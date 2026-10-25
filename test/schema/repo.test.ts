@@ -73,6 +73,7 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
     const lines = readFileSync(`${ROOT}/.prettierignore`, 'utf8').split('\n').filter(Boolean)
     // `.wp/` (review r3): the local notes and screenshots of the work packages, kept out of git by
     // .gitignore; a JSON file written there must not turn `yarn check` red
+    // `.agents/`, `.claude/`, `.npm/`: untracked files the agent sandbox writes into the checkout
     expect(lines).toEqual([
       'dist/',
       'out/',
@@ -81,6 +82,9 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       'test/**/golden/',
       'quality/reviews/',
       '.wp/',
+      '.agents/',
+      '.claude/',
+      '.npm/',
     ])
   })
 

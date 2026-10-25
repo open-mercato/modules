@@ -5,3 +5,6 @@ site/.generated/
 test/**/golden/
 quality/reviews/
 .wp/
+.agents/
+.claude/
+.npm/
