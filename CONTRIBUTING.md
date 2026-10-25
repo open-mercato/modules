@@ -44,7 +44,7 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 | `featured`                        | K   | featured section only; never changes ranking                                                   |
 | `aliases`                         | K   | extra search phrases                                                                           |
 
-Key order in the file follows this table. `yarn om format` sorts keys and formats the file with Prettier; the autofix job only formats.
+Key order in the file follows this table. `yarn om format` sorts keys and formats the file with Prettier; the autofix job only formats. While the repository is private the autofix job does not run, so run `yarn om format modules` before you push: the `checks` job fails on a file in another form, and `validate` warns about it in its summary.
 
 ## Text rules
 

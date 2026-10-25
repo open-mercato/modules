@@ -17,7 +17,7 @@ import {
   SiteFile,
 } from '../schema/index.ts'
 import { BuiltinUpcomingFile, QualityReview } from '../schema/policy.ts'
-import { yamlFiles } from './format.ts'
+import { FormatError, formatDescriptorText, readCategoryAliases, yamlFiles } from './format.ts'
 import type { Catalog } from './catalog.ts'
 import { checkLocal } from './local.ts'
 import { checkRemote, type RemoteDeps } from './remote.ts'
@@ -184,6 +184,14 @@ export function checkBuiltinCoverage(catalog: Catalog, upcoming: readonly string
   return out
 }
 
+/**
+ * The warning of a descriptor that is not in the form `yarn om format` writes (finding of 25 Oct: key order or quotes
+ * passed validate and failed the checks job with a bare Prettier warning, and autofix is off while the repository is
+ * private).
+ */
+export const FORMAT_WARNING =
+  'not in the canonical form (key order, quotes or spacing): run yarn om format modules and commit the result, or the checks job fails'
+
 export interface ValidateOptions {
   root: string
   catalog: Catalog
@@ -244,6 +252,13 @@ export async function validateEntry(file: string, opts: ValidateOptions): Promis
   if (!local.d || errorsOf(local.findings).some((x) => x.step === 'schema')) {
     for (const s of STEPS.slice(1)) if (s !== 'builtin') result.skipped.push({ step: s, reason: 'schema error' })
     return finish()
+  }
+  // the canonical form, with the formatter autofix runs: a warning, so the summary tells the author what `checks` wants
+  try {
+    const formatted = await formatDescriptorText(text, abs, { categoryAliases: readCategoryAliases(opts.root) })
+    if (formatted.changed) result.findings.push(g('schema', 'warning', 'format', FORMAT_WARNING))
+  } catch (err) {
+    if (!(err instanceof FormatError)) throw err
   }
   if (!opts.remote) {
     for (const s of [...network, 'claim' as const]) result.skipped.push({ step: s, reason: 'offline' })
