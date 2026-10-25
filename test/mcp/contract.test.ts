@@ -277,9 +277,11 @@ describe('tools/call on the fixture', () => {
     const all = await at('2026-01-01T00:00:00Z')
     expect(await at('2026-01-01')).toEqual(all)
     expect(await at('2026-01-01T01:00:00+01:00')).toEqual(all)
+    expect(await at('2028-02-29')).toEqual([])
     const day = all.at(-1)!.at.slice(0, 10)
     expect((await at(day)).every((c) => c.at >= `${day}T00:00:00`)).toBe(true)
-    for (const bad of ['2026-13-45', '23.10.2026', 'yesterday']) {
+    // days that do not exist are refused, not rolled over to March or May (review of 25 Oct)
+    for (const bad of ['2026-13-45', '2026-02-31', '2026-02-29', '2026-04-31', '23.10.2026', 'yesterday']) {
       const r = await client.callTool({ name: 'get_changes', arguments: { since: bad } })
       expect(r.isError, bad).toBe(true)
     }

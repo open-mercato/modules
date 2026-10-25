@@ -266,7 +266,14 @@ export const InstallPlan = z.object({
 export const GetChangesInput = z.object({
   // a date alone counts from 00:00 UTC (additive, 25 Oct: `since: "2026-10-23"` was refused as no ISO datetime)
   since: z
-    .union([IsoDate.refine((v) => !Number.isNaN(Date.parse(v)), 'not a date'), z.string().datetime({ offset: true })])
+    .union([
+      // a day that exists: Date.parse rolls 2026-02-31 over to 3 March, so the date must read back the same
+      IsoDate.refine((v) => {
+        const t = Date.parse(`${v}T00:00:00Z`)
+        return !Number.isNaN(t) && new Date(t).toISOString().slice(0, 10) === v
+      }, 'not a date'),
+      z.string().datetime({ offset: true }),
+    ])
     .describe('A date (2026-10-23, from 00:00 UTC) or an ISO date-time (2026-10-23T08:00:00Z).'),
   types: z.array(Change.shape.type).optional(),
   limit: z.number().int().min(1).max(200).default(100),
