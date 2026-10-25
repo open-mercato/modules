@@ -110,7 +110,7 @@ const anyIso = cells.some((c) => c.isolation)
       {why.map((w) => <span class="ssd__why" set:html={nbspDates(whyHtml(w))} />)}
       {warn.map((w) => <span class="ssd__why ssd__why--warn" set:html={nbspDates(whyHtml(w))} />)}
       {isolation.map((w) => <span class="ssd__why ssd__why--iso" set:html={nbspDates(whyHtml(w))} />)}
-      {anyIso && <span class="ssd__legend"><span class="sq-iso-key" aria-hidden="true" />Dot: in isolation, an app from the empty preset. The square is a new app.</span>}
+      {anyIso && <span class="ssd__legend"><span class="sq-iso-key" aria-hidden="true" />Dot: in isolation, an app from the empty preset; grey when it agrees with the square, in color when it differs. The square is a new app.</span>}
       {versions.map((v) => <span class="ssd__why ssd__why--version">{nbspDates(v)}</span>)}
     </span>
     {note && <span class="chip chip--preview ssd__note" title={noteTitle ?? undefined}>{note}</span>}

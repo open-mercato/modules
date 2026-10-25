@@ -5,7 +5,7 @@ import { ICONS } from '../components/icons/paths.ts'
 import type { IconName } from '../components/icons/paths.ts'
 import { licenseChip, typeChip } from './chips.ts'
 import type { SealModel } from './chips.ts'
-import { STATUS } from './status.ts'
+import { STATUS, isoMark } from './status.ts'
 import { breakSegments } from './wrap.ts'
 import type { StripCell } from './status.ts'
 
@@ -132,11 +132,11 @@ export function Square({
   step?: string | null
 }) {
   const s = STATUS[status]
-  // a red dot on a green square read as an error of a verified module (finding of 25 Oct): there it is a quiet grey
-  // dot, the labels and titles still say `broken in isolation`; the dot stays (D10)
-  // beside a square of another version the dot is hollow too (finding of 25 Oct: telemetry on 0.8 drew a dashed square
-  // with the red dot of the 0.9.0 receipt in isolation); the labels and titles name the version
-  const dot = other && iso ? 'other' : iso === 'broken' && status === 'verified' ? 'quiet' : iso
+  // the dot is secondary (decision Ia of 25 Oct, a calmer row): small and grey when it says what the square says, in
+  // colour only when the module alone got another verdict; a broken dot on a green square is a red ring, never a solid
+  // red dot (finding of 25 Oct: that read as an error of a verified module). Beside a square of another version the dot
+  // is hollow (finding of 25 Oct: telemetry on 0.8); the labels and titles name the version
+  const dot = isoMark(status, iso, other)
   const mark = dot ? <span class={`sq-iso sq-iso--${dot}`} aria-hidden="true" /> : null
   // the line's receipt judged another version (review r6): a dashed outline, the mark of the preview chip, never the
   // other version's colour; the letter stays U (no verdict for the version a fresh app installs)

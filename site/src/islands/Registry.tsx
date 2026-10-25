@@ -9,7 +9,7 @@ import type { BuiltInCard, ModuleCard } from '../../../lib/schema/tools.ts'
 import type { IndexEntry, Line } from '../../../lib/schema/index.ts'
 import ModuleRow, { ModuleRowHead } from './ModuleRow.tsx'
 import { CommandChipView, Icon, Square, TypeChipView, Wrap } from '../lib/ui.tsx'
-import { ISOLATION_MARK, STATE_LEGEND, markOf } from '../lib/status.ts'
+import { ISOLATION_MARK, ISO_DIFFERS, STATE_LEGEND, isoMark, isolationDot, markOf } from '../lib/status.ts'
 import { PREVIEW_CHIP } from '../../../lib/core/source.ts'
 import { EMPTY_PRESET_LEAD, lineVersion } from '../../../lib/core/policy.ts'
 import type { Others } from '../lib/status.ts'
@@ -842,8 +842,20 @@ export default function Registry({
   const legend = STATE_LEGEND.filter((st) => present.has(st.mark))
   // a receipt of another version than the one a fresh app installs (review r6): its own mark, its own words
   const anyOther = exactRows.some((x) => lines.some((l) => x.e.others?.[l.key]))
-  // the signal `in isolation` (24 Oct): the dot and its words
-  const anyIso = exactRows.some((x) => lines.some((l) => x.e.compat.isolation?.[l.key]))
+  // the signal `in isolation` (24 Oct): the dot and its words, one key per way the list draws it (decision Ia of
+  // 25 Oct: grey where it agrees with the square, in colour only where it differs)
+  const isoMarks = new Set(
+    exactRows.flatMap((x) =>
+      lines.flatMap((l) => {
+        const iso = x.e.compat.isolation?.[l.key]
+        const m = iso
+          ? isoMark(x.e.compat.lines[l.key]?.status ?? 'untested', isolationDot(iso), !!x.e.others?.[l.key])
+          : null
+        return m ? [m] : []
+      }),
+    ),
+  )
+  const anyIso = isoMarks.size > 0
   // the yellow sign before a license (finding of 25 Oct): its words were only a tooltip, which phones never show
   const anyLicenseMismatch = exactRows.some((x) => !x.e.enterprise && x.e.license.mismatch)
 
@@ -992,12 +1004,19 @@ export default function Registry({
                         {st.title && <span class="sr-only">. {st.title}</span>}
                       </li>
                     ))}
-                    {signals && anyIso && (
+                    {signals && isoMarks.has('agree') && (
                       <li>
-                        <span class="sq-iso-key" aria-hidden="true" />
+                        <span class="sq-iso-key sq-iso-key--agree" aria-hidden="true" />
                         <span>{ISOLATION_MARK.legend}</span>
                       </li>
                     )}
+                    {signals &&
+                      ISO_DIFFERS.filter((m) => isoMarks.has(m)).map((m) => (
+                        <li>
+                          <span class={`sq-iso-key sq-iso-key--${m}`} aria-hidden="true" />
+                          <span>{ISOLATION_MARK.differs[m]}</span>
+                        </li>
+                      ))}
                     {signals && anyOther && (
                       <li>
                         <Square status="untested" other />

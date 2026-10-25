@@ -980,6 +980,59 @@
   }
 }
 
+/* a calmer row (decision Ia of 25 Oct, after a core team note that the list "hits the eyes": three lime squares, a
+   solid lime VERIFIED · 0.9 that repeats them, a lime type plate and two icons in every row). Until the list is
+   redesigned the squares are the row's one source of colour: the level is a quiet outline in its own colour, the
+   type an outline in its hue with neutral text, and the actions show on hover or focus where a pointer can hover. */
+.mrow__seal .seal--verified {
+  background: transparent;
+  color: var(--ok-text);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+/* Listed, the default level: plain words, no frame, so Verified's outline reads as the step up */
+.mrow__seal .seal--listed {
+  border: 0;
+  padding-inline: 0;
+  color: var(--ink-2);
+}
+.mrow__seal .seal--listed.seal--note {
+  padding-left: 0;
+}
+/* OM Quality keeps its cut corners and the brand gradient, as an edge instead of a plate */
+.mrow__seal .seal--quality {
+  padding: 5px 11px 6px 9px;
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    linear-gradient(to bottom left, #b4f372 12%, #eefb63 58%, #bc9aff 100%) border-box;
+  border: 1.5px solid transparent;
+  color: var(--ink);
+  clip-path: none;
+  border-radius: var(--radius-s);
+}
+.mrow:hover .mrow__seal .seal--quality {
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(to bottom left, #b4f372 12%, #eefb63 58%, #bc9aff 100%) border-box;
+}
+/* the type in the row: the frame and words of the license chip under it; the number and the name tell the types apart */
+.mrow .mrow__tags .chip--official,
+.mrow .mrow__tags .chip--community,
+.mrow .mrow__tags .chip--third {
+  background: transparent;
+  color: var(--ink-2);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mrow:not(.mrow--head) .mrow__act {
+    opacity: 0;
+    transition: opacity var(--dur-1) var(--ease);
+  }
+  .mrow:hover .mrow__act,
+  .mrow:focus-within .mrow__act {
+    opacity: 1;
+  }
+}
+
 /* ---------- toast for copy actions ---------- */
 .toast {
   position: fixed;
@@ -1050,43 +1103,51 @@
   }
 }
 
-/* the signal `in isolation` (decision of 24 Oct): a 6 px dot at the square's top right corner for the line's last
-   receipt in an app from the empty preset, ringed in the page colour so it never merges with the square; the square
-   is a new app's (classic) verdict and keeps its colour. Verified lime with a dark edge, broken red, anything else a
-   hollow ink-3 ring (>= 3:1 against the page, spec 7.9). */
+/* the signal `in isolation` (decision of 24 Oct): a dot at the square's top right corner for the line's last receipt
+   in an app from the empty preset, ringed in the page colour so it never merges with the square; the square is a new
+   app's (classic) verdict and keeps its colour. The dot is secondary (decision Ia of 25 Oct, a calmer row): a 5 px
+   grey dot where it says what the square says, a 5 px hollow ring where it judged nothing or the square is another
+   version's, and a 7 px mark in colour only where the module alone got another verdict: a red ring for broken (never
+   a solid red dot on a green square, finding of 25 Oct), lime with a dark edge for verified. */
 .strip__cell {
   position: relative;
 }
 .sq-iso {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 7px;
-  height: 7px;
+  top: -2px;
+  right: -2px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow: 0 0 0 1.5px var(--bg);
+}
+.sq-iso--agree {
+  background: var(--ink-3);
+}
+.sq-iso--other {
+  background: var(--bg);
+  border: 1px solid var(--ink-3);
+}
+.sq-iso--verified,
+.sq-iso--broken {
+  top: -3px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
 }
 .sq-iso--verified {
   background: #b4f372;
   border: 1.5px solid #2f520b;
 }
 .sq-iso--broken {
-  background: #f32828;
-  border: 1.5px solid #a01313;
-}
-.sq-iso--other {
   background: var(--bg);
-  border: 1.5px solid var(--ink-3);
+  border: 2px solid var(--bad-ink);
 }
-/* broken in isolation beside a verified square: grey, so the verdict reads first (finding of 25 Oct) */
-.sq-iso--quiet {
-  background: var(--ink-3);
-  border: 1.5px solid var(--ink-3);
-}
-/* the key of the dot in legends: the hollow ring, followed by its words; with a state, the dot of that state */
+/* the key of the dot in legends: the hollow ring, followed by its words; with a mark, the dot of that mark */
 .sq-iso-key {
   display: inline-block;
+  flex: none;
   width: 7px;
   height: 7px;
   margin-right: 6px;
@@ -1094,13 +1155,23 @@
   border: 1.5px solid var(--ink-3);
   vertical-align: 0;
 }
+.sq-iso-key--agree {
+  background: var(--ink-3);
+}
+.sq-iso-key--other {
+  background: transparent;
+}
 .sq-iso-key--verified {
+  width: 8px;
+  height: 8px;
   background: #b4f372;
   border-color: #2f520b;
 }
 .sq-iso-key--broken {
-  background: #f32828;
-  border-color: #a01313;
+  width: 8px;
+  height: 8px;
+  background: transparent;
+  border: 2px solid var(--bad-ink);
 }
 @media print {
   .sq-iso {

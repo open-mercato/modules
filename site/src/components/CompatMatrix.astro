@@ -9,7 +9,7 @@ import { renderSigil } from '../../../lib/sigil/sigil.ts'
 import { wbrHtml } from '../lib/wrap.ts'
 import type { SigilKind } from '../../../lib/sigil/sigil.ts'
 import { day } from '../lib/format.ts'
-import { ISOLATION_MARK, STATUS, isolationDot, listAnd, markOf, orderLines } from '../lib/status.ts'
+import { ISOLATION_MARK, ISO_DIFFERS, STATUS, isoMark, isolationDot, listAnd, markOf, orderLines } from '../lib/status.ts'
 import {
   FIT_GLYPH,
   FIT_LEGEND,
@@ -104,7 +104,24 @@ const present = new Set(
     .concat(keys.flatMap((k) => (compat.baseline[k] ? [markOf(compat.baseline[k])] : []))),
 )
 const anyOther = compat.rows.some((r) => keys.some((k) => otherOf(r.locator, k)))
-const anyIso = compat.rows.some((r) => keys.some((k) => isoOf(r, k))) || keys.some((k) => isoBase(k))
+// one key per way the matrix draws the dot (decision Ia of 25 Oct): grey where it agrees with the square, in colour
+// only where the module alone got another verdict
+const isoMarks = new Set(
+  compat.rows
+    .flatMap((r) =>
+      keys.map((k) => {
+        const iso = isoOf(r, k)
+        return iso ? isoMark(r.cells[k]?.status ?? 'untested', isolationDot(iso), !!otherOf(r.locator, k)) : null
+      }),
+    )
+    .concat(
+      keys.map((k) => {
+        const ib = isoBase(k)
+        return ib ? isoMark(compat.baseline[k]?.status ?? 'untested', isolationDot(ib)) : null
+      }),
+    )
+    .filter((m) => m !== null),
+)
 // the states the matrix shows, as on / (review r4: day 0 listed broken, quarantine and both not-judged marks)
 const legend = STATE_LEGEND.filter((s) => present.has(s.mark))
 const isRegression = (row: CompatIndex['rows'][number]): boolean =>
@@ -177,14 +194,24 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
       ))
     }
     {
-      anyIso && (
+      isoMarks.has('agree') && (
         <li>
           <span class="cm__lsq">
-            <span class="sq-iso-key" aria-hidden="true" />
+            <span class="sq-iso-key sq-iso-key--agree" aria-hidden="true" />
           </span>
           <span>{ISOLATION_MARK.legend}</span>
         </li>
       )
+    }
+    {
+      ISO_DIFFERS.filter((m) => isoMarks.has(m)).map((m) => (
+        <li>
+          <span class="cm__lsq">
+            <span class={`sq-iso-key sq-iso-key--${m}`} aria-hidden="true" />
+          </span>
+          <span>{ISOLATION_MARK.differs[m]}</span>
+        </li>
+      ))
     }
     {
       anyOther && (

@@ -59,9 +59,37 @@ export const STATUS: Record<CellStatus, StatusMeta> = {
  */
 export const ISOLATION_MARK = {
   word: 'in isolation (empty preset)',
-  // plain words (finding of 25 Oct: `a second signal, never the verdict` read as jargon next to a red dot)
-  legend: 'dot: the module alone, in an app from the empty preset. The square is the verdict.',
+  // plain words (finding of 25 Oct: `a second signal, never the verdict` read as jargon next to a red dot); the dot
+  // is grey where it says what the square says (decision Ia of 25 Oct), so the key says that first
+  legend: 'grey dot: the module alone (empty preset), same as the square',
+  /** The key of each dot that stands out: alone, the module got another verdict than the square's. */
+  differs: {
+    broken: 'red ring: broken alone, unlike the square',
+    verified: 'green dot: verified alone, unlike the square',
+    other: 'hollow dot: alone, not judged or another version',
+  },
 } as const
+
+/**
+ * How an isolation dot draws beside its square (decision Ia of 25 Oct, the calmer registry row): `agree`, a small
+ * grey dot, when it says what the square says; `other`, a small hollow ring, when it judged nothing or the square is a
+ * receipt of another version; `broken` (a red ring) or `verified` (a green dot) only when the module alone got
+ * another verdict than the square's, the one case worth a look.
+ */
+export type IsoMark = 'agree' | 'other' | 'verified' | 'broken'
+
+/** The dots that get a key of their own in a legend, in the order a legend lists them. */
+export const ISO_DIFFERS = ['broken', 'verified', 'other'] as const satisfies readonly IsoMark[]
+
+export function isoMark(
+  status: CellStatus,
+  iso: 'verified' | 'broken' | 'other' | null | undefined,
+  other = false,
+): IsoMark | null {
+  if (!iso) return null
+  if (other || iso === 'other') return 'other'
+  return iso === status ? 'agree' : iso
+}
 
 /**
  * The isolation dot of a line in a few words for its label: `in isolation (empty preset): verified on 23 Oct`, with the

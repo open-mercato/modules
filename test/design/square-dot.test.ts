@@ -1,4 +1,5 @@
-// The isolation dot beside a square (finding of 25 Oct): another version's red never stands next to a line's square.
+// The isolation dot beside a square (finding of 25 Oct): another version's red never stands next to a line's square,
+// and the dot is grey where it agrees with the square (decision Ia of 25 Oct).
 import { describe, expect, it } from 'vitest'
 import { Square } from '../../site/src/lib/ui.tsx'
 
@@ -16,9 +17,12 @@ describe('Square isolation dot', () => {
     expect(c).toContain('sq-iso sq-iso--other')
     expect(c).not.toContain('sq-iso sq-iso--broken')
   })
-  it('beside a verdict of the line the dot keeps its state, and a broken dot on a green square is quiet', () => {
-    expect(classes(Square({ status: 'broken', iso: 'broken' }))).toContain('sq-iso sq-iso--broken')
-    expect(classes(Square({ status: 'verified', iso: 'broken' }))).toContain('sq-iso sq-iso--quiet')
+  it('a dot that says what the square says is quiet; it stands out only where the module alone differs', () => {
+    expect(classes(Square({ status: 'broken', iso: 'broken' }))).toContain('sq-iso sq-iso--agree')
+    expect(classes(Square({ status: 'verified', iso: 'verified' }))).toContain('sq-iso sq-iso--agree')
+    expect(classes(Square({ status: 'verified', iso: 'broken' }))).toContain('sq-iso sq-iso--broken')
+    expect(classes(Square({ status: 'broken', iso: 'verified' }))).toContain('sq-iso sq-iso--verified')
+    expect(classes(Square({ status: 'harness-red', iso: 'other' }))).toContain('sq-iso sq-iso--other')
     expect(classes(Square({ status: 'untested', other: true, iso: null }))).not.toContain('sq-iso sq-iso--other')
   })
 })
