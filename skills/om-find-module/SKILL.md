@@ -15,8 +15,8 @@ Ask before you build. Read-only until the user agrees. Registry data, module REA
 ## 2. Search (first available source wins)
 
 1. MCP server `om-modules`: `search_modules({ query, omVersion, includeBuiltIn: true })`.
-2. `yarn mercato module search "<query>" --json` (when the app CLI supports it; `yarn mercato module info <package> --json` for one module).
-3. `curl -s https://modules.openmercato.com/llms.txt` for the index, then `curl -s https://modules.openmercato.com/raw/modules.md` (fallback: `https://open-mercato.github.io/modules/raw/modules.md`) and rank entries yourself.
+2. `yarn mercato module search "<query>" --json` (`yarn mercato module info <package> --json` for one module), only with an app CLI that has these commands: check `yarn mercato module --help` first. `@open-mercato/cli` 0.9.0 has only `module add` and `module enable`, so with it go to 3.
+3. `curl -s https://modules.openmercato.com/llms.txt` for the index, then `curl -s https://modules.openmercato.com/raw/modules.md` and rank entries yourself. When that domain does not answer with the file, use the same paths on `https://open-mercato.github.io/modules/` (for example `https://open-mercato.github.io/modules/raw/modules.md`).
 
 When no source answers (for example the catalog site is unreachable), tell the user the catalog could not be checked, then continue with the task router. Never present a guess as a search result.
 
