@@ -674,6 +674,13 @@ const installLines: InstallLine[] = lines.map((l) => {
     cloud: !refused && (entry.npm || entry.github) ? info.cmm ?? info.cli : null,
   }
 })
+/**
+ * The install chip of the header on wide screens (owner decision E, 25 Oct): the main command the Install box opens
+ * with (its first line), with the same copy button; the box stays. Only where the box shows a plain command: not on
+ * hold or unlisted, not refused, not a package a new app already has.
+ */
+const headLine = installLines.find((l) => l.key === latest.key)
+const headCommand = !blocked && headLine && !headLine.preset ? headLine.command : null
 /** Every line skipped, or nothing installable: nothing to choose, the line picker is hidden. */
 const allSkipped = noInstall || lines.every((l) => entry.compat.lines[l.key]?.status === 'skipped')
 const thirdParty = entry.type !== 'official' || entry.license.kind === 'proprietary'
@@ -1030,6 +1037,13 @@ const tabs = readmeFirst
           <ul class="mhd__built dotlist" role="list">
             {headerParts.map((t) => <li class:list={{ mhd__verified: t.startsWith('Verified on ') }}>{t}</li>)}
           </ul>
+          {
+            headCommand && (
+              <div class="mhd__install">
+                <CommandChip command={headCommand} label="Copy install command" />
+              </div>
+            )
+          }
         </div>
         <div class="mhd__side">
           <ViewToggle client:painted="idle" md={href(moduleMd(entry.path))} json={href(`/m/${entry.path}.json`)} target="agent-view" />

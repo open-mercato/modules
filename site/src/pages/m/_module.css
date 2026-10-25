@@ -123,6 +123,15 @@
 .mhd__verified {
   color: var(--ok-text);
 }
+/* the install chip (owner decision E): the Install box's command, as wide as its text; a long one wraps at the token
+   boundaries as in the box */
+.mhd__install {
+  display: flex;
+  margin-top: 4px;
+}
+.mhd__install .cmd {
+  min-width: 0;
+}
 .mhd__side {
   display: grid;
   align-content: space-between;
@@ -1526,6 +1535,10 @@ html[data-view='agent'] [data-human] {
   }
   .mhd__sum {
     font-size: 16px;
+  }
+  /* a phone reads the Install box right after the strip: no second command in the header */
+  .mhd__install {
+    display: none;
   }
   .mhd__copy {
     /* never squeezed by a long locator in the flex row (review r7: 35 to 40 px wide) */
