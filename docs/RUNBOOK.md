@@ -356,8 +356,10 @@ Before the repository is public:
 
 At the switch to the public address:
 
-5. Repository variables `SITE_URL` and `BASE_PATH` (`https://modules.openmercato.com` and `/` once the domain answers;
-   until then `https://open-mercato.github.io` and `/modules`), `MCP_URL` after the Worker deploy (D-OPEN-1).
+5. Repository variables `SITE_URL` and `BASE_PATH` (`https://modules.openmercato.com` and `/` once the domain serves
+   this site, see step 9; until then `https://open-mercato.github.io` and `/modules`), `MCP_URL` after the Worker deploy
+   (D-OPEN-1). `modules.openmercato.com` answers already, from the `*.openmercato.com` wildcard on the Traefik host, so
+   "answers" is not the test: switch only after step 9 shows the catalog there.
 6. Settings > Pages > Source: GitHub Actions. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on
    their own once the repository is public; while it is private they run only by hand (Actions minutes).
 7. Environments `github-pages` and `mcp` (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`), and the WebMCP origin
@@ -365,6 +367,12 @@ At the switch to the public address:
    to `main` (Settings > Environments > mcp > Deployment branches) before adding `CLOUDFLARE_API_TOKEN`, so no other
    branch can deploy with it.
 8. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
+9. The custom domain. `pages.yml` deploys with GitHub Actions, so a `CNAME` file in the build is ignored: the domain is
+   set only in the settings. First verify `modules.openmercato.com` in the organization (Settings > Pages > Add a
+   domain; GitHub shows the TXT record `_github-pages-challenge-open-mercato.modules.openmercato.com`), then devops add
+   that TXT and a CNAME `modules.openmercato.com` -> `open-mercato.github.io` (the CNAME replaces the wildcard for this
+   name), then Settings > Pages > Custom domain `modules.openmercato.com` and Enforce HTTPS once the certificate is
+   issued. Change `SITE_URL` and `BASE_PATH` (step 5) in the same sitting and rerun `pages`.
 
 ## Triage of submissions
 
