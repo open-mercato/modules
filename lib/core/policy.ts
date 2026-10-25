@@ -455,6 +455,10 @@ export function builtForText(e: VersionSource & Pick<IndexEntry, 'compat'>): str
   if (b.kind === 'missing' || !b.range) return 'Built for: no Open Mercato peer range'
   if (b.kind === 'star') return `Built for any version (peers ${b.range})`
   const minor = /(\d+\.\d+)/.exec(b.range)?.[1] ?? b.range
+  // an exact pin to a prerelease snapshot accepts no release line (gateway-tpay pins 0.8.1-develop.7442...; finding of
+  // 25 Oct: `Built for 0.8` read as if it fitted 0.8.0)
+  if (b.kind === 'exact-pin' && b.lines.length === 0 && /-/.test(b.range))
+    return `Built for a prerelease snapshot (peers ${b.range}), which no release line accepts`
   if (b.kind === 'open') return `Built for ${minor} and later (peers ${b.range})`
   const versions = [...new Set(b.lines.map((k) => lineVersion(e, k)).filter((v): v is string => !!v))]
   if (b.lines.length && versions.length > 1) return `Built for ${listAnd(b.lines)} (peers of ${listAnd(versions)})`
