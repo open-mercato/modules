@@ -103,6 +103,8 @@ describe('run checks', () => {
     expect(checkNightlyRun(run(1)).ok).toBe(true)
     expect(checkNightlyRun(run(1, { head_branch: 'feature' }))).toMatchObject({ ok: false })
     expect(checkNightlyRun(run(1, { event: 'pull_request' }))).toMatchObject({ ok: false })
+    // a scheduled night the private-repository guard skipped: nothing to collect, no red collect run
+    expect(checkNightlyRun(run(1, { conclusion: 'skipped' }))).toMatchObject({ ok: false, reason: 'run 1 was skipped' })
     expect(checkNightlyRun(run(1, { path: '.github/workflows/spike.yml' }))).toMatchObject({ ok: false })
     expect(checkNightlyRun(run(1, { head_repository: { full_name: 'evil/modules' } }))).toMatchObject({ ok: false })
     expect(checkNightlyRun(run(2, { display_title: runTitle(2, 1) }))).toEqual({ ok: true, attempt: 2, parent: 1 })

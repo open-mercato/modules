@@ -163,10 +163,15 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(day0?.run).toContain('yarn om emit --data "$day0"')
     expect(day0?.run).toContain('yarn astro build')
     expect(text('validate.yml')).not.toMatch(/secrets\./)
-    // the summary step comes first; check and test still run when it fails
-    const names = steps(w).map((s) => s.name)
-    expect(names.indexOf('Validate descriptors')).toBeLessThan(names.indexOf('Check'))
-    for (const n of ['Check', 'Test']) expect(steps(w).find((s) => s.name === n)?.if).toBe('${{ !cancelled() }}')
+    // the summary has a job of its own (finding of 25 Oct: GitHub shows a step summary when its job ends, so check,
+    // test and the builds in the same job delayed it by minutes); check, test and the builds run beside it
+    const names = (k: string) => (w.jobs[k] as Job).steps.map((s) => s.name)
+    expect(Object.keys(w.jobs)).toEqual(['validate', 'checks', 'build'])
+    expect(names('validate').at(-1)).toBe('Validate descriptors')
+    expect(names('validate')).not.toContain('Check')
+    expect(names('checks')).toEqual(expect.arrayContaining(['Check', 'Test']))
+    expect(names('build')).toContain('Build site on day-0 data')
+    for (const k of Object.keys(w.jobs)) expect((w.jobs[k] as Job)['timeout-minutes'], k).toBe(15)
   })
 
   it('autofix: named autofix.ci, modules/** only, read only, 5 min, format then the autofix action', () => {
@@ -239,6 +244,23 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     ])
       expect(run).toContain(c)
     expect(run).not.toMatch(/gh issue comment|gh pr/)
+  })
+
+  it('while the repository is private no schedule runs watch, sync or the night (Actions minutes)', () => {
+    const guard = "${{ github.event_name != 'schedule' || !github.event.repository.private }}"
+    for (const f of ['watch.yml', 'sync.yml', 'nightly.yml']) {
+      const jobs = Object.values(wf(f).jobs) as (Job & { if?: string })[]
+      expect(jobs[0]?.if, f).toBe(guard)
+    }
+    // collect never starts for a night the guard skipped
+    expect(text('collect.yml')).toContain("github.event.workflow_run.conclusion != 'skipped'")
+  })
+
+  it('sync: the discovery issue does not need the discovery label to exist', () => {
+    const run = runText(wf('sync.yml'))
+    expect(run).not.toMatch(/gh issue list[^\n]*--label discovery/)
+    expect(run).not.toMatch(/gh issue create [^\n]*--label discovery/)
+    expect(run).toContain('gh label list')
   })
 
   it('the data writers have distinct groups and never cancel a pending run', () => {

@@ -60,6 +60,7 @@ const FAKE_GH = `#!/usr/bin/env bash
 set -euo pipefail
 echo "gh $*" >> "$CALLS"
 if [ "$1 $2" = "issue list" ]; then printf '%s' "\${FAKE_ISSUE:-}"; fi
+if [ "$1 $2" = "label list" ]; then printf '%s' "\${FAKE_LABELS:-}"; fi
 `
 
 let tmp: string
@@ -235,7 +236,13 @@ describe.skipIf(!hasJq)('sync.yml steps', () => {
 
     expect(runStep(stepRun('sync.yml', 'Discover packages')).code).toBe(0)
     writeFileSync(calls, '')
-    const created = runStep(stepRun('sync.yml', 'Update the discovery issue'))
+    // the label `discovery` does not exist yet (an owner click, spec 5.6 item 7): the issue is created without it
+    const bare = runStep(stepRun('sync.yml', 'Update the discovery issue'))
+    expect(bare.code, bare.out).toBe(0)
+    expect(callLog().at(-1)).toBe('gh issue create --title Discovered packages --body-file out/discover.md')
+
+    writeFileSync(calls, '')
+    const created = runStep(stepRun('sync.yml', 'Update the discovery issue'), { FAKE_LABELS: 'bug\ndiscovery\n' })
     expect(created.code, created.out).toBe(0)
     expect(callLog().at(-1)).toBe(
       'gh issue create --title Discovered packages --label discovery --body-file out/discover.md',

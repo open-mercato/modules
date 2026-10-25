@@ -29,6 +29,9 @@ defaults:
 jobs:
   watch:
     name: watch
+    # As nightly.yml: no scheduled run while the repository is private (Actions minutes); a push of a descriptor or
+    # policy change and a dispatch still run, and the schedule starts on its own once the repository is public.
+    if: ${{ github.event_name != 'schedule' || !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

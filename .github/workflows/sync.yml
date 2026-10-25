@@ -23,6 +23,9 @@ defaults:
 jobs:
   sync:
     name: sync
+    # As nightly.yml: while the repository is private a scheduled run would spend the org's Actions minutes on data
+    # nobody can see yet; a dispatch still runs, and the schedule starts on its own once the repository is public.
+    if: ${{ github.event_name != 'schedule' || !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -76,11 +79,15 @@ jobs:
         run: |
           set -euo pipefail
           title="Discovered packages"
-          number="$(gh issue list --state open --label discovery --search "in:title \"$title\"" --json number,title \
-            --jq "[.[] | select(.title == \"$title\")][0].number // empty")"
+          # found by title and author, not by label: the label `discovery` is an owner click (spec 5.6 item 7) and
+          # `gh issue create --label` fails while it does not exist (finding of 25 Oct)
+          number="$(gh issue list --state open --author app/github-actions --search "in:title \"$title\"" \
+            --json number,title --jq "[.[] | select(.title == \"$title\")][0].number // empty")"
           if [ -n "$number" ]; then
             gh issue edit "$number" --body-file out/discover.md
             echo "Updated issue #$number."
           else
-            gh issue create --title "$title" --label discovery --body-file out/discover.md
+            label=()
+            if gh label list --limit 200 --json name --jq '.[].name' | grep -qx discovery; then label=(--label discovery); fi
+            gh issue create --title "$title" ${label[@]+"${label[@]}"} --body-file out/discover.md
           fi

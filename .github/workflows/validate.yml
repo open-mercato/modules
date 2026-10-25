@@ -1,5 +1,7 @@
-# Pull request check (spec 5.1, 5.2): the descriptor summary first, so an author sees it within minutes, then the
-# repo checks. Read-only token, no secrets, no privileged trigger. Branch protection requires the `validate` job.
+# Pull request check (spec 5.1, 5.2). Three jobs, so the descriptor summary of `validate` appears as soon as that job
+# ends (GitHub shows a step summary when its job finishes; with check, test and the builds in the same job it took
+# minutes longer, finding of 25 Oct). Read-only token, no secrets, no privileged trigger. Branch protection should
+# require the `validate` job (spec 5.6 item 4, an owner click, not set yet; docs/RUNBOOK.md "Repository setup").
 name: validate
 
 on:
@@ -21,8 +23,6 @@ jobs:
     name: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      ASTRO_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -59,6 +59,30 @@ jobs:
           PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
         run: yarn om validate --changed=origin/main --summary "$GITHUB_STEP_SUMMARY"
 
+  checks:
+    name: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
       - name: Check
         if: ${{ !cancelled() }}
         run: yarn check
@@ -66,6 +90,30 @@ jobs:
       - name: Test
         if: ${{ !cancelled() }}
         run: yarn test
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
 
       # day 0 (review r2): the state before the first night has no receipts at all; it once broke the build, so the
       # site is built on it in every run, not only when site/ changes

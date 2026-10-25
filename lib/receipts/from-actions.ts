@@ -88,6 +88,9 @@ export function checkNightlyRun(run: ApiRun): RunCheck {
   const base = run.repository?.full_name
   if (head && base && head !== base) return { ok: false, reason: `run ${run.id} comes from ${head}` }
   if (run.status !== null && run.status !== 'completed') return { ok: false, reason: `run ${run.id} is ${run.status}` }
+  // a scheduled night the private-repository guard of nightly.yml skipped has no matrix to collect (finding of 25 Oct:
+  // every such night failed collect with `no matrix-a1 artifact`)
+  if (run.conclusion === 'skipped') return { ok: false, reason: `run ${run.id} was skipped` }
   const t = parseRunTitle(run.display_title)
   return { ok: true, ...t }
 }

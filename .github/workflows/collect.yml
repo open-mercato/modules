@@ -32,9 +32,11 @@ jobs:
   collect:
     name: collect
     # Only runs of nightly on main from this repository, started by the schedule or a dispatch (checked again in code).
+    # A night nightly.yml skipped (scheduled while the repository is private) has nothing to collect.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.head_branch == 'main' &&
+      (github.event.workflow_run.conclusion != 'skipped' &&
+       github.event.workflow_run.head_branch == 'main' &&
        github.event.workflow_run.head_repository.full_name == github.repository &&
        (github.event.workflow_run.event == 'schedule' || github.event.workflow_run.event == 'workflow_dispatch'))
     runs-on: ubuntu-latest
