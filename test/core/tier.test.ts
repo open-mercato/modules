@@ -2,7 +2,14 @@
 import { describe, expect, it } from 'vitest'
 import { evaluateEntry, judgedFacts, judgedVersions } from '../../lib/core/health.ts'
 import { cellSummary, decisiveReceipt, recommendedVersions, resolveLine } from '../../lib/core/lines.ts'
-import { listedRules, newestInstallable, tierFrom, TIER_RULES, verifiedRules } from '../../lib/core/tier.ts'
+import {
+  listedRules,
+  newestInstallable,
+  tierFrom,
+  TIER_RULES,
+  verifiedRules,
+  VER5_NOT_READ,
+} from '../../lib/core/tier.ts'
 import type { Receipt, SyncRecord } from '../../lib/schema/data/index.ts'
 import { Receipt as ReceiptSchema } from '../../lib/schema/data/index.ts'
 import { durableGatedRelease, fixtureEntry, LOC, loadFixture, NOW, type Fixture } from './helpers.ts'
@@ -438,11 +445,34 @@ describe('Verified and the quarantine (5.3, 6.3, D46)', () => {
     })
     expect(none.tier).toBe('listed')
     // a tarball that names its repository, with no descriptor repository to compare it to, keeps the pass
-    expect(ver5('git+https://github.com/open-mercato/open-mercato.git').rule).toEqual({
-      id: 'VER-5',
-      pass: true,
-      detail: 'No repository in the descriptor to compare.',
+    for (const url of ['git+https://github.com/open-mercato/open-mercato.git', 'https://gitlab.com/acme/foo.git'])
+      expect(ver5(url).rule).toEqual({
+        id: 'VER-5',
+        pass: true,
+        detail: 'No repository in the descriptor to compare.',
+      })
+  })
+
+  it('VER-5: a tarball the sync has not read is not claimed to name no repository (review of 25 Oct)', () => {
+    const rules = verifiedRules({
+      source: 'npm',
+      npm: '@acme/never-synced',
+      descriptorGithub: null,
+      sync: null,
+      receipts: [],
+      lines,
+      recommended: {},
+      githubVersion: null,
+      signals: {
+        receipt: {},
+        fit: {},
+        supplyChain: { status: 'ok', reasons: [] },
+        hygiene: { status: 'ok', failing: [] },
+      },
+      now: NOW,
     })
+    expect(rules.find((r) => r.id === 'VER-5')).toEqual({ id: 'VER-5', pass: false, detail: VER5_NOT_READ })
+    expect(VER5_NOT_READ).not.toContain('nor the tarball')
   })
 })
 

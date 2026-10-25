@@ -251,6 +251,10 @@ function repoOf(url: string | null | undefined): string | null {
   return m ? `${m[1]}/${m[2]}`.toLowerCase() : null
 }
 
+/** VER-5 detail of an npm entry without a descriptor repository whose tarball the sync has not read yet. */
+export const VER5_NOT_READ =
+  'Not checked: the sync has not read the tarball yet, and the descriptor names no repository.'
+
 /** VER-1..5. */
 export function verifiedRules(i: VerifiedInput): Rule[] {
   const out: Rule[] = []
@@ -346,7 +350,11 @@ export function verifiedRules(i: VerifiedInput): Rule[] {
         ok ? 'Tarball repository.url matches the descriptor.' : `Tarball repository.url is ${got ?? 'missing'}.`,
       ),
     )
-  } else if (repoOf(i.sync?.npm?.repositoryUrl) === null)
+  } else if (!i.sync?.npm)
+    // no sync record: whether the tarball names a repository is unknown, so the sentence does not claim it (review of
+    // 25 Oct)
+    out.push(rule('VER-5', false, VER5_NOT_READ))
+  else if (!i.sync.npm.repositoryUrl)
     // nothing names a source, so nothing is checked: not a pass (finding of 25 Oct, a repo-less package had it free)
     out.push(rule('VER-5', false, 'Not checked: neither the descriptor nor the tarball names a repository.'))
   else out.push(rule('VER-5', true, 'No repository in the descriptor to compare.'))

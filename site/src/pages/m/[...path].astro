@@ -29,6 +29,7 @@ import { GENERATED_DIR, loadSiteData } from '../../../../lib/emit/site-data.ts'
 import { enterpriseNotes, installInfo, isEnterprisePackage } from '../../../../lib/core/plan.ts'
 import { promptParts } from '../../../../lib/core/prompt.ts'
 import { compareVersions } from '../../../../lib/core/semver.ts'
+import { VER5_NOT_READ } from '../../../../lib/core/tier.ts'
 import type { IndexEntry, Receipt as ReceiptT } from '../../../../lib/schema/index.ts'
 import { orderLines, STATUS } from '../../lib/status.ts'
 import type { Others } from '../../lib/status.ts'
@@ -845,9 +846,11 @@ const verSignals = [
         : 'Checked by the sync against repository.url; details are in the agent card.',
     fix: github
       ? 'Push a tag for the release you want tested.'
-      : ruleOf('VER-5')?.detail.startsWith('Not checked')
-        ? 'Set repository.url in package.json to the source repository.'
-        : 'Keep repository.url in package.json pointing at the listed repository.',
+      : ruleOf('VER-5')?.detail === VER5_NOT_READ
+        ? 'Nothing to change yet: the next sync reads repository.url from the tarball.'
+        : ruleOf('VER-5')?.detail.startsWith('Not checked')
+          ? 'Set repository.url in package.json to the source repository.'
+          : 'Keep repository.url in package.json pointing at the listed repository.',
   },
 ]
 const ver = verSignals.map((v) => {
