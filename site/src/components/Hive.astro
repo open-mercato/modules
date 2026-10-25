@@ -85,8 +85,19 @@ const counts = {
     width: 100%;
     height: auto;
   }
+  /* a cell is a link (finding of 25 Oct: a click drew the browser's blue rectangle around the hex). No outline for any
+     focus: the pointer says it is clickable, hover and keyboard focus draw the hex edge instead */
+  .hive__map :global(a[data-k]) {
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hive__map :global(a[data-k]:focus),
+  .hive__map :global(a[data-k]:focus-visible) {
+    outline: none;
+  }
   .hive__map :global(a:hover use),
-  .hive__map :global(a:focus use) {
+  .hive__map :global(a:focus-visible use) {
     stroke: #fafafa;
     stroke-width: 1.5;
   }
