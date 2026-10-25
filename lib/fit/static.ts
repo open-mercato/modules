@@ -135,8 +135,13 @@ export function resolveSubpath(world: FitWorld, pkg: string, subpath: string): R
     const cands = (prefs: readonly string[]): string[] =>
       pickCond(m.target, prefs).map((t) => join(root, m.star === null ? t : t.replaceAll('*', m.star)))
     const typesFile = cands(TYPES_PREFS).find(isFile) ?? null
-    const runtimeFile = cands(RUNTIME_PREFS).find(isFile) ?? null
+    const runtime = cands(RUNTIME_PREFS)
+    const runtimeFile = runtime.find(isFile) ?? null
     if (!typesFile && !runtimeFile) return { status: 'noFile' }
+    // an export with runtime conditions whose files are all missing fails at runtime even when its types exist
+    // (finding of 25 Oct: `types: ./src/*.ts` matched a src file the package ships without dist); a types-only
+    // export has no runtime condition and stays ok
+    if (runtime.length > 0 && !runtimeFile) return { status: 'noFile' }
     return { status: 'ok', typesFile, runtimeFile }
   }
   if (sub === '.') {

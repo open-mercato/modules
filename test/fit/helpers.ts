@@ -40,6 +40,11 @@ export function fakeShared(version: 'A' | 'B'): Record<string, string> {
     'src/lib/all.ts': "export * from './not-published'\nexport const known = 1\n",
     'src/lib/complete.ts': "export * from './di/container'\n",
     ...(version === 'A' ? { 'src/lib/gone.ts': 'export const x = 1\n' } : {}),
+    // the runtime files of the `default` condition, as a published package has them (static fit checks both)
+    'dist/lib/di/container.js': 'export function createRequestContainer() { return 1 }\n',
+    'dist/lib/all.js': 'export const known = 1\n',
+    'dist/lib/complete.js': "export * from './di/container.js'\n",
+    ...(version === 'A' ? { 'dist/lib/gone.js': 'export const x = 1\n' } : {}),
   }
 }
 

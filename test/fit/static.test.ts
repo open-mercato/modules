@@ -60,6 +60,38 @@ describe('resolveSubpath', () => {
     expect(resolveSubpath(worldA, '@open-mercato/ui', '.').status).toBe('noPkg')
     expect(resolveSubpath(worldA, '@open-mercato/queue', '.').status).toBe('noPkg')
   })
+  it('an export whose runtime target is missing does not fit, even when its types exist (finding of 25 Oct)', () => {
+    const root = tempDir()
+    writeTree(join(root, 'p'), {
+      'package.json': JSON.stringify({
+        name: '@open-mercato/cache',
+        exports: {
+          '.': { types: './index.d.ts', import: './missing.js' },
+          './both': { types: './both.d.ts', default: './both.js' },
+          './types-only': { types: './t.d.ts' },
+          './*': { types: './src/*.ts', default: './dist/*.js' },
+        },
+      }),
+      'index.d.ts': 'export declare const a: number\n',
+      'both.d.ts': 'export declare const b: number\n',
+      'both.js': 'export const b = 1\n',
+      't.d.ts': 'export type T = number\n',
+      'src/x.ts': 'export const x = 1\n',
+      'src/y.ts': 'export const y = 1\n',
+      'dist/y.js': 'export const y = 1\n',
+    })
+    const w = createWorld({ version: '1.0.0', dirs: new Map([['@open-mercato/cache', join(root, 'p')]]) })
+    expect(resolveSubpath(w, '@open-mercato/cache', '.').status).toBe('noFile')
+    expect(resolveSubpath(w, '@open-mercato/cache', 'both').status).toBe('ok')
+    expect(resolveSubpath(w, '@open-mercato/cache', 'types-only').status).toBe('ok')
+    expect(resolveSubpath(w, '@open-mercato/cache', 'x').status).toBe('noFile')
+    expect(resolveSubpath(w, '@open-mercato/cache', 'y').status).toBe('ok')
+    const r = checkImports(w, { '@open-mercato/cache': { '.': ['a'], x: ['x'], y: ['y'] } })
+    expect(r.missing.map((m) => [m.kind, m.subpath])).toEqual([
+      ['subpath', '.'],
+      ['subpath', 'x'],
+    ])
+  })
   it('splits specifiers', () => {
     expect(specParts('@open-mercato/shared/lib/di/container')).toEqual(['@open-mercato/shared', 'lib/di/container'])
     expect(specParts('@open-mercato/ui')).toEqual(['@open-mercato/ui', '.'])
