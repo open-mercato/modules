@@ -7,7 +7,13 @@ import { parse as parseYaml } from 'yaml'
 import type { z } from 'zod'
 import { Descriptor } from '../schema/descriptor.ts'
 import { assertPathMatches, descriptorLocator } from '../schema/locator.ts'
-import { BuiltinCategoriesFile, BuiltinUpcomingFile, CategoriesFile, SiteFile } from '../schema/policy.ts'
+import {
+  BuiltinCategoriesFile,
+  BuiltinUpcomingFile,
+  CategoriesFile,
+  RevocationsFile,
+  SiteFile,
+} from '../schema/policy.ts'
 import {
   BuiltinData,
   Change,
@@ -114,6 +120,8 @@ export interface LoadOptions {
   skills: string
   /** Repo root, for the fallback core version (pinned `@open-mercato/cli`). */
   root: string
+  /** OM Quality folder (`quality/`); default `<root>/quality`. */
+  quality?: string
 }
 
 function loadDescriptors(dir: string, r: Reader): LoadedDescriptor[] {
@@ -245,6 +253,9 @@ export function loadEmitData(o: LoadOptions): EmitData {
   const upcomingFile = join(o.policy, 'builtin-upcoming.yml')
   const builtinUpcoming = existsSync(upcomingFile) ? Object.keys(p.yaml(upcomingFile, BuiltinUpcomingFile) ?? {}) : []
   const site = p.yaml(join(o.policy, 'site.yml'), SiteFile)
+  const qualityDir = o.quality ?? join(o.root, 'quality')
+  const q = new Reader(qualityDir)
+  const revocations = q.yaml(join(qualityDir, 'revocations.yml'), RevocationsFile) ?? []
 
   return {
     descriptors: loadDescriptors(o.modules, r),
@@ -269,6 +280,7 @@ export function loadEmitData(o: LoadOptions): EmitData {
     cliSearchSince: site?.cliSearchSince ?? null,
     skills: loadSkills(o.skills),
     pinnedCoreVersion: pinnedCliVersion(o.root),
-    warnings: [...r.warnings, ...p.warnings.map((w) => `policy/${w}`)],
+    revocations,
+    warnings: [...r.warnings, ...p.warnings.map((w) => `policy/${w}`), ...q.warnings.map((w) => `quality/${w}`)],
   }
 }

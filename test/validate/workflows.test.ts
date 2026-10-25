@@ -207,11 +207,12 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(p?.with?.['fail-on-provenance-change']).toBe(true)
   })
 
-  it('watch: cron, push of modules/policy, dispatch; own group; data-branch.ts; hive; keepalive', () => {
+  it('watch: cron, push of modules/policy/quality, dispatch; own group; data-branch.ts; hive; keepalive', () => {
     const w = wf('watch.yml')
+    // quality/** (finding of 25 Oct): a revocation re-runs health, and pages.yml publishes after watch
     expect(w.on).toEqual({
       schedule: [{ cron: '17 */6 * * *' }],
-      push: { branches: ['main'], paths: ['modules/**', 'policy/**'] },
+      push: { branches: ['main'], paths: ['modules/**', 'policy/**', 'quality/**'] },
       workflow_dispatch: null,
     })
     expect(w.permissions).toEqual({ contents: 'write', actions: 'write' })

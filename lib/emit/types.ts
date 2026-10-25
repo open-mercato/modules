@@ -88,6 +88,11 @@ export interface EmitData {
   skills: SkillSource[]
   /** `@open-mercato/cli` pinned in package.json: core version when the data branch has no lines yet. */
   pinnedCoreVersion: string | null
+  /**
+   * quality/revocations.yml of the checkout: a seal revoked after the last `yarn om health` is dropped on the next
+   * publish (finding of 25 Oct). Absent: none.
+   */
+  revocations?: readonly { locator: string; version: string }[]
   warnings: string[]
 }
 

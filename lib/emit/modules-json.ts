@@ -21,7 +21,7 @@ import { receiptSource } from '../core/source.ts'
 import { sha256Hex } from '../sigil/sha256.ts'
 import { sigilFromCounts, sigilPhase } from '../sigil/sigil.ts'
 import { locatorToPath } from '../schema/locator.ts'
-import type { Facts, FitCell, Receipt } from '../schema/data/index.ts'
+import type { Facts, FitCell, Health, Receipt } from '../schema/data/index.ts'
 import type { BuiltInModule } from '../schema/published/builtin.ts'
 import type {
   CellSummary,
@@ -63,6 +63,23 @@ function previousFacts(all: Map<string, Facts>, version: string | null): Facts |
 }
 
 /** One context per valid descriptor, entries with slot conflicts filled. Invalid descriptors are left out. */
+/**
+ * The seal health granted, re-checked for what can change between two health runs (finding of 25 Oct: a revocation
+ * merged into quality/ was published with the old health until the next watch): the judged version, not expired on
+ * the build day, and not in quality/revocations.yml of the checkout.
+ */
+export function publishedQuality(
+  health: Health | null,
+  version: string | null,
+  locator: string,
+  revocations: readonly { locator: string; version: string }[],
+  now: string,
+): Health['quality'] {
+  const q = health && health.tier === 'verified' ? health.quality : null
+  if (!q || q.version !== version || q.until < now.slice(0, 10)) return null
+  return revocations.some((r) => r.locator === locator && r.version === q.version) ? null : q
+}
+
 export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: string) => void): EntryContext[] {
   const lines = data.lines?.lines ?? []
   const catalog: CatalogRef[] = data.descriptors
@@ -112,7 +129,7 @@ export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: 
       lines,
       claims: data.claims,
       // OM Quality: health validated the review against quality/ and revocations; it needs Verified (spec 6.3)
-      quality: health && health.tier === 'verified' ? health.quality : null,
+      quality: publishedQuality(health, judged.version, locator, data.revocations ?? [], opts.now),
       now: opts.now,
       previousFacts: previousFacts(allFacts, judged.version),
       presets: data.presets,
