@@ -1,9 +1,6 @@
 {
   "exchange rates": {
-    "modules": [
-      "@dainamite/billing",
-      "@dainamite/cpq"
-    ],
+    "modules": [],
     "builtIn": [
       "currencies"
     ]
@@ -87,8 +84,7 @@
   "subscriptions billing": {
     "modules": [
       "@dainamite/cpq-billing-connector",
-      "@dainamite/billing",
-      "@dainamite/cpq"
+      "@dainamite/billing"
     ],
     "builtIn": []
   },
@@ -125,17 +121,12 @@
   "health check": {
     "modules": [
       "@fullstackhouse/open-mercato-health",
-      "@open-mercato/checkout",
-      "@open-mercato/gateway-stripe"
+      "@open-mercato/checkout"
     ],
     "builtIn": []
   },
   "when a deal is won": {
-    "modules": [
-      "@open-mercato/channel-discord",
-      "@open-mercato/checkout",
-      "@open-mercato/content"
-    ],
+    "modules": [],
     "builtIn": [
       "customers"
     ]

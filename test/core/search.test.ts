@@ -83,6 +83,28 @@ describe('a swap of two letters (finding of 25 Oct)', () => {
   })
 })
 
+describe('weak hits are cut (finding of 25 Oct)', () => {
+  // the sandbox test: `when a deal is won` gave total 52 (documents, email channels, onboarding for `when` and a
+  // fuzzy `real`), `exchange rates` ranked scheduler, ai-assistant, web-research-serp and billing for `change`/`rated`
+  it.each([
+    ['when a deal is won', 'customers'],
+    ['exchange rates', 'currencies'],
+  ])('%s: only the built-in answers, no module', (query, builtIn) => {
+    const r = searchModules(corpusIdx, { query })
+    expect(r.builtIn[0]?.id).toBe(builtIn)
+    expect(r.results).toEqual([])
+    expect(r.total).toBe(0)
+  })
+
+  it('an OR hit with a word as typed stays, however low; `when` and `use` are stop words', () => {
+    const r = searchModules(corpusIdx, { query: 'durable jobs' })
+    expect(r.results.map((c) => c.locator)).toContain('npm:@open-mercato/scheduler')
+    // `Use when` opens every whenToUse: it matched every module
+    expect(searchModules(corpusIdx, { query: 'when' }).total).toBe(0)
+    expect(searchModules(corpusIdx, { query: 'use when' }).total).toBe(0)
+  })
+})
+
 describe('golden queries (Appendix B) on the 59 entries and 46 built-ins', () => {
   it.each(GOLDEN)('%s', (query, modules, builtIn) => {
     const r = searchModules(corpusIdx, { query })

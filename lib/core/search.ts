@@ -45,6 +45,13 @@ export const BOOST_VERIFIED = 0.15
 export const BOOST_OFFICIAL = 0.1
 /** Below this many AND hits, OR hits fill the list after them. */
 export const MIN_AND_RESULTS = 3
+/**
+ * An OR hit (one that misses some query words) that matched no query word as typed, only a fuzzy or prefix variant,
+ * and scores below this share of the best hit is noise and is dropped (finding of 25 Oct: `when a deal is won`
+ * listed 52 modules for a fuzzy `real`, `exchange rates` five for `change` and `rated`). AND hits, which match every
+ * word, are never cut.
+ */
+export const WEAK_HIT_RATIO = 0.2
 
 // Words that carry no meaning in a module query. Dropped from documents and queries alike, so an AND query
 // such as "web search for agents" does not need the word "for" in a summary.
@@ -82,6 +89,22 @@ const STOPWORDS = new Set([
   'with',
   'you',
   'your',
+  // question words of a query in plain language, and the `Use when` every whenToUse starts with (finding of 25 Oct:
+  // `when` matched every module)
+  'can',
+  'do',
+  'does',
+  'how',
+  'need',
+  'needs',
+  'use',
+  'used',
+  'uses',
+  'want',
+  'wants',
+  'what',
+  'when',
+  'which',
 ])
 
 /**
@@ -574,7 +597,8 @@ export function swapVariants(query: string): string[] {
   if (words.length > 6) return []
   const out: string[] = []
   words.forEach((w, i) => {
-    if (w.length < 3 || w.length > 24 || !/^[a-z0-9]+$/.test(w)) return
+    // a stop word is not a typo to undo (`use when` read as `ues when` and found channel-ses)
+    if (w.length < 3 || w.length > 24 || !/^[a-z0-9]+$/.test(w) || processTerm(w) === null) return
     for (let j = 0; j < w.length - 1; j++) {
       if (w[j] === w[j + 1]) continue
       const swapped = `${w.slice(0, j)}${w[j + 1]}${w[j]}${w.slice(j + 2)}`
@@ -658,10 +682,17 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
   // AND first; nothing at all: OR (spec 8.2). Fewer than MIN_AND_RESULTS modules: OR-only modules are appended
   // after the AND ones, so a two-word query still shows close matches.
   const none = (x: ReturnType<typeof run>): boolean => x.mods.length === 0 && x.bis.length === 0
+  const topOf = (x: ReturnType<typeof run>): number => Math.max(x.mods[0]?.r.score ?? 0, x.bis[0]?.r.score ?? 0)
+  // weak OR hits (no word as typed, below WEAK_HIT_RATIO of the best score), modules and built-ins alike, are dropped
+  const typed = new Set(tokenize(input.query).filter((t) => processTerm(t) !== null))
+  const strong = <T extends { r: SearchResult }>(xs: readonly T[], top: number): T[] =>
+    xs.filter((x) => x.r.score >= WEAK_HIT_RATIO * top || Object.keys(x.r.match).some((t) => typed.has(t)))
   let found = run('AND')
   let didYouMean: string | null = null
   if (none(found)) {
-    found = run('OR')
+    const or = run('OR')
+    const top = topOf(or)
+    found = { mods: strong(or.mods, top), bis: strong(or.bis, top) }
     // still nothing: one swapped pair of letters (`stirpe`), the variant with the best hit wins
     if (none(found)) {
       let best: { v: string; f: typeof found; top: number } | null = null
@@ -677,8 +708,9 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
     }
   } else if (found.mods.length < MIN_AND_RESULTS && tokenize(input.query).filter((t) => processTerm(t)).length > 1) {
     const or = run('OR')
+    const top = Math.max(topOf(found), topOf(or))
     const seen = new Set(found.mods.map((x) => x.m.locator))
-    found = { mods: [...found.mods, ...or.mods.filter((x) => !seen.has(x.m.locator))], bis: found.bis }
+    found = { mods: [...found.mods, ...strong(or.mods, top).filter((x) => !seen.has(x.m.locator))], bis: found.bis }
   }
 
   const best = found.mods[0]?.r.score ?? 0
