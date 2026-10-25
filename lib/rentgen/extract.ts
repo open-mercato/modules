@@ -25,7 +25,8 @@ import { anatomyStatus, glyphOf } from './diff.ts'
 import { scanEnv } from './env.ts'
 import { hostDeclared, scanHosts } from './hosts.ts'
 import { ImportCollector } from './imports.ts'
-import { readIntegration, type IntegrationRead } from './integration.ts'
+import { scanEntityTables, scanMigrationTables, type TableRead } from './entities.ts'
+import { injectionWidgets, readIntegration, type IntegrationRead } from './integration.ts'
 import { readGate, resolveKind } from './kind.ts'
 import { licenseFileOf, resolveLicense } from './license.ts'
 import { finding, lintModule, lintPackage } from './lint.ts'
@@ -44,8 +45,11 @@ import {
   type UnpackReport,
 } from './unpack.ts'
 
-/** Bump when Rentgen's own readers change what they write (cache key with the engine version). */
-export const RENTGEN_VERSION = 1
+/**
+ * Bump when Rentgen's own readers change what they write (cache key with the engine version). 2 (25 Oct): tables, the
+ * bundle's credentials and injection widgets read through consts of the package, env names in key lists.
+ */
+export const RENTGEN_VERSION = 2
 
 /** Official module package by name (spec 6.1: `npm:@open-mercato/*`). */
 export function isOfficialName(name: string): boolean {
@@ -180,6 +184,10 @@ export interface ModuleExtras {
   env: { name: string; src: Src }[]
   hosts: { host: string; src: Src; confidence: 'high' | 'low' }[]
   imports: ModuleFacts['omImports']
+  /** Tables of `@Entity` classes and migrations the engine did not list (raw, sanitized here); absent: none read. */
+  tables?: TableRead[]
+  /** Widgets of `widgets/injection-table.ts`, computed spot keys included; absent: not read. */
+  injectionWidgets?: number
 }
 
 export interface MappedModule {
@@ -211,20 +219,22 @@ export function mapModule(
     .list('requires entry', requiresRaw, indexSrc)
     .map((r) => ({ raw: r, resolvesTo: coreIds.has(r) ? `core:${r}` : null }))
 
-  const entities = cap(
-    (raw?.entities ?? [])
-      .filter((e) => san.ok('entity ID', e.id))
-      .map((e) => ({
-        id: e.id,
-        table: san.ok('table name', e.table) ? e.table : null,
-        src: srcAt(
-          root,
-          sources.get(`entity|${e.id}`),
-          e.class ? new RegExp(`class\\s+${escapeRe(e.class)}\\b`) : null,
-        ),
-      })),
-    200,
-  )
+  const engineEntities = (raw?.entities ?? [])
+    .filter((e) => san.ok('entity ID', e.id))
+    .map((e) => ({
+      id: e.id,
+      table: san.ok('table name', e.table) ? e.table : null,
+      src: srcAt(root, sources.get(`entity|${e.id}`), e.class ? new RegExp(`class\\s+${escapeRe(e.class)}\\b`) : null),
+    }))
+  // tables the engine leaves out: a table name in a const, a table only a migration creates (finding of 25 Oct)
+  for (const t of x.tables ?? []) {
+    if (engineEntities.some((e) => e.table === t.table || (e.id === t.id && e.table !== null))) continue
+    if (!san.ok('entity ID', t.id, t.src) || !san.ok('table name', t.table, t.src)) continue
+    const same = engineEntities.find((e) => e.id === t.id)
+    if (same) same.table = t.table
+    else engineEntities.push({ id: t.id, table: t.table, src: srcAt(root, t.src.file, null, t.src.line) })
+  }
+  const entities = cap(engineEntities, 200)
 
   const routes = x.routes?.routes ?? []
   const httpRoutes: ModuleFacts['http']['routes'] = []
@@ -384,7 +394,8 @@ export function mapModule(
     ui: {
       backendPages,
       frontendPages,
-      widgets: contributions.filter((c) => c.kind === 'widget').length,
+      // the injection table counts widgets under a computed spot key too (gateway-stripe, channel-discord)
+      widgets: Math.max(contributions.filter((c) => c.kind === 'widget').length, x.injectionWidgets ?? 0),
       extensionHosts: raw?.extensionSurfaces?.hosts.length ?? 0,
     },
     background: { workers, cli },
@@ -541,11 +552,26 @@ export async function scanPackageDir(pkgRoot: string, ctx: ScanContext): Promise
     const routes = scanRoutes(pkgRoot, moduleRoot, id)
     diagnostics.push(...routes.diagnostics)
     const integration = readIntegration(pkgRoot, moduleRoot)
+    const entityTables = scanEntityTables(pkgRoot, moduleRoot, id)
+    const tables = [
+      ...entityTables,
+      ...scanMigrationTables(pkgRoot, moduleRoot, id).filter((t) => !entityTables.some((e) => e.table === t.table)),
+    ]
     const imports = new ImportCollector().scanFiles(files).merge(sharedImports).toJSON()
     const m = mapModule(
       id,
       raw,
-      { pkgRoot, moduleRoot, routes, integration, env: scanEnv(pkgRoot, all), hosts: scanHosts(pkgRoot, all), imports },
+      {
+        pkgRoot,
+        moduleRoot,
+        routes,
+        integration,
+        env: scanEnv(pkgRoot, all),
+        hosts: scanHosts(pkgRoot, all),
+        imports,
+        tables,
+        injectionWidgets: injectionWidgets(moduleRoot),
+      },
       coreIds,
       ctx.descriptor?.declares?.hosts ?? null,
     )

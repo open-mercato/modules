@@ -324,3 +324,64 @@ export function exportsOf(sf: ts.SourceFile): ExportInfo {
   }
   return info
 }
+
+// ---------------------------------------------------------------- consts of the same package
+
+/** A literal value as an expression node, so `evalLiteral` reads an imported const like a local one. */
+function litNode(v: Lit): ts.Expression | null {
+  const f = ts.factory
+  if (isUnknown(v)) return null
+  if (v === null) return f.createNull()
+  if (typeof v === 'string') return f.createStringLiteral(v)
+  if (typeof v === 'number')
+    return v < 0
+      ? f.createPrefixUnaryExpression(ts.SyntaxKind.MinusToken, f.createNumericLiteral(-v))
+      : f.createNumericLiteral(v)
+  if (typeof v === 'boolean') return v ? f.createTrue() : f.createFalse()
+  // an unknown item stays unknown: an identifier no const map holds
+  if (Array.isArray(v))
+    return f.createArrayLiteralExpression(v.map((x) => litNode(x) ?? f.createIdentifier('__unknown')))
+  return f.createObjectLiteralExpression(
+    Object.entries(v).flatMap(([k, x]) => {
+      const n = litNode(x)
+      return n ? [f.createPropertyAssignment(f.createStringLiteral(k), n)] : []
+    }),
+  )
+}
+
+/** Static value of a name another file of the package exports (`export const X = ...`, one `export { X } from`). */
+function exportedValue(file: string, name: string, depth: number): Lit | undefined {
+  const sf = parseSource(file)
+  if (!sf) return undefined
+  const info = exportsOf(sf)
+  const init = info.initializers.get(name)
+  if (init) return evalLiteral(init, sf, moduleConsts(sf, file, depth))
+  const from = info.from.get(name)
+  const next = from ? resolveRelative(file, from.spec) : null
+  return from && next && depth < 3 ? exportedValue(next, from.name, depth + 1) : undefined
+}
+
+/**
+ * `fileConsts` plus the consts the file imports from other files of the same package (`import { INVENTORY_TABLE } from
+ * '../lib/constants'`), evaluated in their own file (finding of 25 Oct: sync-shopify declares its table and its bundle
+ * id through constants, and the anatomy said no tables and no credentials). Package imports stay unknown.
+ */
+export function moduleConsts(sf: ts.SourceFile, file: string, depth = 0): Map<string, ts.Expression> {
+  const out = fileConsts(sf)
+  if (depth > 2) return out
+  for (const st of sf.statements) {
+    if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue
+    const clause = st.importClause
+    const named = clause?.namedBindings
+    if (!clause || clause.isTypeOnly || !named || !ts.isNamedImports(named)) continue
+    const target = resolveRelative(file, st.moduleSpecifier.text)
+    if (!target) continue
+    for (const el of named.elements) {
+      if (el.isTypeOnly || out.has(el.name.text)) continue
+      const v = exportedValue(target, (el.propertyName ?? el.name).text, depth + 1)
+      const n = v === undefined ? null : litNode(v)
+      if (n) out.set(el.name.text, n)
+    }
+  }
+  return out
+}

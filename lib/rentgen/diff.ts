@@ -71,13 +71,14 @@ export function anatomyCounts(modules: readonly ModuleFacts[], routesMeasured = 
 
 /**
  * SIG-ANA (spec 6.2): `none` without facts, `partial` when no src or fewer than 3 non-zero organs,
- * `full` with facts and `authResolved >= 0.9`. `hidden` (enterprise) is decided by the caller,
+ * `full` with facts and `authResolved >= 0.9`. An integration.ts Rentgen could not read is `partial` too (finding of 25
+ * Oct: sync-shopify read as full while its credentials were missing). `hidden` (enterprise) is decided by the caller,
  * which knows the entry; Rentgen withholds enterprise anatomy and returns `none` for it.
  */
 export function anatomyStatus(facts: Facts | null): 'full' | 'partial' | 'none' {
   if (!facts || facts.modules.length === 0) return 'none'
   const nonZero = Math.max(...facts.modules.map((m) => [...m.glyph].filter((d) => d !== '0').length))
-  if (nonZero < 3) return 'partial'
+  if (nonZero < 3 || facts.coverage.integrationTs === 'unparsed') return 'partial'
   return facts.coverage.routesAuthResolved >= 0.9 ? 'full' : 'partial'
 }
 

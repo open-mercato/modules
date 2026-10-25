@@ -17,7 +17,21 @@ const isProcessEnv = (n: ts.Node): boolean =>
   ((ts.isIdentifier(n.expression) && n.expression.text === 'process') ||
     (ts.isMetaProperty(n.expression) && n.expression.name.text === 'meta'))
 
-/** Raw names (unvalidated; the caller sanitizes) in the given files, first occurrence wins. */
+const ENV_NAME_RE = /^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/
+
+/** A function whose parameter is the environment: `env: NodeJS.ProcessEnv` or `env = process.env`. */
+function takesEnv(n: ts.Node, sf: ts.SourceFile): boolean {
+  if (!ts.isFunctionLike(n)) return false
+  return n.parameters.some(
+    (p) => (p.type && /\bProcessEnv\b/.test(p.type.getText(sf))) || (p.initializer && isProcessEnv(p.initializer)),
+  )
+}
+
+/**
+ * Raw names (unvalidated; the caller sanitizes) in the given files, first occurrence wins. Besides direct reads, the
+ * env names a function that takes the environment lists in array literals (`readEnvValue(env, ['OM_X', 'OM_Y'])`,
+ * finding of 25 Oct: gateway-stripe read OM_INTEGRATION_STRIPE_* that way and the anatomy said no env).
+ */
 export function scanEnv(pkgRoot: string, files: readonly string[]): EnvRead[] {
   const out: EnvRead[] = []
   const seen = new Set<string>()
@@ -29,7 +43,14 @@ export function scanEnv(pkgRoot: string, files: readonly string[]): EnvRead[] {
   for (const file of files) {
     const sf = parseSource(file)
     if (!sf) continue
+    const keyLists = (n: ts.Node): void => {
+      if (ts.isArrayLiteralExpression(n))
+        for (const el of n.elements)
+          if (ts.isStringLiteralLike(el) && ENV_NAME_RE.test(el.text)) add(el.text, sf, el, file)
+      ts.forEachChild(n, keyLists)
+    }
     const visit = (n: ts.Node): void => {
+      if (takesEnv(n, sf)) keyLists(n)
       if (ts.isPropertyAccessExpression(n) && isProcessEnv(n.expression)) add(n.name.text, sf, n, file)
       else if (
         ts.isElementAccessExpression(n) &&

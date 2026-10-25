@@ -47,13 +47,17 @@ export function unionGlyph(facts: Facts | null): string {
   return out.join('')
 }
 
-/** SIG-ANA. */
+/**
+ * SIG-ANA. An integration.ts the catalog could not read keeps it `partial` (finding of 25 Oct: sync-shopify read as
+ * full while its credentials and its table were missing).
+ */
 export function anatomySignal(facts: Facts | null, enterprise: boolean): Signals['anatomy'] {
   if (enterprise) return 'hidden'
   if (!facts) return 'none'
   const organs = [...unionGlyph(facts)].filter((c) => c !== '0').length
   const src = facts.gate.modules.some((m) => m.src)
-  return organs >= 3 && src && facts.coverage.routesAuthResolved >= 0.9 ? 'full' : 'partial'
+  const read = facts.coverage.integrationTs !== 'unparsed'
+  return organs >= 3 && src && read && facts.coverage.routesAuthResolved >= 0.9 ? 'full' : 'partial'
 }
 
 /** SIG-SUP. */

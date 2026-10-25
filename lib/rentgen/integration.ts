@@ -3,7 +3,7 @@
 // fields (names, types and `required` only, never values or labels).
 import { join } from 'node:path'
 import { ts } from 'ts-morph'
-import { evalLiteral, fileConsts, isFile, isLitObject, lineOf, parseSource, relPath, type LitObject } from './ast.ts'
+import { evalLiteral, isFile, isLitObject, lineOf, moduleConsts, parseSource, relPath, type LitObject } from './ast.ts'
 
 export interface CredentialField {
   key: string
@@ -48,23 +48,24 @@ export function readIntegration(pkgRoot: string, moduleRoot: string): Integratio
   if (!file) return { status: 'absent', definitions: [] }
   const sf = parseSource(file)
   if (!sf) return { status: 'unparsed', definitions: [] }
-  const consts = fileConsts(sf)
+  const consts = moduleConsts(sf, file)
   const defs: IntegrationDef[] = []
   const seen = new Set<string>()
   const visit = (node: ts.Node): void => {
     if (ts.isObjectLiteralExpression(node)) {
       const v = evalLiteral(node, sf, consts)
-      if (
+      // an IntegrationDefinition, or an IntegrationBundle that holds the credentials its integrations share
+      // (sync-shopify: the definitions come from a factory function, the bundle is a literal)
+      const definition =
         isLitObject(v) &&
-        typeof v.id === 'string' &&
         typeof v.title === 'string' &&
-        (typeof v.category === 'string' || typeof v.hub === 'string' || typeof v.providerKey === 'string') &&
-        !seen.has(v.id)
-      ) {
+        (typeof v.category === 'string' || typeof v.hub === 'string' || typeof v.providerKey === 'string')
+      const bundle = isLitObject(v) && credentialsOf(v).length > 0
+      if (isLitObject(v) && typeof v.id === 'string' && (definition || bundle) && !seen.has(v.id)) {
         seen.add(v.id)
         defs.push({
           id: v.id,
-          title: str(v.title),
+          title: typeof v.title === 'string' ? str(v.title) : null,
           category: str(v.category),
           hub: str(v.hub),
           providerKey: str(v.providerKey),
@@ -80,4 +81,23 @@ export function readIntegration(pkgRoot: string, moduleRoot: string): Integratio
   }
   visit(sf)
   return { status: defs.length > 0 ? 'expanded' : 'unparsed', definitions: defs }
+}
+
+/**
+ * Widgets of `<moduleRoot>/widgets/injection-table.ts`: entries with a `widgetId` under any spot key, a computed one
+ * (`[gatewayStripeDetailWidgetSpotId]`) included, which the engine cannot resolve and leaves out. 0 without the file.
+ */
+export function injectionWidgets(moduleRoot: string): number {
+  const file = ['injection-table.ts', 'injection-table.tsx'].map((n) => join(moduleRoot, 'widgets', n)).find(isFile)
+  const sf = file ? parseSource(file) : null
+  if (!sf) return 0
+  const ids = new Set<string>()
+  const visit = (node: ts.Node): void => {
+    if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name) && node.name.text === 'widgetId') {
+      if (ts.isStringLiteralLike(node.initializer)) ids.add(node.initializer.text)
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(sf)
+  return ids.size
 }
