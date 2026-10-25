@@ -966,11 +966,11 @@ export const SEED: readonly SeedEntry[] = [
       npm: '@open-mercato/carrier-inpost',
       category: 'warehouse-shipping',
       tags: ['shipping', 'parcel-lockers', 'poland'],
-      summary: 'InPost shipping carrier integration. Only a canary build from March 2026 is published.',
+      summary: 'InPost shipping carrier integration. npm has canary and develop builds only, no stable release yet.',
       whenToUse: 'Use when parcels ship through InPost, once Open Mercato publishes a stable release of this module.',
       providers: [{ name: 'inpost', label: 'InPost' }],
       status: 'hold',
-      reason: 'Returning to the monorepo (open-mercato#7081). Only a canary is published.',
+      reason: 'Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet.',
     },
   },
   {

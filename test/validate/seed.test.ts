@@ -246,8 +246,9 @@ describe('modules/** (spec 11.1)', () => {
       supersededBy: 'core:forms',
       reason: 'Moved into Open Mercato core (open-mercato#6770).',
     })
+    // #7081 was merged on 24 Oct; npm has canary and develop builds, no stable release (finding of 25 Oct)
     expect(get('npm:@open-mercato/carrier-inpost').reason).toBe(
-      'Returning to the monorepo (open-mercato#7081). Only a canary is published.',
+      'Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet.',
     )
     for (const n of ['gateway-payu', 'gateway-przelewy24', 'pay-by-links'])
       expect(get(`npm:@open-mercato/${n}`).reason).toBe('Orphaned canary from March 2026. No source in any repository.')
