@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import type { CommandContext } from '../cli.ts'
+import { libraryPeers, withInstalledPeers, type CatalogRef } from '../core/entry.ts'
 import { evaluateEntry, judgedFacts, presetBackendRoutes, type HealthInput } from '../core/health.ts'
 import { linkNightBaselines } from '../core/lines.ts'
 import { Descriptor } from '../schema/descriptor.ts'
@@ -123,6 +124,16 @@ export default function health(ctx: CommandContext): number {
 
   const files = walk(opts.modules).filter((f) => f.endsWith('.yml'))
   if (files.length === 0) console.error(`om health: no descriptors in ${opts.modules}.`)
+  // the catalog libraries a package peers on (`withInstalledPeers`, finding of 25 Oct), as the emitter reads them
+  const catalog: CatalogRef[] = []
+  for (const file of files) {
+    try {
+      const d = Descriptor.safeParse(parseYaml(readFileSync(file, 'utf8')))
+      if (d.success) catalog.push({ locator: descriptorLocator(d.data), npm: d.data.npm ?? null, kind: d.data.kind })
+    } catch {
+      // the loop below reports it
+    }
+  }
   const summary: { locator: string; tier: string | null; state: string; written: boolean }[] = []
   const changes: Change[] = []
   let failures = 0
@@ -157,7 +168,10 @@ export default function health(ctx: CommandContext): number {
     const sync = readJson(join(data, 'sync', `${path}.json`), SyncRecord)
     const n = sync?.npm
     // a module run collected before its baseline run of the same night keeps `baseline: null` (review r3)
-    const receipts = linkNightBaselines(readJsonl(join(data, 'receipts', `${path}.jsonl`), Receipt), baselines)
+    const receipts = withInstalledPeers(
+      linkNightBaselines(readJsonl(join(data, 'receipts', `${path}.jsonl`), Receipt), baselines),
+      libraryPeers(locator, sync?.npm?.peerDependencies, catalog),
+    )
     // Fit of any version on a line: each line is judged on its own install version (E5)
     const fitOf = (v: string, lineKey: string): FitCell | null => {
       const l = lines.lines.find((x) => x.key === lineKey)

@@ -4,6 +4,7 @@
 import type { CategoryId, Wedge } from '../schema/common.ts'
 import type { Descriptor } from '../schema/descriptor.ts'
 import type { Facts, ModuleFacts } from '../schema/data/facts.ts'
+import type { Receipt } from '../schema/data/receipt.ts'
 import type { Presets } from '../schema/data/lines.ts'
 import type { Stats } from '../schema/data/sync.ts'
 import type { BuiltInModule } from '../schema/published/builtin.ts'
@@ -256,6 +257,42 @@ export function catalogPeerRequires(
     if (hit) out.push({ raw: name, resolvesTo: hit.locator })
   }
   return out
+}
+
+/** npm names of the catalog libraries a package peers on: the cells install them first (`lib:<npm>@<v>`, spec 5.3). */
+export function libraryPeers(
+  self: string,
+  peers: Readonly<Record<string, string>> | null | undefined,
+  catalog: readonly CatalogRef[] | undefined,
+): string[] {
+  return catalogPeerRequires(self, peers, catalog)
+    .filter((r) => catalog?.find((c) => c.locator === r.resolvesTo)?.kind === 'library')
+    .map((r) => r.raw)
+}
+
+/**
+ * A broken receipt of a cell that did not install a catalog library the package peers on (finding of 25 Oct: the
+ * receipts of terminal-tracking before cbf74c7 never installed @freighttech/ui, so every cell failed at TS2307 on
+ * `@freighttech/ui/...` imports): the test was wrong, not the module. It reads as `harness-red` (`our test app
+ * failed`, never the module's fault) until a receipt that installed the library judges it, so the page, the policy
+ * and the counts never call the module broken for it. Only libraries: a cell always adds them (`yarn add`), while a
+ * module peer a new app registers is left out on purpose (`resolveRequires`).
+ */
+export function withInstalledPeers<R extends Pick<Receipt, 'requiresInstalled' | 'result' | 'transition'>>(
+  receipts: readonly R[],
+  libraries: readonly string[],
+): R[] {
+  if (libraries.length === 0) return [...receipts]
+  return receipts.map((r) => {
+    if (r.result.status !== 'broken') return r
+    const installed = r.requiresInstalled.map((s) => s.replace(/^lib:/, '').replace(/(.)@[^@/]+$/, '$1'))
+    if (libraries.every((name) => installed.includes(name))) return r
+    return {
+      ...r,
+      result: { ...r.result, status: 'harness-red', classification: 'harness-red' },
+      transition: { ...r.transition, to: 'harness-red', confirmed: false },
+    }
+  })
 }
 
 /** One `modules.json` entry. `slotConflicts` is filled by `withSlotConflicts` over the whole list. */

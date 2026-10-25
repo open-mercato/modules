@@ -3,6 +3,7 @@
 // is returned (a schema failure throws: the build must not publish an invalid contract).
 import type { z } from 'zod'
 import { latestLine, presetsOrFallback, type LineInfo } from '../core/lines.ts'
+import { libraryPeers, withInstalledPeers, type CatalogRef } from '../core/entry.ts'
 import { coreLineOf, planInstall, type PlanContext } from '../core/plan.ts'
 import { locatorToPath } from '../schema/locator.ts'
 import { Facts, Receipt, type Receipt as ReceiptT } from '../schema/data/index.ts'
@@ -92,8 +93,27 @@ function publicData(data: EmitData, site: string): EmitData {
   }
 }
 
+/**
+ * Receipts read against the catalog libraries each package peers on (`withInstalledPeers`, finding of 25 Oct): a cell
+ * that never installed such a library judged the test, not the module.
+ */
+function withPeerLibraries(data: EmitData): EmitData {
+  const catalog: CatalogRef[] = data.descriptors
+    .filter((d) => d.descriptor)
+    .map((d) => ({ locator: d.locator, npm: d.descriptor!.npm ?? null, kind: d.descriptor!.kind }))
+  return {
+    ...data,
+    receipts: new Map(
+      [...data.receipts].map(([k, list]) => [
+        k,
+        withInstalledPeers(list, libraryPeers(k, data.sync.get(k)?.npm?.peerDependencies, catalog)),
+      ]),
+    ),
+  }
+}
+
 export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
-  const pub0 = publicData(input, opts.site)
+  const pub0 = withPeerLibraries(publicData(input, opts.site))
   // day 0 (review r9): before the first night writes data/presets.json, a new app still ships events and search
   const data: EmitData = pub0.lines
     ? { ...pub0, presets: presetsOrFallback(pub0.presets, lineList(pub0.lines), pub0.lines.resolvedAt) }
