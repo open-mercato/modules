@@ -5,12 +5,14 @@ import {
   loadSearchIndex,
   relevanceCompare,
   SEARCH_DEFAULTS,
+  searchAll,
   searchModules,
   swapVariants,
   tokenize,
   type SearchIndexData,
 } from '../../lib/core/search.ts'
 import { SearchModulesInput, SearchModulesOutput } from '../../lib/schema/tools.ts'
+import { DEFAULTS, passes, toRegistryEntry } from '../../site/src/islands/Registry.tsx'
 import { corpusBuiltIn, corpusEntries, fixtureBuiltIn, fixtureEntries, LOC, loadFixture, NOW, SITE } from './helpers.ts'
 
 const fx = loadFixture()
@@ -342,5 +344,38 @@ describe('search behaviour (8.2)', () => {
       includeExamples: parsed.includeExamples,
       limit: parsed.limit,
     })
+  })
+})
+
+describe('the registry page searches without the cap of the tools (finding of 25 Oct)', () => {
+  it('searchAll returns every match, searchModules still at most 20', () => {
+    const all = searchAll(corpusIdx, { query: 'open mercato' })
+    expect(all.results.length).toBeGreaterThan(20)
+    expect(all.results.length).toBe(all.total)
+    const capped = searchModules(corpusIdx, { query: 'open mercato', limit: 50 })
+    expect(capped.results).toHaveLength(20)
+    expect(capped.total).toBe(all.total)
+    // the same ranking: the capped list is the head of the full one
+    expect(capped.results.map((r) => r.locator)).toEqual(all.results.slice(0, 20).map((r) => r.locator))
+  })
+
+  it('a level filter applied after the search keeps every matching entry of that level', () => {
+    const entries = corpusEntries()
+    const rows = new Map(entries.map((e) => [e.locator, toRegistryEntry(e, lines)]))
+    const listed = { ...DEFAULTS, tier: ['listed'] }
+    const want = searchAll(corpusIdx, { query: 'open mercato', includeBuiltIn: false, kind: ['module', 'provider'] })
+      .results.map((r) => rows.get(r.locator)!)
+      .filter((e) => passes(e, listed))
+    expect(want.length).toBeGreaterThan(0)
+    // what the page showed before: the top 20, then the filter
+    const before = searchModules(corpusIdx, {
+      query: 'open mercato',
+      limit: 20,
+      includeBuiltIn: false,
+      kind: ['module', 'provider'],
+    })
+      .results.map((r) => rows.get(r.locator)!)
+      .filter((e) => passes(e, listed))
+    expect(before.length).toBeLessThan(want.length)
   })
 })

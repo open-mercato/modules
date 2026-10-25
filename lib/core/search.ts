@@ -620,13 +620,29 @@ export const SEARCH_DEFAULTS = { verifiedOnly: false, includeBuiltIn: true, incl
  * this module so the site's search chunk does not carry it.
  */
 export function searchModules(searcher: Searcher, rawInput: SearchModulesInput): SearchModulesOutput {
+  return search(searcher, rawInput, SEARCH_MAX_LIMIT)
+}
+
+/** The cap of `limit` in the tool contract (tools@1 SearchModulesInput). */
+export const SEARCH_MAX_LIMIT = 20
+
+/**
+ * The registry page's search: the same ranking as `search_modules` with every match returned (finding of 25 Oct). The
+ * page holds the whole index and applies level, license, line and held after the search, so the cap of 20 hid the
+ * matching entries of a level ranked below it (`module` + Listed showed none of 17). The tools keep the cap.
+ */
+export function searchAll(searcher: Searcher, rawInput: Omit<SearchModulesInput, 'limit'>): SearchModulesOutput {
+  return search(searcher, { ...rawInput, limit: Number.POSITIVE_INFINITY }, Number.POSITIVE_INFINITY)
+}
+
+function search(searcher: Searcher, rawInput: SearchModulesInput, maxLimit: number): SearchModulesOutput {
   const input = {
     ...rawInput,
     query: rawInput.query ?? '',
     verifiedOnly: rawInput.verifiedOnly ?? SEARCH_DEFAULTS.verifiedOnly,
     includeBuiltIn: rawInput.includeBuiltIn ?? SEARCH_DEFAULTS.includeBuiltIn,
     includeExamples: rawInput.includeExamples ?? SEARCH_DEFAULTS.includeExamples,
-    limit: Math.min(20, Math.max(1, Math.floor(rawInput.limit ?? SEARCH_DEFAULTS.limit))),
+    limit: Math.min(maxLimit, Math.max(1, Math.floor(rawInput.limit ?? SEARCH_DEFAULTS.limit))),
   }
   const { data } = searcher
   const latest = latestLine(data.lines)?.key ?? null

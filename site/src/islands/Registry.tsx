@@ -157,7 +157,7 @@ const isExample = (e: RegistryEntry): boolean => e.tags.includes('example')
 
 type Sort = 'relevance' | 'verified' | 'published' | 'name'
 type KindFilter = 'modules' | 'tools'
-interface Filters {
+export interface Filters {
   q: string
   cat: string
   type: string[]
@@ -169,7 +169,7 @@ interface Filters {
   examples: boolean
   sort: Sort
 }
-const DEFAULTS: Filters = {
+export const DEFAULTS: Filters = {
   q: '',
   cat: '',
   type: [],
@@ -262,7 +262,7 @@ const verifiedOn = (e: RegistryEntry, line: string): boolean =>
   e.compat.verifiedOn.includes(line) || !!e.version.recommended[line]
 
 /** Facet tests; `skip` leaves one facet out (its own counts). */
-function passes(e: RegistryEntry, f: Filters, skip?: keyof Filters): boolean {
+export function passes(e: RegistryEntry, f: Filters, skip?: keyof Filters): boolean {
   if (isHeld(e) && !f.held) return false
   if (!e.listed && !isHeld(e)) return false
   if (isExample(e) && !f.examples) return false
@@ -453,15 +453,14 @@ export default function Registry({
     setSearch((s) => ({ ...s, q, status: s.status === 'ready' ? 'ready' : 'loading' }))
     loadSearcher(indexUrl)
       .then(async (searcher) => {
-        const { searchModules, tokenize, processTerm } = await import('../../../lib/core/search.ts')
-        // filters the search contract knows go into the query, so a match outside the top 20 is not lost to
-        // a filter applied afterwards; level, license, line and held stay local
+        const { searchAll, tokenize, processTerm } = await import('../../../lib/core/search.ts')
+        // every match, not the tools' top 20 (finding of 25 Oct): level, license, line and held are applied here
+        // afterwards, and a match ranked past 20 was lost to them; the filters the search knows still go in
         const kinds = (KINDS.find((k) => k.id === f.kind)?.kinds ?? []) as (
           'module' | 'provider' | 'tool' | 'library'
         )[]
-        const out = searchModules(searcher, {
+        const out = searchAll(searcher, {
           query: q,
-          limit: 20,
           includeExamples: f.examples,
           ...(f.on ? { omVersion: f.on } : {}),
           ...(f.cat ? { category: f.cat as ModuleCard['category'] } : {}),
@@ -469,9 +468,8 @@ export default function Registry({
           kind: [...kinds, 'built-in'],
         })
         // the same query over every kind, category and type: what the facet counts show while searching
-        const pool = searchModules(searcher, {
+        const pool = searchAll(searcher, {
           query: q,
-          limit: 20,
           includeExamples: true,
           includeBuiltIn: false,
           kind: ['module', 'provider', 'tool', 'library'],
