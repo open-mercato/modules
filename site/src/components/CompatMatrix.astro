@@ -1,0 +1,887 @@
+---
+// Compatibility matrix (spec 7.7 D): one row per module, one 28 px cell per line, a pinned "Open Mercato itself"
+// row. Cells are native popovers (Popover API); the three switches are CSS-only (:has), so the page needs no JS.
+// Two layers per cell (review r1): the receipt in the middle (a filled square only for a real result, a quiet dot
+// while queued, a dash when skipped) and the static fit as an outline with a corner glyph, never a fill, so a
+// static finding can never pass for an install result.
+import type { CompatIndex, IsolationCell } from '../../../lib/schema/index.ts'
+import { renderSigil } from '../../../lib/sigil/sigil.ts'
+import { wbrHtml } from '../lib/wrap.ts'
+import type { SigilKind } from '../../../lib/sigil/sigil.ts'
+import { day } from '../lib/format.ts'
+import { ISOLATION_MARK, STATUS, isolationDot, listAnd, markOf, orderLines } from '../lib/status.ts'
+import {
+  FIT_GLYPH,
+  FIT_LEGEND,
+  STATE_LEGEND,
+  cellAria,
+  cellPeers,
+  cellVersion,
+  fitByDefault,
+  fitOf,
+  isDayZero,
+  metaLine,
+  shortV,
+  stateSentence,
+  type CellText,
+} from '../lib/compat-cells.ts'
+import { Square } from '../lib/ui.tsx'
+import { href, modulePage, receiptPage } from '../lib/url.ts'
+import type { Others } from '../lib/status.ts'
+import { isolationText, otherVersionText } from '../../../lib/core/policy.ts'
+import { whyHtml } from '../lib/receipts.ts'
+
+interface Props {
+  compat: CompatIndex
+  /** Sigil data per locator (from modules.json). */
+  sigils?: Record<string, { glyph: string; phase: number; kind: SigilKind; enterprise: boolean; publicRoutes: boolean }>
+  /** First error sentence per receipt id. */
+  errors?: Record<string, string>
+  /** Prefix for element ids (several matrices on one page). */
+  idPrefix?: string
+  /** Queue sentence per line key, e.g. `Queued for tonight's run (02:17 UTC).` */
+  queued?: Record<string, string>
+  /**
+   * Queue sentence per line key of a cell whose new app already registers the package (`inPresets`): weekly on next
+   * (`Queued for Sunday's run (02:17 UTC).`, lib/core/lines.ts `cellCadence`, review of 24 Oct).
+   */
+  queuedInPreset?: Record<string, string>
+  /** Day 0: one sentence for every line by its own cadence (`Queued: 0.9 and next tonight (02:17 UTC), 0.8 on Sunday.`). */
+  queuedAll?: string
+  /** Why a module is skipped, per locator (a sentence). */
+  skipReasons?: Record<string, string>
+  /** Print the peer sentence above the switches (the /compat page prints it as a display line instead). */
+  sentence?: boolean
+  /** Group title per locator: rows come sorted by group and each group gets a header row (sort by category). */
+  groups?: Record<string, string>
+  /**
+   * Per locator, the lines whose receipt judged another version than the one a fresh app installs (review r6): an
+   * outlined square, the one sentence in the popover and a link to that version's receipt, never its verdict.
+   */
+  others?: Record<string, Others>
+  /** Per locator, the signal `in isolation` of each line (modules.json `compat.isolation`, 24 Oct). */
+  isolation?: Record<string, Record<string, IsolationCell>>
+}
+const {
+  compat,
+  sigils = {},
+  errors = {},
+  idPrefix = 'cm',
+  queued = {},
+  queuedInPreset = {},
+  queuedAll,
+  skipReasons = {},
+  sentence: showSentence = true,
+  groups,
+  others = {},
+  isolation = {},
+} = Astro.props
+const otherOf = (locator: string, key: string) => others[locator]?.[key] ?? null
+// the signal `in isolation` of a cell (an app from the empty preset, decision of 24 Oct): the dot and one sentence in
+// the popover, never the cell's state
+const isoOf = (row: CompatIndex['rows'][number], key: string) => isolation[row.locator]?.[key] ?? null
+const isoText = (row: CompatIndex['rows'][number], key: string): string | null => {
+  const c = isoOf(row, key)
+  return c ? isolationText(c, row.cells[key]?.moduleVersion ?? cellVersion(row, key)) : null
+}
+const isoBase = (key: string) => compat.isolationBaseline?.[key] ?? null
+const lines = orderLines(compat.lines)
+const keys = lines.map((l) => l.key)
+const colTitle = (l: (typeof lines)[number]): { main: string; sub: string } =>
+  l.source === 'develop'
+    ? { main: 'next', sub: shortV(l.version) }
+    : { main: l.version, sub: l.source === 'latest' ? 'latest' : l.source === 'previous' ? 'previous' : '' }
+const sentence = `Peer ranges reject ${compat.peersRejectFitting.rejected} of ${compat.peersRejectFitting.fitting} combinations that fit statically.`
+let n = 0
+const pid = (): string => `${idPrefix}-p${++n}`
+const dayZero = isDayZero(compat, keys)
+const fitOn = fitByDefault(compat, keys)
+const ids = { declared: `${idPrefix}-declared`, fit: `${idPrefix}-fit`, reg: `${idPrefix}-reg` }
+// one entry per mark (round 14): a dependency the age gate held back is not a release in the gate
+const present = new Set(
+  compat.rows
+    .flatMap((r) => keys.filter((k) => !otherOf(r.locator, k)).map((k) => markOf(r.cells[k])))
+    .concat(keys.flatMap((k) => (compat.baseline[k] ? [markOf(compat.baseline[k])] : []))),
+)
+const anyOther = compat.rows.some((r) => keys.some((k) => otherOf(r.locator, k)))
+const anyIso = compat.rows.some((r) => keys.some((k) => isoOf(r, k))) || keys.some((k) => isoBase(k))
+// the states the matrix shows, as on / (review r4: day 0 listed broken, quarantine and both not-judged marks)
+const legend = STATE_LEGEND.filter((s) => present.has(s.mark))
+const isRegression = (row: CompatIndex['rows'][number]): boolean =>
+  keys.some((k) => row.cells[k]?.status === 'broken' && !otherOf(row.locator, k))
+/** The header row of a group, where a new group starts; it hides with `Regressions only` when its rows all do. */
+const groupHead = (i: number): { title: string; count: number; regression: boolean } | null => {
+  if (!groups) return null
+  const row = compat.rows[i]!
+  const title = groups[row.locator] ?? ''
+  if (i > 0 && groups[compat.rows[i - 1]!.locator] === title) return null
+  const members = compat.rows.filter((r) => (groups[r.locator] ?? '') === title)
+  return { title, count: members.length, regression: members.some(isRegression) }
+}
+const q = (k: string, row?: CompatIndex['rows'][number]): string =>
+  (row?.inPresets?.includes(k) ? queuedInPreset[k] : undefined) ?? queued[k] ?? "Queued for tonight's run."
+/** A baseline's result in one sentence: `Passed on 23 Oct · 1 harness patch (api-keys).` */
+const baseWord = (c: NonNullable<CompatIndex['baseline'][string]>): string => {
+  const head =
+    c.status === 'verified'
+      ? 'Passed'
+      : c.status === 'broken' || c.status === 'harness-red'
+        ? 'Failed'
+        : c.status === 'infra-error'
+          ? 'Did not finish'
+          : `${STATUS[c.status].word.charAt(0).toUpperCase()}${STATUS[c.status].word.slice(1)}`
+  const patches = c.patches.length
+    ? ` · ${c.patches.length} harness patch${c.patches.length > 1 ? 'es' : ''} (${c.patches.join(', ')})`
+    : ''
+  return `${head}${c.at ? ` on ${day(c.at)}` : ''}${patches}.`
+}
+const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): CellText => {
+  const c = row.cells[l.key]
+  const status = c?.status ?? 'untested'
+  return {
+    line: l.key,
+    status,
+    fit: fitOf(c?.fit),
+    // before a receipt the cell names the version a new app has on the line (`ships`, else the row's), with the peers of
+    // that version (review of 24 Oct); a skipped cell has none for the line
+    moduleVersion: c?.moduleVersion ?? (status === 'skipped' ? null : cellVersion(row, l.key)),
+    omVersion: c?.omVersion ?? l.version,
+    ...cellPeers(row, l.key),
+    skipped: status === 'skipped' ? (skipReasons[row.locator] ?? null) : null,
+    step: c?.step ?? null,
+    since: c?.since ?? null,
+    at: c?.at ?? null,
+  }
+}
+---
+
+<div class="cm">
+  <div class="cm__bar">
+    {showSentence && <p class="cm__sentence">{sentence}</p>}
+    <div class="cm__switches" role="group" aria-label="Matrix view">
+      <label class="cm__sw"><input type="checkbox" id={ids.fit} checked={fitOn} /> Show static fit</label>
+      <label class="cm__sw"><input type="checkbox" id={ids.declared} /> Declared overlay</label>
+      <label class="cm__sw"><input type="checkbox" id={ids.reg} /> Regressions only</label>
+    </div>
+  </div>
+  <ul class="cm__legend" role="list" aria-label="Legend">
+    {
+      legend.map((s) => (
+        <li title={s.title}>
+          <span class="cm__lsq">
+            <Square status={s.status} step={s.step ?? null} />
+          </span>
+          <span>{s.text}</span>
+          {s.title && <span class="sr-only">. {s.title}</span>}
+        </li>
+      ))
+    }
+    {
+      anyIso && (
+        <li>
+          <span class="cm__lsq">
+            <span class="sq-iso-key" aria-hidden="true" />
+          </span>
+          <span>{ISOLATION_MARK.legend}</span>
+        </li>
+      )
+    }
+    {
+      anyOther && (
+        <li>
+          <span class="cm__lsq">
+            <Square status="untested" other />
+          </span>
+          <span>receipt for another version</span>
+        </li>
+      )
+    }
+    {
+      FIT_LEGEND.map((f) => (
+        <li class="cm__legend-fit" data-fit={f.fit}>
+          <span class="cm__lfit" aria-hidden="true">
+            <span class="cm__f">{FIT_GLYPH[f.fit]}</span>
+          </span>
+          <span>{f.text}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="cm__scroll" tabindex="0" role="region" aria-label="Compatibility matrix, scrolls sideways">
+    <table class="cm__table">
+      <thead>
+        <tr>
+          <th scope="col" class="cm__mod">Module</th>
+          {
+            lines.map((l) => (
+              <th scope="col" class="cm__col">
+                <code class="cm__colmain">{colTitle(l).main}</code>
+                <code class="cm__colsub" title={l.version}>{colTitle(l).sub}</code>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cm__base" data-regression="no">
+          <th scope="row" class="cm__mod">
+            <span class="cm__name">Open Mercato itself</span>
+            <span class="cm__loc">a new app, preset classic</span>
+          </th>
+          {
+            dayZero && (
+              <td class="cm__td cm__queued" colspan={lines.length}>
+                {queuedAll ?? q(lines.find((l) => l.source === 'latest')?.key ?? keys[0] ?? '')}
+              </td>
+            )
+          }
+          {
+            !dayZero &&
+              lines.map((l) => {
+                const c = compat.baseline[l.key]
+                const status = c?.status ?? 'untested'
+                const id = pid()
+                const word = c ? baseWord(c) : q(l.key)
+                // a red baseline held against packages a new app ships (review of 24 Oct): named, never Open Mercato alone
+                const held = c?.status === 'harness-red' ? (compat.baselineCulprits?.[l.key] ?? []) : []
+                const heldText = held.length
+                  ? `Red because of ${listAnd(held)}, ${held.length > 1 ? 'packages' : 'a package'} a new app already has: ${held.length > 1 ? 'their cells carry' : 'its cell carries'} the break, and every other module is judged on its own run.`
+                  : null
+                const ib = isoBase(l.key)
+                const ibText = ib ? `In isolation (empty preset): ${baseWord(ib).charAt(0).toLowerCase()}${baseWord(ib).slice(1)}` : null
+                return (
+                  <td class="cm__td" data-st={status}>
+                    <button
+                      type="button"
+                      class="cm__cell"
+                      popovertarget={id}
+                      aria-label={`${cellAria({ line: l.key, status, at: c?.at ?? null, step: null, fit: 'unknown' }, false)}${heldText ? `. ${heldText.replace(/\.$/, '')}` : ''}${ibText ? `. ${ibText}` : ''}`}
+                    >
+                      <span class="cm__st">
+                        {status === 'untested' && !ib ? <span class="cm__dot" /> : <Square status={status} step={c?.step ?? null} iso={ib ? isolationDot(ib) : null} />}
+                      </span>
+                    </button>
+                    <div popover id={id} class="cm__pop">
+                      <p class="cm__pophead">Open Mercato {shortV(l.version)} · a new app</p>
+                      <p>{word}</p>
+                      {heldText && <p>{heldText}</p>}
+                      {c?.receipt && <a href={href(receiptPage(c.receipt))}>View receipt</a>}
+                      {ibText && <p class="cm__popiso">{ibText}</p>}
+                      {ib?.receipt && <a href={href(receiptPage(ib.receipt))}>View the receipt in isolation</a>}
+                    </div>
+                  </td>
+                )
+              })
+          }
+        </tr>
+        {
+          compat.rows.map((row, i) => {
+            const regression = isRegression(row)
+            const sg = sigils[row.locator]
+            const head = groupHead(i)
+            return (
+              <>
+              {head && (
+                <tr class="cm__grp" data-regression={head.regression ? 'yes' : 'no'}>
+                  <th scope="rowgroup" colspan={lines.length + 1}>
+                    <span class="cm__grpt">
+                      {head.title} <span class="cm__grpn num">{head.count}</span>
+                    </span>
+                  </th>
+                </tr>
+              )}
+              <tr data-regression={regression ? 'yes' : 'no'}>
+                <th scope="row" class="cm__mod">
+                  <a class="cm__modlink" href={href(modulePage(row.path))}>
+                    <span
+                      class="cm__sig"
+                      set:html={renderSigil({
+                        glyph: sg?.glyph ?? '0000000',
+                        phase: sg?.phase ?? 0,
+                        kind: sg?.kind ?? 'module',
+                        enterprise: sg?.enterprise,
+                        publicRoutes: sg?.publicRoutes,
+                        size: 24,
+                        label: '',
+                      }).replace('role="img" aria-label=""', 'aria-hidden="true"')}
+                    />
+                    <span class="cm__name">{row.title}</span>
+                  </a>
+                  <span
+                    class="cm__loc"
+                    translate="no"
+                    set:html={wbrHtml(`${row.locator.replace(/^npm:|^github:/, '')}${row.version ? `@${row.version}` : ''}`)}
+                  />
+                </th>
+                {lines.map((l) => {
+                  const o = otherOf(row.locator, l.key)
+                  const raw = row.cells[l.key]
+                  const id = pid()
+                  const iso = isoOf(row, l.key)
+                  const it = isoText(row, l.key)
+                  if (o) {
+                    // the receipt judged another version (review r6): the line has no verdict for its own version
+                    const fit = fitOf(raw?.fit)
+                    const text = otherVersionText(l.key, o.installs, o.other)
+                    const meta = metaLine({
+                      ...cellPeers(row, l.key),
+                      line: l.key,
+                      moduleVersion: o.installs,
+                      omVersion: raw?.omVersion ?? l.version,
+                      fit,
+                    })
+                    return (
+                      <td class="cm__td" data-declared={row.builtFor.lines.includes(l.key) ? 'yes' : 'no'} data-fit={fit} data-st="other">
+                        <button type="button" class="cm__cell" popovertarget={id} aria-label={`${l.key}: ${text.replace(/\.$/, '')}${it ? `. ${it}` : ''}`}>
+                          <span class="cm__st">
+                            <Square status="untested" other iso={iso ? isolationDot(iso) : null} />
+                          </span>
+                          <span class="cm__f" aria-hidden="true">
+                            {FIT_GLYPH[fit]}
+                          </span>
+                        </button>
+                        <div popover id={id} class="cm__pop">
+                          <p class="cm__pophead">
+                            {row.title} · {l.key === 'next' ? `next ${shortV(l.version)}` : l.version}
+                          </p>
+                          <p>{text}</p>
+                          <p class="cm__popmeta">{meta}</p>
+                          {raw?.receipt && <a href={href(receiptPage(raw.receipt))}>View the {shortV(o.other.moduleVersion ?? '')} receipt</a>}
+                          {it && <p class="cm__popiso" set:html={whyHtml(it)} />}
+                          {iso?.receipt && <a href={href(receiptPage(iso.receipt))}>View the receipt in isolation</a>}
+                        </div>
+                      </td>
+                    )
+                  }
+                  const c = cellOf(row, l)
+                  const err = raw?.receipt ? errors[raw.receipt] : undefined
+                  return (
+                    <td class="cm__td" data-declared={c.read === false ? 'unread' : c.declared ? 'yes' : 'no'} data-fit={c.fit} data-st={c.status}>
+                      <button type="button" class="cm__cell" popovertarget={id} aria-label={`${cellAria(c, true)}${it ? `. ${it}` : ''}`}>
+                        <span class="cm__st">
+                          {c.status === 'untested' && !iso ? (
+                            <span class="cm__dot" />
+                          ) : c.status === 'skipped' ? (
+                            <span class="cm__dash" />
+                          ) : (
+                            <Square status={c.status} step={c.step} iso={iso ? isolationDot(iso) : null} />
+                          )}
+                        </span>
+                        <span class="cm__f" aria-hidden="true">
+                          {FIT_GLYPH[c.fit]}
+                        </span>
+                      </button>
+                      <div popover id={id} class="cm__pop">
+                        <p class="cm__pophead">
+                          {row.title} · {l.key === 'next' ? `next ${shortV(l.version)}` : l.version}
+                        </p>
+                        <p>{stateSentence(c, q(l.key, row), raw ? null : it)}</p>
+                        <p class="cm__popmeta">{metaLine(c)}</p>
+                        {err && <p class="cm__poperr">{err}</p>}
+                        {raw?.receipt && <a href={href(receiptPage(raw.receipt))}>View receipt</a>}
+                        {raw && it && <p class="cm__popiso" set:html={whyHtml(it)} />}
+                        {iso?.receipt && <a href={href(receiptPage(iso.receipt))}>View the receipt in isolation</a>}
+                      </div>
+                    </td>
+                  )
+                })}
+              </tr>
+              </>
+            )
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .cm {
+    display: grid;
+    gap: 16px;
+  }
+  .cm__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+  .cm__sentence {
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .cm__switches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .cm__sw {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .cm__sw:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--bg-2);
+  }
+  .cm__sw input {
+    width: 14px;
+    height: 14px;
+    accent-color: #0c0c0c;
+    margin: 0;
+  }
+  :global(:root[data-theme='dark']) .cm__sw input {
+    accent-color: #b4f372;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .cm__sw input {
+      accent-color: #b4f372;
+    }
+  }
+  .cm__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cm__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cm__lsq,
+  .cm__lfit {
+    display: inline-grid;
+    place-items: center;
+    width: 14px;
+    height: 14px;
+  }
+  .cm__legend-fit {
+    display: none !important;
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__legend-fit {
+    display: inline-flex !important;
+  }
+  .cm__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+  .cm__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+  .cm__table th,
+  .cm__table td {
+    border-bottom: 1px solid var(--line);
+    padding: 0;
+    text-align: left;
+    font-weight: 400;
+  }
+  .cm__table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  .cm__table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    padding: 10px 12px;
+    vertical-align: bottom;
+  }
+  .cm__col {
+    width: 176px;
+    min-width: 176px;
+    white-space: nowrap;
+    text-align: center !important;
+  }
+  .cm__col code {
+    display: block;
+    font: inherit;
+    letter-spacing: 0.02em;
+  }
+  .cm__colmain {
+    color: var(--ink);
+  }
+  .cm__col .cm__colsub {
+    color: var(--ink-2);
+    font-size: 10px;
+  }
+  .cm__mod {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--bg);
+    padding: 8px 16px !important;
+    min-width: 240px;
+    border-right: 1px solid var(--line);
+  }
+  thead .cm__mod {
+    background: var(--bg-2);
+    z-index: 2;
+  }
+  /* the name and its locator read as one block, as in the registry (review r4: an inline sigil added a line box
+     and pushed the locator 27 px under the name) */
+  .cm__modlink {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .cm__modlink:hover .cm__name {
+    text-decoration: underline;
+  }
+  .cm__sig {
+    display: block;
+    line-height: 0;
+    color: var(--ink);
+  }
+  .cm__sig :global(svg) {
+    display: block;
+  }
+  .cm__name {
+    font-weight: 500;
+    line-height: 20px;
+  }
+  .cm__loc {
+    display: block;
+    margin-top: -2px;
+    line-height: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+    padding-left: 32px;
+    /* identifiers are never cut: they wrap after '/' and before '@' only */
+    max-width: 420px;
+  }
+  .cm__base .cm__mod,
+  .cm__base td {
+    background: var(--bg-2);
+  }
+  /* category header rows (sort by category): mono 10 px like /built-in, the label stays in view while the table
+     scrolls sideways */
+  .cm__table .cm__grp th {
+    padding: 14px 16px 6px;
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cm__grpt {
+    position: sticky;
+    left: 16px;
+  }
+  .cm__grpn {
+    margin-left: 6px;
+    color: var(--ink-3);
+  }
+  .cm__base .cm__loc {
+    padding-left: 0;
+  }
+  /* day 0: one sentence in the pinned row, set as text (beats `.cm__table td` and `.cm__td`) */
+  .cm__table td.cm__queued {
+    padding: 12px 16px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-2);
+    text-align: left !important;
+  }
+  .cm__td {
+    text-align: center !important;
+    vertical-align: middle;
+  }
+  /* the cell: a 28 px box (spec 6.7). Receipt layer in the middle, the fit layer as the box outline + corner glyph */
+  .cm__cell {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin: 6px 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-s);
+    background: transparent;
+    outline-offset: 2px;
+  }
+  .cm__cell:hover {
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink-3);
+  }
+  .cm__st {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+  }
+  /* a real result fills the 28 px cell; with the fit layer on it steps back to 14 px inside the fit outline */
+  .cm__st :global(.strip__cell),
+  .cm__st :global(.strip__cell svg) {
+    width: 28px;
+    height: 28px;
+  }
+  .cm__st :global(.strip__cell rect),
+  .cm__st :global(.strip__cell path),
+  .cm__st :global(.strip__cell circle) {
+    vector-effect: non-scaling-stroke;
+  }
+  .cm__dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-3);
+  }
+  .cm__dash {
+    display: block;
+    width: 10px;
+    height: 1.5px;
+    background: var(--ink-3);
+  }
+  .cm__f {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--ink-2);
+  }
+  /* fit layer on */
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit] .cm__cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-s);
+    pointer-events: none;
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit='fit'] .cm__cell::before {
+    border: 1px solid var(--ink-2);
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit='no-fit'] .cm__cell::before {
+    border: 1px dashed var(--bad-ink);
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit='unknown'] .cm__cell::before {
+    border: 1px dotted var(--ink-3);
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit] .cm__f {
+    display: block;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit='no-fit'] .cm__f {
+    color: var(--bad-ink);
+  }
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit] .cm__st :global(.strip__cell),
+  .cm:has(input[id$='-fit']:checked) .cm__td[data-fit] .cm__st :global(.strip__cell svg) {
+    width: 14px;
+    height: 14px;
+  }
+  /* legend of the fit layer: the same outline and glyph at 14 px */
+  .cm__lfit {
+    position: relative;
+    border-radius: var(--radius-s);
+  }
+  .cm__legend-fit[data-fit='fit'] .cm__lfit {
+    border: 1px solid var(--ink-2);
+  }
+  .cm__legend-fit[data-fit='no-fit'] .cm__lfit {
+    border: 1px dashed var(--bad-ink);
+    color: var(--bad-ink);
+  }
+  .cm__legend-fit[data-fit='unknown'] .cm__lfit {
+    border: 1px dotted var(--ink-3);
+  }
+  .cm__lfit .cm__f {
+    display: block;
+    color: inherit;
+  }
+  .cm__legend-fit[data-fit='fit'] .cm__lfit .cm__f {
+    color: var(--ink-2);
+  }
+  .cm:has(input[id$='-declared']:checked) .cm__td[data-declared='yes'] .cm__cell {
+    outline: 1.5px solid var(--ok-text);
+  }
+  .cm:has(input[id$='-declared']:checked) .cm__td[data-declared='no'] .cm__cell {
+    outline: 1.5px dashed var(--bad-ink);
+  }
+  .cm:has(input[id$='-reg']:checked) tbody tr[data-regression='no']:not(.cm__base) {
+    display: none;
+  }
+  .cm__pop {
+    width: min(320px, calc(100vw - 32px));
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: var(--shadow-float);
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: left;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @supports (position-area: bottom) {
+    .cm__pop {
+      position-area: bottom;
+      position-try-fallbacks: flip-block;
+      transform: none;
+      top: auto;
+      left: auto;
+      margin: 8px;
+    }
+  }
+  .cm__pop p + p,
+  .cm__pop p + a {
+    margin-top: 6px;
+  }
+  .cm__pop a {
+    display: inline-block;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .cm__pophead {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cm__popmeta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .cm__poperr {
+    padding-left: 8px;
+    border-left: 2px solid #f32828;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  /* the signal `in isolation` in a popover (24 Oct): an ink-3 edge, the quiet ink of a second signal */
+  .cm__popiso {
+    padding-left: 8px;
+    border-left: 2px solid var(--ink-3);
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+  .cm__popiso :global(code) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .cm__pop a + a {
+    margin-left: 12px;
+  }
+  @media (max-width: 767px) {
+    .cm__mod {
+      min-width: 180px;
+    }
+    .cm__loc {
+      max-width: 200px;
+    }
+    .cm__col {
+      width: 144px;
+      min-width: 144px;
+    }
+    .cm__sw {
+      min-height: 44px;
+    }
+    .cm__modlink {
+      min-height: 44px;
+    }
+    /* phones (spec 6.7, 7.10, review r10): the squares are read, not tapped; the row's one target is its module link,
+       44 px tall and as wide as the column, and the script below takes the cells out of the tab order */
+    .cm__cell {
+      margin: 8px;
+      pointer-events: none;
+    }
+    .cm__cell:hover {
+      box-shadow: none;
+    }
+    .cm__modlink {
+      width: 100%;
+    }
+  }
+  /* phones: 150 px module column (title only) + three 64 px line columns, every line visible; 12 px of air on the
+     right of the scroll area so the next column never touches the frame */
+  @media (max-width: 479px) {
+    .cm__scroll {
+      padding-right: 12px;
+    }
+    .cm__mod {
+      min-width: 0;
+      width: 140px;
+      max-width: 140px;
+      overflow: hidden;
+      padding: 8px 10px !important;
+    }
+    /* the sigil at 16 px (spec 7.7 D) and the name at 13 px, so the longest word of a name (`Communication`) fits the
+       140 px column instead of touching its edge (review r4) */
+    .cm__mod .cm__modlink {
+      gap: 6px;
+      font-size: 13px;
+    }
+    .cm__mod .cm__sig :global(svg) {
+      width: 16px;
+      height: 16px;
+    }
+    .cm__loc {
+      display: none;
+    }
+    .cm__col {
+      width: 64px;
+      min-width: 64px;
+      padding: 10px 4px !important;
+    }
+    .cm__col .cm__colsub {
+      display: none;
+    }
+    .cm__sentence {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<script>
+  // phones (spec 6.7: single squares are clickable on the desktop /compat only, review r10): out of the tab order there
+  const phone = window.matchMedia('(max-width: 767px)')
+  const apply = (): void => {
+    for (const b of document.querySelectorAll<HTMLButtonElement>('.cm__cell')) {
+      if (phone.matches) b.setAttribute('tabindex', '-1')
+      else b.removeAttribute('tabindex')
+    }
+  }
+  apply()
+  phone.addEventListener('change', apply)
+</script>

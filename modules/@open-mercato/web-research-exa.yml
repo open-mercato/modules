@@ -1,0 +1,12 @@
+npm: "@open-mercato/web-research-exa"
+repo: open-mercato/open-mercato#main/packages/web-research-exa
+kind: provider
+category: ai-automation
+tags: [web-search, ai]
+summary: "Exa adapter for web-research: embeddings index, native domain and date filters, and the cost of each search."
+whenToUse: Use when agents need relevant passages from recent sources and you accept a per-call price from Exa.
+providers:
+  - { name: exa, label: Exa }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

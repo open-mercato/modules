@@ -1,0 +1,97 @@
+# Pull request check (spec 5.1, 5.2): the descriptor summary first, so an author sees it within minutes, then the
+# repo checks. Read-only token, no secrets, no privileged trigger. Branch protection requires the `validate` job.
+name: validate
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        # Read only: lines and built-in modules for Fit and collision checks. Missing on the first day.
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data
+            git worktree add --detach .data origin/data
+          else
+            mkdir -p .data
+            echo "No data branch yet: Fit is skipped, built-in modules come from the pinned CLI."
+          fi
+
+      - name: Validate descriptors
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: yarn om validate --changed=origin/main --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Check
+        if: ${{ !cancelled() }}
+        run: yarn check
+
+      - name: Test
+        if: ${{ !cancelled() }}
+        run: yarn test
+
+      # day 0 (review r2): the state before the first night has no receipts at all; it once broke the build, so the
+      # site is built on it in every run, not only when site/ changes
+      - name: Build site on day-0 data
+        if: ${{ !cancelled() }}
+        run: |
+          day0="$RUNNER_TEMP/day0"
+          rm -rf "$day0"
+          mkdir -p "$day0"
+          cp -R test/fixtures/data/. "$day0"
+          rm -rf "$day0/receipts"
+          yarn om emit --data "$day0"
+          yarn astro build
+
+      - name: Detect site changes
+        id: site
+        if: ${{ !cancelled() }}
+        run: |
+          if git diff --quiet origin/main...HEAD -- site lib/emit astro.config.ts; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build site on fixture data
+        if: ${{ !cancelled() && steps.site.outputs.changed == 'true' }}
+        run: |
+          yarn om emit --data test/fixtures/data
+          yarn astro build

@@ -1,0 +1,184 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@freighttech%2Fshipment-tracking"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@freighttech/shipment-tracking",
+      "dist-tags": {
+        "latest": "0.7.2"
+      },
+      "versions": {
+        "0.6.0": {
+          "version": "0.6.0",
+          "license": "MIT",
+          "gitHead": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf",
+          "maintainers": [
+            {
+              "name": "fto-admin"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "nats": "^2.28.2",
+            "next": "^16.2.3",
+            "react": "^19.0.0",
+            "awilix": "^12.0.5",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.556.0",
+            "@freighttech/ui": "^0.13.0",
+            "@mikro-orm/core": "^7.0.17",
+            "@open-mercato/core": "0.6.2",
+            "@opentelemetry/api": "^1.9.0",
+            "@open-mercato/cache": "0.6.2",
+            "@open-mercato/queue": "0.6.2",
+            "@open-mercato/events": "0.6.2",
+            "@open-mercato/shared": "0.6.2",
+            "@mikro-orm/decorators": "^7.0.17",
+            "@mikro-orm/migrations": "^7.0.17",
+            "@mikro-orm/postgresql": "^7.0.17",
+            "@tanstack/react-query": "^5.90.12",
+            "@react-google-maps/api": "^2.20.6",
+            "@open-mercato/scheduler": "0.6.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-quJ6bpanuQwd516HdRAXbBQWhzaRs9KMWDg6KRQskGXEzM+dE6ueHDAPOD8muPfEyaHPwvWft8TJiVUUnAWXQA==",
+            "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.6.0.tgz"
+          }
+        },
+        "0.7.0": {
+          "version": "0.7.0",
+          "license": "MIT",
+          "gitHead": "d4ce4d49a168430e4d549548428aaed1b65c8d31",
+          "maintainers": [
+            {
+              "name": "fto-admin"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "nats": "^2.28.2",
+            "next": "^16.2.3",
+            "react": "^19.0.0",
+            "awilix": "^12.0.5",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.556.0",
+            "@freighttech/ui": "^0.13.0",
+            "@mikro-orm/core": "^7.0.17",
+            "@open-mercato/core": "0.6.2",
+            "@opentelemetry/api": "^1.9.0",
+            "@open-mercato/cache": "0.6.2",
+            "@open-mercato/queue": "0.6.2",
+            "@open-mercato/events": "0.6.2",
+            "@open-mercato/shared": "0.6.2",
+            "@mikro-orm/decorators": "^7.0.17",
+            "@mikro-orm/migrations": "^7.0.17",
+            "@mikro-orm/postgresql": "^7.0.17",
+            "@tanstack/react-query": "^5.90.12",
+            "@react-google-maps/api": "^2.20.6",
+            "@open-mercato/scheduler": "0.6.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-GslY8MNns686vEzCqG2boACdDk5TB4/U9XBb7cq/xeDsEv/OjjXGwuCJuFGXlQWX9BkUEeGXfYXvGA1eBSkdDg==",
+            "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.7.0.tgz"
+          }
+        },
+        "0.7.1": {
+          "version": "0.7.1",
+          "license": "MIT",
+          "gitHead": "78eac19f57dd23379a4eb6646af66bbd067805c2",
+          "maintainers": [
+            {
+              "name": "fto-admin"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "nats": "^2.28.2",
+            "next": "^16.2.3",
+            "react": "^19.0.0",
+            "awilix": "^12.0.5",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.556.0",
+            "@freighttech/ui": "^0.13.0",
+            "@mikro-orm/core": "^7.0.17",
+            "@open-mercato/core": "0.6.2",
+            "@opentelemetry/api": "^1.9.0",
+            "@open-mercato/cache": "0.6.2",
+            "@open-mercato/queue": "0.6.2",
+            "@open-mercato/events": "0.6.2",
+            "@open-mercato/shared": "0.6.2",
+            "@mikro-orm/decorators": "^7.0.17",
+            "@mikro-orm/migrations": "^7.0.17",
+            "@mikro-orm/postgresql": "^7.0.17",
+            "@tanstack/react-query": "^5.90.12",
+            "@react-google-maps/api": "^2.20.6",
+            "@open-mercato/scheduler": "0.6.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-h089OYw7Oc3sLvpOlS9jOy918bnvzJO5iMcHNPipX62CvFwiYK7yZhRec8ClIefE1kEk49i57ZtdZsOb8fhqXQ==",
+            "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.7.1.tgz"
+          }
+        },
+        "0.7.2": {
+          "version": "0.7.2",
+          "license": "MIT",
+          "gitHead": "912da3ad35c09ec0a18461f4ed4ca2eb801a995f",
+          "maintainers": [
+            {
+              "name": "fto-admin"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "nats": "^2.28.2",
+            "next": "^16.2.3",
+            "react": "^19.0.0",
+            "awilix": "^12.0.5",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.556.0",
+            "@freighttech/ui": "^0.13.0 || ^0.14.0",
+            "@mikro-orm/core": "^7.0.17",
+            "@open-mercato/core": "0.6.2",
+            "@opentelemetry/api": "^1.9.0",
+            "@open-mercato/cache": "0.6.2",
+            "@open-mercato/queue": "0.6.2",
+            "@open-mercato/events": "0.6.2",
+            "@open-mercato/shared": "0.6.2",
+            "@mikro-orm/decorators": "^7.0.17",
+            "@mikro-orm/migrations": "^7.0.17",
+            "@mikro-orm/postgresql": "^7.0.17",
+            "@tanstack/react-query": "^5.90.12",
+            "@react-google-maps/api": "^2.20.6",
+            "@open-mercato/scheduler": "0.6.2"
+          },
+          "scripts": {},
+          "description": "Carrier shipment tracking for the Open Mercato platform — DCSA carrier adapters (Maersk, MSC, CMA CGM, Hapag-Lloyd, ZIM, COSCO, Evergreen), a ShipsGo aggregator fallback, a Journey Timeline, and an optional live vessel/POI map.",
+          "dist": {
+            "integrity": "sha512-ZI4UVhg4bdBp2DSUhgdvv5D51m7OGPA3qtQKWStmFxbxWJAKpGgv/UzSWc8RN5ZnCQst31TMWzsAgmZjCfmysw==",
+            "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.7.2.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-09-16T10:53:49.636Z",
+        "modified": "2026-09-24T19:26:05.738Z",
+        "0.6.0": "2026-09-16T10:53:49.952Z",
+        "0.7.0": "2026-09-16T12:26:00.199Z",
+        "0.7.1": "2026-09-16T12:39:24.003Z",
+        "0.7.2": "2026-09-24T19:26:05.384Z"
+      },
+      "maintainers": [
+        {
+          "name": "fto-admin"
+        }
+      ],
+      "description": "Carrier shipment tracking for the Open Mercato platform — DCSA carrier adapters (Maersk, MSC, CMA CGM, Hapag-Lloyd, ZIM, COSCO, Evergreen), a ShipsGo aggregator fallback, a Journey Timeline, and an optional live vessel/POI map."
+    }
+  }
+}

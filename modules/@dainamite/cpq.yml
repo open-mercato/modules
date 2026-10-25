@@ -1,0 +1,7 @@
+npm: "@dainamite/cpq"
+github: dainamite-technologies/dainamite-core
+repo: dainamite-technologies/dainamite-core#main/packages/cpq
+category: catalog-pricing
+tags: [cpq, quotes, pricing, subscriptions]
+summary: Configurable products, multi-charge price tables, guided quotes and amend, renew or cancel flows for subscriptions.
+whenToUse: Use when you sell configurable products or subscriptions and sales reps build quotes that turn into orders.

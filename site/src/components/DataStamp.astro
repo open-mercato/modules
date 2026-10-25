@@ -1,0 +1,73 @@
+---
+// DATA 24 OCT 03:41 UTC from dataAsOf.nightly (spec 7.6). The inline freshness script lives in Base.astro, after
+// #stale-banner (site/src/lib/freshness.ts): > 48 h turns the dot yellow, and the header stamp (data-primary) also
+// shows the banner. The same rule runs at build time as the no-JS fallback. A stamp given an explicit `now` keeps
+// it in data-now, so demo states stay as rendered.
+// Preview data (dataAsOf.source = 'preview', review r6): `PREVIEW 23 OCT` without the hour (the run panel names
+// its own times), a hollow grey dot instead of the live lime one, the preview sentence as the tooltip, and no
+// data-nightly, so no clock ever calls a preview run a nightly run that did not finish.
+import { stampModel, type DataAsOf } from '../lib/freshness.ts'
+
+interface Props {
+  dataAsOf: DataAsOf
+  /** Build time (for the no-JS fallback); defaults to now. */
+  now?: string
+  variant?: 'header' | 'inline'
+}
+const { dataAsOf, now: fixedNow, variant = 'header' } = Astro.props
+const m = stampModel(dataAsOf, fixedNow ?? new Date().toISOString())
+---
+
+<span
+  class:list={['stamp', `stamp--${variant}`, { 'is-stale': m.stale, 'is-pending': m.pending, 'is-preview': m.preview }]}
+  data-nightly={m.nightlyAttr}
+  data-now={fixedNow}
+  data-primary={variant === 'header' ? '' : undefined}
+  data-day={m.dayAttr}
+  data-source={m.preview ? 'preview' : undefined}
+  title={m.title}
+>
+  <span class="stamp__dot" aria-hidden="true"></span>
+  <span class="stamp__text">{m.label}</span>
+</span>
+
+<style>
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  /* a 6 px round dot (spec 7.6): lime for fresh data, yellow after 48 h */
+  .stamp__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b4f372;
+    box-shadow: 0 0 0 2px color-mix(in srgb, #b4f372 28%, transparent);
+  }
+  .is-stale .stamp__dot {
+    background: #eefb63;
+    box-shadow: 0 0 0 2px color-mix(in srgb, #eefb63 35%, transparent);
+  }
+  .is-pending .stamp__dot {
+    background: var(--ink-3);
+    box-shadow: none;
+  }
+  /* a preview run is not a live feed (review r6): a hollow grey ring, the outline language of the preview chip */
+  .is-preview .stamp__dot {
+    width: 7px;
+    height: 7px;
+    background: transparent;
+    border: 1.5px solid var(--ink-3);
+    box-shadow: none;
+  }
+</style>

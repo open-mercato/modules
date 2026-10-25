@@ -1,0 +1,8 @@
+npm: "@open-mercato/webhooks"
+repo: open-mercato/open-mercato#main/packages/webhooks
+category: integrations-sync
+tags: [webhooks, events, integrations]
+summary: "Standard Webhooks delivery of platform events: signed payloads, retries, delivery logs, test sends and inbound receive."
+whenToUse: Use when an external system must learn about changes in the app as they happen, without polling the API.
+links:
+  docs: https://docs.openmercato.com/user-guide/webhooks

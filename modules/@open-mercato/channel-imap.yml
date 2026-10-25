@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-imap"
+repo: open-mercato/open-mercato#main/packages/channel-imap
+category: communication
+tags: [email, imap, smtp]
+summary: Connects any mailbox over IMAP for inbound polling and SMTP for outbound mail.
+whenToUse: Use when staff mailboxes live on a provider without a dedicated channel and the server offers IMAP and SMTP access.
+whenNotToUse: For Google Workspace mailboxes use channel-gmail, which signs in with OAuth2 instead of a stored password.
+providers:
+  - { name: imap, label: IMAP and SMTP }
+links:
+  docs: https://docs.openmercato.com/user-guide/communication-channels-imap

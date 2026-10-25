@@ -1,0 +1,3663 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=scope%3Aopen-mercato&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 64520,
+            "weekly": 12630
+          },
+          "dependents": "15",
+          "updated": "2026-10-22T13:55:32.616Z",
+          "searchScore": 102.38672,
+          "package": {
+            "name": "@open-mercato/ui",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Composable UI toolkit for Open Mercato backoffice and business apps.",
+            "sanitized_name": "@open-mercato/ui",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:33:28.702Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/ui"
+            }
+          },
+          "score": {
+            "final": 102.38672,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 71368,
+            "weekly": 13997
+          },
+          "dependents": "7",
+          "updated": "2026-10-22T13:50:26.282Z",
+          "searchScore": 102.34821,
+          "package": {
+            "name": "@open-mercato/shared",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The shared foundation for Open Mercato packages.",
+            "sanitized_name": "@open-mercato/shared",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:29:38.004Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/shared"
+            }
+          },
+          "score": {
+            "final": 102.34821,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 50917,
+            "weekly": 8100
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T14:02:46.540Z",
+          "searchScore": 99.44771,
+          "package": {
+            "name": "@open-mercato/cli",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The command-line toolbox for Open Mercato developers.",
+            "sanitized_name": "@open-mercato/cli",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:41.181Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cli"
+            }
+          },
+          "score": {
+            "final": 99.44771,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46397,
+            "weekly": 8005
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:46:31.617Z",
+          "searchScore": 98.03936,
+          "package": {
+            "name": "@open-mercato/content",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Static content module for policy and legal pages in Open Mercato apps.",
+            "sanitized_name": "@open-mercato/content",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:45.874Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/content"
+            }
+          },
+          "score": {
+            "final": 98.03936,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 57042,
+            "weekly": 12814
+          },
+          "dependents": "18",
+          "updated": "2026-10-22T14:41:41.273Z",
+          "searchScore": 96.181915,
+          "package": {
+            "name": "@open-mercato/core",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Build production-grade business modules on top of the Open Mercato platform.",
+            "sanitized_name": "@open-mercato/core",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:41:14.001Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/core"
+            }
+          },
+          "score": {
+            "final": 96.181915,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 51915,
+            "weekly": 8732
+          },
+          "dependents": "3",
+          "updated": "2026-10-22T13:48:24.522Z",
+          "searchScore": 94.37282,
+          "package": {
+            "name": "@open-mercato/events",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Event-driven backbone for Open Mercato modules.",
+            "sanitized_name": "@open-mercato/events",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:50.766Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/events"
+            }
+          },
+          "score": {
+            "final": 94.37282,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 58444,
+            "weekly": 10317
+          },
+          "dependents": "10",
+          "updated": "2026-10-22T13:50:30.640Z",
+          "searchScore": 93.75564,
+          "package": {
+            "name": "@open-mercato/queue",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Multi-strategy job queue with local and BullMQ support",
+            "sanitized_name": "@open-mercato/queue",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:57.325Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/queue"
+            }
+          },
+          "score": {
+            "final": 93.75564,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 92122,
+            "weekly": 14491
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T14:44:31.518Z",
+          "searchScore": 93.413994,
+          "package": {
+            "name": "@open-mercato/cezar",
+            "keywords": [],
+            "version": "0.16.2",
+            "description": "Local cockpit for running and tracking AI agent tasks in your repo. Uses your logged-in `claude` CLI and `gh` — zero config, zero database.",
+            "sanitized_name": "@open-mercato/cezar",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-21T20:58:52.454Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar"
+            }
+          },
+          "score": {
+            "final": 93.413994,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 43556,
+            "weekly": 7435
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:10.174Z",
+          "searchScore": 91.62308,
+          "package": {
+            "name": "@open-mercato/onboarding",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Tenant onboarding and first-run experience for Open Mercato.",
+            "sanitized_name": "@open-mercato/onboarding",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:33.348Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/onboarding"
+            }
+          },
+          "score": {
+            "final": 91.62308,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46595,
+            "weekly": 8014
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:49:28.374Z",
+          "searchScore": 85.7539,
+          "package": {
+            "name": "@open-mercato/scheduler",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Database-managed scheduled jobs with admin UI",
+            "sanitized_name": "@open-mercato/scheduler",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:05.365Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/scheduler"
+            }
+          },
+          "score": {
+            "final": 85.7539,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46831,
+            "weekly": 8113
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T13:49:27.544Z",
+          "searchScore": 85.3696,
+          "package": {
+            "name": "@open-mercato/search",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Hybrid search for Open Mercato: fulltext, vector, and token-based search in one module.",
+            "sanitized_name": "@open-mercato/search",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:36.908Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/search"
+            }
+          },
+          "score": {
+            "final": 85.3696,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 14264,
+            "weekly": 7731
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T14:00:53.015Z",
+          "searchScore": 83.43241,
+          "package": {
+            "name": "create-mercato-app",
+            "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+            "version": "0.9.0",
+            "description": "Create a new Open Mercato application",
+            "sanitized_name": "create-mercato-app",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:30:20.552Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-app"
+            }
+          },
+          "score": {
+            "final": 83.43241,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 20546,
+            "weekly": 5076
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:54:10.303Z",
+          "searchScore": 81.60599,
+          "package": {
+            "name": "@open-mercato/enterprise",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The commercial layer of Open Mercato — proprietary enterprise modules plus certification, review, and operational support that take AI-built CRM/ERP systems to production. Delivered as the `@open-mercato/enterprise` package.",
+            "sanitized_name": "@open-mercato/enterprise",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "SEE LICENSE IN LICENSE.md",
+            "date": "2026-10-09T19:26:35.733Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/enterprise"
+            }
+          },
+          "score": {
+            "final": 81.60599,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 38655,
+            "weekly": 6772
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:16.540Z",
+          "searchScore": 80.02209,
+          "package": {
+            "name": "@open-mercato/checkout",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "`@open-mercato/checkout` provides the `checkout` module for standalone pay links and the Phase A public payment flow.",
+            "sanitized_name": "@open-mercato/checkout",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:58.206Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/checkout"
+            }
+          },
+          "score": {
+            "final": 80.02209,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 40069,
+            "weekly": 8537
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T13:49:45.401Z",
+          "searchScore": 79.7951,
+          "package": {
+            "name": "@open-mercato/telemetry",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Vendor-neutral spans, metrics, and error reporting backed by a pluggable OTLP provider. Off by default; the telemetry runtime is loaded only when explicitly enabled.",
+            "sanitized_name": "@open-mercato/telemetry",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:00.494Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/telemetry"
+            }
+          },
+          "score": {
+            "final": 79.7951,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18727,
+            "weekly": 5330
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:48:43.715Z",
+          "searchScore": 77.85364,
+          "package": {
+            "name": "@open-mercato/documents",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Collaborative internal documents for Open Mercato: a tenant/organization-scoped backoffice module where staff co-author rich-text documents in real time (TipTap + Yjs), organized in folders, shared per-document (owner / editor / commenter / viewer), annot",
+            "sanitized_name": "@open-mercato/documents",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:24.284Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/documents"
+            }
+          },
+          "score": {
+            "final": 77.85364,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 54587,
+            "weekly": 9403
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:45:10.708Z",
+          "searchScore": 76.108,
+          "package": {
+            "name": "@open-mercato/ai-assistant",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "AI-powered chat and tool execution for Open Mercato, using MCP (Model Context Protocol) for tool discovery and execution.",
+            "sanitized_name": "@open-mercato/ai-assistant",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:18.873Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/ai-assistant"
+            }
+          },
+          "score": {
+            "final": 76.108,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 65762,
+            "weekly": 13482
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T13:48:24.842Z",
+          "searchScore": 73.68333,
+          "package": {
+            "name": "@open-mercato/cache",
+            "keywords": ["cache", "caching", "redis", "sqlite", "memory", "tags", "invalidation"],
+            "version": "0.9.0",
+            "description": "Multi-strategy cache service with tag-based invalidation support",
+            "sanitized_name": "@open-mercato/cache",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:23:29.667Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cache"
+            }
+          },
+          "score": {
+            "final": 73.68333,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 4958,
+            "weekly": 537
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T22:04:54.269Z",
+          "searchScore": 66.544395,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-health",
+            "keywords": ["health-check", "kubernetes", "open-mercato", "readiness", "liveness"],
+            "version": "0.3.0",
+            "description": "Health check endpoints for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-health",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:0996890e-30a9-4d92-a647-8b34591f1738",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-19T12:19:37.521Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-health#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-health.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-health/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-health"
+            }
+          },
+          "score": {
+            "final": 66.544395,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8431,
+            "weekly": 3348
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:20.744Z",
+          "searchScore": 61.682713,
+          "package": {
+            "name": "@open-mercato/starter",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "One-command, cross-platform bootstrap for Open Mercato dev environments: prerequisite doctor, corporate TLS trust, idempotent setup steps, and a supervised hybrid or fully containerized stack.",
+            "sanitized_name": "@open-mercato/starter",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:11.054Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/starter"
+            }
+          },
+          "score": {
+            "final": 61.682713,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1367,
+            "weekly": 861
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T08:53:09.458Z",
+          "searchScore": 59.99662,
+          "package": {
+            "name": "mercato-sandbox",
+            "keywords": [],
+            "version": "0.1.0-pr568.1.4",
+            "description": "Command-line interface for Open Mercato Sandboxes.",
+            "sanitized_name": "mercato-sandbox",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-10T10:40:56.189Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/mercato-sandbox"
+            }
+          },
+          "score": {
+            "final": 59.99662,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 708,
+            "weekly": 13
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T18:46:24.385Z",
+          "searchScore": 55.329807,
+          "package": {
+            "name": "@freighttech/ui",
+            "keywords": [],
+            "version": "0.14.9",
+            "description": "Composable UI toolkit for Open Mercato backoffice and business apps, maintained by [FreightTech.org](https://freighttech.org).",
+            "sanitized_name": "@freighttech/ui",
+            "publisher": {
+              "email": "admin@freighttech.org",
+              "username": "fto-admin"
+            },
+            "maintainers": [
+              {
+                "email": "admin@freighttech.org",
+                "username": "fto-admin"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-07T17:00:24.800Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@freighttech/ui"
+            }
+          },
+          "score": {
+            "final": 55.329807,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1225,
+            "weekly": 264
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T15:06:18.672Z",
+          "searchScore": 51.603767,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-demo-auth",
+            "keywords": ["open-mercato", "auth", "login", "dev-tools", "widget"],
+            "version": "0.3.0",
+            "description": "Dev-only login form prefill + auto-submit widget for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-demo-auth",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:a4a3aca9-bbad-49be-9814-7993936084ab",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-04-24T13:00:14.939Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-demo-auth#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-demo-auth.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-demo-auth/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-demo-auth"
+            }
+          },
+          "score": {
+            "final": 51.603767,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 646,
+            "weekly": 200
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T14:01:16.121Z",
+          "searchScore": 50.16606,
+          "package": {
+            "name": "create-mercato-module",
+            "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+            "version": "0.5.1",
+            "description": "Create and publish a single module from an existing Open Mercato app.",
+            "sanitized_name": "create-mercato-module",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-14T13:58:52.713Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/create-mercato-module#readme",
+              "repository": "git+https://github.com/open-mercato/create-mercato-module.git",
+              "bugs": "https://github.com/open-mercato/create-mercato-module/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-module"
+            }
+          },
+          "score": {
+            "final": 50.16606,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 401,
+            "weekly": 401
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T11:46:09.197Z",
+          "searchScore": 47.302612,
+          "package": {
+            "name": "@open-mercato/readiness-scanner",
+            "keywords": ["open-mercato", "security", "readiness", "cli", "typescript"],
+            "version": "0.1.0",
+            "description": "Static production-readiness scanner for Open Mercato applications.",
+            "sanitized_name": "@open-mercato/readiness-scanner",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T11:43:50.166Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/mercato-readiness-scanner#readme",
+              "repository": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+              "bugs": "https://github.com/open-mercato/mercato-readiness-scanner/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/readiness-scanner"
+            }
+          },
+          "score": {
+            "final": 47.302612,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 206,
+            "weekly": 206
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T12:26:10.257Z",
+          "searchScore": 41.43296,
+          "package": {
+            "name": "@piotrkarwatka/visits",
+            "keywords": [],
+            "version": "0.1.0",
+            "description": "Open Mercato module: visits",
+            "sanitized_name": "@piotrkarwatka/visits",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-09T12:24:57.137Z",
+            "links": {
+              "homepage": "https://github.com/pkarw/visits-example#readme",
+              "repository": "git+https://github.com/pkarw/visits-example.git",
+              "bugs": "https://github.com/pkarw/visits-example/issues",
+              "npm": "https://www.npmjs.com/package/@piotrkarwatka/visits"
+            }
+          },
+          "score": {
+            "final": 41.43296,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 204,
+            "weekly": 8
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T22:36:12.836Z",
+          "searchScore": 39.5481,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-durable-work",
+            "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+            "version": "0.6.0",
+            "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+            "sanitized_name": "@fullstackhouse/open-mercato-durable-work",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:cbc6f716-d3e0-446d-878d-65d7a4c1ce70",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:10:25.314Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-durable-work"
+            }
+          },
+          "score": {
+            "final": 39.5481,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 172,
+            "weekly": 27
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T22:36:11.101Z",
+          "searchScore": 34.434563,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+            "version": "0.6.0",
+            "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+            "sanitized_name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:ab4e576a-f994-4691-8250-9bcc793c31f8",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:09:09.970Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-data-sync-durable"
+            }
+          },
+          "score": {
+            "final": 34.434563,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 66,
+            "weekly": 11
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T14:06:17.318Z",
+          "searchScore": 33.856007,
+          "package": {
+            "name": "opencode-mercato",
+            "keywords": [
+              "opencode",
+              "opencode-plugin",
+              "marketplace",
+              "tui",
+              "plugins",
+              "mcp",
+              "skills",
+              "themes",
+              "agents",
+              "bun",
+              "typescript"
+            ],
+            "version": "0.2.1",
+            "description": "Mercato — the OpenCode V2 marketplace for everything: plugins, MCP servers, skills, themes, and agents, inside the TUI",
+            "sanitized_name": "opencode-mercato",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:b3491d16-876e-4cab-b185-10b6837e8f3b",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "thomassanna1e@gmail.com",
+                "username": "thomassanna"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-17T13:23:01.293Z",
+            "links": {
+              "homepage": "https://github.com/ThomasSanna/opencode-mercato#readme",
+              "repository": "git+https://github.com/ThomasSanna/opencode-mercato.git",
+              "bugs": "https://github.com/ThomasSanna/opencode-mercato/issues",
+              "npm": "https://www.npmjs.com/package/opencode-mercato"
+            }
+          },
+          "score": {
+            "final": 33.856007,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 92,
+            "weekly": 14
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T18:16:21.922Z",
+          "searchScore": 32.30516,
+          "package": {
+            "name": "@northbound-run/sync-shopify",
+            "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+            "version": "0.5.0",
+            "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+            "sanitized_name": "@northbound-run/sync-shopify",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:4716e9da-6fd0-4841-9caa-c089b30e12ef",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-19T15:40:40.378Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-shopify",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-shopify/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-shopify"
+            }
+          },
+          "score": {
+            "final": 32.30516,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 355,
+            "weekly": 20
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T19:46:18.865Z",
+          "searchScore": 31.985542,
+          "package": {
+            "name": "@freighttech/shipment-tracking",
+            "keywords": [],
+            "version": "0.7.2",
+            "description": "Carrier shipment tracking for the Open Mercato platform — DCSA carrier adapters (Maersk, MSC, CMA CGM, Hapag-Lloyd, ZIM, COSCO, Evergreen), a ShipsGo aggregator fallback, a Journey Timeline, and an optional live vessel/POI map.",
+            "sanitized_name": "@freighttech/shipment-tracking",
+            "publisher": {
+              "email": "admin@freighttech.org",
+              "username": "fto-admin"
+            },
+            "maintainers": [
+              {
+                "email": "admin@freighttech.org",
+                "username": "fto-admin"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-24T19:26:05.384Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@freighttech/shipment-tracking"
+            }
+          },
+          "score": {
+            "final": 31.985542,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 75,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T00:26:15.685Z",
+          "searchScore": 28.193384,
+          "package": {
+            "name": "@northbound-run/sync-google-sheets",
+            "keywords": [
+              "open-mercato",
+              "google-sheets",
+              "data-sync",
+              "oauth",
+              "integration",
+              "bidirectional-sync",
+              "etl"
+            ],
+            "version": "0.2.0",
+            "description": "Google Sheets ↔ Open Mercato Data Sync adapter: production-ready import, plus experimental scheduled sync and bidirectional export. Entity-agnostic and reusable — not tied to any specific project.",
+            "sanitized_name": "@northbound-run/sync-google-sheets",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:5a0ef4ab-5f79-4c39-ab88-fea6b6b3b1b6",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-07-23T23:23:28.297Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-google-sheets#readme",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-google-sheets.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-google-sheets/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-google-sheets"
+            }
+          },
+          "score": {
+            "final": 28.193384,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 27,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T11:51:12.839Z",
+          "searchScore": 25.917894,
+          "package": {
+            "name": "@sensinum/strapi-plugin-open-mercato",
+            "keywords": ["strapi", "open-mercato", "plugin", "custom-field", "ecommerce"],
+            "version": "1.0.0",
+            "description": "Strapi - Open Mercato seamless integration",
+            "sanitized_name": "@sensinum/strapi-plugin-open-mercato",
+            "publisher": {
+              "email": "hello@sensinum.com",
+              "username": "cyp3r"
+            },
+            "maintainers": [
+              {
+                "email": "hello@sensinum.com",
+                "username": "cyp3r"
+              },
+              {
+                "email": "maksymilian.pamula@gmail.com",
+                "username": "kronos66"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-02-22T14:08:07.113Z",
+            "links": {
+              "homepage": "https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato/tree/main#readme",
+              "repository": "git+https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato.git",
+              "bugs": "https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@sensinum/strapi-plugin-open-mercato"
+            }
+          },
+          "score": {
+            "final": 25.917894,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 42,
+            "weekly": 30
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T09:51:08.220Z",
+          "searchScore": 24.93241,
+          "package": {
+            "name": "@fastwhitecat/integration-ksef-direct",
+            "keywords": [],
+            "version": "0.1.8",
+            "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+            "sanitized_name": "@fastwhitecat/integration-ksef-direct",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "7a7aa871-7409-4a03-83c6-def80393f97f",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "bernard.van.der.esch@fastwhitecat.com",
+                "username": "bernard-fwc"
+              },
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-15T09:45:06.770Z",
+            "links": {
+              "homepage": "https://github.com/FastWhiteCat/openmercato-module-ksef#readme",
+              "repository": "git+https://github.com/FastWhiteCat/openmercato-module-ksef.git",
+              "bugs": "https://github.com/FastWhiteCat/openmercato-module-ksef/issues",
+              "npm": "https://www.npmjs.com/package/@fastwhitecat/integration-ksef-direct"
+            }
+          },
+          "score": {
+            "final": 24.93241,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 21,
+            "weekly": 21
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T11:51:17.818Z",
+          "searchScore": 23.293772,
+          "package": {
+            "name": "@piotrkarwatka/marketing-consents",
+            "keywords": [],
+            "version": "0.1.0",
+            "description": "Open Mercato module: marketing_consents",
+            "sanitized_name": "@piotrkarwatka/marketing-consents",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-14T11:49:41.185Z",
+            "links": {
+              "homepage": "https://github.com/pkarw/marketing-consents#readme",
+              "repository": "git+https://github.com/pkarw/marketing-consents.git",
+              "bugs": "https://github.com/pkarw/marketing-consents/issues",
+              "npm": "https://www.npmjs.com/package/@piotrkarwatka/marketing-consents"
+            }
+          },
+          "score": {
+            "final": 23.293772,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 24,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T11:31:09.181Z",
+          "searchScore": 22.345436,
+          "package": {
+            "name": "@dainamite/billing",
+            "keywords": [],
+            "version": "0.19.0",
+            "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+            "sanitized_name": "@dainamite/billing",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:51.527Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/billing"
+            }
+          },
+          "score": {
+            "final": 22.345436,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 37,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T01:01:09.554Z",
+          "searchScore": 21.74662,
+          "package": {
+            "name": "@northbound-run/channel-cloudflare-email",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "email",
+              "email-routing",
+              "email-sending",
+              "communication-channels"
+            ],
+            "version": "0.2.0",
+            "description": "Cloudflare Email Service channel for Open Mercato: inbound email via Email Routing + a thin Email Worker, outbound via the Email Sending REST API, with real delivery status from Queues event subscriptions.",
+            "sanitized_name": "@northbound-run/channel-cloudflare-email",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:d9cf3a19-ece2-4c44-8ceb-2bd4942b6e9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-07T00:08:18.861Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-email",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-email.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-email/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/channel-cloudflare-email"
+            }
+          },
+          "score": {
+            "final": 21.74662,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:09.656Z",
+          "searchScore": 20.150898,
+          "package": {
+            "name": "@open-mercato/client",
+            "keywords": [],
+            "version": "0.3.5",
+            "description": "Typed API client for the Open Mercato platform, generated directly from the monorepo's OpenAPI specification. Full product docs live at https://docs.openmercato.com and the hosted API explorer is available at https://demo.openmercato.com/docs/api. Project",
+            "sanitized_name": "@open-mercato/client",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2025-11-12T13:18:51.033Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/client"
+            }
+          },
+          "score": {
+            "final": 20.150898,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 3
+          },
+          "dependents": "1",
+          "updated": "2026-10-21T01:16:37.598Z",
+          "searchScore": 19.937725,
+          "package": {
+            "name": "@open-mercato/cezar-api-client",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "Typed client and shared contract types for the cezar cockpit HTTP API.",
+            "sanitized_name": "@open-mercato/cezar-api-client",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:43:59.433Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-api-client"
+            }
+          },
+          "score": {
+            "final": 19.937725,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 17,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T20:26:12.148Z",
+          "searchScore": 19.62526,
+          "package": {
+            "name": "@open-mercato/cezar-react",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "React providers, components, and the complete embeddable Cezar cockpit.",
+            "sanitized_name": "@open-mercato/cezar-react",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:41:24.252Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-react"
+            }
+          },
+          "score": {
+            "final": 19.62526,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 6
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T19:31:15.445Z",
+          "searchScore": 18.522896,
+          "package": {
+            "name": "@northbound-run/search-cloudflare",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "ai-search",
+              "autorag",
+              "search",
+              "fulltext",
+              "hybrid-search",
+              "rag"
+            ],
+            "version": "0.1.1",
+            "description": "Cloudflare AI Search as a pluggable fulltext driver for Open Mercato: hybrid BM25 + vector retrieval behind the stock FullTextSearchDriver contract, with no search service to operate.",
+            "sanitized_name": "@northbound-run/search-cloudflare",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:aab4aba8-e523-4926-ab07-d15eaad6ae9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-08T18:43:20.080Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/search-cloudflare"
+            }
+          },
+          "score": {
+            "final": 18.522896,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 17,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T00:51:15.984Z",
+          "searchScore": 18.14137,
+          "package": {
+            "name": "@dainamite/cpq",
+            "keywords": [],
+            "version": "0.4.0",
+            "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+            "sanitized_name": "@dainamite/cpq",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:51.413Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/cpq"
+            }
+          },
+          "score": {
+            "final": 18.14137,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 72,
+            "weekly": 7
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T10:11:11.810Z",
+          "searchScore": 17.281387,
+          "package": {
+            "name": "1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "keywords": ["info", "telegram", "educational", "1-elevated-trading-gianluigi-ventre-vol1-vol2"],
+            "version": "7.12.11",
+            "description": "Community e info per 1% Elevated Trading – Gianluigi Ventre  (Vol.1 + Vol.2)",
+            "sanitized_name": "1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "publisher": {
+              "email": "ulises.lakshya@minafter.com",
+              "username": "umomotro"
+            },
+            "maintainers": [
+              {
+                "email": "ulises.lakshya@minafter.com",
+                "username": "umomotro"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-09T08:16:24.762Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/1-elevated-trading-gianluigi-ventre-vol1-vol2"
+            }
+          },
+          "score": {
+            "final": 17.281387,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 25,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-18T12:36:11.706Z",
+          "searchScore": 16.16579,
+          "package": {
+            "name": "@zizzfizzix/aef",
+            "keywords": [],
+            "version": "0.5.1",
+            "description": "Slot-based, adapter-driven engineering skills for AI coding harnesses.",
+            "sanitized_name": "@zizzfizzix/aef",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:06e8ddc8-f8a6-4b39-9f0d-ec945340ed4d",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "kuba.serafinowski@gmail.com",
+                "username": "kuba.wtf"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-06-21T11:10:58.366Z",
+            "links": {
+              "homepage": "https://github.com/zizzfizzix/agentic-engineering-framework#readme",
+              "repository": "git+https://github.com/zizzfizzix/agentic-engineering-framework.git",
+              "bugs": "https://github.com/zizzfizzix/agentic-engineering-framework/issues",
+              "npm": "https://www.npmjs.com/package/@zizzfizzix/aef"
+            }
+          },
+          "score": {
+            "final": 16.16579,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 26,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T00:31:39.946Z",
+          "searchScore": 15.69414,
+          "package": {
+            "name": "@pat-lewczuk/cezar",
+            "keywords": [],
+            "version": "0.1.5",
+            "description": "Local cockpit for running and tracking AI agent tasks in your repo. Uses your logged-in `claude` CLI and `gh` — zero config, zero database.",
+            "sanitized_name": "@pat-lewczuk/cezar",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-07-15T23:14:15.747Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@pat-lewczuk/cezar"
+            }
+          },
+          "score": {
+            "final": 15.69414,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T14:41:07.423Z",
+          "searchScore": 13.423369,
+          "package": {
+            "name": "open-mercato-generator",
+            "keywords": [],
+            "version": "0.3.13",
+            "description": "Open Mercato OpenAPI -> Rust client generator tools",
+            "sanitized_name": "open-mercato-generator",
+            "publisher": {
+              "email": "m.kadziolka@gmail.com",
+              "username": "mkadziolka"
+            },
+            "maintainers": [
+              {
+                "email": "m.kadziolka@gmail.com",
+                "username": "mkadziolka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-01-17T11:28:55.016Z",
+            "links": {
+              "homepage": "https://github.com/mkadzikolka/open-mercato-rust-client",
+              "repository": "git+https://github.com/mkadziolka/open-mercato-rust-client.git",
+              "bugs": "https://github.com/mkadziolka/open-mercato-rust-client/issues",
+              "npm": "https://www.npmjs.com/package/open-mercato-generator"
+            }
+          },
+          "score": {
+            "final": 13.423369,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 19,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:11:12.056Z",
+          "searchScore": 13.19292,
+          "package": {
+            "name": "vedi-il-0-to-blockchain-luca-valori",
+            "keywords": ["guida", "risorse", "formazione", "valori", "corso", "blockchain", "luca"],
+            "version": "1.0.253211",
+            "description": "Dettagli e link per il materiale relativo a 0 to blockchain – Luca Valori",
+            "sanitized_name": "vedi-il-0-to-blockchain-luca-valori",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:19:27.354Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/vedi-il-0-to-blockchain-luca-valori"
+            }
+          },
+          "score": {
+            "final": 13.19292,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T09:51:10.523Z",
+          "searchScore": 12.805028,
+          "package": {
+            "name": "@cyberhub/trust-open-mercato-core",
+            "keywords": [
+              "open-mercato-core",
+              "open-mercato-core",
+              "security",
+              "security-report",
+              "trust-score",
+              "vulnerability",
+              "npm-audit",
+              "npm-security",
+              "supply-chain",
+              "pkgtrust",
+              "audit",
+              "scan",
+              "risk",
+              "risk-assessment",
+              "standard"
+            ],
+            "version": "1.0.0",
+            "description": "Security Trust Report: @open-mercato/core@0.4.10 — 57/100 (C+, standard). Maintainer risk, supply chain analysis from 8 security databases.",
+            "sanitized_name": "@cyberhub/trust-open-mercato-core",
+            "publisher": {
+              "email": "nrupaks@gmail.com",
+              "username": "nrupaks"
+            },
+            "maintainers": [
+              {
+                "email": "nrupaks@gmail.com",
+                "username": "nrupaks"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-04-07T07:33:56.962Z",
+            "links": {
+              "homepage": "https://nrupak.com/trust/%40open-mercato%2Fcore",
+              "repository": "git+https://github.com/nrupaks/pkgtrust.git",
+              "bugs": "https://github.com/nrupaks/pkgtrust/issues",
+              "npm": "https://www.npmjs.com/package/@cyberhub/trust-open-mercato-core"
+            }
+          },
+          "score": {
+            "final": 12.805028,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 24,
+            "weekly": 2
+          },
+          "dependents": "1",
+          "updated": "2026-10-20T20:26:40.743Z",
+          "searchScore": 12.743546,
+          "package": {
+            "name": "@open-mercato/cezar-contract",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "The cezar HTTP API contract: zod schemas and the types inferred from them.",
+            "sanitized_name": "@open-mercato/cezar-contract",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:41:19.457Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-contract"
+            }
+          },
+          "score": {
+            "final": 12.743546,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 12,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:21:08.483Z",
+          "searchScore": 12.143105,
+          "package": {
+            "name": "scarica-il-corso-0-to-blockchain-luca-valori",
+            "keywords": ["scarica", "corso", "download", "0-to-blockchain-luca-valori"],
+            "version": "4.92.772",
+            "description": "Download gratuito per 0 to blockchain – Luca Valori",
+            "sanitized_name": "scarica-il-corso-0-to-blockchain-luca-valori",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:26:07.217Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/scarica-il-corso-0-to-blockchain-luca-valori"
+            }
+          },
+          "score": {
+            "final": 12.143105,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 19,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:16:11.006Z",
+          "searchScore": 10.958494,
+          "package": {
+            "name": "vedi-il-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "keywords": [
+              "guida",
+              "trading",
+              "gianluigi",
+              "risorse",
+              "vol1",
+              "vol2",
+              "formazione",
+              "ventre",
+              "elevated",
+              "corso"
+            ],
+            "version": "2.0.253211",
+            "description": "Dettagli e link per il materiale relativo a 1% Elevated Trading – Gianluigi Ventre  (Vol.1 + Vol.2)",
+            "sanitized_name": "vedi-il-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:20:33.190Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/vedi-il-1-elevated-trading-gianluigi-ventre-vol1-vol2"
+            }
+          },
+          "score": {
+            "final": 10.958494,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 10,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T10:26:08.826Z",
+          "searchScore": 10.8838215,
+          "package": {
+            "name": "come-scaricare-0-to-blockchain-luca-valori",
+            "keywords": [
+              "download",
+              "scarica",
+              "scontato",
+              "corso",
+              "corsipiratati",
+              "gratis",
+              "0",
+              "to",
+              "blockchain",
+              "luca",
+              "valori"
+            ],
+            "version": "2.3.65",
+            "description": "13 seconds ago - Se stai cercando come scaricare il corso 0 to blockchain – Luca Valori per pochi spicci clicca qui.",
+            "sanitized_name": "come-scaricare-0-to-blockchain-luca-valori",
+            "publisher": {
+              "email": "ulises.lakshya@minafter.com",
+              "username": "umomotro"
+            },
+            "maintainers": [
+              {
+                "email": "ulises.lakshya@minafter.com",
+                "username": "umomotro"
+              }
+            ],
+            "license": "ISC",
+            "date": "2026-05-09T08:33:23.315Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/come-scaricare-0-to-blockchain-luca-valori"
+            }
+          },
+          "score": {
+            "final": 10.8838215,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 26,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T08:51:36.203Z",
+          "searchScore": 10.11555,
+          "package": {
+            "name": "@dainamite/cpq-billing-connector",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "Wires @dainamite/cpq subscription lifecycle events to @dainamite/billing API calls (activated / amended / renewed / cancelled / merged / superseded).",
+            "sanitized_name": "@dainamite/cpq-billing-connector",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:50.785Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/cpq-billing-connector"
+            }
+          },
+          "score": {
+            "final": 10.11555,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 11,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T19:31:49.742Z",
+          "searchScore": 9.010968,
+          "package": {
+            "name": "cosa-opencode",
+            "keywords": ["opencode", "opencode-plugin", "cosa", "cosa-skills", "agents", "orchestration"],
+            "version": "0.1.0",
+            "description": "Cosa for opencode — registers the Consigliere, Famiglia Codice and Famiglia Disegno as opencode agents and points the skill loader at Cosa's doctrine skills.",
+            "sanitized_name": "cosa-opencode",
+            "publisher": {
+              "email": "robert@kummer.email",
+              "username": "rokde"
+            },
+            "maintainers": [
+              {
+                "email": "robert@kummer.email",
+                "username": "rokde"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-07-27T18:32:55.581Z",
+            "links": {
+              "homepage": "https://github.com/rokde/cosa-skills#readme",
+              "repository": "git+https://github.com/rokde/cosa-skills.git",
+              "bugs": "https://github.com/rokde/cosa-skills/issues",
+              "npm": "https://www.npmjs.com/package/cosa-opencode"
+            }
+          },
+          "score": {
+            "final": 9.010968,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T10:26:12.397Z",
+          "searchScore": 8.528554,
+          "package": {
+            "name": "come-scaricare-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "keywords": [
+              "download",
+              "scarica",
+              "scontato",
+              "corso",
+              "corsipiratati",
+              "gratis",
+              "1",
+              "elevated",
+              "trading",
+              "gianluigi",
+              "ventre",
+              "vol1",
+              "vol2"
+            ],
+            "version": "1.3.32",
+            "description": "13 seconds ago - Se stai cercando come scaricare il corso 1% Elevated Trading – Gianluigi Ventre  (Vol.1 + Vol.2) per pochi spicci clicca qui.",
+            "sanitized_name": "come-scaricare-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "publisher": {
+              "email": "ulises.lakshya@minafter.com",
+              "username": "umomotro"
+            },
+            "maintainers": [
+              {
+                "email": "ulises.lakshya@minafter.com",
+                "username": "umomotro"
+              }
+            ],
+            "license": "ISC",
+            "date": "2026-05-09T08:34:20.281Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/come-scaricare-1-elevated-trading-gianluigi-ventre-vol1-vol2"
+            }
+          },
+          "score": {
+            "final": 8.528554,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 9,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:21:11.353Z",
+          "searchScore": 7.9341054,
+          "package": {
+            "name": "scarica-il-corso-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "keywords": ["scarica", "corso", "download", "1-elevated-trading-gianluigi-ventre-vol1-vol2"],
+            "version": "2.93.9",
+            "description": "Download gratuito per 1% Elevated Trading – Gianluigi Ventre  (Vol.1 + Vol.2)",
+            "sanitized_name": "scarica-il-corso-1-elevated-trading-gianluigi-ventre-vol1-vol2",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:26:20.914Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/scarica-il-corso-1-elevated-trading-gianluigi-ventre-vol1-vol2"
+            }
+          },
+          "score": {
+            "final": 7.9341054,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 9,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:16:08.541Z",
+          "searchScore": 7.734266,
+          "package": {
+            "name": "vedi-il-10-in-legge-10-cefti",
+            "keywords": ["legge", "cefti", "guida", "risorse", "formazione", "corso"],
+            "version": "1.0.253211",
+            "description": "Dettagli e link per il materiale relativo a 10 In Legge 10 – CEFTI",
+            "sanitized_name": "vedi-il-10-in-legge-10-cefti",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:20:42.617Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/vedi-il-10-in-legge-10-cefti"
+            }
+          },
+          "score": {
+            "final": 7.734266,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 9,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T17:46:34.626Z",
+          "searchScore": 7.554277,
+          "package": {
+            "name": "@fast-white-cat/integration-ksef-direct",
+            "keywords": [],
+            "version": "0.1.2",
+            "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+            "sanitized_name": "@fast-white-cat/integration-ksef-direct",
+            "publisher": {
+              "email": "bernard.van.der.esch@fastwhitecat.com",
+              "username": "fastwhitecat"
+            },
+            "maintainers": [
+              {
+                "email": "bernard.van.der.esch@fastwhitecat.com",
+                "username": "fastwhitecat"
+              }
+            ],
+            "date": "2026-06-10T16:04:07.316Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@fast-white-cat/integration-ksef-direct"
+            }
+          },
+          "score": {
+            "final": 7.554277,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T17:21:13.116Z",
+          "searchScore": 6.665042,
+          "package": {
+            "name": "scarica-il-corso-10-in-legge-10-cefti",
+            "keywords": ["scarica", "corso", "download", "10-in-legge-10-cefti"],
+            "version": "3.91.56",
+            "description": "Download gratuito per 10 In Legge 10 – CEFTI",
+            "sanitized_name": "scarica-il-corso-10-in-legge-10-cefti",
+            "publisher": {
+              "email": "umbertomonaldo@libero.it",
+              "username": "torreumber"
+            },
+            "maintainers": [
+              {
+                "email": "umbertomonaldo@libero.it",
+                "username": "torreumber"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-08T15:26:34.635Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/scarica-il-corso-10-in-legge-10-cefti"
+            }
+          },
+          "score": {
+            "final": 6.665042,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 6,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T03:36:15.808Z",
+          "searchScore": 5.9041996,
+          "package": {
+            "name": "dowload_ebok_il_selfie_del_mondo_by_marco_d_eramo_uwx9f",
+            "keywords": [],
+            "version": "1.0.8",
+            "description": "Ｄｏｗｎｌｏａｄ ｅｂｏｏｋ ｐｄｆ ｍｏｂｉ ｅｐｕｂ Marco d'Eramo Il selfie del mondo is available now",
+            "sanitized_name": "dowload_ebok_il_selfie_del_mondo_by_marco_d_eramo_uwx9f",
+            "publisher": {
+              "email": "idettemintz4481@pdflivres.com",
+              "username": "idettemintz4481"
+            },
+            "maintainers": [
+              {
+                "email": "idettemintz4481@pdflivres.com",
+                "username": "idettemintz4481"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-02T16:20:54.770Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/dowload_ebok_il_selfie_del_mondo_by_marco_d_eramo_uwx9f"
+            }
+          },
+          "score": {
+            "final": 5.9041996,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T02:11:54.142Z",
+          "searchScore": 5.7603393,
+          "package": {
+            "name": "come-scaricare-il-burattinaio-con-le-mani-doro-di-riccardo-vio-ultimate-success-formula",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "26 seconds ago -  Se stai cercando come scaricare il corso Il Burattinaio con le mani d’Oro di Riccardo Vio (Ultimate Success Formula) per pochi spicci allora clicca sul link qui sotto. Smetti di sprecare migliaia di euro senza rinunciare ad apprendere co",
+            "sanitized_name": "come-scaricare-il-burattinaio-con-le-mani-doro-di-riccardo-vio-ultimate-success-formula",
+            "publisher": {
+              "email": "costanzamonti@blu.it",
+              "username": "costanzamonti"
+            },
+            "maintainers": [
+              {
+                "email": "costanzamonti@blu.it",
+                "username": "costanzamonti"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-14T16:04:12.964Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/come-scaricare-il-burattinaio-con-le-mani-doro-di-riccardo-vio-ultimate-success-formula"
+            }
+          },
+          "score": {
+            "final": 5.7603393,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 2,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T13:11:42.156Z",
+          "searchScore": 5.5508842,
+          "package": {
+            "name": "dowload_ebok_il_mercato_dei_npls_tra_domanda_e_offerta_by_emanuele_carluccio_valter_conca_n3he9",
+            "keywords": [],
+            "version": "2.0.2",
+            "description": "Ｄｏｗｎｌｏａｄ ｅｂｏｏｋ ｐｄｆ ｍｏｂｉ ｅｐｕｂ Emanuele Carluccio & Valter Conca Il mercato dei NPLs tra domanda e offerta is available now",
+            "sanitized_name": "dowload_ebok_il_mercato_dei_npls_tra_domanda_e_offerta_by_emanuele_carluccio_valter_conca_n3he9",
+            "publisher": {
+              "email": "herthafrerichs4503@pdflivres.com",
+              "username": "herthafrerichs4503"
+            },
+            "maintainers": [
+              {
+                "email": "herthafrerichs4503@pdflivres.com",
+                "username": "herthafrerichs4503"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-02T17:45:00.318Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/dowload_ebok_il_mercato_dei_npls_tra_domanda_e_offerta_by_emanuele_carluccio_valter_conca_n3he9"
+            }
+          },
+          "score": {
+            "final": 5.5508842,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T14:51:09.066Z",
+          "searchScore": 5.366186,
+          "package": {
+            "name": "corso-accademia-del-self-publishing-20-alessandro-arnao-br8",
+            "keywords": [
+              "download",
+              "scarica",
+              "scontato",
+              "corso",
+              "corsipiratati",
+              "accademia",
+              "del",
+              "self",
+              "publishing",
+              "2.0"
+            ],
+            "version": "5.5.27",
+            "description": "Aggiornato ora - Scarica Accademia del Self Publishing 2.0  – Alessandro Arnao qui.",
+            "sanitized_name": "corso-accademia-del-self-publishing-20-alessandro-arnao-br8",
+            "publisher": {
+              "email": "ulises.lakshya@minafter.com",
+              "username": "umomotro"
+            },
+            "maintainers": [
+              {
+                "email": "ulises.lakshya@minafter.com",
+                "username": "umomotro"
+              }
+            ],
+            "license": "ISC",
+            "date": "2026-05-11T12:57:31.155Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/corso-accademia-del-self-publishing-20-alessandro-arnao-br8"
+            }
+          },
+          "score": {
+            "final": 5.366186,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 6,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T14:06:15.552Z",
+          "searchScore": 5.0193596,
+          "package": {
+            "name": "come-scaricare-10-in-legge-10-cefti",
+            "keywords": [
+              "scarica",
+              "download",
+              "sicurezza sul lavoro",
+              "cefti",
+              "scontato",
+              "corso",
+              "formazione professionale",
+              "legge",
+              "telegram"
+            ],
+            "version": "1.0.0",
+            "description": "Se stai cercando come scaricare il corso 10 In Legge 10 – CEFTI per pochi spicci allora clicca sul link nel readme.",
+            "sanitized_name": "come-scaricare-10-in-legge-10-cefti",
+            "publisher": {
+              "email": "federicoverga@keemail.me",
+              "username": "federicoparone"
+            },
+            "maintainers": [
+              {
+                "email": "federicoverga@keemail.me",
+                "username": "federicoparone"
+              }
+            ],
+            "license": "ISC",
+            "date": "2026-03-27T09:37:53.241Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/come-scaricare-10-in-legge-10-cefti"
+            }
+          },
+          "score": {
+            "final": 5.0193596,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 6,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T15:12:06.102Z",
+          "searchScore": 4.786305,
+          "package": {
+            "name": "lyon-nantes-en-direct-live",
+            "keywords": [],
+            "version": "1.0.5",
+            "description": "Nantes – Lyon : à quelle heure et sur quelle chaîne voir le match de Coupe de France en direct",
+            "sanitized_name": "lyon-nantes-en-direct-live",
+            "publisher": {
+              "email": "ahs.sa.atv@gmail.com",
+              "username": "dgfhfhfedre"
+            },
+            "maintainers": [
+              {
+                "email": "ahs.sa.atv@gmail.com",
+                "username": "dgfhfhfedre"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-05T18:16:08.955Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/lyon-nantes-en-direct-live"
+            }
+          },
+          "score": {
+            "final": 4.786305,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 3,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T16:16:32.575Z",
+          "searchScore": 4.5024977,
+          "package": {
+            "name": "public_space_stephen_carr_pdf_zb",
+            "keywords": ["public-space-stephen-carr-pdf"],
+            "version": "1.0.0",
+            "description": "public-space-stephen-carr-pdf",
+            "sanitized_name": "public_space_stephen_carr_pdf_zb",
+            "publisher": {
+              "email": "Dawn662Jennings83@yahoo.com",
+              "username": "ulinlobo"
+            },
+            "maintainers": [
+              {
+                "email": "Dawn662Jennings83@yahoo.com",
+                "username": "ulinlobo"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-07T09:13:11.122Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/public_space_stephen_carr_pdf_zb"
+            }
+          },
+          "score": {
+            "final": 4.5024977,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 4,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T23:36:18.098Z",
+          "searchScore": 3.7131493,
+          "package": {
+            "name": "nantes-lyon-en-direct-live",
+            "keywords": [],
+            "version": "1.0.5",
+            "description": "Nantes – Lyon : à quelle heure et sur quelle chaîne voir le match de Coupe de France en direct",
+            "sanitized_name": "nantes-lyon-en-direct-live",
+            "publisher": {
+              "email": "ahs.sa.atv@gmail.com",
+              "username": "dgfhfhfedre"
+            },
+            "maintainers": [
+              {
+                "email": "ahs.sa.atv@gmail.com",
+                "username": "dgfhfhfedre"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-05T18:12:34.220Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/nantes-lyon-en-direct-live"
+            }
+          },
+          "score": {
+            "final": 3.7131493,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 3,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T23:01:39.026Z",
+          "searchScore": 3.485142,
+          "package": {
+            "name": "dowload_ebok_la_mia_vita_non_proprio_perfetta_by_sophie_kinsella_d88j0",
+            "keywords": [],
+            "version": "5.0.3",
+            "description": "Ｄｏｗｎｌｏａｄ ｅｂｏｏｋ ｐｄｆ ｍｏｂｉ ｅｐｕｂ Sophie Kinsella La mia vita non proprio perfetta is available now",
+            "sanitized_name": "dowload_ebok_la_mia_vita_non_proprio_perfetta_by_sophie_kinsella_d88j0",
+            "publisher": {
+              "email": "lesliagler6343@pdflivres.com",
+              "username": "lesliagler6343"
+            },
+            "maintainers": [
+              {
+                "email": "lesliagler6343@pdflivres.com",
+                "username": "lesliagler6343"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-02T19:25:05.942Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/dowload_ebok_la_mia_vita_non_proprio_perfetta_by_sophie_kinsella_d88j0"
+            }
+          },
+          "score": {
+            "final": 3.485142,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 4,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T11:46:23.748Z",
+          "searchScore": 3.3264713,
+          "package": {
+            "name": "nantes-lyon-en-direct-streaming-gratuit-tv",
+            "keywords": [],
+            "version": "1.0.5",
+            "description": "Nantes – Lyon : à quelle heure et sur quelle chaîne voir le match de Coupe de France en direct",
+            "sanitized_name": "nantes-lyon-en-direct-streaming-gratuit-tv",
+            "publisher": {
+              "email": "ahs.sa.atv@gmail.com",
+              "username": "dgfhfhfedre"
+            },
+            "maintainers": [
+              {
+                "email": "ahs.sa.atv@gmail.com",
+                "username": "dgfhfhfedre"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-05T18:13:12.593Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/nantes-lyon-en-direct-streaming-gratuit-tv"
+            }
+          },
+          "score": {
+            "final": 3.3264713,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 3,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T22:11:15.352Z",
+          "searchScore": 3.3069582,
+          "package": {
+            "name": "come-scaricare-obiettivo-100-transazioni-di-simone-rossi",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "20 seconds ago -  Se stai cercando come scaricare il corso Obiettivo 100 Transazioni di Simone Rossi per pochi spicci allora clicca sul link qui sotto. Smetti di sprecare migliaia di euro senza rinunciare ad apprendere competenze di valore.",
+            "sanitized_name": "come-scaricare-obiettivo-100-transazioni-di-simone-rossi",
+            "publisher": {
+              "email": "costanzamonti@blu.it",
+              "username": "costanzamonti"
+            },
+            "maintainers": [
+              {
+                "email": "costanzamonti@blu.it",
+                "username": "costanzamonti"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-14T15:54:05.731Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/come-scaricare-obiettivo-100-transazioni-di-simone-rossi"
+            }
+          },
+          "score": {
+            "final": 3.3069582,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 2,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T23:01:29.468Z",
+          "searchScore": 3.144737,
+          "package": {
+            "name": "dowload_ebok_breve_storia_del_pensiero_economico_by_alessandro_roncaglia_rqfqp",
+            "keywords": [],
+            "version": "5.0.7",
+            "description": "Ｄｏｗｎｌｏａｄ ｅｂｏｏｋ ｐｄｆ ｍｏｂｉ ｅｐｕｂ Alessandro Roncaglia Breve storia del pensiero economico is available now",
+            "sanitized_name": "dowload_ebok_breve_storia_del_pensiero_economico_by_alessandro_roncaglia_rqfqp",
+            "publisher": {
+              "email": "umekovotaw6748@pdflivres.com",
+              "username": "umekovotaw6748"
+            },
+            "maintainers": [
+              {
+                "email": "umekovotaw6748@pdflivres.com",
+                "username": "umekovotaw6748"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-03T00:40:51.075Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/dowload_ebok_breve_storia_del_pensiero_economico_by_alessandro_roncaglia_rqfqp"
+            }
+          },
+          "score": {
+            "final": 3.144737,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 3,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T23:11:31.206Z",
+          "searchScore": 3.096929,
+          "package": {
+            "name": "nantes-lyon-en-direct-streaming",
+            "keywords": [],
+            "version": "1.0.5",
+            "description": "Nantes – Lyon : à quelle heure et sur quelle chaîne voir le match de Coupe de France en direct",
+            "sanitized_name": "nantes-lyon-en-direct-streaming",
+            "publisher": {
+              "email": "ahs.sa.atv@gmail.com",
+              "username": "dgfhfhfedre"
+            },
+            "maintainers": [
+              {
+                "email": "ahs.sa.atv@gmail.com",
+                "username": "dgfhfhfedre"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-05T18:14:27.007Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/nantes-lyon-en-direct-streaming"
+            }
+          },
+          "score": {
+            "final": 3.096929,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 2,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T05:27:11.630Z",
+          "searchScore": 3.038079,
+          "package": {
+            "name": "dowload_ebok_l_arte_del_non_governo_by_piero_craveri_b67jk",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "Ｄｏｗｎｌｏａｄ ｅｂｏｏｋ ｐｄｆ ｍｏｂｉ ｅｐｕｂ Piero Craveri L'arte del non governo is available now",
+            "sanitized_name": "dowload_ebok_l_arte_del_non_governo_by_piero_craveri_b67jk",
+            "publisher": {
+              "email": "chandaldympha1179@pdflivres.com",
+              "username": "chandaldympha1179"
+            },
+            "maintainers": [
+              {
+                "email": "chandaldympha1179@pdflivres.com",
+                "username": "chandaldympha1179"
+              }
+            ],
+            "license": "ISC",
+            "date": "2023-04-02T23:58:13.173Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/dowload_ebok_l_arte_del_non_governo_by_piero_craveri_b67jk"
+            }
+          },
+          "score": {
+            "final": 3.038079,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 0,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T11:47:36.890Z",
+          "searchScore": 0,
+          "package": {
+            "name": "aitl-cli",
+            "keywords": [],
+            "version": "0.1.1",
+            "description": "Install exactly the agent skills needed for a given AITL course lesson.",
+            "sanitized_name": "aitl-cli",
+            "publisher": {
+              "email": "wojtek.kostanski@gmail.com",
+              "username": "wojtek.kostanski"
+            },
+            "maintainers": [
+              {
+                "email": "wojtek.kostanski@gmail.com",
+                "username": "wojtek.kostanski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-21T11:47:02.523Z",
+            "links": {
+              "homepage": "https://github.com/wojkos/aitl-cli#readme",
+              "repository": "git+https://github.com/wojkos/aitl-cli.git",
+              "bugs": "https://github.com/wojkos/aitl-cli/issues",
+              "npm": "https://www.npmjs.com/package/aitl-cli"
+            }
+          },
+          "score": {
+            "final": 0,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 0,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T15:21:32.906Z",
+          "searchScore": 0,
+          "package": {
+            "name": "mercato-readiness-scanner",
+            "keywords": [],
+            "version": "0.2.2",
+            "description": "Static production-readiness scanner for Open Mercato applications.",
+            "sanitized_name": "mercato-readiness-scanner",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-10-22T15:21:00.543Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/mercato-readiness-scanner#readme",
+              "repository": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+              "bugs": "https://github.com/open-mercato/mercato-readiness-scanner/issues",
+              "npm": "https://www.npmjs.com/package/mercato-readiness-scanner"
+            }
+          },
+          "score": {
+            "final": 0,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 75,
+      "time": "2026-10-23T02:37:54.146Z"
+    }
+  }
+}

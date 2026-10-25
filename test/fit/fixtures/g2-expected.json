@@ -1,0 +1,979 @@
+{
+  "source": "research/g2-dane.json (macierz, kontrola_0.9.0, kontrola_ujemna)",
+  "matrix": {
+    "npm:@dainamite/billing@0.19.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 75,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 75,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 75,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 75,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 3
+    },
+    "npm:@dainamite/cpq@0.4.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 60,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 60,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 60,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 60,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 1
+    },
+    "npm:@dainamite/cpq-billing-connector@1.0.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 6,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 6,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 6,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 6,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@fast-white-cat/integration-ksef-direct@0.1.2": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 38,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@freighttech/shipment-tracking@0.7.2": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 36,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 36,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 36,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 36,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 3
+    },
+    "npm:@freighttech/terminal-tracking@0.7.3": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 25,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 25,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 25,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 25,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 2
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 105,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 105,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 105,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 105,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 7,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 7,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 7,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 7,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 1
+    },
+    "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 4,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 4,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 4,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 4,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 66,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 66,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 66,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 66,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    },
+    "npm:@northbound-run/search-cloudflare@0.1.1": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 19,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 19,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 19,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 19,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 1
+    },
+    "npm:@northbound-run/sync-google-sheets@0.2.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 34,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 34,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 34,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 34,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 1
+    },
+    "npm:@northbound-run/sync-shopify@0.5.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 32,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 32,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 32,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 32,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 1
+    },
+    "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": false,
+          "peersAccept": false,
+          "checked": 53,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": false,
+          "peersAccept": false,
+          "checked": 53,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 54,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 54,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 2
+    },
+    "npm:@piotrkarwatka/visits@0.1.0": {
+      "cells": {
+        "0.7.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 18,
+          "typeIssues": 0
+        },
+        "0.8.0": {
+          "fits": true,
+          "peersAccept": true,
+          "checked": 18,
+          "typeIssues": 0
+        },
+        "0.9.0": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 18,
+          "typeIssues": 0
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "fits": true,
+          "peersAccept": false,
+          "checked": 18,
+          "typeIssues": 0
+        }
+      },
+      "driftToNext": 0
+    }
+  },
+  "control090": {
+    "npm:@open-mercato/ai-assistant@0.9.0": {
+      "checked": 150,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-apns@0.9.0": {
+      "checked": 45,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-discord@0.9.0": {
+      "checked": 112,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-expo@0.9.0": {
+      "checked": 39,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-fcm@0.9.0": {
+      "checked": 41,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-gmail@0.9.0": {
+      "checked": 65,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-imap@0.9.0": {
+      "checked": 63,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-resend@0.9.0": {
+      "checked": 31,
+      "issues": 0
+    },
+    "npm:@open-mercato/channel-ses@0.9.0": {
+      "checked": 31,
+      "issues": 0
+    },
+    "npm:@open-mercato/checkout@0.9.0": {
+      "checked": 159,
+      "issues": 2
+    },
+    "npm:@open-mercato/content@0.9.0": {
+      "checked": 3,
+      "issues": 0
+    },
+    "npm:@open-mercato/documents@0.9.0": {
+      "checked": 138,
+      "issues": 0
+    },
+    "npm:@open-mercato/enterprise@0.9.0": {
+      "checked": 352,
+      "issues": 0
+    },
+    "npm:@open-mercato/events@0.9.0": {
+      "checked": 22,
+      "issues": 0
+    },
+    "npm:@open-mercato/gateway-stripe@0.9.0": {
+      "checked": 50,
+      "issues": 0
+    },
+    "npm:@open-mercato/onboarding@0.9.0": {
+      "checked": 78,
+      "issues": 0
+    },
+    "npm:@open-mercato/scheduler@0.9.0": {
+      "checked": 96,
+      "issues": 0
+    },
+    "npm:@open-mercato/search@0.9.0": {
+      "checked": 118,
+      "issues": 0
+    },
+    "npm:@open-mercato/storage-s3@0.9.0": {
+      "checked": 49,
+      "issues": 0
+    },
+    "npm:@open-mercato/sync-akeneo@0.9.0": {
+      "checked": 101,
+      "issues": 0
+    },
+    "npm:@open-mercato/telemetry@0.9.0": {
+      "checked": 13,
+      "issues": 0
+    },
+    "npm:@open-mercato/tillio@0.9.0": {
+      "checked": 72,
+      "issues": 0
+    },
+    "npm:@open-mercato/webhooks@0.9.0": {
+      "checked": 120,
+      "issues": 0
+    }
+  },
+  "negativeControl": {
+    "npm:@open-mercato/ai-assistant@0.9.0": {
+      "0.7.0": {
+        "issues": 2,
+        "checked": 143
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 150
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 150
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 150
+      }
+    },
+    "npm:@open-mercato/channel-apns@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 45
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 45
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 45
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 45
+      }
+    },
+    "npm:@open-mercato/channel-discord@0.9.0": {
+      "0.7.0": {
+        "issues": 2,
+        "checked": 111
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 112
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 112
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 112
+      }
+    },
+    "npm:@open-mercato/channel-expo@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 39
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 39
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 39
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 39
+      }
+    },
+    "npm:@open-mercato/channel-fcm@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 41
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 41
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 41
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 41
+      }
+    },
+    "npm:@open-mercato/channel-gmail@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 61
+      },
+      "0.8.0": {
+        "issues": 1,
+        "checked": 61
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 65
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 65
+      }
+    },
+    "npm:@open-mercato/channel-imap@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 62
+      },
+      "0.8.0": {
+        "issues": 1,
+        "checked": 62
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 63
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 63
+      }
+    },
+    "npm:@open-mercato/channel-resend@0.9.0": {
+      "0.7.0": {
+        "issues": 3,
+        "checked": 28
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 31
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 31
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 31
+      }
+    },
+    "npm:@open-mercato/channel-ses@0.9.0": {
+      "0.7.0": {
+        "issues": 3,
+        "checked": 28
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 31
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 31
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 31
+      }
+    },
+    "npm:@open-mercato/checkout@0.9.0": {
+      "0.7.0": {
+        "issues": 5,
+        "checked": 158
+      },
+      "0.8.0": {
+        "issues": 2,
+        "checked": 159
+      },
+      "0.9.0": {
+        "issues": 2,
+        "checked": 159
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 2,
+        "checked": 159
+      }
+    },
+    "npm:@open-mercato/content@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 3
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 3
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 3
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 3
+      }
+    },
+    "npm:@open-mercato/documents@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 134
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 138
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 138
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 138
+      }
+    },
+    "npm:@open-mercato/enterprise@0.9.0": {
+      "0.7.0": {
+        "issues": 17,
+        "checked": 305
+      },
+      "0.8.0": {
+        "issues": 2,
+        "checked": 350
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 352
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 352
+      }
+    },
+    "npm:@open-mercato/events@0.9.0": {
+      "0.7.0": {
+        "issues": 3,
+        "checked": 21
+      },
+      "0.8.0": {
+        "issues": 1,
+        "checked": 22
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 22
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 22
+      }
+    },
+    "npm:@open-mercato/gateway-stripe@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 49
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 50
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 50
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 50
+      }
+    },
+    "npm:@open-mercato/onboarding@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 77
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 78
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 78
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 78
+      }
+    },
+    "npm:@open-mercato/scheduler@0.9.0": {
+      "0.7.0": {
+        "issues": 2,
+        "checked": 91
+      },
+      "0.8.0": {
+        "issues": 2,
+        "checked": 91
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 96
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 96
+      }
+    },
+    "npm:@open-mercato/search@0.9.0": {
+      "0.7.0": {
+        "issues": 3,
+        "checked": 115
+      },
+      "0.8.0": {
+        "issues": 1,
+        "checked": 115
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 118
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 118
+      }
+    },
+    "npm:@open-mercato/storage-s3@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 49
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 49
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 49
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 49
+      }
+    },
+    "npm:@open-mercato/sync-akeneo@0.9.0": {
+      "0.7.0": {
+        "issues": 0,
+        "checked": 101
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 101
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 101
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 101
+      }
+    },
+    "npm:@open-mercato/telemetry@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 12
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 13
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 13
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 13
+      }
+    },
+    "npm:@open-mercato/tillio@0.9.0": {
+      "0.7.0": {
+        "issues": 4,
+        "checked": 56
+      },
+      "0.8.0": {
+        "issues": 0,
+        "checked": 72
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 72
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 72
+      }
+    },
+    "npm:@open-mercato/webhooks@0.9.0": {
+      "0.7.0": {
+        "issues": 1,
+        "checked": 120
+      },
+      "0.8.0": {
+        "issues": 1,
+        "checked": 120
+      },
+      "0.9.0": {
+        "issues": 0,
+        "checked": 120
+      },
+      "0.10.1-develop.7583.1.0c886d0a14": {
+        "issues": 0,
+        "checked": 120
+      }
+    }
+  }
+}

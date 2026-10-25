@@ -1,0 +1,274 @@
+---
+// Category page (spec 7.7 G): H1 "Open Mercato modules for <Title>", one SEO sentence, the registry filtered to the
+// category on the server, its own canonical URL. Built-in modules of the same category sit next to it, because the
+// best module is often the one already in core.
+import { readFileSync } from 'node:fs'
+import { parse } from 'yaml'
+import Base from '../../layouts/Base.astro'
+import Sigil from '../../components/Sigil.astro'
+import { packEntry } from '../../lib/registry-pack.ts'
+import Registry, { registryCandidates, toRegistryEntry } from '../../islands/Registry.tsx'
+import { otherVersionCells, withJudgedLines } from '../../../../lib/core/policy.ts'
+import { glyphFromCounts, sigilPhase } from '../../../../lib/sigil/sigil.ts'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import { orderLines } from '../../lib/status.ts'
+import { levelNote } from '../../lib/chips.ts'
+import { isPreviewData } from '../../lib/freshness.ts'
+import type { IndexEntry } from '../../../../lib/schema/index.ts'
+import { builtInPage, categoryPage, href } from '../../lib/url.ts'
+import { registryDefault } from './_data.ts'
+import './_registry.css'
+
+export function getStaticPaths() {
+  return loadSiteData().modules.categories.map((c) => ({ params: { category: c.id } }))
+}
+
+const data = loadSiteData()
+const { modules, builtIn, meta } = data
+const id = Astro.params.category as string
+const cat = modules.categories.find((c) => c.id === id)!
+const lines = orderLines(modules.lines)
+const latestKey = (lines.find((l) => l.source === 'latest') ?? lines[0])?.key ?? null
+// a green latest-line square next to Listed says why (review r3)
+const noteOf = (e: IndexEntry): string | null =>
+  latestKey ? levelNote(e, data.detail(e.path)?.rules, latestKey) : null
+const entries = registryCandidates(modules.entries).filter((e) => e.category === id)
+const visible = registryDefault(entries)
+// a category of tools only (devtools) opens on its tools instead of an empty module list
+const tools = entries.filter((e) => e.listed && (e.kind === 'tool' || e.kind === 'library'))
+const initialKind = visible.length === 0 && tools.length > 0 ? 'tools' : 'modules'
+const core = builtIn.modules.filter((m) => m.category === id).sort((a, b) => a.title.localeCompare(b.title))
+
+/** `seo` from policy/categories.yml when the curator wrote one (spec 4.4); otherwise a sentence from the data. */
+function seoSentence(): string {
+  try {
+    const file = parse(readFileSync('policy/categories.yml', 'utf8')) as { categories?: { id: string; seo?: string }[] }
+    const seo = file.categories?.find((c) => c.id === id)?.seo
+    if (seo) return seo
+  } catch {
+    // fall through
+  }
+  // `4 modules for Payments & Finance, read from their published code and installed in a fresh app on each line.
+  // 2 more are built into core.` (review r1: no "nightly" promise; the 0.8 line runs weekly)
+  const n = visible.length
+  const t = tools.length
+  const coreText = core.length ? ` ${core.length} more ${core.length === 1 ? 'is' : 'are'} built into core.` : ''
+  if (n > 0)
+    return `${n} ${n === 1 ? 'module' : 'modules'} for ${cat.title}, read from their published code and installed in a fresh app on each line.${coreText}`
+  if (t > 0)
+    return `${t} ${t === 1 ? 'tool or library' : 'tools and libraries'} for ${cat.title}, read from their published packages.${coreText}`
+  return `No catalog module for ${cat.title} yet.${coreText}`
+}
+const sentence = seoSentence()
+const others = modules.categories.filter((c) => c.id !== id)
+---
+
+<Base
+  title={`Open Mercato modules for ${cat.title}`}
+  description={sentence}
+  path={categoryPage(id)}
+  dataAsOf={meta.dataAsOf}
+  skip={{ href: '#registry', label: 'Skip to modules' }}
+>
+  <section class="band">
+    <div class="sheet section cat-head">
+      <div class="cat-head__text">
+        <nav class="cat-crumbs" aria-label="Breadcrumb">
+          <a href={href('/')}>Modules</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{cat.title}</span>
+        </nav>
+        <h1 class="t-h1">Open Mercato modules for {cat.title}</h1>
+        <p class="cat-head__sub">{sentence}</p>
+      </div>
+      {
+        core.length > 0 && (
+          <div class="cat-core">
+            <p class="t-tagline">Already in core</p>
+            <ul class="cat-core__list" role="list">
+              {core.map((m) => (
+                <li>
+                  <a href={href(builtInPage(m.id))}>
+                    <Sigil builtIn={m} size={24} />
+                    <span>{m.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="band" id="registry" aria-label={`Modules for ${cat.title}`} tabindex="-1">
+    <div class="sheet section reg-section">
+      <Registry
+        client:painted="idle"
+        entries={entries.map((e) => packEntry(toRegistryEntry(withJudgedLines(e), lines, noteOf(e), otherVersionCells(e))))}
+        lines={lines.map((l) => ({ key: l.key, version: l.version, source: l.source }))}
+        categories={modules.categories.map((c) => ({ id: c.id, title: c.title }))}
+        indexUrl={href('/search-index.json')}
+        site={meta.site}
+        category={id}
+        searchField
+        builtInCount={builtIn.modules.length}
+        initialKind={initialKind}
+        signals={!meta.firstNight}
+        preview={!meta.firstNight && isPreviewData(meta.dataAsOf)}
+        builtInSigils={Object.fromEntries(
+          builtIn.modules.map((b) => [b.id, { glyph: glyphFromCounts(b.anatomy.counts), phase: sigilPhase(`core:${b.id}`) }]),
+        )}
+      />
+    </div>
+  </section>
+
+  <nav class="band" aria-label="Other categories">
+    <div class="sheet section cat-others">
+      <p class="t-tagline">// Other categories</p>
+      <ul class="cat-others__list" role="list">
+        {
+          others.map((c) => (
+            <li>
+              <a href={href(categoryPage(c.id))}>
+                <span>{c.title}</span>
+                <span class="cat-others__n">{c.count}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+</Base>
+
+<style>
+  .cat-head {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 48px;
+    align-items: end;
+  }
+  .cat-head__text {
+    display: grid;
+    gap: 14px;
+  }
+  .cat-crumbs {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cat-crumbs a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .cat-crumbs a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .cat-head__sub {
+    max-width: 58ch;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+  .cat-core {
+    display: grid;
+    gap: 10px;
+    padding: 18px 20px;
+    border-radius: var(--radius-l);
+    background: var(--bg-2);
+  }
+  .cat-core__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cat-core__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 4px 10px 4px 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .cat-core__list a :global(svg) {
+    color: var(--ink-2);
+  }
+  .cat-core__list a:hover {
+    border-color: var(--ink-3);
+  }
+  .reg-section {
+    padding-top: 32px;
+  }
+  #registry:focus {
+    outline: none;
+  }
+  .cat-others {
+    display: grid;
+    gap: 16px;
+  }
+  .cat-others__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cat-others__list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .cat-others__list a:hover {
+    color: var(--ok-text);
+  }
+  .cat-others__n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 991px) {
+    .cat-head {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+  /* 44 px phone targets (spec 7.10, review r7): the breadcrumb and the built-in chips */
+  @media (max-width: 767px) {
+    .cat-crumbs {
+      align-items: center;
+    }
+    .cat-crumbs a {
+      display: inline-flex;
+      align-items: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .cat-head__text {
+      gap: 6px;
+    }
+    .cat-core__list a {
+      min-height: 44px;
+    }
+  }
+</style>

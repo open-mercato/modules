@@ -1,0 +1,5 @@
+npm: open-mercato-generator
+kind: tool
+category: devtools
+summary: Generates a Rust API client from the Open Mercato OpenAPI document.
+whenToUse: Use when a Rust service must call the Open Mercato API with typed requests.

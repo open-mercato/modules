@@ -1,0 +1,7 @@
+# Spec 4.3 example
+npm: "@fullstackhouse/open-mercato-data-sync-durable"
+github: fullstackhouse/open-mercato-durable
+category: integrations-sync
+summary: Drop-in replacement for the built-in data_sync module on leased durable jobs.
+whenToUse: Use when long imports must survive worker restarts with lease and epoch fencing.
+replaces: ["core:data_sync"] # K

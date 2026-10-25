@@ -1,0 +1,9 @@
+# No github field: fullstackhouse/open-mercato-durable (repository.url) returns 404 (23 Oct 2026).
+
+npm: "@fullstackhouse/open-mercato-data-sync-durable"
+category: integrations-sync
+tags: [data-sync, durable, imports]
+summary: Drop-in replacement for the built-in data_sync module that runs imports as durable jobs and resumes after a crash.
+whenToUse: Use when long data_sync imports must survive deploys and worker kills and resume from the last committed cursor.
+whenNotToUse: It takes the data_sync slot of core. It needs open-mercato-durable-work at the same version.
+replaces: ["core:data_sync"]

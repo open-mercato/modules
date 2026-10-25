@@ -1,0 +1,498 @@
+---
+// Receipt page (spec 7.7 C): the paper receipt in the middle, its actions, and the neighbours: the baseline of the
+// same night and line, the previous and the next receipt of the same module on the same line. Printable.
+import Base from '../../layouts/Base.astro'
+import Receipt from '../../components/Receipt.astro'
+import Sigil from '../../components/Sigil.astro'
+import Icon from '../../components/icons/Icon.astro'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import type { Receipt as ReceiptT } from '../../../../lib/schema/index.ts'
+import { NOT_JUDGED_TAIL, notJudgedText, presetText } from '../../../../lib/core/policy.ts'
+import {
+  PREVIEW_CHIP,
+  SOURCE_TEXT,
+  appModules,
+  explainReceipt,
+  isPreview,
+  receiptWord,
+  routesOf,
+  whyHtml,
+} from '../../lib/receipts.ts'
+import { receiptPreset } from '../../../../lib/core/lines.ts'
+import { day, dayYear, timeUtc } from '../../lib/format.ts'
+import { href, modulePage, receiptPage } from '../../lib/url.ts'
+import { wbrHtml } from '../../lib/wrap.ts'
+import { uniqueReceipts } from '../c/_data.ts'
+
+export function getStaticPaths() {
+  return uniqueReceipts(loadSiteData().receipts).map((r) => ({ params: { id: r.id } }))
+}
+
+const data = loadSiteData()
+// a retry confirms the first record under the same id: one page per id, the last record wins
+const receipts = uniqueReceipts(data.receipts)
+const id = Astro.params.id as string
+const r = receipts.find((x) => x.id === id) as ReceiptT
+const entry = r.module ? (data.modules.entries.find((e) => e.locator === r.module!.locator) ?? null) : null
+const name = r.module ? r.module.locator.replace(/^npm:|^github:/, '') : 'Open Mercato itself'
+// the preset of the scaffold (decision of 24 Oct): a new app (classic) gives the verdict, an app from the empty preset
+// the signal `in isolation`; each has its own cell, so the neighbours are of the same preset
+const preset = receiptPreset(r)
+const iso = preset === 'empty' && r.module !== null
+const sameCell = receipts
+  .filter(
+    (x) =>
+      (x.module?.locator ?? null) === (r.module?.locator ?? null) &&
+      x.om.line === r.om.line &&
+      receiptPreset(x) === preset,
+  )
+  .sort((a, b) => (a.run.at < b.run.at ? -1 : 1))
+const i = sameCell.findIndex((x) => x.id === r.id)
+const prev = i > 0 ? sameCell[i - 1] : null
+const next = i >= 0 && i < sameCell.length - 1 ? sameCell[i + 1] : null
+const baseline = r.baseline?.receipt ? (receipts.find((x) => x.id === r.baseline!.receipt) ?? null) : null
+const preview = isPreview(r)
+// the route of an old smoke excerpt comes from the module's facts (review r9), as on the module page and the card
+const routes = entry ? routesOf(data.detail(entry.path)?.facts) : undefined
+const why = explainReceipt(r, appModules(data), routes)
+const appName = preset === 'classic' ? 'new' : 'empty preset'
+// a run that judged nothing says so calmly, with its day: never the module's fault (round 5), in the one sentence of
+// the strip, the drawer and the agent policy (review r7); a baseline is the test app itself, so it names the app
+const notJudged =
+  r.result.status === 'quarantine' && r.result.failedStep
+    ? // Yarn's age gate held back a dependency (round 13): the one sentence of the strip and the drawer
+      `${notJudgedText(r.om.line, 'quarantine', r.run.at)}${r.module ? ` ${NOT_JUDGED_TAIL}` : ''}`
+    : r.result.status === 'infra-error' || r.result.status === 'harness-red'
+    ? r.module
+      ? `${notJudgedText(r.om.line, r.result.status, r.run.at)} ${NOT_JUDGED_TAIL}`
+      : r.result.status === 'harness-red'
+        ? `The ${appName} Open Mercato ${r.om.version} app failed on ${day(r.run.at)}, so modules were not judged.`
+        : `${notJudgedText(r.om.line, r.result.status, r.run.at)}`
+    : null
+/** One state, one word on the whole page: the heading, the meta description and the links read `receiptWord`. */
+const word = (x: ReceiptT): string =>
+  r.module && x.module && x.module.version !== r.module.version ? `receipt for ${x.module.version}` : receiptWord(x)
+// the line's cell of the receipt's preset: the verdict (`compat.lines`) or the signal in isolation
+// (`compat.isolation`); a receipt of another version than the one that cell judges is not that cell (review r11)
+const mainCell = entry && r.module ? (entry.compat.lines[r.om.line] ?? null) : null
+const lineCell = entry && r.module ? (iso ? (entry.compat.isolation?.[r.om.line] ?? null) : mainCell) : null
+const outside = !!r.module && !!entry && !!lineCell?.moduleVersion && lineCell.moduleVersion !== r.module.version
+const cellVersion = lineCell?.moduleVersion ?? null
+const cellReceipt = outside && lineCell ? (receipts.find((x) => x.id === lineCell.receipt) ?? null) : null
+// a receipt of an app from the empty preset says what it is, and where the line's verdict is (24 Oct)
+const mainReceipt = iso && mainCell?.receipt ? (receipts.find((x) => x.id === mainCell.receipt) ?? null) : null
+const isoNote = iso
+  ? `An app from the empty preset: the signal in isolation, not the verdict on ${r.om.line}, which a new app (the classic preset) gives.`
+  : null
+const presetNote = !iso && entry?.compat.inPresets?.includes(r.om.line) ? presetText(r.om.line) : null
+const own = receiptWord(r)
+const heading =
+  r.result.status === 'infra-error' || r.result.status === 'harness-red'
+    ? 'Not judged'
+    : `${own[0]!.toUpperCase()}${own.slice(1)}`
+const title = `Receipt ${r.id} · ${name} on ${r.om.version} · Open Mercato Modules`
+// the heading's word, and a preview run says so where the link unfurls too (review r9: a Slack card of a preview
+// receipt read `verified` like CI)
+const description = `${name}${r.module ? ` ${r.module.version}` : ''} on Open Mercato ${r.om.version}: ${own}, ${dayYear(r.run.at)}.${preview ? ` ${PREVIEW_CHIP}.` : ''}`
+// one order for the cell (review r8: a missing link moved its placeholder to the end): baseline, previous, next
+const neighbours: { k: string; r: ReceiptT | null; label: string }[] = [
+  ...(r.module
+    ? [
+        baseline
+          ? {
+              k: 'Baseline',
+              r: baseline,
+              label: `${preset === 'classic' ? 'New app' : 'Empty preset app'} on ${baseline.om.version} · ${receiptWord(baseline)}`,
+            }
+          : { k: 'Baseline', r: null, label: 'none linked to this run' },
+      ]
+    : []),
+  prev
+    ? { k: 'Previous', r: prev, label: `${day(prev.run.at)} · ${word(prev)}` }
+    : { k: 'Previous', r: null, label: 'none, the first receipt' },
+  // review r12: `the next run of next` read oddly
+  next ? { k: 'Next', r: next, label: `${day(next.run.at)} · ${word(next)}` } : { k: 'Next', r: null, label: 'not run yet' },
+]
+// review r12: a preview run's id is the start time of its batch, not a CI run; the page names the batch by its time
+const runAt = `${day(r.run.at)} ${timeUtc(r.run.at)}`
+---
+
+<Base
+  title={title}
+  description={description}
+  path={receiptPage(r.id)}
+  dataAsOf={data.meta.dataAsOf}
+  skip={{ href: '#receipt', label: 'Skip to the receipt' }}
+>
+  <div class="band">
+    <div class="sheet rpage">
+      <nav class="rpage__crumbs no-print" aria-label="Breadcrumb">
+        <a class="rpage__crumb-root" href={href('/compat')}>Compatibility</a>
+        <span class="rpage__crumb-root" aria-hidden="true">/</span>
+        {
+          entry ? (
+            <a href={href(modulePage(entry.path))}><span class="rpage__crumb-back" aria-hidden="true">←</span><code set:html={wbrHtml(name)} /></a>
+          ) : (
+            <span>{name}</span>
+          )
+        }
+        {/* the line stays with its separator (round 14: `/` ended the first line on a phone and `0.8` stood alone) */}
+        <span class="rpage__crumb-line">
+          <span aria-hidden="true">/</span>
+          <code>{r.om.line}</code>
+          {
+            outside && r.module && (
+              <>
+                <span aria-hidden="true">/</span>
+                <code>{r.module.version}</code>
+              </>
+            )
+          }
+        </span>
+      </nav>
+      <div class="rpage__grid">
+        <aside class="rpage__about no-print">
+          {entry && (
+            <a class="rpage__mod" href={href(modulePage(entry.path))}>
+              <Sigil entry={entry} size={48} />
+              <span>
+                <span class="rpage__title">{entry.title}</span>
+                <span class="rpage__npm" set:html={wbrHtml(name)} />
+              </span>
+            </a>
+          )}
+          {preview && <p class="rpage__chip"><span class="chip chip--preview" title={SOURCE_TEXT[r.harness.runner]}>{PREVIEW_CHIP}</span></p>}
+          <h1 class="t-h2 rpage__h">{heading}</h1>
+          {why && <p class="rpage__why" set:html={whyHtml(why)} />}
+          {notJudged && <p class="rpage__why rpage__why--calm">{notJudged}</p>}
+          {presetNote && <p class="rpage__why rpage__why--calm">{presetNote}</p>}
+          {
+            isoNote && (
+              <p class="rpage__why rpage__why--calm">
+                <span class="sq-iso-key" aria-hidden="true" />
+                {isoNote}{' '}
+                {mainReceipt ? (
+                  <a href={href(receiptPage(mainReceipt.id))}>See the verdict.</a>
+                ) : (
+                  `No receipt from a new app on ${r.om.line} yet.`
+                )}
+              </p>
+            )
+          }
+          <p class="rpage__lead">
+            {/* a run that did not judge the module did not install it either: no `installed` (round 5) */}
+            {r.module ? `Version ${r.module.version}` : 'Nothing added'}
+            {notJudged || !r.module ? ' in' : ' installed in'} a {preset === 'classic' ? 'new' : 'fresh'} Open Mercato {r.om.version} app (<code
+              set:html={wbrHtml(r.om.createApp)}
+            />, preset <code>{preset}</code>) on {dayYear(r.run.at)} at {timeUtc(r.run.at)}.
+          </p>
+          {/* the Verified tooltip (6.8) only under a verified result (review r6): under a break or a run that judged
+              nothing it read like a verdict it is not */}
+          <p class="rpage__fine">
+            {SOURCE_TEXT[r.harness.runner]}
+            {/* the Verified tooltip only where the page says Verified (review r9): never under a baseline or a receipt in
+                isolation */}
+            {r.result.status === 'verified' &&
+              !!r.module &&
+              !iso &&
+              " A module's own code runs during the test. Verified is a compatibility signal, not a security review."}
+          </p>
+          {
+            preview ? (
+              <p class="rpage__run rpage__run--text">
+                Preview batch {runAt}, attempt {r.run.attempt}
+              </p>
+            ) : (
+              <a class="rpage__run" href={r.run.url} rel="noopener noreferrer">
+                Run {r.run.id}, attempt {r.run.attempt} <Icon name="external" size={14} />
+              </a>
+            )
+          }
+        </aside>
+        <div class="rpage__paper" id="receipt">
+          <Receipt receipt={r} jsonHref={href(`/r/${r.id}.json`)} />
+        </div>
+        {/* the cell this receipt belongs to (review r1): its baseline, the receipts before and after it, the matrix */}
+        <aside class="rpage__cell no-print" aria-labelledby="rpage-cell">
+          <p class="t-tagline" id="rpage-cell">{outside ? 'This line' : 'This cell'}</p>
+          <p class="rpage__cellk">
+            <code set:html={wbrHtml(name)} /> on <code>{r.om.line}</code>{iso ? ', in isolation (empty preset)' : ''}
+          </p>
+          <ul class="rpage__nb" role="list">
+            {
+              outside && (
+                <li>
+                  <span class="rpage__nbk">This cell</span>
+                  {cellReceipt ? (
+                    <a href={href(receiptPage(cellReceipt.id))}>receipt for {cellVersion}</a>
+                  ) : (
+                    <span class="rpage__nbn">no receipt for {cellVersion} yet</span>
+                  )}
+                </li>
+              )
+            }
+            {
+              neighbours.map((n) => (
+                <li>
+                  <span class="rpage__nbk">{n.k}</span>
+                  {n.r ? <a href={href(receiptPage(n.r.id))}>{n.label}</a> : <span class="rpage__nbn">{n.label}</span>}
+                </li>
+              ))
+            }
+          </ul>
+          <a class="rpage__all" href={href('/compat')}>All receipts <span aria-hidden="true">→</span></a>
+        </aside>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .rpage {
+    padding: 24px var(--pad) 96px;
+  }
+  .rpage__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .rpage__crumbs a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .rpage__crumb-back {
+    display: none;
+  }
+  .rpage__crumbs a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .rpage__crumbs code {
+    font: inherit;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .rpage__crumb-line {
+    display: inline-flex;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .rpage__crumb-line code {
+    color: var(--ink);
+  }
+  .rpage__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  .rpage__cell {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding-top: 4px;
+  }
+  .rpage__cellk {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .rpage__cellk code {
+    color: var(--ink);
+  }
+  .rpage__nbn {
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+  .rpage__all {
+    justify-self: start;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .rpage__about {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .rpage__paper {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .rpage__mod {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .rpage__mod > span {
+    display: grid;
+    min-width: 0;
+  }
+  .rpage__title {
+    font-weight: 500;
+  }
+  /* an npm name breaks after its '/' only (lib/wrap.ts), never at a hyphen inside the name */
+  .rpage__npm {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .rpage__lead {
+    color: var(--ink-2);
+  }
+  .rpage__lead code {
+    font-size: 0.9em;
+    color: var(--ink);
+  }
+  .rpage__fine {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .rpage__chip {
+    margin-bottom: -8px;
+  }
+  /* the one sentence that says why, under the verdict: the answer before the log */
+  .rpage__why :global(code) {
+    font-size: 0.9em;
+  }
+  .rpage__why {
+    padding-left: 12px;
+    border-left: 2px solid var(--bad-fill);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .rpage__why--calm {
+    border-left-color: var(--line-strong);
+    color: var(--ink-2);
+  }
+  /* a finding about Open Mercato itself (review r8): an ink-3 edge, never the red of a break */
+  .rpage__why--found {
+    border-left-color: var(--ink-3);
+  }
+  .rpage__found {
+    display: grid;
+    gap: 6px;
+    padding-left: 12px;
+    border-left: 2px solid var(--ink-3);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .rpage__found ul {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rpage__found :global(code) {
+    font-size: 0.9em;
+  }
+  .rpage__found a {
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+  .rpage__run--text {
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .rpage__nb {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .rpage__nb li {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .rpage__nbk {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 21px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .rpage__run {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+  @media (max-width: 1199px) {
+    .rpage__grid {
+      grid-template-columns: minmax(0, 1fr) 420px;
+    }
+    .rpage__paper {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+    .rpage__cell {
+      grid-column: 1;
+    }
+  }
+  @media (max-width: 767px) {
+    .rpage__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+      margin-top: 24px;
+    }
+    .rpage__paper {
+      grid-column: 1;
+      grid-row: auto;
+    }
+    /* the verdict and its explanation come first on a phone, in reading order too (review r6): the paper follows.
+       Links are 44 px targets (spec 7.10) */
+    .rpage__crumbs {
+      align-items: center;
+      row-gap: 0;
+    }
+    /* review r12: `COMPATIBILITY /` stood on a line of its own above an empty gap; a phone reads `← package / line`.
+       Round 14: `.rpage__crumbs a` below (44 px targets) outranked this rule for the link, so the root came back */
+    .rpage__crumbs .rpage__crumb-root {
+      display: none;
+    }
+    .rpage__crumb-back {
+      display: inline;
+      margin-right: 6px;
+    }
+    .rpage__crumbs a,
+    .rpage__nb a,
+    .rpage__all,
+    .rpage__run:not(.rpage__run--text) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .rpage__nb li {
+      align-items: center;
+      min-height: 44px;
+      padding: 0;
+    }
+    .rpage__mod {
+      min-height: 44px;
+    }
+  }
+  @media print {
+    .rpage {
+      padding: 0;
+    }
+    .rpage__grid {
+      display: block;
+      margin: 0;
+    }
+  }
+</style>

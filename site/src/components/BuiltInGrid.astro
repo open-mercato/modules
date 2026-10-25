@@ -1,0 +1,205 @@
+---
+// Built-in modules by category (spec 7.7 F): a ledger per category, one row per module: grey sigil, title, ID,
+// description in one line. The page gives it the full width of the sheet.
+import type { BuiltInModule } from '../../../lib/schema/index.ts'
+import Sigil from './Sigil.astro'
+import { builtInPage, href } from '../lib/url.ts'
+
+interface Props {
+  modules: BuiltInModule[]
+  categories: { id: string; title: string }[]
+  coreVersion: string
+  /** Line key of the core release, to mark modules enabled in new apps. */
+  presetLine?: string
+}
+const { modules, categories, coreVersion, presetLine } = Astro.props
+const groups = categories
+  .map((c) => ({ ...c, items: modules.filter((m) => m.category === c.id).sort((a, b) => a.title.localeCompare(b.title)) }))
+  .filter((g) => g.items.length > 0)
+/** Module IDs break after '_' only (`communication_` / `channels`), never inside a word. */
+const idHtml = (id: string): string =>
+  id.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`).replace(/_/g, '_<wbr>')
+// on in a new app (the classic preset, decision of 24 Oct); `inEmptyPreset` says an app from the empty preset has it too
+const onN = presetLine ? modules.filter((m) => m.inPresets.includes(presetLine)).length : 0
+const emptyN = presetLine ? modules.filter((m) => (m.inEmptyPreset ?? []).includes(presetLine)).length : 0
+---
+
+<div class="big">
+  <ul class="big__lede dotlist" role="list">
+    <li>{modules.length} modules of core {coreVersion}</li>
+    <li>ship with every app</li>
+    {
+      /* no presets in the data reads as "unknown", not as "none is on": the segment is left out */
+      onN > 0 && (
+        <li>
+          <span class="big__on">{onN} on in a new app</span>
+        </li>
+      )
+    }
+    {emptyN > 0 && <li>{emptyN} in an app from the empty preset</li>}
+  </ul>
+  {
+    groups.map((g) => (
+      <section class="big__group" aria-labelledby={`big-${g.id}`}>
+        <h3 class="big__cat" id={`big-${g.id}`}>
+          <span>{g.title}</span>
+          <span class="big__count">{g.items.length}</span>
+        </h3>
+        <ul class="big__rows" role="list">
+          {g.items.map((m) => (
+            <li>
+              <a class="big__row" href={href(builtInPage(m.id))}>
+                <span class="big__sig">
+                  <Sigil builtIn={m} size={24} />
+                </span>
+                <span class="big__title">{m.title}</span>
+                <code class="big__id" translate="no" set:html={idHtml(m.id)} />
+                <span class="big__desc" title={m.description}>
+                  {m.description}
+                </span>
+                {presetLine && m.inPresets.includes(presetLine) && <span class="big__on big__flag">On in a new app</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  /* a ledger per category: the category as a heading over its rows, one module per row, a hairline between rows,
+     so one module or twelve read with the same rhythm and the description has the full width */
+  .big {
+    display: grid;
+    gap: 28px;
+  }
+  .big__lede {
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .big__group {
+    display: grid;
+  }
+  .big__cat {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-strong);
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .big__count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .big__rows {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .big__rows > li + li {
+    border-top: 1px solid var(--line);
+  }
+  .big__row {
+    display: grid;
+    grid-template-columns: 24px 240px 180px minmax(0, 1fr) auto;
+    grid-template-areas: 'sig title id desc flag';
+    align-items: center;
+    column-gap: 16px;
+    min-height: 48px;
+    padding: 8px 12px;
+    margin-inline: -12px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color var(--dur-1) var(--ease);
+  }
+  .big__row:hover {
+    background: var(--bg-2);
+  }
+  .big__row:hover .big__title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .big__sig {
+    grid-area: sig;
+    display: flex;
+    color: var(--ink-2);
+  }
+  .big__title {
+    grid-area: title;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+  .big__id {
+    grid-area: id;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--ink-2);
+  }
+  .big__desc {
+    grid-area: desc;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--ink-2);
+  }
+  .big__flag {
+    grid-area: flag;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .big__on {
+    color: var(--ok-text);
+  }
+  /* tablet: the ID goes under the title */
+  @media (max-width: 991px) {
+    .big__row {
+      grid-template-columns: 24px 200px minmax(0, 1fr) auto;
+      grid-template-areas:
+        'sig title desc flag'
+        'sig id    desc flag';
+      row-gap: 0;
+    }
+  }
+  /* phone: title and ID on the first line, the description in up to two lines under them */
+  @media (max-width: 599px) {
+    .big__row {
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      grid-template-areas:
+        'sig title flag'
+        'sig id    id'
+        'sig desc  desc';
+      align-items: start;
+      row-gap: 2px;
+      padding-block: 12px;
+    }
+    .big__desc {
+      margin-top: 4px;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+// 4 px brand rule, max 56.6 rem (openmercato.com .color-divider_gradient-line), violet to yellow to lime.
+interface Props {
+  align?: 'start' | 'center'
+  class?: string
+}
+const { align = 'start', class: cls } = Astro.props
+---
+
+<div class:list={['grule', `grule--${align}`, cls]} role="presentation"></div>
+
+<style>
+  .grule {
+    height: 4px;
+    width: 100%;
+    max-width: 56.6rem;
+    background: var(--grad-rule);
+  }
+  .grule--center {
+    margin-inline: auto;
+  }
+</style>

@@ -1,0 +1,3 @@
+# Open Mercato version that shipped `yarn mercato module search` (9.1). Null until it is released;
+# until then the Ask bar uses the `/ search modules` prefix.
+cliSearchSince: null

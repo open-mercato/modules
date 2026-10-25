@@ -1,0 +1,7 @@
+npm: open-mercato-generator
+github: mkadziolka/open-mercato-rust-client
+kind: tool
+category: devtools
+tags: [rust, openapi, codegen]
+summary: Generates Rust types and a Rust API client from the Open Mercato OpenAPI schema.
+whenToUse: Use when a Rust service has to call the Open Mercato API with typed requests and responses.

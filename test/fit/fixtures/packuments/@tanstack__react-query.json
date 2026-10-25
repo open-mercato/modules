@@ -1,0 +1,322 @@
+{
+  "name": "@tanstack/react-query",
+  "dist-tags": {
+    "latest": "5.104.5"
+  },
+  "time": {
+    "5.100.0": "2026-04-23T13:18:26.152Z",
+    "5.100.1": "2026-04-23T14:24:39.849Z",
+    "5.100.2": "2026-04-25T09:43:58.404Z",
+    "5.100.3": "2026-04-25T11:19:36.880Z",
+    "5.100.4": "2026-04-25T15:54:48.134Z",
+    "5.100.5": "2026-04-25T17:31:45.934Z",
+    "5.100.6": "2026-04-28T16:39:52.105Z",
+    "5.100.7": "2026-05-01T07:45:41.004Z",
+    "5.100.8": "2026-05-02T04:11:47.208Z",
+    "5.100.9": "2026-05-03T14:48:42.837Z",
+    "5.100.10": "2026-05-11T14:11:06.587Z",
+    "5.100.11": "2026-05-18T19:47:29.352Z",
+    "5.100.12": "2026-05-22T18:53:44.834Z",
+    "5.100.13": "2026-05-22T19:19:27.018Z",
+    "5.100.14": "2026-05-23T17:16:15.371Z",
+    "5.101.0": "2026-06-02T19:24:39.383Z",
+    "5.101.1": "2026-06-23T10:00:17.739Z",
+    "5.101.2": "2026-06-27T20:31:41.595Z",
+    "5.101.3": "2026-07-20T12:04:31.997Z",
+    "5.101.4": "2026-07-21T13:04:07.544Z",
+    "5.102.0": "2026-08-22T18:56:06.716Z",
+    "5.102.1": "2026-08-23T11:00:31.880Z",
+    "5.102.2": "2026-08-23T18:00:30.589Z",
+    "5.102.3": "2026-08-24T19:26:18.951Z",
+    "5.102.4": "2026-08-25T21:27:52.178Z",
+    "5.102.5": "2026-08-26T08:59:50.795Z",
+    "5.102.6": "2026-08-26T18:36:03.762Z",
+    "5.102.7": "2026-08-27T08:33:25.188Z",
+    "5.102.8": "2026-08-27T16:06:57.089Z",
+    "5.103.0": "2026-09-16T07:08:58.778Z",
+    "5.103.1": "2026-09-16T15:01:15.056Z",
+    "5.103.2": "2026-09-21T09:33:10.783Z",
+    "5.103.3": "2026-09-26T00:17:07.889Z",
+    "5.104.0": "2026-09-26T03:56:26.747Z",
+    "5.104.1": "2026-10-02T10:04:57.020Z",
+    "5.104.2": "2026-10-11T19:35:15.506Z",
+    "5.104.3": "2026-10-15T07:53:35.788Z",
+    "5.104.4": "2026-10-17T17:55:14.077Z",
+    "5.104.5": "2026-10-19T16:57:50.440Z"
+  },
+  "versions": {
+    "5.100.0": {
+      "version": "5.100.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.0.tgz",
+        "integrity": "sha512-UKENFXttzk3vQgMxiWHXHsD5biQc5B+YRdMRY6nXtT3KapOu/EgJ2wZKx8IBORQiUVe6b/GiwNeImCXuiN6XyQ=="
+      }
+    },
+    "5.100.1": {
+      "version": "5.100.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.1.tgz",
+        "integrity": "sha512-UgWRLhQKprC37SsO6y1zRabOqDmM2gsdTNPbqTT35yl7kOOhwXU4nyfOiGHXPwoEFJV1IpSk85hjIFjNFWVpzw=="
+      }
+    },
+    "5.100.2": {
+      "version": "5.100.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.2.tgz",
+        "integrity": "sha512-MvvzPcurtzVh4EcbsTfI1BL5GOfdi1S0dk/qhigEghW07MvcHUl/dhfc1FT8hPEquuMtUC+IIAxC0bdmSp/7kA=="
+      }
+    },
+    "5.100.3": {
+      "version": "5.100.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.3.tgz",
+        "integrity": "sha512-8Fgb4vKmBHllRHUjz3ZOwgV0v9b7cxCdN5T0iFQvvWJJVs6xvaxHERO1BclTL03bbK8vZAuXVKN3IeVS1sUdeQ=="
+      }
+    },
+    "5.100.4": {
+      "version": "5.100.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.4.tgz",
+        "integrity": "sha512-L6n5UWBvnMuYaZTu6WgTbl2mJ7fob1NIdL2vIFo05R/mkr9XvP5PmesZOBiicxzhDAuUurYIG+ZFONbvarEFtQ=="
+      }
+    },
+    "5.100.5": {
+      "version": "5.100.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.5.tgz",
+        "integrity": "sha512-aNwj1mi2v2bQ9IxkyR1grLOUkv3BYWoykHy9KDyLNbjC3tsahbOHJibK+Wjtr1wRhG59/AvJhiJG5OlthaCgJA=="
+      }
+    },
+    "5.100.6": {
+      "version": "5.100.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.6.tgz",
+        "integrity": "sha512-uVSrps0PV16Cxmcn2rvL+dUhwTpTUtiRW347AEeYxMZXO2pZe9ja7E24PAMGoQ5u2g89DD8u4QhOviBk+RN8RA=="
+      }
+    },
+    "5.100.7": {
+      "version": "5.100.7",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.7.tgz",
+        "integrity": "sha512-LoISYWz8dOOuQbeIctF8K6yi42TWtR1WPGpwGuRUpF3u79JVVIg/PVR0MQdIA0VSHqD/ydf/b7PhKTkg3I4fLQ=="
+      }
+    },
+    "5.100.8": {
+      "version": "5.100.8",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.8.tgz",
+        "integrity": "sha512-iNNEekixXU5vtAGKKZX2lx3jTooG5yNY+kv0wSgEdEYG0Mj0JM5bcuQtC35ZAP3nDopT6jciUK3xeX65U7AnfA=="
+      }
+    },
+    "5.100.9": {
+      "version": "5.100.9",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.9.tgz",
+        "integrity": "sha512-Oa44XkaI3kCNN6ME0KByU3xT3SEUNOMfZpHxL6+wFoTm+OeUFYHKdeYVe0aOXlRDm/f15sgLwEt2HDorIdW8+A=="
+      }
+    },
+    "5.100.10": {
+      "version": "5.100.10",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.10.tgz",
+        "integrity": "sha512-FLaZf2RCrA/Zgp4aiu5tG3TyasTRO7aZ99skxQpr3Hg/zXOhu6yq5FZCYQ/tRaJtM9ylnoK8tFK7PolXQadv6Q=="
+      }
+    },
+    "5.100.11": {
+      "version": "5.100.11",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.11.tgz",
+        "integrity": "sha512-J0f9s5x3LE1450nNNfYx+e/n0DMa0uOBdFJUy5r0RvmsXd4nB/n0rbHtHI1vYXhikNFan+wf51p6Tmp4c8ucrg=="
+      }
+    },
+    "5.100.12": {
+      "version": "5.100.12",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.12.tgz",
+        "integrity": "sha512-clXsB8RUd3E45Y6eqpH+Sz20cAmue8oZrtvMURFZDDnUldo0pR0qoGCmoj+Unlg0tgivuCK/8lMZvyqN7eWu4Q=="
+      }
+    },
+    "5.100.13": {
+      "version": "5.100.13",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.13.tgz",
+        "integrity": "sha512-HSBr8CycQEAoXsJR7KNDawBnINJEJ96Eme8oE0hCXjyodE2I97vg3IDzDJBDu18LsbzpVVJcKo80eqLfVCykxw=="
+      }
+    },
+    "5.100.14": {
+      "version": "5.100.14",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.100.14.tgz",
+        "integrity": "sha512-oOr6aRdSFEwWhzxEkD/9ZcItM3+LjBSkeVmadWKwUssAHTsqd/7bOjWrX4AbvEkoEhgAxzN0Xk6H/aYzXiYBAw=="
+      }
+    },
+    "5.101.0": {
+      "version": "5.101.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.0.tgz",
+        "integrity": "sha512-rLlJXSpkqfizLWgkR5+eLeIk0MvTx/meEIR7LRjxic+qxiQP8zVjq7BqQkiCMNLQBlLfuOLqqr6KO5GtrDlmSg=="
+      }
+    },
+    "5.101.1": {
+      "version": "5.101.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.1.tgz",
+        "integrity": "sha512-ZnONUuQKJe1bJMStXUL1s5uKN9FcfC28j5cK+iDZcdSHtUv1wtin1cGc/Oewhf2Oc4eKY7lggtpvT/AbMmhHew=="
+      }
+    },
+    "5.101.2": {
+      "version": "5.101.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.2.tgz",
+        "integrity": "sha512-seDkr6kzGzX1okaaTtZPtgA688CDPlXUz1C6xSg0ESqn04Vuc8tlrYms1s3de+znBqhPVxFRfpAfUf+6XvfPWg=="
+      }
+    },
+    "5.101.3": {
+      "version": "5.101.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.3.tgz",
+        "integrity": "sha512-ZjgcRwmQUSCythDPj6pE2NKFi9bpQegxIBxgt3hPytXI1ElFHNaa3A7aWW8vFaLCIRjPv467rbREYHbxcdgQbg=="
+      }
+    },
+    "5.101.4": {
+      "version": "5.101.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.4.tgz",
+        "integrity": "sha512-yRg2pfOCxIs4ZJW3XYYHU/WgtD04FHSnfHlpRT7h7pR77hwkdRG4wxbKe4aq6P0RvXUTBSQpQeadS1SUYUe+KA=="
+      }
+    },
+    "5.102.0": {
+      "version": "5.102.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.0.tgz",
+        "integrity": "sha512-0GyVyEcGt9M7jHPCua16hNVtstUXE2R4HsnNubFYcDs7DJaLzh1dSiXsADDU/cNn/SqrLfa0vRKyjUmbx4rZLA=="
+      }
+    },
+    "5.102.1": {
+      "version": "5.102.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.1.tgz",
+        "integrity": "sha512-DKJeRvxjsGUWhUVnVVXSseTS0SKBMLSkrz8dm7i08r93IQQ2gAfUkX1e801gVZ18KSwHiG5yng4tQm5+qSGS0w=="
+      }
+    },
+    "5.102.2": {
+      "version": "5.102.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.2.tgz",
+        "integrity": "sha512-KxU8ZyOEuJ81eTSgXa8GQbk/jO/rz0elYtNKt3VMtM2pRjeO8ADIu7sqqmEjFKJKqco9h2N1ojIDuHs6VfDItQ=="
+      }
+    },
+    "5.102.3": {
+      "version": "5.102.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.3.tgz",
+        "integrity": "sha512-nHazxUEUQSGJOswGgSL2DI77f2K75WRCowDgaiyEi0ACocZTFKewTv+A/rJfq6QkuE35rVPff1QUT3ClbaePGQ=="
+      }
+    },
+    "5.102.4": {
+      "version": "5.102.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.4.tgz",
+        "integrity": "sha512-Cn6X2eqFHjCtA/sfM/3eiT6/YmcPqo30twNHUlqkfz9LBqRzdt8GN/mFMWXn/qTacYUo3d4nycMzn3LWZmJ7MQ=="
+      }
+    },
+    "5.102.5": {
+      "version": "5.102.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.5.tgz",
+        "integrity": "sha512-PyTmSq2nW4MnPuQ/T4hZbH2BYShpgCLSJNwCaPEEYO3RWd9yX611wOMm7etz2SZWVh4N7Azag5iZLMDqYTzfNA=="
+      }
+    },
+    "5.102.6": {
+      "version": "5.102.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.6.tgz",
+        "integrity": "sha512-ANz4KZ8z80D85fiz5IAHjpb8XBPLrjOb/0natlD9Ascyy/3p96V86Zw8UbOfA0HDLcvK/A4gNd95r723y5UT2w=="
+      }
+    },
+    "5.102.7": {
+      "version": "5.102.7",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.7.tgz",
+        "integrity": "sha512-bbd8T4jDIj9aPbNn11SsjNH8apKY4zspkrw63JRsNDXjpW5SRF7X0ipi7yrGd8DCs8QhYfhQJKqEj1YLru1DbQ=="
+      }
+    },
+    "5.102.8": {
+      "version": "5.102.8",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.102.8.tgz",
+        "integrity": "sha512-TYBea4OuXWD7MhaSHq069TWbFe7rcwWN6kzT7JF0OKi1K6c1gTv2IzD6A6ExJsCMozdkqBWeuIUZmu4KQg0O5A=="
+      }
+    },
+    "5.103.0": {
+      "version": "5.103.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.103.0.tgz",
+        "integrity": "sha512-Kn/cvTrNwFYpS/q1MYghMsVTSinmAKV1U2AnM3/x07PiczvC+nMoySqNpQK1jgDzVCOIHk5LlF2FhTlJKQmPAQ=="
+      }
+    },
+    "5.103.1": {
+      "version": "5.103.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.103.1.tgz",
+        "integrity": "sha512-rmAPPApNEK17VXRJhtE1rja53n23VV5w30C0saCgJhhX+EpdUnVqMGV/s5nnzV43X75KTHKzuoiuxSzGTBIkag=="
+      }
+    },
+    "5.103.2": {
+      "version": "5.103.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.103.2.tgz",
+        "integrity": "sha512-B+fWiYZBc+0uUD5zDZAeLw9dKj7XEsdnuu6zRZ+no6LNKpeE3P3bJ+N6HINjcIlWR6fW3vUoTneEaGa2V6ehqw=="
+      }
+    },
+    "5.103.3": {
+      "version": "5.103.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.103.3.tgz",
+        "integrity": "sha512-QJMF0QUwJaFm6rrYAq1mlYyMsdiqd9w6gAsFSy+F+8g6/8pQrRy9u3a2yQGpSAmMO4DAZmRHwFZ8UulLaJkBmg=="
+      }
+    },
+    "5.104.0": {
+      "version": "5.104.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.0.tgz",
+        "integrity": "sha512-e1TZmDCQnWIfiDVryIHeA6Idj+Lfx1hORLOhXS/l5wcgvtVD4yYqbTDl378sGQKIi2cSgb0TEMC9cKK8GGoJEw=="
+      }
+    },
+    "5.104.1": {
+      "version": "5.104.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.1.tgz",
+        "integrity": "sha512-Zz70EgjahNI7aCz8BZxM3vUGU44ycxEAzMuCUjLeA7SVhhOkg3ZgPjPJPvHjs6Rmky/dtmnu1WzjGHNHmhCoZQ=="
+      }
+    },
+    "5.104.2": {
+      "version": "5.104.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.2.tgz",
+        "integrity": "sha512-xKmzWGhadbE5wGS/ZmXShRITnI9oItox5GO14KvFZco3+vhTAyXS1erYzJWdiY280zapAGJXFUL9nHgwP6SV/g=="
+      }
+    },
+    "5.104.3": {
+      "version": "5.104.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.3.tgz",
+        "integrity": "sha512-5Ts1ImwJKqoJgPkLxl9WrPQy1JEoEmti3MaaODCfBamHUGFk57IFrc+AIksPq+BAm10EsroX56qm398Z42LG7w=="
+      }
+    },
+    "5.104.4": {
+      "version": "5.104.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.4.tgz",
+        "integrity": "sha512-YD5QkvUNy8Ey3LbOy2vwL97JjoYycwDv++cWAibTe+9BLYvl3c09XpYp5dZ2VcxcguwoDhGF+utYJYb79RB36w=="
+      }
+    },
+    "5.104.5": {
+      "version": "5.104.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.104.5.tgz",
+        "integrity": "sha512-RORgFe052U+93weaNuqg7qHq7vNVNzXN/VrXqD4bbAuQCWUqOl2lV5Ui9flWk5CVvMyL/Bh27QWhzwH0aaOx9g=="
+      }
+    }
+  }
+}

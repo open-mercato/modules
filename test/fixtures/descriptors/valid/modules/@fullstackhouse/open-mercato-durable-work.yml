@@ -1,0 +1,6 @@
+# Fixture entry 39 (spec 11.1). No github field: fullstackhouse/open-mercato-durable returns 404 (23 Oct 2026).
+npm: "@fullstackhouse/open-mercato-durable-work"
+category: storage-infrastructure
+tags: [background-jobs, durable]
+summary: Durable at-least-once background work on leased job records in Postgres.
+whenToUse: Use when background jobs must survive deploys and worker kills and resume where they stopped.

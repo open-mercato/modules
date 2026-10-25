@@ -1,0 +1,15 @@
+# Enterprise: one entry, license.kind enterprise, anatomy hidden, nightly install skipped (spec 11.4).
+
+npm: "@open-mercato/enterprise"
+repo: open-mercato/open-mercato#main/packages/enterprise
+category: auth-security
+tags: [sso, mfa, record-locks, enterprise]
+summary: "Commercial modules: SSO with directory sync, MFA and sudo, record locks, agent orchestrator and status overlays."
+whenToUse: Use when a production app needs SSO, multi-factor auth or record locking and the company holds an Open Mercato Enterprise subscription.
+whenNotToUse: "Not open source: the license is per project, with tiers set by company revenue."
+links:
+  docs: https://docs.openmercato.com/enterprise/overview
+pricing: contact
+enterprise:
+  offerUrl: https://www.openmercato.com/enterprise-level-support
+  modules: [agent_orchestrator, record_locks, security, sso, system_status_overlays]

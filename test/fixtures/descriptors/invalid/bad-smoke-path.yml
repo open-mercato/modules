@@ -1,0 +1,7 @@
+# expect-path: smoke
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when a smoke path is outside the backend and api prefixes.
+smoke:
+  paths: [/login]

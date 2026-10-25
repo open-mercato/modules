@@ -1,0 +1,5 @@
+# Core modules of the develop line that no released @open-mercato/core has yet (spec 4.4, P9): ID -> where it was
+# seen. Their category is in builtin-categories.yml, so the first minor that ships them never puts them in
+# operations. emit and scan do not report them as unknown; once a released core ships one, they ask to remove it here.
+
+ecommerce: main 0c886d0a14 (22 Oct 2026), develop snapshot 0.10.1-develop.7583

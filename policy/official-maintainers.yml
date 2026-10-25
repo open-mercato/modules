@@ -1,0 +1,8 @@
+# npm accounts of Open Mercato (from `npm owner ls @open-mercato/core`). Rule D38: a `kind: tool`
+# package without the @open-mercato scope is official when repository.url points to the open-mercato
+# GitHub org and its npm maintainers are listed here.
+githubOrg: open-mercato
+npm:
+  - pat-lewczuk
+  - patryk.andrzejewski
+  - piotrkarwatka

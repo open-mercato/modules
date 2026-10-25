@@ -1,0 +1,2031 @@
+/* Module page (7.7 B) and its islands: InstallBox, ViewToggle, ReceiptDrawer. The underscore keeps this file out of
+   routing. Shared primitives (chips, seals, strips, command chips) come from ui.css (WP11). */
+
+.mod {
+  padding: 24px var(--pad) 80px;
+}
+.mod > * + * {
+  margin-top: 24px;
+}
+
+/* breadcrumbs: mono, uppercase words, identifiers keep their case */
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.crumbs li + li::before {
+  content: '/';
+  margin-right: 10px;
+  color: var(--ink-3);
+}
+.crumbs a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+.crumbs code {
+  font: inherit;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* ---------- header (7.7 B.2) ---------- */
+.mhd {
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 28px;
+  padding: 32px;
+  border-radius: var(--radius-s);
+  background: var(--bg-2);
+  color: var(--ink);
+}
+.mhd__sig {
+  color: var(--ink);
+}
+.mhd__main {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+}
+.mhd__title {
+  overflow-wrap: break-word;
+}
+.mhd__loc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.mhd__loc code {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.mhd__copy {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--ink-2);
+}
+.mhd__copy:hover {
+  background: var(--bg-3);
+  color: var(--ink);
+}
+.mhd__sum {
+  max-width: 62ch;
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.mhd__chips {
+  display: flex;
+  flex-wrap: wrap;
+  /* the level seal and the chips share one centre line (review r8: LISTED sat 6 px above the chips on a phone) */
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.chip--link {
+  text-decoration: none;
+}
+.chip--link:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+/* Built for · Verified on · Fits statically: a middot list (base.css .dotlist), a dot never starts a line */
+.mhd__built {
+  row-gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.mhd__verified {
+  color: var(--ok-text);
+}
+.mhd__side {
+  display: grid;
+  align-content: space-between;
+  justify-items: end;
+  gap: 16px;
+}
+
+/* ---------- Human | Agent ---------- */
+.vt {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--bg);
+}
+.vt button {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.vt button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--bg);
+}
+.vt button:not([aria-pressed='true']):hover {
+  color: var(--ink);
+}
+html[data-view='agent'] [data-human] {
+  display: none !important;
+}
+.mod__agent:empty {
+  display: none;
+}
+.agentv {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--film-line);
+  border-radius: var(--radius-m);
+  background: var(--film);
+  color: var(--film-ink);
+  color-scheme: dark;
+  --ink: var(--film-ink);
+  --ink-2: var(--film-ink-2);
+  --line-strong: var(--film-line);
+  --bg: var(--film);
+  --bg-2: var(--film-2);
+  --bg-3: #1b1b1b;
+  --focus: #b4f372;
+}
+.agentv__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.agentv__tabs {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: auto;
+}
+.agentv__tabs button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--film-ink-2);
+  font-size: 13px;
+}
+.agentv__tabs button[aria-pressed='true'] {
+  border-color: var(--film-line);
+  background: var(--film-2);
+  color: var(--film-ink);
+}
+.agentv__tabs code {
+  color: #bc9aff;
+}
+.agentv__tokens {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #b4f372;
+}
+.agentv__raw {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--film-ink-2);
+}
+.agentv__note {
+  font-size: 13px;
+  color: var(--film-ink-2);
+}
+.agentv__note code {
+  color: #bc9aff;
+}
+.agentv__pre {
+  max-height: 70vh;
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--film-line);
+  border-radius: var(--radius-s);
+  background: #0a0a0a;
+  color: #e8e8e8;
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+.agentv__err {
+  color: #ff6b6b;
+}
+
+.mod__banners {
+  display: grid;
+  gap: 8px;
+}
+.mod__banners:empty {
+  display: none;
+}
+
+/* ---------- 8/4 body ---------- */
+.mod__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: 40px;
+  align-items: start;
+  margin-top: 40px !important;
+}
+.mod__main {
+  min-width: 0;
+}
+.mod__side {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
+}
+.mod__sticky {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+  z-index: 2;
+}
+.mod__empty {
+  padding: 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-m);
+  color: var(--ink-2);
+}
+.mod__fine {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.mod__fine a {
+  color: var(--ink);
+}
+
+/* ---------- tabs (7.9: ARIA tabs; without JS every panel shows) ---------- */
+.tabs__list {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs__list [role='tab'] {
+  position: relative;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tabs__list [role='tab']:hover {
+  color: var(--ink);
+}
+.tabs__list [role='tab'][aria-selected='true'] {
+  color: var(--ink);
+}
+.tabs__list [role='tab'][aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--ink);
+}
+.tabs__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  min-width: 0;
+}
+/* with JavaScript the tab row is there from the first paint (the script only wires it), so the panels do not move
+   down when it runs (review r2, CLS); without JavaScript it stays hidden and every panel shows */
+@media (scripting: enabled) {
+  /* beats the global [hidden] rule; the attribute stays for the no-script case */
+  .tabs__list[hidden] {
+    display: flex !important;
+  }
+}
+.tabs__panel > * {
+  min-width: 0;
+}
+.tabs__panel:focus-visible {
+  outline-offset: 6px;
+}
+.tabs:not(.is-tabs) .tabs__panel + .tabs__panel {
+  margin-top: 56px;
+}
+/* with JavaScript the panel headings are visually hidden from the first paint, as the tab row names them, so the
+   first panel does not move up when the script runs (review r2, CLS) */
+.tabs.is-tabs .tabs__h {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (scripting: enabled) {
+  .tabs .tabs__h {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* anatomy */
+.anat__callout code {
+  display: block;
+  padding: 12px 14px;
+  border-left: 3px solid #b4f372;
+  background: var(--bg-2);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.anat__note {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.anat__note code {
+  font-size: 0.95em;
+}
+.anat__plug {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* hygiene */
+.hyg {
+  display: grid;
+  gap: 10px;
+}
+.hyg__h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hyg__status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hyg__status--ok {
+  color: var(--ok-text);
+}
+.hyg__status--warn {
+  color: var(--wait-ink);
+}
+.hyg__status--fail {
+  color: var(--bad-ink);
+}
+.hyg__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.hyg__item {
+  display: grid;
+  grid-template-columns: 44px 180px minmax(0, 1fr);
+  grid-template-areas:
+    'sev code msg'
+    'sev code links';
+  column-gap: 14px;
+  row-gap: 2px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.hyg__sev {
+  grid-area: sev;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hyg__item--error .hyg__sev {
+  color: var(--bad-ink);
+}
+.hyg__item--warn .hyg__sev {
+  color: var(--wait-ink);
+}
+.hyg__code {
+  grid-area: code;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+.hyg__msg {
+  grid-area: msg;
+  color: var(--ink-2);
+  overflow-wrap: break-word;
+}
+.hyg__links {
+  grid-area: links;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.hyg__links a {
+  color: var(--ink-2);
+}
+.hyg__links a:hover {
+  color: var(--ink);
+}
+
+/* versions */
+.vers {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.vers__item {
+  display: grid;
+  grid-template-columns: 96px minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.vers__v {
+  font-size: 15px;
+}
+.vers__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.vers__date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.vers__diff {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.vers__from {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.vers__facts {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.vers__preview code {
+  font-size: 13px;
+}
+
+/* receipts tab */
+.rcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-items: start;
+}
+.rcards__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+.rcards__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+/* the card of a receipt that judged another version (review r6): the sentence names both versions before the paper */
+.rcards__other {
+  padding-left: 10px;
+  border-left: 1.5px dashed var(--ink-3);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.rcards__empty {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  padding: 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-m);
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.rcards__open {
+  font-size: 13px;
+}
+.trans {
+  display: grid;
+  gap: 10px;
+}
+.trans__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line-strong);
+}
+.trans__item {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 8px 0 8px 18px;
+  font-size: 14px;
+}
+.trans__item::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 15px;
+  width: 7px;
+  height: 7px;
+  background: var(--ink);
+}
+.trans__at,
+.trans__line,
+.trans__v {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.trans__ft strong {
+  font-weight: 500;
+}
+
+/* readme: author text, untrusted, plain text */
+.readme {
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+.readme__cap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wait-ink);
+}
+.readme__text {
+  max-height: 640px;
+  overflow: auto;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.readme__links {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+.readme__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* quality tab */
+.qual__h {
+  margin-bottom: -8px;
+}
+.qual {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.qual__item {
+  display: grid;
+  grid-template-columns: 20px 52px minmax(0, 1fr);
+  gap: 4px 12px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.qual__mark {
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.qual__item.is-pass .qual__mark {
+  color: var(--ok-text);
+}
+.qual__item.is-pending .qual__mark {
+  color: var(--ink-3);
+}
+.qual__item.is-fail .qual__mark {
+  color: var(--bad-ink);
+}
+.qual__id {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.qual__fix {
+  grid-column: 3;
+  color: var(--ink-2);
+}
+.qual__fix .t-label {
+  margin-right: 6px;
+  color: var(--ink);
+}
+.omq {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg-2);
+}
+.omq__state {
+  margin: 6px 0 4px;
+}
+.omq__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.maint {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.maint .cmd {
+  width: 100%;
+}
+
+/* ---------- side column ---------- */
+.side__sec {
+  display: grid;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.side__h {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.33;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.side__sub {
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-3);
+}
+.side__links,
+.side__rel {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.side__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* the file type sits in the link text as plain mono (no chip padding), so the underline runs unbroken */
+.side__links code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.side__rel span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.side__relrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.side__k {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.side__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+}
+.side__stats div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+}
+.side__stats dt {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.side__stats dd {
+  margin: 2px 0 0;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- install box (7.6) ---------- */
+.ib__bar,
+.ib__scrim,
+.ib__close {
+  display: none;
+}
+.ib__box {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--bg);
+  min-width: 0;
+}
+.ib__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ib__h {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.33;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.ib__lines {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ib__legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.ib__seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+.ib__segbtn {
+  position: relative;
+  cursor: pointer;
+}
+.ib__segbtn + .ib__segbtn {
+  border-left: 1px solid var(--line-strong);
+}
+.ib__segbtn input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ib__segbtn > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.ib__segbtn .strip__cell {
+  width: 14px;
+  height: 14px;
+}
+.ib__segbtn:hover > span {
+  background: var(--bg-2);
+}
+.ib__segbtn.is-on > span {
+  background: var(--bg-3);
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--ink);
+}
+.ib__segbtn input:focus-visible + span {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+.ib__linelabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.ib__policy,
+.ib__plan,
+.ib__more {
+  border-top: 1px solid var(--line);
+}
+.ib__policy > summary,
+.ib__plan > summary,
+.ib__more > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 40px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.ib__policy > summary::-webkit-details-marker,
+.ib__plan > summary::-webkit-details-marker,
+.ib__more > summary::-webkit-details-marker,
+.ib__menu > summary::-webkit-details-marker {
+  display: none;
+}
+.ib__policy[open] > summary svg,
+.ib__plan[open] > summary svg,
+.ib__more[open] > summary svg {
+  transform: rotate(180deg);
+}
+.ib__policy strong {
+  font-weight: 500;
+}
+.ib__policy--allow strong {
+  color: var(--ok-text);
+}
+.ib__policy--ask strong {
+  color: var(--wait-ink);
+}
+.ib__policy--refuse strong {
+  color: var(--bad-ink);
+}
+.ib__reasons {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.ib__reasons code {
+  font-size: 11px;
+  color: var(--ink);
+}
+/* a ledger like the nameplate: the reason's word in mono over its sentence, never the enum code (review r4) */
+.ib__reasons > li:not(.ib__consent) {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+.ib__rk {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.ib__consent {
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+.ib__warn,
+.ib__quarantine {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.ib__warn svg {
+  margin-top: 1px;
+  color: var(--wait-ink);
+}
+.ib__quarantine svg {
+  margin-top: 1px;
+}
+.ib__blocked {
+  padding: 12px 14px;
+  border-left: 3px solid var(--bad-ink);
+  background: var(--bg-2);
+  font-size: 14px;
+}
+.ib__agent {
+  display: grid;
+  gap: 8px;
+}
+.ib__split {
+  display: flex;
+  position: relative;
+}
+.ib__open {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  min-height: 40px;
+}
+.ib__menu {
+  position: static;
+}
+.ib__arrow {
+  height: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid #333 !important;
+  list-style: none;
+}
+.ib__menu[open] .ib__arrow svg {
+  transform: rotate(180deg);
+}
+.ib__pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: grid;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--bg);
+  box-shadow: var(--shadow-float);
+}
+.ib__pop ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ib__pop a,
+.ib__pop button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink);
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+}
+.ib__pop a:hover,
+.ib__pop button:hover {
+  background: var(--bg-2);
+}
+.ib__folder {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px 4px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.ib__folder input {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.ib__folder small {
+  color: var(--bad-ink);
+}
+.ib__hint {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.ib__plans {
+  padding-bottom: 12px;
+}
+.ib__ways {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+.ib__way {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.ib__way .cmd {
+  width: 100%;
+}
+.ib__way-h {
+  font-size: 13px;
+  font-weight: 500;
+}
+.ib__way-t {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+/* ---------- receipt drawer: right on desktop, bottom sheet on phones ---------- */
+/* client:painted="visible" watches this marker: it lies over the whole strip (the strip is the Receipts button), so the
+   drawer hydrates as soon as any part of the strip scrolls into view, not only its bottom edge */
+.mod__strip {
+  position: relative;
+}
+.rdrawer-mark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.rdrawer {
+  width: min(440px, 100%);
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: var(--shadow-float);
+}
+.rdrawer::backdrop {
+  background: #0c0c0c66;
+}
+.rdrawer[open] {
+  animation: rdrawer-in 180ms var(--ease);
+}
+@keyframes rdrawer-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+.rdrawer__in {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-height: 100%;
+  padding: 20px 24px 32px;
+}
+.rdrawer__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.rdrawer__list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rdrawer__item {
+  display: grid;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.rdrawer__line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rdrawer__key {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.rdrawer__chip {
+  margin-left: auto;
+}
+.rdrawer__preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.rdrawer__sentence {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+/* a ledger like the paper receipt (review r4): label and value on one row, the full version of a develop snapshot
+   (`0.10.1-develop.7583.1.0c886d0a14`) gets the width of the drawer instead of a third of it, and the run time
+   never drops its duration onto a line of its own */
+.rdrawer__facts {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.rdrawer__facts > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+.rdrawer__facts dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.rdrawer__facts dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.rdrawer__dur {
+  white-space: nowrap;
+  color: var(--ink-2);
+}
+.rdrawer__err {
+  padding: 8px 10px;
+  border-left: 3px solid var(--bad-ink);
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+/* a finding on a line that ships the package (review r8): about Open Mercato itself, never the red of a break */
+.rdrawer__err--found {
+  border-left-color: var(--ink-3);
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+/* what the package's own receipts found on the lines that ship it, once above the lines (review r9) */
+.rdrawer__found {
+  padding: 10px 12px;
+  border-left: 3px solid var(--ink-3);
+  background: var(--bg-2);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.rdrawer__found code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.rdrawer__base {
+  font-size: 13px;
+}
+.rdrawer__base a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+.rdrawer__acts {
+  display: flex;
+  gap: 8px;
+}
+.rdrawer__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+/* ---------- tablet and phone (7.10) ---------- */
+@media (max-width: 991px) {
+  .mod__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  /* one column in reading order: header, install, nameplate, strip, tabs, links */
+  .mod {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .mod > * + * {
+    margin-top: 0;
+  }
+  .mod__grid,
+  .mod__side {
+    display: contents;
+  }
+  .crumbs {
+    order: 0;
+  }
+  .mhd {
+    order: 1;
+  }
+  .mod__banners {
+    order: 2;
+  }
+  .mod__agent {
+    order: 3;
+  }
+  /* reading order (review r1): header, strip, install (tablets), then the anatomy and the plate */
+  .mod__strip {
+    order: 4;
+  }
+  .mod__sticky {
+    order: 5;
+    position: static;
+  }
+  .mod__main {
+    order: 6;
+    margin-top: 8px;
+  }
+  .side__sec {
+    order: 8;
+  }
+  /* once the inline box scrolls away, a sticky bar at the bottom opens the same box as a bottom sheet; on phones
+     there is no inline box at all, only the bar (review r1: the anatomy comes first) */
+  .ib.is-live.is-away .ib__bar,
+  .ib.is-live.is-open .ib__bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 56px;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    border: 0;
+    border-top: 1px solid var(--line-strong);
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: 0 -12px 24px -16px #0000002e;
+    text-align: left;
+  }
+  .ib__bar-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  /* what the receipts say may take two lines (`broken on 0.8, 0.9, next · agent refuses`), never an ellipsis */
+  .ib__bar-sub {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--ink-2);
+  }
+  .ib__bar-chev {
+    transform: rotate(180deg);
+  }
+  .ib.is-live.is-open .ib__box {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 51;
+    display: grid;
+    max-height: 88vh;
+    overflow: auto;
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    border-bottom: 0;
+    box-shadow: var(--shadow-float);
+    animation: rdrawer-up 180ms var(--ease);
+  }
+  .ib.is-live.is-open .ib__close {
+    display: inline-flex;
+    min-height: 44px;
+  }
+  .ib.is-live.is-open .ib__scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: #0c0c0c80;
+  }
+  html.ib-lock {
+    overflow: hidden;
+  }
+  body:has(.ib.is-live) .site-footer {
+    padding-bottom: 64px;
+  }
+  .ib__segbtn > span,
+  .ib__policy > summary,
+  .ib__plan > summary,
+  .ib__more > summary,
+  .ib__open,
+  .ib__arrow,
+  .ib__pop a,
+  .ib__pop button {
+    min-height: 44px;
+  }
+  .rdrawer {
+    width: 100%;
+    height: auto;
+    max-height: 86vh;
+    margin: auto 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-strong);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+  }
+  .rdrawer[open] {
+    animation-name: rdrawer-up;
+  }
+}
+/*
+ * Phones (review r2, CLS): with JavaScript the bar is there from the first paint and the box opens only as a sheet,
+ * so nothing moves when the island hydrates. The sticky column is fixed to the bottom of the screen and holds the
+ * bar; it leaves the reading flow, so no empty wrapper or gap stays above the header. Without JavaScript the box
+ * stays inline, after the main column (the bar would do nothing).
+ */
+@media (max-width: 767px) and (scripting: enabled) {
+  .mod__sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    z-index: 30;
+  }
+  /* an open sheet and its scrim cover the header too */
+  .mod__sticky:has(.ib.is-open) {
+    z-index: 55;
+  }
+  .ib:not(.is-open) .ib__box {
+    display: none;
+  }
+  .ib__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 56px;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    border: 0;
+    border-top: 1px solid var(--line-strong);
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: 0 -12px 24px -16px #0000002e;
+    text-align: left;
+  }
+  body:has(.mod__sticky .ib) .site-footer {
+    padding-bottom: 64px;
+  }
+}
+@media (max-width: 767px) and (scripting: none) {
+  .mod__sticky {
+    order: 7;
+  }
+}
+/* without JavaScript (review r3, as on the list): every panel is on the page, and the controls that need a script
+   are not shown, so nothing on the module page is dead. The strip is a link to the Receipts panel that the drawer
+   takes over once scripts run (review r4). */
+@media (scripting: none) {
+  .mhd__side,
+  .mhd__copy,
+  .mod .cmd__copy,
+  .mod .plate__copy,
+  .mod .ib__lines,
+  .mod .ib__menu button,
+  .mod .ib__folder {
+    display: none !important;
+  }
+}
+@keyframes rdrawer-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@media (max-width: 767px) {
+  .mod {
+    padding-top: 16px;
+  }
+  .mhd {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 16px;
+  }
+  .mhd__sig svg {
+    width: 64px;
+    height: 64px;
+  }
+  .mhd__side {
+    justify-items: start;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mhd__sum {
+    font-size: 16px;
+  }
+  .mhd__copy {
+    /* never squeezed by a long locator in the flex row (review r7: 35 to 40 px wide) */
+    flex: none;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+  .hyg__item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas:
+      'sev code'
+      'sev msg'
+      'sev links';
+  }
+  .vers__item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .vers__diff,
+  .vers__facts {
+    grid-column: 1 / -1;
+  }
+  .tabs__list {
+    margin-inline: calc(-1 * var(--pad));
+    padding-inline: var(--pad);
+  }
+}
+
+/* AnatomyFilm in the 8-column main: the plate (sigil and legend) runs above the 3x3 grid, so every section gets a
+   third of the column instead of a third of what is left next to a 200 px plate */
+@media (min-width: 768px) {
+  .mod .mod__main .film__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mod .mod__main .film__plate {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    gap: 28px;
+    padding: 20px 24px;
+  }
+}
+@media (min-width: 1200px) {
+  /* two columns read row by row: every value stays on one line, so the rows keep one height (review r3); below
+     1200 px the main column is too narrow for `Events emits 6 · subscribes 5` beside `UI 18 pages · 4 widgets` */
+  .mod .mod__main .film__legend {
+    grid-template-columns: repeat(2, minmax(0, 256px));
+    column-gap: 32px;
+  }
+  .mod .mod__main .film__legend .film__n {
+    white-space: nowrap;
+  }
+}
+@media (min-width: 992px) {
+  .mod .mod__main .film__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* phones, last resort: a host next to a confidence tag may break inside, so the page never scrolls sideways */
+@media (max-width: 479px) {
+  .mod .film__item .nw {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .mod .film__item {
+    min-width: 0;
+  }
+}
+
+/* ---------- review round 1 (WP12) ---------- */
+
+/* enterprise: the license chip stands where the level seal would be (6.7) */
+.mhd__ent {
+  white-space: nowrap;
+}
+
+/* stats without a value: small text, no big digit */
+.side__stats dd.side__na {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* install box: a command without a verified receipt, and a refused one behind a disclosure (D23, D46) */
+.ib__unverified {
+  margin-top: -4px;
+  font-size: 12px;
+  color: var(--wait-ink);
+}
+/* a night that judged nothing (round 15): never the module's fault, so the ink of facts, as its neutral square */
+.ib__unverified--calm {
+  color: var(--ink-2);
+}
+/* a line that ships the package (review r9): nothing to install, said where the command would stand */
+.ib__shipped {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--ink-3);
+  background: var(--bg-2);
+}
+.ib__shipped-h {
+  font-size: 14px;
+  font-weight: 500;
+}
+.ib__shipped-t {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.ib__shipped-t code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+/* the signal `in isolation` under the command (24 Oct): the dot's key and its sentence, in the quiet ink of facts */
+.ib__iso {
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  gap: 6px;
+  align-items: baseline;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.ib__shipped .cmd {
+  margin-top: 2px;
+}
+/* a line with nothing stable to install (review r9: tpay on 0.9): calm, not the red edge of a refusal */
+.ib__calm {
+  padding: 12px 14px;
+  border-left: 3px solid var(--ink-3);
+  background: var(--bg-2);
+  font-size: 14px;
+}
+.ib__anyway .ib__unverified {
+  margin: 0 0 8px;
+}
+/* what the decision lets an agent do (review r9) */
+.ib__pmean {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+/* a line that ships the package (review r8): the command only upgrades what a new app has; calm, no warning colour */
+.ib__note {
+  margin-top: -4px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+/* a verified command whose line saw a newer version break (review r7): calm, it explains the pin */
+.ib__pinned {
+  margin-top: -4px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.ib__anyway {
+  border-top: 1px solid var(--line);
+}
+.ib__anyway > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 40px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.ib__anyway > summary::-webkit-details-marker {
+  display: none;
+}
+.ib__anyway[open] > summary svg {
+  transform: rotate(180deg);
+}
+.ib__anyway[open] > summary {
+  margin-bottom: 8px;
+}
+.ib__policy--refuse[open] .ib__reasons {
+  color: var(--ink);
+}
+
+/* phones (7.10): breadcrumbs shrink to the way back, tabs show that they scroll, the nameplate pairs short values */
+@media (max-width: 767px) {
+  .crumbs li:first-child,
+  .crumbs li[aria-current='page'] {
+    display: none;
+  }
+  .crumbs li + li::before {
+    content: none;
+  }
+  .crumbs li:nth-child(2) a::before {
+    content: '\2190\00a0';
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  /* the five tabs fit the phone's width (review r11: `Quality` was cut at the right edge at 390 px and nothing said the
+     row scrolls): tighter tabs that share the row; a narrower screen still scrolls the row */
+  .tabs__list {
+    gap: 0;
+    justify-content: space-between;
+    scroll-snap-type: x proximity;
+  }
+  .tabs__list [role='tab'] {
+    flex: 0 0 auto;
+    padding: 0 8px;
+    font-size: 13px;
+    scroll-snap-align: start;
+  }
+  .tabs__list [role='tab']:first-child {
+    padding-left: 0;
+  }
+  .tabs__list [role='tab']:last-child {
+    padding-right: 0;
+  }
+  .tabs__list [role='tab']:first-child[aria-selected='true']::after {
+    left: 0;
+  }
+  .tabs__list [role='tab']:last-child[aria-selected='true']::after {
+    right: 0;
+  }
+}
+
+/* ---------- review round 2 (WP12) ---------- */
+
+/* before the first receipt: one quiet row instead of 3 x 30 empty nights and 9 dashed steps. The row is the
+   Receipts button (>= 44 px) like the detailed strip it stands in for */
+a.ssq {
+  text-decoration: none;
+}
+.ssq {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-1) var(--ease);
+}
+.ssq:hover {
+  background: var(--bg-2);
+}
+.ssq:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.ssq__cells {
+  display: flex;
+  gap: 10px;
+}
+.ssq__cell {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.ssq__k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.ssq__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.ssq__main {
+  font-size: 14px;
+  line-height: 20px;
+}
+/* the static check of a line without a receipt (round 14, lint backend-route-collision) */
+.ssq__warn {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.ssq__warn code {
+  font-size: 0.92em;
+}
+.ssq__fit {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.ssq__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ssq__chev {
+  transform: rotate(-90deg);
+}
+@media (max-width: 479px) {
+  .ssq {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px 16px;
+  }
+  .ssq__btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-height: 24px;
+  }
+}
+
+/* entries the catalog never installs: one sentence instead of a strip */
+.mod__nostrip {
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* receipts tab: lines without a receipt are one list, a 44 px row per line */
+.rwait {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.rcards + .rwait {
+  margin-top: 24px;
+}
+.rwait__item {
+  display: grid;
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  min-height: 44px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.rwait__k {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+.rwait__t {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+@media (max-width: 479px) {
+  .rwait__item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
+/* enterprise: the modules of the package, one 44 px row each */
+.ent {
+  display: grid;
+  gap: 12px;
+}
+.ent__h {
+  margin-top: 8px;
+}
+.ent__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.ent__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.ent__item code {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+/* the line picker is hidden when no line can be chosen */
+.ib__lines[hidden] {
+  display: none;
+}
+
+/* AnatomyFilm in the 8-column main: a section with long identifiers spans two columns; the page computes the spans so
+   every row ends at the edge (an inline style with this page's rules) */
+
+/* the header facts are short sentences: on a narrow header they wrap inside an item instead of running out */
+.mhd__built.dotlist > li {
+  white-space: normal;
+}
+
+/* nameplate slots 3 and 4 (RECOMMENDED, LATEST; fixed geometry): a long version wraps at the zero-width spaces the
+   page puts after its dots, never inside a number */
+.mod .plate__cell:nth-child(3) .nw,
+.mod .plate__cell:nth-child(4) .nw {
+  white-space: normal;
+}
+
+/* ---------- review r1 ---------- */
+/* the level sits first in the chip line (no lonely chip in the corner) */
+.mhd__level {
+  display: inline-flex;
+  align-items: center;
+}
+.mhd__side {
+  align-content: start;
+}
+/* the plate comes after the anatomy, in the main column */
+.mod__plate {
+  margin-top: 40px;
+}
+/* links, stats and related: a row of three under the two columns */
+.mod__foot {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 40px;
+  margin-top: 48px !important;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+/* a tall Related column must not stretch Links and Stats: each section keeps its own height, rows from the top */
+.mod__foot > .side__sec {
+  border-top: 0;
+  align-content: start;
+  align-self: start;
+}
+@media (max-width: 991px) {
+  .mod__foot {
+    order: 9;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 16px !important;
+  }
+}
+
+/* touch targets of at least 44 px on phones (spec 7.10, review r2): the category and Unclaimed chips reach 44 px
+   through an invisible edge, the links stack at 44 px */
+@media (max-width: 767px) {
+  .mhd__chips .chip--link {
+    position: relative;
+  }
+  .mhd__chips .chip--link::after {
+    content: '';
+    position: absolute;
+    inset: -12px -3px;
+  }
+  .side__links {
+    gap: 0;
+  }
+  .side__links a {
+    min-height: 44px;
+    /* a short label (`JSON`) is still a 44 px target (review r7) */
+    min-width: 44px;
+  }
+}
+
+/* phones (spec 7.10: touch targets >= 44 px, review r4): the small links of the page get a 44 px hit area that grows
+   around the text, so nothing in the layout moves; the toggle and the plate's disclosure grow themselves */
+@media (max-width: 767px) {
+  .hyg__links a,
+  .mhd__chips .chip--link {
+    position: relative;
+  }
+  .hyg__links a::after,
+  .mhd__chips .chip--link::after {
+    content: '';
+    position: absolute;
+    /* 18 px of text + 2 x 13 px = 44 px */
+    inset: -13px -4px;
+  }
+  /* a short link (`rule`) is 44 px wide too, centred on its text; the 14 px gap keeps neighbours apart (review r7) */
+  .hyg__links a::after {
+    inset: -13px auto;
+    left: 50%;
+    width: max(calc(100% + 8px), 44px);
+    translate: -50% 0;
+  }
+  .vt button {
+    min-height: 44px;
+  }
+  /* stacked Related links (review r6): an edge that overlapped the next row gave each link 27 px of its own; now
+     each row is a 44 px link of its own, as in Links */
+  .side__rel {
+    gap: 0;
+  }
+  .side__rel a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    /* a short title (`sales`, `Billing`) is a 44 px target too (review r8) */
+    min-width: 44px;
+  }
+  /* beats the nameplate's scoped 40 px */
+  .mod .plate__more > summary {
+    min-height: 44px !important;
+  }
+}

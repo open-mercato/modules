@@ -1,0 +1,6 @@
+npm: mercato-readiness-scanner
+kind: tool
+category: devtools
+summary: Static production-readiness scanner for Open Mercato applications.
+whenToUse: Use when an Open Mercato app needs a readiness check before going to production.
+renamedFrom: ["npm:@open-mercato/readiness-scanner"]

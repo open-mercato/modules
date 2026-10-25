@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@package-broker/adapter-node@0.19.8?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@package-broker/adapter-node",
+      "version": "0.19.8",
+      "files": []
+    }
+  }
+}

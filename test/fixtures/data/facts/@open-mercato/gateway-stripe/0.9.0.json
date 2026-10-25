@@ -1,0 +1,245 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "fixture-wp01",
+    "durationMs": 28
+  },
+  "package": {
+    "locator": "npm:@open-mercato/gateway-stripe",
+    "name": "@open-mercato/gateway-stripe",
+    "version": "0.9.0",
+    "integrity": "sha512-U/tlIjnj/V5AuSB+fEEIh4Ta9Uftzrzr5iUb6nSWLcd7W8W7mzPHd6Ngg3ZYPH9g98cSUayH1e6nOga2E3Iqag==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "gateway_stripe",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/queue": "0.9.0",
+    "@open-mercato/ui": "0.9.0",
+    "@stripe/react-stripe-js": "^6.8.2",
+    "@stripe/stripe-js": "^9.14.0",
+    "stripe": "^22.3.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "gateway_stripe",
+      "title": "Stripe Payment Gateway",
+      "description": "Accept card payments, Apple Pay, Google Pay, and bank transfers via Stripe.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": ["gateway_stripe.view", "gateway_stripe.configure"],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 4,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "stripe-webhook"
+          }
+        ],
+        "cli": ["configure-from-env", "help"]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "publishableKey",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "secretKey",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "webhookSecret",
+            "type": "secret",
+            "required": true
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "docs.stripe.com",
+            "src": {
+              "file": "src/modules/gateway_stripe/integration.ts",
+              "line": 14
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "stripe"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/integrations/lib/credentials-service": ["CredentialsService", "createCredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService", "createIntegrationLogService"],
+          "modules/integrations/lib/state-service": ["IntegrationStateService", "createIntegrationStateService"],
+          "modules/payment_gateways/lib/gateway-service": ["PaymentGatewayService"],
+          "modules/payment_gateways/lib/webhook-utils": ["claimWebhookProcessing", "releaseWebhookClaim"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/queue/dispatchOrigin": ["isTrustedWebhookDispatch"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationCredentialWebhookHelp",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/payment_gateways/client": [
+            "EmbeddedPaymentGatewayRendererProps",
+            "registerEmbeddedPaymentGatewayRenderer"
+          ],
+          "modules/payment_gateways/types": [
+            "CancelInput",
+            "CancelResult",
+            "CaptureInput",
+            "CaptureResult",
+            "CreateSessionInput",
+            "CreateSessionResult",
+            "GatewayAdapter",
+            "GatewayPaymentStatus",
+            "GetStatusInput",
+            "PaymentGatewayPresentationRequest",
+            "RefundInput",
+            "RefundResult",
+            "UnifiedPaymentStatus",
+            "VerifyWebhookInput",
+            "WebhookEvent",
+            "registerGatewayAdapter",
+            "registerPaymentGatewayDescriptor",
+            "registerWebhookHandler"
+          ],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/button": ["Button"],
+          "primitives/spinner": ["Spinner"]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "gateway_stripe",
+        "tables": [],
+        "aclFeatures": ["gateway_stripe.view", "gateway_stripe.configure"],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0020201",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Open Mercato peers are pinned to an exact version.",
+          "anchor": null,
+          "src": {
+            "file": "package.json",
+            "line": 2
+          }
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "The package ships no AGENTS.md.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball contains __tests__.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": [
+    "[module-facts] module registry unavailable (registryPath not provided); API route auth omitted for gateway_stripe"
+  ]
+}

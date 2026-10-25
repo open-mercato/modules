@@ -1,0 +1,19 @@
+---
+// Command chip (spec 7.6): light #EFE7FF / #6B55A0, dark #1B1B1B / #B4F372, with a copy button.
+// The view lives in lib/ui.tsx so islands render the same markup. Copy works through the page-wide [data-copy]
+// handler of the layout. The command wraps only at token boundaries; `oneLine` fades the end instead.
+import { CommandChipView } from '../lib/ui.tsx'
+
+interface Props {
+  command: string
+  /** Prompt glyph shown before the command and never copied. */
+  prompt?: string
+  label?: string
+  oneLine?: boolean
+  /** Shorter text to show (the copy keeps `command`). */
+  display?: string
+}
+const { command, prompt = '$', label = 'Copy command', oneLine = false, display } = Astro.props
+---
+
+<CommandChipView command={command} prompt={prompt} label={label} oneLine={oneLine} display={display} />

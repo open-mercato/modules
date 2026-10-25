@@ -1,0 +1,6 @@
+# expect-path: reason
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when a curator sets hold but forgets the public reason.
+status: hold

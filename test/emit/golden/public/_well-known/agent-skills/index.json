@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "om-find-module",
+      "type": "skill-md",
+      "description": "Before building a feature in an Open Mercato app, search the module registry first.",
+      "url": "https://wojciechszyjka.github.io/modules/.well-known/agent-skills/om-find-module/SKILL.md",
+      "digest": "sha256:e56855e07bf63ad769695bf6105217bf38228c3a27d2f2f60799a61d9a333c28"
+    }
+  ]
+}

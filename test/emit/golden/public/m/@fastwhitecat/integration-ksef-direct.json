@@ -1,0 +1,1466 @@
+{
+  "locator": "npm:@fastwhitecat/integration-ksef-direct",
+  "path": "@fastwhitecat/integration-ksef-direct",
+  "npm": "@fastwhitecat/integration-ksef-direct",
+  "github": "FastWhiteCat/openmercato-module-ksef",
+  "repoPath": null,
+  "kind": "module",
+  "type": "3rd-party",
+  "enterprise": false,
+  "title": "KSeF Integration",
+  "summary": "Sends and receives Polish structured e-invoices through the KSeF API v2.",
+  "whenToUse": "Use when the app must issue or receive structured invoices in KSeF (Poland).",
+  "whenNotToUse": null,
+  "category": "localization-compliance",
+  "tags": [
+    "ksef",
+    "e-invoicing",
+    "poland"
+  ],
+  "providers": [
+    {
+      "name": "ksef",
+      "label": "KSeF"
+    }
+  ],
+  "moduleIds": [
+    "integration_ksef_direct"
+  ],
+  "requires": [
+    {
+      "raw": "integrations",
+      "resolvesTo": "core:integrations"
+    }
+  ],
+  "replaces": [],
+  "slotConflicts": [],
+  "renamedFrom": [
+    "npm:@fast-white-cat/integration-ksef-direct"
+  ],
+  "supersededBy": null,
+  "alternatives": [],
+  "status": "active",
+  "listed": true,
+  "featured": false,
+  "license": {
+    "spdx": "MIT",
+    "kind": "osi",
+    "mismatch": false
+  },
+  "version": {
+    "latest": "0.1.8",
+    "preview": null,
+    "publishedAt": "2026-10-15",
+    "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA==",
+    "installableFrom": "2026-10-20",
+    "gitRef": "df48a8c52904dc2cae6dabf3379f7076a7b319a5",
+    "recommended": {
+      "0.9": "0.1.8",
+      "0.8": null,
+      "next": "0.1.8"
+    }
+  },
+  "identity": {
+    "builtFrom": "verified",
+    "claimed": false,
+    "source": "npm"
+  },
+  "compat": {
+    "builtFor": {
+      "range": ">=0.7.0 <0.8.0",
+      "kind": "bounded",
+      "lines": []
+    },
+    "lines": {
+      "0.9": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.9.0",
+        "moduleVersion": "0.1.8",
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_eb0bba415853",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": []
+      },
+      "next": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+        "moduleVersion": "0.1.8",
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_4f12b867366e",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": []
+      }
+    },
+    "verifiedOn": [
+      "0.9",
+      "next"
+    ],
+    "isolation": {
+      "0.9": {
+        "status": "verified",
+        "step": null,
+        "moduleVersion": "0.1.8",
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_44221517d2f6"
+      },
+      "next": {
+        "status": "verified",
+        "step": null,
+        "moduleVersion": "0.1.8",
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_f1c31fd2f033"
+      }
+    }
+  },
+  "anatomy": {
+    "version": "0.1.8",
+    "coverage": "full",
+    "counts": {
+      "entities": 3,
+      "tables": 3,
+      "migrations": 6,
+      "routes": 8,
+      "publicRoutes": 0,
+      "aclFeatures": 7,
+      "eventsEmitted": 9,
+      "eventsConsumed": 1,
+      "backendPages": 4,
+      "frontendPages": 0,
+      "widgets": 0,
+      "workers": 3,
+      "cli": 0,
+      "aiTools": 0,
+      "aiAgents": 0,
+      "extends": 0
+    },
+    "lists": {
+      "aclFeatures": [
+        "integration_ksef_direct.view",
+        "integration_ksef_direct.manage",
+        "integration_ksef_direct.documents.view",
+        "integration_ksef_direct.documents.create",
+        "integration_ksef_direct.documents.send",
+        "integration_ksef_direct.received_documents.view",
+        "integration_ksef_direct.received_documents.sync"
+      ],
+      "eventsEmitted": [
+        "ksef_direct.connection.connected",
+        "ksef_direct.connection.failed",
+        "ksef_direct.connection.checked",
+        "ksef_direct.document.created",
+        "ksef_direct.document.queued",
+        "ksef_direct.document.sent",
+        "ksef_direct.document.failed",
+        "ksef_direct.received_document.synced",
+        "ksef_direct.received_document.failed"
+      ],
+      "eventsConsumed": [
+        "ksef_direct.document.created"
+      ],
+      "env": [],
+      "hosts": [
+        "api-test.ksef.mf.gov.pl",
+        "api.ksef.mf.gov.pl"
+      ],
+      "tables": [
+        "ksef_direct_documents",
+        "ksef_direct_received_documents",
+        "ksef_direct_connections"
+      ],
+      "publicRoutes": [],
+      "credentials": [
+        {
+          "key": "ksef_token",
+          "type": "secret",
+          "required": true
+        },
+        {
+          "key": "nip",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "environment",
+          "type": "select",
+          "required": true
+        }
+      ],
+      "backendPages": [
+        "/backend/integration-ksef-direct/documents/new",
+        "/backend/integration-ksef-direct/documents",
+        "/backend/integration-ksef-direct/received-documents",
+        "/backend"
+      ]
+    },
+    "callout": "ADDS 3 TABLES · 8 ROUTES (0 PUBLIC) · 7 PERMISSIONS · EMITS 9 EVENTS",
+    "diff": null
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "verified",
+      "0.8": "untested",
+      "next": "verified"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "ok",
+      "next": "ok"
+    },
+    "anatomy": "full",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "warn",
+      "failing": [
+        "event-prefix"
+      ]
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-10-15",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for no tested line; verified on 0.9, next."
+      ]
+    }
+  },
+  "tier": "verified",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ],
+      "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
+    },
+    "0.8": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.8."
+        }
+      ],
+      "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
+    },
+    "next": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ],
+      "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
+    }
+  },
+  "install": {
+    "cli": "yarn mercato module add @fastwhitecat/integration-ksef-direct@0.1.8 --allow-third-party",
+    "cmm": "npx create-mercato-module install @fastwhitecat/integration-ksef-direct@0.1.8",
+    "needsAllowThirdParty": true,
+    "moduleFlag": null
+  },
+  "stats": {
+    "downloads30d": 42,
+    "stars": 1
+  },
+  "sigil": {
+    "glyph": "2223200",
+    "phase": 224,
+    "publicRoutes": false
+  },
+  "links": {
+    "page": "https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct",
+    "md": "https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct.md",
+    "json": "https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct.json",
+    "facts": "https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct/v/0.1.8/facts.json",
+    "npm": "https://www.npmjs.com/package/@fastwhitecat/integration-ksef-direct",
+    "repo": "https://github.com/FastWhiteCat/openmercato-module-ksef",
+    "docs": null
+  },
+  "addedAt": "2026-10-23",
+  "updatedAt": "2026-10-23T03:05:00Z",
+  "_meta": {
+    "com.openmercato.modules/installable": {
+      "0.9": "0.1.8",
+      "0.8": "0.1.8",
+      "next": "0.1.8"
+    }
+  },
+  "facts": {
+    "factsVersion": 1,
+    "extractor": {
+      "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+      "factsContractVersion": 2,
+      "catalog": "fixture-wp01",
+      "durationMs": 56
+    },
+    "package": {
+      "locator": "npm:@fastwhitecat/integration-ksef-direct",
+      "name": "@fastwhitecat/integration-ksef-direct",
+      "version": "0.1.8",
+      "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA==",
+      "source": "npm-tarball",
+      "gitRef": "df48a8c52904dc2cae6dabf3379f7076a7b319a5"
+    },
+    "gate": {
+      "installable": true,
+      "needsModuleFlag": false,
+      "reason": null,
+      "modules": [
+        {
+          "id": "integration_ksef_direct",
+          "src": true,
+          "dist": true
+        }
+      ]
+    },
+    "kind": "module",
+    "license": {
+      "value": "MIT",
+      "kind": "osi",
+      "mismatch": false,
+      "sources": {
+        "packageJson": "MIT",
+        "licenseFile": "MIT",
+        "moduleInfo": null,
+        "integrationTs": "MIT"
+      }
+    },
+    "omPeers": {
+      "@open-mercato/core": ">=0.7.0 <0.8.0",
+      "@open-mercato/queue": ">=0.7.0 <0.8.0",
+      "@open-mercato/shared": ">=0.7.0 <0.8.0",
+      "@open-mercato/ui": ">=0.7.0 <0.8.0"
+    },
+    "dependencies": {},
+    "agentsMd": false,
+    "readmeExcerpt": "# @fastwhitecat/integration-ksef-direct\n\nOpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.\n\n## Features\n\n- Send invoices to KSeF (FA(2) format)\n- Poll submission status and retrieve KSeF reference numbers\n- Fetch and sync received invoices\n- Health check for connection status and rate limits\n- Supports both test (`api-test.ksef.mf.gov.pl`) and production (`api.ksef.mf.gov.pl`) environments\n\n## Requirements\n\n- OpenMercato `>=0.7.0 <0.8.0`\n- The `integrations` module enabled in your app\n- KSeF token and NIP (Tax Identification Number)\n\n## Installation\n\nThis is a third-party module, so install it with your package manager — the built-in\n`mercato module add` command only accepts official `@open-mercato/*` packages.\n\n**1. Add the package to your app**\n\n```bash\nnpm install @fastwhitecat/integration-ksef-direct\n# or, in a yarn-workspaces monorepo:\nyarn workspace <your-app> add @fastwhitecat/integration-ksef-direct\n```\n\n> If your app is still on `awilix@12`, npm may report an `ERESOLVE` peer conflict.\n> Install with `--legacy-peer-deps` t",
+    "modules": [
+      {
+        "id": "integration_ksef_direct",
+        "title": "KSeF Integration",
+        "description": "Direct integration with the Polish KSeF system via official MF API v2",
+        "requires": [
+          {
+            "raw": "integrations",
+            "resolvesTo": "core:integrations"
+          }
+        ],
+        "ejectable": null,
+        "data": {
+          "entities": [
+            {
+              "id": "integration_ksef_direct:ksef_direct_document",
+              "table": "ksef_direct_documents",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/data/entities.ts",
+                "line": 19
+              }
+            },
+            {
+              "id": "integration_ksef_direct:ksef_direct_received_document",
+              "table": "ksef_direct_received_documents",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/data/entities.ts",
+                "line": 103
+              }
+            },
+            {
+              "id": "integration_ksef_direct:ksef_direct_connection",
+              "table": "ksef_direct_connections",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/data/entities.ts",
+                "line": 168
+              }
+            }
+          ],
+          "migrations": {
+            "count": 6,
+            "first": "2026-05-19",
+            "last": "2026-05-21"
+          },
+          "customEntities": 0
+        },
+        "http": {
+          "routes": [
+            {
+              "method": "GET",
+              "path": "/api/integration-ksef-direct/documents/[id]",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.documents.view"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/get/integration-ksef-direct/documents/[id]/route.ts",
+                "line": 13
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/api/integration-ksef-direct/documents",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.documents.view"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/get/integration-ksef-direct/documents/route.ts",
+                "line": 21
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/api/integration-ksef-direct/received-documents/[id]",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.received_documents.view"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/get/integration-ksef-direct/received-documents/[id]/route.ts",
+                "line": 13
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/api/integration-ksef-direct/received-documents",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.received_documents.view"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/get/integration-ksef-direct/received-documents/route.ts",
+                "line": 20
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/api/integration-ksef-direct/documents/[id]/send",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.documents.send"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/post/integration-ksef-direct/documents/[id]/send/route.ts",
+                "line": 17
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/api/integration-ksef-direct/documents",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.documents.create"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/post/integration-ksef-direct/documents/route.ts",
+                "line": 16
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/api/integration-ksef-direct/received-documents/fetch",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.received_documents.sync"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/post/integration-ksef-direct/received-documents/fetch/route.ts",
+                "line": 34
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/api/integration-ksef-direct/received-documents/sync",
+              "requireAuth": true,
+              "requireFeatures": [
+                "integration_ksef_direct.received_documents.sync"
+              ],
+              "hasOpenApi": true,
+              "src": {
+                "file": "src/modules/integration_ksef_direct/api/post/integration-ksef-direct/received-documents/sync/route.ts",
+                "line": 16
+              }
+            }
+          ],
+          "legacyRouteFiles": 8,
+          "authResolved": 1
+        },
+        "security": {
+          "aclFeatures": [
+            "integration_ksef_direct.view",
+            "integration_ksef_direct.manage",
+            "integration_ksef_direct.documents.view",
+            "integration_ksef_direct.documents.create",
+            "integration_ksef_direct.documents.send",
+            "integration_ksef_direct.received_documents.view",
+            "integration_ksef_direct.received_documents.sync"
+          ],
+          "setupDefaultRoleFeatures": true
+        },
+        "events": {
+          "emits": [
+            {
+              "id": "ksef_direct.connection.connected",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 4
+              }
+            },
+            {
+              "id": "ksef_direct.connection.failed",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 5
+              }
+            },
+            {
+              "id": "ksef_direct.connection.checked",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 6
+              }
+            },
+            {
+              "id": "ksef_direct.document.created",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 7
+              }
+            },
+            {
+              "id": "ksef_direct.document.queued",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 8
+              }
+            },
+            {
+              "id": "ksef_direct.document.sent",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 9
+              }
+            },
+            {
+              "id": "ksef_direct.document.failed",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 10
+              }
+            },
+            {
+              "id": "ksef_direct.received_document.synced",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 11
+              }
+            },
+            {
+              "id": "ksef_direct.received_document.failed",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/events.ts",
+                "line": 12
+              }
+            }
+          ],
+          "subscribes": [
+            {
+              "event": "ksef_direct.document.created",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/subscribers/auto-enqueue-ksef-document.ts",
+                "line": 6
+              }
+            }
+          ]
+        },
+        "ui": {
+          "backendPages": [
+            {
+              "path": "/backend/integration-ksef-direct/documents/new",
+              "requireFeatures": [
+                "integration_ksef_direct.documents.create"
+              ]
+            },
+            {
+              "path": "/backend/integration-ksef-direct/documents",
+              "requireFeatures": []
+            },
+            {
+              "path": "/backend/integration-ksef-direct/received-documents",
+              "requireFeatures": []
+            },
+            {
+              "path": "/backend",
+              "requireFeatures": []
+            }
+          ],
+          "frontendPages": [],
+          "widgets": 0,
+          "extensionHosts": 13
+        },
+        "background": {
+          "workers": [
+            {
+              "queue": "ksef_direct_check"
+            },
+            {
+              "queue": "ksef_direct_send"
+            },
+            {
+              "queue": "ksef_direct_receive"
+            }
+          ],
+          "cli": []
+        },
+        "ai": {
+          "tools": [],
+          "agents": []
+        },
+        "config": {
+          "credentials": [
+            {
+              "key": "ksef_token",
+              "type": "secret",
+              "required": true
+            },
+            {
+              "key": "nip",
+              "type": "text",
+              "required": true
+            },
+            {
+              "key": "environment",
+              "type": "select",
+              "required": true
+            }
+          ],
+          "env": []
+        },
+        "network": {
+          "hosts": [
+            {
+              "host": "api-test.ksef.mf.gov.pl",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/lib/ksefClient.ts",
+                "line": 7
+              },
+              "confidence": "high"
+            },
+            {
+              "host": "api.ksef.mf.gov.pl",
+              "src": {
+                "file": "src/modules/integration_ksef_direct/lib/ksefClient.ts",
+                "line": 8
+              },
+              "confidence": "high"
+            }
+          ],
+          "undeclared": []
+        },
+        "extends": [],
+        "omImports": {
+          "@open-mercato/core": {
+            "modules/directory/data/entities": [
+              "(dynamic/require)"
+            ]
+          },
+          "@open-mercato/queue": {
+            ".": [
+              "QueuedJob",
+              "WorkerMeta",
+              "createModuleQueue"
+            ]
+          },
+          "@open-mercato/shared": {
+            "lib/auth/server": [
+              "getAuthFromRequest"
+            ],
+            "lib/crud/mutation-guard": [
+              "runCrudMutationGuardAfterSuccess",
+              "validateCrudMutationGuard"
+            ],
+            "lib/di/container": [
+              "AppContainer",
+              "createRequestContainer"
+            ],
+            "lib/frontend/useOrganizationScope": [
+              "useOrganizationScopeVersion"
+            ],
+            "lib/http/readJsonSafe": [
+              "readJsonSafe"
+            ],
+            "lib/i18n/context": [
+              "useT"
+            ],
+            "lib/openapi": [
+              "OpenApiRouteDoc"
+            ],
+            "modules/events": [
+              "createModuleEvents"
+            ],
+            "modules/integrations/types": [
+              "IntegrationDefinition"
+            ],
+            "modules/setup": [
+              "ModuleSetupConfig"
+            ]
+          },
+          "@open-mercato/ui": {
+            "backend/DataTable": [
+              "DataTable"
+            ],
+            "backend/detail": [
+              "ErrorMessage",
+              "LoadingMessage"
+            ],
+            "backend/FlashMessages": [
+              "flash"
+            ],
+            "backend/injection/useAppEvent": [
+              "useAppEvent"
+            ],
+            "backend/injection/useGuardedMutation": [
+              "useGuardedMutation"
+            ],
+            "backend/Page": [
+              "Page",
+              "PageBody"
+            ],
+            "backend/SectionHeader": [
+              "SectionHeader"
+            ],
+            "backend/utils/apiCall": [
+              "apiCall"
+            ],
+            "primitives/alert": [
+              "Alert",
+              "AlertDescription"
+            ],
+            "primitives/button": [
+              "Button"
+            ],
+            "primitives/dialog": [
+              "Dialog",
+              "DialogContent",
+              "DialogFooter",
+              "DialogHeader",
+              "DialogTitle"
+            ],
+            "primitives/form-field": [
+              "FormField"
+            ],
+            "primitives/icon-button": [
+              "IconButton"
+            ],
+            "primitives/input": [
+              "Input"
+            ],
+            "primitives/spinner": [
+              "Spinner"
+            ],
+            "primitives/status-badge": [
+              "StatusBadge"
+            ]
+          }
+        },
+        "collisionKeys": {
+          "moduleId": "integration_ksef_direct",
+          "tables": [
+            "ksef_direct_documents",
+            "ksef_direct_received_documents",
+            "ksef_direct_connections"
+          ],
+          "aclFeatures": [
+            "integration_ksef_direct.view",
+            "integration_ksef_direct.manage",
+            "integration_ksef_direct.documents.view",
+            "integration_ksef_direct.documents.create",
+            "integration_ksef_direct.documents.send",
+            "integration_ksef_direct.received_documents.view",
+            "integration_ksef_direct.received_documents.sync"
+          ],
+          "eventIds": [
+            "ksef_direct.connection.connected",
+            "ksef_direct.connection.failed",
+            "ksef_direct.connection.checked",
+            "ksef_direct.document.created",
+            "ksef_direct.document.queued",
+            "ksef_direct.document.sent",
+            "ksef_direct.document.failed",
+            "ksef_direct.received_document.synced",
+            "ksef_direct.received_document.failed"
+          ],
+          "backendRoutes": [
+            "/backend/integration-ksef-direct/documents/new",
+            "/backend/integration-ksef-direct/documents",
+            "/backend/integration-ksef-direct/received-documents",
+            "/backend"
+          ]
+        },
+        "publicRoutes": 0,
+        "glyph": "2223200",
+        "lint": [
+          {
+            "code": "event-prefix",
+            "severity": "warn",
+            "message": "9 event IDs do not start with integration_ksef_direct. (for example ksef_direct.connection.connected).",
+            "anchor": "AGENTS.md:206",
+            "src": {
+              "file": "src/modules/integration_ksef_direct/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "code": "peer-range-behind",
+            "severity": "info",
+            "message": "Built for >=0.7.0 <0.8.0, which does not include the latest line 0.9.0.",
+            "anchor": null,
+            "src": null
+          },
+          {
+            "code": "no-agents-md",
+            "severity": "info",
+            "message": "The package ships no AGENTS.md.",
+            "anchor": null,
+            "src": null
+          },
+          {
+            "code": "ships-tests",
+            "severity": "info",
+            "message": "The tarball contains __tests__.",
+            "anchor": null,
+            "src": null
+          }
+        ]
+      }
+    ],
+    "coverage": {
+      "routesAuthResolved": 1,
+      "integrationTs": "expanded"
+    },
+    "diagnostics": [
+      "[module-facts] module registry unavailable (registryPath not provided); API route auth omitted for integration_ksef_direct"
+    ]
+  },
+  "receipts": [
+    {
+      "schema": 1,
+      "id": "r_20261023_4f12b867366e",
+      "cellKey": "4f12b867366edd63843a0d1ff85550af4864dd5d9e0cf51fdb90d6bc9722a3c2",
+      "module": {
+        "locator": "npm:@fastwhitecat/integration-ksef-direct",
+        "version": "0.1.8",
+        "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA=="
+      },
+      "om": {
+        "line": "next",
+        "version": "0.10.1-develop.7583.1.0c886d0a14",
+        "createApp": "create-mercato-app@0.10.1-develop.7583.1.0c886d0a14",
+        "preset": "classic"
+      },
+      "harness": {
+        "version": "d3d479555664",
+        "node": "24.21.0",
+        "yarn": "4.17.1",
+        "runner": "ubuntu-latest",
+        "mode": "realistic",
+        "patches": []
+      },
+      "baseline": {
+        "status": "verified",
+        "receipt": "r_20261023_e3fb888fa365"
+      },
+      "requiresInstalled": [],
+      "steps": [
+        {
+          "name": "scaffold",
+          "status": "pass",
+          "sec": 6,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "install",
+          "status": "pass",
+          "sec": 55,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "add",
+          "status": "pass",
+          "sec": 24,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "generate",
+          "status": "pass",
+          "sec": 12,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "typecheck",
+          "status": "pass",
+          "sec": 75,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "initialize",
+          "status": "pass",
+          "sec": 19,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "build",
+          "status": "pass",
+          "sec": 146,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "start",
+          "status": "pass",
+          "sec": 10,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "smoke",
+          "status": "pass",
+          "sec": 11,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        }
+      ],
+      "result": {
+        "status": "verified",
+        "failedStep": null,
+        "alsoFailed": [],
+        "classification": "pass",
+        "quarantineUntil": null
+      },
+      "transition": {
+        "from": null,
+        "to": "verified",
+        "confirmed": true
+      },
+      "run": {
+        "id": 18000000001,
+        "attempt": 1,
+        "url": "https://github.com/wojciechszyjka/modules/actions/runs/18000000001",
+        "at": "2026-10-23T02:17:00Z",
+        "durationSec": 358
+      },
+      "attestation": null
+    },
+    {
+      "schema": 1,
+      "id": "r_20261023_eb0bba415853",
+      "cellKey": "eb0bba4158530598ca55c489c5c3bad55b40c87f8a4980da484f34410ac18417",
+      "module": {
+        "locator": "npm:@fastwhitecat/integration-ksef-direct",
+        "version": "0.1.8",
+        "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA=="
+      },
+      "om": {
+        "line": "0.9",
+        "version": "0.9.0",
+        "createApp": "create-mercato-app@0.9.0",
+        "preset": "classic"
+      },
+      "harness": {
+        "version": "d3d479555664",
+        "node": "24.21.0",
+        "yarn": "4.17.1",
+        "runner": "ubuntu-latest",
+        "mode": "realistic",
+        "patches": []
+      },
+      "baseline": {
+        "status": "verified",
+        "receipt": "r_20261023_d509ddf9fe1a"
+      },
+      "requiresInstalled": [],
+      "steps": [
+        {
+          "name": "scaffold",
+          "status": "pass",
+          "sec": 6,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "install",
+          "status": "pass",
+          "sec": 158,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "add",
+          "status": "pass",
+          "sec": 23,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "generate",
+          "status": "pass",
+          "sec": 9,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "typecheck",
+          "status": "pass",
+          "sec": 72,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "initialize",
+          "status": "pass",
+          "sec": 17,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "build",
+          "status": "pass",
+          "sec": 139,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "start",
+          "status": "pass",
+          "sec": 9,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "smoke",
+          "status": "pass",
+          "sec": 11,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        }
+      ],
+      "result": {
+        "status": "verified",
+        "failedStep": null,
+        "alsoFailed": [],
+        "classification": "pass",
+        "quarantineUntil": null
+      },
+      "transition": {
+        "from": null,
+        "to": "verified",
+        "confirmed": true
+      },
+      "run": {
+        "id": 18000000001,
+        "attempt": 1,
+        "url": "https://github.com/wojciechszyjka/modules/actions/runs/18000000001",
+        "at": "2026-10-23T02:17:00Z",
+        "durationSec": 444
+      },
+      "attestation": null
+    },
+    {
+      "schema": 1,
+      "id": "r_20261023_f1c31fd2f033",
+      "cellKey": "f1c31fd2f0334f92cd8b444afb6b427e6e91b282bc513e2f9b479bea865ed43c",
+      "module": {
+        "locator": "npm:@fastwhitecat/integration-ksef-direct",
+        "version": "0.1.8",
+        "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA=="
+      },
+      "om": {
+        "line": "next",
+        "version": "0.10.1-develop.7583.1.0c886d0a14",
+        "createApp": "create-mercato-app@0.10.1-develop.7583.1.0c886d0a14",
+        "preset": "empty"
+      },
+      "harness": {
+        "version": "d3d479555664",
+        "node": "24.21.0",
+        "yarn": "4.17.1",
+        "runner": "ubuntu-latest",
+        "mode": "realistic",
+        "patches": []
+      },
+      "baseline": {
+        "status": "verified",
+        "receipt": "r_20261023_53a00a7b1ef8"
+      },
+      "requiresInstalled": [
+        "core:integrations"
+      ],
+      "steps": [
+        {
+          "name": "scaffold",
+          "status": "pass",
+          "sec": 6,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "install",
+          "status": "pass",
+          "sec": 55,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "add",
+          "status": "pass",
+          "sec": 24,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "generate",
+          "status": "pass",
+          "sec": 12,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "typecheck",
+          "status": "pass",
+          "sec": 75,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "initialize",
+          "status": "pass",
+          "sec": 19,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "build",
+          "status": "pass",
+          "sec": 146,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "start",
+          "status": "pass",
+          "sec": 10,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "smoke",
+          "status": "pass",
+          "sec": 11,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        }
+      ],
+      "result": {
+        "status": "verified",
+        "failedStep": null,
+        "alsoFailed": [],
+        "classification": "pass",
+        "quarantineUntil": null
+      },
+      "transition": {
+        "from": null,
+        "to": "verified",
+        "confirmed": true
+      },
+      "run": {
+        "id": 18000000001,
+        "attempt": 1,
+        "url": "https://github.com/wojciechszyjka/modules/actions/runs/18000000001",
+        "at": "2026-10-23T02:17:00Z",
+        "durationSec": 358
+      },
+      "attestation": null
+    },
+    {
+      "schema": 1,
+      "id": "r_20261023_44221517d2f6",
+      "cellKey": "44221517d2f6400036511c4b4f77789e227ee52c5d2ed3429110da17856b42a6",
+      "module": {
+        "locator": "npm:@fastwhitecat/integration-ksef-direct",
+        "version": "0.1.8",
+        "integrity": "sha512-S/WTfqYPGCe4qSyCzAa6Fg+eMGdLd92HB09unoaqdgBgYBcp9YxQL63GDcq1kA7/wm8CokntXpg9l7jkt106RA=="
+      },
+      "om": {
+        "line": "0.9",
+        "version": "0.9.0",
+        "createApp": "create-mercato-app@0.9.0",
+        "preset": "empty"
+      },
+      "harness": {
+        "version": "d3d479555664",
+        "node": "24.21.0",
+        "yarn": "4.17.1",
+        "runner": "ubuntu-latest",
+        "mode": "realistic",
+        "patches": [
+          {
+            "id": "api-keys",
+            "why": "OM 0.9.0 empty preset omits api_keys (fixed on main in #7473, not in release/v0.9.x)",
+            "ref": "https://github.com/open-mercato/open-mercato/pull/7473"
+          }
+        ]
+      },
+      "baseline": {
+        "status": "verified",
+        "receipt": "r_20261023_ab33b4e8d8a1"
+      },
+      "requiresInstalled": [
+        "core:integrations"
+      ],
+      "steps": [
+        {
+          "name": "scaffold",
+          "status": "pass",
+          "sec": 6,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "install",
+          "status": "pass",
+          "sec": 158,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "add",
+          "status": "pass",
+          "sec": 23,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "generate",
+          "status": "pass",
+          "sec": 9,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "typecheck",
+          "status": "pass",
+          "sec": 72,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "initialize",
+          "status": "pass",
+          "sec": 17,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "build",
+          "status": "pass",
+          "sec": 139,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "start",
+          "status": "pass",
+          "sec": 9,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        },
+        {
+          "name": "smoke",
+          "status": "pass",
+          "sec": 11,
+          "signature": null,
+          "excerpt": null,
+          "file": null,
+          "line": null
+        }
+      ],
+      "result": {
+        "status": "verified",
+        "failedStep": null,
+        "alsoFailed": [],
+        "classification": "pass",
+        "quarantineUntil": null
+      },
+      "transition": {
+        "from": null,
+        "to": "verified",
+        "confirmed": true
+      },
+      "run": {
+        "id": 18000000001,
+        "attempt": 1,
+        "url": "https://github.com/wojciechszyjka/modules/actions/runs/18000000001",
+        "at": "2026-10-23T02:17:00Z",
+        "durationSec": 444
+      },
+      "attestation": null
+    }
+  ],
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.1.8)."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "Tarball repository.url matches the descriptor."
+    }
+  ]
+}

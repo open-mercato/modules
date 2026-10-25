@@ -1,0 +1,8 @@
+npm: "@northbound-run/sync-google-sheets"
+github: Northbound-Run/open-mercato-google-sheets
+category: integrations-sync
+tags: [google-sheets, import, spreadsheets]
+summary: Adapter for data_sync that imports Google Sheets rows into any entity, with scheduled sync and an experimental two-way export.
+whenToUse: Use when a team keeps data in Google Sheets and needs it imported into app records without writing code.
+providers:
+  - { name: google-sheets, label: Google Sheets }

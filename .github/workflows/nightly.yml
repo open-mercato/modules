@@ -1,0 +1,246 @@
+# Nightly install (spec 5.3, D8-D12, D47): a fresh Open Mercato app per release line and starter preset (baseline,
+# "Open Mercato itself"; classic gives the main verdict, empty the signal "in isolation"), then one fresh app per module
+# cell. Third-party module code runs only here, on ephemeral ubuntu-latest runners,
+# with zero secrets and `contents: read`; app and module steps run as the user om-cell without sudo (`env -i`).
+# Each ladder step is its own GitHub step with `id` and `name` equal to the Step enum, so `collect` reads the true
+# status of every step from the Actions API. No actions/cache (D12). Logs go to artifacts (30 days).
+name: nightly
+run-name: nightly a${{ inputs.attempt || 1 }}${{ inputs.parent && format(' p{0}', inputs.parent) || '' }}
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+    inputs:
+      cells:
+        description: "Cell keys (64 or 12 characters) or locators, comma-separated. Empty: tonight's plan."
+        type: string
+        required: false
+        default: ""
+      mode:
+        description: "Only cells of this mode (realistic or early). Empty: both."
+        type: string
+        required: false
+        default: ""
+      preset:
+        description: "Only cells of this starter preset (classic or empty). Empty: both."
+        type: string
+        required: false
+        default: ""
+      attempt:
+        description: "Attempt number (collect dispatches 2 for unconfirmed red cells)."
+        type: number
+        required: false
+        default: 1
+      parent:
+        description: "Run id of the night this retry belongs to (set by collect)."
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  plan:
+    name: plan
+    # While the repository is private the night runs only by hand: a scheduled run would spend the org's Actions
+    # minutes on a site nobody can see yet. The schedule starts on its own once the repository is public.
+    if: ${{ github.event_name != 'schedule' || !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      cells: ${{ steps.plan.outputs.cells }}
+      count: ${{ steps.plan.outputs.count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Data checkout (read only)
+        run: |
+          set -euo pipefail
+          if git fetch --depth 1 origin data; then git worktree add --detach .data FETCH_HEAD; else mkdir -p .data; fi
+
+      - name: Plan the matrix
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          CELLS: ${{ inputs.cells }}
+          MODE: ${{ inputs.mode }}
+          PRESET_ONLY: ${{ inputs.preset }}
+          ATTEMPT: ${{ inputs.attempt || 1 }}
+        run: |
+          set -euo pipefail
+          yarn om plan-matrix --event "$EVENT" --cells "$CELLS" --mode "$MODE" --preset "$PRESET_ONLY" \
+            --attempt "$ATTEMPT" --github-output "$GITHUB_OUTPUT"
+
+      - name: Upload the matrix
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: matrix-a${{ inputs.attempt || 1 }}
+          path: out/matrix.json
+          retention-days: 30
+          if-no-files-found: error
+
+  cell:
+    name: cell ${{ matrix.cell.key12 }} ${{ matrix.cell.line }}
+    needs: plan
+    if: needs.plan.outputs.count != '0'
+    runs-on: ubuntu-latest
+    # a cell of the classic preset takes about 15 minutes with a warm Yarn cache (preview trial of 24 Oct), CI has none
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        cell: ${{ fromJSON(needs.plan.outputs.cells) }}
+    services:
+      postgres:
+        image: pgvector/pgvector@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6 # pg17-trixie
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: open-mercato
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      BASELINE: ${{ matrix.cell.baseline && '1' || '0' }}
+      OM_VERSION: ${{ matrix.cell.omVersion }}
+      PRESET: ${{ matrix.cell.preset }}
+      MODULE_SPEC: ${{ matrix.cell.moduleSpec }}
+      MODULE_NPM: ${{ matrix.cell.moduleNpm }}
+      MODULE_IDS: ${{ join(matrix.cell.moduleIds, ' ') }}
+      MODULE_FLAG: ${{ matrix.cell.moduleFlag }}
+      THIRD_PARTY: ${{ matrix.cell.thirdParty && '1' || '0' }}
+      REQUIRES_SPECS: ${{ join(matrix.cell.requiresSpecs, ' ') }}
+      REPLACES: ${{ join(matrix.cell.replaces, ' ') }}
+      PATCHES: ${{ join(matrix.cell.patches, ' ') }}
+      MODE: ${{ matrix.cell.mode }}
+      SMOKE_API: ${{ matrix.cell.smokeApi }}
+      BACKEND_PAGE: ${{ matrix.cell.backendPage }}
+      SMOKE_PATHS: ${{ join(matrix.cell.smokePaths, ' ') }}
+      SMOKE_PRESET: ${{ join(matrix.cell.presetSmoke, ' ') }}
+    steps:
+      - name: Checkout harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+          sparse-checkout: harness
+
+      # job-level env cannot read the runner context, so the logs directory is set here
+      - name: Logs directory
+        run: echo "OUT=$RUNNER_TEMP/cell" >> "$GITHUB_ENV"
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.21.0
+
+      - name: prepare
+        id: prepare
+        timeout-minutes: 4
+        run: bash harness/steps.sh prepare /home/om-cell
+
+      - name: scaffold
+        id: scaffold
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
+        timeout-minutes: 3
+        run: /opt/harness/steps.sh scaffold /home/om-cell
+
+      - name: patch
+        id: patch
+        if: ${{ !cancelled() && steps.scaffold.outcome == 'success' }}
+        timeout-minutes: 1
+        run: /opt/harness/steps.sh patch /home/om-cell/app
+
+      - name: env
+        id: env
+        if: ${{ !cancelled() && steps.patch.outcome == 'success' }}
+        timeout-minutes: 1
+        run: /opt/harness/steps.sh env /home/om-cell/app
+
+      - name: install
+        id: install
+        if: ${{ !cancelled() && steps.env.outcome == 'success' }}
+        timeout-minutes: 8
+        run: /opt/harness/steps.sh install /home/om-cell/app
+
+      - name: add
+        id: add
+        if: ${{ !cancelled() && !matrix.cell.baseline && steps.install.outcome == 'success' }}
+        timeout-minutes: 6
+        run: /opt/harness/steps.sh add /home/om-cell/app
+
+      - name: generate
+        id: generate
+        if: ${{ !cancelled() && (steps.add.outcome == 'success' || (matrix.cell.baseline && steps.install.outcome == 'success')) }}
+        timeout-minutes: 3
+        run: /opt/harness/steps.sh generate /home/om-cell/app
+
+      - name: typecheck
+        id: typecheck
+        if: ${{ !cancelled() && steps.generate.outcome == 'success' }}
+        timeout-minutes: 9
+        run: /opt/harness/steps.sh typecheck /home/om-cell/app
+
+      - name: initialize
+        id: initialize
+        # Also after a red typecheck (spec 5.3): consents fails typecheck but initializes.
+        if: ${{ !cancelled() && steps.generate.outcome == 'success' }}
+        timeout-minutes: 4
+        run: /opt/harness/steps.sh initialize /home/om-cell/app
+
+      - name: build
+        id: build
+        if: ${{ !cancelled() && steps.initialize.outcome == 'success' }}
+        timeout-minutes: 16
+        run: /opt/harness/steps.sh build /home/om-cell/app
+
+      - name: start
+        id: start
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        timeout-minutes: 5
+        run: /opt/harness/steps.sh start /home/om-cell/app
+
+      - name: smoke
+        id: smoke
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        timeout-minutes: 3
+        run: /opt/harness/steps.sh smoke /home/om-cell/app
+
+      - name: pack
+        id: pack
+        if: always()
+        timeout-minutes: 2
+        run: |
+          if [ -x /opt/harness/steps.sh ]; then /opt/harness/steps.sh pack /home/om-cell/app; else mkdir -p "$OUT"; fi
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: cell-${{ matrix.cell.key12 }}-${{ matrix.cell.line }}-a${{ inputs.attempt || 1 }}
+          path: ${{ runner.temp }}/cell
+          retention-days: 30
+          if-no-files-found: warn

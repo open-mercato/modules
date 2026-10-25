@@ -1,0 +1,5 @@
+# expect-path: summary
+npm: "@acme/thing"
+category: devtools
+summary: See the [docs](./docs) for the full list of features.
+whenToUse: Use when the summary carries a markdown link, which plain text forbids.

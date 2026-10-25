@@ -1,0 +1,474 @@
+{
+  "name": "zod",
+  "dist-tags": {
+    "latest": "4.6.7"
+  },
+  "time": {
+    "4.0.0": "2025-07-09T18:47:37.886Z",
+    "4.0.1": "2025-07-10T00:25:32.096Z",
+    "4.0.2": "2025-07-10T00:55:37.674Z",
+    "4.0.3": "2025-07-10T18:20:10.979Z",
+    "4.0.4": "2025-07-10T20:49:03.682Z",
+    "4.0.5": "2025-07-10T22:36:34.448Z",
+    "4.0.6": "2025-07-23T22:32:19.915Z",
+    "4.0.7": "2025-07-23T22:48:20.545Z",
+    "4.0.8": "2025-07-24T01:43:47.380Z",
+    "4.0.9": "2025-07-24T20:05:50.778Z",
+    "4.0.10": "2025-07-25T02:13:31.907Z",
+    "4.0.11": "2025-07-29T01:01:45.419Z",
+    "4.0.12": "2025-07-29T08:43:58.191Z",
+    "4.0.13": "2025-07-29T09:00:08.685Z",
+    "4.0.14": "2025-07-30T07:05:35.879Z",
+    "4.0.15": "2025-08-06T00:01:48.485Z",
+    "4.0.16": "2025-08-08T22:29:20.549Z",
+    "4.0.17": "2025-08-09T17:48:57.842Z",
+    "4.1.0": "2025-08-23T07:20:29.055Z",
+    "4.1.1": "2025-08-24T06:29:39.769Z",
+    "4.1.2": "2025-08-25T23:12:45.581Z",
+    "4.1.3": "2025-08-26T00:56:32.129Z",
+    "4.1.4": "2025-08-27T20:50:17.314Z",
+    "4.1.5": "2025-08-28T18:37:18.912Z",
+    "4.1.6": "2025-09-11T04:19:40.382Z",
+    "4.1.7": "2025-09-11T05:23:28.177Z",
+    "4.1.8": "2025-09-11T18:01:08.023Z",
+    "4.1.9": "2025-09-16T21:38:51.621Z",
+    "4.1.10": "2025-09-20T16:42:39.727Z",
+    "4.1.11": "2025-09-20T17:16:31.591Z",
+    "4.1.12": "2025-10-06T16:30:25.760Z",
+    "4.1.13": "2025-11-24T02:38:31.131Z",
+    "4.2.0": "2025-12-15T07:22:39.080Z",
+    "4.2.1": "2025-12-16T02:47:52.996Z",
+    "4.3.0": "2025-12-31T05:10:46.067Z",
+    "4.3.1": "2025-12-31T05:49:46.246Z",
+    "4.3.2": "2025-12-31T05:59:14.366Z",
+    "4.3.3": "2025-12-31T19:36:29.605Z",
+    "4.3.4": "2025-12-31T23:02:10.195Z",
+    "4.3.5": "2026-01-04T08:06:58.206Z",
+    "4.3.6": "2026-01-22T19:14:35.382Z",
+    "4.4.0": "2026-04-29T22:39:44.590Z",
+    "4.4.1": "2026-04-29T23:13:08.282Z",
+    "4.4.2": "2026-05-01T21:30:03.830Z",
+    "4.4.3": "2026-05-04T07:06:40.819Z",
+    "4.5.1": "2026-08-28T17:58:39.744Z",
+    "4.5.0": "2026-08-28T18:14:39.625Z",
+    "4.5.2": "2026-08-29T00:36:06.996Z",
+    "4.5.3": "2026-08-29T17:46:48.271Z",
+    "4.5.4": "2026-08-29T17:55:42.775Z",
+    "4.6.0": "2026-09-09T19:25:02.729Z",
+    "4.6.1": "2026-09-09T21:50:12.924Z",
+    "4.6.2": "2026-09-10T21:44:31.022Z",
+    "4.6.3": "2026-09-12T22:23:48.121Z",
+    "4.6.4": "2026-09-13T00:12:11.332Z",
+    "4.6.5": "2026-09-13T23:25:14.644Z",
+    "4.6.6": "2026-10-11T16:18:23.878Z",
+    "4.6.7": "2026-10-12T16:29:37.778Z"
+  },
+  "versions": {
+    "4.0.0": {
+      "version": "4.0.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.0.tgz",
+        "integrity": "sha512-9diLdTPc/L7w/5jI4C3gHYNiGHDV9IZYxo1e5LSD8cabi65WVTWWb+g2BGPEpUUCOxR4D+6O5B0AzyMdUAXwrw=="
+      }
+    },
+    "4.0.1": {
+      "version": "4.0.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.1.tgz",
+        "integrity": "sha512-3ayMCwqt0I18sfM+jC4t06mieo1n5B7jeH7GtPvCmzSfnecxO8+qBLtD56wOLccc3TJOMHUhiaG36ck6dtmKeQ=="
+      }
+    },
+    "4.0.2": {
+      "version": "4.0.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.2.tgz",
+        "integrity": "sha512-X2niJNY54MGam4L6Kj0AxeedeDIi/E5QFW0On2faSX5J4/pfLk1tW+cRMIMoojnCavn/u5W/kX17e1CSGnKMxA=="
+      }
+    },
+    "4.0.3": {
+      "version": "4.0.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.3.tgz",
+        "integrity": "sha512-V78FonTAxtGAyF2xR75x0YoW8uKXdQiusoPtzbT07vH3mZiGdTQN6INuivHyYT6M2V2YRFDEKIF4ylTJh54EXg=="
+      }
+    },
+    "4.0.4": {
+      "version": "4.0.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.4.tgz",
+        "integrity": "sha512-i+8X+1VC5B3ufKpHJYkp1uACl34n8MA3PNXiayDGmKVqTmiKgqmxSayPQjsYvkGs+DitAMS7U1l4uG6AZYCJGA=="
+      }
+    },
+    "4.0.5": {
+      "version": "4.0.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.5.tgz",
+        "integrity": "sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA=="
+      }
+    },
+    "4.0.6": {
+      "version": "4.0.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.6.tgz",
+        "integrity": "sha512-grO8UyVvh4j3nIcvZYCxgVvxJOKbWW8rZX2wlAL2qPG/Pe/R66/9MBeptqxPgpT7CBtGnJiwp6q76pq+hCAw2w=="
+      }
+    },
+    "4.0.7": {
+      "version": "4.0.7",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.7.tgz",
+        "integrity": "sha512-AKvYUuvqmyRf21eNxjuO++WPrQHhWg8i/4POzBLL//qVhcxA6gOptSDxXKM2S+uh8FtPV3MU/QZKOxqwsRV5kg=="
+      }
+    },
+    "4.0.8": {
+      "version": "4.0.8",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.8.tgz",
+        "integrity": "sha512-+MSh9cZU9r3QKlHqrgHMTSr3QwMGv4PLfR0M4N/sYWV5/x67HgXEhIGObdBkpnX8G78pTgWnIrBL2lZcNJOtfg=="
+      }
+    },
+    "4.0.9": {
+      "version": "4.0.9",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.9.tgz",
+        "integrity": "sha512-PAqUh1FW4Irxcs6/sWfnhJGV/8F0eLNd1FryydBfbA9Qvz1LaJk0TDrSC+hIKlArS/xVISuX/yjlS1bzg2D3Zw=="
+      }
+    },
+    "4.0.10": {
+      "version": "4.0.10",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.10.tgz",
+        "integrity": "sha512-3vB+UU3/VmLL2lvwcY/4RV2i9z/YU0DTV/tDuYjrwmx5WeJ7hwy+rGEEx8glHp6Yxw7ibRbKSaIFBgReRPe5KA=="
+      }
+    },
+    "4.0.11": {
+      "version": "4.0.11",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.11.tgz",
+        "integrity": "sha512-LVrgstTaQJek72n6ZGxhAhH/Q24PhGx4lIAcgBmjtvjRq0qYjiH9U0o3hfuC2vfExsnpoHElc4XOJjMKQjUQxg=="
+      }
+    },
+    "4.0.12": {
+      "version": "4.0.12",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.12.tgz",
+        "integrity": "sha512-OGAzot5brPuJQ7CABq8Eh00TK8QhQz/D5IwMqHbGRzrq8DD3e5uabJmi1HyPl1UMSkFAIF0SOlxhHIr22v8sLA=="
+      }
+    },
+    "4.0.13": {
+      "version": "4.0.13",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.13.tgz",
+        "integrity": "sha512-jv+zRxuZQxTrFHzxZ46ezL2FtnE+M4HIJHJEwLsZ7UjrXHltdG6HrxvqM0twoVCWxJiYf8WqKjAcjztegpkB+Q=="
+      }
+    },
+    "4.0.14": {
+      "version": "4.0.14",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.14.tgz",
+        "integrity": "sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw=="
+      }
+    },
+    "4.0.15": {
+      "version": "4.0.15",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.15.tgz",
+        "integrity": "sha512-2IVHb9h4Mt6+UXkyMs0XbfICUh1eUrlJJAOupBHUhLRnKkruawyDddYRCs0Eizt900ntIMk9/4RksYl+FgSpcQ=="
+      }
+    },
+    "4.0.16": {
+      "version": "4.0.16",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.16.tgz",
+        "integrity": "sha512-Djo/cM339grjI7/HmN+ixYO2FzEMcWr/On50UlQ/RjrWK1I/hPpWhpC76heCptnRFpH0LMwrEbUY50HDc0V8wg=="
+      }
+    },
+    "4.0.17": {
+      "version": "4.0.17",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.0.17.tgz",
+        "integrity": "sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ=="
+      }
+    },
+    "4.1.0": {
+      "version": "4.1.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.0.tgz",
+        "integrity": "sha512-UWxluYj2IDX9MHRXTMbB/2eeWrAMmmMSESM+MfT9MQw8U1qo9q5ASW08anoJh6AJ7pkt099fLdNFmfI+4aChHg=="
+      }
+    },
+    "4.1.1": {
+      "version": "4.1.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.1.tgz",
+        "integrity": "sha512-SgMZK/h8Tigt9nnKkfJMvB/mKjiJXaX26xegP4sa+0wHIFVFWVlsQGdhklDmuargBD3Hsi3rsQRIzwJIhTPJHA=="
+      }
+    },
+    "4.1.2": {
+      "version": "4.1.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.2.tgz",
+        "integrity": "sha512-SMwLPyHGp8HbPjJGqJOBJjPFAua5oSBf6+4ZA1/g4LW+rnYdd3JwAlDHa7fJ+nHSiGDWmE2jRWsLPV0OLlAuHQ=="
+      }
+    },
+    "4.1.3": {
+      "version": "4.1.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.3.tgz",
+        "integrity": "sha512-1neef4bMce1hNTrxvHVKxWjKfGDn0oAli3Wy1Uwb7TRO1+wEwoZUZNP1NXIEESybOBiFnBOhI6a4m6tCLE8dog=="
+      }
+    },
+    "4.1.4": {
+      "version": "4.1.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.4.tgz",
+        "integrity": "sha512-2YqJuWkU6IIK9qcE4k1lLLhyZ6zFw7XVRdQGpV97jEIZwTrscUw+DY31Xczd8nwaoksyJUIxCojZXwckJovWxA=="
+      }
+    },
+    "4.1.5": {
+      "version": "4.1.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.5.tgz",
+        "integrity": "sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg=="
+      }
+    },
+    "4.1.6": {
+      "version": "4.1.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.6.tgz",
+        "integrity": "sha512-ODK6zDMdQmu2MuklFFjN79FpiXECO+7uNBXPxHKNZu/dQQbuptvukshF7dmLOkMnR9inMTeLqqHuGKhs32SHdQ=="
+      }
+    },
+    "4.1.7": {
+      "version": "4.1.7",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.7.tgz",
+        "integrity": "sha512-6qi6UYyzAl7W9uV29KvcSFXqK4QCYNYUz2YASPNBWpJE1RY6R1nArmmFPgGY/CBYWzpeMw3EOER+DR9a05O4IA=="
+      }
+    },
+    "4.1.8": {
+      "version": "4.1.8",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.8.tgz",
+        "integrity": "sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ=="
+      }
+    },
+    "4.1.9": {
+      "version": "4.1.9",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.9.tgz",
+        "integrity": "sha512-HI32jTq0AUAC125z30E8bQNz0RQ+9Uc+4J7V97gLYjZVKRjeydPgGt6dvQzFrav7MYOUGFqqOGiHpA/fdbd0cQ=="
+      }
+    },
+    "4.1.10": {
+      "version": "4.1.10",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.10.tgz",
+        "integrity": "sha512-XuQhz4bDMHS66VWMD/ZQI+BT4DYbOYGjhV/sIlSA4vAzMuxjLT31Oa7m6Z7lEdCGDkt1VCt0x4Ro2PHonEdKFA=="
+      }
+    },
+    "4.1.11": {
+      "version": "4.1.11",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.11.tgz",
+        "integrity": "sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg=="
+      }
+    },
+    "4.1.12": {
+      "version": "4.1.12",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.12.tgz",
+        "integrity": "sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ=="
+      }
+    },
+    "4.1.13": {
+      "version": "4.1.13",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.1.13.tgz",
+        "integrity": "sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig=="
+      }
+    },
+    "4.2.0": {
+      "version": "4.2.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.2.0.tgz",
+        "integrity": "sha512-Bd5fw9wlIhtqCCxotZgdTOMwGm1a0u75wARVEY9HMs1X17trvA/lMi4+MGK5EUfYkXVTbX8UDiDKW4OgzHVUZw=="
+      }
+    },
+    "4.2.1": {
+      "version": "4.2.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.2.1.tgz",
+        "integrity": "sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw=="
+      }
+    },
+    "4.3.0": {
+      "version": "4.3.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.0.tgz",
+        "integrity": "sha512-dXOXgs5b9ulOPotwXMEsAUoUPL2glchysY0RTJYVqJ7bU0Y5gqE1k3v19eCWrJsczrbae/Dt9+ajrJbr8Ot4uw=="
+      }
+    },
+    "4.3.1": {
+      "version": "4.3.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.1.tgz",
+        "integrity": "sha512-byMElGHzmpXpO+x5sBMZZ7Dz7p/144k+verQewrJ+p47EM2YlVkz7nuen2iGod6oy5iWmY9zMfL/tvUWBgeMew=="
+      }
+    },
+    "4.3.2": {
+      "version": "4.3.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.2.tgz",
+        "integrity": "sha512-b8L8yn4rIVfiXyHAmnr52/ZEpDumlT0bmxiq3Ws1ybrinhflGpt12Hvv54kYnEsGPRs6o/Ka3/ppA2OWY21IVg=="
+      }
+    },
+    "4.3.3": {
+      "version": "4.3.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.3.tgz",
+        "integrity": "sha512-bQ7Rxwfn04DCrTjjRfD9SavY2vWdmf3REjs/mkc1LdwI1KkcHClBRJmnvmA/6epGeqlHePtIRF1J4SrMMlW7IA=="
+      }
+    },
+    "4.3.4": {
+      "version": "4.3.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.4.tgz",
+        "integrity": "sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A=="
+      }
+    },
+    "4.3.5": {
+      "version": "4.3.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.5.tgz",
+        "integrity": "sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g=="
+      }
+    },
+    "4.3.6": {
+      "version": "4.3.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.3.6.tgz",
+        "integrity": "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="
+      }
+    },
+    "4.4.0": {
+      "version": "4.4.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.4.0.tgz",
+        "integrity": "sha512-932TE3dEKhhYkEZFv6meaxLaCyg1m6LSI0ETKCIyUqIim+KgIsB/kha/4CKwDEbYgMzS5QxAe2mtDPpaHLHdsQ=="
+      }
+    },
+    "4.4.1": {
+      "version": "4.4.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.4.1.tgz",
+        "integrity": "sha512-a6ENMBBGZBsnlSebQ/eKCguSBeGKSf4O7BPnqVPmYGtpBYI7VSqoVqw+QcB7kPRjbqPwhYTpFbVj/RqNz/CT0Q=="
+      }
+    },
+    "4.4.2": {
+      "version": "4.4.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.4.2.tgz",
+        "integrity": "sha512-IynmDyxsEsb9RKzO3J9+4SxXnl2FTFSzNBaKKaMV6tsSk0rw9gYw9gs+JFCq/qk2LCZ78KDwyj+Z289TijSkUw=="
+      }
+    },
+    "4.4.3": {
+      "version": "4.4.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.4.3.tgz",
+        "integrity": "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="
+      }
+    },
+    "4.5.1": {
+      "version": "4.5.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.5.1.tgz",
+        "integrity": "sha512-P3GqeAEOEDqKvafVGLezbg+39YW/ze4xrD4qdS0adOY8eoI3zfjv1PQM4UwQzgT8mZKXEbqtVt8K+ZKGqkMFKg=="
+      }
+    },
+    "4.5.0": {
+      "version": "4.5.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.5.0.tgz",
+        "integrity": "sha512-FSVkRSv3SBc0aefry5kxuD46ExRwtWWyUPjyXHZt00YRF81+MX8rdQm8aJwlL4NLMqcJABseHr66OJuc+0LkDw=="
+      }
+    },
+    "4.5.2": {
+      "version": "4.5.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.5.2.tgz",
+        "integrity": "sha512-XkYXCol10+ba/6F/cueWV+TezUeOqXW0hdeJt5CdXjTYeAgAQg5N03RQdJ80mhfFE72+pblvYMW4wy2Qp4Qbrg=="
+      }
+    },
+    "4.5.3": {
+      "version": "4.5.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.5.3.tgz",
+        "integrity": "sha512-DVADDs2rc+nEbqt+Lsd1ESk6FokySOACfLuon6MNrLnFfE4EBdgb3DcXrnHmngIZBBdPz2PJMPBtgzaMIk59ZA=="
+      }
+    },
+    "4.5.4": {
+      "version": "4.5.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.5.4.tgz",
+        "integrity": "sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA=="
+      }
+    },
+    "4.6.0": {
+      "version": "4.6.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.0.tgz",
+        "integrity": "sha512-iIvwyDnebKYpww2ta0DjaNOL8RnVLmPMhgWyOzlW9y0EIIxv5gl+H6Y0ONpt83HqjGqkk78uWp6xWtpxzZdPbw=="
+      }
+    },
+    "4.6.1": {
+      "version": "4.6.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.1.tgz",
+        "integrity": "sha512-341aRWQsve0rvronKNTqZpjmzdbUDlFuzHaI/XLg/Ej82qffDJRRfBTCuv7+9q/rMjB6LSLyEBnW4InJeMtt/Q=="
+      }
+    },
+    "4.6.2": {
+      "version": "4.6.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.2.tgz",
+        "integrity": "sha512-lh5RCAGFa1Cm2hjtNwLQhSs/AsqdWnTQaBER9fEwN/88pSh7KOtJavtBx/0VlkN/uFd61SwYmljLMDAsHlvzBQ=="
+      }
+    },
+    "4.6.3": {
+      "version": "4.6.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.3.tgz",
+        "integrity": "sha512-qTMC0QXIpf4iH+G0rCJl6ZjKiFpqAU9++JDN8tqts3KP58MWeJU/in9tDccsHqlOolCIrBKsiPXR8vCLhe4QhA=="
+      }
+    },
+    "4.6.4": {
+      "version": "4.6.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.4.tgz",
+        "integrity": "sha512-AXSD6hvGdvRjajG/l1cC+d6IrhH+sjmPKtYeQdJIK8MFJl3LyClzS+o/YsVC+zQZPupAaeH5skwwm8YqYH7BqA=="
+      }
+    },
+    "4.6.5": {
+      "version": "4.6.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.5.tgz",
+        "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="
+      }
+    },
+    "4.6.6": {
+      "version": "4.6.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.6.tgz",
+        "integrity": "sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA=="
+      }
+    },
+    "4.6.7": {
+      "version": "4.6.7",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.7.tgz",
+        "integrity": "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+npm: "@freighttech/shipment-tracking"
+category: warehouse-shipping
+summary: Tracks ocean shipments through carrier adapters and shows their milestones.
+whenToUse: Use when the app must follow container shipments across several ocean carriers.

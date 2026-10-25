@@ -1,0 +1,7 @@
+# Fixture entry 16 (spec 11.1): no stable release, preview only.
+npm: "@open-mercato/gateway-tpay"
+category: payments-finance
+summary: PLN payments and BLIK through Tpay for checkout and sales documents.
+whenToUse: Use when the app takes PLN bank transfers or BLIK payments through a Tpay account.
+providers:
+  - { name: tpay, label: Tpay }

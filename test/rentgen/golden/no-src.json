@@ -1,0 +1,48 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 0
+  },
+  "package": {
+    "locator": "npm:@x/built-only",
+    "name": "@x/built-only",
+    "version": "1.0.0",
+    "integrity": null,
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/ in the tarball.",
+    "modules": []
+  },
+  "kind": "library",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# Built only\n",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "Proposed kind module, but the tarball has no src/modules. Confirmed as library.",
+    "No src/ in the tarball: anatomy is not available."
+  ]
+}

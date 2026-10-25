@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/jt-resource-factory@0.3.5?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "jt-resource-factory",
+      "version": "0.3.5",
+      "files": []
+    }
+  }
+}

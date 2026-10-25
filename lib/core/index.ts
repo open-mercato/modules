@@ -1,0 +1,18 @@
+// Barrel for lib/core: one isomorphic core for the site, the MCP Worker, WebMCP, the CLI and tests (spec 8.1).
+// No Node APIs anywhere below this folder (checked by mcp/tsconfig.json and test/core/isomorphic.test.ts).
+export * from './compat.ts'
+export * from './deeplinks.ts'
+export * from './entry.ts'
+export * from './health.ts'
+export * from './lines.ts'
+export * from './plan.ts'
+export * from './policy.ts'
+export * from './prompt.ts'
+export * from './refs.ts'
+export * from './search.ts'
+export * from './semver.ts'
+export * from './signals.ts'
+export * from './source.ts'
+export * from './steps.ts'
+export * from './text.ts'
+export * from './tier.ts'

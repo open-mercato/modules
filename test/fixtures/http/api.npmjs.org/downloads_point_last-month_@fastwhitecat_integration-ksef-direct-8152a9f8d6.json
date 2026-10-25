@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.npmjs.org/downloads/point/last-month/@fastwhitecat%2Fintegration-ksef-direct"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "downloads": 42,
+      "start": "2026-09-19",
+      "end": "2026-10-18",
+      "package": "@fastwhitecat/integration-ksef-direct"
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Adainamite-acc&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 26,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T08:51:36.203Z",
+          "searchScore": 17.469807,
+          "package": {
+            "name": "@dainamite/cpq-billing-connector",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "Wires @dainamite/cpq subscription lifecycle events to @dainamite/billing API calls (activated / amended / renewed / cancelled / merged / superseded).",
+            "sanitized_name": "@dainamite/cpq-billing-connector",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:50.785Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/cpq-billing-connector"
+            }
+          },
+          "score": {
+            "final": 17.469807,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 24,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T11:31:09.181Z",
+          "searchScore": 16.683052,
+          "package": {
+            "name": "@dainamite/billing",
+            "keywords": [],
+            "version": "0.19.0",
+            "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+            "sanitized_name": "@dainamite/billing",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:51.527Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/billing"
+            }
+          },
+          "score": {
+            "final": 16.683052,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 17,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T00:51:15.984Z",
+          "searchScore": 14.99302,
+          "package": {
+            "name": "@dainamite/cpq",
+            "keywords": [],
+            "version": "0.4.0",
+            "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+            "sanitized_name": "@dainamite/cpq",
+            "publisher": {
+              "email": "hq@dainamite.com",
+              "username": "dainamite-acc"
+            },
+            "maintainers": [
+              {
+                "email": "hq@dainamite.com",
+                "username": "dainamite-acc"
+              },
+              {
+                "email": "kamyszek1@gmail.com",
+                "username": "kamyyylo"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-25T10:53:51.413Z",
+            "links": {
+              "homepage": "https://github.com/dainamite-technologies/dainamite-core#readme",
+              "repository": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+              "bugs": "https://github.com/dainamite-technologies/dainamite-core/issues",
+              "npm": "https://www.npmjs.com/package/@dainamite/cpq"
+            }
+          },
+          "score": {
+            "final": 14.99302,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 3,
+      "time": "2026-10-23T02:38:13.456Z"
+    }
+  }
+}

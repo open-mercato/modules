@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@open-mercato%2Fgateway-stripe/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "legacy": "1.0.1",
+      "canary": "0.6.8-canary.322.1.0b9d350501",
+      "latest": "0.9.0",
+      "develop": "0.10.1-develop.7583.1.0c886d0a14"
+    }
+  }
+}

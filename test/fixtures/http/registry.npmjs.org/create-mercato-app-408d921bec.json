@@ -1,0 +1,558 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/create-mercato-app"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "create-mercato-app",
+      "dist-tags": {
+        "canary": "0.6.8-canary.322.1.0b9d350501",
+        "latest": "0.9.0",
+        "develop": "0.10.1-develop.7583.1.0c886d0a14"
+      },
+      "versions": {
+        "0.4.5": {
+          "version": "0.4.5",
+          "license": "MIT",
+          "repository": {
+            "url": "https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "gitHead": "c8dbd983bf6a11c96ba4888bc9c698decbb2bcad",
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-q573XiKR61NVWkDYnt4uvQUIW+/yntw8eFa2tcXy/OAoZgyPsT7ZwbCwBaZKOdCNZFNhuS4/vCgFTbQCYXWIdw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.5.tgz"
+          }
+        },
+        "0.4.6": {
+          "version": "0.4.6",
+          "license": "MIT",
+          "repository": {
+            "url": "https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "gitHead": "a71fbbd3da32291740747a92aabdc9bc2d67e1ba",
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-aYxO+bxWB0MIVw9BdgRXpXXWRA7WOTUwQDPEndj3OBOG/9UsA5+uQbv/b6U34nT8Y94O6KnHYEw9qHSdCE30ZQ==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.6.tgz"
+          }
+        },
+        "0.4.7": {
+          "version": "0.4.7",
+          "license": "MIT",
+          "repository": {
+            "url": "https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "gitHead": "ae9109fb7f61735c1adcac38e772c44d00cddf36",
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-NgxzKan52tszfU/3zUtpEXePOLoPkqWwSPcwu4AKg6zh3/9SGlLIr08UEqBCyvCW763ie4B0IK254gCuTbQj3A==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.7.tgz"
+          }
+        },
+        "0.4.8": {
+          "version": "0.4.8",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-+c6tSeMBMHRaHN5+KxsJQDImsVAPX8kCzf5OnvQVOpxyVXzQMcLHQ1K/ZCY1TZqVoA3GKR/GmeeUnLK2ZevsAg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.8.tgz"
+          }
+        },
+        "0.4.9": {
+          "version": "0.4.9",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-lbVIb7F6JOJrIzGlR8CKLVYuIjaB+eJR1sGZLaKp/zMy1m18OcH2qXz7D1T64MOL8j+BnfmsWpGBI6cs2YzjOg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.9.tgz"
+          }
+        },
+        "0.4.10": {
+          "version": "0.4.10",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-RConlNCvAXN0IM21DAgsnuI4CFcciGTmPKguYxCYmRwjeoaCACj749reXSoxvlJWnXHRgltoJcnXTQt5mUxUng==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.4.10.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.1",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-eubkhrTujwXtkwoQXtaoLpo1d0a9FIAzz0uV8vvFeINomMEYcooLzYrveDj3IyygxNdyt4qj7FzH5XOgObqEoQ==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.5.0.tgz"
+          }
+        },
+        "0.6.0": {
+          "version": "0.6.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.13",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-tA0BhVnjD4Z3VlYpHgW/RS9gH0VKkd+1U+Mwo1Yo86osZ7ZxD8IVhRySKAgWKbKwyDEYfMnTKvv9sZXa2oYwzg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.0.tgz"
+          }
+        },
+        "0.6.1": {
+          "version": "0.6.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.15",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-MOJUdmqmk18l9DLRxPB5Jn6DBS+s1UuzH/AtndDwUz89QhaaD+vIEsFUtQAkcZif8rKRGsoaiCYi6apUEfXeZw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.1.tgz"
+          }
+        },
+        "0.6.2": {
+          "version": "0.6.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.15",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-a7d97lFxwDfnYWNjiG523U2Xc5fGM49BVpr/o7fhjIv5K/WtJw3sNboys6JxRYvRvoLJcJpWzi0a/MIrROwzxw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.2.tgz"
+          }
+        },
+        "0.6.3": {
+          "version": "0.6.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.15",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-aEFLzduEihGOErSYpyoY1VMTh32h4CKGUgjghK4ftJGc50naZhE2D24qTy5SGIBC9pYnaiVKszgW8Spf71f3zg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.3.tgz"
+          }
+        },
+        "0.6.4": {
+          "version": "0.6.4",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.16",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-DFMuVqj10FRsrHiuSmZCj62Gg3JzMFRstgUTN9LS6WabH1GFCBseQNhmdEiZLdY9fb5tiAvqrFsWa2xvOQCWQw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.4.tgz"
+          }
+        },
+        "0.6.5": {
+          "version": "0.6.5",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.16",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-HgOoyl0mWdmQL5v5QQpjnXemAAUuPBQyP66y0olsMXO3v5Mslr+i/exzd91tdqTyvjw9cBF2KhDDEhZm2dt1Sg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.5.tgz"
+          }
+        },
+        "0.6.6": {
+          "version": "0.6.6",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.19",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-Y4tsRYoXeWU0jSCI/pEAo/Tiw54LtVO9vP4Ut6rm6ubd+Hq9/UE1PLXMhbDyADuVxB5ormzT8mfxkr/v5kC3fw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.6.tgz"
+          }
+        },
+        "0.6.7": {
+          "version": "0.6.7",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.20",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-wFeHpRt8kgyV2SD9U11IDnGctUV0qee4iUhU4q9e767lKfxZ4X1J3QZtBSE+k754sQlDFShTqUODdipzf/gH5Q==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.7.tgz"
+          }
+        },
+        "0.6.8-canary.322.1.0b9d350501": {
+          "version": "0.6.8-canary.322.1.0b9d350501",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.22",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-ALz/exuKcsXoJK0OcRu3MqriHHopQ7O/344B8QdmcgsXq3ab0bABn/WzXWemBFoJVevCNiGLUASDLWfbL2bBHg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.6.8-canary.322.1.0b9d350501.tgz"
+          }
+        },
+        "0.7.0": {
+          "version": "0.7.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.22",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-nPV3mmjGVSJcZ9GskQRdNl6kJDoHDJVuYm9Rdjp4JoaW4MJLUIJL6KPuDkKwIwzX1hxwGKwcPYQ0H45jDu96cA==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.7.0.tgz"
+          }
+        },
+        "0.8.0": {
+          "version": "0.8.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.22",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-LWPekXg9Cv1xe3CznpzBVZbjcdfm1rPw8yO6SxmKhqGKGxSiBDzIBEcLbZpFr7lsGccnx66/LyCg1XU9BtXPpQ==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.8.0.tgz"
+          }
+        },
+        "0.9.0": {
+          "version": "0.9.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.22",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-JuPuedKgPhJNcN98cIx/M8YVcSpQbLBZoYDeLOgznFlv6Y0x9Eg4j3jUjp5TC9f6fCvjZBAtdDLFOrOUO8wwfA==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.9.0.tgz"
+          }
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "version": "0.10.1-develop.7583.1.0c886d0a14",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/create-app"
+          },
+          "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "tar": "^7.5.22",
+            "ts-morph": "^28.0.0",
+            "picocolors": "^1.1.0"
+          },
+          "scripts": {},
+          "description": "Create a new Open Mercato application",
+          "dist": {
+            "integrity": "sha512-ctzbQCIKE5K1pU+gxfdQ9sHLYchvbXqlxjddruLiFJMYG30FFUTBAYDzrUDLkKb1qZ0W2d3VFKVsdMnK7ajaZA==",
+            "tarball": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.10.1-develop.7583.1.0c886d0a14.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-01-23T15:47:08.447Z",
+        "modified": "2026-10-22T14:00:14.653Z",
+        "0.4.5": "2026-02-27T06:48:44.344Z",
+        "0.4.6": "2026-03-06T08:10:48.978Z",
+        "0.4.7": "2026-03-13T11:40:35.757Z",
+        "0.4.8": "2026-03-17T09:49:48.138Z",
+        "0.4.9": "2026-03-26T12:48:56.400Z",
+        "0.4.10": "2026-04-01T15:56:52.308Z",
+        "0.5.0": "2026-04-22T11:58:29.484Z",
+        "0.6.0": "2026-05-07T10:47:09.293Z",
+        "0.6.1": "2026-05-14T07:15:13.033Z",
+        "0.6.2": "2026-05-22T06:23:26.633Z",
+        "0.6.3": "2026-05-28T16:05:50.762Z",
+        "0.6.4": "2026-06-09T06:29:25.000Z",
+        "0.6.5": "2026-06-15T13:50:16.938Z",
+        "0.6.6": "2026-07-17T07:47:09.894Z",
+        "0.6.7": "2026-08-05T10:11:03.511Z",
+        "0.6.8-canary.322.1.0b9d350501": "2026-08-14T08:56:54.313Z",
+        "0.7.0": "2026-08-26T09:03:14.383Z",
+        "0.8.0": "2026-09-18T11:44:08.856Z",
+        "0.9.0": "2026-10-09T19:30:20.552Z",
+        "0.10.1-develop.7583.1.0c886d0a14": "2026-10-22T14:00:14.149Z"
+      },
+      "maintainers": [
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Create a new Open Mercato application",
+      "repository": {
+        "url": "git+https://github.com/open-mercato/open-mercato.git",
+        "type": "git",
+        "directory": "packages/create-app"
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40fastwhitecat%2Fintegration-ksef-direct/versions/0.1.8"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@fastwhitecat/integration-ksef-direct",
+        "version": "0.1.8"
+      },
+      "publishedAt": "2026-10-15T09:45:06Z",
+      "slsaProvenances": [
+        {
+          "sourceRepository": "https://github.com/FastWhiteCat/openmercato-module-ksef",
+          "commit": "df48a8c52904dc2cae6dabf3379f7076a7b319a5",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@fastwhitecat%2fintegration-ksef-direct@0.1.8",
+          "verified": true
+        }
+      ],
+      "attestations": [
+        {
+          "type": "https://slsa.dev/provenance/v1",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@fastwhitecat%2fintegration-ksef-direct@0.1.8",
+          "verified": true,
+          "sourceRepository": "https://github.com/FastWhiteCat/openmercato-module-ksef",
+          "commit": "df48a8c52904dc2cae6dabf3379f7076a7b319a5"
+        }
+      ]
+    }
+  }
+}

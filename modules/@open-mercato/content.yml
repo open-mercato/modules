@@ -1,0 +1,7 @@
+npm: "@open-mercato/content"
+repo: open-mercato/open-mercato#main/packages/content
+category: content-portal
+tags: [legal, pages]
+summary: Adds public terms of service and privacy policy pages to the app, rendered from code in the app layout.
+whenToUse: Use when the app needs public terms and privacy pages and their text can live in code next to the app.
+whenNotToUse: "It is not a CMS: the admin panel has no page editor."

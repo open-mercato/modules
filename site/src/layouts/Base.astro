@@ -1,0 +1,180 @@
+---
+// Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, theme before first paint, self-hosted fonts, header,
+// stale-data banner, footer, copy handler with a polite live region, Speculation Rules, and WebMCP on pages that
+// ask for it (site/src/scripts/webmcp.ts, WP14, loaded through import.meta.glob so a missing file is fine).
+import '../styles/tokens.css'
+import '../styles/base.css'
+import '../styles/ui.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import Banner from '../components/Banner.astro'
+import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
+import { absoluteUrl, BASE, href } from '../lib/url.ts'
+import { day, hoursBetween } from '../lib/format.ts'
+import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
+import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
+
+interface Props {
+  title: string
+  description: string
+  /** Site path of this page without the base, e.g. '/m/@x/y'. */
+  path: string
+  dataAsOf: DataAsOf
+  /** Markdown twin of the page (module pages). */
+  mdAlternate?: string
+  /** Register the WebMCP tools (/, /m/*, /for-agents). */
+  webmcp?: boolean
+  /** Extra JSON-LD object. */
+  jsonLd?: Record<string, unknown>
+  /** Skip link target and text (spec 7.9). */
+  skip?: { href: string; label: string }
+  /** Force noindex (otherwise noindex on *.github.io, D36). */
+  noindex?: boolean
+  bodyClass?: string
+}
+const {
+  title,
+  description,
+  path,
+  dataAsOf,
+  mdAlternate,
+  webmcp = false,
+  jsonLd,
+  skip = { href: '#main', label: 'Skip to content' },
+  noindex,
+  bodyClass,
+} = Astro.props
+const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
+const canonical = absoluteUrl(site, path)
+const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
+const ogImage = absoluteUrl(site, '/og-default.png')
+// a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
+const stale =
+  dataAsOf.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
+const speculation = JSON.stringify({
+  prefetch: [{ where: { href_matches: `${BASE}/m/*` }, eagerness: 'moderate' }],
+})
+const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()`
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    {robotsNoindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
+    <link rel="llms-txt" href={href('/llms.txt')} />
+    {mdAlternate && <link rel="alternate" type="text/markdown" href={href(mdAlternate)} />}
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0C0C0C" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Open Mercato Modules" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 155)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline set:html={themeInit} />
+    {/* the view-transition opt-in is inline in the head (review r4: the flight from a query to a module page was
+        dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
+        new page's first style pass could run without it; inline: 96 of 96 flights land in headless Chromium) */}
+    <style is:inline set:html={`${fontFaceCss()}@view-transition{navigation:auto}`}></style>
+    <script type="speculationrules" is:inline set:html={speculation} />
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href={skip.href}>{skip.label}</a>
+    <Header dataAsOf={dataAsOf} current={path} />
+    {
+      /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
+      !isPreviewData(dataAsOf) && (
+        <div class="sheet stale-wrap" id="stale-banner" hidden={!stale}>
+          <Banner variant="stale-data">
+            Data from <span data-stale-day>{dataAsOf.nightly ? day(dataAsOf.nightly) : ''}</span>. The nightly run did
+            not finish.
+          </Banner>
+        </div>
+      )
+    }
+    <script is:inline set:html={STALE_CHECK_JS} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer dataAsOf={dataAsOf} />
+    <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
+    <script>
+      const toast = document.getElementById('om-toast')
+      let timer: ReturnType<typeof setTimeout> | undefined
+      function say(text: string): void {
+        if (!toast) return
+        toast.textContent = text
+        toast.setAttribute('data-on', '')
+        clearTimeout(timer)
+        timer = setTimeout(() => toast.removeAttribute('data-on'), 1600)
+      }
+      async function copy(text: string): Promise<boolean> {
+        try {
+          await navigator.clipboard.writeText(text)
+          return true
+        } catch {
+          const ta = document.createElement('textarea')
+          ta.value = text
+          ta.setAttribute('readonly', '')
+          ta.style.position = 'fixed'
+          ta.style.opacity = '0'
+          document.body.append(ta)
+          ta.select()
+          const ok = document.execCommand('copy')
+          ta.remove()
+          return ok
+        }
+      }
+      document.addEventListener('click', (ev) => {
+        const el = (ev.target as Element | null)?.closest<HTMLElement>('[data-copy]')
+        if (!el) return
+        ev.preventDefault()
+        void copy(el.dataset.copy ?? '').then((ok) => say(ok ? (el.dataset.copied ?? 'Copied') : 'Copy failed'))
+      })
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key !== '/' || ev.metaKey || ev.ctrlKey || ev.altKey) return
+        const t = ev.target as HTMLElement | null
+        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return
+        const search = document.querySelector<HTMLInputElement>('[data-search-input]')
+        if (search) {
+          ev.preventDefault()
+          search.focus()
+        }
+      })
+    </script>
+    {
+      webmcp && (
+        <script>
+          import { afterFirstPaint } from '../lib/after-paint.ts'
+          // after the first paint (spec 7.11): WebMCP is for agents and never draws anything
+          const mods = import.meta.glob('../scripts/webmcp.ts')
+          afterFirstPaint(() => {
+            for (const load of Object.values(mods)) void load()
+          })
+        </script>
+      )
+    }
+  </body>
+</html>
+
+<style>
+  .stale-wrap {
+    padding: 12px var(--pad) 0;
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

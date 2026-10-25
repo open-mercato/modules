@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@northbound-run/sync-google-sheets@0.2.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@northbound-run/sync-google-sheets",
+      "version": "0.2.0",
+      "files": [
+        {
+          "name": "/dist/modules/sync_google_sheets/acl.js"
+        },
+        {
+          "name": "/src/modules/sync_google_sheets/index.ts"
+        }
+      ]
+    }
+  }
+}

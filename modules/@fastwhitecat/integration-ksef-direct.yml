@@ -1,0 +1,9 @@
+npm: "@fastwhitecat/integration-ksef-direct"
+github: FastWhiteCat/openmercato-module-ksef
+category: localization-compliance
+tags: [ksef, e-invoicing, poland]
+summary: Sends and receives Polish structured e-invoices through the KSeF API v2.
+whenToUse: Use when the app must issue or receive structured invoices in KSeF (Poland) and you have a KSeF token for the NIP.
+providers:
+  - { name: ksef, label: KSeF }
+renamedFrom: ["npm:@fast-white-cat/integration-ksef-direct"]

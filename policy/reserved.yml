@@ -1,0 +1,4 @@
+# Reserved names. A new entry whose name or module ID matches one fails validation unless a curator
+# adds the `name-reviewed` label. Core module IDs are loaded from data/builtin/<coreVersion>.json
+# (a collision without `replaces` is the `collision-core` error).
+names: [catalog, directory, modules, official, open-mercato]

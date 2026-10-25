@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@fullstackhouse/nestjs-logger-middleware@1.1.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@fullstackhouse/nestjs-logger-middleware",
+      "version": "1.1.0",
+      "files": []
+    }
+  }
+}

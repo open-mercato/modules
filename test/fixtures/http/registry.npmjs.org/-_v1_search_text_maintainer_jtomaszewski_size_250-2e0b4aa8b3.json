@@ -1,0 +1,1283 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Ajtomaszewski&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 4958,
+            "weekly": 537
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T22:04:54.269Z",
+          "searchScore": 48.63458,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-health",
+            "keywords": ["health-check", "kubernetes", "open-mercato", "readiness", "liveness"],
+            "version": "0.3.0",
+            "description": "Health check endpoints for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-health",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:0996890e-30a9-4d92-a647-8b34591f1738",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-19T12:19:37.521Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-health#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-health.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-health/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-health"
+            }
+          },
+          "score": {
+            "final": 48.63458,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1225,
+            "weekly": 264
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T15:06:18.672Z",
+          "searchScore": 41.06525,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-demo-auth",
+            "keywords": ["open-mercato", "auth", "login", "dev-tools", "widget"],
+            "version": "0.3.0",
+            "description": "Dev-only login form prefill + auto-submit widget for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-demo-auth",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:a4a3aca9-bbad-49be-9814-7993936084ab",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-04-24T13:00:14.939Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-demo-auth#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-demo-auth.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-demo-auth/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-demo-auth"
+            }
+          },
+          "score": {
+            "final": 41.06525,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1690,
+            "weekly": 214
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T10:16:04.845Z",
+          "searchScore": 40.42876,
+          "package": {
+            "name": "@fullstackhouse/cerber",
+            "keywords": [
+              "code-review",
+              "pull-request",
+              "ai",
+              "claude",
+              "claude-code",
+              "github",
+              "cli",
+              "local-first",
+              "developer-tools",
+              "human-in-the-loop"
+            ],
+            "version": "1.0.0",
+            "description": "AI code-review cockpit: Claude reviews your PRs into local artifacts; nothing reaches GitHub until you say so.",
+            "sanitized_name": "@fullstackhouse/cerber",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "0aa80d05-9651-4f24-93e5-968fd8fcfcb2",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-22T10:15:33.481Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/cerber#readme",
+              "repository": "git+https://github.com/fullstackhouse/cerber.git",
+              "bugs": "https://github.com/fullstackhouse/cerber/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/cerber"
+            }
+          },
+          "score": {
+            "final": 40.42876,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 623,
+            "weekly": 48
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T10:21:23.914Z",
+          "searchScore": 34.25419,
+          "package": {
+            "name": "ionic-cordova-gulp-seed",
+            "keywords": ["seed", "ionic", "gulp", "cordova"],
+            "version": "2.6.1",
+            "description": "Ionic & Cordova & Gulp seed with organized code, tests, bower support and some other stuff. Originated from ionic-angular-cordova-seed.",
+            "sanitized_name": "ionic-cordova-gulp-seed",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2017-04-25T12:28:23.797Z",
+            "links": {
+              "homepage": "https://github.com/jtomaszewski/ionic-cordova-gulp-seed#readme",
+              "repository": "git+https://github.com/jtomaszewski/ionic-cordova-gulp-seed.git",
+              "bugs": "https://github.com/jtomaszewski/ionic-cordova-gulp-seed/issues",
+              "npm": "https://www.npmjs.com/package/ionic-cordova-gulp-seed"
+            }
+          },
+          "score": {
+            "final": 34.25419,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 413,
+            "weekly": 17
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T14:06:18.039Z",
+          "searchScore": 31.618256,
+          "package": {
+            "name": "@fullstackhouse/react-native-sync-storage",
+            "keywords": ["react-native", "ios", "android"],
+            "version": "0.1.1",
+            "description": "Synchronous storage library for React Native",
+            "sanitized_name": "@fullstackhouse/react-native-sync-storage",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-08-08T08:14:12.429Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/react-native-sync-storage#readme",
+              "repository": "git+https://github.com/fullstackhouse/react-native-sync-storage.git",
+              "bugs": "https://github.com/fullstackhouse/react-native-sync-storage/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/react-native-sync-storage"
+            }
+          },
+          "score": {
+            "final": 31.618256,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 204,
+            "weekly": 8
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T22:36:12.836Z",
+          "searchScore": 27.56034,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-durable-work",
+            "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+            "version": "0.6.0",
+            "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+            "sanitized_name": "@fullstackhouse/open-mercato-durable-work",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:cbc6f716-d3e0-446d-878d-65d7a4c1ce70",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:10:25.314Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-durable-work"
+            }
+          },
+          "score": {
+            "final": 27.56034,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 177,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T12:56:42.157Z",
+          "searchScore": 26.955858,
+          "package": {
+            "name": "@fullstackhouse/plasmic-utils",
+            "keywords": [],
+            "version": "2.10.0",
+            "description": "Utilities shared across various front-end projects built on Plasmic.",
+            "sanitized_name": "@fullstackhouse/plasmic-utils",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-11-04T11:22:26.434Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/plasmic-utils#readme",
+              "repository": "git+https://github.com/fullstackhouse/plasmic-utils.git",
+              "bugs": "https://github.com/fullstackhouse/plasmic-utils/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/plasmic-utils"
+            }
+          },
+          "score": {
+            "final": 26.955858,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 172,
+            "weekly": 27
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T22:36:11.101Z",
+          "searchScore": 26.629519,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+            "version": "0.6.0",
+            "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+            "sanitized_name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:ab4e576a-f994-4691-8250-9bcc793c31f8",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:09:09.970Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-data-sync-durable"
+            }
+          },
+          "score": {
+            "final": 26.629519,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 158,
+            "weekly": 3
+          },
+          "dependents": "2",
+          "updated": "2026-10-20T13:47:03.955Z",
+          "searchScore": 26.129347,
+          "package": {
+            "name": "@fullstackhouse/nestjs-outbox",
+            "keywords": [],
+            "version": "4.1.2",
+            "description": "NestJS Outbox pattern implementation with extensible database drivers",
+            "sanitized_name": "@fullstackhouse/nestjs-outbox",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:a1a56beb-7bea-4921-bec0-db697d543b29",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-23T09:57:17.940Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-outbox#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-outbox.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-outbox/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-outbox"
+            }
+          },
+          "score": {
+            "final": 26.129347,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 104,
+            "weekly": 21
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T21:06:11.307Z",
+          "searchScore": 24.779867,
+          "package": {
+            "name": "@fullstackhouse/react-compose",
+            "keywords": ["react", "compose", "providers", "context", "hoc", "wrapper", "nesting"],
+            "version": "0.1.0",
+            "description": "Compose React providers and components to avoid deeply nested JSX trees",
+            "sanitized_name": "@fullstackhouse/react-compose",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-01T23:37:17.391Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/react-compose#readme",
+              "repository": "git+https://github.com/fullstackhouse/react-compose.git",
+              "bugs": "https://github.com/fullstackhouse/react-compose/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/react-compose"
+            }
+          },
+          "score": {
+            "final": 24.779867,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 126,
+            "weekly": 18
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T02:51:54.100Z",
+          "searchScore": 24.75971,
+          "package": {
+            "name": "@fullstackhouse/react-native-nested-safe-area",
+            "keywords": ["react-native", "safe-area", "nested", "context", "ios", "android"],
+            "version": "0.1.2",
+            "description": "A wrapper on top of react-native-safe-area-context that allows nested safe area contexts",
+            "sanitized_name": "@fullstackhouse/react-native-nested-safe-area",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-08-13T09:04:57.433Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/react-native-nested-safe-area#readme",
+              "repository": "git+https://github.com/fullstackhouse/react-native-nested-safe-area.git",
+              "bugs": "https://github.com/fullstackhouse/react-native-nested-safe-area/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/react-native-nested-safe-area"
+            }
+          },
+          "score": {
+            "final": 24.75971,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 50,
+            "weekly": 29
+          },
+          "dependents": "1",
+          "updated": "2026-10-16T18:26:12.466Z",
+          "searchScore": 19.396921,
+          "package": {
+            "name": "@fullstackhouse/react-ssr-prepass",
+            "keywords": [],
+            "version": "2.0.11",
+            "description": "A custom partial React SSR renderer for prefetching and suspense",
+            "sanitized_name": "@fullstackhouse/react-ssr-prepass",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-03-28T11:44:13.492Z",
+            "links": {
+              "homepage": "https://github.com/FormidableLabs/react-ssr-prepass#readme",
+              "repository": "git+ssh://git@github.com/FormidableLabs/react-ssr-prepass.git",
+              "bugs": "https://github.com/FormidableLabs/react-ssr-prepass/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/react-ssr-prepass"
+            }
+          },
+          "score": {
+            "final": 19.396921,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 48,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T16:36:25.916Z",
+          "searchScore": 19.076427,
+          "package": {
+            "name": "@fullstackhouse/nestjs-outbox-mikro-orm-driver",
+            "keywords": [],
+            "version": "4.1.2",
+            "description": "This package provides a driver for the NestJS Outbox library that uses MikroORM to interact with the database.",
+            "sanitized_name": "@fullstackhouse/nestjs-outbox-mikro-orm-driver",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:7f538da7-f629-4cbf-84b5-4837a1748b37",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-23T09:57:20.375Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-outbox#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-outbox.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-outbox/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-outbox-mikro-orm-driver"
+            }
+          },
+          "score": {
+            "final": 19.076427,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 45,
+            "weekly": 12
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T11:31:14.420Z",
+          "searchScore": 18.773052,
+          "package": {
+            "name": "@fullstackhouse/agentloop",
+            "keywords": ["ai", "agent", "claude", "slack", "mcp"],
+            "version": "0.7.5",
+            "description": "AI agent that monitors chat platforms and responds using Claude Code",
+            "sanitized_name": "@fullstackhouse/agentloop",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:37819b16-3759-44aa-a042-b0dd9d8c41ba",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-03-25T08:43:42.221Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/agentloop#readme",
+              "repository": "git+https://github.com/fullstackhouse/agentloop.git",
+              "bugs": "https://github.com/fullstackhouse/agentloop/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/agentloop"
+            }
+          },
+          "score": {
+            "final": 18.773052,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 8
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T16:21:12.595Z",
+          "searchScore": 16.850645,
+          "package": {
+            "name": "@fullstackhouse/nestjs-redis-health",
+            "keywords": ["nestjs", "terminus", "redis", "health", "healthcheck", "ioredis"],
+            "version": "1.0.0",
+            "description": "Redis health indicator for NestJS Terminus",
+            "sanitized_name": "@fullstackhouse/nestjs-redis-health",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-11-24T12:29:47.464Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-redis-health#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-redis-health.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-redis-health/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-redis-health"
+            }
+          },
+          "score": {
+            "final": 16.850645,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 26,
+            "weekly": 8
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T15:56:34.907Z",
+          "searchScore": 15.7115,
+          "package": {
+            "name": "@jtomaszewski/bullmq",
+            "keywords": ["bull", "bullmq", "queues", "jobs", "redis"],
+            "version": "5.59.1",
+            "description": "Queue for messages and jobs based on Redis",
+            "sanitized_name": "@jtomaszewski/bullmq",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-09-04T10:36:09.142Z",
+            "links": {
+              "homepage": "https://bullmq.io/",
+              "repository": "git+https://github.com/taskforcesh/bullmq.git",
+              "bugs": "https://github.com/taskforcesh/bullmq/issues",
+              "npm": "https://www.npmjs.com/package/@jtomaszewski/bullmq"
+            }
+          },
+          "score": {
+            "final": 15.7115,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 22,
+            "weekly": 11
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T15:46:33.499Z",
+          "searchScore": 15.462151,
+          "package": {
+            "name": "@fullstackhouse/opentelemetry-js-decorator",
+            "keywords": ["opentelemetry", "tracing", "decorator", "typescript", "observability"],
+            "version": "0.1.1",
+            "description": "A TypeScript decorator for OpenTelemetry tracing",
+            "sanitized_name": "@fullstackhouse/opentelemetry-js-decorator",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-07T21:10:39.742Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/opentelemetry-js-decorator#readme",
+              "repository": "git+https://github.com/fullstackhouse/opentelemetry-js-decorator.git",
+              "bugs": "https://github.com/fullstackhouse/opentelemetry-js-decorator/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/opentelemetry-js-decorator"
+            }
+          },
+          "score": {
+            "final": 15.462151,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 15,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T20:31:24.979Z",
+          "searchScore": 13.35684,
+          "package": {
+            "name": "@fullstackhouse/nestjs-outbox-typeorm-driver",
+            "keywords": [],
+            "version": "4.1.2",
+            "description": "This package provides a driver for the NestJS Outbox library that uses TypeORM to interact with the database.",
+            "sanitized_name": "@fullstackhouse/nestjs-outbox-typeorm-driver",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:ce1a94d8-084a-48cb-8b30-5567bc8c7e8d",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-23T09:57:20.533Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-outbox#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-outbox.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-outbox/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-outbox-typeorm-driver"
+            }
+          },
+          "score": {
+            "final": 13.35684,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 17,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T17:21:13.647Z",
+          "searchScore": 13.342113,
+          "package": {
+            "name": "hot-app",
+            "keywords": ["hot", "reload", "webpack"],
+            "version": "1.0.2",
+            "description": "App wrapper to make it start, stop and restart easily through the browser console or f.e. webpack hot reload.",
+            "sanitized_name": "hot-app",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2016-10-09T20:30:37.048Z",
+            "links": {
+              "homepage": "https://github.com/jtomaszewski/hot-app#readme",
+              "repository": "git+https://github.com/jtomaszewski/hot-app.git",
+              "bugs": "https://github.com/jtomaszewski/hot-app/issues",
+              "npm": "https://www.npmjs.com/package/hot-app"
+            }
+          },
+          "score": {
+            "final": 13.342113,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 16,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T13:16:26.878Z",
+          "searchScore": 13.10171,
+          "package": {
+            "name": "@jtomaszewski/eslint-config",
+            "keywords": [],
+            "version": "4.0.1",
+            "description": "ESLint config to be used in some of our projects, that includes recommended rules of the following plugins:",
+            "sanitized_name": "@jtomaszewski/eslint-config",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2022-01-14T12:41:32.668Z",
+            "links": {
+              "repository": "https://github.com/jtomaszewski/eslint-config",
+              "npm": "https://www.npmjs.com/package/@jtomaszewski/eslint-config"
+            }
+          },
+          "score": {
+            "final": 13.10171,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 13,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T14:46:12.518Z",
+          "searchScore": 12.889886,
+          "package": {
+            "name": "@fullstackhouse/nestjs-better-auth",
+            "keywords": ["nestjs", "better-auth", "auth", "nestjs-better-auth"],
+            "version": "2.1.1-fullstackhouse.2",
+            "description": "Better Auth for NestJS (Fullstack House fork with MikroORM fixes)",
+            "sanitized_name": "@fullstackhouse/nestjs-better-auth",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-11-07T10:43:34.303Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-better-auth#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-better-auth.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-better-auth/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-better-auth"
+            }
+          },
+          "score": {
+            "final": 12.889886,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 13,
+            "weekly": 6
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T16:31:32.750Z",
+          "searchScore": 12.085126,
+          "package": {
+            "name": "angular-hot",
+            "keywords": ["angular", "hot", "reload", "webpack", "angular.js", "angularjs"],
+            "version": "1.0.1",
+            "description": "Hot reload your angular services/directives/factories/etc without unnecessary pain.",
+            "sanitized_name": "angular-hot",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2016-10-09T15:03:46.884Z",
+            "links": {
+              "homepage": "https://github.com/jtomaszewski/angular-hot#readme",
+              "repository": "git+https://github.com/jtomaszewski/angular-hot.git",
+              "bugs": "https://github.com/jtomaszewski/angular-hot/issues",
+              "npm": "https://www.npmjs.com/package/angular-hot"
+            }
+          },
+          "score": {
+            "final": 12.085126,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 13,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T15:51:12.926Z",
+          "searchScore": 12.014555,
+          "package": {
+            "name": "@fullstackhouse/nestjs-betterauth-logger",
+            "keywords": ["nestjs", "better-auth", "logger", "logging", "authentication", "plugin"],
+            "version": "0.1.0",
+            "description": "NestJS logger plugin for Better Auth - structured HTTP request logging",
+            "sanitized_name": "@fullstackhouse/nestjs-betterauth-logger",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-11-24T12:00:02.532Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-betterauth-logger#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-betterauth-logger.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-betterauth-logger/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-betterauth-logger"
+            }
+          },
+          "score": {
+            "final": 12.014555,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 12,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T12:48:55.985Z",
+          "searchScore": 11.584882,
+          "package": {
+            "name": "@fullstackhouse/nestjs-logger-middleware",
+            "keywords": ["nestjs", "logger", "middleware", "http", "logging"],
+            "version": "1.1.0",
+            "description": "A configurable HTTP logger middleware for NestJS applications",
+            "sanitized_name": "@fullstackhouse/nestjs-logger-middleware",
+            "publisher": {
+              "email": "jacek@fullstack.house",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-11-17T08:42:26.245Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-logger-middleware"
+            }
+          },
+          "score": {
+            "final": 11.584882,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 10,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T20:26:09.762Z",
+          "searchScore": 11.182946,
+          "package": {
+            "name": "@fullstackhouse/nestjs-outbox-tracing",
+            "keywords": [],
+            "version": "4.1.2",
+            "description": "OpenTelemetry tracing middleware for NestJS Outbox",
+            "sanitized_name": "@fullstackhouse/nestjs-outbox-tracing",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:d6900cfe-4258-4a91-8446-c36211d92cd4",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-12-23T09:57:20.480Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/nestjs-outbox#readme",
+              "repository": "git+https://github.com/fullstackhouse/nestjs-outbox.git",
+              "bugs": "https://github.com/fullstackhouse/nestjs-outbox/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/nestjs-outbox-tracing"
+            }
+          },
+          "score": {
+            "final": 11.182946,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 9,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T21:41:47.539Z",
+          "searchScore": 10.137257,
+          "package": {
+            "name": "jt-resource-factory",
+            "keywords": ["angularjs", "resource", "cache"],
+            "version": "0.3.5",
+            "description": "API Resource factory using Angular's $http with support for cache and useful properties like $promise, $networkPromise, $resolved etc.",
+            "sanitized_name": "jt-resource-factory",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2016-08-21T15:56:37.089Z",
+            "links": {
+              "homepage": "https://github.com/jtomaszewski/jt-resource-factory",
+              "repository": "git+https://github.com/jtomaszewski/jt-resource-factory.git",
+              "bugs": "https://github.com/jtomaszewski/jt-resource-factory/issues",
+              "npm": "https://www.npmjs.com/package/jt-resource-factory"
+            }
+          },
+          "score": {
+            "final": 10.137257,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T18:46:15.806Z",
+          "searchScore": 8.913802,
+          "package": {
+            "name": "@jtomaszewski/babel-plugin-styled-components",
+            "keywords": [
+              "styled-components",
+              "css-in-js",
+              "babel-plugin",
+              "server-side rendering",
+              "ssr",
+              "displayName"
+            ],
+            "version": "1.10.8-beta.0",
+            "description": "Improve the debugging experience and add server-side rendering support to styled-components",
+            "sanitized_name": "@jtomaszewski/babel-plugin-styled-components",
+            "publisher": {
+              "email": "jacek@jtom.me",
+              "username": "jtomaszewski"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@jtom.me",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2020-04-16T15:52:02.951Z",
+            "links": {
+              "homepage": "https://github.com/jtomaszewski/babel-plugin-styled-components#readme",
+              "repository": "git+https://github.com/jtomaszewski/babel-plugin-styled-components.git",
+              "bugs": "https://github.com/jtomaszewski/babel-plugin-styled-components/issues",
+              "npm": "https://www.npmjs.com/package/@jtomaszewski/babel-plugin-styled-components"
+            }
+          },
+          "score": {
+            "final": 8.913802,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 27,
+      "time": "2026-10-23T02:38:14.113Z"
+    }
+  }
+}

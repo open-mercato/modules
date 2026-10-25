@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@northbound-run/search-cloudflare@0.1.1?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@northbound-run/search-cloudflare",
+      "version": "0.1.1",
+      "files": [
+        {
+          "name": "/dist/modules/search_cloudflare/cli.js"
+        },
+        {
+          "name": "/src/modules/search_cloudflare/index.ts"
+        }
+      ]
+    }
+  }
+}

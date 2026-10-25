@@ -1,0 +1,372 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "fixture-wp01",
+    "durationMs": 27
+  },
+  "package": {
+    "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",
+    "name": "@fullstackhouse/open-mercato-data-sync-durable",
+    "version": "0.6.0",
+    "integrity": "sha512-LJ8pmZjcEjdlX2yuDkmNADwyqbxzvpn7oRHXemr/gdhUf5A7sAvl48Cgz3HArXX5S8kXoiFFOVH2E+7H3kKS+w==",
+    "source": "npm-tarball",
+    "gitRef": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "data_sync",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": ">=0.7.0 <0.8.0",
+    "@open-mercato/queue": ">=0.7.0 <0.8.0",
+    "@open-mercato/shared": ">=0.7.0 <0.8.0",
+    "@open-mercato/ui": ">=0.7.0 <0.8.0"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-data-sync-durable\n\nA drop-in replacement for Open Mercato's core `data_sync` module that runs sync runs as durable\nwork. Same tables, same REST API, same adapter contract, same events, same UI.\n\n## The problem\n\nA `data_sync` run is one long stream over a cursor. On core's engine:\n\n- a deploy in the middle of a multi-day backfill kills the run\n- a worker that dies leaves the run `running` forever\n- one transient error at hour nine fails the whole run, throwing away hour one through eight\n\n## Install\n\n```bash\nyarn add @fullstackhouse/open-mercato-data-sync-durable @fullstackhouse/open-mercato-durable-work pg-boss\n```\n\nName `durable-work` explicitly: it is a *peer* of this package, not a dependency, and yarn does\nnot install peers for you. That is not tidiness — it exports a process-wide registry, so a\nsecond copy in the tree would mean job kinds register into one while the worker reads the other,\nsilently. `pg-boss` is the client for the default transport; swap it for `bullmq` and `ioredis`\nto run on Redis.\n\nThe two packages release in lockstep at one version, and this package's peer range is rewritten\nto `^<that version>` on every release — upgrade the",
+  "modules": [
+    {
+      "id": "data_sync",
+      "title": null,
+      "description": null,
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 2,
+          "first": "2026-03-04",
+          "last": "2026-08-10"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/data_sync/mappings/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/mappings/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/data_sync/mappings/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/mappings/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/data_sync/mappings/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/mappings/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/data_sync/mappings",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/mappings/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/data_sync/mappings",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/mappings/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/data_sync/runs/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.view"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/runs/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/data_sync/schedules/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/schedules/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/data_sync/schedules/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/schedules/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/data_sync/schedules/[id]",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/schedules/[id]/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/data_sync/schedules",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/schedules/route.ts",
+              "line": 6
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/data_sync/schedules",
+            "requireAuth": true,
+            "requireFeatures": ["data_sync.configure"],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/data_sync/api/schedules/route.ts",
+              "line": 6
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1.0
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/data-sync",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/data-sync/runs/[id]",
+            "requireFeatures": []
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/data_sync/acl": ["*", "default", "features"],
+          "modules/data_sync/api/mappings/[id]/route": ["*", "DELETE", "GET", "PUT", "openApi"],
+          "modules/data_sync/api/mappings/route": ["*", "GET", "POST", "openApi"],
+          "modules/data_sync/api/options": ["*", "GET", "openApi"],
+          "modules/data_sync/api/run": ["POST", "openApi"],
+          "modules/data_sync/api/runs": ["*", "GET", "openApi"],
+          "modules/data_sync/api/runs/[id]/cancel": ["POST", "openApi"],
+          "modules/data_sync/api/runs/[id]/retry": ["*", "POST", "openApi"],
+          "modules/data_sync/api/runs/[id]/route": ["*", "GET", "openApi"],
+          "modules/data_sync/api/schedules/[id]/route": ["*", "DELETE", "GET", "PUT", "openApi"],
+          "modules/data_sync/api/schedules/route": ["*", "GET", "POST", "openApi"],
+          "modules/data_sync/api/schedules/serialize": ["*", "serializeSchedule"],
+          "modules/data_sync/api/validate": ["*", "POST", "openApi"],
+          "modules/data_sync/backend/data-sync/page": ["*", "default"],
+          "modules/data_sync/backend/data-sync/page.meta": ["*", "metadata"],
+          "modules/data_sync/backend/data-sync/runs/[id]/page": ["*", "default"],
+          "modules/data_sync/backend/data-sync/runs/[id]/page.meta": ["*", "metadata"],
+          "modules/data_sync/components/IntegrationScheduleTab": ["*", "IntegrationScheduleTab", "default"],
+          "modules/data_sync/components/RunParameterFields": [
+            "*",
+            "RunParameterFields",
+            "buildDefaultRunParameterValues",
+            "buildRetryFailureMessage",
+            "buildRunFailureMessage",
+            "buildRunParametersPayload",
+            "hasRequiredRunParameterWithoutDefault",
+            "resolveRunParameterText"
+          ],
+          "modules/data_sync/data/entities": ["*", "SyncCursor", "SyncMapping", "SyncRun", "SyncSchedule"],
+          "modules/data_sync/data/validators": [
+            "*",
+            "createSyncScheduleSchema",
+            "listSyncRunsQuerySchema",
+            "listSyncSchedulesQuerySchema",
+            "retrySyncSchema",
+            "runSyncSchema",
+            "updateSyncScheduleSchema",
+            "validateConnectionSchema"
+          ],
+          "modules/data_sync/di": ["register"],
+          "modules/data_sync/events": ["*", "default", "emitDataSyncEvent", "eventsConfig"],
+          "modules/data_sync/extension-points": ["*", "default", "extensionPoints"],
+          "modules/data_sync/index": ["*", "metadata"],
+          "modules/data_sync/lib/adapter": ["*"],
+          "modules/data_sync/lib/adapter-registry": [
+            "*",
+            "getAllDataSyncAdapters",
+            "getDataSyncAdapter",
+            "registerDataSyncAdapter",
+            "resolveAdapterForIntegration",
+            "resolveProviderKey"
+          ],
+          "modules/data_sync/lib/batch-stream": ["*", "forEachBatch"],
+          "modules/data_sync/lib/id-mapping": ["*", "createExternalIdMappingService"],
+          "modules/data_sync/lib/queue": ["*", "getSyncQueue"],
+          "modules/data_sync/lib/queue-policy": [
+            "*",
+            "DATA_SYNC_EXPORT_QUEUE",
+            "DATA_SYNC_IMPORT_QUEUE",
+            "DATA_SYNC_LOCK_DURATION_MS",
+            "DATA_SYNC_MAX_STALLED_COUNT",
+            "DATA_SYNC_QUEUE_ATTEMPTS",
+            "DATA_SYNC_RESUMABLE_QUEUES"
+          ],
+          "modules/data_sync/lib/run-parameters": [
+            "*",
+            "getApplicableRunParameters",
+            "isReservedRunParameterKey",
+            "normalizeRunParameters"
+          ],
+          "modules/data_sync/lib/start-cursor": [
+            "*",
+            "persistsSharedCursor",
+            "resolveAdapterForIntegration",
+            "resolveStartCursor"
+          ],
+          "modules/data_sync/lib/start-run": ["DataSyncStartScope", "StartDataSyncRunInput"],
+          "modules/data_sync/lib/sync-engine": ["*", "createSyncEngine"],
+          "modules/data_sync/lib/sync-run-service": ["*", "SyncRunOwnershipConflictError", "createSyncRunService"],
+          "modules/data_sync/lib/sync-schedule-service": ["*", "createSyncScheduleService"],
+          "modules/data_sync/lib/syncRunStatus": [
+            "*",
+            "getSyncRunStatusVariant",
+            "getSyncSummaryVariant",
+            "syncRunStatusVariants",
+            "syncSummaryVariants"
+          ],
+          "modules/data_sync/migrations/Migration20260304113737": ["*", "Migration20260304113737"],
+          "modules/data_sync/migrations/Migration20260810120000": ["*", "Migration20260810120000"],
+          "modules/data_sync/setup": ["*", "default", "setup"],
+          "modules/data_sync/workers/sync-scheduled": ["*", "default", "metadata"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/di/container": ["(dynamic/require)", "AppContainer", "createRequestContainer"],
+          "lib/logger": ["createLogger"]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "data_sync",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": ["/backend/data-sync", "/backend/data-sync/runs/[id]"]
+      },
+      "publicRoutes": 0,
+      "glyph": "1320000",
+      "lint": [
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for >=0.7.0 <0.8.0, which does not include the latest line 0.9.0.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "The package ships no AGENTS.md.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1.0,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "worker queue not resolved statically in src/modules/data_sync/workers/sync-export.ts",
+    "worker queue not resolved statically in src/modules/data_sync/workers/sync-import.ts",
+    "[module-facts] module registry unavailable (registryPath not provided); API route auth omitted for data_sync"
+  ]
+}

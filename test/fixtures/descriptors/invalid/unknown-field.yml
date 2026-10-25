@@ -1,0 +1,6 @@
+# expect-path: author
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when you need a descriptor with an unknown field in it.
+author: Someone

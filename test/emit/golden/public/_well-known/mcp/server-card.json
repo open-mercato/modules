@@ -1,0 +1,41 @@
+{
+  "serverInfo": {
+    "name": "om-modules",
+    "title": "Open Mercato Modules",
+    "version": "1.0.0"
+  },
+  "transport": {
+    "type": "streamable-http",
+    "url": "https://om-modules.example.workers.dev/mcp"
+  },
+  "authentication": {
+    "required": false
+  },
+  "tools": [
+    {
+      "name": "search_modules",
+      "description": "Search Open Mercato modules: official, community and third-party packages, plus the modules built into Open Mercato core."
+    },
+    {
+      "name": "get_module",
+      "description": "One module: anatomy, compatibility per line, trust, install command and the author README marked untrusted."
+    },
+    {
+      "name": "check_compat",
+      "description": "Is a module verified on this app's Open Mercato version: receipts, static fit and agent policy."
+    },
+    {
+      "name": "plan_install",
+      "description": "Install plan for one or more modules: requires closure, commands with exact versions, permissions, settings, conflicts and the consent text."
+    },
+    {
+      "name": "get_changes",
+      "description": "Catalog changes since a date: new entries, new versions, receipt transitions and level changes."
+    }
+  ],
+  "resources": [
+    {
+      "uri": "om-modules://index"
+    }
+  ]
+}

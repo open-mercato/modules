@@ -1,0 +1,11 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.github.com/orgs/FastWhiteCat/public_members/someone-else",
+    "synthetic": true
+  },
+  "response": {
+    "status": 404,
+    "text": ""
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "open-mercato-modules-repo",
+  "private": true,
+  "type": "module",
+  "packageManager": "yarn@4.18.1",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "scripts": {
+    "om": "node lib/cli.ts",
+    "dev": "astro dev",
+    "build": "node lib/cli.ts emit --data .data && astro build",
+    "check": "tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && prettier --check . && node lib/cli.ts check-text",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "e2e:build": "node test/e2e/build.ts",
+    "e2e:lighthouse": "node test/e2e/lighthouse.ts"
+  },
+  "dependencies": {
+    "@astrojs/preact": "6.0.6",
+    "@astrojs/sitemap": "3.7.4",
+    "@cfworker/json-schema": "4.1.1",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@open-mercato/cli": "0.9.0",
+    "astro": "7.3.8",
+    "fastest-levenshtein": "1.0.16",
+    "geist": "1.7.2",
+    "minisearch": "7.2.0",
+    "p-limit": "7.3.3",
+    "preact": "10.29.8",
+    "semver": "7.8.5",
+    "spdx-correct": "3.2.0",
+    "spdx-expression-parse": "5.0.0",
+    "tar": "7.5.22",
+    "ts-morph": "28.0.0",
+    "yaml": "2.9.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@cloudflare/workers-types": "5.20261008.1",
+    "@playwright/test": "1.64.0",
+    "@types/node": "24.19.1",
+    "prettier": "3.9.9",
+    "takumi-js": "2.14.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3",
+    "wrangler": "4.149.0"
+  }
+}

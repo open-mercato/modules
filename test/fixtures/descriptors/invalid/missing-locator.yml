@@ -1,0 +1,4 @@
+# expect-message: npm or github is required
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when the descriptor has neither npm nor github fields.

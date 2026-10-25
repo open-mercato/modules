@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@northbound-run%2Fsync-shopify/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.5.0"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "name": "@tanstack/react-table",
+  "dist-tags": {
+    "latest": "9.3.1"
+  },
+  "time": {
+    "9.0.0": "2026-08-04T06:29:16.564Z",
+    "9.0.1": "2026-08-07T13:53:54.269Z",
+    "9.1.0": "2026-08-07T18:32:18.860Z",
+    "9.1.1": "2026-08-08T18:39:18.375Z",
+    "9.1.2": "2026-08-09T03:11:37.658Z",
+    "9.2.3": "2026-08-26T19:32:33.914Z",
+    "9.2.4": "2026-08-28T17:48:30.904Z",
+    "9.2.5": "2026-10-04T04:21:04.372Z",
+    "9.2.6": "2026-10-04T18:00:10.791Z",
+    "9.2.8": "2026-10-08T21:40:53.324Z",
+    "9.3.1": "2026-10-12T16:50:44.806Z"
+  },
+  "versions": {
+    "9.0.0": {
+      "version": "9.0.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.0.0.tgz",
+        "integrity": "sha512-Q/Z49MQcdMwge67U+LTjSEQJCnQE9/tNWK5IpiYex9JFDzfjNkLIi7yzGA4dfW4UpuMBrtqbSnSzn7oPr60T+w=="
+      }
+    },
+    "9.0.1": {
+      "version": "9.0.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.0.1.tgz",
+        "integrity": "sha512-xjIeydBG7FeCuFtRSQW9Zbca16JfXcl6mxowxdN3UQYczcmYmVJbzkFGxXesSfZY3o11zh7/xnBDU2YZKsG6qA=="
+      }
+    },
+    "9.1.0": {
+      "version": "9.1.0",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.1.0.tgz",
+        "integrity": "sha512-KXZDQ+MjmacO6KG0Fo019UMHJV7nXVzf/GeBiwSK7a52RVcycFJWRx88OYtOfGPMDRfAK5vyyguC8B2zvc95HA=="
+      }
+    },
+    "9.1.1": {
+      "version": "9.1.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.1.1.tgz",
+        "integrity": "sha512-djHwPDsoC8SxKhk/MT6gl59U4/jW0zF8YbDmvDlAd3sMQJQ6/B4iW54b86JqU1g255nChUxb0QT5n5+EXtGQbg=="
+      }
+    },
+    "9.1.2": {
+      "version": "9.1.2",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.1.2.tgz",
+        "integrity": "sha512-YQPZFJ1nIi/bjjwsPZVouABgahDcl7Gdm33CdTStUJBn0DjEVJ2uhSTVmIoWt9MVKdQziXGAsXipSzy949Hygg=="
+      }
+    },
+    "9.2.3": {
+      "version": "9.2.3",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.2.3.tgz",
+        "integrity": "sha512-Aot6+uNmFbOQhk4Y56TqP9PFTge6hJIDkKC4mbGaPZpRHTosebvO4gFevz7V0KKcUzpIRH2MqWiiyskAYkfWKw=="
+      }
+    },
+    "9.2.4": {
+      "version": "9.2.4",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.2.4.tgz",
+        "integrity": "sha512-Rzp1Q4e0/nIgEjmISYR5HeEgLTNtrG+C7NFZf/AbCxPO5hg+zC3yNGwcoECigUk8SFzzvhXbd2rFdtP2ZiGrfA=="
+      }
+    },
+    "9.2.5": {
+      "version": "9.2.5",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.2.5.tgz",
+        "integrity": "sha512-Stx55j6c02xhF7G598HS0PHZhOQOAXhR41fJ7HuEBunu9KheHP51xbDqxiGHsNedfOWjTuW5jqPoWzHhHX35SQ=="
+      }
+    },
+    "9.2.6": {
+      "version": "9.2.6",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.2.6.tgz",
+        "integrity": "sha512-Wmt3sbzwz+5CtB0pqIxGw2FrNW9mF4AhJ9KnS1/VGZ8cDAEg51S4ixru2dnF0xQnY407kdYNLer3ms+n8zCN6w=="
+      }
+    },
+    "9.2.8": {
+      "version": "9.2.8",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.2.8.tgz",
+        "integrity": "sha512-cJxgratJm3uMm2sXnmY3PCTvcvIEFleCJ2uSOM2nxCmIY8RWA1KjXt5fsWGlYisL7DODr2w9YpLRQ3i/7MdIsQ=="
+      }
+    },
+    "9.3.1": {
+      "version": "9.3.1",
+      "dist": {
+        "tarball": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-9.3.1.tgz",
+        "integrity": "sha512-E6Ya5TnY6EaGyZYIUqig/29Lr/gJSAubQkLJFqiWkUl5nRCr0Xr9hvJot+NiRTtG+TzGxHTiqUW3bnLtQxlHug=="
+      }
+    }
+  }
+}

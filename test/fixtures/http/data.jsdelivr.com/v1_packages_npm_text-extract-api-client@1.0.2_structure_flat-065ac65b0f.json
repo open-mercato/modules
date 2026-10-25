@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/text-extract-api-client@1.0.2?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "text-extract-api-client",
+      "version": "1.0.2",
+      "files": []
+    }
+  }
+}

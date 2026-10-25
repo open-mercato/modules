@@ -1,0 +1,5 @@
+# expect-path: whenToUse
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Helps when you need something, but it does not start with the prefix.

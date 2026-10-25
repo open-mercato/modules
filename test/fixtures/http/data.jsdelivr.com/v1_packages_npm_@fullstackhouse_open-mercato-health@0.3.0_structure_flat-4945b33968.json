@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@fullstackhouse/open-mercato-health@0.3.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@fullstackhouse/open-mercato-health",
+      "version": "0.3.0",
+      "files": [
+        {
+          "name": "/dist/modules/health/api/get/live.d.ts"
+        },
+        {
+          "name": "/src/modules/health/index.ts"
+        }
+      ]
+    }
+  }
+}

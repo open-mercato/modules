@@ -1,0 +1,1527 @@
+---
+// Module page (spec 7.7 B): breadcrumbs, the header with the sigil and the level seal, state banners, the nameplate,
+// the detailed signal strip (one Receipts button), then 8/4: tabs (Anatomy, Versions, Receipts, Readme, Quality)
+// and the install box. Every value comes from the emitted data; nothing is typed by hand.
+import { existsSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
+import Base from '../../layouts/Base.astro'
+import Sigil from '../../components/Sigil.astro'
+import Seal from '../../components/Seal.astro'
+import TypeChip from '../../components/TypeChip.astro'
+import LicenseChip from '../../components/LicenseChip.astro'
+import Banner from '../../components/Banner.astro'
+import Nameplate from '../../components/Nameplate.astro'
+import type { NameplateRow } from '../../components/Nameplate.astro'
+import SignalStripDetailed from '../../components/SignalStripDetailed.astro'
+import AnatomyFilm from '../../components/AnatomyFilm.astro'
+import PlugDiagram from '../../components/PlugDiagram.astro'
+import InstallPlan from '../../components/InstallPlan.astro'
+import Receipt from '../../components/Receipt.astro'
+import CommandChip from '../../components/CommandChip.astro'
+import YMarks from '../../components/YMarks.astro'
+import Icon from '../../components/icons/Icon.astro'
+import InstallBox from '../../islands/InstallBox.tsx'
+import type { InstallLine } from '../../islands/InstallBox.tsx'
+import ViewToggle from '../../islands/ViewToggle.tsx'
+import ReceiptDrawer from '../../islands/ReceiptDrawer.tsx'
+import type { DrawerLine } from '../../islands/ReceiptDrawer.tsx'
+import { GENERATED_DIR, loadSiteData } from '../../../../lib/emit/site-data.ts'
+import { installInfo } from '../../../../lib/core/plan.ts'
+import { promptParts } from '../../../../lib/core/prompt.ts'
+import { compareVersions } from '../../../../lib/core/semver.ts'
+import type { IndexEntry, Receipt as ReceiptT } from '../../../../lib/schema/index.ts'
+import { orderLines, STATUS } from '../../lib/status.ts'
+import type { Others } from '../../lib/status.ts'
+import {
+  PREVIEW_CHIP,
+  errorLine,
+  explainReceipt,
+  isPreview,
+  appModules,
+  lastReceipt,
+  receiptWord,
+  routesOf,
+  transitionRows,
+  whyHtml,
+} from '../../lib/receipts.ts'
+import {
+  PREVIEW_ONLY_TEXT,
+  REASON_LABELS,
+  brokenText,
+  builtForText as coreBuiltForText,
+  emptyPresetOn,
+  isolationLineText,
+  isolationText,
+  lineVersion,
+  notJudgedText,
+  heldBack,
+  notTestedText,
+  emptyPresetVersion,
+  emptyCommandCaution,
+  installVersion,
+  otherVersionCells,
+  otherVersionText,
+  pinnedText,
+  presetInstallText,
+  presetText,
+  untestedText,
+  withJudgedLines,
+  claimLabel,
+  collisionNote,
+  collisionStatic,
+  EMPTY_PRESET_LEAD,
+} from '../../../../lib/core/policy.ts'
+import { isolationReceipts, mainReceipts } from '../../../../lib/core/lines.ts'
+import { BACKEND_ROUTE_COLLISION, collisionLintText } from '../../../../lib/core/finding.ts'
+import { isolationDot } from '../../lib/status.ts'
+import { PREVIEW_QUEUED, PREVIEW_SENTENCE } from '../../../../lib/core/source.ts'
+import { isPreviewData } from '../../lib/freshness.ts'
+import { day, dayYear, duration, nbspDates, plural, shortIntegrity, shortVersion, timeUtc } from '../../lib/format.ts'
+import { absoluteUrl, builtInPage, categoryPage, href, modulePage, moduleMd, receiptPage } from '../../lib/url.ts'
+import { wbrHtml } from '../../lib/wrap.ts'
+import { transitionNames } from '../../lib/vt.ts'
+import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
+import { levelNote, licenseChip, rulesHeading, verifiedTestNote } from '../../lib/chips.ts'
+import { cannotInstall, catalogSkip, uniqueReceipts, withSkipped } from '../c/_data.ts'
+import { headerResults, listAnd, noRecommendedNote } from '../../lib/status.ts'
+import { queuedCellSentence, queuedCellsSentence, queuedSentence, schedule } from '../../lib/schedule.ts'
+import { Square } from '../../lib/ui.tsx'
+import './_module.css'
+
+export function getStaticPaths() {
+  return loadSiteData().modules.entries.map((e) => ({ params: { path: e.path } }))
+}
+
+const path = Astro.params.path as string
+const data = loadSiteData()
+const { modules, meta } = data
+const lines = orderLines(modules.lines)
+// entries the nightly run never installs (enterprise, provider, library, tool) carry `skipped` on every line (5.3)
+const raw = withSkipped(modules.entries.find((e) => e.path === path) as IndexEntry, lines)
+// every line reads as a verdict on the version a fresh app installs there (review r6, spec 6.5): a receipt of another
+// version leaves the line's cells and squares, and comes back only as the one sentence that names both versions
+const others: Others = otherVersionCells(raw)
+const entry = withJudgedLines(raw)
+// lines whose new app (the classic preset) already registers the package: nothing to install there; the line keeps its
+// verdict, the receipt of the version a new app ships (decision of 24 Oct)
+const preset = new Set(raw.compat.inPresets ?? [])
+const otherText = (k: string): string | null => {
+  const o = others[k]
+  return o ? otherVersionText(k, o.installs, o.other) : null
+}
+const detail = data.detail(path)
+const facts = detail?.facts ?? null
+const latest = lines.find((l) => l.source === 'latest') ?? lines[0]!
+// one record per receipt id: a retry confirms the first record under the same id (last one wins)
+// the main verdict reads receipts of a new app (classic) only; those of an app from the empty preset are the signal `in
+// isolation` (`compat.isolation`), shown beside it and never as the line's state (decision of 24 Oct)
+const allReceipts: ReceiptT[] = uniqueReceipts(data.receipts.filter((r) => r.module?.locator === entry.locator))
+const receipts: ReceiptT[] = mainReceipts(allReceipts)
+const isoReceipts: ReceiptT[] = isolationReceipts(allReceipts)
+const plans = data.plans[entry.locator] ?? {}
+const catTitle = (id: string): string => modules.categories.find((c) => c.id === id)?.title ?? id
+const byLocator = new Map(modules.entries.map((e) => [e.locator, e]))
+const builtInById = new Map(data.builtIn.modules.map((b) => [b.id, b]))
+// the strip's axis ends on the day of the data, never the build day (review r12: `24 OCT` under `DATA 23 OCT`)
+const today = (meta.dataAsOf.nightly ?? meta.dataAsOf.npm ?? meta.generatedAt).slice(0, 10)
+const name = entry.npm ?? entry.github ?? entry.locator
+const vt = transitionNames(entry.locator)
+const reason = (code: string): string | null =>
+  Object.values(entry.agentPolicy)
+    .flatMap((p) => p.reasons)
+    .find((r) => r.code === code)?.text ?? null
+
+// ---------- state ----------
+const held = entry.status === 'hold' || entry.status === 'delisted'
+const notListed = !entry.listed && !held
+const github = entry.identity.source === 'github'
+const preview = entry.version.latest === null && entry.version.preview !== null
+const baselineLatest = latest.baseline
+const harnessRed = baselineLatest?.status === 'harness-red'
+const quarantineUntil =
+  entry.version.installableFrom && entry.version.installableFrom > today ? entry.version.installableFrom : null
+const skipText = catalogSkip(entry)
+const noInstall = cannotInstall(entry)
+const holdText = `${reason('HOLD') ?? `On hold: ${entry.status}.`} Do not install.`
+const sched = schedule()
+const notListedText = reason('NOT_INSTALLABLE')
+  ? 'The package has no src/modules and dist/modules pair, so it cannot be installed.'
+  : reason('UNPINNED_GIT')
+    ? 'The GitHub source has no pinned tag, so it cannot be installed.'
+    : 'The listing checks did not pass.'
+const blocked = held ? holdText : notListed ? notListedText : null
+
+// ---------- header facts ----------
+// one line, results first (review r1): what the receipts say, then the declaration, then the static fit of the lines
+// without a receipt (drift counts as a fit here, D14: the radar names the drift), then the lines still queued
+// one sentence for the page, the agent card and check_compat (lib/core/policy.ts builtForText, review r9)
+const builtForText = (): string => coreBuiltForText(entry)
+// "Verified on" promises a test only where the nightly run will install the entry (5.3)
+const notTested = skipText
+  ? skipText.replace(/\.$/, '').replace(': ', ' (') + ').'
+  : noInstall
+    ? 'Not installable by the catalog.'
+    : null
+const stripOrder = lines // previous, latest, next (orderLines)
+const noReceipt = (k: string): boolean => (entry.compat.lines[k]?.status ?? 'untested') === 'untested' && !others[k]
+const fitOf = (k: string) => entry.signals.fit[k] ?? 'unknown'
+const fits = (k: string): boolean => fitOf(k) === 'ok' || fitOf(k) === 'drift'
+const fitOk = stripOrder.filter((l) => noReceipt(l.key) && fits(l.key)).map((l) => l.key)
+const fitNo = stripOrder.filter((l) => noReceipt(l.key) && fitOf(l.key) === 'no-fit').map((l) => l.key)
+const queuedLines = stripOrder.filter((l) => noReceipt(l.key)).map((l) => l.key)
+const anyReceipt = stripOrder.some((l) => !noReceipt(l.key) && entry.compat.lines[l.key]?.status !== 'skipped')
+const showFit = !notTested && (fitOk.length > 0 || fitNo.length > 0)
+const fitParts: string[] = showFit
+  ? [
+      ...(fitOk.length ? [`Fits statically on ${listAnd(fitOk)}`] : []),
+      ...(fitNo.length ? [`Does not fit statically on ${listAnd(fitNo)}`] : []),
+    ]
+  : []
+/** 6.8 `Fits statically` tooltip per line, or the plain no-fit sentence; null without a static result. */
+const fitSentence = (l: (typeof lines)[number]): string | null => {
+  const v = l.key === 'next' ? shortVersion(l.version) : l.version
+  if (notTested || !noReceipt(l.key)) return null
+  // a line whose new app already registers the package (round 14: `Not installed yet` under `already registers`)
+  if (fits(l.key))
+    return `Every import resolves against the published ${v} packages. ${preset.has(l.key) ? 'Not tested by the catalog yet.' : 'Not installed yet.'}`
+  if (fitOf(l.key) === 'no-fit') return `Does not fit statically: an import is missing from the published ${v} packages.`
+  return null
+}
+// one phrase per state, the lines of each state together (review r4: a module broken on three lines said it three
+// times here and three times under the strip); steps and dates are in the sentence under the strip
+const resultParts = headerResults(entry, stripOrder, others)
+// a backend route a new app already has, on the lines without a verdict (round 15: `Fits statically on 0.8, 0.9 and
+// next` stood alone over `Static check: ... collides`; the fit reads imports, the collision routes)
+const collideKeys = stripOrder.filter((l) => !!collisionStatic(raw, l.key)).map((l) => l.key)
+const headerParts: string[] = [
+  ...resultParts,
+  builtForText(),
+  ...(notTested ? [notTested.replace(/\.$/, '')] : fitParts),
+  ...(!notTested && collideKeys.length ? [`Route collision on ${listAnd(collideKeys)}`] : []),
+  ...(!notTested && anyReceipt && queuedLines.length ? [`Queued on ${listAnd(queuedLines)}`] : []),
+]
+const builtForLines = entry.compat.builtFor.lines
+// peers that cover none of the verified lines disagree with the receipts too (`>=0.7.0 <0.8.0`, verified on 0.9)
+const declaredMismatch =
+  entry.compat.verifiedOn.length > 0 &&
+  !!entry.compat.builtFor.range &&
+  entry.compat.builtFor.kind !== 'star' &&
+  entry.compat.verifiedOn.some((l) => !builtForLines.includes(l))
+
+// ---------- nameplate (7.7 B.3) ----------
+/** A zero-width space after each dot: a long version (`0.0.0-canary.20260603190311.74d2590`) wraps at its dots. */
+const softDots = (v: string): string => (v.length > 18 ? v.replace(/\.(?=.)/g, '.\u200B') : v)
+const recommendedLatest = entry.version.recommended[latest.key] ?? null
+const builtFrom =
+  entry.identity.builtFrom === 'verified'
+    ? `${entry.github ?? entry.links.repo?.replace('https://github.com/', '') ?? 'Public CI build'}${entry.version.gitRef ? ` @ ${entry.version.gitRef.slice(0, 7)}` : ''}`
+    : entry.identity.builtFrom === 'lost'
+      ? 'Provenance lost on this release'
+      : 'No provenance'
+const lic = licenseChip(entry.license)
+const licenseValue =
+  entry.license.kind === 'proprietary' && entry.license.spdx
+    ? `${lic.label} (${entry.license.spdx})`
+    : lic.label
+// compact plate (review r1): one row of the facts people compare, empty values left out; the rest under All facts
+const latestValue = entry.version.latest
+  ? `${entry.version.latest}${entry.version.publishedAt ? ` · ${day(entry.version.publishedAt)}` : ''}`
+  : entry.version.preview
+    ? `${softDots(entry.version.preview)} (preview)`
+    : github && entry.version.gitRef
+      ? softDots(entry.version.gitRef)
+      : null
+const rows: NameplateRow[] = [
+  entry.npm
+    ? { label: 'Package', value: entry.npm, mono: true, copy: entry.npm }
+    : { label: 'Repository', value: entry.github ?? '', mono: true, copy: entry.github ?? undefined },
+  ...(latestValue
+    ? [
+        {
+          label: 'Latest',
+          value: latestValue,
+          mono: true,
+          note:
+            quarantineUntil && entry.version.latest
+              ? `Installable from ${day(quarantineUntil)}${entry.compat.lines[latest.key]?.precheck === 'pass' ? ', pre-check passed' : ''}`
+              : undefined,
+        },
+      ]
+    : []),
+  {
+    // the same label as the chip (lib/chips.ts), with the SPDX id when the chip does not show it
+    label: 'License',
+    value: licenseValue,
+    mono: entry.license.kind === 'osi',
+    muted: entry.license.kind === 'unknown',
+    mismatch: entry.license.mismatch ? 'License sources disagree (package.json, LICENSE, module info).' : undefined,
+  },
+  ...(entry.compat.builtFor.range
+    ? [
+        {
+          label: 'Built for',
+          value: entry.compat.builtFor.range,
+          mono: true,
+          title: "From the module's peer dependencies. A declaration, not a test.",
+          mismatch: declaredMismatch
+            ? `Peers and receipts disagree: peers ${entry.compat.builtFor.range}, verified on ${listAnd(entry.compat.verifiedOn)}.`
+            : undefined,
+        },
+      ]
+    : []),
+  ...(entry.requires.length && !noInstall
+    ? [{ label: 'Requires', value: entry.requires.map((r) => r.raw).join(', '), mono: true }]
+    : []),
+]
+// ---------- receipts ----------
+// the receipt behind each line's cell (review r7): the last receipt of the version a fresh app installs there, not a
+// newer receipt of another version (webhooks 0.9.0 broke on 0.8 after 0.8.0 was verified there)
+const byId = new Map(receipts.map((r) => [r.id, r]))
+const lastByLine = Object.fromEntries(
+  lines.map((l) => {
+    const id = entry.compat.lines[l.key]?.receipt
+    return [l.key, (id ? byId.get(id) : undefined) ?? lastReceipt(receipts, l.key)]
+  }),
+)
+// the signal `in isolation` per line: the receipt behind `compat.isolation[line]` and its one sentence
+const isoById = new Map(isoReceipts.map((r) => [r.id, r]))
+const isoOf = (k: string) => raw.compat.isolation?.[k] ?? null
+const isoSentence = (k: string): string | null => {
+  const c = isoOf(k)
+  return c ? isolationText(c, lineVersion(raw, k)) : null
+}
+// beside a verdict, only when it says something else than the verdict (lib/core/policy.ts isolationLineText)
+const isoBeside = (k: string): string | null => (entry.compat.lines[k] || others[k] ? isolationLineText(raw, k) : null)
+// a newer break of another version on a line whose install version has its own verdict: said once, as the reason
+// the line's command pins that version, with the receipt one click away; the emitter's `compat.newerBreaks`, the same
+// condition `check_compat` and the card read (lib/core/lines.ts newerBreak, review r8)
+const pinned: Record<string, { text: string; receipt: ReceiptT }> = {}
+for (const l of lines) {
+  const c = entry.compat.lines[l.key]
+  const nb = raw.compat.newerBreaks?.[l.key]
+  const last = nb ? byId.get(nb.receipt) : undefined
+  if (!c?.moduleVersion || !nb || !last || others[l.key]) continue
+  pinned[l.key] = { text: pinnedText(l.key, c.moduleVersion, nb), receipt: last }
+}
+const routes = routesOf(facts)
+// a break with one red night only: the same words as the agent policy and VER-1, `since` only once a second night
+// confirmed it (review r4)
+const unconfirmed: Record<string, string> = {}
+for (const l of lines) {
+  const c = entry.compat.lines[l.key]
+  if (c?.status !== 'broken') continue
+  const streak = receipts.filter(
+    (r) =>
+      r.om.line === l.key &&
+      r.result.status === 'broken' &&
+      (c.moduleVersion === null || r.module?.version === c.moduleVersion),
+  )
+  if (streak.length > 0 && !streak.some((r) => r.transition.confirmed))
+    unconfirmed[l.key] = (lastByLine[l.key]?.run.at ?? c.at ?? today).slice(0, 10)
+}
+// receipts of the local preview runner say so wherever a receipt is shown (round 5), with the one chip (review r6)
+const previewReceipts = allReceipts.some(isPreview)
+const previewData = isPreviewData(meta.dataAsOf)
+// why a line broke, when its receipt says it plainly (lib/receipts/classify.ts), once per sentence with its lines;
+// a receipt of another version explains nothing about the version a fresh app installs (review r6)
+const whyByText = new Map<string, string[]>()
+for (const l of lines) {
+  if (others[l.key]) continue
+  // the cell's `finding` (round 14): the sentence the card, raw/modules.md and check_compat print, from the same
+  // receipt; a cell emitted before the field explains its receipt here, with the same function
+  const c = entry.compat.lines[l.key]
+  const w = (c?.status === 'broken' ? c.finding : null) ?? explainReceipt(lastByLine[l.key] ?? null, appModules(data), routes)
+  if (w) whyByText.set(w, [...(whyByText.get(w) ?? []), l.key])
+}
+const stripWhy = [...whyByText].map(([w, keys]) => `${listAnd(keys)}: ${w}`)
+// a backend route a new app already has, on a line without a verdict (round 14, lint `backend-route-collision`): the
+// static check and what the same version did on the other lines, the words of the box, the card and check_compat
+const warnByText = new Map<string, string[]>()
+for (const l of lines) {
+  const w = collisionNote(raw, l.key)
+  if (w) warnByText.set(w, [...(warnByText.get(w) ?? []), l.key])
+}
+const stripWarn = [...warnByText].map(([w, keys]) => `${listAnd(keys)}: ${w}`)
+// the signal `in isolation` next to a verdict, one sentence with its lines (round 13: events said the same sentence
+// three times, one per line; with no verdict yet the strip's sentence says it)
+const isoByText = new Map<string, string[]>()
+for (const l of lines) {
+  const t = isoBeside(l.key)
+  if (t) isoByText.set(t, [...(isoByText.get(t) ?? []), l.key])
+}
+const stripIso = [...isoByText].map(([t, keys]) => `${listAnd(keys)}: ${t}`)
+// the strip's ladder and nights show the receipts of the install version only: another version's red never stands
+// next to a line that has no receipt for its own version (review r6)
+const stripReceipts = receipts.filter((r) => {
+  const o = others[r.om.line]
+  if (o) return r.module?.version === o.installs
+  // a line judged on its install version shows that version's nights only (review r7)
+  const v = entry.compat.lines[r.om.line]?.moduleVersion
+  return !v || v !== lineVersion(entry, r.om.line) || r.module?.version === v
+})
+// a receipt that installed a catalog replacement in place of a core module the entry requires (the preview receipts
+// of Shopify and Sheets got the third-party durable data_sync before the harness fix, review r6): said under the
+// strip from the receipt's own `requiresInstalled`, until the next run installs core
+const replacedBy = new Map<string, string>()
+for (const e of modules.entries) for (const r of e.replaces) if (e.npm) replacedBy.set(`${r}|${e.npm}`, e.npm)
+const requiresNotes: string[] = []
+{
+  const subs = new Map<string, { keys: string[]; verified: boolean }>()
+  for (const l of lines) {
+    if (others[l.key]) continue
+    const r = lastByLine[l.key]
+    if (!r) continue
+    for (const req of entry.requires) {
+      const core = req.resolvesTo
+      if (!core?.startsWith('core:') || r.requiresInstalled.includes(core)) continue
+      const pkg = r.requiresInstalled
+        .map((x) => x.replace(/@[^@/]+$/, ''))
+        .find((name) => replacedBy.has(`${core}|${name}`))
+      if (!pkg) continue
+      const k = `${pkg}|${core.slice(5)}`
+      const g = subs.get(k) ?? { keys: [], verified: true }
+      g.keys.push(l.key)
+      g.verified &&= r.result.status === 'verified'
+      subs.set(k, g)
+    }
+  }
+  for (const [k, g] of subs) {
+    const [pkg, id] = k.split('|') as [string, string]
+    requiresNotes.push(
+      g.verified
+        ? `Verified with ${pkg} installed in place of core ${id}.`
+        : `The receipts on ${listAnd(g.keys)} installed ${pkg} in place of core ${id}.`,
+    )
+  }
+}
+// no nightly CI run exists while the receipts come from a preview run: nothing is promised for tonight (review r6); a
+// package a new app on next already has runs on the weekly night only (lib/core/lines.ts `cellCadence`, the predicate
+// the nightly plan runs by, review of 24 Oct)
+const queued = (l: (typeof lines)[number]): string => queuedCellSentence(l, preset.has(l.key), previewData, sched)
+/**
+ * The state of one line in one sentence, the words of the strip (drawer, install box, Receipts tab). `withIso: false`
+ * leaves the signal `in isolation` out, for the install box, which says it under the empty preset's command.
+ */
+function lineSentence(l: (typeof lines)[number], r: ReceiptT | null, status: string, withIso = true): string {
+  const other = otherText(l.key)
+  if (other) return other
+  const c = entry.compat.lines[l.key]
+  // no receipt from a new app yet, one from an app from the empty preset: the one sentence of lib/core/policy.ts
+  const iso = withIso ? isoOf(l.key) : null
+  if (!r && iso && status === 'untested')
+    return [untestedText(l.key, iso, lineVersion(raw, l.key)), queued(l)].join(' ')
+  if (!r && !withIso && isoOf(l.key) && status === 'untested') return [notTestedText(l.key), queued(l)].join(' ')
+  if (!r)
+    return status === 'skipped'
+      ? (skipText ?? (preview ? PREVIEW_ONLY_TEXT : 'Not installed by the catalog.'))
+      : noInstall
+        ? 'Not installable by the catalog.'
+        : [fitSentence(l), queued(l)].filter(Boolean).join(' ')
+  // the shape of the break sentence (review r8: `Verified on 0.8 on 23 Oct.` beside `Broken at typecheck on 0.8 since
+  // 23 Oct.`): the first verified night of the run, as the cell's `since`
+  if (r.result.status === 'verified') return `Verified on ${l.key} since ${day(c?.since ?? r.run.at)}.`
+  if (r.result.status === 'broken')
+    return brokenText(l.key, r.result.failedStep, c?.since ?? null, unconfirmed[l.key] ?? null, !(l.key in unconfirmed))
+  if (r.result.status === 'infra-error' || r.result.status === 'harness-red')
+    return notJudgedText(l.key, r.result.status, r.run.at)
+  // a run Yarn's age gate stopped on a dependency (round 13): not judged, in the one sentence of every channel
+  if (r.result.status === 'quarantine' && r.result.failedStep) return notJudgedText(l.key, 'quarantine', r.run.at)
+  return `${STATUS[r.result.status].word[0]!.toUpperCase()}${STATUS[r.result.status].word.slice(1)}.`
+}
+const lineLabel = (l: (typeof lines)[number]): string =>
+  l.key === 'next' ? `next · ${shortVersion(l.version)}` : `${l.version} · ${l.source}`
+const drawerLines: DrawerLine[] = lines.map((l) => {
+  const r = lastByLine[l.key] ?? null
+  const c = entry.compat.lines[l.key]
+  const status = c?.status ?? (entry.enterprise ? 'skipped' : 'untested')
+  const sentence = lineSentence(l, r, status)
+  const iso = isoOf(l.key)
+  const isoR = iso?.receipt ? isoById.get(iso.receipt) : undefined
+  return {
+    key: l.key,
+    label: lineLabel(l),
+    status,
+    step: c?.step ?? null,
+    ...(others[l.key] ? { other: true } : {}),
+    sentence,
+    ...(iso
+      ? {
+          isolation: {
+            dot: isolationDot(iso),
+            // with no verdict the line's sentence already says it; the link then names the receipt
+            sentence: r || others[l.key] ? (isoSentence(l.key) ?? '') : 'View the receipt in isolation (empty preset)',
+            href: isoR ? href(receiptPage(isoR.id)) : null,
+          },
+        }
+      : {}),
+    receipt: r
+      ? {
+          href: href(receiptPage(r.id)),
+          json: href(`/r/${r.id}.json`),
+          moduleVersion: r.module?.version ?? null,
+          omVersion: r.om.version,
+          at: `${day(r.run.at)} ${timeUtc(r.run.at)}`,
+          duration: duration(r.run.durationSec),
+          // another version's error explains nothing about the version a fresh app installs (review r6); the sentence
+          // above names the state, so the error line drops `Broken at <step>:` (review r8)
+          // a finding is said once, above the lines (review r9: the same sentence stood three times in a row)
+          firstError: others[l.key] ? null : errorLine(r, 140, appModules(data)),
+          ...(others[l.key] ? { view: `View the ${r.module?.version ?? ''} receipt` } : {}),
+          preview: isPreview(r) ? PREVIEW_CHIP : null,
+        }
+      : null,
+  }
+})
+// before any receipt on any line: one quiet row (squares, one sentence, the Receipts button) instead of 3 x 30 empty
+// nights; entries the catalog never installs get one sentence and no strip at all
+const noStrip = !!skipText || noInstall
+const compactStrip = !noStrip && !anyReceipt && allReceipts.length === 0
+// the lines that wait for a receipt, each by its own cadence (0.8 runs weekly); skipped lines are not queued
+const waiting = lines.filter((l) => drawerLines.find((d) => d.key === l.key)?.status === 'untested' && !others[l.key])
+const compactSentence =
+  queuedCellsSentence(waiting, preset, previewData, sched) || (previewData ? PREVIEW_QUEUED : queuedSentence('nightly', sched))
+// transitions, newest first, of a new app and of an app from the empty preset, each against its own previous receipt
+// (lib/receipts.ts `transitionRows`)
+const transitions = transitionRows(allReceipts).slice(0, 10)
+
+// the Recommended row says why there is none in the strip's words (review r7: `No receipt on 0.9 yet.` stood under a
+// red strip); `No receipt on <line> yet.` only while the line waits for its first receipt
+const recommendedNote = noRecommendedNote(entry, latest, {
+  unconfirmed,
+  others,
+  ageGateDays: sched.ageGateDays,
+  installableFrom: quarantineUntil,
+})
+const moreRows: NameplateRow[] = noInstall
+  ? []
+  : [
+      {
+        label: 'Module ID',
+        value: entry.moduleIds.join(', ') || 'none',
+        mono: true,
+        muted: entry.moduleIds.length === 0,
+      },
+      ...(recommendedLatest || !skipText
+        ? [
+            {
+              label: 'Recommended',
+              value: recommendedLatest ?? 'none',
+              mono: true,
+              muted: !recommendedLatest,
+              note: recommendedLatest
+                ? `Verified on ${latest.key}${preset.has(latest.key) ? `. ${presetText(latest.key)}` : ''}`
+                : recommendedNote,
+            },
+          ]
+        : []),
+      entry.version.integrity
+        ? { label: 'Tarball', value: shortIntegrity(entry.version.integrity), mono: true, copy: entry.version.integrity }
+        : { label: 'Tarball', value: github ? 'none (GitHub source)' : 'none', mono: true, muted: true },
+      {
+        label: 'Built from',
+        value: builtFrom,
+        mono: entry.identity.builtFrom === 'verified',
+        muted: entry.identity.builtFrom !== 'verified',
+        note:
+          entry.identity.builtFrom === 'verified'
+            ? 'Built in public CI from the linked repository and commit. Tells you where it came from, not that it is safe.'
+            : undefined,
+      },
+      ...(entry.replaces.length
+        ? [{ label: 'Replaces', value: entry.replaces.map((r) => r.replace(/^core:/, 'core ')).join(', '), mono: true }]
+        : []),
+      ...(quarantineUntil
+        ? [
+            {
+              label: 'Installable from',
+              value: dayYear(quarantineUntil),
+              mono: true,
+              note: `Yarn ${sched.ageGateDays}-day age gate for new releases.`,
+            },
+          ]
+        : []),
+      ...(entry.renamedFrom.length
+        ? [
+            {
+              label: 'Renamed from',
+              value: entry.renamedFrom.map((l) => l.replace(/^npm:|^github:/, '')).join(', '),
+              mono: true,
+            },
+          ]
+        : []),
+    ]
+
+// ---------- install (D46: recommended per line) ----------
+/**
+ * Under a command that installs no verified version: the line's state in the words of the strip and the drawer
+ * (review r6: `Latest release. Not judged on 0.9 yet.` said a third thing, and the version is not always the latest).
+ */
+function installNote(l: (typeof lines)[number], withIso = true): string {
+  if (skipText) return 'The catalog never installs it, so it is never verified.'
+  const st = entry.compat.lines[l.key]?.status ?? 'untested'
+  if (st === 'quarantine' && !heldBack(entry.compat.lines[l.key])) return `In the Yarn age gate on ${l.key}.`
+  return lineSentence(l, others[l.key] ? null : (lastByLine[l.key] ?? null), st, withIso)
+}
+const installLines: InstallLine[] = lines.map((l) => {
+  // a line whose app from the empty preset registers the package too (events): `yarn add`, never `module add`, which
+  // throws `already enabled` (D10, spec 4.6); elsewhere the command of an app that does not have it
+  const both = emptyPresetOn(raw, l.key)
+  const shipped = both && entry.npm ? entry.moduleIds.map((id) => ({ id, from: entry.npm! })) : null
+  // where a new app ships it and the empty preset does not, the command is that preset's, with the version it does not
+  // break on (`emptyPresetVersion`: checkout 0.8.0 on 0.8, not 0.9.0, review of 24 Oct)
+  const emptyVersion = preset.has(l.key) && !both ? emptyPresetVersion(raw, l.key) : installVersion(entry, l.key)
+  const info = installInfo({ ...entry, moduleFlag: entry.install.moduleFlag }, l.key, shipped, emptyVersion)
+  const iso = isoOf(l.key)
+  const policy = entry.agentPolicy[l.key] ?? { decision: 'ask' as const, reasons: [] }
+  const rec = entry.version.recommended[l.key] ?? null
+  const newer =
+    rec && entry.version.latest && entry.version.latest !== rec && quarantineUntil
+      ? `${entry.version.latest} installable from ${day(quarantineUntil)}${entry.compat.lines[l.key]?.precheck === 'pass' ? ', pre-check passed' : ''}. Install ${rec} until then.`
+      : null
+  const parts = promptParts(entry, { site: meta.site, line: l.key })
+  // D23: `refuse` takes the main action away (no command, no deeplink); the command stays behind a disclosure,
+  // except when nothing can be installed at all
+  const refused = policy.decision === 'refuse'
+  const unusable = policy.reasons.some((r) => r.code === 'NOT_INSTALLABLE')
+  // a package with preview builds only, on a line the run skips (tpay on 0.8 and 0.9): no develop build as the main
+  // command; it stays behind a disclosure that says it was not tested there (review r9)
+  const previewOnly = preview && (entry.compat.lines[l.key]?.status ?? 'skipped') === 'skipped' && !refused
+  // on a line a new app ships, the empty preset's command carries its own signal `in isolation` right under it, with
+  // the version it installs (review of 24 Oct); the note and the box then speak of a new app only
+  const emptyOwn = preset.has(l.key) && !both && !!iso
+  return {
+    key: l.key,
+    label: lineLabel(l),
+    status: entry.compat.lines[l.key]?.status ?? 'untested',
+    step: entry.compat.lines[l.key]?.step ?? null,
+    noReceiptFor: others[l.key]?.installs ?? null,
+    ...(preset.has(l.key)
+      ? {
+          preset: true,
+          shippedIds: entry.moduleIds,
+          shippedText: presetInstallText(entry.moduleIds),
+          emptyCommand: both ? null : info.cli,
+          emptyLead: EMPTY_PRESET_LEAD,
+          // the receipt in isolation of another version than the command's says there is none for it (round 13)
+          emptyNote:
+            emptyOwn && iso
+              ? iso.moduleVersion && iso.moduleVersion !== emptyVersion
+                ? emptyCommandCaution(raw, l.key, emptyVersion)
+                : isolationText(iso, emptyVersion)
+              : null,
+          // `Change the version` to the version a new app already ships moves nothing (events 0.9.0 on 0.9)
+          sameAsShipped: both && installVersion(entry, l.key) === raw.compat.ships?.[l.key],
+        }
+      : {}),
+    // the signal `in isolation` beside a verdict; with no verdict yet the note says it (lineSentence)
+    isolation: iso && !emptyOwn && isoBeside(l.key) ? { dot: isolationDot(iso), sentence: isoBeside(l.key)! } : null,
+    isoDot: iso ? isolationDot(iso) : null,
+    command: refused || previewOnly ? null : info.cli,
+    anyway: refused && !unusable ? info.cli : null,
+    previewBuild: previewOnly ? info.cli : null,
+    note: refused || rec ? null : installNote(l, !emptyOwn),
+    // a night that judged nothing reads calm (round 15: the age gate's sentence stood in the colour of waiting)
+    noteCalm: (() => {
+      const c = entry.compat.lines[l.key]
+      return !others[l.key] && !!c && (heldBack(c) || c.status === 'infra-error' || c.status === 'harness-red')
+    })(),
+    pinned: refused ? null : (pinned[l.key]?.text ?? null),
+    // a backend route a new app already has, on a line without a verdict (round 14): said with the command
+    collision: collisionNote(raw, l.key),
+    policy,
+    quarantine: newer,
+    prompt: !refused && !previewOnly && parts.command ? parts : null,
+    // More ways to install follow the chosen line (D46): the same recommended version as the main command
+    cmm: refused ? null : info.cmm,
+    cloud: !refused && (entry.npm || entry.github) ? info.cmm ?? info.cli : null,
+  }
+})
+/** Every line skipped, or nothing installable: nothing to choose, the line picker is hidden. */
+const allSkipped = noInstall || lines.every((l) => entry.compat.lines[l.key]?.status === 'skipped')
+const thirdParty = entry.type !== 'official' || entry.license.kind === 'proprietary'
+const warning = thirdParty
+  ? "Third-party code runs inside your app with access to all tenants' data. Read the anatomy before installing."
+  : null
+
+// ---------- anatomy and hygiene ----------
+const anatomyState = entry.enterprise ? 'hidden' : entry.signals.anatomy
+const lint = (facts?.modules ?? []).flatMap((m) => m.lint)
+const sevOrder = { error: 0, warn: 1, info: 2 } as const
+/**
+ * A lint message of the data branch read as one sentence with its verb in agreement (review r9: `1 of 4 routes do not
+ * require authentication.`); lib/rentgen writes the plural for any count, and old facts keep that text.
+ */
+const lintMessage = (m: string): string =>
+  m
+    .replace(/\. \(for example ([^)]+)\)\.$/, ' (for example $1).')
+    .replace(/^1 extension contributions target /, '1 extension contribution targets ')
+    .replace(/^1 of (\d+) routes do not /, '1 of $1 routes does not ')
+    .replace(/^1 of (\d+) routes have no /, '1 of $1 routes has no ')
+// lint `backend-route-collision` (round 14): computed against a new app of each line, not stored in the facts
+const collideLines = new Map<string, { c: NonNullable<IndexEntry['compat']['collisions']>[string][number]; keys: string[] }>()
+for (const l of lines)
+  for (const c of raw.compat.collisions?.[l.key] ?? []) {
+    const k = `${c.route}|${c.module}|${c.from}`
+    collideLines.set(k, { c, keys: [...(collideLines.get(k)?.keys ?? []), l.key] })
+  }
+const collideLint = [...collideLines.values()].map(({ c, keys }) => ({
+  code: BACKEND_ROUTE_COLLISION.code,
+  severity: BACKEND_ROUTE_COLLISION.severity,
+  message: collisionLintText(c, keys),
+  anchor: null,
+  src: null,
+}))
+/** Escaped text with each npm package (`@open-mercato/webhooks`) kept on one line. */
+const nwPackages = (t: string): string =>
+  t
+    .replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`)
+    .replace(/(?<=\()@[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9._-]*[a-z0-9](?=\))/g, (m) => `<span class="nw">${m}</span>`)
+const lintSorted = [...lint, ...collideLint].sort(
+  (a, b) => sevOrder[a.severity] - sevOrder[b.severity] || a.code.localeCompare(b.code),
+)
+function anchorUrl(anchor: string | null): string | null {
+  const m = anchor ? /^(AGENTS\.md|module-development\.md):(\d+)$/.exec(anchor) : null
+  if (!m) return null
+  const file = m[1] === 'AGENTS.md' ? 'AGENTS.md' : '.ai/docs/module-development.md'
+  return `https://github.com/open-mercato/open-mercato/blob/main/${file}#L${m[2]}`
+}
+const srcUrl = (file: string, line: number): string | null =>
+  entry.npm && facts
+    ? `https://cdn.jsdelivr.net/npm/${entry.npm}@${facts.package.version}/${file}`
+    : entry.github && entry.version.gitRef
+      ? `https://github.com/${entry.github}/blob/${entry.version.gitRef}/${file}#L${line}`
+      : null
+const plugRequires = entry.requires.map((r) => ({
+  label: r.raw,
+  note: r.resolvesTo?.startsWith('core:') ? 'core' : r.resolvesTo ? r.resolvesTo.replace(/^npm:|^github:/, '') : undefined,
+}))
+const plugExtends = (facts?.modules ?? [])
+  .flatMap((m) => m.extends)
+  .filter((x, i, all) => all.findIndex((y) => y.target === x.target && y.kind === x.kind) === i)
+  .slice(0, 12)
+  // a zero-width space after ':' and '.' lets a long target wrap at its token boundaries, never inside a name
+  .map((x) => ({ label: x.target.replace(/([:.])(?=.)/g, '$1\u200B'), note: x.kind }))
+
+// ---------- versions ----------
+const vDir = join(GENERATED_DIR, 'public', 'm', path, 'v')
+const versions = existsSync(vDir)
+  ? readdirSync(vDir)
+      .filter((v) => /^\d+\.\d+\.\d+/.test(v))
+      .sort((a, b) => compareVersions(b, a))
+      .slice(0, 5)
+  : []
+const diff = entry.anatomy?.diff ?? null
+function diffLabel(): string {
+  if (!diff) return ''
+  const a = diff.added
+  const parts = [
+    a.publicRoutes ? `+${plural(a.publicRoutes, 'public route')}` : '',
+    a.routes ? `+${plural(a.routes, 'route')}` : '',
+    a.tables ? `+${plural(a.tables, 'table')}` : '',
+    a.aclFeatures ? `+${plural(a.aclFeatures, 'permission')}` : '',
+    ...a.env.map((e) => `reads ${e}`),
+    ...a.hosts.map((h) => `new host ${h}`),
+    diff.removed.routes ? `-${plural(diff.removed.routes, 'route')}` : '',
+    diff.removed.tables ? `-${plural(diff.removed.tables, 'table')}` : '',
+  ].filter(Boolean)
+  return parts.length ? parts.join(' · ') : 'no new permissions, tables, routes or hosts.'
+}
+
+// ---------- quality (VER-1..5) ----------
+// The verdicts are the rules the level was computed from (`/m/<path>.json` `rules`, review r3): a green square next to
+// Listed can no longer come with five ticks. The page keeps its own words only where they say more than the rule
+// (the queue sentence of an untested line, entries the catalog never installs); the signals are the fallback for
+// data emitted before `rules` existed.
+const sig = entry.signals
+const rcpL = sig.receipt[latest.key] ?? 'untested'
+const fitL = sig.fit[latest.key] ?? 'unknown'
+// an entry the catalog cannot install has no queued receipt: the same words as the strip and /compat (review r2)
+const verNoInstall = noInstall || !!skipText
+const ruleOf = (id: string) => detail?.rules?.find((r) => r.id === id) ?? null
+const verSignals = [
+  {
+    id: 'VER-1',
+    pending: rcpL === 'untested' && !verNoInstall,
+    pass: rcpL === 'verified',
+    text: verNoInstall
+      ? `Receipt on ${latest.key}: ${noInstall ? 'not installable by the catalog' : 'not installed by the catalog'}.`
+      : rcpL === 'untested'
+        ? `Receipt on ${latest.key}: ${queued(latest).replace(/^Queued/, 'queued')}`
+        : `Receipt on ${latest.key}: ${STATUS[rcpL].word}.`,
+    fix: noInstall
+      ? reason('UNPINNED_GIT')
+        ? 'Push a tag for the release you want tested.'
+        : 'Publish the package with the src/modules and dist/modules pair.'
+      : skipText
+        ? 'Nothing to fix. Verified applies to the modules the nightly run installs.'
+        : rcpL === 'broken'
+          ? `Fix the failing step (${entry.compat.lines[latest.key]?.step ?? 'see the receipt'}) and publish a new version; ${previewData ? 'the first nightly CI run' : "tonight's run"} picks it up.`
+          : rcpL === 'untested'
+            ? 'Nothing to do.'
+            : 'See the receipt.',
+  },
+  {
+    id: 'VER-2',
+    pass: fitL === 'ok' || fitL === 'drift',
+    text:
+      fitL === 'ok' || fitL === 'drift'
+        ? `Fits statically on ${latest.key}.`
+        : fitL === 'no-fit'
+          ? `Does not fit statically on ${latest.key}.`
+          : `Static fit on ${latest.key} not analyzed.`,
+    fix: 'Import only subpaths and symbols that exist in the published Open Mercato packages of this line.',
+  },
+  {
+    id: 'VER-3',
+    pass: sig.supplyChain.status === 'ok',
+    text: `Supply chain: ${sig.supplyChain.status}.${sig.supplyChain.reasons.length ? ` ${sig.supplyChain.reasons.join(' ')}` : ''}`,
+    fix: 'Drop install scripts or declare them in scriptsRequired, depend only on registry packages, patch high advisories.',
+  },
+  {
+    id: 'VER-4',
+    pass: sig.hygiene.status !== 'fail',
+    text: sig.hygiene.status === 'fail' ? `Lint errors: ${sig.hygiene.failing.join(', ')}.` : 'No lint errors.',
+    fix: 'Fix the error rules listed under Hygiene in the Anatomy tab.',
+  },
+  {
+    id: 'VER-5',
+    pass: github ? !!entry.version.gitRef : entry.tier === 'verified' || entry.identity.builtFrom === 'verified',
+    text: github
+      ? entry.version.gitRef
+        ? `Tested on the pinned ref ${entry.version.gitRef.slice(0, 12)}.`
+        : 'No pinned tag.'
+      : entry.identity.builtFrom === 'verified'
+        ? 'Built from the listed repository.'
+        : 'Checked by the sync against repository.url; details are in the agent card.',
+    fix: github ? 'Push a tag for the release you want tested.' : 'Keep repository.url in package.json pointing at the listed repository.',
+  },
+]
+const ver = verSignals.map((v) => {
+  const r = ruleOf(v.id)
+  if (!r) return v
+  // VER-1 untested: the queue sentence says when the receipt comes; never installed: the page's sentence says why
+  // VER-3: the page names the supply chain reasons the rule detail leaves out
+  // a receipt of another version keeps the rule's own sentence, which names both versions (review r6)
+  const keepText =
+    (v.id === 'VER-1' && (verNoInstall || (!r.pass && rcpL === 'untested' && !others[latest.key]))) ||
+    (v.id === 'VER-3' && r.pass === v.pass && sig.supplyChain.reasons.length > 0)
+  const fix =
+    v.id === 'VER-1' && !r.pass && rcpL === 'verified'
+      ? /baseline/.test(r.detail)
+        ? "Nothing to fix in the module. The empty-app baseline of this night decides; the next green night links it."
+        : /days ago/.test(r.detail)
+          ? `Nothing to fix in the module. ${previewData ? 'The first nightly CI run' : "Tonight's run"} renews the receipt.`
+          : v.fix
+      : v.fix
+  return { ...v, pass: r.pass, pending: 'pending' in v ? v.pending && !r.pass : undefined, text: keepText ? v.text : r.detail, fix }
+})
+const verPassed = ver.filter((v) => v.pass).length
+// `Verified on` titles the rules only on a Verified entry; the test note is in the past tense only with a verified
+// receipt on the line (review r4)
+const qualHead = rulesHeading(entry.tier, latest.key, verPassed, ver.length)
+const lastLatest = lastByLine[latest.key] ?? null
+const qualTest = verifiedTestNote({
+  installs: !verNoInstall,
+  last: lastLatest ? { status: lastLatest.result.status, at: lastLatest.run.at } : null,
+  omVersion: latest.version,
+  preview: previewData,
+})
+const note = levelNote(entry, detail?.rules, latest.key)
+const repoUrl = CATALOG_REPO_URL
+const issueUrl = (template: string): string =>
+  `${repoUrl}/issues/new?template=${template}&title=${encodeURIComponent(`${template === 'om-quality-request.yml' ? 'OM Quality review' : 'Report'}: ${name}`)}`
+const badge = `[![Open Mercato Modules](${meta.site}/badge/${entry.path}.svg)](${meta.site}/m/${entry.path})`
+
+// ---------- related ----------
+const related = modules.entries
+  .filter((e) => e.listed && e.locator !== entry.locator && e.category === entry.category)
+  .slice(0, 5)
+const requiredBy = modules.entries.filter((e) =>
+  e.requires.some((r) => r.resolvesTo === entry.locator),
+)
+const linkFor = (r: { raw: string; resolvesTo: string | null }): { href: string; label: string; note: string } => {
+  if (r.resolvesTo?.startsWith('core:'))
+    return { href: href(builtInPage(r.resolvesTo.slice(5))), label: r.raw, note: 'built-in' }
+  const target = r.resolvesTo ? byLocator.get(r.resolvesTo) : undefined
+  return target
+    ? { href: href(modulePage(target.path)), label: target.title, note: r.raw }
+    : { href: href(`/?q=${encodeURIComponent(r.raw)}`), label: r.raw, note: 'not in the catalog' }
+}
+
+const readme = facts?.readmeExcerpt ?? null
+const title = `${entry.title} · ${name} · Open Mercato Modules`
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: entry.title,
+  description: entry.summary,
+  ...(entry.links.repo ? { codeRepository: entry.links.repo } : {}),
+  programmingLanguage: 'TypeScript',
+  ...(entry.license.spdx ? { license: entry.license.spdx } : {}),
+  ...(entry.version.latest ? { version: entry.version.latest } : {}),
+  url: absoluteUrl(meta.site, modulePage(entry.path)),
+}
+const tabs = [
+  { id: 'anatomy', label: 'Anatomy' },
+  { id: 'versions', label: 'Versions' },
+  { id: 'receipts', label: 'Receipts' },
+  { id: 'readme', label: 'Readme' },
+  { id: 'quality', label: 'Quality' },
+]
+---
+
+<Base
+  title={title}
+  description={entry.summary}
+  path={modulePage(entry.path)}
+  dataAsOf={meta.dataAsOf}
+  mdAlternate={moduleMd(entry.path)}
+  webmcp
+  jsonLd={jsonLd}
+  skip={{ href: '#module-body', label: 'Skip to module details' }}
+>
+  <div class="band">
+    <div class="sheet mod">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol role="list">
+          <li><a href={href('/')}>Modules</a></li>
+          <li><a href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
+          <li aria-current="page"><code translate="no" set:html={wbrHtml(name)} /></li>
+        </ol>
+      </nav>
+
+      <header class="mhd">
+        <YMarks inset={8} />
+        <div class="mhd__sig"><Sigil entry={entry} size={96} transition /></div>
+        <div class="mhd__main">
+          <h1 class="t-h1 mhd__title" style={`view-transition-name:${vt.title}`}>{entry.title}</h1>
+          <p class="mhd__loc">
+            <code translate="no" set:html={wbrHtml(entry.locator)} />
+            <button type="button" class="mhd__copy" data-copy={entry.locator} aria-label={`Copy locator ${entry.locator}`}>
+              <Icon name="copy" size={14} />
+            </button>
+          </p>
+          <p class="mhd__sum">{entry.summary}</p>
+          <ul class="mhd__chips" role="list">
+            <li class="mhd__level">
+              {
+                entry.enterprise ? (
+                  <span class="chip chip--enterprise" title="Commercial license. Anatomy not published.">
+                    Enterprise license
+                  </span>
+                ) : (
+                  <Seal entry={{ ...entry, levelNote: note }} latestKey={latest.key} preview={previewData} />
+                )
+              }
+            </li>
+            <li><TypeChip type={entry.type} /></li>
+            <li><span class="chip chip--line">{entry.kind}</span></li>
+            {!entry.enterprise && <li><LicenseChip license={entry.license} /></li>}
+            <li><a class="chip chip--line chip--link" href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
+            {
+              /* claims are for authors outside the org: an @open-mercato package is never "unclaimed" (lib/core claimLabel,
+                 the card's Trust line reads the same) */
+              claimLabel(entry) && (
+                <li>
+                  {claimLabel(entry) === 'Claimed' ? (
+                    <span class="chip chip--line" title="The author confirmed this listing.">Claimed</span>
+                  ) : (
+                    <a
+                      class="chip chip--line chip--link"
+                      href={`${repoUrl}/blob/main/CONTRIBUTING.md`}
+                      title="Not claimed by its author yet. CONTRIBUTING.md says how to claim a listing."
+                    >
+                      Unclaimed
+                    </a>
+                  )}
+                </li>
+              )
+            }
+          </ul>
+          <ul class="mhd__built dotlist" role="list">
+            {headerParts.map((t) => <li class:list={{ mhd__verified: t.startsWith('Verified on ') }}>{t}</li>)}
+          </ul>
+        </div>
+        <div class="mhd__side">
+          <ViewToggle client:painted="idle" md={href(moduleMd(entry.path))} json={href(`/m/${entry.path}.json`)} target="agent-view" />
+        </div>
+      </header>
+
+      <div class="mod__banners" data-human>
+        {held && (
+          <Banner variant="hold" link={entry.supersededBy ? { href: entry.supersededBy.startsWith('core:') ? href(builtInPage(entry.supersededBy.slice(5))) : href(modulePage(byLocator.get(entry.supersededBy)?.path ?? '')), label: entry.supersededBy.startsWith('core:') ? `Built-in ${entry.supersededBy.slice(5)}` : 'Use instead' } : undefined}>
+            {/* the banner label already says ON HOLD (6.8 text stays in the install box, cards and JSON) */}
+            {holdText.replace(/^On hold:\s*/, '')}
+          </Banner>
+        )}
+        {notListed && <Banner variant="hold" tag="Not listed">{blocked}</Banner>}
+        {entry.status === 'unmaintained' && (
+          <Banner variant="hold" tag="Unmaintained">
+            Not maintained.{entry.alternatives.length > 0 && ` Alternatives: ${entry.alternatives.map((a) => a.replace(/^npm:|^github:/, '')).join(', ')}.`}
+          </Banner>
+        )}
+        {reason('ADVISORY') && <Banner variant="advisory">{reason('ADVISORY')} Do not install until fixed.</Banner>}
+        {entry.replaces.length > 0 && (
+          <Banner variant="replaces">
+            Replaces the built-in {entry.replaces.map((r) => r.replace(/^core:/, '')).join(', ')} module. You cannot enable both.
+          </Banner>
+        )}
+        {entry.enterprise && (
+          <Banner variant="enterprise" link={entry.links.docs ? { href: entry.links.docs, label: 'See the offer' } : undefined}>
+            Anatomy not published. Commercial license.
+          </Banner>
+        )}
+        {github && (
+          <Banner variant="github-only">
+            {entry.version.gitRef
+              ? noInstall
+                ? `No npm package. The source is on GitHub at tag ${entry.version.gitRef}.`
+                : `No npm package. Receipts install from GitHub at tag ${entry.version.gitRef}.`
+              : 'No npm package and no pinned tag. The catalog cannot install it until a tag is pushed.'}
+          </Banner>
+        )}
+        {preview && !held && <Banner variant="preview">No stable release yet. Only preview builds are published.</Banner>}
+        {quarantineUntil && !held && (
+          <Banner variant="quarantine">
+            New release. A fresh app installs it from {day(quarantineUntil)} (Yarn {sched.ageGateDays}-day age gate).
+          </Banner>
+        )}
+        {harnessRed && (
+          <Banner variant="harness-red">
+            A new Open Mercato {latest.version} app failed tonight. Module results on this line are withheld.
+          </Banner>
+        )}
+      </div>
+
+      <div id="agent-view" class="mod__agent"></div>
+
+
+
+      {
+        /* entries the catalog never installs: no strip; the header line and the plate already say why */
+        noStrip ? null : (
+          <div class="mod__strip" data-human>
+            {/* the island's marker covers the strip (_module.css), so the drawer hydrates as soon as any of it shows */}
+            <ReceiptDrawer
+              client:painted="visible"
+              title={entry.title}
+              previewSentence={previewReceipts ? PREVIEW_SENTENCE : null}
+              lines={drawerLines}
+              compatHref={href('/compat')}
+              compatLabel={meta.dataAsOf.nightly === null ? 'Compatibility matrix' : 'All receipts'}
+            />
+            {compactStrip ? (
+              <a class="ssq" href="#panel-receipts" data-receipts-open aria-label={`Receipts. ${drawerLines.map((l) => `${l.key}: ${l.sentence}`).join(' ')}${stripWarn.length ? ` ${stripWarn.join(' ')}` : ''}`}>
+                <span class="ssq__cells" aria-hidden="true">
+                  {drawerLines.map((l) => (
+                    <span class="ssq__cell">
+                      <span class="ssq__k">{l.key}</span>
+                      <Square status={l.status} step={l.step ?? null} iso={l.isolation?.dot ?? null} />
+                    </span>
+                  ))}
+                </span>
+                <span class="ssq__text">
+                  <span class="ssq__main">{compactSentence}</span>
+                  {/* the static check before the first night (round 14): a prediction from the facts, said as one */}
+                  {stripWarn.map((w) => <span class="ssq__warn" set:html={nbspDates(whyHtml(w))} />)}
+                </span>
+                <span class="ssq__btn">
+                  Receipts <Icon name="chevron-down" size={14} class="icon ssq__chev" />
+                </span>
+              </a>
+            ) : (
+              <SignalStripDetailed
+                entry={entry}
+                lines={modules.lines}
+                receipts={stripReceipts}
+                end={today}
+                href="#panel-receipts"
+                sentence={{ queued: compactSentence, ageGateDays: sched.ageGateDays, installableFrom: quarantineUntil, unconfirmed, others }}
+                note={previewReceipts ? PREVIEW_CHIP : null}
+                noteTitle={previewReceipts ? PREVIEW_SENTENCE : null}
+                why={stripWhy}
+                warn={stripWarn}
+                isolation={stripIso}
+                versions={requiresNotes}
+              />
+            )}
+          </div>
+        )
+      }
+
+      <div class="mod__grid" id="module-body" data-human>
+        <div class="mod__main">
+          <div class="tabs" data-tabs>
+            <div class="tabs__list" role="tablist" aria-label="Module details" hidden>
+              {
+                tabs.map((t, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    id={`tab-${t.id}`}
+                    aria-controls={`panel-${t.id}`}
+                    aria-selected={i === 0 ? 'true' : 'false'}
+                    tabindex={i === 0 ? 0 : -1}
+                  >
+                    {t.label}
+                  </button>
+                ))
+              }
+            </div>
+
+            <!-- Anatomy -->
+            <section class="tabs__panel" id="panel-anatomy" role="tabpanel" aria-labelledby="tab-anatomy" tabindex="0">
+              <h2 class="tabs__h">Anatomy</h2>
+              {
+                anatomyState === 'hidden' ? (
+                  <div class="ent">
+                    {/* the banner says the anatomy is not published; the tab lists what the package contains */}
+                    {entry.moduleIds.length === 0 && <p class="mod__empty">Anatomy not published. Commercial license.</p>}
+                    {entry.moduleIds.length > 0 && (
+                      <>
+                        <h3 class="t-tagline ent__h">Includes {plural(entry.moduleIds.length, 'module')}</h3>
+                        <p class="mod__fine">Module IDs from the package. Their contracts are not published.</p>
+                        <ul class="ent__list" role="list">
+                          {entry.moduleIds.map((id) => {
+                            const core = builtInById.get(id)
+                            return (
+                              <li class="ent__item">
+                                {core ? <Sigil builtIn={core} size={24} /> : <Sigil kind="built-in" glyph="0000000" size={24} />}
+                                {core ? (
+                                  <a href={href(builtInPage(id))}><code translate="no">{id}</code></a>
+                                ) : (
+                                  <code translate="no">{id}</code>
+                                )}
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </>
+                    )}
+                  </div>
+                ) : !entry.anatomy || !facts ? (
+                  <p class="mod__empty">
+                    {github && !entry.version.gitRef
+                      ? 'Not read yet: the repository has no tag to read the code from.'
+                      : 'Not read yet. The catalog reads the published code within minutes of a release.'}
+                  </p>
+                ) : (
+                  <>
+                    {/* AnatomyFilm titles its nine sections with h4: this keeps the outline h2 > h3 > h4 (7.9) */}
+                    <h3 class="sr-only">What it adds, section by section</h3>
+                    <div class="anat">
+                      <AnatomyFilm entry={entry} facts={facts} />
+                    </div>
+                    {(plugRequires.length > 0 || plugExtends.length > 0) && (
+                      <div class="anat__plug">
+                        <h3 class="t-tagline">Plugs into</h3>
+                        <PlugDiagram title={entry.moduleIds[0] ?? entry.title} requires={plugRequires} extends={plugExtends} />
+                      </div>
+                    )}
+                  </>
+                )
+              }
+              {
+                lintSorted.length > 0 && (
+                  <div class="hyg" id="hygiene">
+                    <h3 class="hyg__h">
+                      <span class="t-tagline">Hygiene</span>
+                      <span class:list={['hyg__status', `hyg__status--${sig.hygiene.status}`]}>{sig.hygiene.status}</span>
+                    </h3>
+                    <ul class="hyg__list" role="list">
+                      {lintSorted.map((l) => {
+                        const doc = anchorUrl(l.anchor)
+                        const src = l.src ? srcUrl(l.src.file, l.src.line) : null
+                        return (
+                          <li class:list={['hyg__item', `hyg__item--${l.severity}`]}>
+                            <span class="hyg__sev">{l.severity}</span>
+                            <code class="hyg__code">{l.code}</code>
+                            {/* one sentence: the lint text of the data branch has a stray period before its example */}
+                            {/* an npm package never breaks at its hyphen (round 14) */}
+                            <span class="hyg__msg" set:html={nwPackages(lintMessage(l.message))} />
+                            <span class="hyg__links">
+                              {src && l.src && (
+                                <a href={src} rel="noopener noreferrer" set:html={`${wbrHtml(`${l.src.file}:${l.src.line}`)}`} />
+                              )}
+                              {doc && (
+                                <a href={doc} rel="noopener noreferrer">
+                                  rule
+                                </a>
+                              )}
+                            </span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )
+              }
+            </section>
+
+            <!-- Versions -->
+            <section class="tabs__panel" id="panel-versions" role="tabpanel" aria-labelledby="tab-versions" tabindex="0">
+              <h2 class="tabs__h">Versions</h2>
+              {
+                versions.length === 0 ? (
+                  <p class="mod__empty">
+                    {entry.enterprise
+                      ? 'Versions are not compared for commercial packages: the anatomy is not published.'
+                      : 'No published version read yet.'}
+                  </p>
+                ) : (
+                  <ol class="vers" role="list">
+                    {versions.map((v, i) => (
+                      <li class="vers__item">
+                        <code class="vers__v">{v}</code>
+                        <span class="vers__tags">
+                          {v === entry.version.latest && <span class="chip chip--line">latest</span>}
+                          {Object.entries(entry.version.recommended)
+                            .filter(([, r]) => r === v)
+                            .map(([k]) => (
+                              <span class="chip chip--official">recommended · {k}</span>
+                            ))}
+                          {v === entry.version.latest && entry.version.publishedAt && <span class="vers__date">{dayYear(entry.version.publishedAt)}</span>}
+                        </span>
+                        <span class="vers__diff">
+                          {i === 0 && diff && v === entry.anatomy?.version ? (
+                            <>
+                              <span class="vers__from">Since {diff.from}:</span> {diffLabel()}
+                            </>
+                          ) : i === 0 && !diff ? (
+                            'First version read by the catalog.'
+                          ) : (
+                            ''
+                          )}
+                        </span>
+                        <a class="vers__facts" href={href(`/m/${entry.path}/v/${v}/facts.json`)}>
+                          facts.json
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                )
+              }
+              {entry.version.preview && <p class="vers__preview">Preview on npm: <code>{entry.version.preview}</code></p>}
+              <p class="mod__fine">The catalog reads the latest and the previous stable release. Older versions stay on npm.</p>
+            </section>
+
+            <!-- Receipts -->
+            <section class="tabs__panel" id="panel-receipts" role="tabpanel" aria-labelledby="tab-receipts" tabindex="0">
+              <h2 class="tabs__h">Receipts</h2>
+              {
+                lines.some((l) => lastByLine[l.key]) && (
+                  <ul class="rcards" role="list">
+                    {lines
+                      .filter((l) => lastByLine[l.key])
+                      .map((l) => {
+                        const r = lastByLine[l.key]!
+                        return (
+                          <li class="rcards__item">
+                            <p class="rcards__line">
+                              <span>{lineLabel(l)}</span>
+                              {isPreview(r) && <span class="chip chip--preview" title={PREVIEW_SENTENCE}>{PREVIEW_CHIP}</span>}
+                            </p>
+                            {otherText(l.key) && <p class="rcards__other">{otherText(l.key)}</p>}
+                            {preset.has(l.key) && <p class="rcards__other">{presetText(l.key)}</p>}
+                            {isoSentence(l.key) && (
+                              <p class="rcards__other">
+                                {nbspDates(isoSentence(l.key)!)}{' '}
+                                {isoOf(l.key)?.receipt && <a href={href(receiptPage(isoOf(l.key)!.receipt!))}>Open the receipt</a>}
+                              </p>
+                            )}
+                            {pinned[l.key] && (
+                              <p class="rcards__other">
+                                {pinned[l.key]!.text}{' '}
+                                <a href={href(receiptPage(pinned[l.key]!.receipt.id))}>
+                                  {`Open the ${pinned[l.key]!.receipt.module?.version ?? ''} receipt`}
+                                </a>
+                              </p>
+                            )}
+                            <Receipt receipt={r} jsonHref={href(`/r/${r.id}.json`)} compact />
+                            <a class="rcards__open" href={href(receiptPage(r.id))}>
+                              Open receipt
+                            </a>
+                          </li>
+                        )
+                      })}
+                  </ul>
+                )
+              }
+              {
+                /* lines without a receipt: one list, one row per line (no empty paper per line) */
+                drawerLines.some((d) => !d.receipt) && (
+                  <ul class="rwait" role="list">
+                    {drawerLines
+                      .filter((d) => !d.receipt)
+                      .map((d) => (
+                        <li class="rwait__item">
+                          <span class="rwait__k">{d.label}</span>
+                          <span class="rwait__t">{d.sentence}</span>
+                        </li>
+                      ))}
+                  </ul>
+                )
+              }
+              {
+                transitions.length > 0 && (
+                  <div class="trans">
+                    <h3 class="t-tagline">Transitions</h3>
+                    <ol class="trans__list" role="list">
+                      {transitions.map(({ r, from, to }) => (
+                        <li class="trans__item">
+                          <span class="trans__at">{dayYear(r.run.at)}</span>
+                          {/* both versions named (review r11: `0.8 · 0.8.0 ... 0.8.0` read as a repeat) */}
+                          <span class="trans__line">{r.om.line} · OM {shortVersion(r.om.version)}</span>
+                          <span class="trans__ft">
+                            {from} → <strong>{to}</strong>
+                            {r.transition.confirmed && <span class="trans__conf"> · confirmed</span>}
+                          </span>
+                          <span class="trans__v">{r.module ? `module ${shortVersion(r.module.version)}` : ''}</span>
+                          <a href={href(receiptPage(r.id))}>receipt</a>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )
+              }
+            </section>
+
+            <!-- Readme -->
+            <section class="tabs__panel" id="panel-readme" role="tabpanel" aria-labelledby="tab-readme" tabindex="0">
+              <h2 class="tabs__h">Readme</h2>
+              {
+                readme ? (
+                  <figure class="readme">
+                    <figcaption class="readme__cap">
+                      <Icon name="warning" size={14} /> Author's README. Not verified by the catalog.
+                    </figcaption>
+                    {/* a scrolling region a keyboard can reach (axe scrollable-region-focusable, review r4) */}
+                    <div class="readme__text" tabindex="0" role="region" aria-label="Author's README">{readme}</div>
+                  </figure>
+                ) : (
+                  <p class="mod__empty">No README text in the published package.</p>
+                )
+              }
+              <p class="readme__links">
+                {entry.links.npm && <a href={entry.links.npm} rel="noopener noreferrer">npm <Icon name="external" size={14} /></a>}
+                {entry.links.repo && <a href={entry.links.repo} rel="noopener noreferrer">Repository <Icon name="external" size={14} /></a>}
+              </p>
+            </section>
+
+            <!-- Quality -->
+            <section class="tabs__panel" id="panel-quality" role="tabpanel" aria-labelledby="tab-quality" tabindex="0">
+              <h2 class="tabs__h">Quality</h2>
+              <h3 class="t-tagline qual__h">{qualHead}</h3>
+              <ul class="qual" role="list">
+                {
+                  ver.map((v) => (
+                    <li class:list={['qual__item', v.pass ? 'is-pass' : 'pending' in v && v.pending ? 'is-pending' : 'is-fail']}>
+                      <span class="qual__mark" aria-label={v.pass ? 'pass' : 'pending' in v && v.pending ? 'pending' : 'fail'}>
+                        {v.pass ? '✓' : 'pending' in v && v.pending ? '○' : '✗'}
+                      </span>
+                      <code class="qual__id">{v.id}</code>
+                      <span class="qual__text">{v.text}</span>
+                      {!v.pass && !('pending' in v && v.pending) && <span class="qual__fix"><span class="t-label">What to fix</span> {v.fix}</span>}
+                    </li>
+                  ))
+                }
+              </ul>
+              <p class="mod__fine">
+                {qualTest && `${qualTest} `}
+                <a href={href('/quality')}>How levels work</a>
+              </p>
+              <div class="omq">
+                <div>
+                  <h3 class="t-tagline">OM Quality</h3>
+                  <p class="omq__state">{entry.quality ? `Reviewed on ${entry.quality.version}, valid until ${entry.quality.until}.` : 'Not reviewed.'}</p>
+                  <p class="mod__fine">Review time can be paid for. The result cannot.</p>
+                </div>
+                <div class="omq__acts">
+                  <a class="btn btn--secondary btn--sm" href={issueUrl('om-quality-request.yml')} rel="noopener noreferrer">Request review</a>
+                  <a class="btn btn--ghost btn--sm" href={issueUrl('report-module.yml')} rel="noopener noreferrer">Report this module</a>
+                </div>
+              </div>
+              <div class="maint">
+                <h3 class="t-tagline">For maintainers</h3>
+                <p class="mod__fine">Add the badge to your README. It follows the module's level and receipts.</p>
+                <img class="maint__badge" src={href(`/badge/${entry.path}.svg`)} alt={`Open Mercato Modules badge for ${name}`} height="20" loading="lazy" />
+                <CommandChip command={badge} prompt="" label="Copy badge markdown" />
+              </div>
+            </section>
+          </div>
+          <div class="mod__plate">
+            <Nameplate rows={rows} more={moreRows} title="Nameplate" />
+          </div>
+        </div>
+
+        <aside class="mod__side" aria-label="Install and links">
+          <div class="mod__sticky">
+            <InstallBox
+              client:painted="visible"
+              lines={installLines}
+              initial={latest.key}
+              warning={warning}
+              cloudUrl="https://app.openmercatocloud.com/dashboard?create=1"
+              blocked={blocked}
+              hideLines={allSkipped}
+              reasonLabels={REASON_LABELS}
+            >
+              {
+                lines.map((l) =>
+                  plans[l.key] ? (
+                    <div data-plan-line={l.key} hidden={l.key !== latest.key}>
+                      <InstallPlan
+                        plan={plans[l.key]!}
+                        omVersion={l.version}
+                        preset={preset.has(l.key)}
+                        title={(() => {
+                          // the module of the page, not the first item of the order (round 14: `events@0.9.0`
+                          // headed the plan of shipment-tracking, whose requires come first)
+                          const own = plans[l.key]!.order.find((o) => o.locator === entry.locator)
+                          return own ? `${name}@${own.version}` : undefined
+                        })()}
+                      />
+                    </div>
+                  ) : null,
+                )
+              }
+            </InstallBox>
+          </div>
+
+        </aside>
+      </div>
+
+      {/* links, stats and related run under both columns (review r1): the right column holds only the install box,
+          so it never leaves a column of white beside a short page */}
+      <div class="mod__foot" data-human>
+          <section class="side__sec" aria-labelledby="links-h">
+            <h2 class="side__h" id="links-h">Links</h2>
+            <ul class="side__links" role="list">
+              {entry.links.npm && <li><a href={entry.links.npm} rel="noopener noreferrer">npm <Icon name="external" size={14} /></a></li>}
+              {entry.links.repo && <li><a href={entry.links.repo} rel="noopener noreferrer">Repository <Icon name="external" size={14} /></a></li>}
+              {entry.links.docs && <li><a href={entry.links.docs} rel="noopener noreferrer">Docs <Icon name="external" size={14} /></a></li>}
+              <li><a href={href(moduleMd(entry.path))}><span>Agent card <code>.md</code></span></a></li>
+              <li><a href={href(`/m/${entry.path}.json`)}>JSON</a></li>
+              {entry.links.facts && <li><a href={entry.links.facts}><span>Anatomy facts <code>facts.json</code></span></a></li>}
+            </ul>
+          </section>
+
+          {
+            entry.stats && entry.type !== 'official' && (
+              <section class="side__sec" aria-labelledby="stats-h">
+                <h2 class="side__h" id="stats-h">Stats <span class="side__sub">Shown, not scored.</span></h2>
+                <dl class="side__stats">
+                  <div>
+                    <dt>npm downloads, 30 days</dt>
+                    {entry.stats.downloads30d === null ? <dd class="side__na">Not available</dd> : <dd>{entry.stats.downloads30d.toLocaleString('en-US')}</dd>}
+                  </div>
+                  <div>
+                    <dt>GitHub stars</dt>
+                    {entry.stats.stars === null ? <dd class="side__na">Not available</dd> : <dd>{entry.stats.stars.toLocaleString('en-US')}</dd>}
+                  </div>
+                </dl>
+              </section>
+            )
+          }
+
+          {
+            (entry.requires.length > 0 || requiredBy.length > 0 || related.length > 0) && (
+              <section class="side__sec" aria-labelledby="rel-h">
+                <h2 class="side__h" id="rel-h">Related</h2>
+                {entry.requires.length > 0 && (
+                  <>
+                    <p class="side__k">Requires</p>
+                    <ul class="side__rel" role="list">
+                      {entry.requires.map((r) => {
+                        const l = linkFor(r)
+                        return (
+                          <li>
+                            <a href={l.href}>{l.label}</a> <span>{l.note}</span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </>
+                )}
+                {requiredBy.length > 0 && (
+                  <>
+                    <p class="side__k">Required by</p>
+                    <ul class="side__rel" role="list">
+                      {requiredBy.map((e) => (
+                        <li>
+                          <a href={href(modulePage(e.path))}>{e.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {related.length > 0 && (
+                  <>
+                    <p class="side__k">Same category</p>
+                    <ul class="side__rel" role="list">
+                      {related.map((e) => (
+                        <li class="side__relrow">
+                          <Sigil entry={e} size={16} />
+                          <a href={href(modulePage(e.path))}>{e.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </section>
+            )
+          }
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // ARIA tabs (spec 7.9): without JavaScript every panel stays visible, one under another.
+  for (const root of Array.from(document.querySelectorAll<HTMLElement>('[data-tabs]'))) {
+    const list = root.querySelector<HTMLElement>('[role="tablist"]')
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'))
+    const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls') ?? ''))
+    if (!list || tabs.length === 0) continue
+    root.classList.add('is-tabs')
+    list.hidden = false
+    // the hash changes only when someone picks a tab, never on load
+    const select = (i: number, focus: boolean, writeHash = true): void => {
+      tabs.forEach((t, j) => {
+        const on = i === j
+        t.setAttribute('aria-selected', String(on))
+        t.tabIndex = on ? 0 : -1
+        if (panels[j]) panels[j]!.hidden = !on
+      })
+      if (focus) tabs[i]?.focus()
+      if (!writeHash) return
+      try {
+        history.replaceState(history.state, '', `#${tabs[i]?.id.replace(/^tab-/, '') ?? ''}`)
+      } catch {
+        // ignore
+      }
+    }
+    const fromHash = tabs.findIndex((t) => `#${t.id.replace(/^tab-/, '')}` === location.hash)
+    select(fromHash >= 0 ? fromHash : 0, false, false)
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i, false))
+      t.addEventListener('keydown', (ev) => {
+        const k = ev.key
+        const n = tabs.length
+        const next = k === 'ArrowRight' ? (i + 1) % n : k === 'ArrowLeft' ? (i - 1 + n) % n : k === 'Home' ? 0 : k === 'End' ? n - 1 : -1
+        if (next >= 0) {
+          ev.preventDefault()
+          select(next, true)
+        }
+      })
+    })
+    // links into a panel (#hygiene) switch to its tab
+    document.addEventListener('click', (ev) => {
+      const a = (ev.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]')
+      const id = a?.getAttribute('href')?.slice(1)
+      const panel = id ? document.getElementById(id)?.closest('[role="tabpanel"]') : null
+      const i = panel ? panels.indexOf(panel as HTMLElement) : -1
+      if (i >= 0) select(i, false)
+    })
+  }
+</script>

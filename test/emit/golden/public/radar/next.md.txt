@@ -1,0 +1,31 @@
+# Release radar: next = 0.10.1-develop.7583.1.0c886d0a14
+
+Compared with 0.9.0. Generated 2026-10-23T03:05:00Z.
+
+0.10.1-develop.7583.1.0c886d0a14 changes 3 APIs used by fixture modules. createRequestContainer is used by 15 of 16 packages outside the org.
+
+## Changed APIs in use
+
+| Symbol | Change | Used by |
+|---|---|---|
+| `@open-mercato/shared/lib/commands#CommandHandler` | signature | Marketing Consents |
+| `@open-mercato/shared/lib/commands#CommandRuntimeContext` | signature | Marketing Consents |
+| `@open-mercato/shared/modules/registry#ModuleCli` | signature | Durable Work |
+
+## Static breaks
+
+None.
+
+## Same failure in several modules
+
+None.
+
+Receipts on next: 1 verified, 0 broken.
+
+## Load-bearing APIs
+
+| Symbol | Used by |
+|---|---|
+| `@open-mercato/shared/lib/di/container#createRequestContainer` | 15 of 16 |
+
+Changing these breaks the ecosystem. Consider them frozen.

@@ -1,0 +1,84 @@
+# Every 6 hours and after a descriptor or policy change on main (spec 5.1, 5.2): release lines, new versions,
+# Rentgen (static, no module code runs), Fit, Radar, health, Hive slots, one commit on the data branch through
+# lib/sources/data-branch.ts (fetch, reset, replay the whole write, commit, push; 3 attempts), keepalive.
+name: watch
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/**"
+      - "policy/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: watch
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  watch:
+    name: watch
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Prepare data checkout
+        # data-branch.ts resets this worktree to origin/data (or an orphan on the first run) before every attempt.
+        run: git worktree add --detach .data HEAD
+
+      - name: Watch and commit to data
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # data-branch.ts pushes with the job token, set explicitly for this step only (checkout keeps no credentials).
+          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.https://github.com/.extraheader
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')"
+          echo "::add-mask::${GIT_CONFIG_VALUE_0#AUTHORIZATION: basic }"
+          export GIT_CONFIG_VALUE_0
+          node lib/sources/data-branch.ts --dir .data --message "chore(data): watch $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- \
+            bash -euo pipefail -c '
+              yarn om watch --keepalive
+              if [ "$(jq -r ".lines.coreChanged" out/queue.json)" = "true" ] || [ ! -f ".data/builtin/$(jq -r ".lines.coreLatest" out/queue.json).json" ]; then
+                yarn om scan --builtin "$(jq -r ".lines.coreLatest" out/queue.json)"
+              fi
+              if [ "$(jq ".items | length" out/queue.json)" -gt 0 ]; then
+                yarn om scan --queue out/queue.json
+              fi
+              if [ "$(jq ".lines.changed | length" out/queue.json)" -gt 0 ]; then
+                yarn om fit
+              elif [ "$(jq ".items | length" out/queue.json)" -gt 0 ]; then
+                yarn om fit --modules "$(jq -r "[.items[] | \"\(.locator)@\(.version)\"] | join(\",\")" out/queue.json)"
+              fi
+              yarn om radar
+              yarn om health --changed
+              yarn om hive
+            '

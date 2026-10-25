@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/open-mercato-generator/versions/0.3.13"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "open-mercato-generator",
+        "version": "0.3.13"
+      },
+      "publishedAt": "2026-01-17T11:28:55Z",
+      "slsaProvenances": [],
+      "attestations": []
+    }
+  }
+}

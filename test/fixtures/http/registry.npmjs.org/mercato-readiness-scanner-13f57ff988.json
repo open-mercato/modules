@@ -1,0 +1,127 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/mercato-readiness-scanner"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "mercato-readiness-scanner",
+      "dist-tags": {
+        "latest": "0.2.2"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+            "type": "git"
+          },
+          "gitHead": "07d50afe62a06a475034b076d08f6f6d545e5af7",
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "yaml": "^2.9.1",
+            "semver": "^7.8.5"
+          },
+          "scripts": {},
+          "description": "Static production-readiness scanner for Open Mercato applications.",
+          "dist": {
+            "integrity": "sha512-gRfAO77orMz01HSD/4mNg/G2Xb6gpVzdmG8RPjRUFsDJe2/bw8Vzdv5pmJDQ5aQ36YclErpX9H+mZYHIrPY/pg==",
+            "tarball": "https://registry.npmjs.org/mercato-readiness-scanner/-/mercato-readiness-scanner-0.1.0.tgz"
+          }
+        },
+        "0.2.0": {
+          "version": "0.2.0",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+            "type": "git"
+          },
+          "gitHead": "ae2dcf55072fd46c1ebb57a34dca7f618f8496ac",
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "yaml": "^2.9.1",
+            "semver": "^7.8.5"
+          },
+          "scripts": {},
+          "description": "Static production-readiness scanner for Open Mercato applications.",
+          "dist": {
+            "integrity": "sha512-jCWQuZnEVEsrUBTWbBgZ12pHNFqZe+WIoA27v6uATGOobER837YQWY9cmqq6tdL6oWwNCCJ0qdsrxTF3Vxmv1g==",
+            "tarball": "https://registry.npmjs.org/mercato-readiness-scanner/-/mercato-readiness-scanner-0.2.0.tgz"
+          }
+        },
+        "0.2.1": {
+          "version": "0.2.1",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+            "type": "git"
+          },
+          "gitHead": "f51b66088244fa5a9615fecc0c435d78dad89676",
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "yaml": "^2.9.1",
+            "semver": "^7.8.5"
+          },
+          "scripts": {},
+          "description": "Static production-readiness scanner for Open Mercato applications.",
+          "dist": {
+            "integrity": "sha512-52ClNr5Q5fooVNUzVPH5L6Shbl4c2dSk/mfXB3uIxQgp0g0sfGL1oKW/FBDKjahDiH6mxysPEb4+w9Y5SV1g1w==",
+            "tarball": "https://registry.npmjs.org/mercato-readiness-scanner/-/mercato-readiness-scanner-0.2.1.tgz"
+          }
+        },
+        "0.2.2": {
+          "version": "0.2.2",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+            "type": "git"
+          },
+          "gitHead": "3fc6a9954069117ae5ab404a23f5f8af009966f3",
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "yaml": "^2.9.1",
+            "semver": "^7.8.5"
+          },
+          "scripts": {},
+          "description": "Static production-readiness scanner for Open Mercato applications.",
+          "dist": {
+            "integrity": "sha512-ee0dPquU8MPzwoFPf1RGK419ddeKwLT9ZEH6uAKZ/8euDOpzGxGmfCAit68fhfQPcVblgqPB8Df9mYbYMZ0cjA==",
+            "tarball": "https://registry.npmjs.org/mercato-readiness-scanner/-/mercato-readiness-scanner-0.2.2.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-22T14:15:39.974Z",
+        "modified": "2026-10-22T15:21:01.428Z",
+        "0.1.0": "2026-10-22T14:18:18.424Z",
+        "0.2.0": "2026-10-22T14:58:39.325Z",
+        "0.2.1": "2026-10-22T15:17:30.107Z",
+        "0.2.2": "2026-10-22T15:21:00.543Z"
+      },
+      "maintainers": [
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Static production-readiness scanner for Open Mercato applications.",
+      "repository": {
+        "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+        "type": "git"
+      }
+    }
+  }
+}

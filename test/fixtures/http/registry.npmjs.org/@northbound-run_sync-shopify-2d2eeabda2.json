@@ -1,0 +1,526 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@northbound-run%2Fsync-shopify"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@northbound-run/sync-shopify",
+      "dist-tags": {
+        "latest": "0.5.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/northbound-run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "593e121bb992a8717257b91cf7940669498e66bf",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-DUXlUvxdi0J5lXJq1QAG1GjAde/Q1k9FuR9NXq1m3p+weIOZh6bgvA9d3L6x1KftoNoDxW56eIuWKPuCtFQ2aA==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.1.0.tgz"
+          }
+        },
+        "0.1.2": {
+          "version": "0.1.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "434bd4196f00b603495ab10464102cf8fe071ef9",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-RCc+rvGjg3kdYwWSL579gOJ3Cot4G8Y7YSOGQrVy5cLlQC0snMWu8z2DTZkQ/MFZS+5PgeKwvAyZdbipbxIrxg==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.1.2.tgz"
+          }
+        },
+        "0.2.0": {
+          "version": "0.2.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "fe4e1c8f108d7dd0576cc6542f3d2caf30edd7ce",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-y8IigUUeTEkFQAJyAtUyuDkMPQeCTRo0opcGH4Pl3/Lkeks9tdNgiyXU83XGI3vVTIWF2o+4WFb4dinYFsjKwg==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.2.0.tgz"
+          }
+        },
+        "0.3.0": {
+          "version": "0.3.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "2317284c58bda74607ab51088008ce31c3af73ce",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-Y+1IqIlRcXCgHtQ7Tb+s7P4PIWlX045P+NLaDbqBszb+RwTVS7FcBIhHCqew/9EEwgKZfnDOWO2vSLktlVrtEA==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.3.0.tgz"
+          }
+        },
+        "0.4.0": {
+          "version": "0.4.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "5a3964fe8bee654b9722d9be2af5cb6081c4fbd3",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-+fPzlKoWmGn0d9i2gFJikxXqNSePza6UmtVlzDJVGizuUc6JMR+wRDBb2ly+O0JMm0hlg1W9U11O0pghOPEXfw==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.0.tgz"
+          }
+        },
+        "0.4.1": {
+          "version": "0.4.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "7f4fe89fce9e729068a23a092cd9fbd11a7a4e6f",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-Zv3X/gJutcdps8bdstoD7HEeO8FrCPA15+TBSoepScg9Dm5sD0728RZ6VPB3cG5mlWfpDxwcliMoemUBPhb4cA==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.1.tgz"
+          }
+        },
+        "0.4.2": {
+          "version": "0.4.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "44fa2cb38ac575137db58630b0f075239f6ef687",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "@open-mercato/ui": "^0.6.6",
+            "@open-mercato/core": "^0.6.6",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-Aflk0ldlAnw8Tl6+E3LKp4rpCklym627xTsxtIhrJGzcutMSyKLv+fHvnOiORGS7yUxfa5vxO7fc6NfdAaeI0A==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.2.tgz"
+          }
+        },
+        "0.4.3": {
+          "version": "0.4.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "8e887c6d58cf7d18f1e3315f5c315ddd515abd2f",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-bez0SRYTA3nMj2DkKEaFgncMI+Z91cqvFr/+GrU8sLEcJCgxrjtC17v+Bdjk5saIkhrB+KuA9fBUFsQ+RBij8g==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.3.tgz"
+          }
+        },
+        "0.4.4": {
+          "version": "0.4.4",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "9e2c8eebb4e6bd8e820cd427ba52a44e17cf8195",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-4614Pm5ZlGEwfdGI7pWq89Zcph5bhMQnMmC7QVyJQB+CCh6/r8XvPXB7IJCiFgR82OlF/OyamvCbPgGZvG4iWQ==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.4.tgz"
+          }
+        },
+        "0.4.5": {
+          "version": "0.4.5",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "11791f145f72eb499239461a3e889bd77970f3fe",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-3nHHlEgBuJLCilUR2tiorsTO9qFmzkC+PonDqfaig6BtW8kPlr6sK+G9MloqUP6L6HXH1nbBe9MDJB/TTiINZQ==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.5.tgz"
+          }
+        },
+        "0.4.6": {
+          "version": "0.4.6",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "c689bfa13d8c270b83a6a3132546d90d7eb94503",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-EASbfHakH7eRWv3icWn/UKZAq537QVsKOavF2um7MoKY52rC4cuD3msxm8XX2PxJFeHSrNOj4CAc8RFPoGS2SQ==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.6.tgz"
+          }
+        },
+        "0.4.7": {
+          "version": "0.4.7",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "e5da74a7c12d66e1d1b980033a093cce286c0833",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-J6ieTnrHMomDa8ubVpuJ+AYwTP0ZFNH1ZGnHb+HFdXSGaWZMDdWpe+XlM2lZHVKBiZqo91qYL5ibuyICl2tP7A==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.7.tgz"
+          }
+        },
+        "0.4.8": {
+          "version": "0.4.8",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "d1efa4700ba65106134caa0b23ab21792f01a187",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-qRRCrlGaB9VWP/70Umae5PSPlE0/ZfTIGV0mimqS2Ddg8KrQzwJYnw/4u8cjSo79jb2y8ly2EzHPO0pxIscSfw==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.8.tgz"
+          }
+        },
+        "0.4.9": {
+          "version": "0.4.9",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+            "type": "git"
+          },
+          "gitHead": "cd3861d524c874c93394c663b32d6ae586a4a87a",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "awilix": "^12.1.1",
+            "@shopify/admin-api-client": "^1.1.2"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-YHoua+6pFFKJ2aAQK8a/+CWnhs6vQBhzPXqCQ/ibsjQa0kiXVpPnGan4ipK8qYryODhliPybaMokx+itfN8wxA==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.4.9.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "license": "MIT",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git"
+          },
+          "gitHead": "e1c17659c70365921d2193892c850543c156254c",
+          "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+          "maintainers": [
+            {
+              "name": "northboundrun"
+            }
+          ],
+          "peerDependencies": {
+            "@mikro-orm/postgresql": "^7.0.14",
+            "@open-mercato/core": ">=0.6.6 <0.7.0",
+            "@open-mercato/shared": ">=0.6.0 <0.7.0",
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0"
+          },
+          "dependencies": {
+            "@shopify/admin-api-client": "^1.1.2",
+            "awilix": "^12.1.1"
+          },
+          "scripts": {},
+          "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+          "dist": {
+            "integrity": "sha512-zRDFHwkpPgadT6qPciKmMig/fDYOXf469dklTZksrTfnmB1GNXXfm3nl+ZF6qNeiwlU0YxS2ZTcbfOtgRAdrgA==",
+            "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.5.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-07-21T00:40:24.318Z",
+        "modified": "2026-08-19T15:40:40.749Z",
+        "0.1.0": "2026-07-21T00:40:24.613Z",
+        "0.1.2": "2026-07-21T04:18:10.871Z",
+        "0.2.0": "2026-07-21T16:06:58.493Z",
+        "0.3.0": "2026-07-21T17:32:29.148Z",
+        "0.4.0": "2026-07-21T20:39:50.112Z",
+        "0.4.1": "2026-07-21T21:43:17.738Z",
+        "0.4.2": "2026-07-22T16:10:45.956Z",
+        "0.4.3": "2026-07-22T18:49:49.948Z",
+        "0.4.4": "2026-07-23T00:02:06.004Z",
+        "0.4.5": "2026-07-23T15:40:43.819Z",
+        "0.4.6": "2026-07-24T18:46:10.582Z",
+        "0.4.7": "2026-08-18T17:16:19.883Z",
+        "0.4.8": "2026-08-18T18:08:40.445Z",
+        "0.4.9": "2026-08-18T23:40:25.411Z",
+        "0.5.0": "2026-08-19T15:40:40.378Z"
+      },
+      "maintainers": [
+        {
+          "name": "northboundrun"
+        }
+      ],
+      "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Northbound-Run/open-mercato-shopify.git"
+      }
+    }
+  }
+}

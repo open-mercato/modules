@@ -1,0 +1,59 @@
+name: Listing request
+description: Ask a maintainer to list a module when you cannot open a pull request.
+title: "Listing request: "
+labels: [new-entry]
+body:
+  - type: markdown
+    attributes:
+      value: A pull request with one file in modules/ is faster. Use this form when that is not possible.
+  - type: input
+    id: package
+    attributes:
+      label: npm package or GitHub repository
+      description: For example @your-scope/your-module, or owner/repo for a module without an npm release.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - crm-sales
+        - catalog-pricing
+        - orders-checkout
+        - marketing-loyalty
+        - warehouse-shipping
+        - operations
+        - payments-finance
+        - localization-compliance
+        - integrations-sync
+        - communication
+        - ai-automation
+        - search-analytics
+        - auth-security
+        - content-portal
+        - storage-infrastructure
+        - devtools
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence in English, 20 to 140 characters, plain text.
+    validations:
+      required: true
+  - type: input
+    id: when-to-use
+    attributes:
+      label: When to use
+      description: Starts with "Use when ", 40 to 240 characters.
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I maintain this package or have the maintainer's consent.
+          required: true

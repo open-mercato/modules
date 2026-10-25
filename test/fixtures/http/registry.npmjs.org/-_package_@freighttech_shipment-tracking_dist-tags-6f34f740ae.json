@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@freighttech%2Fshipment-tracking/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.7.2"
+    }
+  }
+}

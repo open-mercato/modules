@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.npmjs.org/downloads/point/last-month/@fullstackhouse%2Fopen-mercato-data-sync-durable"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "downloads": 172,
+      "start": "2026-09-19",
+      "end": "2026-10-18",
+      "package": "@fullstackhouse/open-mercato-data-sync-durable"
+    }
+  }
+}

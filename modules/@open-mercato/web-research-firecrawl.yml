@@ -1,0 +1,12 @@
+npm: "@open-mercato/web-research-firecrawl"
+repo: open-mercato/open-mercato#main/packages/web-research-firecrawl
+kind: provider
+category: ai-automation
+tags: [web-search, scraping, ai]
+summary: Firecrawl adapter for web-research that returns page content inline with each search result.
+whenToUse: Use when agents must read whole pages, not just snippets, and you have a Firecrawl API key.
+providers:
+  - { name: firecrawl, label: Firecrawl }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

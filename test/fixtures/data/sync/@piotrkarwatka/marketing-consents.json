@@ -1,0 +1,64 @@
+{
+  "locator": "npm:@piotrkarwatka/marketing-consents",
+  "checkedAt": "2026-10-23T00:20:00Z",
+  "firstSeenAt": "2026-10-23T00:00:02Z",
+  "npm": {
+    "name": "@piotrkarwatka/marketing-consents",
+    "distTags": {
+      "latest": "0.1.0"
+    },
+    "latestStable": "0.1.0",
+    "previousStable": null,
+    "preview": null,
+    "publishedAt": {
+      "0.1.0": "2026-10-14T11:49:41Z"
+    },
+    "deprecated": null,
+    "license": "UNLICENSED",
+    "repositoryUrl": "git+https://github.com/pkarw/marketing-consents.git",
+    "gitHead": null,
+    "keywords": [],
+    "maintainers": ["piotrkarwatka"],
+    "peerDependencies": {
+      "next": "16.3.6",
+      "react": "19.2.8",
+      "@open-mercato/ui": "0.9.0",
+      "@open-mercato/core": "0.9.0",
+      "@open-mercato/shared": "0.9.0",
+      "@mikro-orm/decorators": "7.2.3",
+      "@mikro-orm/migrations": "7.2.3",
+      "@mikro-orm/postgresql": "7.2.3"
+    },
+    "dependencies": {
+      "zod": "4.4.3",
+      "@tanstack/react-query": "5.104.1",
+      "@tanstack/react-table": "9.2.6"
+    },
+    "installScripts": [],
+    "integrity": "sha512-ByUXs82VmoFMQa6c7kgE1yhKDBH9MNhZoMvTnkpU0ORD4KxHyv4/fQGUXOzmiUnfU6+Zsc4H1hncG7GbnaE2ig==",
+    "tarball": "https://registry.npmjs.org/@piotrkarwatka/marketing-consents/-/marketing-consents-0.1.0.tgz"
+  },
+  "github": {
+    "repo": "pkarw/marketing-consents",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-14T13:23:01Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": null,
+    "topics": [],
+    "ownerType": "User",
+    "tags": []
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository owner pkarw is listed in policy/community.yml.",
+  "downloads30d": 21,
+  "errors": []
+}

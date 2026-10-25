@@ -1,0 +1,1446 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "dataAsOf": {
+    "nightly": "2026-10-23T02:17:00Z",
+    "npm": "2026-10-23T00:17:00Z",
+    "source": "ci"
+  },
+  "lines": [
+    {
+      "key": "0.9",
+      "version": "0.9.0",
+      "source": "latest",
+      "cadence": "nightly",
+      "baseline": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.9.0",
+        "moduleVersion": null,
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_d509ddf9fe1a",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": []
+      },
+      "isolationBaseline": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.9.0",
+        "moduleVersion": null,
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_ab33b4e8d8a1",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": [
+          "api-keys"
+        ]
+      },
+      "defaultPreset": "classic",
+      "presets": {
+        "classic": [
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "perspectives",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "catalog",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sales",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "warranty_claims",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "wms",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_keys",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "devices",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dictionaries",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "business_rules",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "feature_toggles",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "workflows",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "currencies",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "planner",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "resources",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "staff",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "progress",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "integrations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "data_sync",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sync_excel",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "messages",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "communication_channels",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "push_notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "phone_calls",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "translations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "inbox_ops",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "payment_gateways",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "shipping_carriers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "eudr",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customer_accounts",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "portal",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "content",
+            "from": "@open-mercato/content"
+          },
+          {
+            "id": "onboarding",
+            "from": "@open-mercato/onboarding"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "ai_assistant",
+            "from": "@open-mercato/ai-assistant"
+          },
+          {
+            "id": "scheduler",
+            "from": "@open-mercato/scheduler"
+          },
+          {
+            "id": "checkout",
+            "from": "@open-mercato/checkout"
+          },
+          {
+            "id": "documents",
+            "from": "@open-mercato/documents"
+          },
+          {
+            "id": "gateway_stripe",
+            "from": "@open-mercato/gateway-stripe"
+          },
+          {
+            "id": "channel_resend",
+            "from": "@open-mercato/channel-resend"
+          },
+          {
+            "id": "channel_ses",
+            "from": "@open-mercato/channel-ses"
+          },
+          {
+            "id": "channel_imap",
+            "from": "@open-mercato/channel-imap"
+          },
+          {
+            "id": "channel_gmail",
+            "from": "@open-mercato/channel-gmail"
+          },
+          {
+            "id": "channel_apns",
+            "from": "@open-mercato/channel-apns"
+          },
+          {
+            "id": "channel_expo",
+            "from": "@open-mercato/channel-expo"
+          },
+          {
+            "id": "channel_fcm",
+            "from": "@open-mercato/channel-fcm"
+          },
+          {
+            "id": "sync_akeneo",
+            "from": "@open-mercato/sync-akeneo"
+          },
+          {
+            "id": "tillio",
+            "from": "@open-mercato/tillio"
+          },
+          {
+            "id": "webhooks",
+            "from": "@open-mercato/webhooks"
+          },
+          {
+            "id": "telemetry",
+            "from": "@open-mercato/telemetry"
+          }
+        ],
+        "empty": [
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          }
+        ]
+      }
+    },
+    {
+      "key": "0.8",
+      "version": "0.8.0",
+      "source": "previous",
+      "cadence": "weekly",
+      "baseline": null,
+      "isolationBaseline": null,
+      "defaultPreset": "classic",
+      "presets": {
+        "classic": [
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "perspectives",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "catalog",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sales",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "warranty_claims",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "wms",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_keys",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "devices",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dictionaries",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "business_rules",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "feature_toggles",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "workflows",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "currencies",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "planner",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "resources",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "staff",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "progress",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "integrations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "data_sync",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sync_excel",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "messages",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "communication_channels",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "push_notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "phone_calls",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "translations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "inbox_ops",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "payment_gateways",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "shipping_carriers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "eudr",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customer_accounts",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "portal",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "content",
+            "from": "@open-mercato/content"
+          },
+          {
+            "id": "onboarding",
+            "from": "@open-mercato/onboarding"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "ai_assistant",
+            "from": "@open-mercato/ai-assistant"
+          },
+          {
+            "id": "scheduler",
+            "from": "@open-mercato/scheduler"
+          },
+          {
+            "id": "checkout",
+            "from": "@open-mercato/checkout"
+          },
+          {
+            "id": "documents",
+            "from": "@open-mercato/documents"
+          },
+          {
+            "id": "gateway_stripe",
+            "from": "@open-mercato/gateway-stripe"
+          },
+          {
+            "id": "channel_resend",
+            "from": "@open-mercato/channel-resend"
+          },
+          {
+            "id": "channel_ses",
+            "from": "@open-mercato/channel-ses"
+          },
+          {
+            "id": "channel_imap",
+            "from": "@open-mercato/channel-imap"
+          },
+          {
+            "id": "channel_gmail",
+            "from": "@open-mercato/channel-gmail"
+          },
+          {
+            "id": "channel_apns",
+            "from": "@open-mercato/channel-apns"
+          },
+          {
+            "id": "channel_expo",
+            "from": "@open-mercato/channel-expo"
+          },
+          {
+            "id": "channel_fcm",
+            "from": "@open-mercato/channel-fcm"
+          },
+          {
+            "id": "sync_akeneo",
+            "from": "@open-mercato/sync-akeneo"
+          },
+          {
+            "id": "tillio",
+            "from": "@open-mercato/tillio"
+          },
+          {
+            "id": "webhooks",
+            "from": "@open-mercato/webhooks"
+          }
+        ],
+        "empty": [
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          }
+        ]
+      }
+    },
+    {
+      "key": "next",
+      "version": "0.10.1-develop.7583.1.0c886d0a14",
+      "source": "develop",
+      "cadence": "nightly",
+      "baseline": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+        "moduleVersion": null,
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_e3fb888fa365",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": []
+      },
+      "isolationBaseline": {
+        "status": "verified",
+        "step": null,
+        "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+        "moduleVersion": null,
+        "at": "2026-10-23T02:17:00Z",
+        "receipt": "r_20261023_53a00a7b1ef8",
+        "since": "2026-10-23",
+        "precheck": null,
+        "patches": []
+      },
+      "defaultPreset": "classic",
+      "presets": {
+        "classic": [
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "perspectives",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "catalog",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sales",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "warranty_claims",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "wms",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_keys",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "devices",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dictionaries",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "business_rules",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "feature_toggles",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "workflows",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "currencies",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "planner",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "resources",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "staff",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "progress",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "integrations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "data_sync",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "sync_excel",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "messages",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "communication_channels",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "push_notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "phone_calls",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "translations",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "inbox_ops",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "payment_gateways",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "shipping_carriers",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "eudr",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "customer_accounts",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "portal",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "content",
+            "from": "@open-mercato/content"
+          },
+          {
+            "id": "onboarding",
+            "from": "@open-mercato/onboarding"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "ai_assistant",
+            "from": "@open-mercato/ai-assistant"
+          },
+          {
+            "id": "scheduler",
+            "from": "@open-mercato/scheduler"
+          },
+          {
+            "id": "checkout",
+            "from": "@open-mercato/checkout"
+          },
+          {
+            "id": "documents",
+            "from": "@open-mercato/documents"
+          },
+          {
+            "id": "gateway_stripe",
+            "from": "@open-mercato/gateway-stripe"
+          },
+          {
+            "id": "channel_resend",
+            "from": "@open-mercato/channel-resend"
+          },
+          {
+            "id": "channel_ses",
+            "from": "@open-mercato/channel-ses"
+          },
+          {
+            "id": "channel_imap",
+            "from": "@open-mercato/channel-imap"
+          },
+          {
+            "id": "channel_gmail",
+            "from": "@open-mercato/channel-gmail"
+          },
+          {
+            "id": "channel_apns",
+            "from": "@open-mercato/channel-apns"
+          },
+          {
+            "id": "channel_expo",
+            "from": "@open-mercato/channel-expo"
+          },
+          {
+            "id": "channel_fcm",
+            "from": "@open-mercato/channel-fcm"
+          },
+          {
+            "id": "sync_akeneo",
+            "from": "@open-mercato/sync-akeneo"
+          },
+          {
+            "id": "tillio",
+            "from": "@open-mercato/tillio"
+          },
+          {
+            "id": "webhooks",
+            "from": "@open-mercato/webhooks"
+          },
+          {
+            "id": "telemetry",
+            "from": "@open-mercato/telemetry"
+          }
+        ],
+        "empty": [
+          {
+            "id": "auth",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "configs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "entities",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "query_index",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_docs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "audit_logs",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "notifications",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "dashboards",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "events",
+            "from": "@open-mercato/events"
+          },
+          {
+            "id": "search",
+            "from": "@open-mercato/search"
+          },
+          {
+            "id": "attachments",
+            "from": "@open-mercato/core"
+          },
+          {
+            "id": "api_keys",
+            "from": "@open-mercato/core"
+          }
+        ]
+      }
+    }
+  ],
+  "baseline": {
+    "0.9": {
+      "status": "verified",
+      "step": null,
+      "omVersion": "0.9.0",
+      "moduleVersion": null,
+      "at": "2026-10-23T02:17:00Z",
+      "receipt": "r_20261023_d509ddf9fe1a",
+      "since": "2026-10-23",
+      "precheck": null,
+      "patches": []
+    },
+    "next": {
+      "status": "verified",
+      "step": null,
+      "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+      "moduleVersion": null,
+      "at": "2026-10-23T02:17:00Z",
+      "receipt": "r_20261023_e3fb888fa365",
+      "since": "2026-10-23",
+      "precheck": null,
+      "patches": []
+    }
+  },
+  "isolationBaseline": {
+    "0.9": {
+      "status": "verified",
+      "step": null,
+      "omVersion": "0.9.0",
+      "moduleVersion": null,
+      "at": "2026-10-23T02:17:00Z",
+      "receipt": "r_20261023_ab33b4e8d8a1",
+      "since": "2026-10-23",
+      "precheck": null,
+      "patches": [
+        "api-keys"
+      ]
+    },
+    "next": {
+      "status": "verified",
+      "step": null,
+      "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+      "moduleVersion": null,
+      "at": "2026-10-23T02:17:00Z",
+      "receipt": "r_20261023_53a00a7b1ef8",
+      "since": "2026-10-23",
+      "precheck": null,
+      "patches": []
+    }
+  },
+  "rows": [
+    {
+      "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",
+      "path": "@fullstackhouse/open-mercato-data-sync-durable",
+      "title": "Durable Data Sync",
+      "version": "0.6.0",
+      "builtFor": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "lines": []
+      },
+      "cells": {
+        "0.9": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        }
+      }
+    },
+    {
+      "locator": "npm:@fullstackhouse/open-mercato-durable-work",
+      "path": "@fullstackhouse/open-mercato-durable-work",
+      "title": "Durable Work",
+      "version": "0.6.0",
+      "builtFor": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "lines": []
+      },
+      "cells": {
+        "0.9": {
+          "status": "verified",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": "0.6.0",
+          "at": "2026-10-23T02:17:00Z",
+          "receipt": "r_20261023_1ab9a9b55874",
+          "since": "2026-10-23",
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "drift"
+        }
+      }
+    },
+    {
+      "locator": "npm:@open-mercato/enterprise",
+      "path": "@open-mercato/enterprise",
+      "title": "Enterprise",
+      "version": "0.9.0",
+      "builtFor": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "lines": [
+          "0.9"
+        ],
+        "ranges": {
+          "0.9": "0.9.0",
+          "next": "0.9.0"
+        }
+      },
+      "cells": {
+        "0.9": {
+          "status": "skipped",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "skipped",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "next": {
+          "status": "skipped",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        }
+      }
+    },
+    {
+      "locator": "npm:@fastwhitecat/integration-ksef-direct",
+      "path": "@fastwhitecat/integration-ksef-direct",
+      "title": "KSeF Integration",
+      "version": "0.1.8",
+      "builtFor": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "lines": []
+      },
+      "cells": {
+        "0.9": {
+          "status": "verified",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": "0.1.8",
+          "at": "2026-10-23T02:17:00Z",
+          "receipt": "r_20261023_eb0bba415853",
+          "since": "2026-10-23",
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "next": {
+          "status": "verified",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": "0.1.8",
+          "at": "2026-10-23T02:17:00Z",
+          "receipt": "r_20261023_4f12b867366e",
+          "since": "2026-10-23",
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        }
+      }
+    },
+    {
+      "locator": "npm:@piotrkarwatka/marketing-consents",
+      "path": "@piotrkarwatka/marketing-consents",
+      "title": "Marketing Consents",
+      "version": "0.1.0",
+      "builtFor": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "lines": [
+          "0.9"
+        ]
+      },
+      "cells": {
+        "0.9": {
+          "status": "broken",
+          "step": "typecheck",
+          "omVersion": "0.9.0",
+          "moduleVersion": "0.1.0",
+          "at": "2026-10-23T02:17:00Z",
+          "receipt": "r_20261023_4f0dc1d63104",
+          "since": "2026-10-23",
+          "precheck": null,
+          "patches": [],
+          "finding": "Typecheck failed: TS2321 Excessive stack depth comparing types '{ title: string; titleHeadingLevel: 1; columns: LegacyColumnDef<ConsentRow>[]; data: ConsentRow[]; ...' and 'IntrinsicAttributes & Data…",
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "no-fit"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "drift"
+        }
+      }
+    },
+    {
+      "locator": "npm:@open-mercato/gateway-stripe",
+      "path": "@open-mercato/gateway-stripe",
+      "title": "Stripe Payment Gateway",
+      "version": "0.9.0",
+      "builtFor": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "lines": [
+          "0.9"
+        ],
+        "ranges": {
+          "0.9": "0.9.0"
+        }
+      },
+      "cells": {
+        "0.9": {
+          "status": "verified",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": "0.9.0",
+          "at": "2026-10-23T02:17:00Z",
+          "receipt": "r_20261023_9ef53ea30473",
+          "since": "2026-10-23",
+          "precheck": null,
+          "patches": [],
+          "fit": "ok"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        }
+      },
+      "inPresets": [
+        "0.8",
+        "0.9",
+        "next"
+      ],
+      "ships": {
+        "0.9": "0.9.0",
+        "0.8": "0.8.0",
+        "next": "0.10.1-develop.7583.1.0c886d0a14"
+      }
+    },
+    {
+      "locator": "npm:@open-mercato/gateway-tpay",
+      "path": "@open-mercato/gateway-tpay",
+      "title": "Tpay Payment Gateway",
+      "version": "0.8.1-develop.7442.1.4c1dbf1f0e",
+      "builtFor": {
+        "range": null,
+        "kind": "missing",
+        "lines": []
+      },
+      "cells": {
+        "0.9": {
+          "status": "skipped",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "0.8": {
+          "status": "skipped",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        }
+      }
+    },
+    {
+      "locator": "github:Chmarusso/open-mercato-enrichment-treg",
+      "path": "github/chmarusso/open-mercato-enrichment-treg",
+      "title": "treg.to Enrichment",
+      "version": null,
+      "builtFor": {
+        "range": null,
+        "kind": "missing",
+        "lines": []
+      },
+      "cells": {
+        "0.9": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.9.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "0.8": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.8.0",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        },
+        "next": {
+          "status": "untested",
+          "step": null,
+          "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+          "moduleVersion": null,
+          "at": null,
+          "receipt": null,
+          "since": null,
+          "precheck": null,
+          "patches": [],
+          "fit": "unknown"
+        }
+      }
+    }
+  ],
+  "peersRejectFitting": {
+    "rejected": 11,
+    "fitting": 14
+  }
+}

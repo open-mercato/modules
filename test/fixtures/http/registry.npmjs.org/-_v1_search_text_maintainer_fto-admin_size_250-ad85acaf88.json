@@ -1,0 +1,141 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Afto-admin&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 708,
+            "weekly": 13
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T18:46:24.385Z",
+          "searchScore": 39.09456,
+          "package": {
+            "name": "@freighttech/ui",
+            "keywords": [],
+            "version": "0.14.9",
+            "description": "Composable UI toolkit for Open Mercato backoffice and business apps, maintained by [FreightTech.org](https://freighttech.org).",
+            "sanitized_name": "@freighttech/ui",
+            "publisher": {
+              "email": "admin@freighttech.org",
+              "username": "fto-admin"
+            },
+            "maintainers": [
+              {
+                "email": "admin@freighttech.org",
+                "username": "fto-admin"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-07T17:00:24.800Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@freighttech/ui"
+            }
+          },
+          "score": {
+            "final": 39.09456,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 495,
+            "weekly": 11
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T08:31:12.267Z",
+          "searchScore": 35.87378,
+          "package": {
+            "name": "@freighttech/terminal-tracking",
+            "keywords": [],
+            "version": "0.7.3",
+            "description": "Container-terminal tracking for the FreightTech FMS. Polls container terminal APIs (Navis **N4** family; Baltic Hub / BCT Gdańsk first), normalizes the results into events, and emits them — with per-terminal runtime configuration, periodic polling, and te",
+            "sanitized_name": "@freighttech/terminal-tracking",
+            "publisher": {
+              "email": "admin@freighttech.org",
+              "username": "fto-admin"
+            },
+            "maintainers": [
+              {
+                "email": "admin@freighttech.org",
+                "username": "fto-admin"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-08T08:23:19.809Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@freighttech/terminal-tracking"
+            }
+          },
+          "score": {
+            "final": 35.87378,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 355,
+            "weekly": 20
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T19:46:18.865Z",
+          "searchScore": 32.96241,
+          "package": {
+            "name": "@freighttech/shipment-tracking",
+            "keywords": [],
+            "version": "0.7.2",
+            "description": "Carrier shipment tracking for the Open Mercato platform — DCSA carrier adapters (Maersk, MSC, CMA CGM, Hapag-Lloyd, ZIM, COSCO, Evergreen), a ShipsGo aggregator fallback, a Journey Timeline, and an optional live vessel/POI map.",
+            "sanitized_name": "@freighttech/shipment-tracking",
+            "publisher": {
+              "email": "admin@freighttech.org",
+              "username": "fto-admin"
+            },
+            "maintainers": [
+              {
+                "email": "admin@freighttech.org",
+                "username": "fto-admin"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-24T19:26:05.384Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@freighttech/shipment-tracking"
+            }
+          },
+          "score": {
+            "final": 32.96241,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 3,
+      "time": "2026-10-23T02:38:13.774Z"
+    }
+  }
+}

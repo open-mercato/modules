@@ -1,0 +1,39 @@
+# Test copy of spec 11.3 (the real policy/ignore.yml belongs to WP03).
+- {
+    locator: "npm:@fast-white-cat/integration-ksef-direct",
+    reason: "old name of @fastwhitecat/integration-ksef-direct",
+  }
+- { locator: "npm:@sensinum/strapi-plugin-open-mercato", reason: "Strapi plugin, not an Open Mercato module" }
+- { locator: "npm:n8n-nodes-open-mercato", reason: "n8n integration, not a module" }
+- { locator: "github:open-mercato/n8n-nodes", reason: "n8n integration, not a module" }
+- { locator: "npm:@softiq/tokscale-om", reason: "unrelated package" }
+- { locator: "npm:opencode-mercato", reason: "unrelated package" }
+- { locator: "npm:@cyberhub/trust-open-mercato-core", reason: "generated spam report" }
+- {
+    locator: "github:michalper/open-mercato-marketing-automation",
+    reason: "fork of the monorepo; code goes to core (#6749)",
+  }
+- { locator: "github:dainamite-technologies/dainamite-core", reason: "demo application modules" }
+- { locator: "npm:@open-mercato/shared", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/ui", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/cli", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/cache", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/queue", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/starter", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/client", reason: "framework infrastructure, not a module" }
+- { locator: "npm:@open-mercato/test-package", reason: "framework infrastructure, not a module" }
+- { locator: "npm:create-mercato-app", reason: "framework tooling, not a module" }
+- { locator: "npm:@open-mercato/cezar*", reason: "framework tooling, not a module" }
+- { locator: "npm:cezar-cli", reason: "framework tooling, not a module" }
+- { locator: "npm:cezar-run", reason: "framework tooling, not a module" }
+- { locator: "npm:@pat-lewczuk/cezar", reason: "framework tooling, not a module" }
+- { locator: "npm:mercato-sandbox", reason: "framework tooling, not a module" }
+- { locator: "github:matgren/oss-prm", reason: "application, not a published module" }
+- { locator: "github:open-mercato/ready-app-oss-prm", reason: "application, not a published module" }
+- { locator: "github:open-mercato/need-termin", reason: "application, not a published module" }
+- { locator: "github:evojam/blueprint-2-quote", reason: "application, not a published module" }
+- { locator: "github:jkojro/itad-poc", reason: "application, not a published module" }
+- { locator: "github:RadnoK/open-mercato-open-logistico", reason: "application, not a published module" }
+- { locator: "github:matchojecki/logistiko-celny", reason: "application, not a published module" }
+- { locator: "github:itrix-Open-Mercato/open_logistiko", reason: "application, not a published module" }
+- { locator: "github:FreightTech/open-mercato-modules", reason: "application, not a published module" }

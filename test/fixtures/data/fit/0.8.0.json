@@ -1,0 +1,85 @@
+{
+  "om": "0.8.0",
+  "computedAt": "2026-10-23T00:17:00Z",
+  "cells": {
+    "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+      "status": "ok",
+      "checked": 38,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+      "status": "no-fit",
+      "checked": 53,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/encryption/migration-backfill",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+      "status": "ok",
+      "checked": 7,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+      "status": "ok",
+      "checked": 105,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-stripe@0.9.0": {
+      "status": "ok",
+      "checked": 50,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/enterprise@0.9.0": {
+      "status": "no-fit",
+      "checked": 350,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    }
+  }
+}

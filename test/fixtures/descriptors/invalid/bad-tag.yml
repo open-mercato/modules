@@ -1,0 +1,6 @@
+# expect-path: tags
+npm: "@acme/thing"
+category: devtools
+tags: [Commerce]
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when a tag has upper case letters, which the pattern forbids.

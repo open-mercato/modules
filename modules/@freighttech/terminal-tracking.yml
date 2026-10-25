@@ -1,0 +1,12 @@
+# No github field: the npm package repository.url points to the monorepo; repo gives the package path.
+
+npm: "@freighttech/terminal-tracking"
+repo: FreightTech/open-mercato-modules#main/packages/terminal-tracking
+category: warehouse-shipping
+tags: [containers, terminals, tracking, ports]
+summary: Polls container terminal APIs (Navis N4, GCT and BCT in Gdynia) and turns container moves into tracking events.
+whenToUse: Use when you need gate-in, discharge and departure times for containers at Navis N4 terminals or the Gdynia terminals.
+providers:
+  - { name: navis-n4, label: Navis N4 }
+  - { name: gct, label: Gdynia Container Terminal }
+  - { name: bct, label: BCT Gdynia }

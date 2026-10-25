@@ -1,0 +1,8 @@
+npm: "@dainamite/billing"
+github: dainamite-technologies/dainamite-core
+repo: dainamite-technologies/dainamite-core#main/packages/billing
+category: payments-finance
+tags: [billing, subscriptions, invoices, usage]
+summary: "Recurring billing: one-time, recurring and usage items, scheduled bill runs and draft invoices in sales for approval."
+whenToUse: Use when you charge subscriptions or metered usage and want draft invoices in the app before anything is posted.
+whenNotToUse: "It does not replace your accounting system: it prepares invoices for a person to approve."

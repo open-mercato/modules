@@ -1,0 +1,11 @@
+npm: "@open-mercato/sync-akeneo"
+repo: open-mercato/open-mercato#main/packages/sync-akeneo
+category: integrations-sync
+tags: [pim, products, import]
+summary: Imports categories, product attributes and products from Akeneo PIM into the catalog, on demand or on a schedule.
+whenToUse: Use when product data is mastered in Akeneo PIM and the app catalog must follow it.
+whenNotToUse: "Import only: changes made in Open Mercato do not go back to Akeneo."
+providers:
+  - { name: akeneo, label: Akeneo PIM }
+links:
+  docs: https://docs.openmercato.com/user-guide/akeneo-pim

@@ -1,0 +1,6 @@
+npm: "@northbound-run/sync-shopify"
+category: integrations-sync
+summary: Syncs products, prices, customers and orders from a Shopify store.
+whenToUse: Use when an existing Shopify store must feed its catalog and orders into the app.
+providers:
+  - { name: shopify, label: Shopify }

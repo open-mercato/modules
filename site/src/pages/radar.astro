@@ -1,0 +1,427 @@
+---
+// /radar (spec 7.7 E, D14, D33): what the next Open Mercato snapshot changes for the modules outside the
+// @open-mercato scope, from radar/next.json and surface.json. No island; copy goes through [data-copy].
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import Base from '../layouts/Base.astro'
+import RadarTables from '../components/RadarTables.astro'
+import RadarText from './_radar-tables.astro'
+import EmptyState from '../components/EmptyState.astro'
+import Icon from '../components/icons/Icon.astro'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { day, shortVersion } from '../lib/format.ts'
+import { href } from '../lib/url.ts'
+import { isPreviewData } from '../lib/freshness.ts'
+import { PREVIEW_CHIP } from '../../../lib/core/source.ts'
+
+const data = loadSiteData()
+const { radar, surface, meta } = data
+const mdFile = join(data.root, 'public', 'radar', 'next.md')
+const markdown = existsSync(mdFile) ? readFileSync(mdFile, 'utf8') : null
+const nextLine = data.modules.lines.find((l) => l.source === 'develop') ?? null
+const description = radar
+  ? radar.summary
+  : 'What the next Open Mercato snapshot changes for the modules in the catalog, read statically from their code.'
+// The summary is prose with versions in it. Its first sentence is the lead; the counts it repeats (static breaks,
+// receipts on next) become a mono stat strip from the same fields, so no sentence starts with a digit on the page.
+const sentences = radar ? radar.summary.split(/(?<=\.)\s+(?=\S)/) : []
+const lead = sentences[0] ?? ''
+const rest = sentences.slice(1).filter((x) => !/break statically\.$|^Receipts on next:/.test(x))
+// One population on the page: the radar counts every module outside the scope (npm and GitHub-only); surface.json
+// counts npm packages. The difference is named, never left as two denominators.
+const top = radar ? ([...radar.loadBearing].sort((a, b) => b.modules - a.modules)[0] ?? null) : null
+const population = top?.of ?? null
+/**
+ * `7 verified · 8 broken · 1 queued of 16`: every module of the population in one state, so the parts sum up (review
+ * r9: `7 verified · 8 broken of 16` left the sixteenth unnamed). Zero parts other than verified and broken are left out.
+ */
+function tileText(): string {
+  const t = meta.radarNext
+  if (!radar) return ''
+  if (!t) return `${radar.receiptsOnNext.verified} verified · ${radar.receiptsOnNext.broken} broken`
+  const parts = [
+    `${t.verified} verified`,
+    `${t.broken} broken`,
+    ...(t.quarantine ? [`${t.quarantine} not judged (age gate)`] : []),
+    ...(t.notJudged ? [`${t.notJudged} not judged`] : []),
+    ...(t.queued ? [`${t.queued} queued`] : []),
+    ...(t.skipped ? [`${t.skipped} skipped`] : []),
+  ]
+  return `${parts.join(' · ')} of ${t.population}`
+}
+const stats = radar
+  ? [
+      { k: 'Static breaks', v: String(radar.staticBreaks.length) },
+      { k: 'Same failure in several modules', v: String(radar.sameFailure.length) },
+      {
+        // receipts from a preview run say so here too (round 5), with the one chip (review r6); counted over the
+        // modules of the lead sentence (lib/emit/radar.ts radarRows), not over the official ones too
+        // the scope in the label (review r8: `7 verified · 8 broken` beside the hero's `27 verified · 10 broken` on next
+        // read as a contradiction): the radar counts the modules outside @open-mercato only
+        k: `Receipts on next · outside @open-mercato${isPreviewData(meta.dataAsOf) ? ` · ${PREVIEW_CHIP}` : ''}`,
+        // before any receipt on next the tile says when they come, not two zeros that read like a result
+        v:
+          radar.receiptsOnNext.verified + radar.receiptsOnNext.broken === 0
+            ? meta.firstNight
+              ? 'after the first night'
+              : 'queued'
+            : tileText(),
+      },
+    ]
+  : []
+const changedSymbols = new Map((radar?.changedApis ?? []).map((c) => [c.symbol, c.change]))
+// "@open-mercato" never breaks at its hyphen
+const nwHtml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/@open-mercato/g, '<span class="nw">@open-mercato</span>')
+const githubOnly = population !== null && surface ? Math.max(0, population - surface.externalPackages) : 0
+const symbolName = (s: string): string => s.slice(s.lastIndexOf('#') + 1)
+const symbolPkg = (s: string): string => s.slice(0, s.lastIndexOf('#'))
+// an empty table is said once, in the stat strip; only Changed APIs has no number there
+const noChanges = radar !== null && radar.changedApis.length === 0
+---
+
+<Base title="Radar · Open Mercato Modules" description={description} path="/radar" dataAsOf={meta.dataAsOf}>
+  <section class="band">
+    <div class="sheet section rd-head">
+      <div class="rd-copy">
+        <p class="t-tagline">
+          // Release radar
+          {
+            radar ? (
+              <>
+                {' '}· next = <code class="nw" title={radar.next}>{shortVersion(radar.next)}</code> · computed{' '}
+                {day(radar.generatedAt)}
+              </>
+            ) : null
+          }
+        </p>
+        <h1 class="rd-title">What the next snapshot changes.</h1>
+        {
+          radar ? (
+            <div class="rd-summary">
+              <p class="rd-sent rd-sent--lead" set:html={nwHtml(lead)} />
+              {rest.map((x) => <p class="rd-sent" set:html={nwHtml(x)} />)}
+              <dl class="rd-stats">
+                {stats.map((x) => (
+                  <div>
+                    <dt>{x.k}</dt>
+                    <dd class="num">{x.v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : (
+            <p class="rd-summary">The radar appears after the first static fit against the next snapshot.</p>
+          )
+        }
+        <p class="rd-lede">
+          Every import of every module outside the <code class="nw">@open-mercato</code> scope, checked against the
+          published Open Mercato {radar?.base ?? meta.coreVersion} packages and against next
+          {nextLine ? <> (<code class="nw" title={nextLine.version}>{shortVersion(nextLine.version)}</code>)</> : null}.
+          Static: no module code runs here. A changed signature can still compile; {isPreviewData(meta.dataAsOf)
+            ? 'the receipts on next tell. Until nightly CI starts, they come from a preview run.'
+            : 'the nightly receipts on next tell.'}
+        </p>
+        {
+          radar && (
+            <div class="rd-actions">
+              {markdown && (
+                <button type="button" class="btn btn--secondary" data-copy={markdown} data-copied="Radar copied as markdown">
+                  <Icon name="copy" size={16} /> Copy as markdown
+                </button>
+              )}
+              <a class="btn btn--ghost" href={href('/radar/next.md')}>
+                radar/next.md
+              </a>
+              <a class="btn btn--ghost" href={href('/surface.json')}>
+                surface.json
+              </a>
+            </div>
+          )
+        }
+      </div>
+      {
+        top && (
+          <figure class="rd-gauge" aria-label={`${symbolName(top.symbol)} is imported by ${top.modules} of ${top.of} modules`}>
+            <p class="rd-gauge__num">
+              <span class="num">{top.modules}</span>
+              <span class="rd-gauge__of">of {top.of}</span>
+            </p>
+            <span class="rd-gauge__bar" style={`--v:${top.of ? top.modules / top.of : 0}`} aria-hidden="true"><i /></span>
+            <figcaption>
+              modules import <code>{symbolName(top.symbol)}</code>
+              <span class="rd-gauge__pkg">{symbolPkg(top.symbol)}</span>
+            </figcaption>
+          </figure>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    radar ? (
+      <section class="band" aria-labelledby="rd-tables">
+        <div class="sheet section rd-body">
+          {/* the tables' own headings are h3: a heading of this section keeps the outline h1, h2, h3 (review r4) */}
+          <h2 class="sr-only" id="rd-tables">
+            Radar tables
+          </h2>
+          {noChanges && <p class="rd-status">No API used by a listed module changed since {radar.base}.</p>}
+          <div class="rd-tables">
+            <RadarText changed={changedSymbols}>
+              <RadarTables radar={radar} />
+            </RadarText>
+          </div>
+        </div>
+      </section>
+    ) : (
+      <section class="band">
+        <div class="sheet section">
+          <EmptyState title="No radar yet." text="It is computed by the watch run from the static fit on next." />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    surface && (
+      <section class="band" aria-labelledby="rd-surface">
+        <div class="sheet section rd-surface">
+          <p class="t-tagline">// Surface</p>
+          <h2 id="rd-surface">The Open Mercato API the ecosystem stands on.</h2>
+          <p class="rd-lede">
+            <span class="num">{surface.symbols.length}</span> symbols of Open Mercato {surface.base} are imported by the{' '}
+            <span class="num">{surface.externalPackages}</span> npm packages outside the <code class="nw">@open-mercato</code> scope.
+            {
+              githubOnly > 0 && (
+                <>
+                  {' '}The radar above also reads {githubOnly} {githubOnly === 1 ? 'module' : 'modules'} published only on
+                  GitHub, so its counts are out of {population}.
+                </>
+              )
+            }{' '}
+            The full list per symbol is in <a href={href('/surface.json')}>surface.json</a>, for backward compatibility
+            reviews of the core.
+          </p>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .rd-head {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: 24px 48px;
+    align-items: start;
+    padding-bottom: 48px;
+  }
+  .rd-copy,
+  .rd-surface,
+  .rd-body {
+    display: grid;
+    gap: 16px;
+  }
+  .rd-body {
+    padding-top: 48px;
+  }
+  .rd-title {
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .rd-summary {
+    display: grid;
+    gap: 12px;
+    max-width: 60ch;
+  }
+  /* the counts of the summary as a mono stat strip under the lead */
+  .rd-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin: 0;
+  }
+  .rd-stats div {
+    display: grid;
+    gap: 2px;
+  }
+  .rd-stats dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .rd-stats dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+  .rd-sent {
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .rd-sent--lead {
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .rd-lede {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  .rd-lede code {
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+  .rd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .rd-actions .btn--ghost {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 13px;
+  }
+  /* the instrument of the header: the most load-bearing symbol, out of the same population as the tables */
+  .rd-gauge {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+  }
+  .rd-gauge__num {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .rd-gauge__num .num {
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .rd-gauge__of {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--ink-2);
+  }
+  .rd-gauge__bar {
+    height: 4px;
+    background: var(--bg-3);
+    overflow: hidden;
+  }
+  .rd-gauge__bar i {
+    display: block;
+    height: 100%;
+    width: calc(var(--v) * 100%);
+    background: var(--ink);
+  }
+  .rd-gauge figcaption {
+    display: grid;
+    gap: 2px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .rd-gauge figcaption code {
+    color: var(--ink);
+  }
+  .rd-gauge__pkg {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  .rd-status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+  /* RadarTables (WP11): empty tables are said once in the status line; the rest run the full width */
+  .rd-tables :global(.radar) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rd-tables :global(.radar__block:has(> .radar__empty)) {
+    display: none;
+  }
+  /* two symbols of the same name in different files: the path comes first, so the rows tell them apart */
+  .rd-tables :global(.radar__sym .radar__pkg) {
+    order: -1;
+  }
+  /* a load-bearing API that changed carries the change chip next to its name */
+  .rd-tables :global(.rd-chg) {
+    justify-self: start;
+    align-self: start;
+    margin-top: 4px;
+    padding: 1px 6px;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-s);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--wait-ink);
+  }
+  .rd-tables :global(.rd-meter--changed .radar__name) {
+    font-weight: 600;
+  }
+  .rd-tables :global(.rd-n--changed) {
+    color: var(--wait-ink);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  /* the meter sits next to its symbol, not across the full width of the block */
+  @media (min-width: 768px) {
+    .rd-tables :global(.radar__meter) {
+      grid-template-columns: minmax(0, 520px) 160px 64px;
+      justify-content: start;
+    }
+  }
+  /* "Used by": quiet mono links, underlined on hover only */
+  .rd-tables :global(.radar__mods a) {
+    font-family: var(--font-mono);
+    text-decoration: none;
+  }
+  .rd-tables :global(.radar__mods a:hover) {
+    text-decoration: underline;
+  }
+  @media (max-width: 991px) {
+    .rd-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .rd-head {
+      padding-bottom: 32px;
+    }
+    .rd-body {
+      padding-top: 32px;
+    }
+    .rd-actions .btn {
+      min-height: 44px;
+    }
+  }
+  @media (max-width: 479px) {
+    .rd-sent--lead {
+      font-size: 19px;
+    }
+    .rd-gauge__num .num {
+      font-size: 48px;
+    }
+    /* phones: the table cells turn into blocks; the module list keeps its own wrapping row with gaps */
+    .rd-tables :global(.radar__table td.radar__mods) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+  }
+</style>

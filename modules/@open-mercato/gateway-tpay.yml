@@ -1,0 +1,13 @@
+# No stable release yet (latest is a develop build): preview, nightly on next only (spec 11.4).
+
+npm: "@open-mercato/gateway-tpay"
+repo: open-mercato/open-mercato#main/packages/gateway-tpay
+category: payments-finance
+tags: [payments, blik, poland]
+summary: "PLN payments on the Tpay hosted page: online transfers, BLIK and other methods enabled on your Tpay account."
+whenToUse: Use when Polish customers pay in PLN by bank transfer or BLIK and you have a Tpay merchant account.
+whenNotToUse: For card payments in other currencies use gateway-stripe.
+providers:
+  - { name: tpay, label: Tpay }
+links:
+  docs: https://docs.openmercato.com/user-guide/tpay-payments

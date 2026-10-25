@@ -1,0 +1,621 @@
+---
+// Built-in module page (spec 7.7 F): what the core module adds, read from the CLI facts of @open-mercato/core
+// (module-facts.v2.json), the `module enable` command when new apps do not have it, what it requires, and which
+// catalog entries need it or replace it.
+import Base from '../../layouts/Base.astro'
+import Sigil from '../../components/Sigil.astro'
+import TypeChip from '../../components/TypeChip.astro'
+import CommandChip from '../../components/CommandChip.astro'
+import YMarks from '../../components/YMarks.astro'
+import Icon from '../../components/icons/Icon.astro'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import type { BuiltInModule } from '../../../../lib/schema/index.ts'
+import { orderLines } from '../../lib/status.ts'
+import { plural } from '../../lib/format.ts'
+import { builtInPage, categoryPage, href, modulePage } from '../../lib/url.ts'
+import { byLineKey } from '../../../../lib/core/lines.ts'
+import { EMPTY_PRESET_LEAD, listAnd } from '../../../../lib/core/policy.ts'
+import { idWrapHtml, rowSpans } from '../c/_data.ts'
+
+export function getStaticPaths() {
+  return loadSiteData().builtIn.modules.map((m) => ({ params: { id: m.id } }))
+}
+
+const data = loadSiteData()
+const { builtIn, modules, meta } = data
+const id = Astro.params.id as string
+const m = builtIn.modules.find((x) => x.id === id) as BuiltInModule
+const lines = orderLines(modules.lines)
+const latest = lines.find((l) => l.source === 'latest')
+const catTitle = modules.categories.find((c) => c.id === m.category)?.title ?? m.category
+// on in a new app (the classic preset, decision of 24 Oct); off in an app from the empty preset unless that preset has it
+// too (review r11: currencies said `Enable it`, which every new app has on)
+const enabledInNew = latest ? m.inPresets.includes(latest.key) : false
+const inEmpty = latest ? (m.inEmptyPreset ?? []).includes(latest.key) : false
+const presetKnown = latest ? !!modules.lines.find((l) => l.key === latest.key)?.defaultPreset : false
+const allOn = [...m.inPresets].sort(byLineKey)
+const emptyOn = [...(m.inEmptyPreset ?? [])].sort(byLineKey)
+const inNewApps = allOn.length
+  ? `On in a new app on ${listAnd(allOn)}.${emptyOn.length ? ` In an app from the empty preset on ${listAnd(emptyOn)} too.` : ' Off in an app from the empty preset.'}`
+  : presetKnown
+    ? 'Off in a new app and in an app from the empty preset.'
+    : meta.firstNight
+      ? 'Known after the first nightly run reads the preset.'
+      : 'Not in the presets the catalog has read.'
+const c = m.anatomy.counts
+const L = m.anatomy.lists
+const more = (shown: number, total: number): string | null => (total > shown ? `+${total - shown} more` : null)
+/** The shared `<id>.` prefix of a list, printed once over it (like AnatomyFilm), or null. */
+const prefixOf = (xs: readonly string[]): string | null =>
+  xs.length > 1 && xs.every((x) => x.startsWith(`${m.id}.`)) ? `${m.id}.` : null
+const strip = (x: string, p: string | null): string => (p && x.startsWith(p) ? x.slice(p.length) : x)
+interface Item {
+  lead?: string
+  text: string
+}
+interface Sec {
+  id: string
+  title: string
+  items: Item[]
+  prefix: string | null
+  extra: string | null
+  empty: string
+}
+const aclPrefix = prefixOf(L.aclFeatures)
+const evPrefix = prefixOf([...L.eventsEmitted, ...L.eventsConsumed])
+const sections: Sec[] = [
+  { id: 'data', title: 'Data', items: L.tables.map((t) => ({ text: t })), prefix: null, extra: more(L.tables.length, c.tables), empty: 'No tables.' },
+  { id: 'api', title: 'API', items: [], prefix: null, extra: null, empty: 'Routes are not listed for built-in modules.' },
+  {
+    id: 'security',
+    title: 'Security',
+    items: L.aclFeatures.map((x) => ({ text: strip(x, aclPrefix) })),
+    prefix: aclPrefix,
+    extra: more(L.aclFeatures.length, c.aclFeatures),
+    empty: 'No permissions.',
+  },
+  {
+    id: 'events',
+    title: 'Events',
+    items: [
+      ...L.eventsEmitted.map((e) => ({ lead: 'emits', text: strip(e, evPrefix) })),
+      ...L.eventsConsumed.map((e) => ({ lead: 'subscribes', text: strip(e, evPrefix) })),
+    ],
+    prefix: evPrefix,
+    extra: more(L.eventsEmitted.length + L.eventsConsumed.length, c.eventsEmitted + c.eventsConsumed),
+    empty: 'No events.',
+  },
+  {
+    id: 'ui',
+    title: 'UI',
+    items: [
+      c.backendPages ? plural(c.backendPages, 'backend page') : '',
+      c.frontendPages ? plural(c.frontendPages, 'frontend page') : '',
+      c.widgets ? plural(c.widgets, 'widget') : '',
+    ]
+      .filter(Boolean)
+      .map((text) => ({ text })),
+    prefix: null,
+    extra: null,
+    empty: 'No pages.',
+  },
+  {
+    id: 'background',
+    title: 'Background',
+    items: [c.workers ? plural(c.workers, 'worker') : '', c.cli ? plural(c.cli, 'CLI command') : '']
+      .filter(Boolean)
+      .map((text) => ({ text })),
+    prefix: null,
+    extra: null,
+    empty: 'No workers.',
+  },
+  {
+    id: 'ai',
+    title: 'AI',
+    items: [c.aiTools ? plural(c.aiTools, 'AI tool') : '', c.aiAgents ? plural(c.aiAgents, 'AI agent') : '']
+      .filter(Boolean)
+      .map((text) => ({ text })),
+    prefix: null,
+    extra: null,
+    empty: 'No AI tools.',
+  },
+  {
+    id: 'config',
+    title: 'Config',
+    items: [
+      ...L.credentials.map((x) => ({ lead: x.type === 'secret' ? 'secret' : 'field', text: `${x.key}${x.required ? '' : ' (optional)'}` })),
+      ...L.env.map((e) => ({ lead: 'env', text: e })),
+    ],
+    prefix: null,
+    extra: null,
+    empty: 'No settings.',
+  },
+  { id: 'network', title: 'Network', items: L.hosts.map((h) => ({ text: h })), prefix: null, extra: null, empty: 'No hosts found in the code.' },
+]
+// the same rule as the module film (review r1): only sections with facts get a cell, the rest are named once under
+// the grid; API stays, it says why routes are missing
+const ABSENT: Record<string, string> = {
+  data: 'tables',
+  security: 'permissions',
+  events: 'events',
+  ui: 'UI',
+  background: 'background jobs',
+  ai: 'AI tools',
+  config: 'credentials',
+  network: 'hosts',
+}
+const shown = sections.filter((x) => x.items.length > 0 || x.id === 'api')
+const absentText = sections
+  .filter((x) => x.items.length === 0 && x.id !== 'api')
+  .map((x) => ABSENT[x.id] ?? x.title.toLowerCase())
+  .join(', ')
+// a section whose identifiers do not fit a third of the film takes two thirds; every row ends at the edge
+const leadW = (x: Sec): number => x.items.reduce((n, i) => Math.max(n, i.lead?.length ?? 0), 0)
+const want = Object.fromEntries(
+  sections.map((x) => [x.id, x.items.some((i) => i.text.length + (leadW(x) ? leadW(x) + 2 : 0) > 26) ? 2 : 1]),
+)
+const span3 = rowSpans(shown.map((x) => x.id), want, 3)
+const span2 = rowSpans(shown.map((x) => x.id), want, 2)
+const needs = modules.entries.filter((e) => e.listed && e.requires.some((r) => r.resolvesTo === `core:${m.id}`))
+const replacedBy = modules.entries.filter((e) => e.replaces.includes(`core:${m.id}`))
+const requires = m.requires.map((r) => ({ id: r, page: builtIn.modules.some((x) => x.id === r) ? href(builtInPage(r)) : null }))
+const sameCat = builtIn.modules.filter((x) => x.category === m.category && x.id !== m.id)
+---
+
+<Base
+  title={`${m.title} · built into Open Mercato · Open Mercato Modules`}
+  description={m.description}
+  path={builtInPage(m.id)}
+  dataAsOf={meta.dataAsOf}
+  skip={{ href: '#bi-body', label: 'Skip to module details' }}
+>
+  <div class="band">
+    <div class="sheet bim">
+      <nav class="bim__crumbs" aria-label="Breadcrumb">
+        <a href={href('/')}>Modules</a>
+        <span aria-hidden="true">/</span>
+        <a href={href('/built-in')}>Built-in</a>
+        <span aria-hidden="true">/</span>
+        <code>{m.id}</code>
+      </nav>
+
+      <header class="bim__head">
+        <YMarks inset={8} />
+        <div class="bim__sig"><Sigil builtIn={m} size={96} /></div>
+        <div class="bim__main">
+          <h1 class="t-h1">{m.title}</h1>
+          <p class="bim__id"><code>{m.id}</code> in <code>@open-mercato/core</code></p>
+          <p class="bim__desc">{m.description}</p>
+          <ul class="bim__chips" role="list">
+            <li><TypeChip type="built-in" /></li>
+            <li><a class="chip chip--line bim__chiplink" href={href(categoryPage(m.category))}>{catTitle}</a></li>
+            {enabledInNew && <li><span class="chip chip--official">On in a new app</span></li>}
+          </ul>
+          <p class="bim__ships">Ships with Open Mercato {builtIn.coreVersion}</p>
+        </div>
+        <div class="bim__cmd">
+          {
+            enabledInNew && inEmpty ? (
+              <p class="bim__on">On in a new app. Nothing to enable.</p>
+            ) : enabledInNew ? (
+              <>
+                <p class="bim__on">On in a new app. Nothing to enable.</p>
+                <p class="t-tagline">{EMPTY_PRESET_LEAD.replace(/:$/, '')}</p>
+                <CommandChip command={m.install} />
+                <p class="bim__fine">Then run <code>yarn generate</code>. Core is already installed, so nothing is downloaded.</p>
+              </>
+            ) : (
+              <>
+                <p class="t-tagline">Enable it</p>
+                <CommandChip command={m.install} />
+                <p class="bim__fine">Then run <code>yarn generate</code>. Core is already installed, so nothing is downloaded.</p>
+              </>
+            )
+          }
+        </div>
+      </header>
+
+      <div class="bim__grid" id="bi-body">
+        <section class="bfilm" aria-labelledby="bfilm-h">
+          <div class="bfilm__head">
+            <Sigil builtIn={m} size={48} />
+            <div>
+              <h2 class="bfilm__h" id="bfilm-h">Anatomy</h2>
+              <p class="bfilm__callout"><code>{m.anatomy.callout || 'NO CONTRACTS DECLARED'}</code></p>
+            </div>
+          </div>
+          <div class="bfilm__grid">
+            {
+              shown.map((s) => (
+                <section
+                  class="bfilm__sec"
+                  aria-labelledby={`bf-${s.id}`}
+                  style={`--s3:${span3[s.id] ?? 1};--s2:${span2[s.id] ?? 1};--lead:${leadW(s)}ch`}
+                >
+                  <h3 class="bfilm__sh" id={`bf-${s.id}`}>{s.title}</h3>
+                  {s.prefix && <p class="bfilm__prefix"><code translate="no">{s.prefix}</code></p>}
+                  {s.items.length > 0 ? (
+                    <ul class:list={['bfilm__list', { 'bfilm__list--lead': s.items.some((i) => i.lead) }]} role="list">
+                      {s.items.map((x) => (
+                        <li class="bfilm__item">
+                          {x.lead && <span class="bfilm__lead">{x.lead}</span>}
+                          <code translate="no" set:html={idWrapHtml(x.text)} />
+                        </li>
+                      ))}
+                      {s.extra && <li class="bfilm__more">{s.extra}</li>}
+                    </ul>
+                  ) : (
+                    <p class="bfilm__empty">{s.empty}</p>
+                  )}
+                </section>
+              ))
+            }
+          </div>
+          {absentText && <p class="bfilm__absent">Not present: {absentText}.</p>}
+          <p class="bfilm__src">From <code>module-facts.v2.json</code> in <code>@open-mercato/cli</code> {builtIn.coreVersion}. Read statically, not executed.</p>
+        </section>
+
+        <aside class="bim__side">
+          <section class="bim__sec">
+            <h2 class="bim__sh">Requires</h2>
+            {
+              requires.length ? (
+                <ul class="bim__list" role="list">
+                  {requires.map((r) => (
+                    <li>{r.page ? <a href={r.page}><code>{r.id}</code></a> : <code>{r.id}</code>}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p class="bim__muted">Requires nothing.</p>
+              )
+            }
+          </section>
+          <section class="bim__sec">
+            <h2 class="bim__sh">In new apps</h2>
+            <p class="bim__muted">{inNewApps}</p>
+          </section>
+          {
+            needs.length > 0 && (
+              <section class="bim__sec">
+                <h2 class="bim__sh">Needed by</h2>
+                <ul class="bim__list" role="list">
+                  {needs.map((e) => (
+                    <li class="bim__row">
+                      <Sigil entry={e} size={16} />
+                      <a href={href(modulePage(e.path))}>{e.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+          {
+            replacedBy.length > 0 && (
+              <section class="bim__sec">
+                <h2 class="bim__sh">Replaced by</h2>
+                <ul class="bim__list" role="list">
+                  {replacedBy.map((e) => (
+                    <li class="bim__row">
+                      <Sigil entry={e} size={16} />
+                      <a href={href(modulePage(e.path))}>{e.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+          {
+            sameCat.length > 0 && (
+              <section class="bim__sec">
+                <h2 class="bim__sh">Also in {catTitle}</h2>
+                <ul class="bim__list" role="list">
+                  {sameCat.map((x) => (
+                    <li class="bim__row">
+                      <Sigil builtIn={x} size={16} />
+                      <a href={href(builtInPage(x.id))}>{x.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+          <a class="bim__all" href={href('/built-in')}>All {builtIn.modules.length} built-in modules <Icon name="chevron-down" size={14} class="icon bim__chev" /></a>
+        </aside>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .bim {
+    padding: 24px var(--pad) 96px;
+  }
+  .bim > * + * {
+    margin-top: 24px;
+  }
+  .bim__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .bim__crumbs a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .bim__crumbs a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .bim__crumbs code {
+    font: inherit;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .bim__head {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) minmax(0, 380px);
+    gap: 28px;
+    padding: 32px;
+    border-radius: var(--radius-s);
+    background: var(--bg-2);
+  }
+  .bim__sig {
+    color: var(--ink-2);
+  }
+  .bim__main {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    min-width: 0;
+  }
+  .bim__id {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .bim__id code {
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .bim__desc {
+    max-width: 60ch;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .bim__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .bim__chiplink {
+    text-decoration: none;
+  }
+  .bim__ships {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .bim__cmd {
+    display: grid;
+    gap: 10px;
+    align-content: end;
+    min-width: 0;
+  }
+  .bim__fine {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .bim__on {
+    padding: 12px 14px;
+    border-left: 3px solid #b4f372;
+    background: var(--bg);
+    font-size: 14px;
+  }
+  .bim__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: 40px;
+    align-items: start;
+    margin-top: 40px !important;
+  }
+
+  /* the film: dark in both themes, like AnatomyFilm */
+  .bfilm {
+    display: grid;
+    gap: 20px;
+    padding: 24px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-l);
+    background: var(--film);
+    color: var(--film-ink);
+    color-scheme: dark;
+  }
+  .bfilm__absent {
+    font-size: 13px;
+    color: var(--film-ink-2);
+  }
+  .bfilm__head {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    color: #9e9e9e;
+  }
+  .bfilm__h {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9e9e9e;
+  }
+  .bfilm__callout code {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: #fafafa;
+  }
+  .bfilm__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid #1f1f1f;
+    background: #1f1f1f;
+  }
+  .bfilm__sec {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-width: 0;
+    padding: 14px 16px 16px;
+    background: var(--film);
+  }
+  .bfilm__sh {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9e9e9e;
+  }
+  .bfilm__sec {
+    grid-column: span var(--s3, 1);
+  }
+  .bfilm__prefix code {
+    font-size: 11px;
+    color: #9e9e9e;
+  }
+  .bfilm__list {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.45;
+    color: #e8e8e8;
+  }
+  .bfilm__list code {
+    font: inherit;
+    color: inherit;
+  }
+  .bfilm__list--lead .bfilm__item {
+    display: grid;
+    grid-template-columns: var(--lead, 10ch) minmax(0, 1fr);
+    column-gap: 8px;
+  }
+  .bfilm__list--lead .bfilm__more {
+    padding-left: calc(var(--lead, 10ch) + 8px);
+  }
+  .bfilm__lead {
+    color: #9e9e9e;
+  }
+  .bfilm__more {
+    color: #9e9e9e;
+  }
+  .bfilm__empty {
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+  .bfilm__src {
+    font-size: 12px;
+    color: #9e9e9e;
+  }
+  .bfilm__src code {
+    color: #bc9aff;
+  }
+
+  .bim__side {
+    display: grid;
+    gap: 24px;
+  }
+  .bim__sec {
+    display: grid;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .bim__sh {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.33;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .bim__list {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+  }
+  .bim__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-2);
+  }
+  .bim__muted {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .bim__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .bim__all :global(.bim__chev) {
+    transform: rotate(-90deg);
+  }
+  @media (max-width: 991px) {
+    .bim__head {
+      grid-template-columns: 96px minmax(0, 1fr);
+    }
+    .bim__cmd {
+      grid-column: 1 / -1;
+    }
+    .bim__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .bfilm__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .bfilm__sec {
+      grid-column: span var(--s2, 1);
+    }
+  }
+  @media (max-width: 767px) {
+    .bim__head {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 20px 16px;
+      gap: 16px;
+    }
+    .bim__sig :global(svg) {
+      width: 64px;
+      height: 64px;
+    }
+    .bim__desc {
+      font-size: 16px;
+    }
+    .bfilm {
+      padding: 16px;
+    }
+    .bfilm__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .bfilm__sec {
+      grid-column: auto;
+    }
+  }
+</style>

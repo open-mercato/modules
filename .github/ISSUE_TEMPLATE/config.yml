@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Add a module yourself
+    url: https://github.com/open-mercato/modules/blob/main/README.md#submit-a-module-in-3-steps
+    about: One YAML file in modules/ and a pull request. CI checks it in a few minutes.
+  - name: Open Mercato framework questions
+    url: https://github.com/open-mercato/open-mercato/discussions
+    about: Questions about Open Mercato itself, not about this list of modules.

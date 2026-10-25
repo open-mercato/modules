@@ -1,0 +1,7 @@
+# expect-path: providers
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when a provider label carries HTML, which plain text forbids.
+providers:
+  - { name: acme, label: "<b>Acme</b>" }

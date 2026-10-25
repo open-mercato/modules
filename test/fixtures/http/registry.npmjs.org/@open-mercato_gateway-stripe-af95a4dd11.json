@@ -1,0 +1,686 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@open-mercato%2Fgateway-stripe"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@open-mercato/gateway-stripe",
+      "dist-tags": {
+        "legacy": "1.0.1",
+        "canary": "0.6.8-canary.322.1.0b9d350501",
+        "latest": "0.9.0",
+        "develop": "0.10.1-develop.7583.1.0c886d0a14"
+      },
+      "versions": {
+        "1.0.1": {
+          "version": "1.0.1",
+          "deprecated": "published by mistake, use 0.4.x",
+          "gitHead": "ae9109fb7f61735c1adcac38e772c44d00cddf36",
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.4.7",
+            "@mikro-orm/postgresql": "^6.5.9"
+          },
+          "dependencies": {
+            "stripe": "^17.0.0",
+            "@open-mercato/core": "0.4.7",
+            "@open-mercato/queue": "0.4.7"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-WJ4skigbgAMIWTMZBLU7I0S9k9EnuIZcpPSfLN33pJ/e/tHfxP6XGpUSWMoWP8N4fI85FLR8xgh2TEluryunkw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-1.0.1.tgz"
+          }
+        },
+        "0.4.8": {
+          "version": "0.4.8",
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.4.8",
+            "@mikro-orm/postgresql": "^6.5.9"
+          },
+          "dependencies": {
+            "stripe": "^17.0.0",
+            "@open-mercato/core": "0.4.8",
+            "@open-mercato/queue": "0.4.8"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-IbrniYgZYs3r42r7JgSln69wU3/R9mwCtZzeerusoo94UKEvnNvIQsuzuOTH2bu6pJvL1ZXDh7oTEBgorwU/7A==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.4.8.tgz"
+          }
+        },
+        "0.4.9": {
+          "version": "0.4.9",
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.4.9",
+            "@mikro-orm/postgresql": "^6.5.9"
+          },
+          "dependencies": {
+            "stripe": "^17.0.0",
+            "@open-mercato/ui": "0.4.9",
+            "@stripe/stripe-js": "^7.9.0",
+            "@open-mercato/core": "0.4.9",
+            "@open-mercato/queue": "0.4.9",
+            "@stripe/react-stripe-js": "^3.9.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-8usj2cExsf/x9Hgn+iX0t0jLc067ggLNrfMzKlS2ph3y+s72NnLvqprWKibspGGZkp2ZA/Zv6YI5aotnaZRdkQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.4.9.tgz"
+          }
+        },
+        "0.4.10": {
+          "version": "0.4.10",
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.4.10",
+            "@mikro-orm/postgresql": "^6.5.9"
+          },
+          "dependencies": {
+            "stripe": "^17.0.0",
+            "@open-mercato/ui": "0.4.10",
+            "@stripe/stripe-js": "^7.9.0",
+            "@open-mercato/core": "0.4.10",
+            "@open-mercato/queue": "0.4.10",
+            "@stripe/react-stripe-js": "^3.9.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-cW0uMKz8EqE19NOpjlbY5nE4Zl+ln02BkrfSGF5atYSIp105AP0eauYvjoR1KfyvJjC/529zKijB9ZHh/OcQlQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.4.10.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.5.0",
+            "@mikro-orm/postgresql": "^6.6.10"
+          },
+          "dependencies": {
+            "stripe": "^22.0.2",
+            "@open-mercato/ui": "0.5.0",
+            "@stripe/stripe-js": "^9.2.0",
+            "@open-mercato/core": "0.5.0",
+            "@open-mercato/queue": "0.5.0",
+            "@stripe/react-stripe-js": "^6.2.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-qmM6Lc1tUV9spFs8hdJbbgLfBTGf+FtJL4+KISPwne6nC+B9WYZv2WU4+Ow9m94huqlERjU/90GT7JctzVJfCQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.5.0.tgz"
+          }
+        },
+        "0.6.0": {
+          "version": "0.6.0",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "@open-mercato/shared": "0.6.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.1.0",
+            "@open-mercato/ui": "0.6.0",
+            "@stripe/stripe-js": "^9.3.1",
+            "@open-mercato/core": "0.6.0",
+            "@open-mercato/queue": "0.6.0",
+            "@stripe/react-stripe-js": "^6.2.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-gLp3Fr5hMhP3Y0BUfhvBfk0k/JzsXPsQpYuu3NFciusJaqxSOSdrLcKwAne+OuiLI8rzYg7CjKOV3eqDhYMjZw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.0.tgz"
+          }
+        },
+        "0.6.1": {
+          "version": "0.6.1",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.1",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.1.1",
+            "@open-mercato/ui": "0.6.1",
+            "@stripe/stripe-js": "^9.3.1",
+            "@open-mercato/core": "0.6.1",
+            "@open-mercato/queue": "0.6.1",
+            "@stripe/react-stripe-js": "^6.3.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-7zTQrsyHwB3MyrN18saenYSj0eZjvqf9Hcdis7cXrZwXi+6OSfz3uUv+cRyPYViSTYTh66WyE9JvAIFcaGZh2w==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.1.tgz"
+          }
+        },
+        "0.6.2": {
+          "version": "0.6.2",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.2",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.1.1",
+            "@open-mercato/ui": "0.6.2",
+            "@stripe/stripe-js": "^9.6.0",
+            "@open-mercato/core": "0.6.2",
+            "@open-mercato/queue": "0.6.2",
+            "@stripe/react-stripe-js": "^6.4.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-BH1aWCx72SwUABEA8JDVthT38LGHgflAnT92zVf70Bv81FZBQvwFjMqYddncYCzvfI6q5aGSNDAYmckQw6hq/Q==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.2.tgz"
+          }
+        },
+        "0.6.3": {
+          "version": "0.6.3",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.3",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.1.1",
+            "@open-mercato/ui": "0.6.3",
+            "@stripe/stripe-js": "^9.6.0",
+            "@open-mercato/core": "0.6.3",
+            "@open-mercato/queue": "0.6.3",
+            "@stripe/react-stripe-js": "^6.4.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-Vb794hRjvSRkrQmziwTFMj63rd+6+3hs5sGQ0QLoYpRrfxbb1mQcd9bWqpbgWrSXotctsUvek9/5Qq6YWRProg==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.3.tgz"
+          }
+        },
+        "0.6.4": {
+          "version": "0.6.4",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.4",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.2.0",
+            "@open-mercato/ui": "0.6.4",
+            "@stripe/stripe-js": "^9.7.0",
+            "@open-mercato/core": "0.6.4",
+            "@open-mercato/queue": "0.6.4",
+            "@stripe/react-stripe-js": "^6.6.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-ZCyBQPoQNEDWSYZ93Y4rVxxDt0rW+t138rHBClcZgAVt205Sh5hAXZRRLECUIwCMqooPnw0VlGMnqrGQApdQJA==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.4.tgz"
+          }
+        },
+        "0.6.5": {
+          "version": "0.6.5",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.5",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.2.1",
+            "@open-mercato/ui": "0.6.5",
+            "@stripe/stripe-js": "^9.8.0",
+            "@open-mercato/core": "0.6.5",
+            "@open-mercato/queue": "0.6.5",
+            "@stripe/react-stripe-js": "^6.6.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-nXzAt3rdX3qemlyXXTSu192bujLAZjemXtnHJPq4WCueGGYHYxLOf1iHAUqnKCr542vtKkHtPxGe95QndlXvHQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.5.tgz"
+          }
+        },
+        "0.6.6": {
+          "version": "0.6.6",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.6",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.0",
+            "@open-mercato/ui": "0.6.6",
+            "@stripe/stripe-js": "^9.8.0",
+            "@open-mercato/core": "0.6.6",
+            "@open-mercato/queue": "0.6.6",
+            "@stripe/react-stripe-js": "^6.6.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-4MqKDGYRtN/eMEwoZ8FGWGc797z6ejOHUj1YXnQ2Y8c59OJcAWJdpYV2n13Nwb43eaCAT+nMIdd4PFc0Ei+/VA==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.6.tgz"
+          }
+        },
+        "0.6.7": {
+          "version": "0.6.7",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.7",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.6.7",
+            "@stripe/stripe-js": "^9.9.0",
+            "@open-mercato/core": "0.6.7",
+            "@open-mercato/queue": "0.6.7",
+            "@stripe/react-stripe-js": "^6.7.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-9/f34ocaqNGGPtSeoh2cJhso4wbQGMT+PfAHz3tq6CJcg4mMtrUBkFMYwm2bbdZUeR7pM4iMu0SvVPs366IRHw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.7.tgz"
+          }
+        },
+        "0.6.8-canary.322.1.0b9d350501": {
+          "version": "0.6.8-canary.322.1.0b9d350501",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.6.8-canary.322.1.0b9d350501",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.6.8-canary.322.1.0b9d350501",
+            "@stripe/stripe-js": "^9.12.1",
+            "@open-mercato/core": "0.6.8-canary.322.1.0b9d350501",
+            "@open-mercato/queue": "0.6.8-canary.322.1.0b9d350501",
+            "@stripe/react-stripe-js": "^6.7.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-cOOuoJxEBqRA+Shh5dfl9cZ8mOB3WpMLHchhvUbOZAQXhSJ95KqsT3L9NnkYMByeLYYOtFx8cH+X+//pTyoqMw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.6.8-canary.322.1.0b9d350501.tgz"
+          }
+        },
+        "0.7.0": {
+          "version": "0.7.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.7.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.7.0",
+            "@stripe/stripe-js": "^9.12.1",
+            "@open-mercato/core": "0.7.0",
+            "@open-mercato/queue": "0.7.0",
+            "@stripe/react-stripe-js": "^6.7.0"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-FZOBqz23dhbdVJ2SiOHbg9hQ1L1tcA2mqL45E1PAr0LU7uKypK+R6SS1gQuMt1+CV8evigOtXuJvdwJ90FQxVA==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.7.0.tgz"
+          }
+        },
+        "0.8.0": {
+          "version": "0.8.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.8.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.8.0",
+            "@stripe/stripe-js": "^9.14.0",
+            "@open-mercato/core": "0.8.0",
+            "@open-mercato/queue": "0.8.0",
+            "@stripe/react-stripe-js": "^6.8.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-kbc4r4HBO9QxXBvRNpCwJRQyZe+Ah8fLoK5zwf89vRcQzq40OfrBtTWOPRmypE0ktR//JeBDhP12WcDg+JsJqQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.8.0.tgz"
+          }
+        },
+        "0.9.0": {
+          "version": "0.9.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.9.0",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.9.0",
+            "@stripe/stripe-js": "^9.14.0",
+            "@open-mercato/core": "0.9.0",
+            "@open-mercato/queue": "0.9.0",
+            "@stripe/react-stripe-js": "^6.8.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-U/tlIjnj/V5AuSB+fEEIh4Ta9Uftzrzr5iUb6nSWLcd7W8W7mzPHd6Ngg3ZYPH9g98cSUayH1e6nOga2E3Iqag==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.9.0.tgz"
+          }
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "version": "0.10.1-develop.7583.1.0c886d0a14",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-stripe"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/shared": "0.10.1-develop.7583.1.0c886d0a14",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "stripe": "^22.3.1",
+            "@open-mercato/ui": "0.10.1-develop.7583.1.0c886d0a14",
+            "@stripe/stripe-js": "^9.14.0",
+            "@open-mercato/core": "0.10.1-develop.7583.1.0c886d0a14",
+            "@open-mercato/queue": "0.10.1-develop.7583.1.0c886d0a14",
+            "@stripe/react-stripe-js": "^6.8.2"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-LBBigq67RlfNvppD+/dylmaWR7P0XcQZW4joaNHRlZbfvNTRbDNkdD5yVw1Z7/gPWAOBndNh4a7w3EUwEmaabQ==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.10.1-develop.7583.1.0c886d0a14.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-03-04T13:47:47.763Z",
+        "modified": "2026-10-22T13:47:36.782Z",
+        "1.0.1": "2026-03-13T11:40:41.067Z",
+        "0.4.8": "2026-03-17T09:49:59.401Z",
+        "0.4.9": "2026-03-26T12:49:09.749Z",
+        "0.4.10": "2026-04-01T15:57:05.188Z",
+        "0.5.0": "2026-04-22T11:58:44.943Z",
+        "0.6.0": "2026-05-07T10:47:29.646Z",
+        "0.6.1": "2026-05-14T07:15:29.184Z",
+        "0.6.2": "2026-05-22T06:23:43.597Z",
+        "0.6.3": "2026-05-28T16:06:08.745Z",
+        "0.6.4": "2026-06-09T06:29:45.760Z",
+        "0.6.5": "2026-06-15T13:50:35.363Z",
+        "0.6.6": "2026-07-17T07:47:32.254Z",
+        "0.6.7": "2026-08-05T10:11:23.664Z",
+        "0.6.8-canary.322.1.0b9d350501": "2026-08-14T08:57:18.530Z",
+        "0.7.0": "2026-08-26T09:03:35.946Z",
+        "0.8.0": "2026-09-18T11:35:43.304Z",
+        "0.9.0": "2026-10-09T19:25:40.921Z",
+        "0.10.1-develop.7583.1.0c886d0a14": "2026-10-22T13:47:36.337Z"
+      },
+      "maintainers": [
+        {
+          "name": "pat-lewczuk"
+        },
+        {
+          "name": "patryk.andrzejewski"
+        },
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "repository": {
+        "url": "git+https://github.com/open-mercato/open-mercato.git",
+        "type": "git",
+        "directory": "packages/gateway-stripe"
+      }
+    }
+  }
+}

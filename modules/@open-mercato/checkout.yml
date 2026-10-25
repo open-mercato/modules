@@ -1,0 +1,9 @@
+npm: "@open-mercato/checkout"
+repo: open-mercato/open-mercato#main/packages/checkout
+category: orders-checkout
+tags: [pay-links, payments, checkout]
+summary: Pay links with fixed, custom or price-list amounts, reusable templates and public pay pages with password and usage limits.
+whenToUse: Use when you collect one-off payments such as deposits, workshop fees or tickets without a storefront or a sales document.
+whenNotToUse: "It takes no money on its own: pair it with a payment gateway such as gateway-stripe."
+links:
+  docs: https://docs.openmercato.com/user-guide/checkout

@@ -1,0 +1,334 @@
+---
+// Nameplate (spec 7.6, 7.7 B.3): a rating plate of label / value cells. Labels mono 11 uppercase --ink-2,
+// values 13-14, Y marks in the corners, a yellow not-equal sign where declaration and evidence disagree.
+import YMarks from './YMarks.astro'
+import Icon from './icons/Icon.astro'
+import { wbrHtml } from '../lib/wrap.ts'
+
+export interface NameplateRow {
+  label: string
+  value: string
+  /** Mono value (versions, hashes, IDs). */
+  mono?: boolean
+  /** Explains a mismatch; shows the not-equal sign. */
+  mismatch?: string
+  /** Copy button for this value. */
+  copy?: string
+  /** Link the value. */
+  href?: string
+  /** Secondary line under the value. */
+  note?: string
+  /** Explanation on hover (the value's title), when a note would be too long for the compact row. */
+  title?: string
+  /** Muted value (none, not yet). */
+  muted?: boolean
+  /** Span the full width. */
+  wide?: boolean
+  /** Span two columns (long mono values: package, built from, tarball). Default: by label and length. */
+  span2?: boolean
+}
+interface Props {
+  /** The facts people compare, in one row (review r1: a compact plate). */
+  rows: NameplateRow[]
+  /** The rest of the record, behind `All facts` in the fixed-slot plate below the row. */
+  more?: NameplateRow[]
+  title?: string
+}
+const { rows: main, more = [], title = 'Nameplate' } = Astro.props
+const rows = more
+/** Line breaks only after "/" and before "@" in long package names, never inside a name (lib/wrap.ts). */
+const breakable = (s: string): string => wbrHtml(s)
+const WIDE_LABELS = new Set(['PACKAGE', 'BUILT FROM', 'TARBALL'])
+const isSpan2 = (r: NameplateRow): boolean =>
+  !r.wide && (r.span2 ?? (WIDE_LABELS.has(r.label.toUpperCase()) || (r.mono === true && r.value.length > 26)))
+/** Short values (LATEST, LICENSE, VERIFIED ON, REPLACES ...) pair up two per row on phones. */
+const isShort = (r: NameplateRow): boolean =>
+  !r.wide && !isSpan2(r) && r.value.length <= 18 && (r.note?.length ?? 0) <= 22 && !r.copy
+
+/**
+ * Column spans per layout, so the last cell of a row reaches the plate's edge instead of leaving a blank slot.
+ * The plate has 4, 3 or 2 columns (container width, see the style) and a phone layout (2 columns, only short values
+ * paired). The cells are placed like CSS `grid-auto-flow: row dense` would place them; then the rightmost cell of
+ * every row that ends short of the edge spans to it (the freed slots were never used, so no other cell moves).
+ */
+function spansFor(cols: number, base: (r: NameplateRow) => number): number[] {
+  const want = rows.map((r) => Math.min(cols, base(r)))
+  const grid: (number | null)[][] = []
+  const at: { row: number; col: number }[] = []
+  const free = (row: number, col: number, n: number): boolean => {
+    for (let c = col; c < col + n; c++) if (c >= cols || grid[row]?.[c] != null) return false
+    return true
+  }
+  want.forEach((n, i) => {
+    for (let row = 0; ; row++) {
+      grid[row] ??= Array(cols).fill(null)
+      const col = [...Array(cols - n + 1).keys()].find((c) => free(row, c, n))
+      if (col === undefined) continue
+      for (let c = col; c < col + n; c++) (grid[row] as (number | null)[])[c] = i
+      at[i] = { row, col }
+      break
+    }
+  })
+  const out = [...want]
+  grid.forEach((cells) => {
+    let last = cols - 1
+    while (last >= 0 && cells[last] == null) last--
+    if (last < 0 || last === cols - 1) return
+    const i = cells[last] as number
+    out[i] = cols - (at[i] as { col: number }).col
+  })
+  return out
+}
+const desk = (r: NameplateRow): number => (r.wide ? 99 : isSpan2(r) ? 2 : 1)
+const phone = (r: NameplateRow): number => (isShort(r) ? 1 : 2)
+const spans = { c4: spansFor(4, desk), c3: spansFor(3, desk), c2: spansFor(2, desk), ph: spansFor(2, phone) }
+const spanStyle = (i: number): string =>
+  `--c4:${spans.c4[i]};--c3:${spans.c3[i]};--c2:${spans.c2[i]};--ph:${spans.ph[i]}`
+---
+
+<section class="plate" aria-label={title}>
+  <YMarks inset={-5} />
+  <div class="plate__clip">
+    <dl class="plate__row">
+      {
+        main.map((r) => (
+          <div class:list={['plate__cell', { 'plate__cell--wide': r.mono && r.value.length > 18 }]} title={r.title}>
+            <dt class="plate__label">{r.label}</dt>
+            <dd class:list={['plate__value', { 'plate__value--mono': r.mono, 'plate__value--muted': r.muted }]}>
+              {r.mismatch && (
+                <span class="plate__neq" title={r.mismatch} aria-label={`Mismatch: ${r.mismatch}`}>
+                  ≠
+                </span>
+              )}
+              {r.href ? <a href={r.href} set:html={breakable(r.value)} /> : <span set:html={breakable(r.value)} />}
+              {r.copy && (
+                <button type="button" class="plate__copy" data-copy={r.copy} aria-label={`Copy ${r.label.toLowerCase()}`}>
+                  <Icon name="copy" size={14} />
+                </button>
+              )}
+            </dd>
+            {r.note && <dd class="plate__note">{r.note}</dd>}
+          </div>
+        ))
+      }
+    </dl>
+    {
+      rows.length > 0 && (
+        <details class="plate__more">
+          <summary>
+            <span>All facts</span>
+            <Icon name="chevron-down" size={14} />
+          </summary>
+          <dl class="plate__grid">
+            {rows.map((r, i) => (
+              <div class="plate__cell" style={spanStyle(i)}>
+                <dt class="plate__label">{r.label}</dt>
+                <dd class:list={['plate__value', { 'plate__value--mono': r.mono, 'plate__value--muted': r.muted }]}>
+                  {r.mismatch && (
+                    <span class="plate__neq" title={r.mismatch} aria-label={`Mismatch: ${r.mismatch}`}>
+                      ≠
+                    </span>
+                  )}
+                  {r.href ? <a href={r.href} set:html={breakable(r.value)} /> : <span set:html={breakable(r.value)} />}
+                  {r.copy && (
+                    <button
+                      type="button"
+                      class="plate__copy"
+                      data-copy={r.copy}
+                      aria-label={`Copy ${r.label.toLowerCase()}`}
+                    >
+                      <Icon name="copy" size={14} />
+                    </button>
+                  )}
+                </dd>
+                {r.note && <dd class="plate__note">{r.note}</dd>}
+              </div>
+            ))}
+          </dl>
+        </details>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .plate {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background: var(--bg);
+  }
+  .plate__clip {
+    overflow: hidden;
+    border-radius: var(--radius-s);
+  }
+  /* 4, 3 or 2 columns from the plate's own width; every cell's span per layout is computed in the build
+     (spansFor), so each row is filled to the edge and no blank slot is left */
+  .plate__clip {
+    container: plate / inline-size;
+  }
+  /* the compact row: cells of 140 px that grow, a long identifier (package) twice as wide; every line of cells
+     fills the plate, so a cell that wraps alone (requires) runs to the edge instead of leaving three blank slots
+     (review r3). Values break only at the token boundaries of lib/wrap.ts, never at a hyphen inside a name. */
+  .plate__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1px -1px 0;
+  }
+  .plate__row > .plate__cell {
+    flex: 1 1 140px;
+  }
+  .plate__row > .plate__cell--wide {
+    flex: 2 1 280px;
+  }
+  .plate__more {
+    border-top: 1px solid var(--line);
+  }
+  .plate__more > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    cursor: pointer;
+    list-style: none;
+  }
+  .plate__more > summary::-webkit-details-marker {
+    display: none;
+  }
+  .plate__more > summary:hover {
+    color: var(--ink);
+  }
+  .plate__more[open] > summary :global(svg) {
+    transform: rotate(180deg);
+  }
+  .plate__more > .plate__grid {
+    border-top: 1px solid var(--line);
+  }
+  .plate__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row dense;
+    gap: 0;
+    margin: 0 -1px -1px 0;
+  }
+  .plate__cell {
+    grid-column: span var(--c2);
+  }
+  @container plate (min-width: 780px) {
+    .plate__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .plate__cell {
+      grid-column: span var(--c3);
+    }
+  }
+  @container plate (min-width: 1040px) {
+    .plate__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .plate__cell {
+      grid-column: span var(--c4);
+    }
+  }
+  /* phones: short values (LATEST, LICENSE, VERIFIED ON ...) pair up, long ones take the whole row */
+  @container plate (max-width: 439px) {
+    .plate__cell {
+      grid-column: span var(--ph);
+    }
+  }
+  .plate__cell {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px 14px 14px;
+    background: var(--bg);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 599px) {
+    .plate__cell {
+      padding: 10px 12px 12px;
+    }
+  }
+  .plate__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.33;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .plate__value {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 0;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 20px;
+    overflow-wrap: break-word;
+  }
+  .plate__value--mono {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .plate__value--muted {
+    color: var(--ink-2);
+  }
+  .plate__value a {
+    text-decoration-color: var(--line-strong);
+  }
+  .plate__note {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--ink-2);
+  }
+  .plate__neq {
+    margin-top: 2px;
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    background: #eefb63;
+    color: #0c0c0c;
+    font-size: 13px;
+    cursor: help;
+  }
+  .plate__copy {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    align-self: flex-start;
+    width: 24px;
+    height: 24px;
+    margin: -2px 0 -4px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-s);
+    background: transparent;
+    color: var(--ink-2);
+  }
+  .plate__copy:hover {
+    background: var(--bg-3);
+    color: var(--ink);
+  }
+  /* phones: a 44 px target that keeps the row height (the extra area overlaps the cell padding) */
+  @media (max-width: 767px) {
+    .plate__copy {
+      width: 44px;
+      height: 44px;
+      margin: -12px -10px -12px 0;
+    }
+  }
+</style>

@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-gmail"
+repo: open-mercato/open-mercato#main/packages/channel-gmail
+category: communication
+tags: [email, gmail, oauth]
+summary: "Connects each user Gmail account over OAuth2: sends through the Gmail API and pulls replies with History API polling."
+whenToUse: Use when sales or support staff work from Google Workspace mailboxes and their email threads should appear in the app.
+whenNotToUse: For other mail servers use channel-imap. For transactional sending only use channel-resend or channel-ses.
+providers:
+  - { name: gmail, label: Gmail }
+links:
+  docs: https://docs.openmercato.com/user-guide/communication-channels-gmail

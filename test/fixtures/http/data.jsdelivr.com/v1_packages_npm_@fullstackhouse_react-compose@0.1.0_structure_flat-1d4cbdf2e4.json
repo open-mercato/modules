@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@fullstackhouse/react-compose@0.1.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@fullstackhouse/react-compose",
+      "version": "0.1.0",
+      "files": []
+    }
+  }
+}

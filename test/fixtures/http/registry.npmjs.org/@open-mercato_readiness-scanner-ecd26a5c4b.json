@@ -1,0 +1,65 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@open-mercato%2Freadiness-scanner"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@open-mercato/readiness-scanner",
+      "dist-tags": {
+        "latest": "0.1.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+            "type": "git"
+          },
+          "gitHead": "c8871ef76e2ea308120270daf7bafc74974fe00e",
+          "keywords": ["open-mercato", "security", "readiness", "cli", "typescript"],
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "scripts": {},
+          "description": "Static production-readiness scanner for Open Mercato applications.",
+          "dist": {
+            "integrity": "sha512-8XbOaeilAP8MsQ7rGAcRHk+uvCy5lJcFmMlpIHfSrSgT9+c13sAscxIf7lK+Y9dwMjy6RY+C8dB1TTh0nplIsw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/readiness-scanner/-/readiness-scanner-0.1.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-09T11:42:54.483Z",
+        "modified": "2026-10-09T11:43:50.343Z",
+        "0.1.0": "2026-10-09T11:43:50.166Z"
+      },
+      "maintainers": [
+        {
+          "name": "pat-lewczuk"
+        },
+        {
+          "name": "patryk.andrzejewski"
+        },
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Static production-readiness scanner for Open Mercato applications.",
+      "repository": {
+        "url": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+        "type": "git"
+      }
+    }
+  }
+}

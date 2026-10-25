@@ -1,0 +1,625 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=keywords%3Aopen-mercato&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 14264,
+            "weekly": 7731
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T14:00:53.015Z",
+          "searchScore": 67.13874,
+          "package": {
+            "name": "create-mercato-app",
+            "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+            "version": "0.9.0",
+            "description": "Create a new Open Mercato application",
+            "sanitized_name": "create-mercato-app",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:30:20.552Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-app"
+            }
+          },
+          "score": {
+            "final": 67.13874,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 4958,
+            "weekly": 537
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T22:04:54.269Z",
+          "searchScore": 58.520412,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-health",
+            "keywords": ["health-check", "kubernetes", "open-mercato", "readiness", "liveness"],
+            "version": "0.3.0",
+            "description": "Health check endpoints for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-health",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:0996890e-30a9-4d92-a647-8b34591f1738",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-05-19T12:19:37.521Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-health#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-health.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-health/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-health"
+            }
+          },
+          "score": {
+            "final": 58.520412,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1225,
+            "weekly": 264
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T15:06:18.672Z",
+          "searchScore": 48.57439,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-demo-auth",
+            "keywords": ["open-mercato", "auth", "login", "dev-tools", "widget"],
+            "version": "0.3.0",
+            "description": "Dev-only login form prefill + auto-submit widget for Open Mercato applications",
+            "sanitized_name": "@fullstackhouse/open-mercato-demo-auth",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:a4a3aca9-bbad-49be-9814-7993936084ab",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-04-24T13:00:14.939Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-demo-auth#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-demo-auth.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-demo-auth/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-demo-auth"
+            }
+          },
+          "score": {
+            "final": 48.57439,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 646,
+            "weekly": 200
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T14:01:16.121Z",
+          "searchScore": 42.576447,
+          "package": {
+            "name": "create-mercato-module",
+            "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+            "version": "0.5.1",
+            "description": "Create and publish a single module from an existing Open Mercato app.",
+            "sanitized_name": "create-mercato-module",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-14T13:58:52.713Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/create-mercato-module#readme",
+              "repository": "git+https://github.com/open-mercato/create-mercato-module.git",
+              "bugs": "https://github.com/open-mercato/create-mercato-module/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-module"
+            }
+          },
+          "score": {
+            "final": 42.576447,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 401,
+            "weekly": 401
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T11:46:09.197Z",
+          "searchScore": 38.666588,
+          "package": {
+            "name": "@open-mercato/readiness-scanner",
+            "keywords": ["open-mercato", "security", "readiness", "cli", "typescript"],
+            "version": "0.1.0",
+            "description": "Static production-readiness scanner for Open Mercato applications.",
+            "sanitized_name": "@open-mercato/readiness-scanner",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T11:43:50.166Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/mercato-readiness-scanner#readme",
+              "repository": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+              "bugs": "https://github.com/open-mercato/mercato-readiness-scanner/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/readiness-scanner"
+            }
+          },
+          "score": {
+            "final": 38.666588,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 204,
+            "weekly": 8
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T22:36:12.836Z",
+          "searchScore": 35.481613,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-durable-work",
+            "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+            "version": "0.6.0",
+            "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+            "sanitized_name": "@fullstackhouse/open-mercato-durable-work",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:cbc6f716-d3e0-446d-878d-65d7a4c1ce70",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:10:25.314Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-durable-work"
+            }
+          },
+          "score": {
+            "final": 35.481613,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 172,
+            "weekly": 27
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T22:36:11.101Z",
+          "searchScore": 32.892395,
+          "package": {
+            "name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+            "version": "0.6.0",
+            "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+            "sanitized_name": "@fullstackhouse/open-mercato-data-sync-durable",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:ab4e576a-f994-4691-8250-9bcc793c31f8",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "jacek@fullstack.house",
+                "username": "jtomaszewski"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-09-17T22:09:09.970Z",
+            "links": {
+              "homepage": "https://github.com/fullstackhouse/open-mercato-durable#readme",
+              "repository": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+              "bugs": "https://github.com/fullstackhouse/open-mercato-durable/issues",
+              "npm": "https://www.npmjs.com/package/@fullstackhouse/open-mercato-data-sync-durable"
+            }
+          },
+          "score": {
+            "final": 32.892395,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 92,
+            "weekly": 14
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T18:16:21.922Z",
+          "searchScore": 28.058422,
+          "package": {
+            "name": "@northbound-run/sync-shopify",
+            "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+            "version": "0.5.0",
+            "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+            "sanitized_name": "@northbound-run/sync-shopify",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:4716e9da-6fd0-4841-9caa-c089b30e12ef",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-19T15:40:40.378Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-shopify",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-shopify/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-shopify"
+            }
+          },
+          "score": {
+            "final": 28.058422,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 75,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T00:26:15.685Z",
+          "searchScore": 26.604618,
+          "package": {
+            "name": "@northbound-run/sync-google-sheets",
+            "keywords": [
+              "open-mercato",
+              "google-sheets",
+              "data-sync",
+              "oauth",
+              "integration",
+              "bidirectional-sync",
+              "etl"
+            ],
+            "version": "0.2.0",
+            "description": "Google Sheets ↔ Open Mercato Data Sync adapter: production-ready import, plus experimental scheduled sync and bidirectional export. Entity-agnostic and reusable — not tied to any specific project.",
+            "sanitized_name": "@northbound-run/sync-google-sheets",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:5a0ef4ab-5f79-4c39-ab88-fea6b6b3b1b6",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-07-23T23:23:28.297Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-google-sheets#readme",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-google-sheets.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-google-sheets/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-google-sheets"
+            }
+          },
+          "score": {
+            "final": 26.604618,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 37,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T01:01:09.554Z",
+          "searchScore": 22.240221,
+          "package": {
+            "name": "@northbound-run/channel-cloudflare-email",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "email",
+              "email-routing",
+              "email-sending",
+              "communication-channels"
+            ],
+            "version": "0.2.0",
+            "description": "Cloudflare Email Service channel for Open Mercato: inbound email via Email Routing + a thin Email Worker, outbound via the Email Sending REST API, with real delivery status from Queues event subscriptions.",
+            "sanitized_name": "@northbound-run/channel-cloudflare-email",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:d9cf3a19-ece2-4c44-8ceb-2bd4942b6e9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-07T00:08:18.861Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-email",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-email.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-email/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/channel-cloudflare-email"
+            }
+          },
+          "score": {
+            "final": 22.240221,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 6
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T19:31:15.445Z",
+          "searchScore": 21.776814,
+          "package": {
+            "name": "@northbound-run/search-cloudflare",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "ai-search",
+              "autorag",
+              "search",
+              "fulltext",
+              "hybrid-search",
+              "rag"
+            ],
+            "version": "0.1.1",
+            "description": "Cloudflare AI Search as a pluggable fulltext driver for Open Mercato: hybrid BM25 + vector retrieval behind the stock FullTextSearchDriver contract, with no search service to operate.",
+            "sanitized_name": "@northbound-run/search-cloudflare",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:aab4aba8-e523-4926-ab07-d15eaad6ae9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-08T18:43:20.080Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/search-cloudflare"
+            }
+          },
+          "score": {
+            "final": 21.776814,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 27,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T11:51:12.839Z",
+          "searchScore": 21.329243,
+          "package": {
+            "name": "@sensinum/strapi-plugin-open-mercato",
+            "keywords": ["strapi", "open-mercato", "plugin", "custom-field", "ecommerce"],
+            "version": "1.0.0",
+            "description": "Strapi - Open Mercato seamless integration",
+            "sanitized_name": "@sensinum/strapi-plugin-open-mercato",
+            "publisher": {
+              "email": "hello@sensinum.com",
+              "username": "cyp3r"
+            },
+            "maintainers": [
+              {
+                "email": "hello@sensinum.com",
+                "username": "cyp3r"
+              },
+              {
+                "email": "maksymilian.pamula@gmail.com",
+                "username": "kronos66"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-02-22T14:08:07.113Z",
+            "links": {
+              "homepage": "https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato/tree/main#readme",
+              "repository": "git+https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato.git",
+              "bugs": "https://github.com/VirtusLab-Open-Source/strapi-plugin-open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@sensinum/strapi-plugin-open-mercato"
+            }
+          },
+          "score": {
+            "final": 21.329243,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 12,
+      "time": "2026-10-23T02:38:12.830Z"
+    }
+  }
+}

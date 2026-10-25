@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Open Mercato Modules changes</title>
+  <id>https://wojciechszyjka.github.io/modules/feed.xml</id>
+  <link rel="self" href="https://wojciechszyjka.github.io/modules/feed.xml"/>
+  <link href="https://wojciechszyjka.github.io/modules/"/>
+  <updated>2026-10-23T03:05:00Z</updated>
+  <author><name>Open Mercato Modules</name></author>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T03:05:00Z~tier-change~npm:@fastwhitecat/integration-ksef-direct~line=0.9~version=0.1.8~from=listed~to=verified</id>
+    <title>KSeF Integration: level listed to verified.</title>
+    <updated>2026-10-23T03:05:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct"/>
+    <category term="tier-change"/>
+    <summary>KSeF Integration: level listed to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T03:05:00Z~tier-change~npm:@fullstackhouse/open-mercato-durable-work~line=0.9~version=0.6.0~from=listed~to=verified</id>
+    <title>Durable Work: level listed to verified.</title>
+    <updated>2026-10-23T03:05:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fullstackhouse/open-mercato-durable-work"/>
+    <category term="tier-change"/>
+    <summary>Durable Work: level listed to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T03:05:00Z~tier-change~npm:@open-mercato/gateway-stripe~line=0.9~version=0.9.0~from=listed~to=verified</id>
+    <title>Stripe Payment Gateway: level listed to verified.</title>
+    <updated>2026-10-23T03:05:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@open-mercato/gateway-stripe"/>
+    <category term="tier-change"/>
+    <summary>Stripe Payment Gateway: level listed to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T02:17:00Z~receipt-transition~npm:@fastwhitecat/integration-ksef-direct~line=0.9~version=0.1.8~from=untested~to=verified</id>
+    <title>KSeF Integration on 0.9: untested to verified.</title>
+    <updated>2026-10-23T02:17:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct"/>
+    <category term="receipt-transition"/>
+    <summary>KSeF Integration on 0.9: untested to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T02:17:00Z~receipt-transition~npm:@fastwhitecat/integration-ksef-direct~line=next~version=0.1.8~from=untested~to=verified</id>
+    <title>KSeF Integration on next: untested to verified.</title>
+    <updated>2026-10-23T02:17:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct"/>
+    <category term="receipt-transition"/>
+    <summary>KSeF Integration on next: untested to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T02:17:00Z~receipt-transition~npm:@fullstackhouse/open-mercato-durable-work~line=0.9~version=0.6.0~from=untested~to=verified</id>
+    <title>Durable Work on 0.9: untested to verified.</title>
+    <updated>2026-10-23T02:17:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fullstackhouse/open-mercato-durable-work"/>
+    <category term="receipt-transition"/>
+    <summary>Durable Work on 0.9: untested to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T02:17:00Z~receipt-transition~npm:@open-mercato/gateway-stripe~line=0.9~version=0.9.0~from=untested~to=verified</id>
+    <title>Stripe Payment Gateway on 0.9: untested to verified.</title>
+    <updated>2026-10-23T02:17:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@open-mercato/gateway-stripe"/>
+    <category term="receipt-transition"/>
+    <summary>Stripe Payment Gateway on 0.9: untested to verified.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T02:17:00Z~receipt-transition~npm:@piotrkarwatka/marketing-consents~line=0.9~version=0.1.0~from=untested~to=broken</id>
+    <title>Marketing Consents on 0.9: untested to broken.</title>
+    <updated>2026-10-23T02:17:00Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@piotrkarwatka/marketing-consents"/>
+    <category term="receipt-transition"/>
+    <summary>Marketing Consents on 0.9: untested to broken.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:08Z~new-entry~github:Chmarusso/open-mercato-enrichment-treg</id>
+    <title>treg.to Enrichment is listed.</title>
+    <updated>2026-10-23T00:00:08Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/github/chmarusso/open-mercato-enrichment-treg"/>
+    <category term="new-entry"/>
+    <summary>treg.to Enrichment is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:07Z~new-entry~npm:@open-mercato/enterprise</id>
+    <title>Enterprise is listed.</title>
+    <updated>2026-10-23T00:00:07Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise"/>
+    <category term="new-entry"/>
+    <summary>Enterprise is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:06Z~new-entry~npm:@open-mercato/gateway-tpay</id>
+    <title>Tpay Payment Gateway is listed.</title>
+    <updated>2026-10-23T00:00:06Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@open-mercato/gateway-tpay"/>
+    <category term="new-entry"/>
+    <summary>Tpay Payment Gateway is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:05Z~new-entry~npm:@open-mercato/gateway-stripe</id>
+    <title>Stripe Payment Gateway is listed.</title>
+    <updated>2026-10-23T00:00:05Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@open-mercato/gateway-stripe"/>
+    <category term="new-entry"/>
+    <summary>Stripe Payment Gateway is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:04Z~new-entry~npm:@fullstackhouse/open-mercato-data-sync-durable</id>
+    <title>Durable Data Sync is listed.</title>
+    <updated>2026-10-23T00:00:04Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fullstackhouse/open-mercato-data-sync-durable"/>
+    <category term="new-entry"/>
+    <summary>Durable Data Sync is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:03Z~new-entry~npm:@fullstackhouse/open-mercato-durable-work</id>
+    <title>Durable Work is listed.</title>
+    <updated>2026-10-23T00:00:03Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fullstackhouse/open-mercato-durable-work"/>
+    <category term="new-entry"/>
+    <summary>Durable Work is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:02Z~new-entry~npm:@piotrkarwatka/marketing-consents</id>
+    <title>Marketing Consents is listed.</title>
+    <updated>2026-10-23T00:00:02Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@piotrkarwatka/marketing-consents"/>
+    <category term="new-entry"/>
+    <summary>Marketing Consents is listed.</summary>
+  </entry>
+  <entry>
+    <id>https://wojciechszyjka.github.io/modules/changes.json#2026-10-23T00:00:01Z~new-entry~npm:@fastwhitecat/integration-ksef-direct</id>
+    <title>KSeF Integration is listed.</title>
+    <updated>2026-10-23T00:00:01Z</updated>
+    <link href="https://wojciechszyjka.github.io/modules/m/@fastwhitecat/integration-ksef-direct"/>
+    <category term="new-entry"/>
+    <summary>KSeF Integration is listed.</summary>
+  </entry>
+</feed>

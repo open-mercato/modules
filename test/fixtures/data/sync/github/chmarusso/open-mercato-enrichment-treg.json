@@ -1,0 +1,29 @@
+{
+  "locator": "github:Chmarusso/open-mercato-enrichment-treg",
+  "checkedAt": "2026-10-23T00:20:00Z",
+  "firstSeenAt": "2026-10-23T00:00:08Z",
+  "npm": null,
+  "github": {
+    "repo": "Chmarusso/open-mercato-enrichment-treg",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-08T15:57:01Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "User",
+    "tags": []
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner Chmarusso is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": null,
+  "errors": []
+}

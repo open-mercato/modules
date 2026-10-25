@@ -1,0 +1,106 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@open-mercato%2Fgateway-tpay"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@open-mercato/gateway-tpay",
+      "dist-tags": {
+        "latest": "0.8.1-develop.7442.1.4c1dbf1f0e",
+        "develop": "0.10.1-develop.7583.1.0c886d0a14"
+      },
+      "versions": {
+        "0.8.1-develop.7442.1.4c1dbf1f0e": {
+          "version": "0.8.1-develop.7442.1.4c1dbf1f0e",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-tpay"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "@open-mercato/shared": "0.8.1-develop.7442.1.4c1dbf1f0e",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "zod": "^4.4.3",
+            "@open-mercato/core": "0.8.1-develop.7442.1.4c1dbf1f0e"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-HGCiENOGtHStItm8ekf6I02pWbgmQR+7LalF60XIBgK4qWHe8f+h7GPpYlr9S1JtBxUCB0YJLHNQeHqYfCEO+g==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-tpay/-/gateway-tpay-0.8.1-develop.7442.1.4c1dbf1f0e.tgz"
+          }
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "version": "0.10.1-develop.7583.1.0c886d0a14",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/gateway-tpay"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "@open-mercato/shared": "0.10.1-develop.7583.1.0c886d0a14",
+            "@mikro-orm/postgresql": "^7.0.14"
+          },
+          "dependencies": {
+            "zod": "^4.4.3",
+            "@open-mercato/core": "0.10.1-develop.7583.1.0c886d0a14"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-RM0TjbAelisTw3nyJUmQe42xMNiMsUu5LIsE8o7KIxa0UjgDDzE9XWMt+tuwPgJLLaH4Cot0xxTYzJBGK/4PhA==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/gateway-tpay/-/gateway-tpay-0.10.1-develop.7583.1.0c886d0a14.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-10T09:38:47.681Z",
+        "modified": "2026-10-22T13:49:29.881Z",
+        "0.8.1-develop.7442.1.4c1dbf1f0e": "2026-10-10T09:39:43.230Z",
+        "0.10.1-develop.7583.1.0c886d0a14": "2026-10-22T13:49:29.049Z"
+      },
+      "maintainers": [
+        {
+          "name": "pat-lewczuk"
+        },
+        {
+          "name": "patryk.andrzejewski"
+        },
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "repository": {
+        "url": "git+https://github.com/open-mercato/open-mercato.git",
+        "type": "git",
+        "directory": "packages/gateway-tpay"
+      }
+    }
+  }
+}

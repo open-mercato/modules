@@ -1,0 +1,304 @@
+---
+// Built-in modules (spec 7.7 F): every module of @open-mercato/core by category, grey sigils, from built-in.json.
+import Base from '../../layouts/Base.astro'
+import CommandChip from '../../components/CommandChip.astro'
+import Sigil from '../../components/Sigil.astro'
+import Icon from '../../components/icons/Icon.astro'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import { orderLines } from '../../lib/status.ts'
+import { builtInPage, href } from '../../lib/url.ts'
+
+const data = loadSiteData()
+const { builtIn, modules, meta } = data
+const latest = orderLines(modules.lines).find((l) => l.source === 'latest')
+const categories = modules.categories.map((c) => ({ id: c.id, title: c.title }))
+// on in a new app (the classic preset, decision of 24 Oct), and of those, on in an app from the empty preset too
+const inPresets = latest ? builtIn.modules.filter((m) => m.inPresets.includes(latest.key)).length : 0
+const inEmpty = latest ? builtIn.modules.filter((m) => (m.inEmptyPreset ?? []).includes(latest.key)).length : 0
+const on = (m: (typeof builtIn.modules)[number]): boolean => !!latest && m.inPresets.includes(latest.key)
+// a dense instrument list per category, two columns of categories on desktop (the version is in the H1 once)
+const groups = categories
+  .map((c) => ({
+    ...c,
+    items: builtIn.modules.filter((m) => m.category === c.id).sort((a, b) => a.title.localeCompare(b.title)),
+  }))
+  .filter((g) => g.items.length > 0)
+---
+
+<Base
+  title={`Built into Open Mercato ${builtIn.coreVersion} · Open Mercato Modules`}
+  description={`${builtIn.modules.length} modules ship with Open Mercato core ${builtIn.coreVersion}. Search them before you build or install a package.`}
+  path="/built-in"
+  dataAsOf={meta.dataAsOf}
+  skip={{ href: '#built-in', label: 'Skip to built-in modules' }}
+>
+  <section class="band">
+    <div class="sheet section bi-head">
+      <div class="bi-head__text">
+        <p class="t-tagline">// Ask before you build</p>
+        <h1 class="t-h1">Built into Open Mercato {builtIn.coreVersion}</h1>
+        <p class="bi-head__sub">
+          {builtIn.modules.length} modules ship with <code>@open-mercato/core</code>. A module you need may already be
+          here: enable it instead of installing a package.{
+            inPresets > 0 &&
+              ` ${inPresets} are on in a new app${inEmpty > 0 ? `, ${inEmpty} of them in an app from the empty preset too` : ''}.`
+          }
+        </p>
+      </div>
+      <div class="bi-head__how">
+        <p class="t-tagline">Enable one</p>
+        <CommandChip command="yarn mercato module enable @open-mercato/core --module <id>" />
+        <p class="bi-head__fine">
+          <code>enable</code>, not <code>add</code>: core is always installed, so registering the module is enough, and
+          the version of core stays the one your app runs.
+        </p>
+        <a class="bi-head__search" href={href('/#registry')}>Search modules and built-in together</a>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="built-in" aria-label="Built-in modules by category">
+    <div class="sheet section">
+      <div class="bil">
+        {
+          groups.map((g) => (
+            <section class="bil__group" aria-labelledby={`bil-${g.id}`}>
+              <h2 class="bil__cat" id={`bil-${g.id}`}>
+                <span>{g.title}</span>
+                <span class="bil__n">{g.items.length}</span>
+              </h2>
+              <ul class="bil__list" role="list">
+                {g.items.map((m) => (
+                  <li class="bil__row">
+                    <span class="bil__sig">
+                      <Sigil builtIn={m} size={24} />
+                    </span>
+                    <span class="bil__main">
+                      <span class="bil__line">
+                        <a class="bil__title" href={href(builtInPage(m.id))}>
+                          {m.title}
+                        </a>
+                        <code class="bil__id">{m.id}</code>
+                      </span>
+                      <span class="bil__desc" title={m.description}>
+                        {m.description}
+                      </span>
+                    </span>
+                    {on(m) ? (
+                      <span
+                        class="bil__on"
+                        title={
+                          (m.inEmptyPreset ?? []).includes(latest?.key ?? '')
+                            ? 'On in a new app, and in an app from the empty preset too.'
+                            : 'On in a new app. Off in an app from the empty preset.'
+                        }
+                      >
+                        On
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--icon btn--sm bil__copy"
+                        data-copy={m.install}
+                        aria-label={`Copy enable command for ${m.id}`}
+                        title={m.install}
+                      >
+                        <Icon name="terminal" size={16} />
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bi-head {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 48px;
+    align-items: end;
+  }
+  .bi-head__text {
+    display: grid;
+    gap: 14px;
+  }
+  .bi-head__sub {
+    max-width: 56ch;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+  .bi-head__sub code {
+    font-size: 0.85em;
+    color: var(--ink);
+  }
+  .bi-head__how {
+    display: grid;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+  }
+  .bi-head__fine {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .bi-head__fine code {
+    color: var(--ink);
+  }
+  .bi-head__search {
+    font-size: 14px;
+  }
+  /* a 44 px target on phones (spec 7.10, review r6) */
+  @media (max-width: 767px) {
+    .bi-head__search {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  @media (max-width: 991px) {
+    .bi-head {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+
+  /* dense list (7.7 F): categories in two columns, one 52 px row per module */
+  .bil {
+    columns: 2;
+    column-gap: 48px;
+  }
+  .bil__group {
+    break-inside: avoid;
+    margin-bottom: 32px;
+  }
+  .bil__cat {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.33;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .bil__n {
+    font-variant-numeric: tabular-nums;
+  }
+  .bil__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .bil__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) minmax(36px, auto);
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--line);
+    transition: background-color var(--dur-1) var(--ease);
+  }
+  .bil__row:hover {
+    background: var(--bg-2);
+  }
+  .bil__sig {
+    display: grid;
+    color: var(--ink-2);
+  }
+  .bil__main {
+    display: grid;
+    min-width: 0;
+  }
+  .bil__line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+  .bil__title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .bil__title::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .bil__title:hover {
+    text-decoration: underline;
+  }
+  .bil__id {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 12px;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .bil__desc {
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ink-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bil__copy,
+  .bil__on {
+    position: relative;
+    z-index: 1;
+    justify-self: end;
+  }
+  .bil__on {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ok-text);
+  }
+  .bil__on--default {
+    color: var(--ink-2);
+  }
+  @media (max-width: 991px) {
+    .bil {
+      columns: 1;
+    }
+  }
+  @media (max-width: 479px) {
+    .bil__row {
+      grid-template-columns: 24px minmax(0, 1fr) minmax(44px, auto);
+      padding-block: 8px;
+    }
+    .bil__line {
+      flex-wrap: wrap;
+      gap: 0 10px;
+    }
+    /* a long title wraps inside its column (review r4: `Customer Identity & Portal Authentication` ran 18 px past it) */
+    .bil__title {
+      white-space: normal;
+    }
+    .bil__desc {
+      white-space: normal;
+    }
+    .bil__copy {
+      width: 44px !important;
+      min-height: 44px;
+    }
+  }
+</style>

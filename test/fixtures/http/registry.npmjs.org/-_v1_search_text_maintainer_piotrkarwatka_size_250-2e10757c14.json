@@ -1,0 +1,3199 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Apiotrkarwatka&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 92122,
+            "weekly": 14491
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T14:44:31.518Z",
+          "searchScore": 62.74407,
+          "package": {
+            "name": "@open-mercato/cezar",
+            "keywords": [],
+            "version": "0.16.2",
+            "description": "Local cockpit for running and tracking AI agent tasks in your repo. Uses your logged-in `claude` CLI and `gh` — zero config, zero database.",
+            "sanitized_name": "@open-mercato/cezar",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-21T20:58:52.454Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar"
+            }
+          },
+          "score": {
+            "final": 62.74407,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 51915,
+            "weekly": 8732
+          },
+          "dependents": "3",
+          "updated": "2026-10-22T13:48:24.522Z",
+          "searchScore": 59.392986,
+          "package": {
+            "name": "@open-mercato/events",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Event-driven backbone for Open Mercato modules.",
+            "sanitized_name": "@open-mercato/events",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:50.766Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/events"
+            }
+          },
+          "score": {
+            "final": 59.392986,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 50917,
+            "weekly": 8100
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T14:02:46.540Z",
+          "searchScore": 56.853794,
+          "package": {
+            "name": "@open-mercato/cli",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The command-line toolbox for Open Mercato developers.",
+            "sanitized_name": "@open-mercato/cli",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:41.181Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cli"
+            }
+          },
+          "score": {
+            "final": 56.853794,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 71368,
+            "weekly": 13997
+          },
+          "dependents": "7",
+          "updated": "2026-10-22T13:50:26.282Z",
+          "searchScore": 56.696846,
+          "package": {
+            "name": "@open-mercato/shared",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The shared foundation for Open Mercato packages.",
+            "sanitized_name": "@open-mercato/shared",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:29:38.004Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/shared"
+            }
+          },
+          "score": {
+            "final": 56.696846,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46397,
+            "weekly": 8005
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:46:31.617Z",
+          "searchScore": 56.332836,
+          "package": {
+            "name": "@open-mercato/content",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Static content module for policy and legal pages in Open Mercato apps.",
+            "sanitized_name": "@open-mercato/content",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:45.874Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/content"
+            }
+          },
+          "score": {
+            "final": 56.332836,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46377,
+            "weekly": 7651
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:48:10.864Z",
+          "searchScore": 56.33042,
+          "package": {
+            "name": "@open-mercato/gateway-stripe",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/gateway-stripe",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:40.921Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/gateway-stripe"
+            }
+          },
+          "score": {
+            "final": 56.33042,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 64520,
+            "weekly": 12630
+          },
+          "dependents": "15",
+          "updated": "2026-10-22T13:55:32.616Z",
+          "searchScore": 56.15126,
+          "package": {
+            "name": "@open-mercato/ui",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Composable UI toolkit for Open Mercato backoffice and business apps.",
+            "sanitized_name": "@open-mercato/ui",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:33:28.702Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/ui"
+            }
+          },
+          "score": {
+            "final": 56.15126,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 57042,
+            "weekly": 12814
+          },
+          "dependents": "18",
+          "updated": "2026-10-22T14:41:41.273Z",
+          "searchScore": 55.973595,
+          "package": {
+            "name": "@open-mercato/core",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Build production-grade business modules on top of the Open Mercato platform.",
+            "sanitized_name": "@open-mercato/core",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:41:14.001Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/core"
+            }
+          },
+          "score": {
+            "final": 55.973595,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 67048,
+            "weekly": 12022
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T14:43:51.867Z",
+          "searchScore": 55.26148,
+          "package": {
+            "name": "cezar-run",
+            "keywords": [],
+            "version": "0.16.1",
+            "description": "Alias for @open-mercato/cezar — so `npx cezar-run` just works. Local cockpit for running and tracking AI agent tasks in your repo.",
+            "sanitized_name": "cezar-run",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-20T16:28:04.801Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/cezar-run"
+            }
+          },
+          "score": {
+            "final": 55.26148,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 58444,
+            "weekly": 10317
+          },
+          "dependents": "10",
+          "updated": "2026-10-22T13:50:30.640Z",
+          "searchScore": 54.533134,
+          "package": {
+            "name": "@open-mercato/queue",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Multi-strategy job queue with local and BullMQ support",
+            "sanitized_name": "@open-mercato/queue",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:57.325Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/queue"
+            }
+          },
+          "score": {
+            "final": 54.533134,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 32803,
+            "weekly": 6652
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:46:35.826Z",
+          "searchScore": 54.389877,
+          "package": {
+            "name": "@open-mercato/channel-imap",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-imap",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:40.352Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-imap"
+            }
+          },
+          "score": {
+            "final": 54.389877,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 54587,
+            "weekly": 9403
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:45:10.708Z",
+          "searchScore": 54.17107,
+          "package": {
+            "name": "@open-mercato/ai-assistant",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "AI-powered chat and tool execution for Open Mercato, using MCP (Model Context Protocol) for tool discovery and execution.",
+            "sanitized_name": "@open-mercato/ai-assistant",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:18.873Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/ai-assistant"
+            }
+          },
+          "score": {
+            "final": 54.17107,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 40069,
+            "weekly": 8537
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T13:49:45.401Z",
+          "searchScore": 54.046574,
+          "package": {
+            "name": "@open-mercato/telemetry",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Vendor-neutral spans, metrics, and error reporting backed by a pluggable OTLP provider. Off by default; the telemetry runtime is loaded only when explicitly enabled.",
+            "sanitized_name": "@open-mercato/telemetry",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:00.494Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/telemetry"
+            }
+          },
+          "score": {
+            "final": 54.046574,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18727,
+            "weekly": 5330
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:48:43.715Z",
+          "searchScore": 53.435295,
+          "package": {
+            "name": "@open-mercato/documents",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Collaborative internal documents for Open Mercato: a tenant/organization-scoped backoffice module where staff co-author rich-text documents in real time (TipTap + Yjs), organized in folders, shared per-document (owner / editor / commenter / viewer), annot",
+            "sanitized_name": "@open-mercato/documents",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:24.284Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/documents"
+            }
+          },
+          "score": {
+            "final": 53.435295,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18671,
+            "weekly": 5303
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:44:31.376Z",
+          "searchScore": 53.417797,
+          "package": {
+            "name": "@open-mercato/channel-discord",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-discord",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:12.309Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-discord"
+            }
+          },
+          "score": {
+            "final": 53.417797,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 43556,
+            "weekly": 7435
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:10.174Z",
+          "searchScore": 52.97389,
+          "package": {
+            "name": "@open-mercato/onboarding",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Tenant onboarding and first-run experience for Open Mercato.",
+            "sanitized_name": "@open-mercato/onboarding",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:33.348Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/onboarding"
+            }
+          },
+          "score": {
+            "final": 52.97389,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 38945,
+            "weekly": 7753
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:50:20.139Z",
+          "searchScore": 52.380486,
+          "package": {
+            "name": "@open-mercato/sync-akeneo",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/sync-akeneo",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:57.625Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/sync-akeneo"
+            }
+          },
+          "score": {
+            "final": 52.380486,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 44766,
+            "weekly": 6914
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:52:03.742Z",
+          "searchScore": 52.04044,
+          "package": {
+            "name": "@open-mercato/webhooks",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Webhooks module for Open Mercato — Standard Webhooks compliant outbound/inbound delivery",
+            "sanitized_name": "@open-mercato/webhooks",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:59.060Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/webhooks"
+            }
+          },
+          "score": {
+            "final": 52.04044,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18055,
+            "weekly": 5200
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:48:59.632Z",
+          "searchScore": 51.182926,
+          "package": {
+            "name": "@open-mercato/channel-ses",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-ses",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:25:21.158Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-ses"
+            }
+          },
+          "score": {
+            "final": 51.182926,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 25245,
+            "weekly": 6254
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:46:44.523Z",
+          "searchScore": 51.076263,
+          "package": {
+            "name": "@open-mercato/channel-resend",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-resend",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:45.139Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-resend"
+            }
+          },
+          "score": {
+            "final": 51.076263,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 23497,
+            "weekly": 6040
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:47:27.359Z",
+          "searchScore": 50.68819,
+          "package": {
+            "name": "@open-mercato/channel-apns",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-apns",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:36.154Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-apns"
+            }
+          },
+          "score": {
+            "final": 50.68819,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 20546,
+            "weekly": 5076
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:54:10.303Z",
+          "searchScore": 50.402336,
+          "package": {
+            "name": "@open-mercato/enterprise",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "The commercial layer of Open Mercato — proprietary enterprise modules plus certification, review, and operational support that take AI-built CRM/ERP systems to production. Delivered as the `@open-mercato/enterprise` package.",
+            "sanitized_name": "@open-mercato/enterprise",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "SEE LICENSE IN LICENSE.md",
+            "date": "2026-10-09T19:26:35.733Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/enterprise"
+            }
+          },
+          "score": {
+            "final": 50.402336,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 65762,
+            "weekly": 13482
+          },
+          "dependents": "2",
+          "updated": "2026-10-22T13:48:24.842Z",
+          "searchScore": 49.86387,
+          "package": {
+            "name": "@open-mercato/cache",
+            "keywords": ["cache", "caching", "redis", "sqlite", "memory", "tags", "invalidation"],
+            "version": "0.9.0",
+            "description": "Multi-strategy cache service with tag-based invalidation support",
+            "sanitized_name": "@open-mercato/cache",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:23:29.667Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cache"
+            }
+          },
+          "score": {
+            "final": 49.86387,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 14264,
+            "weekly": 7731
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T14:00:53.015Z",
+          "searchScore": 49.858673,
+          "package": {
+            "name": "create-mercato-app",
+            "keywords": ["open-mercato", "erp", "commerce", "scaffolding", "cli"],
+            "version": "0.9.0",
+            "description": "Create a new Open Mercato application",
+            "sanitized_name": "create-mercato-app",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:30:20.552Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-app"
+            }
+          },
+          "score": {
+            "final": 49.858673,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 23587,
+            "weekly": 5985
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:44:53.152Z",
+          "searchScore": 48.7115,
+          "package": {
+            "name": "@open-mercato/channel-fcm",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-fcm",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:24.526Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-fcm"
+            }
+          },
+          "score": {
+            "final": 48.7115,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46831,
+            "weekly": 8113
+          },
+          "dependents": "0",
+          "updated": "2026-10-22T13:49:27.544Z",
+          "searchScore": 48.236282,
+          "package": {
+            "name": "@open-mercato/search",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Hybrid search for Open Mercato: fulltext, vector, and token-based search in one module.",
+            "sanitized_name": "@open-mercato/search",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:36.908Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/search"
+            }
+          },
+          "score": {
+            "final": 48.236282,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 46595,
+            "weekly": 8014
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:49:28.374Z",
+          "searchScore": 48.21206,
+          "package": {
+            "name": "@open-mercato/scheduler",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "Database-managed scheduled jobs with admin UI",
+            "sanitized_name": "@open-mercato/scheduler",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:26:05.365Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/scheduler"
+            }
+          },
+          "score": {
+            "final": 48.21206,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 20460,
+            "weekly": 5568
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:44:39.923Z",
+          "searchScore": 47.97262,
+          "package": {
+            "name": "@open-mercato/channel-expo",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-expo",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:23:06.363Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-expo"
+            }
+          },
+          "score": {
+            "final": 47.97262,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 38655,
+            "weekly": 6772
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:16.540Z",
+          "searchScore": 47.31645,
+          "package": {
+            "name": "@open-mercato/checkout",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "`@open-mercato/checkout` provides the `checkout` module for standalone pay links and the Phase A public payment flow.",
+            "sanitized_name": "@open-mercato/checkout",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:24:58.206Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/checkout"
+            }
+          },
+          "score": {
+            "final": 47.31645,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8049,
+            "weekly": 3210
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:51:18.119Z",
+          "searchScore": 46.64387,
+          "package": {
+            "name": "@open-mercato/web-research-model",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-model",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:30:43.117Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-model"
+            }
+          },
+          "score": {
+            "final": 46.64387,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8034,
+            "weekly": 3257
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:51:04.006Z",
+          "searchScore": 46.633392,
+          "package": {
+            "name": "@open-mercato/web-research-exa",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-exa",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:31.102Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-exa"
+            }
+          },
+          "score": {
+            "final": 46.633392,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8028,
+            "weekly": 3206
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:50:35.335Z",
+          "searchScore": 46.629196,
+          "package": {
+            "name": "@open-mercato/web-research-browser",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-browser",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:27.561Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-browser"
+            }
+          },
+          "score": {
+            "final": 46.629196,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 32936,
+            "weekly": 6608
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:48:30.372Z",
+          "searchScore": 46.548878,
+          "package": {
+            "name": "@open-mercato/channel-gmail",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/channel-gmail",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:23:19.999Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/channel-gmail"
+            }
+          },
+          "score": {
+            "final": 46.548878,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 15336,
+            "weekly": 4526
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:51:16.545Z",
+          "searchScore": 46.475037,
+          "package": {
+            "name": "@open-mercato/storage-s3",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/storage-s3",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:19.330Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/storage-s3"
+            }
+          },
+          "score": {
+            "final": 46.475037,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8215,
+            "weekly": 3305
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:51:16.114Z",
+          "searchScore": 45.004963,
+          "package": {
+            "name": "@open-mercato/web-research-serp",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-serp",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:36.992Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-serp"
+            }
+          },
+          "score": {
+            "final": 45.004963,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7951,
+            "weekly": 3197
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:52:45.837Z",
+          "searchScore": 44.828335,
+          "package": {
+            "name": "@open-mercato/web-research-searxng",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-searxng",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:43.945Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-searxng"
+            }
+          },
+          "score": {
+            "final": 44.828335,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 22386,
+            "weekly": 5896
+          },
+          "dependents": "1",
+          "updated": "2026-10-22T13:51:03.741Z",
+          "searchScore": 44.697792,
+          "package": {
+            "name": "@open-mercato/web-research",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:10.266Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research"
+            }
+          },
+          "score": {
+            "final": 44.697792,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 7983,
+            "weekly": 3192
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:56:41.656Z",
+          "searchScore": 43.97655,
+          "package": {
+            "name": "@open-mercato/web-research-tavily",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-tavily",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:42.780Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-tavily"
+            }
+          },
+          "score": {
+            "final": 43.97655,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18115,
+            "weekly": 5210
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:50:17.656Z",
+          "searchScore": 43.682964,
+          "package": {
+            "name": "@open-mercato/tillio",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/tillio",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:28:05.628Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/tillio"
+            }
+          },
+          "score": {
+            "final": 43.682964,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8016,
+            "weekly": 3250
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:50:55.282Z",
+          "searchScore": 43.10489,
+          "package": {
+            "name": "@open-mercato/web-research-firecrawl",
+            "keywords": [],
+            "version": "0.9.0",
+            "sanitized_name": "@open-mercato/web-research-firecrawl",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:24.642Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/web-research-firecrawl"
+            }
+          },
+          "score": {
+            "final": 43.10489,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 3762,
+            "weekly": 3182
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:50:01.145Z",
+          "searchScore": 41.141376,
+          "package": {
+            "name": "@open-mercato/gateway-tpay",
+            "keywords": [],
+            "version": "0.8.1-develop.7442.1.4c1dbf1f0e",
+            "description": "Temporary package placeholder for staged publishing",
+            "sanitized_name": "@open-mercato/gateway-tpay",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-10T09:39:43.230Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/gateway-tpay"
+            }
+          },
+          "score": {
+            "final": 41.141376,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 8431,
+            "weekly": 3348
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T13:49:20.744Z",
+          "searchScore": 40.01678,
+          "package": {
+            "name": "@open-mercato/starter",
+            "keywords": [],
+            "version": "0.9.0",
+            "description": "One-command, cross-platform bootstrap for Open Mercato dev environments: prerequisite doctor, corporate TLS trust, idempotent setup steps, and a supervised hybrid or fully containerized stack.",
+            "sanitized_name": "@open-mercato/starter",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T19:27:11.054Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/open-mercato#readme",
+              "repository": "git+https://github.com/open-mercato/open-mercato.git",
+              "bugs": "https://github.com/open-mercato/open-mercato/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/starter"
+            }
+          },
+          "score": {
+            "final": 40.01678,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1367,
+            "weekly": 861
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T08:53:09.458Z",
+          "searchScore": 33.920963,
+          "package": {
+            "name": "mercato-sandbox",
+            "keywords": [],
+            "version": "0.1.0-pr568.1.4",
+            "description": "Command-line interface for Open Mercato Sandboxes.",
+            "sanitized_name": "mercato-sandbox",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-10T10:40:56.189Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/mercato-sandbox"
+            }
+          },
+          "score": {
+            "final": 33.920963,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 1963,
+            "weekly": 298
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T17:01:13.877Z",
+          "searchScore": 33.03313,
+          "package": {
+            "name": "interpreter-tools",
+            "keywords": [],
+            "version": "0.9.8",
+            "description": "<img src=\".readme-assets/hero.png\" />",
+            "sanitized_name": "interpreter-tools",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-05-14T10:48:40.922Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/interpreter-tools"
+            }
+          },
+          "score": {
+            "final": 33.03313,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 401,
+            "weekly": 401
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T11:46:09.197Z",
+          "searchScore": 28.138622,
+          "package": {
+            "name": "@open-mercato/readiness-scanner",
+            "keywords": ["open-mercato", "security", "readiness", "cli", "typescript"],
+            "version": "0.1.0",
+            "description": "Static production-readiness scanner for Open Mercato applications.",
+            "sanitized_name": "@open-mercato/readiness-scanner",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-09T11:43:50.166Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/mercato-readiness-scanner#readme",
+              "repository": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+              "bugs": "https://github.com/open-mercato/mercato-readiness-scanner/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/readiness-scanner"
+            }
+          },
+          "score": {
+            "final": 28.138622,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 646,
+            "weekly": 200
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T14:01:16.121Z",
+          "searchScore": 27.714554,
+          "package": {
+            "name": "create-mercato-module",
+            "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+            "version": "0.5.1",
+            "description": "Create and publish a single module from an existing Open Mercato app.",
+            "sanitized_name": "create-mercato-module",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-14T13:58:52.713Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/create-mercato-module#readme",
+              "repository": "git+https://github.com/open-mercato/create-mercato-module.git",
+              "bugs": "https://github.com/open-mercato/create-mercato-module/issues",
+              "npm": "https://www.npmjs.com/package/create-mercato-module"
+            }
+          },
+          "score": {
+            "final": 27.714554,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 206,
+            "weekly": 206
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T12:26:10.257Z",
+          "searchScore": 24.630974,
+          "package": {
+            "name": "@piotrkarwatka/visits",
+            "keywords": [],
+            "version": "0.1.0",
+            "description": "Open Mercato module: visits",
+            "sanitized_name": "@piotrkarwatka/visits",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-09T12:24:57.137Z",
+            "links": {
+              "homepage": "https://github.com/pkarw/visits-example#readme",
+              "repository": "git+https://github.com/pkarw/visits-example.git",
+              "bugs": "https://github.com/pkarw/visits-example/issues",
+              "npm": "https://www.npmjs.com/package/@piotrkarwatka/visits"
+            }
+          },
+          "score": {
+            "final": 24.630974,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 337,
+            "weekly": 13
+          },
+          "dependents": "1",
+          "updated": "2026-10-21T17:31:15.302Z",
+          "searchScore": 24.60838,
+          "package": {
+            "name": "open-agents-builder-client",
+            "keywords": [],
+            "version": "1.6.1",
+            "description": "A TypeScript client for the Open Agents Builder APIs, including Zod-based DTOs.",
+            "sanitized_name": "open-agents-builder-client",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-05-28T11:29:57.740Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/open-agents-builder-client"
+            }
+          },
+          "score": {
+            "final": 24.60838,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 40,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:13.812Z",
+          "searchScore": 17.790117,
+          "package": {
+            "name": "@open-mercato/forms",
+            "keywords": [],
+            "version": "0.0.0-canary.20260603190311.74d2590",
+            "description": "Audit-grade questionnaire / form primitive for Open Mercato — versioned definitions, append-only submissions, role-sliced rendering",
+            "sanitized_name": "@open-mercato/forms",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-06-03T19:03:17.877Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/forms"
+            }
+          },
+          "score": {
+            "final": 17.790117,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 71,
+            "weekly": 7
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T11:21:12.359Z",
+          "searchScore": 17.246553,
+          "package": {
+            "name": "@open-mercato/carrier-inpost",
+            "keywords": [],
+            "version": "0.4.6-canary-5eb138494e",
+            "sanitized_name": "@open-mercato/carrier-inpost",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-03-05T14:46:53.835Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/carrier-inpost"
+            }
+          },
+          "score": {
+            "final": 17.246553,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 3
+          },
+          "dependents": "1",
+          "updated": "2026-10-21T01:16:37.598Z",
+          "searchScore": 15.217806,
+          "package": {
+            "name": "@open-mercato/cezar-api-client",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "Typed client and shared contract types for the cezar cockpit HTTP API.",
+            "sanitized_name": "@open-mercato/cezar-api-client",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:43:59.433Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-api-client"
+            }
+          },
+          "score": {
+            "final": 15.217806,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:14.566Z",
+          "searchScore": 14.647089,
+          "package": {
+            "name": "@open-mercato/test-package",
+            "keywords": [],
+            "version": "0.1.0-canary.20260320075440.99893ec",
+            "sanitized_name": "@open-mercato/test-package",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-03-20T07:54:45.281Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/test-package"
+            }
+          },
+          "score": {
+            "final": 14.647089,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 27,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:12.094Z",
+          "searchScore": 14.463725,
+          "package": {
+            "name": "@open-mercato/pay-by-links",
+            "keywords": [],
+            "version": "0.4.9-canary-fcabd45887",
+            "sanitized_name": "@open-mercato/pay-by-links",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-03-18T09:12:59.948Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/pay-by-links"
+            }
+          },
+          "score": {
+            "final": 14.463725,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 24,
+            "weekly": 2
+          },
+          "dependents": "1",
+          "updated": "2026-10-20T20:26:40.743Z",
+          "searchScore": 13.873096,
+          "package": {
+            "name": "@open-mercato/cezar-contract",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "The cezar HTTP API contract: zod schemas and the types inferred from them.",
+            "sanitized_name": "@open-mercato/cezar-contract",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:41:19.457Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-contract"
+            }
+          },
+          "score": {
+            "final": 13.873096,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 21,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:10.089Z",
+          "searchScore": 13.687415,
+          "package": {
+            "name": "@open-mercato/gateway-przelewy24",
+            "keywords": [],
+            "version": "0.4.6-canary-5eb138494e",
+            "sanitized_name": "@open-mercato/gateway-przelewy24",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-03-05T14:46:56.146Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/gateway-przelewy24"
+            }
+          },
+          "score": {
+            "final": 13.687415,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 21,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:08.511Z",
+          "searchScore": 13.687415,
+          "package": {
+            "name": "@open-mercato/gateway-payu",
+            "keywords": [],
+            "version": "0.4.6-canary-5eb138494e",
+            "sanitized_name": "@open-mercato/gateway-payu",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-03-05T14:46:54.950Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/gateway-payu"
+            }
+          },
+          "score": {
+            "final": 13.687415,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 21,
+            "weekly": 21
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T11:51:17.818Z",
+          "searchScore": 13.687415,
+          "package": {
+            "name": "@piotrkarwatka/marketing-consents",
+            "keywords": [],
+            "version": "0.1.0",
+            "description": "Open Mercato module: marketing_consents",
+            "sanitized_name": "@piotrkarwatka/marketing-consents",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "UNLICENSED",
+            "date": "2026-10-14T11:49:41.185Z",
+            "links": {
+              "homepage": "https://github.com/pkarw/marketing-consents#readme",
+              "repository": "git+https://github.com/pkarw/marketing-consents.git",
+              "bugs": "https://github.com/pkarw/marketing-consents/issues",
+              "npm": "https://www.npmjs.com/package/@piotrkarwatka/marketing-consents"
+            }
+          },
+          "score": {
+            "final": 13.687415,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 18,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T16:41:09.656Z",
+          "searchScore": 12.9041605,
+          "package": {
+            "name": "@open-mercato/client",
+            "keywords": [],
+            "version": "0.3.5",
+            "description": "Typed API client for the Open Mercato platform, generated directly from the monorepo's OpenAPI specification. Full product docs live at https://docs.openmercato.com and the hosted API explorer is available at https://demo.openmercato.com/docs/api. Project",
+            "sanitized_name": "@open-mercato/client",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2025-11-12T13:18:51.033Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/@open-mercato/client"
+            }
+          },
+          "score": {
+            "final": 12.9041605,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 17,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-20T20:26:12.148Z",
+          "searchScore": 12.17661,
+          "package": {
+            "name": "@open-mercato/cezar-react",
+            "keywords": [],
+            "version": "0.10.0-pr931.9002",
+            "description": "React providers, components, and the complete embeddable Cezar cockpit.",
+            "sanitized_name": "@open-mercato/cezar-react",
+            "publisher": {
+              "email": "patryk.lewczuk@hotmail.com",
+              "username": "pat-lewczuk"
+            },
+            "maintainers": [
+              {
+                "email": "patryk.lewczuk@hotmail.com",
+                "username": "pat-lewczuk"
+              },
+              {
+                "email": "patrick.andrzejewsky@gmail.com",
+                "username": "patryk.andrzejewski"
+              },
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-27T19:41:24.252Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/cezar#readme",
+              "repository": "git+https://github.com/open-mercato/cezar.git",
+              "bugs": "https://github.com/open-mercato/cezar/issues",
+              "npm": "https://www.npmjs.com/package/@open-mercato/cezar-react"
+            }
+          },
+          "score": {
+            "final": 12.17661,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 9,
+            "weekly": 4
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T01:46:15.169Z",
+          "searchScore": 9.220508,
+          "package": {
+            "name": "pdf-extract-api-client",
+            "keywords": ["pdf-extract-api", "api-client", "pdf"],
+            "version": "1.0.2",
+            "description": "TypeScript client for the PDF Extract API",
+            "sanitized_name": "pdf-extract-api-client",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2024-11-14T13:42:11.733Z",
+            "links": {
+              "homepage": "https://github.com/CatchTheTornado/pdf-extract-api-client#readme",
+              "repository": "git+https://github.com/CatchTheTornado/pdf-extract-api-client.git",
+              "bugs": "https://github.com/CatchTheTornado/pdf-extract-api-client/issues",
+              "npm": "https://www.npmjs.com/package/pdf-extract-api-client"
+            }
+          },
+          "score": {
+            "final": 9.220508,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 6,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T17:56:17.662Z",
+          "searchScore": 7.564108,
+          "package": {
+            "name": "open-agents-builder-example",
+            "keywords": [],
+            "version": "1.0.0",
+            "description": "Example usage of Open Agents Builder client",
+            "sanitized_name": "open-agents-builder-example",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2025-05-19T11:48:12.149Z",
+            "links": {
+              "npm": "https://www.npmjs.com/package/open-agents-builder-example"
+            }
+          },
+          "score": {
+            "final": 7.564108,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 5,
+            "weekly": 2
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T17:51:13.899Z",
+          "searchScore": 6.508953,
+          "package": {
+            "name": "text-extract-api-client",
+            "keywords": ["pdf-extract-api", "api-client", "pdf"],
+            "version": "1.0.2",
+            "description": "TypeScript client for the PDF Extract API",
+            "sanitized_name": "text-extract-api-client",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2025-01-08T10:08:07.623Z",
+            "links": {
+              "homepage": "https://github.com/CatchTheTornado/text-extract-api-client#readme",
+              "repository": "git+https://github.com/CatchTheTornado/text-extract-api-client.git",
+              "bugs": "https://github.com/CatchTheTornado/text-extract-api-client/issues",
+              "npm": "https://www.npmjs.com/package/text-extract-api-client"
+            }
+          },
+          "score": {
+            "final": 6.508953,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 0,
+            "weekly": 0
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T15:21:32.906Z",
+          "searchScore": 0,
+          "package": {
+            "name": "mercato-readiness-scanner",
+            "keywords": [],
+            "version": "0.2.2",
+            "description": "Static production-readiness scanner for Open Mercato applications.",
+            "sanitized_name": "mercato-readiness-scanner",
+            "publisher": {
+              "email": "piotr.karwatka@gmail.com",
+              "username": "piotrkarwatka"
+            },
+            "maintainers": [
+              {
+                "email": "piotr.karwatka@gmail.com",
+                "username": "piotrkarwatka"
+              }
+            ],
+            "date": "2026-10-22T15:21:00.543Z",
+            "links": {
+              "homepage": "https://github.com/open-mercato/mercato-readiness-scanner#readme",
+              "repository": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+              "bugs": "https://github.com/open-mercato/mercato-readiness-scanner/issues",
+              "npm": "https://www.npmjs.com/package/mercato-readiness-scanner"
+            }
+          },
+          "score": {
+            "final": 0,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 63,
+      "time": "2026-10-23T02:39:38.914Z"
+    }
+  }
+}

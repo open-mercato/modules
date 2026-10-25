@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@fullstackhouse/nestjs-redis-health@1.0.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@fullstackhouse/nestjs-redis-health",
+      "version": "1.0.0",
+      "files": []
+    }
+  }
+}

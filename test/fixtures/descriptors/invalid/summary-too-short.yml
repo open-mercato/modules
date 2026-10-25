@@ -1,0 +1,5 @@
+# expect-path: summary
+npm: "@acme/thing"
+category: devtools
+summary: Too short.
+whenToUse: Use when the summary is shorter than twenty characters.

@@ -1,0 +1,161 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@dainamite%2Fbilling"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@dainamite/billing",
+      "dist-tags": {
+        "latest": "0.19.0"
+      },
+      "versions": {
+        "0.17.0": {
+          "version": "0.17.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "type": "git",
+            "directory": "packages/billing"
+          },
+          "gitHead": "ad015655f0396201e5fe861eb2869c3c87f9a5b4",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "awilix": "^12.0.0",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.400.0",
+            "@mikro-orm/core": "^7.0.0",
+            "@open-mercato/ui": "^0.6.0",
+            "@open-mercato/core": "^0.6.0",
+            "@open-mercato/queue": "^0.6.0",
+            "@open-mercato/events": "^0.6.0",
+            "@open-mercato/shared": "^0.6.0",
+            "@mikro-orm/decorators": "^7.0.0",
+            "@mikro-orm/postgresql": "^7.0.0",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0"
+          },
+          "scripts": {},
+          "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+          "dist": {
+            "integrity": "sha512-bmpiiUZVsOkEstZFaILmB0jHi95UqGtBAWt7n8Gu1kgD7IqN3uUukxVVtToeW3H5hTTwIWC6zRE2uViHgvg9QA==",
+            "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-0.17.0.tgz"
+          }
+        },
+        "0.18.0": {
+          "version": "0.18.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "type": "git",
+            "directory": "packages/billing"
+          },
+          "gitHead": "1fd9281937f30e75c62df9acf45cf3a2dbdaabe4",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "awilix": "^12.0.0",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.400.0",
+            "@mikro-orm/core": "^7.0.0",
+            "@open-mercato/ui": "^0.6.0",
+            "@open-mercato/core": "^0.6.0",
+            "@open-mercato/queue": "^0.6.0",
+            "@open-mercato/events": "^0.6.0",
+            "@open-mercato/shared": "^0.6.0",
+            "@mikro-orm/decorators": "^7.0.0",
+            "@mikro-orm/postgresql": "^7.0.0",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0"
+          },
+          "scripts": {},
+          "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+          "dist": {
+            "integrity": "sha512-1XrITjbGy2QIG+pU9hQbfsLFG1elibdACEan/SeLqF+PvDHnczTDzoW+yQFruB0Jk8fqLCaXcRlHTr7blfbrOg==",
+            "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-0.18.0.tgz"
+          }
+        },
+        "0.19.0": {
+          "version": "0.19.0",
+          "license": "MIT",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "directory": "packages/billing"
+          },
+          "gitHead": "bf641f89e1493ae88a88234140f0cf43daaa0849",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "@mikro-orm/core": "^7.1.5",
+            "@mikro-orm/decorators": "^7.1.5",
+            "@mikro-orm/postgresql": "^7.1.5",
+            "@open-mercato/core": "^0.6.7",
+            "@open-mercato/events": "^0.6.7",
+            "@open-mercato/queue": "^0.6.7",
+            "@open-mercato/shared": "^0.6.7",
+            "@open-mercato/ui": "^0.6.7",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0",
+            "awilix": "^12.0.0",
+            "lucide-react": "^0.400.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "zod": "^4.0.0"
+          },
+          "scripts": {},
+          "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+          "dist": {
+            "integrity": "sha512-bm1RB5Nuy2ZSPLxLXVNkwya/jzrV+MAhzCVL5zuQ8CDjK4R4HI8hUCyl+SdRHPkrnE9XNrU8OM5cVcSrukW3dA==",
+            "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-0.19.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-06-09T11:51:33.999Z",
+        "modified": "2026-08-25T10:53:51.722Z",
+        "0.17.0": "2026-06-09T11:51:34.367Z",
+        "0.18.0": "2026-07-01T09:06:16.684Z",
+        "0.19.0": "2026-08-25T10:53:51.527Z"
+      },
+      "maintainers": [
+        {
+          "name": "dainamite-acc"
+        },
+        {
+          "name": "kamyyylo"
+        }
+      ],
+      "description": "Dainamite Billing — lightweight recurring-billing engine for Open Mercato (Bill Runs, one-time / recurring / usage items, draft invoices in core/sales with human approval).",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+        "directory": "packages/billing"
+      }
+    }
+  }
+}

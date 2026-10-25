@@ -1,0 +1,8 @@
+# No github field: pkarw/visits-example returns 404 (23 Oct 2026), so the entry stays Unclaimed.
+
+npm: "@piotrkarwatka/visits"
+category: crm-sales
+tags: [example, crm]
+summary: Example module with one backend page that lists CRM interactions in a table with search and paging.
+whenToUse: Use when you want a small reference for a module page that reads CRM data, for example while learning modules.
+whenNotToUse: "Not a feature module: it adds no tables and no API routes of its own."

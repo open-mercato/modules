@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/create-mercato-module/versions/0.5.1"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "create-mercato-module",
+        "version": "0.5.1"
+      },
+      "publishedAt": "2026-10-14T13:58:52Z",
+      "slsaProvenances": [],
+      "attestations": []
+    }
+  }
+}

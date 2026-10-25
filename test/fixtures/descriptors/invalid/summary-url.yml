@@ -1,0 +1,5 @@
+# expect-path: summary
+npm: "@acme/thing"
+category: devtools
+summary: Read more at https://example.com before you install it.
+whenToUse: Use when the summary carries a URL, which plain text forbids.

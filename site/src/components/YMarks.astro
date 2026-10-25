@@ -1,0 +1,61 @@
+---
+// Registration marks "Y" (Tonik brand book): three 9 px arms at 120 degrees, 1 px, in the four corners of the nearest
+// positioned parent. Only on the hero and the nameplate (spec 7.3). Decorative. Colour: Tonik Grey 400 #B6B6B6 on
+// light and Grey 900 #434343 on dark, not --line-strong (1.24:1 on white, invisible; spec 7.3 amendment 23.10).
+interface Props {
+  inset?: number
+  tone?: 'line' | 'film'
+}
+const { inset = 6, tone = 'line' } = Astro.props
+const arm = 'M4.5 4.5V0M4.5 4.5 8.4 6.75M4.5 4.5.6 6.75'
+const corners = ['tl', 'tr', 'bl', 'br']
+---
+
+{
+  corners.map((c) => (
+    <svg
+      class:list={['ymark', `ymark--${c}`, `ymark--${tone}`]}
+      style={`--y-inset:${inset}px`}
+      viewBox="0 0 9 9"
+      width="9"
+      height="9"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={arm} fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" />
+    </svg>
+  ))
+}
+
+<style>
+  .ymark {
+    position: absolute;
+    pointer-events: none;
+    color: #b6b6b6;
+  }
+  :global(:root[data-theme='dark']) .ymark,
+  .ymark--film {
+    color: #434343;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .ymark {
+      color: #434343;
+    }
+  }
+  .ymark--tl {
+    top: var(--y-inset);
+    left: var(--y-inset);
+  }
+  .ymark--tr {
+    top: var(--y-inset);
+    right: var(--y-inset);
+  }
+  .ymark--bl {
+    bottom: var(--y-inset);
+    left: var(--y-inset);
+  }
+  .ymark--br {
+    bottom: var(--y-inset);
+    right: var(--y-inset);
+  }
+</style>

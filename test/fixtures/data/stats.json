@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-23T00:20:00Z",
+  "entries": {
+    "npm:@fastwhitecat/integration-ksef-direct": {
+      "downloads30d": 42,
+      "stars": 1
+    },
+    "npm:@piotrkarwatka/marketing-consents": {
+      "downloads30d": 21,
+      "stars": 0
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work": {
+      "downloads30d": 204,
+      "stars": null
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable": {
+      "downloads30d": 172,
+      "stars": null
+    },
+    "npm:@open-mercato/gateway-stripe": {
+      "downloads30d": 46377,
+      "stars": null
+    },
+    "npm:@open-mercato/gateway-tpay": {
+      "downloads30d": 3762,
+      "stars": null
+    },
+    "npm:@open-mercato/enterprise": {
+      "downloads30d": 20546,
+      "stars": null
+    },
+    "github:Chmarusso/open-mercato-enrichment-treg": {
+      "downloads30d": null,
+      "stars": 0
+    }
+  }
+}

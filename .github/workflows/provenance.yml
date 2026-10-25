@@ -1,0 +1,39 @@
+# Supply chain of the catalog itself (spec 5.1, 5.5): fail when a dependency in yarn.lock loses npm provenance,
+# trusted publishing or staged publishing, or when its provenance repository or branch changes.
+name: provenance
+
+on:
+  pull_request:
+    paths:
+      - yarn.lock
+  push:
+    branches:
+      - main
+    paths:
+      - yarn.lock
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  provenance:
+    name: provenance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check provenance downgrades
+        uses: danielroe/provenance-action@fcc45fd5a5b818c477432b32c838dcd0c79cd2dd # v0.2.0
+        with:
+          lockfile: yarn.lock
+          base-ref: ${{ github.event_name == 'push' && github.event.before || format('origin/{0}', github.base_ref) }}
+          fail-on-provenance-change: true

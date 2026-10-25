@@ -1,0 +1,558 @@
+---
+// /quality (spec 7.7 J, 6.1-6.3, 6.8): the levels and their rules, rendered from the same metadata the machine uses
+// (TIER_RULES of lib/core/tier.ts), the OM Quality checklist from quality/checklist/v1.md and the public
+// revocations from quality/revocations.yml. No island.
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
+import Base from '../layouts/Base.astro'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { TIER_RULES } from '../../../lib/core/tier.ts'
+import { SealView, Square } from '../lib/ui.tsx'
+import { STATE_LEGEND, STATUS } from '../lib/status.ts'
+import { FIT_GLYPH, fitOf } from '../lib/compat-cells.ts'
+import { STEPS, STEPS_WORD } from '../../../lib/core/steps.ts'
+import { plural } from '../lib/format.ts'
+import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+
+const REPO = CATALOG_REPO_URL
+const { meta, modules } = loadSiteData()
+const latest = modules.lines.find((l) => l.source === 'latest')
+const latestKey = latest?.key ?? '0.9'
+
+const listed = TIER_RULES.filter((r) => r.level === 'listed')
+const verified = TIER_RULES.filter((r) => r.level === 'verified')
+
+/** Signals (spec 6.2). They are measured per version and feed the levels; lib/core has no text table for them. */
+// the receipt and fit states are drawn with the same marks as the matrix on /compat
+const FIT_STATES = [
+  { fit: 'ok', word: 'ok' },
+  { fit: 'drift', word: 'drift (still a fit)' },
+  { fit: 'no-fit', word: 'no fit' },
+  { fit: 'unknown', word: 'unknown' },
+] as const
+const SIGNALS: { id: string; name: string; states: string; rule: string }[] = [
+  {
+    id: 'SIG-RCP',
+    name: 'Receipt, per line',
+    states: 'verified, broken, not judged (test app failed, run did not finish, or the age gate held back a dependency), queued, skipped',
+    rule: `A fresh app of the line adds the module and runs ${STEPS_WORD} steps, ${STEPS[0]} to ${STEPS[STEPS.length - 1]}. Status comes from the GitHub Actions API, not from files the module could write.`,
+  },
+  {
+    id: 'SIG-FIT',
+    name: 'Fits statically, per line',
+    states: 'ok, drift, no fit, unknown',
+    rule: 'Every import resolves against the published packages of the line. Drift is reported only against latest.',
+  },
+  {
+    id: 'SIG-ANA',
+    name: 'Anatomy',
+    states: 'full, partial, hidden, none',
+    rule: 'Facts read from src/ of the published tarball. Partial: fewer than three kinds of contract, or no src. Hidden: enterprise.',
+  },
+  {
+    id: 'SIG-SUP',
+    name: 'Supply chain',
+    states: 'ok, warn, fail',
+    rule: 'No undeclared install scripts or binding.gyp, no git, http or file dependencies, no high or critical advisory older than 30 days, no lost provenance.',
+  },
+  {
+    id: 'SIG-HYG',
+    name: 'Hygiene',
+    states: 'ok, warn, fail',
+    rule: 'Lint of the anatomy, each finding with an anchor in the Open Mercato docs and a file and line. Fail on any error.',
+  },
+  {
+    id: 'SIG-MNT',
+    name: 'Maintenance',
+    states: 'current, behind, stale, archived, deprecated',
+    rule: 'Current: a release within 180 days or verified on latest. Stale: more than 365 days and not verified on latest.',
+  },
+  {
+    id: 'SIG-DEC',
+    name: 'Declared vs observed',
+    states: 'match, mismatch',
+    rule: 'Built for (peers) against Verified on (receipts), declared hosts and environment against the anatomy.',
+  },
+]
+
+// quality/checklist/v1.md: the markdown table rows `| OMQ-01 | text |`
+const checklistText = readFileSync(resolve('quality/checklist/v1.md'), 'utf8')
+const checklist = [...checklistText.matchAll(/^\|\s*(OMQ-\d{2})\s*\|\s*(.+?)\s*\|\s*$/gm)].map((m) => ({
+  id: m[1] as string,
+  text: m[2] as string,
+}))
+const preconditions = /^Preconditions: (.+)$/m.exec(checklistText)?.[1] ?? null
+
+interface Revocation {
+  locator: string
+  version: string
+  reason: string
+  at: string
+}
+const revocations = ((parseYaml(readFileSync(resolve('quality/revocations.yml'), 'utf8')) as Revocation[] | null) ?? []).filter(
+  (r) => r && typeof r.locator === 'string',
+)
+const holders = meta.counts.omQuality
+const requestUrl = `${REPO}/issues/new?template=om-quality-request.yml`
+const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+/** Paths and file names in a rule text as <code> (src/modules, dist/modules, package.json), the rest escaped. */
+const pathsHtml = (s: string): string =>
+  esc(s).replace(/(?<![\w/])((?:src|dist)\/[\w/.&;<>-]*[\w]|package\.json|tsconfig\.json)/g, '<code>$1</code>')
+/** Markdown inline code of the checklist file as <code>, the rest escaped. */
+const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `<code>${esc(part)}</code>` : esc(part))).join('')
+---
+
+<Base
+  title="Quality levels · Open Mercato Modules"
+  description="Listed, Verified and OM Quality: what each level checks, who grants it and what it does not mean."
+  path="/quality"
+  dataAsOf={meta.dataAsOf}
+>
+  <section class="band">
+    <div class="sheet section q-head">
+      <div class="q-copy">
+        <p class="t-tagline">// Quality</p>
+        <h1 class="q-title">Three levels. Two are measured, one is reviewed.</h1>
+        <p class="q-lede">
+          One word on every card. Listed and Verified are granted and taken away by machine, from the rules below. OM
+          Quality is granted only by people. There is no score from 0 to 100, and popularity is shown, not scored.
+        </p>
+      </div>
+      <ol class="q-levels" role="list">
+        <li>
+          <SealView seal={{ kind: 'listed', title: 'Listed' }} />
+          <p>The descriptor, the package, its kind and its license pass the checks. Read from the published code.</p>
+        </li>
+        <li>
+          <SealView seal={{ kind: 'verified', line: latestKey, title: `Verified on ${latestKey}` }} />
+          <p>
+            Installed in a fresh Open Mercato {latest?.version ?? ''} app by the nightly run, per version, granted and
+            lost automatically.
+          </p>
+        </li>
+        <li>
+          <span class="seal seal--quality" title="OM Quality">
+            <span class="seal__main">OM Quality</span>
+            <span class="seal__sub">per tarball · 12 months</span>
+          </span>
+          <p>
+            A core team reviewer and a second approver checked one published tarball against the checklist. Valid 12
+            months.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="q-listed">
+    <div class="sheet section q-sec">
+      <p class="t-tagline">// Listed · machine · all rules required</p>
+      <h2 id="q-listed">Listed</h2>
+      <table class="q-table">
+        <thead><tr><th scope="col">Rule</th><th scope="col">Check</th></tr></thead>
+        <tbody>
+          {
+            listed.map((r) => (
+              <tr>
+                <th scope="row"><code>{r.id}</code></th>
+                <td set:html={pathsHtml(r.text)} />
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="q-note">An entry on hold or delisted is not listed and has no level.</p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="q-verified">
+    <div class="sheet section q-sec">
+      <p class="t-tagline">// Verified · machine · per version · on the latest line</p>
+      <h2 id="q-verified">Verified</h2>
+      <table class="q-table">
+        <thead><tr><th scope="col">Rule</th><th scope="col">Check</th></tr></thead>
+        <tbody>
+          {
+            verified.map((r) => (
+              <tr>
+                <th scope="row"><code>{r.id}</code></th>
+                <td set:html={pathsHtml(r.text)} />
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="q-note">
+        Lost when latest is confirmed broken (two red nights in a row with a green baseline), when the receipt is older
+        than 14 days, or when VER-3 to VER-5 break. A failed test app or a run that did not finish never takes it away. A new release in the Yarn age gate does not take it away either: the recommended version keeps it.
+        Provenance is not required. Built-in and enterprise modules have no level.
+      </p>
+      <p class="q-callout">
+        Installed in a fresh Open Mercato {latest?.version ?? ''} app: {STEPS.join(', ')}. A module's own code runs
+        during the test. Verified is a compatibility signal, not a security review.
+      </p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="q-signals">
+    <div class="sheet section q-sec">
+      <p class="t-tagline">// Signals · measured per version · each with a date and evidence</p>
+      <h2 id="q-signals">Signals</h2>
+      <table class="q-table q-table--sig">
+        <thead><tr><th scope="col">Signal</th><th scope="col">States</th><th scope="col">Rule</th></tr></thead>
+        <tbody>
+          {
+            SIGNALS.map((s) => (
+              <tr>
+                <th scope="row">
+                  <code>{s.id}</code>
+                  <span class="q-signame">{s.name}</span>
+                </th>
+                <td class="q-states">
+                  {s.id === 'SIG-RCP' ? (
+                    <ul class="q-marks" role="list">
+                      {STATE_LEGEND.map((st) => (
+                        <li title={st.title}>
+                          <Square status={st.status} step={st.step ?? null} />
+                          <span>{st.mark === 'skipped' ? STATUS.skipped.word : st.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : s.id === 'SIG-FIT' ? (
+                    <ul class="q-marks" role="list">
+                      {FIT_STATES.map((f) => (
+                        <li data-fit={fitOf(f.fit)}>
+                          <span class="q-fit" aria-hidden="true">
+                            {FIT_GLYPH[fitOf(f.fit)]}
+                          </span>
+                          <span>{f.word}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    s.states
+                  )}
+                </td>
+                <td set:html={pathsHtml(s.rule)} />
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="q-note">
+        Anatomy is read statically from src/ in the published tarball. Code was not executed. It describes what the
+        code declares, not whether it is safe.
+      </p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="q-omq">
+    <div class="sheet section q-sec">
+      <p class="t-tagline">// OM Quality · people only · per published tarball</p>
+      <h2 id="q-omq">OM Quality</h2>
+      <p class="q-count">
+        <span class="num">{plural(holders, 'module')}</span> {holders === 1 ? 'holds' : 'hold'} OM Quality.
+      </p>
+      {preconditions && <p class="q-lede" set:html={codeHtml(`Preconditions: ${preconditions}`)} />}
+      <table class="q-table">
+        <thead><tr><th scope="col">Item</th><th scope="col">Check, pass or fail with a file and a line</th></tr></thead>
+        <tbody>
+          {
+            checklist.map((c) => (
+              <tr>
+                <th scope="row"><code>{c.id}</code></th>
+                <td set:html={codeHtml(c.text)} />
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <div class="q-cols">
+        <div>
+          <h3>How a review runs</h3>
+          <ol class="q-steps">
+            <li>The author asks for a review with the issue form.</li>
+            <li>An isolated agent pre-pass reads the tarball statically and drafts a report with files and lines. It cannot grant anything.</li>
+            <li>A reviewer from the core team checks every item.</li>
+            <li>A second person approves.</li>
+            <li>A pull request adds the review file; a maintainer merges it.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Validity</h3>
+          <p>
+            12 months, for one <code>dist.integrity</code>. A new version does not inherit the review. Revoked
+            automatically when Verified is lost for more than 14 days, or when a high or critical advisory stays
+            unfixed for 14 days.
+          </p>
+          <h3>Revocations</h3>
+          {
+            revocations.length === 0 ? (
+              <p>No revocations.</p>
+            ) : (
+              <ul class="q-revs" role="list">
+                {revocations.map((r) => (
+                  <li>
+                    <code>{r.locator}@{r.version}</code> · {r.at} · {r.reason}
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </div>
+      <p class="q-paid">Review time can be paid for. The result cannot.</p>
+      <div>
+        <a class="btn btn--primary" href={requestUrl} rel="noopener noreferrer">Request review</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="q-not">
+    <div class="sheet section q-sec">
+      <p class="t-tagline">// Read this before you trust a badge</p>
+      <h2 id="q-not">What the levels do not mean</h2>
+      <ul class="q-not" role="list">
+        <li><strong>Verified does not mean safe.</strong> A module's own code runs during the test. It is a compatibility signal, not a security review.</li>
+        <li><strong>Listed does not mean tested.</strong> It means the descriptor, package, kind and license checks passed.</li>
+        <li><strong>Built for is not Verified on.</strong> Peer dependencies are a declaration, not a test.</li>
+        <li><strong>Built from is not a safety claim.</strong> It tells you where a package came from, not that it is safe.</li>
+        <li><strong>OM Quality does not carry over.</strong> Each new version needs its own review.</li>
+        <li><strong>Popularity is not a level.</strong> Downloads and stars are shown, not scored, and hidden for official packages.</li>
+        <li><strong>No level is for sale.</strong> Review time can be paid for. The result cannot.</li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .q-copy,
+  .q-sec {
+    display: grid;
+    gap: 16px;
+  }
+  .q-head {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 24px 48px;
+    align-items: start;
+    padding-bottom: 48px;
+  }
+  .band:has(.q-head) + .band > .section {
+    padding-top: 48px;
+  }
+  .q-title {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .q-lede {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  /* the instrument of the header: the three seals at twice their card size, each with what it means */
+  .q-levels {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .q-levels li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 10px;
+    padding: 16px 20px;
+    background: var(--bg);
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .q-levels li > :global(.seal) {
+    zoom: 2;
+    justify-self: start;
+  }
+  /* the second line of the OM Quality seal reads in full ink on every stop of the gradient (spec 6.7) */
+  .q-levels :global(.seal--quality .seal__sub) {
+    opacity: 1;
+    color: #0c0c0c;
+  }
+  .q-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .q-table th,
+  .q-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .q-table thead th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: var(--bg-2);
+  }
+  .q-table tbody th {
+    width: 120px;
+    white-space: nowrap;
+  }
+  .q-table code {
+    font-size: 13px;
+  }
+  .q-table--sig tbody th {
+    width: 220px;
+    white-space: normal;
+  }
+  .q-signame {
+    display: block;
+    margin-top: 2px;
+  }
+  .q-states {
+    width: 220px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .q-note {
+    max-width: 80ch;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .q-callout {
+    max-width: 80ch;
+    padding: 12px 14px;
+    border-left: 3px solid var(--ok-fill);
+    background: var(--bg-2);
+    font-size: 14px;
+  }
+  /* a fact under the heading, in body size, so it does not compete with the H2 */
+  .q-count {
+    font-size: 16px;
+    color: var(--ink-2);
+  }
+  .q-count .num {
+    color: var(--ink);
+  }
+  .q-marks {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .q-marks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* the fit marks of /compat: outlines and a glyph, never a fill */
+  .q-fit {
+    display: inline-grid;
+    place-items: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ink-2);
+  }
+  [data-fit='fit'] > .q-fit {
+    border: 1px solid var(--ink-2);
+  }
+  [data-fit='no-fit'] > .q-fit {
+    border: 1px dashed var(--bad-ink);
+    color: var(--bad-ink);
+  }
+  [data-fit='unknown'] > .q-fit {
+    border: 1px dotted var(--ink-3);
+  }
+  .q-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .q-cols h3 {
+    margin: 0 0 8px;
+  }
+  .q-cols h3 + p + h3 {
+    margin-top: 20px;
+  }
+  .q-cols p,
+  .q-steps {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .q-steps {
+    padding-left: 20px;
+    display: grid;
+    gap: 6px;
+  }
+  .q-revs {
+    font-size: 14px;
+  }
+  .q-paid {
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  .q-not {
+    display: grid;
+    gap: 10px;
+    max-width: 80ch;
+  }
+  .q-not li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+  .q-not strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  @media (max-width: 991px) {
+    .q-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .q-head {
+      padding-bottom: 32px;
+    }
+    .band:has(.q-head) + .band > .section {
+      padding-top: 32px;
+    }
+    .q-levels,
+    .q-cols {
+      grid-template-columns: 1fr;
+    }
+    .q-levels li > :global(.seal) {
+      zoom: 1.5;
+    }
+    .q-table--sig thead {
+      display: none;
+    }
+    .q-table--sig tr {
+      display: grid;
+      border-bottom: 1px solid var(--line);
+      padding: 8px 0;
+    }
+    .q-table--sig th,
+    .q-table--sig td {
+      width: auto !important;
+      border: 0;
+      padding: 4px 0;
+    }
+    .q-table tbody th {
+      width: 84px;
+      padding-left: 0;
+    }
+  }
+</style>

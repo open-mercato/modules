@@ -1,0 +1,17 @@
+# No github field: the npm package has no repository.url. Source: FreightTech/open-mercato-modules.
+
+npm: "@freighttech/shipment-tracking"
+repo: FreightTech/open-mercato-modules#main/packages/shipment-tracking
+category: warehouse-shipping
+tags: [containers, ocean-freight, tracking, dcsa]
+summary: Tracks ocean containers through DCSA carrier APIs such as Maersk and MSC, with a ShipsGo fallback and a journey timeline.
+whenToUse: Use when a forwarder needs container milestones from carriers on its shipment records, with an optional live vessel map.
+providers:
+  - { name: maersk, label: Maersk }
+  - { name: msc, label: MSC }
+  - { name: cma-cgm, label: CMA CGM }
+  - { name: hapag-lloyd, label: Hapag-Lloyd }
+  - { name: zim, label: ZIM }
+  - { name: cosco, label: COSCO }
+  - { name: evergreen, label: Evergreen }
+  - { name: shipsgo, label: ShipsGo }

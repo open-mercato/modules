@@ -1,0 +1,109 @@
+[
+  {
+    "key": "core:currencies",
+    "q": 0,
+    "r": 0,
+    "group": "core",
+    "wedge": "money",
+    "href": "/built-in/currencies",
+    "title": "Currencies · built into core"
+  },
+  {
+    "key": "core:data_sync",
+    "q": 0,
+    "r": -1,
+    "group": "core",
+    "wedge": "connect",
+    "href": "/built-in/data_sync",
+    "title": "Data Sync · built into core"
+  },
+  {
+    "key": "core:wms",
+    "q": 1,
+    "r": -1,
+    "group": "core",
+    "wedge": "operate",
+    "href": "/built-in/wms",
+    "title": "Warehouse Management System · built into core"
+  },
+  {
+    "key": "github:Chmarusso/open-mercato-enrichment-treg",
+    "q": -1,
+    "r": -1,
+    "group": "ecosystem",
+    "wedge": "sell",
+    "type": "3rd-party",
+    "href": "/m/github/chmarusso/open-mercato-enrichment-treg",
+    "title": "treg.to Enrichment · 3rd-party · listed"
+  },
+  {
+    "key": "npm:@fastwhitecat/integration-ksef-direct",
+    "q": 0,
+    "r": -2,
+    "group": "ecosystem",
+    "wedge": "money",
+    "type": "3rd-party",
+    "href": "/m/@fastwhitecat/integration-ksef-direct",
+    "title": "KSeF Integration · 3rd-party · verified on 0.9"
+  },
+  {
+    "key": "npm:@fullstackhouse/open-mercato-data-sync-durable",
+    "q": 2,
+    "r": -2,
+    "group": "ecosystem",
+    "wedge": "connect",
+    "type": "3rd-party",
+    "href": "/m/@fullstackhouse/open-mercato-data-sync-durable",
+    "title": "Durable Data Sync · 3rd-party · listed"
+  },
+  {
+    "key": "npm:@fullstackhouse/open-mercato-durable-work",
+    "q": 0,
+    "r": 1,
+    "group": "ecosystem",
+    "wedge": "platform",
+    "type": "3rd-party",
+    "href": "/m/@fullstackhouse/open-mercato-durable-work",
+    "title": "Durable Work · 3rd-party · verified on 0.9"
+  },
+  {
+    "key": "npm:@open-mercato/enterprise",
+    "q": 1,
+    "r": 0,
+    "group": "official",
+    "wedge": "platform",
+    "type": "official",
+    "href": "/m/@open-mercato/enterprise",
+    "title": "Enterprise · official · listed"
+  },
+  {
+    "key": "npm:@open-mercato/gateway-stripe",
+    "q": 1,
+    "r": -2,
+    "group": "official",
+    "wedge": "money",
+    "type": "official",
+    "href": "/m/@open-mercato/gateway-stripe",
+    "title": "Stripe Payment Gateway · official · verified on 0.9"
+  },
+  {
+    "key": "npm:@open-mercato/gateway-tpay",
+    "q": -1,
+    "r": 0,
+    "group": "official",
+    "wedge": "money",
+    "type": "official",
+    "href": "/m/@open-mercato/gateway-tpay",
+    "title": "Tpay Payment Gateway · official · listed"
+  },
+  {
+    "key": "npm:@piotrkarwatka/marketing-consents",
+    "q": -1,
+    "r": 1,
+    "group": "ecosystem",
+    "wedge": "sell",
+    "type": "community",
+    "href": "/m/@piotrkarwatka/marketing-consents",
+    "title": "Marketing Consents · community · listed"
+  }
+]

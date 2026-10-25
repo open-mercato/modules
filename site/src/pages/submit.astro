@@ -1,0 +1,708 @@
+---
+// /submit (spec 7.7 H, 1.1 item 7): the SubmitForm island checks a package live in the browser (npm, jsDelivr,
+// GitHub), builds the descriptor with the Zod schema of CI and opens a pull request. The page passes it the
+// catalog (for "Already listed" and "Renamed"), the ignore list and the categories, read at build time.
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
+import Base from '../layouts/Base.astro'
+import SubmitForm from '../islands/SubmitForm.tsx'
+import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { CategoriesFile, IgnoreFile } from '../../../lib/schema/policy.ts'
+import { sigilLabel } from '../../../lib/sigil/sigil.ts'
+import { orderLines } from '../lib/status.ts'
+
+const REPO = CATALOG_REPO_URL
+// npmPreapprovedPackages of the app template (spec 3.3, 4.5 Lines.preapproved); not in the published files yet
+const PREAPPROVED = ['@open-mercato/*']
+
+const { meta, modules, builtIn } = loadSiteData()
+const categories = CategoriesFile.parse(parseYaml(readFileSync(resolve('policy/categories.yml'), 'utf8'))).categories.map(
+  (c) => ({ id: c.id, title: c.title, aliases: c.aliases }),
+)
+const ignore = IgnoreFile.parse(parseYaml(readFileSync(resolve('policy/ignore.yml'), 'utf8')) ?? [])
+// the descriptor file of a listed entry, so "Copy YAML" and "Propose an edit" keep its curator fields
+const descriptorOf = (path: string): Record<string, unknown> | null => {
+  const file = resolve('modules', `${path}.yml`)
+  if (!existsSync(file)) return null
+  const d = parseYaml(readFileSync(file, 'utf8')) as unknown
+  return d && typeof d === 'object' && !Array.isArray(d) ? (d as Record<string, unknown>) : null
+}
+const catalog = modules.entries.map((e) => ({
+  locator: e.locator,
+  path: e.path,
+  npm: e.npm,
+  github: e.github,
+  title: e.title,
+  status: e.status,
+  renamedFrom: e.renamedFrom,
+  type: e.type,
+  kind: e.kind,
+  sigil: {
+    glyph: e.sigil.glyph,
+    phase: e.sigil.phase,
+    publicRoutes: e.sigil.publicRoutes,
+    label: sigilLabel(e.anatomy?.counts ?? null, { enterprise: e.enterprise }),
+  },
+  fields: { category: e.category, tags: e.tags, summary: e.summary, whenToUse: e.whenToUse, providers: e.providers },
+  cli: e.install.cli,
+  descriptor: descriptorOf(e.path),
+  replaces: e.replaces.map((r) => r.replace(/^core:/, '')),
+}))
+// module IDs of core on the latest line: a package that ships one collides (lint collision-core)
+const builtInIds = { coreVersion: builtIn.coreVersion, ids: builtIn.modules.map((m) => m.id) }
+const lines = orderLines(modules.lines).map((l) => ({ key: l.key, version: l.version, source: l.source, cadence: l.cadence }))
+// the header shows a real descriptor of the catalog as the shape of what the form builds (spec 4.3 house style)
+const sampleEntry = modules.entries.find((e) => e.listed && e.type !== 'official' && e.npm && e.providers.length > 0) ?? null
+const sampleFile = sampleEntry ? resolve('modules', `${sampleEntry.path}.yml`) : null
+const sample = sampleFile && existsSync(sampleFile) ? readFileSync(sampleFile, 'utf8').trim() : null
+---
+
+<Base
+  title="Submit a module · Open Mercato Modules"
+  description="Paste an npm package name. The page checks the published files, the license and the Yarn age gate, builds the descriptor and opens a pull request."
+  path="/submit"
+  dataAsOf={meta.dataAsOf}
+  skip={{ href: '#sf-pkg', label: 'Skip to the package field' }}
+>
+  <section class="band">
+    <div class="sheet section sb-head">
+      <div class="sb-copy">
+        <p class="t-tagline">// Submit a module</p>
+        <h1 class="sb-title">List your module in two minutes.</h1>
+        <p class="sb-lede">
+          Paste the npm name. Your browser checks the published files (<code>src/modules</code> and{' '}
+          <code>dist/modules</code>), the license and the date a fresh app can install it, then builds the descriptor
+          with the same schema as CI. You open the pull request; a person merges it.
+        </p>
+      </div>
+      {
+        sample && sampleEntry && (
+          <figure class="sb-sample">
+            <figcaption>
+              <code>modules/{sampleEntry.path}.yml</code>
+              <span>a listed entry, the whole file</span>
+            </figcaption>
+            <pre><code>{sample}</code></pre>
+          </figure>
+        )
+      }
+    </div>
+  </section>
+  <section class="band" aria-label="Submit form">
+    <div class="sheet section sb-body">
+      {/* the checks run in the browser: without JavaScript the form would be dead (review r4), so it is not shown */}
+      <noscript>
+        <p class="sb-nojs">
+          The checks run in your browser and need JavaScript. Without it, add <code>modules/&lt;scope&gt;/&lt;name&gt;.yml</code>{' '}
+          in a pull request (the file above is a full example) or{' '}
+          <a href={`${REPO}/issues/new?template=listing-request.yml`} rel="noopener noreferrer">request a listing</a>.
+        </p>
+      </noscript>
+      <SubmitForm
+        client:painted
+        catalog={catalog}
+        ignore={ignore}
+        categories={categories}
+        lines={lines}
+        coreVersion={meta.coreVersion}
+        preapproved={PREAPPROVED}
+        builtIn={builtInIds}
+        repo={REPO}
+      />
+    </div>
+  </section>
+  <section class="band">
+    <div class="sheet section sb-more">
+      <div>
+        <h2 class="t-h3">Building a module?</h2>
+        <p>
+          Publish it with <code>create-mercato-module</code>, then paste its npm name here.
+        </p>
+      </div>
+      <div>
+        <h2 class="t-h3">What happens next</h2>
+        <p>
+          CI checks the file and writes a short summary on the pull request. After merge the module is read from
+          source within minutes and installed in the next run of each line.
+        </p>
+      </div>
+      <div>
+        <h2 class="t-h3">Rules</h2>
+        <p>
+          English, plain text, no links in the summary. Measured fields are never in the file. See the{' '}
+          <a href={`${REPO}/blob/main/CONTRIBUTING.md`} rel="noopener noreferrer">contributing guide</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sb-head {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 16px 48px;
+    align-items: start;
+    padding-bottom: 48px;
+  }
+  .sb-copy {
+    display: grid;
+    gap: 16px;
+  }
+  .sb-body {
+    padding-top: 48px;
+  }
+  .sb-title {
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .sb-sample {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    min-width: 0;
+  }
+  .sb-sample figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .sb-sample figcaption code {
+    color: var(--ink);
+  }
+  /* one code panel for YAML on the page: the same film panel as the generated descriptor */
+  .sb-sample pre {
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: var(--radius-m);
+    background: var(--film);
+    color: var(--film-ink);
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  /* once a package is checked, the preview shows its own file: the example steps aside */
+  :global(body:has(.sf__result)) .sb-sample {
+    display: none;
+  }
+  @media (max-width: 991px) {
+    .sb-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .sb-head {
+      padding-bottom: 32px;
+    }
+    .sb-body {
+      padding-top: 32px;
+    }
+    .sb-sample {
+      display: none;
+    }
+  }
+  .sb-lede {
+    max-width: 70ch;
+    color: var(--ink-2);
+  }
+  .sb-more {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .sb-more h2 {
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  @media (max-width: 767px) {
+    .sb-more {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .sb-nojs {
+    max-width: 64ch;
+    font-size: 16px;
+    color: var(--ink-2);
+  }
+  @media (scripting: none) {
+    .sb-body :global(.sf) {
+      display: none;
+    }
+  }
+  /* ---------- SubmitForm island (site/src/islands/SubmitForm.tsx) ---------- */
+  :global(.sf) {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: 40px;
+    align-items: start;
+  }
+  :global(.sf__left),
+  :global(.sf__right) {
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+  }
+  :global(.sf__right) {
+    position: sticky;
+    top: 72px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+  }
+  :global(.sf__lookup),
+  :global(.sf__form) {
+    display: grid;
+    gap: 8px;
+  }
+  :global(.sf__form) {
+    gap: 18px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  :global(.sf__label) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  :global(.sf__label code) {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+    color: var(--ink);
+  }
+  :global(.sf__opt),
+  :global(.sf__count) {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  :global(.sf__count--bad) {
+    color: var(--bad-ink);
+  }
+  :global(.sf__row) {
+    display: flex;
+    gap: 8px;
+  }
+  :global(.sf__input) {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+  }
+  :global(.sf__input:hover) {
+    border-color: var(--ink-3);
+  }
+  :global(.sf__input[aria-invalid='true']) {
+    border-color: var(--bad-ink);
+  }
+  :global(.sf__input--mono) {
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  :global(textarea.sf__input) {
+    resize: vertical;
+    line-height: 1.45;
+  }
+  :global(.sf__check) {
+    min-height: 40px;
+    padding-inline: 20px;
+  }
+  :global(.sf__help),
+  :global(.sf__lint) {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  :global(.sf__err) {
+    font-size: 13px;
+    color: var(--bad-ink);
+  }
+  :global(.sf__busy) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  :global(.sf__result) {
+    display: grid;
+    gap: 14px;
+  }
+  :global(.sf__states) {
+    display: grid;
+    gap: 8px;
+  }
+  /* one banner language for every state and network notice: a 3 px signal bar on --bg-2 (Banner of spec 7.6) */
+  :global(.sf__banner) {
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--line-strong);
+    background: var(--bg-2);
+    font-size: 14px;
+    line-height: 20px;
+  }
+  :global(.sf__btag) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  :global(.sf__banner--ok) {
+    border-left-color: var(--ok-fill);
+  }
+  :global(.sf__banner--info) {
+    border-left-color: var(--violet);
+  }
+  :global(.sf__banner--wait) {
+    border-left-color: var(--wait-fill);
+  }
+  :global(.sf__banner--bad) {
+    border-left-color: var(--bad-fill);
+  }
+  :global(.sf__banner--bad .sf__btag) {
+    color: var(--bad-ink);
+  }
+  :global(.sf__ignored) {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  :global(.sf__rules),
+  :global(.sf__issues) {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :global(.sf__rule) {
+    display: grid;
+    grid-template-columns: 18px 52px minmax(0, 1fr);
+    gap: 8px;
+    align-items: baseline;
+    font-size: 14px;
+  }
+  :global(.sf__mark) {
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    font-size: 11px;
+    line-height: 1;
+  }
+  :global(.sf__rule--pass .sf__mark) {
+    background: var(--ok-fill);
+    color: var(--ok-ink);
+  }
+  :global(.sf__rule--fail .sf__mark) {
+    background: var(--bad-fill);
+    color: #fff;
+  }
+  :global(.sf__rule--pending .sf__mark),
+  :global(.sf__rule--unknown .sf__mark) {
+    border: 1px dashed var(--ink-3);
+    color: var(--ink-2);
+  }
+  :global(.sf__rule--fail) {
+    color: var(--bad-ink);
+  }
+  :global(.sf__rid) {
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  :global(.sf__facts) {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+  }
+  :global(.sf__facts > div) {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 12px;
+    font-size: 14px;
+  }
+  :global(.sf__facts dt) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    padding-top: 2px;
+  }
+  :global(.sf__facts dd) {
+    margin: 0;
+  }
+  :global(.sf__warn) {
+    color: var(--wait-ink);
+  }
+  /* a fact sentence stays in ink; only the value it is about (a range, a license) carries the signal colour */
+  :global(.sf__mark-warn) {
+    color: var(--wait-ink);
+    font-size: 13px;
+  }
+  :global(.sf__mark-ok) {
+    font-size: 13px;
+  }
+  :global(.sf__field) {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  :global(.sf__providers) {
+    gap: 8px;
+  }
+  :global(.sf__providers .btn) {
+    justify-self: start;
+  }
+  :global(.sf__prow) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px;
+    gap: 8px;
+  }
+  :global(.sf__remove) {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  :global(.sf__remove:hover) {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  :global(.sf__hdr) {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+  }
+  :global(.sf__hsig) {
+    color: var(--ink-3);
+  }
+  :global(.sf__hsig--real) {
+    color: var(--ink);
+  }
+  :global(.sf__hmain) {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  :global(.sf__htitle) {
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  :global(.sf__hloc) {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  :global(.sf__hsum) {
+    font-size: 14px;
+  }
+  :global(.sf__hchips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  :global(.sf__hnote),
+  :global(.sf__hlines) {
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  :global(.sf__hcmd) {
+    min-width: 0;
+  }
+  /* the command in the preview is shown whole: it wraps at token boundaries and, as a last resort, anywhere */
+  :global(.sf__hcmd .cmd__text) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  :global(.sf__rowprev) {
+    container-type: inline-size;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    overflow: hidden;
+  }
+  /* the preview is the card variant of the row (the phone layout of ModuleRow) whenever its column is narrow:
+     title and locator wrap, never cut; the strip sits under the chips with its own line labels */
+  @container (max-width: 640px) {
+    :global(.sf__rowprev .mrow) {
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      grid-template-areas:
+        'sig  head  head'
+        'summ summ  summ'
+        'chips chips chips'
+        'strip strip seal';
+      column-gap: 12px;
+      row-gap: 10px;
+      padding: 16px;
+    }
+    :global(.sf__rowprev .mrow__head) {
+      flex-direction: column;
+      gap: 0;
+    }
+    :global(.sf__rowprev .mrow__title),
+    :global(.sf__rowprev .mrow__loc) {
+      max-width: 100%;
+      white-space: normal;
+      overflow: visible;
+      overflow-wrap: break-word;
+    }
+    :global(.sf__rowprev .mrow__summ) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    :global(.sf__rowprev .mrow__summ > span:first-child) {
+      flex: none;
+      white-space: normal;
+    }
+    :global(.sf__rowprev .mrow__chips) {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    :global(.sf__rowprev .mrow__strip) {
+      justify-self: start;
+    }
+    :global(.sf__rowprev .mrow__seal) {
+      justify-content: flex-end;
+      align-self: end;
+    }
+  }
+  /* no column header above a single row: the strip keeps its own line labels at every width */
+  :global(.sf__rowprev .mrow .mrow__strip .strip) {
+    grid-template-rows: auto 14px;
+    grid-auto-columns: minmax(14px, 1fr);
+    column-gap: 2px;
+  }
+  :global(.sf__rowprev .mrow .mrow__strip .strip__label) {
+    display: block;
+  }
+  :global(.sf__rowprev .mrow .mrow__strip .strip > .strip__cell) {
+    grid-row: 2;
+  }
+  :global(.sf__rowprev .mrow__meta),
+  :global(.sf__rowprev .mrow__act) {
+    display: none;
+  }
+  :global(.sf__yaml) {
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: var(--radius-m);
+    background: var(--film);
+    color: var(--film-ink);
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-x: auto;
+  }
+  :global(.sf__issues) {
+    font-size: 13px;
+    color: var(--bad-ink);
+  }
+  :global(.sf__actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  /* a disabled primary is a quiet plate, not a faded gradient (review r1) */
+  :global(.btn.sf__btn--off) {
+    background: var(--bg-3);
+    color: var(--ink-3);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  :global(.sf__notes) {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0 0 0 4px;
+    list-style: none;
+    font-size: 13px;
+  }
+  :global(.sf__note) {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 8px;
+  }
+  :global(.sf__note--error .sf__mark) {
+    color: var(--bad-ink);
+  }
+  :global(.sf__note--warn .sf__mark) {
+    color: var(--wait-ink);
+  }
+  :global(.sf__after) {
+    font-size: 14px;
+  }
+  :global(.sf__empty) {
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 991px) {
+    :global(.sf) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+    :global(.sf__right) {
+      position: static;
+    }
+  }
+  @media (max-width: 767px) {
+    :global(.sf__right) {
+      padding: 14px;
+    }
+    :global(.sf__facts > div) {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    :global(.sf__input),
+    :global(.sf__check),
+    :global(.sf__actions .btn) {
+      min-height: 44px;
+    }
+    :global(.sf__remove) {
+      min-height: 44px;
+    }
+  }
+  /* phones: the sigil sits above the title, so the command and the locator get the full width */
+  @media (max-width: 479px) {
+    :global(.sf__hdr) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      padding: 14px;
+    }
+  }
+</style>

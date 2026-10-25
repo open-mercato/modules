@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.osv.dev/v1/querybatch",
+    "bodySha256": "dadf1069f9f47b14ad48f8e312e2004ec1961691aa2352f152208d6616e599af"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "results": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+    }
+  }
+}

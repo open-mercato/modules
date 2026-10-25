@@ -1,0 +1,7 @@
+github: Chmarusso/open-mercato-enrichment-treg
+category: crm-sales
+tags: [enrichment, crm, leads]
+summary: Enriches CRM people and companies through treg.to, adds hiring and news signals and finds similar companies.
+whenToUse: Use when sales reps need job titles, company size or industry filled in on CRM records and pay-per-call lookups are fine.
+providers:
+  - { name: treg, label: treg.to }

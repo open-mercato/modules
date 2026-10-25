@@ -1,0 +1,625 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@fullstackhouse%2Fopen-mercato-data-sync-durable"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@fullstackhouse/open-mercato-data-sync-durable",
+      "dist-tags": {
+        "pr-1": "0.2.2-pr1.57",
+        "latest": "0.6.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "05c4fdf845cd96c37df04e5096801187b26513e0",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.1.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-dDN6EghEpVzExzogBh2UISsnQV+j61Hjopv4+5mkRGEPc8geOSQ/NIdKuqfld5rTY1+cGngEzDYg/AszJTGAPw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.1.0.tgz"
+          }
+        },
+        "0.1.1": {
+          "version": "0.1.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "cfd7a1bedd8fde1b89d1ffaf6eb0d5257a307f4e",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.1.1"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-6jmN8br0abfoRXFy7bofFewKEs4W5awzaENxP65gJIhQTiUg4McO/xAJTWOSf2q5DNEbqyQpkmCGPZjl73dm3w==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.1.1.tgz"
+          }
+        },
+        "0.1.2": {
+          "version": "0.1.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "233a15489dac63cf4eb512e19cf8d3fbbc4c42d9",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.1.2"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-6i1yH88kGxAdZ/BqPRlQQAAXmmHUaKSc5L8c0cgdvzh8FQAxAXrOwXppUODBjq4CP3/poGPtyXH2FWcnmm6B+A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.1.2.tgz"
+          }
+        },
+        "0.1.3": {
+          "version": "0.1.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "3ebc5118438312eefdd8faa5b62cc92e32aa37c3",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.1.3"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-/oQFV5zlWMssPqQLiMh7ckaNj2P/xMW5TBKc+LJf+pulthTvSa8fWdKw7Lo0GBfs0ZmcM+jKQKaV8Krk5tgaGg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.1.3.tgz"
+          }
+        },
+        "0.1.4": {
+          "version": "0.1.4",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "7ec1020f8309f4410d541652b1a805a0c0d687e3",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.1.4"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-LnVqP7fbUre2ILm/p62Gn3e1wyu5l4M/iYz/I1wplRiKlwnabf0KQN7iGUN3AA0TbV93S7jjEi/GxBPsutxIyw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.1.4.tgz"
+          }
+        },
+        "0.2.0": {
+          "version": "0.2.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "95bbb45cd453a43067b9896e445ae8fa2f480fc9",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.2.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-/52mP/nBO9XGjxi4PRUyMeUW1Qt3erp5SbA4jZeO3wnx3TOplhmXs1pOV1BODbme1f4OtVMfSP1ICzsI+r3fug==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.2.0.tgz"
+          }
+        },
+        "0.2.1": {
+          "version": "0.2.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "61677cb9004142b1f959d6a3d4602719d8a65f57",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.2.1"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-EfhLsihQ/3wnV2MM0j/dVyr+grNmS5/kyqnNdbYzCKqgHTOffqXBig7QEX9FGsUv0I8AAKDxjJ8qtHYy5+2C6w==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.2.1.tgz"
+          }
+        },
+        "0.2.2": {
+          "version": "0.2.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "f4f91642d00aabe81ef6e8bd3b56152ad85e689d",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.2.2"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-vNDIg6EJ2Dfut3Nxn+DINZXfOyMVS2kYYRng+5NpIuB+StNc+WWf8UUFxv549jTOU7J/Awch5xJ01KkMuJuW4A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.2.2.tgz"
+          }
+        },
+        "0.2.2-pr1.57": {
+          "version": "0.2.2-pr1.57",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "fd7e5ba1a3c7842c6a0ec79419ef9f3a5f8ba8d6",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.2.2-pr1.57"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-ydEe1EcZwly3N7aC1FlRykdeyZpzCfL+2u8OSmbDZd2M09BAVg3uSpNT822TBsdZr2VTmY52M8jAZ5DQylHNyA==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.2.2-pr1.57.tgz"
+          }
+        },
+        "0.3.0": {
+          "version": "0.3.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "e85107c05dde80efcd5070dcecf2d6cf51627d9c",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.3.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-nQe4gq0ZkZ1Im7bP7sSIqlj5szFtot7kIv+4saNELzsS8hEWNvFesaw8oacDio1TwJNV68BLS1e+7bySeGvdGA==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.3.0.tgz"
+          }
+        },
+        "0.3.1": {
+          "version": "0.3.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "038981b295a47cadb11ae4c6d33c25351baf31fa",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.3.1"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-ZqMoYFwXvkqMONRZIYZFkfP504tILEXdL2BKwJL4l8oHgBK4AUVnunl4Sl6BPWWcYAUbtm1lYbwGMViJhJkR8A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.3.1.tgz"
+          }
+        },
+        "0.3.2": {
+          "version": "0.3.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "aaf7c1ff91f7671c0393d9af9c4c91de39d485f4",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.3.2"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-4aapSL0OYgBrCNgBZ9XNKON7QzX0Ilmm+rbOSuTwn2oScRvvcOeOp//6w3P1z2OFHPB1pMRPIAk1wqqu99gbcw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.3.2.tgz"
+          }
+        },
+        "0.3.3": {
+          "version": "0.3.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "3adc09e1d0b311fded52673eea9a4b2463a75db5",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.3.3"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-GnFE3sC5sRFGgdkKrLbmLbrJN6p3N28IixPpDgwM7sts6NngQTmaTdlzLiHEw0jlHrWWMlPJV01gFAgJEG+Hqg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.3.3.tgz"
+          }
+        },
+        "0.4.0": {
+          "version": "0.4.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "14e2c048aeb14b01128d18d28b5c76d7e89d5796",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.4.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-uE2PRDmr3qGcfEwt15RbZiegky8AOXr38SjXkMBXEY1Vn36npX63r1hEMWIJGFtDdcoyzdxQVTUOwqtSXlJicQ==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.4.0.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "a5b484133d4353971aea106d3e4a2e710db52bbf",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.5.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-+/SC3BqMU9oNABxgRYFI+FsuOgQCF6NGnhT4fuoYBrqVFkUcvC20k9U3szhwt4ZpdzH6J5WgtBbNcn6QOcGzgw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.5.0.tgz"
+          }
+        },
+        "0.6.0": {
+          "version": "0.6.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/data-sync-durable"
+          },
+          "gitHead": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1",
+          "keywords": ["open-mercato", "data-sync", "durable", "at-least-once", "background-jobs"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "react": ">=19.0.0",
+            "react-dom": ">=19.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/ui": ">=0.7.0 <0.8.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/queue": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0",
+            "@fullstackhouse/open-mercato-durable-work": "^0.6.0"
+          },
+          "scripts": {},
+          "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+          "dist": {
+            "integrity": "sha512-LJ8pmZjcEjdlX2yuDkmNADwyqbxzvpn7oRHXemr/gdhUf5A7sAvl48Cgz3HArXX5S8kXoiFFOVH2E+7H3kKS+w==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-data-sync-durable/-/open-mercato-data-sync-durable-0.6.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-09-09T06:08:23.411Z",
+        "modified": "2026-09-17T22:09:10.347Z",
+        "0.1.0": "2026-09-09T06:08:23.794Z",
+        "0.1.1": "2026-09-09T13:47:06.072Z",
+        "0.1.2": "2026-09-09T14:02:28.600Z",
+        "0.1.3": "2026-09-09T14:47:04.013Z",
+        "0.1.4": "2026-09-09T15:02:12.911Z",
+        "0.2.0": "2026-09-10T04:09:59.955Z",
+        "0.2.1": "2026-09-10T04:38:11.079Z",
+        "0.2.2": "2026-09-10T06:55:51.067Z",
+        "0.2.2-pr1.57": "2026-09-11T07:48:19.833Z",
+        "0.3.0": "2026-09-11T10:34:29.785Z",
+        "0.3.1": "2026-09-14T05:38:32.286Z",
+        "0.3.2": "2026-09-14T13:19:22.572Z",
+        "0.3.3": "2026-09-15T05:01:08.964Z",
+        "0.4.0": "2026-09-17T09:33:24.834Z",
+        "0.5.0": "2026-09-17T14:46:43.313Z",
+        "0.6.0": "2026-09-17T22:09:09.970Z"
+      },
+      "maintainers": [
+        {
+          "name": "jtomaszewski"
+        }
+      ],
+      "description": "Drop-in replacement for Open Mercato's core data_sync module that runs sync runs as durable at-least-once work (via @fullstackhouse/open-mercato-durable-work): survives deploys and worker kills, resumes from the committed cursor, retries transient errors ",
+      "repository": {
+        "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+        "type": "git",
+        "directory": "packages/data-sync-durable"
+      }
+    }
+  }
+}

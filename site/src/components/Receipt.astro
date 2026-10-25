@@ -1,0 +1,481 @@
+---
+// Install receipt (spec 7.7 C): paper in both themes, scalloped edges (CSS mask with radial gradients),
+// Geist Mono 12, dotted leaders. Data straight from the Receipt schema; nothing typed by hand.
+import type { Receipt } from '../../../lib/schema/index.ts'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { dayYear, duration, shortIntegrity, timeUtc } from '../lib/format.ts'
+import {
+  RUNNER_TEXT,
+  STEPS,
+  appModules,
+  explainReceipt,
+  generateInAdd,
+  harnessText,
+  isPreview,
+  issueText,
+  logLineHtml,
+  receiptValueHtml,
+  routesOf,
+} from '../lib/receipts.ts'
+import { absoluteUrl, receiptPage } from '../lib/url.ts'
+import { receiptPreset } from '../../../lib/core/lines.ts'
+import { wbrHtml } from '../lib/wrap.ts'
+
+interface Props {
+  receipt: Receipt
+  /** Link to the JSON of this receipt (download). */
+  jsonHref?: string
+  /** Optional caption above the paper. */
+  caption?: string
+  compact?: boolean
+}
+const { receipt: r, jsonHref, compact = false } = Astro.props
+const site = loadSiteData()
+const preview = isPreview(r)
+const entry = r.module ? (site.modules.entries.find((e) => e.locator === r.module!.locator) ?? null) : null
+// why the failed step failed, when the excerpt says it plainly (lib/core/finding.ts), with the route read from the
+// module's facts when the excerpt does not name it (review r9: the page and the paper say the same sentence)
+const why = explainReceipt(r, appModules(site), entry ? routesOf(site.detail(entry.path)?.facts) : undefined)
+// the preset of the scaffold (decision of 24 Oct): a new app (classic) gives the verdict, an app from the empty preset
+// the signal `in isolation`, whose paper says so in its result
+const preset = receiptPreset(r)
+const iso = preset === 'empty' && r.module !== null
+// a step that stopped a run which judged nothing (harness-red, infra-error) is not the module's error: no red
+const judged = r.result.status === 'broken'
+const resultWord: Record<string, string> = {
+  // a baseline is Open Mercato itself (BASELINE ... PASS on a module's paper): it passes, it is not Verified
+  verified: !r.module ? 'PASSED' : iso ? 'VERIFIED IN ISOLATION' : 'VERIFIED',
+  broken: `BROKEN${iso ? ' IN ISOLATION' : ''} AT ${(r.result.failedStep ?? '').toUpperCase()}`,
+  // a dependency held back by the age gate judged nothing (round 13); the plan's own entry is a release in the gate
+  quarantine: r.result.failedStep ? 'NOT JUDGED' : 'IN THE AGE GATE',
+  'harness-red': 'NOT JUDGED',
+  'infra-error': 'NOT JUDGED',
+  untested: 'NOT TESTED',
+  skipped: 'SKIPPED',
+}
+const stepWord = { pass: 'OK', fail: 'FAIL', skipped: 'SKIP' } as const
+const steps = STEPS.map((name) => r.steps.find((s) => s.name === name) ?? null)
+// `module add` runs generate itself (round 14): when add failed there, the generate row says `IN ADD`, not `SKIP`
+const inAdd = generateInAdd(r)
+const failed = r.steps.find((s) => s.status === 'fail' && s.name === r.result.failedStep) ?? null
+const patchLine = r.harness.patches
+  .map((p) => {
+    const pr = /\/pull\/(\d+)/.exec(p.ref)
+    // a no-break space keeps `OM #7473` together; the list breaks before the parenthesis or after the comma
+    return `${p.id}${pr ? ` (OM\u00a0#${pr[1]})` : ''}`
+  })
+  .join(', ')
+const header: { k: string; v: string; sub?: string; list?: boolean }[] = [
+  r.module
+    ? { k: 'Module', v: r.module.locator.replace(/^npm:|^github:/, '') }
+    : { k: 'Module', v: 'none (baseline, nothing added)' },
+  ...(r.module ? [{ k: 'Version', v: r.module.version, sub: shortIntegrity(r.module.integrity) }] : []),
+  { k: 'OM', v: r.om.version, sub: r.om.createApp },
+  { k: 'Line', v: r.om.line },
+  { k: 'Preset', v: preset === 'classic' ? 'classic (a new app)' : 'empty (in isolation)' },
+  { k: 'Harness', v: harnessText(r.harness) },
+  { k: 'Runner', v: RUNNER_TEXT[r.harness.runner] },
+  ...(patchLine ? [{ k: 'Patch', v: patchLine, list: true }] : []),
+  ...(r.requiresInstalled.length ? [{ k: 'Requires', v: r.requiresInstalled.join(', '), list: true }] : []),
+]
+const baselineLine = r.baseline ? `${preset === 'classic' ? 'new app' : 'empty preset app'} on ${r.om.version}` : null
+/**
+ * First-error excerpt as log entries that wrap only at token boundaries (after '/', at spaces): a TypeScript line
+ * `path(154,13): error TS2321: message` becomes `ConsentsTable.tsx:154:13  TS2321  message` (the path is in the
+ * header), any other line is kept whole. At most four entries; the rest is in the run log.
+ */
+const ERR_MAX = 4
+const errLines = (failed?.excerpt ?? '')
+  .split('\n')
+  .map((l) => l.trim())
+  .filter(Boolean)
+const errEntries = errLines.slice(0, ERR_MAX).map((l) => {
+  const ts = /^(.+?)\((\d+),(\d+)\): (?:error|warning) (TS\d+): (.*)$/.exec(l)
+  return ts
+    ? { loc: `${(ts[1] as string).split('/').at(-1)}:${ts[2]}:${ts[3]}`, code: ts[4] as string, text: ts[5] as string }
+    : { loc: null, code: null, text: l }
+})
+const errMore = Math.max(0, errLines.length - ERR_MAX)
+---
+
+<div class:list={['rcpt-wrap', { 'rcpt-wrap--compact': compact }]}>
+  <div class="rcpt-paper">
+  <article class="rcpt" aria-label={`Install receipt ${r.id}`}>
+    <header class="rcpt__title">
+      <span>Open Mercato Modules</span>
+      <span>Install receipt</span>
+      <span class="rcpt__id">{r.id}</span>
+    </header>
+    <hr />
+    <dl class="rcpt__kv">
+      {
+        header.map((h) => (
+          <div>
+            <dt>{h.k}</dt>
+            <dd>
+              <span set:html={receiptValueHtml(h.v, h.list)} />
+              {h.sub && <span class="rcpt__sub">{h.sub}</span>}
+            </dd>
+          </div>
+        ))
+      }
+      {
+        baselineLine && (
+          <div class="rcpt__lead">
+            <dt>Baseline</dt>
+            <dd>
+              <span>{baselineLine}</span>
+              <i />
+              <b>{r.baseline?.status === 'verified' ? 'PASS' : r.baseline?.status.toUpperCase()}</b>
+            </dd>
+          </div>
+        )
+      }
+    </dl>
+    <hr />
+    <ol class="rcpt__steps" role="list">
+      {
+        steps.map((s, i) =>
+          inAdd && STEPS[i] === 'generate' && s?.status !== 'pass' ? (
+            <li class="rcpt__step is-inadd" title="yarn mercato module add runs generate itself">
+              <span>{STEPS[i]}</span>
+              <i />
+              <span class="rcpt__sec" />
+              <b>IN ADD</b>
+            </li>
+          ) : (
+            <li class:list={['rcpt__step', s ? (s.status === 'fail' && !judged ? 'is-stop' : `is-${s.status}`) : 'is-none']}>
+              <span>{STEPS[i]}</span>
+              <i />
+              <span class="rcpt__sec">{s && s.sec !== null ? `${s.sec}s` : ''}</span>
+              <b>{s ? (s.status === 'fail' && !judged ? 'STOP' : stepWord[s.status]) : '--'}</b>
+            </li>
+          ),
+        )
+      }
+    </ol>
+    {
+      failed && failed.excerpt && (
+        <div class:list={['rcpt__err', { 'rcpt__err--stop': !judged }]}>
+          <p class="rcpt__errhead">{judged ? 'First error' : 'Run stopped'} · {failed.name}</p>
+          {why && <p class="rcpt__why">{why}</p>}
+          {failed.file && (
+            <p class="rcpt__errfile" translate="no" title={failed.file} set:html={wbrHtml(`${failed.file}${failed.line ? `:${failed.line}` : ''}`)} />
+          )}
+          <ol class="rcpt__log" role="list">
+            {errEntries.map((e) => (
+              <li>
+                {/* real spaces between the parts: without them `file:153:7TS2321Excessive` was one unbreakable run */}
+                {e.loc && <code class="rcpt__logloc">{e.loc}</code>}{e.loc && ' '}
+                {e.code && <b>{e.code}</b>}{e.code && ' '}
+                <span set:html={logLineHtml(e.text)} />
+              </li>
+            ))}
+          </ol>
+          {errMore > 0 && <p class="rcpt__logmore">+{errMore} more {errMore === 1 ? 'line' : 'lines'} in the run log</p>}
+        </div>
+      )
+    }
+    <hr />
+    <dl class="rcpt__kv rcpt__kv--foot">
+      <div class:list={['rcpt__result', `rcpt__result--${r.result.status}`]}>
+        <dt>Result</dt>
+        <dd>
+          {resultWord[r.result.status]}
+          {/* why nothing was judged, small under the verdict, so the total line stays one line */}
+          {r.result.status === 'infra-error' && <span class="rcpt__sub">the run did not finish</span>}
+          {r.result.status === 'harness-red' && <span class="rcpt__sub">the baseline app failed</span>}
+          {iso && <span class="rcpt__sub">an app from the empty preset, not the verdict</span>}
+        </dd>
+      </div>
+      {
+        r.result.alsoFailed.length > 0 && (
+          <div>
+            <dt>Also</dt>
+            <dd>failed at {r.result.alsoFailed.join(', ')}</dd>
+          </div>
+        )
+      }
+      <div>
+        <dt>Run</dt>
+        <dd>
+          {dayYear(r.run.at).toUpperCase()} {timeUtc(r.run.at)}{r.run.durationSec > 0 && ` · ${duration(r.run.durationSec)}`}
+          {r.run.attempt > 1 && <span class="rcpt__sub">attempt {r.run.attempt}</span>}
+        </dd>
+      </div>
+      <div>
+        <dt>Signed</dt>
+        <dd>not signed (v1)</dd>
+      </div>
+    </dl>
+    <footer class="rcpt__barcode" aria-hidden="true">
+      <span style={`--seed:${parseInt(r.cellKey.slice(0, 6), 16) % 7}`}>{r.cellKey.slice(0, 24)}</span>
+    </footer>
+  </article>
+  </div>
+  {
+    !compact && (
+      <div class="rcpt__actions no-print">
+        {jsonHref && (
+          <a class="btn btn--secondary btn--sm" href={jsonHref} download>
+            Download JSON
+          </a>
+        )}
+        <button
+          type="button"
+          class="btn btn--secondary btn--sm"
+          data-copy={issueText(r, absoluteUrl(site.meta.site, receiptPage(r.id)), why)}
+        >
+          Copy for an issue
+        </button>
+        {/* a preview run has no public page: no link that works only on the maintainer's machine (round 5) */}
+        {!preview && (
+          <a class="btn btn--secondary btn--sm" href={r.run.url} rel="noopener noreferrer">
+            Open run
+          </a>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .rcpt-wrap {
+    width: min(420px, 100%);
+    margin-inline: auto;
+  }
+  .rcpt-wrap--compact {
+    width: 100%;
+  }
+  .rcpt {
+    --r: 5px;
+    position: relative;
+    padding: 28px 22px 26px;
+    background: var(--paper);
+    color: var(--paper-ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+    -webkit-mask:
+      radial-gradient(var(--r) at 50% 0, #0000 97%, #000) 50% 0 / calc(2 * var(--r) + 3px) 51% repeat-x,
+      radial-gradient(var(--r) at 50% 100%, #0000 97%, #000) 50% 100% / calc(2 * var(--r) + 3px) 51% repeat-x;
+    mask:
+      radial-gradient(var(--r) at 50% 0, #0000 97%, #000) 50% 0 / calc(2 * var(--r) + 3px) 51% repeat-x,
+      radial-gradient(var(--r) at 50% 100%, #0000 97%, #000) 50% 100% / calc(2 * var(--r) + 3px) 51% repeat-x;
+  }
+  /* a hairline edge that follows the scallops; no soft shadow (shadows are for floating elements only) */
+  .rcpt-paper {
+    filter: drop-shadow(0 0 0.6px #0000004d);
+  }
+  .rcpt hr {
+    border: 0;
+    border-top: 1px dashed #0c0c0c59;
+    margin: 12px 0;
+  }
+  .rcpt__title {
+    display: grid;
+    justify-items: center;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .rcpt__id {
+    margin-top: 4px;
+    color: var(--paper-ink-2);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+  .rcpt__kv {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+  }
+  .rcpt__kv > div {
+    display: grid;
+    grid-template-columns: 9ch minmax(0, 1fr);
+    gap: 8px;
+  }
+  .rcpt__kv dt {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .rcpt__kv dd {
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+  .rcpt__sub {
+    display: block;
+    color: var(--paper-ink-2);
+  }
+  .rcpt__lead dd,
+  .rcpt__step {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .rcpt__lead i,
+  .rcpt__step i {
+    flex: 1;
+    min-width: 12px;
+    border-bottom: 1px dotted #0c0c0c80;
+    transform: translateY(-3px);
+  }
+  .rcpt__steps {
+    display: grid;
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rcpt__sec {
+    min-width: 5ch;
+    text-align: right;
+    color: var(--paper-ink-2);
+  }
+  .rcpt__step b,
+  .rcpt__lead b {
+    min-width: 4ch;
+    text-align: right;
+    font-weight: 400;
+  }
+  .rcpt__step.is-fail b {
+    color: #b3261e;
+  }
+  .rcpt__step.is-fail span:first-child {
+    text-decoration: underline;
+    text-decoration-color: #f32828;
+    text-underline-offset: 3px;
+  }
+  .rcpt__step.is-skipped,
+  .rcpt__step.is-stop,
+  .rcpt__step.is-none {
+    color: var(--paper-ink-2);
+  }
+  /* generate ran inside module add and failed there (round 14): the add row carries the failure */
+  .rcpt__step.is-inadd {
+    color: var(--paper-ink-2);
+  }
+  .rcpt__step.is-inadd b {
+    color: #b3261e;
+  }
+  .rcpt__err {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-left: 2px solid #f32828;
+    background: #f328280d;
+  }
+  .rcpt__errhead {
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #b3261e;
+    font-size: 11px;
+  }
+  /* the sentence that says why, in the paper's ink: what a person reads before the log */
+  .rcpt__why {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--paper-ink);
+  }
+  /* a run that judged nothing stopped here: grey, never the module's red */
+  .rcpt__err--stop {
+    border-left-color: var(--paper-ink-2);
+    background: #0c0c0c0a;
+  }
+  .rcpt__err--stop .rcpt__errhead {
+    color: var(--paper-ink-2);
+  }
+  .rcpt__errfile {
+    margin-top: 2px;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--paper-ink);
+  }
+  /* log entries wrap at '/' and spaces only (lib/wrap.ts), never inside a word or a path segment */
+  .rcpt__log {
+    display: grid;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--paper-ink-2);
+  }
+  .rcpt__log li {
+    overflow-wrap: normal;
+  }
+  .rcpt__log :global(.rcpt__any) {
+    overflow-wrap: anywhere;
+  }
+  .rcpt__logloc {
+    font: inherit;
+    color: var(--paper-ink);
+  }
+  .rcpt__log b {
+    font-weight: 400;
+    color: #b3261e;
+  }
+  .rcpt__logmore {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--paper-ink-2);
+  }
+  /* the total line of the receipt: larger, between two hairlines, the verdict in its ink */
+  .rcpt__result {
+    margin: 2px 0 4px;
+    padding: 8px 0;
+    border-block: 1px solid var(--paper-ink);
+    align-items: baseline;
+  }
+  .rcpt__result dd {
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: 0.08em;
+  }
+  .rcpt__result .rcpt__sub {
+    font-size: 12px;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+  .rcpt__result--verified dd {
+    color: var(--ok-ink);
+  }
+  .rcpt__result--broken dd {
+    color: #b3261e;
+  }
+  .rcpt__barcode {
+    margin-top: 16px;
+    display: grid;
+    justify-items: center;
+  }
+  .rcpt__barcode span {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--paper-ink-2);
+    padding-top: 26px;
+    background: repeating-linear-gradient(
+        90deg,
+        #0c0c0c 0 1px,
+        transparent 1px 3px,
+        #0c0c0c 3px 5px,
+        transparent 5px 6px,
+        #0c0c0c 6px 7px,
+        transparent 7px 10px
+      )
+      top / 100% 22px no-repeat;
+  }
+  .rcpt__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  @media print {
+    .rcpt-paper {
+      filter: none;
+    }
+  }
+</style>

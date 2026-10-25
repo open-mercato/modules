@@ -1,0 +1,54 @@
+{
+  "locator": "npm:@fullstackhouse/open-mercato-durable-work",
+  "checkedAt": "2026-10-23T00:20:00Z",
+  "firstSeenAt": "2026-10-23T00:00:03Z",
+  "npm": {
+    "name": "@fullstackhouse/open-mercato-durable-work",
+    "distTags": {
+      "pr-1": "0.2.2-pr1.57",
+      "latest": "0.6.0"
+    },
+    "latestStable": "0.6.0",
+    "previousStable": "0.5.0",
+    "preview": null,
+    "publishedAt": {
+      "0.6.0": "2026-09-17T22:10:25Z",
+      "0.5.0": "2026-09-17T14:48:45Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+    "gitHead": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1",
+    "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+    "maintainers": ["jtomaszewski"],
+    "peerDependencies": {
+      "pg": ">=8.0.0",
+      "zod": ">=3.25.0",
+      "next": ">=15.0.0",
+      "bullmq": "^5.0.0 || ^6.0.0",
+      "ioredis": ">=5.0.0",
+      "pg-boss": ">=12.0.0 <13.0.0",
+      "@mikro-orm/core": ">=7.0.0",
+      "@open-mercato/core": ">=0.7.0 <0.8.0",
+      "@open-mercato/shared": ">=0.7.0 <0.8.0",
+      "@mikro-orm/migrations": ">=7.0.0",
+      "@mikro-orm/postgresql": ">=7.0.0"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-uA3NDDbBb2LLA9KG2ZtXm1LeY2RJtDoOFzQafJcWTa/VstxZ8/yJL1BQL9OOWMVBM3qKbTrw6HodEQ5A287o3A==",
+    "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.6.0.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "fullstackhouse/open-mercato-durable",
+    "commit": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Repository fullstackhouse/open-mercato-durable returns 404; npm scope is not in policy/community.yml.",
+  "downloads30d": 204,
+  "errors": ["github: fullstackhouse/open-mercato-durable from repository.url returns 404 (2026-10-23)"]
+}

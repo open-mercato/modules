@@ -1,0 +1,11 @@
+npm: "@open-mercato/gateway-stripe"
+repo: open-mercato/open-mercato#main/packages/gateway-stripe
+category: payments-finance
+tags: [payments, cards]
+summary: Card, Apple Pay, Google Pay and bank transfer payments through Stripe for checkout and sales documents.
+whenToUse: Use when the app takes card or wallet payments in any currency and you already have a Stripe account.
+whenNotToUse: For PLN bank transfers and BLIK use gateway-tpay.
+providers:
+  - { name: stripe, label: Stripe }
+links:
+  docs: https://docs.openmercato.com/user-guide/stripe-payments

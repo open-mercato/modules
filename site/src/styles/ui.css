@@ -1,0 +1,1099 @@
+/* Shared primitives rendered by both Astro components and Preact islands: buttons, chips, seals, the signal
+   strip, command chips and the module row. Component-only styles live next to each component. */
+
+/* ---------- buttons (openmercato.com .button) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 7px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-m);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-2) var(--ease),
+    border-color var(--dur-2) var(--ease),
+    box-shadow var(--dur-2) var(--ease),
+    color var(--dur-2) var(--ease);
+}
+.btn--primary {
+  background: var(--grad);
+  color: #0c0c0c;
+}
+.btn--primary:hover {
+  box-shadow: inset 0 0 0 1px #0c0c0c33;
+}
+.btn--secondary {
+  background: var(--bg);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.btn--secondary:hover {
+  background: var(--bg-2);
+  border-color: var(--ink-3);
+}
+.btn--tertiary {
+  background: #1b1b1b;
+  color: #fff;
+}
+.btn--tertiary:hover {
+  background: #1f1f1f;
+}
+.btn--green {
+  background: var(--ok-ink);
+  color: #fff;
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--ink-2);
+}
+.btn--ghost:hover {
+  color: var(--ink);
+  background: var(--bg-3);
+}
+.btn--icon {
+  width: 36px;
+  padding: 0;
+}
+.btn--sm {
+  min-height: 28px;
+  padding: 3px 10px;
+  font-size: 13px;
+}
+.btn--icon.btn--sm {
+  width: 28px;
+}
+
+/* touch targets of at least 44 px on phones and small tablets (spec 7.10) */
+@media (max-width: 767px) {
+  .btn,
+  .btn--sm {
+    min-height: 44px;
+  }
+  .btn--icon,
+  .btn--icon.btn--sm {
+    width: 44px;
+  }
+}
+
+/* ---------- chips (label-list_item, numbered) ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-s);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+/* the number keeps the chip's full ink (4.5:1 at 11 px); spacing, not fading, sets it apart */
+.chip__num {
+  margin-right: 2px;
+}
+.chip--official {
+  background: #b4f372;
+  color: #2f520b;
+}
+.chip--community {
+  background: #efe7ff;
+  color: #6b55a0;
+}
+.chip--third {
+  background: #eefb63;
+  color: #0c0c0c;
+}
+.chip--builtin {
+  background: var(--bg-3);
+  color: var(--ink-2);
+}
+/* dark (spec 6.7 amendment, WP11b): solid brand plates were the brightest object of every row and pulled the eye
+   off the title. On dark the type is an outline in its hue (contrast on #0C0C0C: lime 14.9:1, violet 8.6:1,
+   yellow 17:1); light mode keeps the plates. */
+:root[data-theme='dark'] .chip--official,
+.band--film .chip--official {
+  background: transparent;
+  color: #b4f372;
+  box-shadow: inset 0 0 0 1px #b4f372;
+}
+:root[data-theme='dark'] .chip--community,
+.band--film .chip--community {
+  background: transparent;
+  color: #bc9aff;
+  box-shadow: inset 0 0 0 1px #bc9aff;
+}
+:root[data-theme='dark'] .chip--third,
+.band--film .chip--third {
+  background: transparent;
+  color: #eefb63;
+  box-shadow: inset 0 0 0 1px #eefb63;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .chip--official {
+    background: transparent;
+    color: #b4f372;
+    box-shadow: inset 0 0 0 1px #b4f372;
+  }
+  :root:not([data-theme='light']) .chip--community {
+    background: transparent;
+    color: #bc9aff;
+    box-shadow: inset 0 0 0 1px #bc9aff;
+  }
+  :root:not([data-theme='light']) .chip--third {
+    background: transparent;
+    color: #eefb63;
+    box-shadow: inset 0 0 0 1px #eefb63;
+  }
+}
+.chip--line {
+  border: 1px solid var(--line-strong);
+  color: var(--ink-2);
+  background: transparent;
+}
+/* a receipt from the local preview runner (round 5): dashed like the untested square, provisional until CI */
+.chip--preview {
+  border: 1px dashed var(--ink-3);
+  color: var(--ink-2);
+  background: transparent;
+}
+.chip--unknown {
+  border: 1px solid var(--line-strong);
+  color: var(--wait-ink);
+}
+.chip--enterprise {
+  background: #1b1b1b;
+  color: #b4f372;
+  box-shadow: inset 0 0 0 1px #2a2a2a;
+}
+.chip--match {
+  background: var(--id-fill);
+  color: #6b55a0;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* dark: a quiet chip, violet on #1B1B1B (7.5:1), so the hit never outshouts the title */
+:root[data-theme='dark'] .chip--match,
+.band--film .chip--match {
+  background: #1b1b1b;
+  color: #bc9aff;
+  box-shadow: inset 0 0 0 1px #2a2a2a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .chip--match {
+    background: #1b1b1b;
+    color: #bc9aff;
+    box-shadow: inset 0 0 0 1px #2a2a2a;
+  }
+}
+.chip__neq {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  margin-right: -3px;
+  border-radius: 1px;
+  background: #eefb63;
+  color: #0c0c0c;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+/* ---------- seals (spec 6.7) ---------- */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-s);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.seal--listed {
+  border: 1px solid var(--line-strong);
+  color: var(--ink-2);
+}
+/* Listed while the latest-line square is green: the `≠` says the strip and the level disagree, the title says why */
+.seal--note {
+  cursor: help;
+  padding-left: 4px;
+}
+.seal--verified {
+  background: var(--ok-fill);
+  color: var(--ok-ink);
+}
+.seal--verified svg {
+  width: 10px;
+  height: 10px;
+}
+.seal--quality {
+  height: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 12px 9px 10px;
+  /* the brand gradient (the stops of --grad and the favicon) along the seal's own diagonal, top right to bottom
+     left as in the mark (review r4: 189 degrees over a wide, low plate read as a yellow highlighter with a strip;
+     on the diagonal lime, yellow and violet each get their share, as on the Submit button) */
+  background: linear-gradient(to bottom left, #b4f372 12%, #eefb63 58%, #bc9aff 100%);
+  color: #0c0c0c;
+  border-radius: 0;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+.seal--quality .seal__sub {
+  font-size: 10px;
+  opacity: 0.72;
+}
+.seal--revoked {
+  height: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 0;
+  color: var(--ink-3);
+  background: var(--bg-3);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+.seal--revoked .seal__main {
+  text-decoration: line-through;
+}
+
+/* ---------- signal strip (spec 6.7): 14 px squares, 2 px apart, shape + colour + letter ---------- */
+.strip {
+  display: inline-grid;
+  grid-auto-flow: column;
+  /* equal columns as wide as the widest label ('next'); squares stay 14 px and centred */
+  grid-auto-columns: minmax(14px, 1fr);
+  column-gap: 2px;
+  row-gap: 3px;
+  grid-template-rows: auto 14px;
+  align-items: end;
+}
+.strip--bare {
+  grid-template-rows: 14px;
+  grid-auto-columns: 14px;
+}
+.strip.strip--bare > .strip__cell {
+  grid-row: 1;
+}
+.strip > .strip__label {
+  grid-row: 1;
+}
+.strip__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: center;
+  white-space: nowrap;
+}
+.strip > .strip__cell {
+  grid-row: 2;
+}
+.strip__cell {
+  display: block;
+  width: 14px;
+  height: 14px;
+  justify-self: center;
+}
+.strip__cell svg {
+  width: 14px;
+  height: 14px;
+}
+/* infra-error: a light plate with a solid ink-3 edge (>= 3:1 against the page, spec 7.9) and a dark '!' */
+.sq-infra {
+  fill: #e7e7e7;
+  stroke: var(--ink-3);
+  stroke-width: 1;
+}
+.sq-infra__mark {
+  stroke: #434343;
+}
+:root[data-theme='dark'] .sq-infra,
+.band--film .sq-infra {
+  fill: #1b1b1b;
+}
+:root[data-theme='dark'] .sq-infra__mark,
+.band--film .sq-infra__mark {
+  stroke: #fafafa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .sq-infra {
+    fill: #1b1b1b;
+  }
+  :root:not([data-theme='light']) .sq-infra__mark {
+    stroke: #fafafa;
+  }
+}
+/* a run Yarn's age gate stopped on a dependency (round 14, spec 6.7): the plate of the states that judged nothing,
+   bg-3 with an ink-3 edge and an ink-3 clock; the yellow square stays for a release of the module in the gate */
+.sq-held {
+  fill: var(--bg-3);
+  stroke: var(--ink-3);
+  stroke-width: 1;
+}
+.sq-held__mark {
+  stroke: var(--ink-3);
+}
+.band--film .sq-held {
+  fill: #1b1b1b;
+}
+.band--film .sq-held__mark {
+  stroke: #8a8a8a;
+}
+.sq-letter {
+  display: none;
+}
+@media print {
+  .sq-letter {
+    display: inline;
+    font: 9px var(--font-mono);
+  }
+}
+
+/* ---------- command chip (text-style-console) ---------- */
+.cmd {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  border-radius: var(--radius-s);
+  background: #efe7ff;
+  color: #6b55a0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+}
+:root[data-theme='dark'] .cmd,
+.band--film .cmd {
+  background: #1b1b1b;
+  color: #b4f372;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .cmd {
+    background: #1b1b1b;
+    color: #b4f372;
+  }
+}
+.cmd__prompt {
+  padding: 8px 0 8px 10px;
+  opacity: 0.6;
+  user-select: none;
+}
+/* a copy target shows the whole command: it wraps only at the <wbr> token boundaries (after '/', before '@'
+   and ' --'), never inside a package name; the copy button stretches with the wrapped text */
+.cmd__text {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  /* a URL never breaks: when it is wider than the chip, the chip scrolls sideways (review r1) */
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
+}
+/* one-line variant (hero): fade the end and keep a visible thin scrollbar instead of a hard cut */
+.cmd--line .cmd__text {
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
+  mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+}
+.cmd__copy {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  border: 0;
+  border-left: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: transparent;
+  color: inherit;
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+.cmd__copy:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+/* touch target of at least 44 px on phones (spec 7.10) */
+@media (max-width: 767px) {
+  .cmd__copy {
+    width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ---------- module row (spec 7.6): 64 px ledger row, a card in narrow lists ----------
+   The row lays itself out from the width of its own list, not the viewport (container queries on the article),
+   so it reads the same across the full sheet (about 1200 px), beside the 240 px filter rail (about 920 px) and
+   on a phone. Thresholds: >= 1040 px ledger with the category, 720-1039 px ledger without it (the category is the
+   title of the chips), < 720 px card, < 440 px phone card. */
+.mrow {
+  container: mrow / inline-size;
+  position: relative;
+}
+.mrow__grid {
+  display: grid;
+  /* fixed instrument columns, so chips, strips and seals line up from row to row; the summary spans the chips */
+  /* the chips cell is a ledger of 3 fixed tracks (category, type, license), so every column starts at the same x in
+     every row and the column labels of ModuleRowHead sit exactly over them */
+  --mrow-tags: calc(var(--mrow-cat) + 112px + 132px + 16px);
+  --mrow-cat: 148px;
+  grid-template-columns: 32px minmax(0, 1fr) var(--mrow-tags) 96px 112px 60px;
+  grid-template-areas:
+    'sig head chips strip seal act'
+    'sig summ summ  strip seal act';
+  column-gap: 20px;
+  row-gap: 2px;
+  align-items: center;
+  min-height: 64px;
+  padding: 11px var(--pad);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  transition: background-color var(--dur-1) var(--ease);
+}
+/* an anatomy hit gets its own line under the summary: the summary keeps its full width, the evidence is whole */
+.mrow--hit > .mrow__grid {
+  grid-template-areas:
+    'sig head chips strip seal act'
+    'sig summ summ  strip seal act'
+    'sig hit  hit   strip seal act';
+}
+.mrow:hover > .mrow__grid {
+  background: var(--bg-2);
+}
+.mrow__sig {
+  grid-area: sig;
+  align-self: center;
+  display: flex;
+  color: var(--ink);
+}
+.mrow__head {
+  grid-area: head;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.mrow__title {
+  flex: 0 1 auto;
+  max-width: 62%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mrow__title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.mrow__title:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* the locator of the column header row (none) and of any row is mono 12 ink-2 */
+.mrow__loc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+/* title over locator in every row (review r4: a locator moved under the title only when it did not fit made those
+   rows 83 px among 64 px ones; one rhythm for the whole list, as on the phone cards): the locator whole, breaking
+   only after its '/', never faded */
+.mrow:not(.mrow--head) .mrow__head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+.mrow:not(.mrow--head) .mrow__head > .mrow__title {
+  max-width: 100%;
+}
+.mrow:not(.mrow--head) .mrow__head > .mrow__loc {
+  max-width: 100%;
+  line-height: 18px;
+}
+.mrow:not(.mrow--head) .mrow__loc wbr {
+  display: inline;
+}
+/* phones: the type, license and category as one mono line (the chips are for wider lists) */
+.mrow__mono {
+  display: none;
+  grid-area: tags;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mrow__mono > span:first-child {
+  color: var(--ink);
+}
+.mrow__summ {
+  grid-area: summ;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.mrow__hit {
+  grid-area: hit;
+  min-width: 0;
+  margin: 4px 0 0;
+}
+.mrow__hit .chip--match {
+  display: inline;
+  height: auto;
+  padding: 2px 6px;
+  font-size: 11px;
+  line-height: 20px;
+  white-space: normal;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.mrow__hit code {
+  font: inherit;
+  color: inherit;
+}
+.chip--match__k {
+  opacity: 0.8;
+}
+/* category (mono), type chip and license chip on the title line, one fixed track each */
+.mrow__tags {
+  grid-area: chips;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px 132px;
+  column-gap: 8px;
+  justify-items: start;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+.mrow__meta {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.mrow__strip {
+  grid-area: strip;
+  justify-self: center;
+}
+.mrow__seal {
+  grid-area: seal;
+  display: flex;
+  justify-content: flex-start;
+}
+.mrow__act {
+  grid-area: act;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+}
+.mrow__strip,
+.mrow__seal,
+.mrow__tags {
+  position: relative;
+  z-index: 1;
+}
+/* enterprise in the 112 px level column: two lines */
+.chip--stack {
+  display: inline-grid;
+  height: auto;
+  padding: 4px 7px;
+  gap: 2px;
+  line-height: 12px;
+}
+/* day 0: every line untested reads as one quiet label, not three identical squares */
+.strip-queued {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+/* ledger: the line labels sit once in the column header (ModuleRowHead), rows show bare squares on a fixed 32 px
+   column pitch shared with the header */
+.mrow--head > .mrow__grid {
+  min-height: 0;
+  padding-block: 8px;
+  grid-template-areas: 'sig head chips strip seal act';
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mrow--head:hover > .mrow__grid {
+  background: var(--bg-2);
+}
+.mrow--head .mrow__meta {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+.mrow__hcell--mod {
+  grid-area: head;
+}
+.strip--labels {
+  grid-template-rows: auto;
+}
+.strip--labels > .strip__label {
+  grid-row: 1;
+}
+.mrow__strip .strip {
+  /* 32 px pitch (review r4): `NEXT` is 28 px of mono 10, so a 28 px pitch left it touching `0.9` */
+  grid-auto-columns: 32px;
+  column-gap: 0;
+}
+.mrow:not(.mrow--head) .mrow__strip .strip {
+  grid-template-rows: 14px;
+}
+.mrow:not(.mrow--head) .mrow__strip .strip__label {
+  display: none;
+}
+.mrow:not(.mrow--head) .mrow__strip .strip > .strip__cell {
+  grid-row: 1;
+}
+/* before the first night (signals off): the ledger without the strip and level columns */
+@container mrow (min-width: 720px) {
+  .mrow--nosig > .mrow__grid {
+    grid-template-columns: 32px minmax(0, 1fr) var(--mrow-tags) 60px;
+    grid-template-areas:
+      'sig head chips act'
+      'sig summ summ  act';
+  }
+  .mrow--nosig.mrow--hit > .mrow__grid {
+    grid-template-areas:
+      'sig head chips act'
+      'sig summ summ  act'
+      'sig hit  hit   act';
+  }
+  .mrow--nosig.mrow--head > .mrow__grid {
+    grid-template-areas: 'sig head chips act';
+  }
+}
+/* signals on (review r2): the strip and level columns leave the module column too narrow for a title and a 28ch
+   locator. Type and license stack in one column (type on the title line, license on the summary line), so the
+   module column gets that room back and every column of the row has the same two lines. The category stays in the
+   chips' title and the filter rail. */
+@container mrow (min-width: 720px) {
+  /* the level column takes 132 px too: VERIFIED · 0.9 is about 128 px wide */
+  .mrow:not(.mrow--nosig) > .mrow__grid {
+    --mrow-tags: 132px;
+    grid-template-columns: 32px minmax(0, 1fr) 132px 96px 132px 60px;
+  }
+  .mrow:not(.mrow--nosig):not(.mrow--head) > .mrow__grid {
+    grid-template-areas:
+      'sig head chips strip seal act'
+      'sig summ chips strip seal act';
+  }
+  /* as specific as the rule above, and after it (review r9: the hit row lost its `hit` area to that rule, so the
+     matched chip fell into an implicit column and pushed the type, strip and level columns out of line) */
+  .mrow--hit:not(.mrow--nosig):not(.mrow--head) > .mrow__grid {
+    grid-template-areas:
+      'sig head chips strip seal act'
+      'sig summ chips strip seal act'
+      'sig hit  hit   strip seal act';
+  }
+  .mrow:not(.mrow--nosig) .mrow__tags {
+    grid-template-columns: 132px;
+    row-gap: 6px;
+  }
+  /* two 20 px lines with the row's own 2 px gap: the type chip sits on the title line, the license on the summary */
+  .mrow:not(.mrow--nosig):not(.mrow--head) .mrow__tags {
+    grid-template-rows: 20px 20px;
+    row-gap: 2px;
+  }
+  .mrow:not(.mrow--nosig) .mrow__meta,
+  .mrow--head:not(.mrow--nosig) .mrow__hlic {
+    display: none;
+  }
+  .mrow--head:not(.mrow--nosig) .mrow__hsep {
+    display: inline;
+  }
+  .mrow:not(.mrow--nosig) > .mrow__grid {
+    column-gap: 14px;
+  }
+}
+.mrow__hsep {
+  display: none;
+}
+/* beside the filter rail: no room for the category on the title line; it stays in the chips' title. Two tracks. */
+@container mrow (max-width: 1039px) {
+  .mrow__grid {
+    --mrow-tags: calc(112px + 132px + 8px);
+  }
+  .mrow__tags {
+    grid-template-columns: 112px 132px;
+  }
+  .mrow__meta {
+    display: none;
+  }
+}
+/* card: title and locator, summary in two lines, the hit, then type, license and category, then the strip with
+   its own line labels and the seal */
+@container mrow (max-width: 719px) {
+  .mrow--head > .mrow__grid {
+    display: none;
+  }
+  .mrow__grid,
+  .mrow--hit > .mrow__grid {
+    grid-template-columns: 32px minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'sig head head act'
+      'sig summ summ summ'
+      'sig hit  hit  hit'
+      'sig tags tags tags'
+      'sig strip . seal';
+    column-gap: 16px;
+    row-gap: 8px;
+    align-items: start;
+    padding-block: 16px;
+  }
+  .mrow__summ {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .mrow__hit {
+    margin: 0;
+  }
+  .mrow__tags {
+    grid-area: tags;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+    white-space: normal;
+  }
+  .mrow__meta {
+    display: inline;
+    order: 9;
+    margin: 0;
+    overflow: visible;
+    white-space: normal;
+  }
+  .mrow__strip {
+    justify-self: start;
+    align-self: end;
+  }
+  .mrow__strip .strip {
+    grid-auto-columns: minmax(14px, 1fr);
+    column-gap: 10px;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip {
+    grid-template-rows: auto 14px;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip__label {
+    display: block;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip > .strip__cell {
+    grid-row: 2;
+  }
+  .mrow__seal {
+    justify-content: flex-end;
+    align-self: end;
+  }
+  .mrow__act {
+    margin-block: -10px;
+  }
+}
+@container mrow (max-width: 719px) {
+  .mrow--nosig > .mrow__grid,
+  .mrow--nosig.mrow--hit > .mrow__grid {
+    grid-template-areas:
+      'sig head head act'
+      'sig summ summ summ'
+      'sig hit  hit  hit'
+      'sig tags tags tags';
+  }
+}
+/* phone card (review r1: about 120 px instead of 190): title with the locator under it (wrapping after '/', never
+   faded), the summary in two lines, one mono meta line; the strip and the seal close the meta line only when a
+   receipt exists (signals on) */
+@container mrow (max-width: 439px) {
+  /* with receipts the strip and the level get a line of their own under the meta line, so the type, license and
+     category are never cut (review r2) */
+  .mrow__grid,
+  .mrow--hit > .mrow__grid {
+    grid-template-columns: 24px minmax(0, 1fr) minmax(0, auto) minmax(0, auto);
+    grid-template-areas:
+      'sig   head  head  act'
+      'sig   loc   loc   loc'
+      'summ  summ  summ  summ'
+      'hit   hit   hit   hit'
+      'tags  tags  tags  tags'
+      'strip strip strip seal';
+    column-gap: 12px;
+    row-gap: 4px;
+    padding-block: 12px;
+  }
+  .mrow--nosig > .mrow__grid,
+  .mrow--nosig.mrow--hit > .mrow__grid {
+    grid-template-areas:
+      'sig  head head  act'
+      'sig  loc  loc   loc'
+      'summ summ summ  summ'
+      'hit  hit  hit   hit'
+      'tags tags tags  tags';
+  }
+  /* the locator line runs under the action buttons too (review r2: a long npm name was cut at the buttons) */
+  .mrow__head {
+    display: contents;
+  }
+  .mrow__head > .mrow__title {
+    grid-area: head;
+    align-self: center;
+  }
+  .mrow__head > .mrow__loc {
+    grid-area: loc;
+    margin-top: -4px;
+  }
+  .mrow__tags {
+    display: none;
+  }
+  .mrow__mono {
+    display: block;
+    align-self: center;
+  }
+  /* Listed is the default level: on a phone card it would only take room from the meta line; Verified and
+     OM Quality still show */
+  .mrow__seal .seal--listed:not(.seal--note) {
+    display: none;
+  }
+  .mrow__strip,
+  .mrow__seal {
+    align-self: center;
+  }
+  /* each square keeps its line label, inline on the card: `0.8 ■  0.9 ■  NEXT ■` (spec 6.7, review r3: three bare
+     squares did not say which line was red) */
+  .mrow:not(.mrow--head) .mrow__strip .strip {
+    grid-template-rows: 14px;
+    grid-auto-columns: auto;
+    column-gap: 5px;
+    align-items: center;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip > .strip__label {
+    display: block;
+    grid-row: 1;
+    line-height: 14px;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip > .strip__label:not(:first-child) {
+    margin-left: 9px;
+  }
+  .mrow:not(.mrow--head) .mrow__strip .strip > .strip__cell {
+    grid-row: 1;
+  }
+  .mrow__sig {
+    padding-top: 2px;
+  }
+  .mrow__sig svg {
+    width: 24px;
+    height: 24px;
+  }
+  .mrow__head {
+    flex-direction: column;
+    gap: 0;
+  }
+  .mrow__title {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .mrow:not(.mrow--head) .mrow__head > .mrow__loc {
+    line-height: 16px;
+  }
+  .mrow__act {
+    margin-block: -8px;
+  }
+}
+/* touch targets of at least 44 px (spec 7.10) */
+@media (max-width: 767px) {
+  .mrow__act .btn {
+    width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ---------- toast for copy actions ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  pointer-events: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-m);
+  background: #0c0c0c;
+  color: #fafafa;
+  box-shadow: var(--shadow-float);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    opacity var(--dur-2) var(--ease),
+    transform var(--dur-2) var(--ease);
+  z-index: 60;
+}
+.toast[data-on] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.toast::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  vertical-align: 1px;
+  background: #b4f372;
+}
+
+/* untested (queued): a quiet dot in the square's place (review r1) */
+.sq-dot {
+  fill: var(--ink-3);
+}
+
+/* built-in sigils on dark (review r4): the grey scale turns around, so a richer core module is lighter, never a
+   #434343 petal lost on #0C0C0C; light keeps the attribute values of lib/sigil/sigil.ts */
+:root[data-theme='dark'] .sg-b1 {
+  fill: #5c5c5c;
+}
+:root[data-theme='dark'] .sg-b2 {
+  fill: #8a8a8a;
+}
+:root[data-theme='dark'] .sg-b3 {
+  fill: #b6b6b6;
+}
+:root[data-theme='dark'] .sg-bc {
+  fill: #9e9e9e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .sg-b1 {
+    fill: #5c5c5c;
+  }
+  :root:not([data-theme='light']) .sg-b2 {
+    fill: #8a8a8a;
+  }
+  :root:not([data-theme='light']) .sg-b3 {
+    fill: #b6b6b6;
+  }
+  :root:not([data-theme='light']) .sg-bc {
+    fill: #9e9e9e;
+  }
+}
+
+/* the signal `in isolation` (decision of 24 Oct): a 6 px dot at the square's top right corner for the line's last
+   receipt in an app from the empty preset, ringed in the page colour so it never merges with the square; the square
+   is a new app's (classic) verdict and keeps its colour. Verified lime with a dark edge, broken red, anything else a
+   hollow ink-3 ring (>= 3:1 against the page, spec 7.9). */
+.strip__cell {
+  position: relative;
+}
+.sq-iso {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1.5px var(--bg);
+}
+.sq-iso--verified {
+  background: #b4f372;
+  border: 1.5px solid #2f520b;
+}
+.sq-iso--broken {
+  background: #f32828;
+  border: 1.5px solid #a01313;
+}
+.sq-iso--other {
+  background: var(--bg);
+  border: 1.5px solid var(--ink-3);
+}
+/* the key of the dot in legends: the hollow ring, followed by its words; with a state, the dot of that state */
+.sq-iso-key {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-3);
+  vertical-align: 0;
+}
+.sq-iso-key--verified {
+  background: #b4f372;
+  border-color: #2f520b;
+}
+.sq-iso-key--broken {
+  background: #f32828;
+  border-color: #a01313;
+}
+@media print {
+  .sq-iso {
+    display: none;
+  }
+}
+
+/* a receipt of another version than the one a fresh app installs (review r6): a dashed ink-3 outline (>= 3:1 like the
+   untested outline of spec 7.9), no fill, so another version's red never stands on the line */
+.sq-other {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+  stroke-dasharray: 2.4 1.6;
+}

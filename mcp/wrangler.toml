@@ -1,0 +1,12 @@
+# Remote MCP server of Open Mercato Modules (spec 3.4, 8.3). Deployed only by .github/workflows/mcp-deploy.yml.
+# Local run: yarn wrangler dev --config mcp/wrangler.toml (override the URLs with --var NAME:value).
+name = "om-modules"
+main = "worker.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+MODULES_INDEX_URL = "https://open-mercato.github.io/modules/modules.json"
+BUILTIN_INDEX_URL = "https://open-mercato.github.io/modules/built-in.json"
+
+[observability]
+enabled = false

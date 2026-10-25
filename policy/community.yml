@@ -1,0 +1,17 @@
+# Who is "community". Sync computes the type: a public member of the open-mercato org, OR an entry here,
+# OR a login from partners[].contributors[] in open-mercato/open-mercato/.github/certified-partners.yml
+# (lib/sources/partners.ts reads the file through raw.githubusercontent.com on every sync; the file has no owners field).
+owners: # extra GitHub logins of people (lower case)
+  - pkarw # Piotr Karwatka (core team); repo of the @piotrkarwatka/* packages
+orgs: # company from certified-partners.yml -> GitHub org (D-OPEN-6 = yes, orchestrator decision E6)
+  - company: Fast White Cat
+    org: fastwhitecat
+  - company: Full Stack House
+    org: fullstackhouse
+  - company: Freight Tech
+    org: freighttech
+npmScopes: # for packages without a resolvable repo (visits: repo 404; durable and freighttech: repo 404 or none)
+  - "@piotrkarwatka"
+  - "@fastwhitecat"
+  - "@fullstackhouse"
+  - "@freighttech"

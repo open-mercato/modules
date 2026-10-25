@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.github.com/orgs/open-mercato/public_members/Chmarusso"
+  },
+  "response": {
+    "status": 404,
+    "json": {
+      "message": "User does not exist or is not a public member of the organization",
+      "documentation_url": "https://docs.github.com/rest/orgs/members#check-public-organization-membership-for-a-user",
+      "status": "404"
+    }
+  }
+}

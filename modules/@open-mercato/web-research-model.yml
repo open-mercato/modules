@@ -1,0 +1,14 @@
+npm: "@open-mercato/web-research-model"
+repo: open-mercato/open-mercato#main/packages/web-research-model
+kind: provider
+category: ai-automation
+tags: [web-search, llm, ai]
+summary: Web search through the native search tool of the agent LLM on Anthropic, OpenAI or Azure OpenAI. On by default.
+whenToUse: Use when you want web search without another vendor or key, through the model the agent already calls.
+providers:
+  - { name: anthropic, label: Anthropic }
+  - { name: openai, label: OpenAI }
+  - { name: azure-openai, label: Azure OpenAI }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

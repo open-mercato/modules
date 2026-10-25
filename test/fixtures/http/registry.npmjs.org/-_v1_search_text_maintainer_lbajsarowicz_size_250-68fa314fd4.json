@@ -1,0 +1,447 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Albajsarowicz&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 143,
+            "weekly": 33
+          },
+          "dependents": "2",
+          "updated": "2026-10-16T10:11:11.555Z",
+          "searchScore": 27.412897,
+          "package": {
+            "name": "@package-broker/main",
+            "keywords": [],
+            "version": "0.19.8",
+            "description": "Cloudflare Workers adapter for PACKAGE.broker.",
+            "sanitized_name": "@package-broker/main",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:689ad0e2-8136-49b0-90ca-97275fcc8556",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:55:55.163Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/main"
+            }
+          },
+          "score": {
+            "final": 27.412897,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 152,
+            "weekly": 35
+          },
+          "dependents": "3",
+          "updated": "2026-10-16T10:11:09.689Z",
+          "searchScore": 27.036968,
+          "package": {
+            "name": "@package-broker/shared",
+            "keywords": [],
+            "version": "0.19.8",
+            "sanitized_name": "@package-broker/shared",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:36c79c02-590d-4741-bc7e-b739ed4ed5bf",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:55:24.670Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/shared"
+            }
+          },
+          "score": {
+            "final": 27.036968,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 144,
+            "weekly": 39
+          },
+          "dependents": "1",
+          "updated": "2026-10-16T10:11:16.794Z",
+          "searchScore": 26.537462,
+          "package": {
+            "name": "@package-broker/ui",
+            "keywords": [],
+            "version": "0.19.8",
+            "description": "React-based web dashboard for PACKAGE.broker.",
+            "sanitized_name": "@package-broker/ui",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:4f075d67-6ea6-4470-8ad8-6c5c73dc38bd",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:55:47.430Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/ui"
+            }
+          },
+          "score": {
+            "final": 26.537462,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 112,
+            "weekly": 28
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T10:11:12.583Z",
+          "searchScore": 25.007187,
+          "package": {
+            "name": "@package-broker/adapter-node",
+            "keywords": [],
+            "version": "0.19.8",
+            "sanitized_name": "@package-broker/adapter-node",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:dfd75504-a78f-494c-be60-19204b4f448c",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:56:07.629Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/adapter-node"
+            }
+          },
+          "score": {
+            "final": 25.007187,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 78,
+            "weekly": 15
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T10:11:11.520Z",
+          "searchScore": 24.559301,
+          "package": {
+            "name": "@package-broker/cloudflare",
+            "keywords": [],
+            "version": "0.19.8",
+            "description": "Interactive CLI tool for deploying PACKAGE.broker to Cloudflare Workers",
+            "sanitized_name": "@package-broker/cloudflare",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:773dbcff-cc09-4ce5-9fa8-960dd32a0dfd",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:56:15.300Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/cloudflare"
+            }
+          },
+          "score": {
+            "final": 24.559301,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 100,
+            "weekly": 32
+          },
+          "dependents": "2",
+          "updated": "2026-10-16T10:11:13.801Z",
+          "searchScore": 24.4727,
+          "package": {
+            "name": "@package-broker/core",
+            "keywords": [],
+            "version": "0.19.8",
+            "description": "Core application logic for PACKAGE.broker - the platform-agnostic engine powering the Composer repository proxy.",
+            "sanitized_name": "@package-broker/core",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:17f2065b-61ba-4ab2-a184-e58ab3a45f2b",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:55:36.836Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/core"
+            }
+          },
+          "score": {
+            "final": 24.4727,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 67,
+            "weekly": 18
+          },
+          "dependents": 0,
+          "updated": "2026-10-16T10:11:12.950Z",
+          "searchScore": 21.901634,
+          "package": {
+            "name": "@package-broker/cli",
+            "keywords": [],
+            "version": "0.19.8",
+            "description": "CLI tool to initialize PACKAGE.broker configuration",
+            "sanitized_name": "@package-broker/cli",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:6af37663-2f50-47ca-a6ff-971f280528d9",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "date": "2026-07-03T08:56:02.279Z",
+            "links": {
+              "homepage": "https://github.com/package-broker/server#readme",
+              "repository": "git+https://github.com/package-broker/server.git",
+              "bugs": "https://github.com/package-broker/server/issues",
+              "npm": "https://www.npmjs.com/package/@package-broker/cli"
+            }
+          },
+          "score": {
+            "final": 21.901634,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 42,
+            "weekly": 30
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T09:51:08.220Z",
+          "searchScore": 20.10489,
+          "package": {
+            "name": "@fastwhitecat/integration-ksef-direct",
+            "keywords": [],
+            "version": "0.1.8",
+            "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+            "sanitized_name": "@fastwhitecat/integration-ksef-direct",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "7a7aa871-7409-4a03-83c6-def80393f97f",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "bernard.van.der.esch@fastwhitecat.com",
+                "username": "bernard-fwc"
+              },
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-15T09:45:06.770Z",
+            "links": {
+              "homepage": "https://github.com/FastWhiteCat/openmercato-module-ksef#readme",
+              "repository": "git+https://github.com/FastWhiteCat/openmercato-module-ksef.git",
+              "bugs": "https://github.com/FastWhiteCat/openmercato-module-ksef/issues",
+              "npm": "https://www.npmjs.com/package/@fastwhitecat/integration-ksef-direct"
+            }
+          },
+          "score": {
+            "final": 20.10489,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 6,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-19T16:31:14.854Z",
+          "searchScore": 8.871618,
+          "package": {
+            "name": "@lbajsarowicz/warden-skill",
+            "keywords": ["warden", "docker", "magento", "laravel", "php", "agent-skill", "cursor", "ai"],
+            "version": "1.2.0",
+            "description": "Agent Skill for Warden Docker development environments",
+            "sanitized_name": "@lbajsarowicz/warden-skill",
+            "publisher": {
+              "email": "lukasz@lbajsarowicz.me",
+              "username": "lbajsarowicz"
+            },
+            "maintainers": [
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-02-02T13:27:36.813Z",
+            "links": {
+              "homepage": "https://github.com/lbajsarowicz/ai-skills-warden#readme",
+              "repository": "git+https://github.com/lbajsarowicz/ai-skills-warden.git",
+              "bugs": "https://github.com/lbajsarowicz/ai-skills-warden/issues",
+              "npm": "https://www.npmjs.com/package/@lbajsarowicz/warden-skill"
+            }
+          },
+          "score": {
+            "final": 8.871618,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 9,
+      "time": "2026-10-23T02:38:14.749Z"
+    }
+  }
+}

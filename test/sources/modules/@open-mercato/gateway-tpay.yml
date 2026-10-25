@@ -1,0 +1,5 @@
+npm: "@open-mercato/gateway-tpay"
+repo: open-mercato/open-mercato#main/packages/gateway-tpay
+category: payments-finance
+summary: Polish bank transfers, BLIK and cards through the Tpay payment gateway.
+whenToUse: Use when the app takes payments from Polish customers through Tpay.

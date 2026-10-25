@@ -1,0 +1,4 @@
+npm: "@dainamite/billing"
+category: payments-finance
+summary: Recurring billing engine with bill runs and draft invoices in sales.
+whenToUse: Use when the app bills customers on a schedule for recurring and usage items.

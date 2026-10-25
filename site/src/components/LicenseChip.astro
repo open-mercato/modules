@@ -1,0 +1,11 @@
+---
+// License chip (spec 6.7): hairline mono; LICENSE UNKNOWN in --wait-ink; ENTERPRISE LICENSE dark; a yellow sign at mismatch.
+import { LicenseChipView } from '../lib/ui.tsx'
+import type { LicenseKind } from '../../../lib/schema/index.ts'
+
+interface Props {
+  license: { spdx: string | null; kind: LicenseKind; mismatch: boolean }
+}
+---
+
+<LicenseChipView license={Astro.props.license} />

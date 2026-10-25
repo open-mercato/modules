@@ -1,0 +1,12 @@
+# In the empty preset of 0.9.0 like events. The author field in index.ts is ignored (spec 11.1).
+
+npm: "@open-mercato/search"
+repo: open-mercato/open-mercato#main/packages/search
+category: search-analytics
+tags: [search, fulltext, vector]
+summary: Hybrid search that fuses fulltext (Meilisearch), vector and token strategies with Reciprocal Rank Fusion.
+whenToUse: Use when users need global search across records and AI agents need a search tool. New apps already enable it.
+providers:
+  - { name: meilisearch, label: Meilisearch }
+links:
+  docs: https://docs.openmercato.com/framework/database/hybrid-search

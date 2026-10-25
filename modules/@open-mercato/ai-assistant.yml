@@ -1,0 +1,13 @@
+npm: "@open-mercato/ai-assistant"
+repo: open-mercato/open-mercato#main/packages/ai-assistant
+category: ai-automation
+tags: [ai, mcp, chat, agents]
+summary: Chat panel on Cmd+J, an MCP server over the platform API and typed AI agents whose writes wait for approval.
+whenToUse: Use when staff should search and change app data in plain language, or an external AI agent needs MCP access to the app.
+whenNotToUse: Skip it when app data must not reach an external LLM provider.
+providers:
+  - { name: anthropic, label: Anthropic }
+  - { name: openai, label: OpenAI }
+  - { name: google, label: Google }
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/overview

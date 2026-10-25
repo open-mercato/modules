@@ -1,0 +1,99 @@
+---
+// 404 (spec 7.7 L): an empty hex cell, the build command and the way back to the search. The page has its own
+// markup instead of EmptyState so the sentence is the page's H1 (EmptyState prints its title as a paragraph).
+import Base from '../layouts/Base.astro'
+import CommandChip from '../components/CommandChip.astro'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { href } from '../lib/url.ts'
+import { registryDefault } from './c/_data.ts'
+
+const { meta, modules } = loadSiteData()
+// the same "modules" as the hero, the registry and the Hive: listed modules and providers without examples
+const moduleCount = registryDefault(modules.entries).length
+---
+
+<Base
+  title="Not found · Open Mercato Modules"
+  description="This page does not exist. Search the Open Mercato modules or build the module yourself."
+  path="/404"
+  dataAsOf={meta.dataAsOf}
+  noindex
+  skip={{ href: '#nf-title', label: 'Skip to content' }}
+>
+  <section class="band">
+    <div class="sheet nf">
+      <svg class="nf__hex" viewBox="0 0 64 64" width="96" height="96" aria-hidden="true">
+        <polygon
+          points="32,5 55.4,18.5 55.4,45.5 32,59 8.6,45.5 8.6,18.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          stroke-dasharray="3 3"
+          vector-effect="non-scaling-stroke"></polygon>
+      </svg>
+      <h1 class="t-h1" id="nf-title" tabindex="-1">This cell is empty.</h1>
+      <p class="nf__text">
+        No page lives here. {moduleCount} catalog modules and {modules.counts.builtIn} built-in modules do.
+      </p>
+      <div class="nf__cmd">
+        <p class="t-tagline">Build it</p>
+        <CommandChip command="npx create-mercato-module init" />
+        <p class="nf__hint">Scaffolds a new Open Mercato module.</p>
+      </div>
+      <div class="nf__actions">
+        <a class="btn btn--tertiary" href={href('/#registry')}>Search modules</a>
+        <a class="btn btn--secondary" href={href('/built-in')}>Browse built-in</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 60vh;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 16px;
+    padding: 96px var(--pad);
+    text-align: center;
+  }
+  .nf__hex {
+    margin-bottom: 8px;
+    color: var(--ink-3);
+  }
+  .nf__text {
+    max-width: 52ch;
+    color: var(--ink-2);
+  }
+  .nf__cmd {
+    display: grid;
+    gap: 8px;
+    width: min(100%, 420px);
+    margin-top: 8px;
+    text-align: left;
+  }
+  .nf__hint {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .nf__actions .btn--tertiary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  @media (max-width: 479px) {
+    .nf {
+      padding-block: 64px;
+    }
+    .nf__actions .btn {
+      min-height: 44px;
+    }
+  }
+</style>

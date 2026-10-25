@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@fullstackhouse%2Fopen-mercato-data-sync-durable/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "pr-1": "0.2.2-pr1.57",
+      "latest": "0.6.0"
+    }
+  }
+}

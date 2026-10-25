@@ -1,0 +1,10 @@
+# No github field: the npm package has no repository.url. Source: FreightTech/open-mercato-modules.
+
+npm: "@freighttech/ui"
+repo: FreightTech/open-mercato-modules#main/packages/ui
+kind: library
+category: devtools
+tags: [ui, components, backoffice]
+summary: "UI toolkit for Open Mercato backoffices: DynamicTable, forms, dialogs, detail sections and notifications."
+whenToUse: Use when you build backoffice pages with FreightTech components, or install terminal-tracking, which depends on it.
+whenNotToUse: Every app already ships the standard @open-mercato/ui components.

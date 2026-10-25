@@ -1,0 +1,382 @@
+---
+// /about (spec 7.7 K): sources and rhythm, cost, what runs where, privacy, how to report a problem, license and
+// maintainer. Schedules are read from the workflow files and the lines from the data, never typed by hand.
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import Base from '../layouts/Base.astro'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { orderLines } from '../lib/status.ts'
+import { dayTime, shortVersion } from '../lib/format.ts'
+import { href } from '../lib/url.ts'
+import { wbrHtml } from '../lib/wrap.ts'
+import { schedule } from '../lib/schedule.ts'
+import { presetCellsWeekly } from '../../../lib/core/lines.ts'
+import { isPreviewData } from '../lib/freshness.ts'
+import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
+import { CATALOG_MAINTAINERS, CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+
+const REPO = CATALOG_REPO_URL
+const { meta, modules } = loadSiteData()
+const lines = orderLines(modules.lines)
+
+/** First `cron:` of a workflow, e.g. "17 2 * * *". */
+function cronOf(file: string): string | null {
+  const p = resolve('.github/workflows', file)
+  if (!existsSync(p)) return null
+  return /cron:\s*["']([^"']+)["']/.exec(readFileSync(p, 'utf8'))?.[1] ?? null
+}
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const pad = (n: string): string => n.padStart(2, '0')
+/** A cron line in words, for the three shapes the workflows use. */
+function cronText(cron: string | null): string | null {
+  if (!cron) return null
+  const [min = '', hour = '', , , dow = ''] = cron.split(/\s+/)
+  const every = /^\*\/(\d+)$/.exec(hour)
+  if (every) return `every ${every[1]} hours at minute ${pad(min)}`
+  if (/^\d+$/.test(hour) && dow === '*') return `daily at ${pad(hour)}:${pad(min)} UTC`
+  if (/^\d+$/.test(hour) && /^\d$/.test(dow)) return `every ${DAYS[Number(dow)]} at ${pad(hour)}:${pad(min)} UTC`
+  return cron
+}
+const watch = cronText(cronOf('watch.yml'))
+const sync = cronText(cronOf('sync.yml'))
+const nightly = cronText(cronOf('nightly.yml'))
+const weeklyLine = lines.find((l) => l.cadence === 'weekly')
+// a new app on next ships a new snapshot of its own packages most nights: their cells run on the weekly night only
+// (lib/core/lines.ts `cellCadence`, review of 24 Oct)
+const presetWeeklyLine = lines.find((l) => l.cadence !== 'weekly' && presetCellsWeekly(l))
+
+const lineSource = { latest: 'latest release', previous: 'previous minor', develop: 'develop snapshot' } as const
+/** Where the version of a line comes from: the npm tag or rule, not the role the first column already names. */
+const lineFrom = { latest: 'npm latest', previous: 'npm previous minor', develop: 'npm tag develop' } as const
+const weeklyDay = schedule().weeklyDay
+const previewData = isPreviewData(meta.dataAsOf)
+---
+
+<Base
+  title="About · Open Mercato Modules"
+  description="Where the data comes from, how often it is refreshed, what runs where, and how to report a problem."
+  path="/about"
+  dataAsOf={meta.dataAsOf}
+>
+  <section class="band">
+    <div class="sheet section ab-head">
+      <div class="ab-copy">
+        <p class="t-tagline">// About</p>
+        <h1 class="ab-title">How the catalog measures modules.</h1>
+        <p class="ab-lede">
+          Open Mercato Modules lists modules for Open Mercato and measures them: the anatomy is read from the published
+          code, compatibility comes from nightly installs in a fresh app on every release line, and the same data is
+          served to people, coding agents and the Open Mercato CLI.
+        </p>
+      </div>
+      <figure class="ab-lines">
+        <figcaption>Release lines tested</figcaption>
+        <table class="ab-table">
+          <thead><tr><th scope="col">Line</th><th scope="col">Open Mercato</th><th scope="col">Source</th><th scope="col">Cadence</th></tr></thead>
+          <tbody>
+            {
+              lines.map((l) => (
+                <tr>
+                  <th scope="row"><code>{l.key}</code></th>
+                  <td>
+                    <code class="nw" translate="no" title={l.version}>{shortVersion(l.version)}</code>
+                    <span class="ab-src--stack">{lineSource[l.source]}</span>
+                  </td>
+                  <td class="ab-src">{lineFrom[l.source]}</td>
+                  <td>{l.cadence}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="ab-sources">
+    <div class="sheet section ab-grid">
+      <div>
+        <p class="t-tagline">// Data</p>
+        <h2 id="ab-sources">Sources and rhythm</h2>
+      </div>
+      <div class="ab-body">
+        <ul class="ab-list" role="list">
+          <li><strong>npm</strong>: new versions, release lines and the anatomy of new tarballs{watch ? `, ${watch}` : ''}.</li>
+          <li><strong>GitHub</strong>: repositories, claims and certified partners{sync ? `, ${sync}` : ''}.</li>
+          <li>
+            <strong>Nightly install</strong>: a fresh app per line, then every module{nightly ? `, ${nightly}` : ''}
+            {weeklyLine ? <>; line <code>{weeklyLine.key}</code> {weeklyDay ? `on ${weeklyDay}s` : 'once a week'}</> : null}
+            {presetWeeklyLine ? <>; on <code>{presetWeeklyLine.key}</code>, the packages a new app already has {weeklyDay ? `on ${weeklyDay}s` : 'once a week'}</> : null}.
+          </li>
+          {/* the two starter presets (decision of 24 Oct, round 13: /about never named them) */}
+          <li>
+            <strong>Two starter presets</strong>: a new app is what <code>npx create-mercato-app</code> makes, the{' '}
+            <code>classic</code> preset, and its receipts give the verdict. An app from the <code>empty</code> preset
+            installs the module without the rest of the platform: a second signal in isolation, never the verdict.
+          </li>
+        </ul>
+        {/* a preview run is named as one (review r6), never as the nightly run */}
+        <p class="ab-small">
+          Data as of: npm {meta.dataAsOf.npm ? dayTime(meta.dataAsOf.npm) : 'not yet'},{' '}
+          {previewData ? 'preview run' : 'nightly'}{' '}
+          {meta.dataAsOf.nightly ? dayTime(meta.dataAsOf.nightly) : 'none yet'}. Data version{' '}
+          <code translate="no" set:html={wbrHtml(meta.dataVersion, { dots: true })} />.
+        </p>
+        {previewData && (
+          <p class="ab-small ab-preview">
+            <span class="chip chip--preview">{PREVIEW_CHIP}</span> {PREVIEW_SENTENCE}
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="ab-where">
+    <div class="sheet section ab-grid">
+      <div>
+        <p class="t-tagline">// Execution</p>
+        <h2 id="ab-where">What runs where</h2>
+      </div>
+      <div class="ab-body">
+        <ul class="ab-list" role="list">
+          <li>
+            <strong>Anatomy</strong> reads <code>src/</code> of the published tarball with the Open Mercato
+            fact extractor. The code is parsed, never executed.
+          </li>
+          <li>
+            <strong>The nightly install</strong> runs on disposable GitHub runners with no secrets and a read-only
+            token. Module steps run as a separate user without sudo, with install scripts disabled. Status comes from the
+            GitHub Actions API, not from files the module could write.
+            {/* the CI guarantees above are not the preview receipts' (review r7): said once, only on preview data */}
+            {previewData && (
+              <span class="ab-li-note">The receipts on this build come from the preview run, not from these runners.</span>
+            )}
+          </li>
+          <li>
+            <strong>Only merged entries</strong> are installed at night. Pull requests are checked statically.
+          </li>
+          <li>
+            <strong>The MCP server</strong> is read-only: no install tool, no state, no authentication.
+            {meta.mcpUrl ? <> Address: <code>{meta.mcpUrl}</code>.</> : <> Its address appears on <a href={href('/for-agents#connect')}>For agents</a> after the first deploy.</>}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="ab-cost">
+    <div class="sheet section ab-grid">
+      <div>
+        <p class="t-tagline">// Cost</p>
+        <h2 id="ab-cost">Cost and privacy</h2>
+      </div>
+      <div class="ab-body">
+        <ul class="ab-list" role="list">
+          <li><strong>0 USD.</strong> Public CI, GitHub Pages and the Cloudflare Workers free tier.</li>
+          <li><strong>No analytics and no cookies.</strong> Pages load nothing from third parties.</li>
+          <li>
+            <strong>Two exceptions, on your action only:</strong> <a href={href('/submit')}>Submit a module</a> asks npm,
+            jsDelivr and GitHub about the package you typed, and the demo on{' '}
+            <a href={href('/for-agents')}>For agents</a> loads this site's own data files.
+          </li>
+          <li><strong>Your theme choice</strong> is kept in your browser's local storage, nowhere else.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="ab-report">
+    <div class="sheet section ab-grid">
+      <div>
+        <p class="t-tagline">// Support</p>
+        <h2 id="ab-report">Report a problem</h2>
+      </div>
+      <div class="ab-body">
+        <ul class="ab-list" role="list">
+          <li>
+            A wrong entry, a malicious or broken module:{' '}
+            <a href={`${REPO}/issues/new?template=report-module.yml`} rel="noopener noreferrer">Report a module</a>.
+          </li>
+          <li>
+            A vulnerability in this site, the data or the MCP server: private vulnerability reporting, see{' '}
+            <a href={`${REPO}/blob/main/SECURITY.md`} rel="noopener noreferrer">SECURITY.md</a>.
+          </li>
+          <li>
+            Your own module: <a href={href('/submit')}>Submit a module</a>, or a pull request with one file in{' '}
+            <code>modules/</code>.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="ab-license">
+    <div class="sheet section ab-grid">
+      <div>
+        <p class="t-tagline">// License</p>
+        <h2 id="ab-license">License and maintainers</h2>
+      </div>
+      <div class="ab-body">
+        <ul class="ab-list" role="list">
+          <li>
+            Code and data: MIT, copyright Open Mercato contributors.{' '}
+            <a href={`${REPO}/blob/main/LICENSE`} rel="noopener noreferrer">LICENSE</a>
+          </li>
+          <li>Module descriptions belong to their authors and are shown as plain text.</li>
+          <li>
+            {/* round 14: the team of the organization, never a personal handle from CODEOWNERS */}
+            Maintained by {CATALOG_MAINTAINERS}, in <a href={REPO} rel="noopener noreferrer">the repository on GitHub</a>.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ab-head {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 24px 48px;
+    align-items: start;
+    padding-bottom: 48px;
+  }
+  .band:has(.ab-head) + .band > .section {
+    padding-top: 48px;
+  }
+  .ab-copy {
+    display: grid;
+    gap: 16px;
+  }
+  .ab-title {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .ab-lines {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 16px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    min-width: 0;
+  }
+  .ab-lines figcaption {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .ab-lines .ab-table {
+    width: 100%;
+  }
+  /* versions and sources stay on one line; the next snapshot is shown short, the full string is its title */
+  .ab-lines .ab-table td,
+  .ab-lines .ab-table th {
+    white-space: nowrap;
+  }
+  .ab-src--stack {
+    display: none;
+  }
+  .ab-lines .ab-table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  .ab-lede {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  .ab-grid {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: 24px;
+  }
+  .ab-grid h2 {
+    margin-top: 8px;
+  }
+  .ab-body {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .ab-list {
+    display: grid;
+    gap: 10px;
+    max-width: 70ch;
+    color: var(--ink-2);
+  }
+  .ab-list strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .ab-table {
+    border-collapse: collapse;
+    font-size: 14px;
+    max-width: 100%;
+  }
+  .ab-table th,
+  .ab-table td {
+    padding: 8px 16px 8px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-weight: 400;
+  }
+  .ab-table thead th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .ab-small {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  /* a preview build's receipts are not these runners' (review r7): dashed, as the preview chip */
+  .ab-li-note {
+    display: block;
+    margin-top: 8px;
+    padding-left: 10px;
+    border-left: 1.5px dashed var(--ink-3);
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  /* the lines table needs about 470 px: one column until the 5/12 track is that wide (review r2: 992-1088 px
+     scrolled sideways); the figure scrolls on its own as a last resort, never the page */
+  @media (max-width: 1119px) {
+    .ab-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .ab-lines {
+    overflow-x: auto;
+  }
+  @media (max-width: 767px) {
+    .ab-head {
+      padding-bottom: 32px;
+    }
+    .band:has(.ab-head) + .band > .section {
+      padding-top: 32px;
+    }
+    .ab-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+  /* phones: the source goes under the version, so the table keeps three columns at 390 px */
+  @media (max-width: 479px) {
+    .ab-lines .ab-table .ab-src,
+    .ab-lines .ab-table thead th:nth-child(3) {
+      display: none;
+    }
+    .ab-src--stack {
+      display: block;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+    .ab-lines {
+      padding: 14px 16px;
+    }
+  }
+</style>

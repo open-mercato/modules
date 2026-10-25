@@ -1,0 +1,14 @@
+---
+// Heroicons v2 outline (MIT). Decorative: aria-hidden. Pair with visible text or an aria-label on the control.
+import { iconSvg } from './paths.ts'
+import type { IconName } from './paths.ts'
+
+interface Props {
+  name: IconName
+  size?: number
+  class?: string
+}
+const { name, size = 16, class: className = 'icon' } = Astro.props
+---
+
+<Fragment set:html={iconSvg(name, size, className)} />

@@ -1,0 +1,14 @@
+{
+  "name": "open-mercato",
+  "owner": { "name": "Open Mercato Modules" },
+  "plugins": [
+    {
+      "name": "om-modules",
+      "source": "./plugins/om-modules",
+      "description": "Find Open Mercato modules before you build: registry search, nightly install receipts and install plans over MCP, plus the om-find-module skill.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["open-mercato", "modules", "mcp"]
+    }
+  ]
+}

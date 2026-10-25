@@ -1,0 +1,37 @@
+name: OM Quality review request
+description: Ask for a human review against the OM Quality checklist v1.
+title: "OM Quality: "
+labels: [curator]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OM Quality is granted by two people from the Open Mercato core team, for one published tarball, for 12 months.
+        Preconditions: the version is Verified, the entry is Claimed, provenance is verified or a GitHub tag equals the version, and the license is explicit.
+        Review time can be paid for. The result cannot.
+  - type: input
+    id: locator
+    attributes:
+      label: Module
+      description: Locator, for example npm:@scope/name.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Exact stable version to review, for example 1.4.2.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes for reviewers
+      description: Anything the checklist items OMQ-01 to OMQ-12 should know, with files and lines.
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I maintain this package.
+          required: true

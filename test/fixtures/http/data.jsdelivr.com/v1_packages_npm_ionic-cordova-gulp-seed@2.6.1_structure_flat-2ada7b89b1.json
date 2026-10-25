@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/ionic-cordova-gulp-seed@2.6.1?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "ionic-cordova-gulp-seed",
+      "version": "2.6.1",
+      "files": []
+    }
+  }
+}

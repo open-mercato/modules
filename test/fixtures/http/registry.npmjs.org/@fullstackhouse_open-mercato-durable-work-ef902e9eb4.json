@@ -1,0 +1,609 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@fullstackhouse%2Fopen-mercato-durable-work"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@fullstackhouse/open-mercato-durable-work",
+      "dist-tags": {
+        "pr-1": "0.2.2-pr1.57",
+        "latest": "0.6.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "05c4fdf845cd96c37df04e5096801187b26513e0",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-CsjT4EsnYIyj05Ig2kKsnHLI/YCmwSnBWLEnA7sRX6u6A/mSqK0Pvpk0Bb+f+jLo1CdER3gNc+nzdfcbvjwj2A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.1.0.tgz"
+          }
+        },
+        "0.1.1": {
+          "version": "0.1.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "cfd7a1bedd8fde1b89d1ffaf6eb0d5257a307f4e",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-oqXzr70+1uqJi8n2sLFFSvHjtTRpZbbWbM+fMILvcF7UDqR8X9QXdSp9wZykIsPdRaPyG3+YtggQdVVP18zuvA==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.1.1.tgz"
+          }
+        },
+        "0.1.2": {
+          "version": "0.1.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "233a15489dac63cf4eb512e19cf8d3fbbc4c42d9",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-3k+tpTe9Dxjxmfu1BCrr1jXL5GaXyqe+uvElSuVX9nfbyNwYtESoWN5wUeOcJgPeduc5T7YqiyaUPJsfXnDkXQ==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.1.2.tgz"
+          }
+        },
+        "0.1.3": {
+          "version": "0.1.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "3ebc5118438312eefdd8faa5b62cc92e32aa37c3",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-tLXtRTMIqQ1niwZmyHogmyuYM7q2qIZEfdizeVO1tJnR754FECUYTcr5veATfY6lGZbZxiC5X43cNZt/YhsRVw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.1.3.tgz"
+          }
+        },
+        "0.1.4": {
+          "version": "0.1.4",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "7ec1020f8309f4410d541652b1a805a0c0d687e3",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-F205PKOmxr2Fp9kHSqTe3e2+TYs1lIpvpzWNbiCBLdnisAoNMYYzFt+LZxxYU6R+dK7gyo7Yfj7SP5dYnEhslg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.1.4.tgz"
+          }
+        },
+        "0.2.0": {
+          "version": "0.2.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "95bbb45cd453a43067b9896e445ae8fa2f480fc9",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-prkuDJVVVDMoroRf3YQVqPUs/kCZS5X0s+9Z6upEfO9uv7kI8QDDJsoBYZ8aekogTZKVzxnyMRAKvXAALzAGzg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.2.0.tgz"
+          }
+        },
+        "0.2.1": {
+          "version": "0.2.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "61677cb9004142b1f959d6a3d4602719d8a65f57",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-IYLvkczRDGYfQxqLzalu0C0YPBkghqs66t5euva2PBaaLcvJ66ePxb6di8fE8zu7aJ3FiBk5J8sDAr9bxQL3LQ==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.2.1.tgz"
+          }
+        },
+        "0.2.2": {
+          "version": "0.2.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "f4f91642d00aabe81ef6e8bd3b56152ad85e689d",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-lZcs9Arc0sS4+7DsNR2fEkL+jfnfeiMlt+tdcrDmANCgQBt6NqRJDM782JpjoIsZ/dxs+im9Ujsz9Mcjyyhf2A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.2.2.tgz"
+          }
+        },
+        "0.2.2-pr1.57": {
+          "version": "0.2.2-pr1.57",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "fd7e5ba1a3c7842c6a0ec79419ef9f3a5f8ba8d6",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-No9m2iOEdB3cqTLmpoGcasEHgxp9NoxqLDsA3kWf91oxqR7FALFBxHIovtQhLiK/BxI3xvv3qRf7WjPUACxqyw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.2.2-pr1.57.tgz"
+          }
+        },
+        "0.3.0": {
+          "version": "0.3.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "e85107c05dde80efcd5070dcecf2d6cf51627d9c",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-glE4AEb1nIcv9R/luAw+ng112jeLYD8QiW02WvOTke26WT2e/dop3Hc/xxzLS4zgOrK6/IhEPRCd4sRnfhRtTg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.3.0.tgz"
+          }
+        },
+        "0.3.1": {
+          "version": "0.3.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "038981b295a47cadb11ae4c6d33c25351baf31fa",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-HbETL/RlUlP9Jg3UQ/LOV2qMPW/c+OwIViSmjuCUSlFBCt7K/T8l6N30hqtKLFTI/rn1tbLyCd4LUKsFuLXY5g==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.3.1.tgz"
+          }
+        },
+        "0.3.2": {
+          "version": "0.3.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "aaf7c1ff91f7671c0393d9af9c4c91de39d485f4",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-1WF86GOkMefshypImmh5TIjiU0Ju90kF7bheX6oPDR+zj8pvKRrSBT1DZRuZiob0HIaGkmcq4ecKmYDPeEmldQ==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.3.2.tgz"
+          }
+        },
+        "0.3.3": {
+          "version": "0.3.3",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "3adc09e1d0b311fded52673eea9a4b2463a75db5",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-v5H0VIYAtwtp2XAW2OSK0CwPTBWr3gypqik7dr5QE2+FWnMQankbtTkTWPr3D0DI9yxF8Sa2TNMFlsSthZYVxg==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.3.3.tgz"
+          }
+        },
+        "0.4.0": {
+          "version": "0.4.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "14e2c048aeb14b01128d18d28b5c76d7e89d5796",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-q4A8Lwol2gkxNuN/fXO75Yf5QX+2CYfqVlhrCoS7s8bB8wnhYzZ53ipn2j4QPrI+MU4xtm5wF3Tn71/tfpLfTA==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.4.0.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "a5b484133d4353971aea106d3e4a2e710db52bbf",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-4oBmZNmIvHslEFtDSdEUAl5OmtAF2xdiOThlsLWMueG7t5Oe/FbOI5KSPhWlZ0TO5Hj34TPg90ddj+nhs4/gaw==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.5.0.tgz"
+          }
+        },
+        "0.6.0": {
+          "version": "0.6.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+            "type": "git",
+            "directory": "packages/durable-work"
+          },
+          "gitHead": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1",
+          "keywords": ["open-mercato", "background-jobs", "durable", "at-least-once", "queue", "bullmq", "pg-boss"],
+          "maintainers": [
+            {
+              "name": "jtomaszewski"
+            }
+          ],
+          "peerDependencies": {
+            "pg": ">=8.0.0",
+            "zod": ">=3.25.0",
+            "next": ">=15.0.0",
+            "bullmq": "^5.0.0 || ^6.0.0",
+            "ioredis": ">=5.0.0",
+            "pg-boss": ">=12.0.0 <13.0.0",
+            "@mikro-orm/core": ">=7.0.0",
+            "@open-mercato/core": ">=0.7.0 <0.8.0",
+            "@open-mercato/shared": ">=0.7.0 <0.8.0",
+            "@mikro-orm/migrations": ">=7.0.0",
+            "@mikro-orm/postgresql": ">=7.0.0"
+          },
+          "scripts": {},
+          "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+          "dist": {
+            "integrity": "sha512-uA3NDDbBb2LLA9KG2ZtXm1LeY2RJtDoOFzQafJcWTa/VstxZ8/yJL1BQL9OOWMVBM3qKbTrw6HodEQ5A287o3A==",
+            "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-durable-work/-/open-mercato-durable-work-0.6.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-09-09T06:08:19.878Z",
+        "modified": "2026-09-17T22:10:25.632Z",
+        "0.1.0": "2026-09-09T06:08:20.430Z",
+        "0.1.1": "2026-09-09T13:46:59.916Z",
+        "0.1.2": "2026-09-09T14:02:22.767Z",
+        "0.1.3": "2026-09-09T14:46:57.923Z",
+        "0.1.4": "2026-09-09T15:02:07.690Z",
+        "0.2.0": "2026-09-10T04:09:54.423Z",
+        "0.2.1": "2026-09-10T04:38:05.464Z",
+        "0.2.2": "2026-09-10T06:55:45.514Z",
+        "0.2.2-pr1.57": "2026-09-11T07:49:51.207Z",
+        "0.3.0": "2026-09-11T10:35:39.765Z",
+        "0.3.1": "2026-09-14T05:41:04.845Z",
+        "0.3.2": "2026-09-14T13:20:30.846Z",
+        "0.3.3": "2026-09-15T05:02:18.452Z",
+        "0.4.0": "2026-09-17T09:35:26.839Z",
+        "0.5.0": "2026-09-17T14:48:45.189Z",
+        "0.6.0": "2026-09-17T22:10:25.314Z"
+      },
+      "maintainers": [
+        {
+          "name": "jtomaszewski"
+        }
+      ],
+      "description": "Durable at-least-once background work for Open Mercato apps: a leased job record in Postgres with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Pluggable transport (BullMQ or pg-boss).",
+      "repository": {
+        "url": "git+https://github.com/fullstackhouse/open-mercato-durable.git",
+        "type": "git",
+        "directory": "packages/durable-work"
+      }
+    }
+  }
+}

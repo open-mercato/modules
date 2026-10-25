@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-ses"
+repo: open-mercato/open-mercato#main/packages/channel-ses
+category: communication
+tags: [email, transactional, aws]
+summary: Sends transactional email through Amazon SES v2 with a region, from address and optional configuration set.
+whenToUse: Use when the app sends transactional email and your infrastructure already runs on AWS with a verified SES identity.
+whenNotToUse: It does not receive mail. For two-way mailboxes use channel-gmail or channel-imap.
+providers:
+  - { name: ses, label: Amazon SES }
+links:
+  docs: https://docs.openmercato.com/user-guide/communication-channels

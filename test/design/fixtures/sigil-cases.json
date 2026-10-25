@@ -1,0 +1,122 @@
+{
+  "source": "Counts from the g2 static scans (~/kod/katalog-src/spikes/g2/out, extractModuleFacts of @open-mercato/cli 0.9.0) and module-facts.v2.json of @open-mercato/cli 0.9.0 (built-in customers). channel-gmail: its one widget is injected into another module, so it counts as Extends (2 contributions, spec 11.1). web-research-exa was not scanned in g2: a provider that only registers into its host (1 contribution).",
+  "cases": [
+    {
+      "name": "dainamite-cpq",
+      "locator": "npm:@dainamite/cpq",
+      "kind": "module",
+      "counts": {
+        "entities": 20,
+        "tables": 20,
+        "migrations": 19,
+        "routes": 91,
+        "publicRoutes": 0,
+        "backendPages": 18,
+        "frontendPages": 0,
+        "widgets": 4,
+        "eventsEmitted": 6,
+        "eventsConsumed": 5,
+        "workers": 0,
+        "cli": 1,
+        "aiTools": 0,
+        "aiAgents": 0,
+        "extends": 4
+      }
+    },
+    {
+      "name": "channel-gmail",
+      "locator": "npm:@open-mercato/channel-gmail",
+      "kind": "module",
+      "counts": {
+        "entities": 0,
+        "tables": 0,
+        "migrations": 0,
+        "routes": 0,
+        "publicRoutes": 0,
+        "backendPages": 0,
+        "frontendPages": 0,
+        "widgets": 0,
+        "eventsEmitted": 0,
+        "eventsConsumed": 0,
+        "workers": 0,
+        "cli": 0,
+        "aiTools": 0,
+        "aiAgents": 0,
+        "extends": 2
+      }
+    },
+    {
+      "name": "fullstackhouse-health",
+      "locator": "npm:@fullstackhouse/open-mercato-health",
+      "kind": "module",
+      "counts": {
+        "entities": 0,
+        "tables": 0,
+        "migrations": 0,
+        "routes": 0,
+        "publicRoutes": 0,
+        "backendPages": 0,
+        "frontendPages": 0,
+        "widgets": 0,
+        "eventsEmitted": 0,
+        "eventsConsumed": 0,
+        "workers": 0,
+        "cli": 0,
+        "aiTools": 0,
+        "aiAgents": 0,
+        "extends": 0
+      }
+    },
+    {
+      "name": "web-research-exa",
+      "locator": "npm:@open-mercato/web-research-exa",
+      "kind": "provider",
+      "counts": {
+        "entities": 0,
+        "tables": 0,
+        "migrations": 0,
+        "routes": 0,
+        "publicRoutes": 0,
+        "backendPages": 0,
+        "frontendPages": 0,
+        "widgets": 0,
+        "eventsEmitted": 0,
+        "eventsConsumed": 0,
+        "workers": 0,
+        "cli": 0,
+        "aiTools": 0,
+        "aiAgents": 0,
+        "extends": 1
+      }
+    },
+    {
+      "name": "builtin-customers",
+      "locator": "core:customers",
+      "kind": "built-in",
+      "counts": {
+        "entities": 26,
+        "tables": 26,
+        "migrations": 0,
+        "routes": null,
+        "publicRoutes": null,
+        "backendPages": 18,
+        "frontendPages": 0,
+        "widgets": 0,
+        "eventsEmitted": 51,
+        "eventsConsumed": 0,
+        "workers": 0,
+        "cli": 4,
+        "aiTools": 20,
+        "aiAgents": 3,
+        "extends": 0
+      }
+    },
+    {
+      "name": "enterprise",
+      "locator": "npm:@open-mercato/enterprise",
+      "kind": "module",
+      "enterprise": true,
+      "counts": null
+    }
+  ]
+}

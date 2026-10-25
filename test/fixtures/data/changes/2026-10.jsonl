@@ -1,0 +1,16 @@
+{"at":"2026-10-23T00:00:01Z","type":"new-entry","locator":"npm:@fastwhitecat/integration-ksef-direct"}
+{"at":"2026-10-23T00:00:02Z","type":"new-entry","locator":"npm:@piotrkarwatka/marketing-consents"}
+{"at":"2026-10-23T00:00:03Z","type":"new-entry","locator":"npm:@fullstackhouse/open-mercato-durable-work"}
+{"at":"2026-10-23T00:00:04Z","type":"new-entry","locator":"npm:@fullstackhouse/open-mercato-data-sync-durable"}
+{"at":"2026-10-23T00:00:05Z","type":"new-entry","locator":"npm:@open-mercato/gateway-stripe"}
+{"at":"2026-10-23T00:00:06Z","type":"new-entry","locator":"npm:@open-mercato/gateway-tpay"}
+{"at":"2026-10-23T00:00:07Z","type":"new-entry","locator":"npm:@open-mercato/enterprise"}
+{"at":"2026-10-23T00:00:08Z","type":"new-entry","locator":"github:Chmarusso/open-mercato-enrichment-treg"}
+{"at":"2026-10-23T02:17:00Z","type":"receipt-transition","locator":"npm:@fastwhitecat/integration-ksef-direct","line":"0.9","from":"untested","to":"verified","version":"0.1.8"}
+{"at":"2026-10-23T02:17:00Z","type":"receipt-transition","locator":"npm:@fastwhitecat/integration-ksef-direct","line":"next","from":"untested","to":"verified","version":"0.1.8"}
+{"at":"2026-10-23T02:17:00Z","type":"receipt-transition","locator":"npm:@fullstackhouse/open-mercato-durable-work","line":"0.9","from":"untested","to":"verified","version":"0.6.0"}
+{"at":"2026-10-23T02:17:00Z","type":"receipt-transition","locator":"npm:@open-mercato/gateway-stripe","line":"0.9","from":"untested","to":"verified","version":"0.9.0"}
+{"at":"2026-10-23T02:17:00Z","type":"receipt-transition","locator":"npm:@piotrkarwatka/marketing-consents","line":"0.9","from":"untested","to":"broken","version":"0.1.0"}
+{"at":"2026-10-23T03:05:00Z","type":"tier-change","locator":"npm:@fastwhitecat/integration-ksef-direct","line":"0.9","from":"listed","to":"verified","version":"0.1.8"}
+{"at":"2026-10-23T03:05:00Z","type":"tier-change","locator":"npm:@fullstackhouse/open-mercato-durable-work","line":"0.9","from":"listed","to":"verified","version":"0.6.0"}
+{"at":"2026-10-23T03:05:00Z","type":"tier-change","locator":"npm:@open-mercato/gateway-stripe","line":"0.9","from":"listed","to":"verified","version":"0.9.0"}

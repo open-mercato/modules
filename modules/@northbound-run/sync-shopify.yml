@@ -1,0 +1,9 @@
+npm: "@northbound-run/sync-shopify"
+github: Northbound-Run/open-mercato-shopify
+category: integrations-sync
+tags: [shopify, import, ecommerce]
+summary: Imports Shopify products, collections, customers, orders and inventory into native catalog, customer and sales records.
+whenToUse: Use when a Shopify store stays the sales front and the app needs its catalog, customers and orders on a schedule.
+whenNotToUse: "Import only: nothing is written back to Shopify."
+providers:
+  - { name: shopify, label: Shopify }

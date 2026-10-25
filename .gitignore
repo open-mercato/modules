@@ -1,0 +1,15 @@
+node_modules
+.yarn/*
+!.yarn/patches
+dist/
+out/
+.data/
+.astro/
+site/.generated/
+test-results/
+playwright-report/
+.wrangler/
+.dev.vars
+.DS_Store
+*.log
+.wp/

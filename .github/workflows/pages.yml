@@ -1,0 +1,100 @@
+# Site on GitHub Pages (spec 5.1, 5.2): `yarn build` (emit + astro) from main and the data branch, then deploy.
+# Runs after watch, sync and collect finish on main (pushes with GITHUB_TOKEN do not start workflows), on push to
+# main, daily and by hand. With no data branch yet the build runs on empty data and shows the empty states.
+name: pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows:
+      - watch
+      - sync
+      - collect
+    types:
+      - completed
+    branches:
+      - main
+  schedule:
+    - cron: "47 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: deploy
+    # Pages stays off while the repository is private (nothing to publish yet); it starts once the repository is public.
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      SITE_URL: ${{ vars.SITE_URL || 'https://open-mercato.github.io' }}
+      BASE_PATH: ${{ vars.BASE_PATH || '/modules' }}
+      MCP_URL: ${{ vars.MCP_URL }}
+      WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        run: |
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data
+            git worktree add --detach .data origin/data
+          else
+            mkdir -p .data
+            echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Build
+        run: yarn build
+
+      - name: Check artifact contents
+        run: |
+          test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
+          test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+          # v5.0.0 packs with --exclude=.[^/]* by default; without this the whole .well-known/ is dropped
+          include-hidden-files: true
+
+      - name: Check the packed artifact
+        run: tar -tf "$RUNNER_TEMP/artifact.tar" | grep -qx './.well-known/mcp/server-card.json'
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

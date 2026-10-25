@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/open-mercato-generator/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.3.13"
+    }
+  }
+}

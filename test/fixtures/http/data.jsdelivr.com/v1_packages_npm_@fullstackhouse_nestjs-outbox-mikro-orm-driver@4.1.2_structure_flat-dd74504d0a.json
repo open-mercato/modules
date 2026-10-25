@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@fullstackhouse/nestjs-outbox-mikro-orm-driver@4.1.2?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@fullstackhouse/nestjs-outbox-mikro-orm-driver",
+      "version": "4.1.2",
+      "files": []
+    }
+  }
+}

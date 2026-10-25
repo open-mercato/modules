@@ -1,0 +1,158 @@
+---
+// Footer (spec 7.6, 7.7 A.7): links to the data, the provenance sentence, data freshness, and the huge outline
+// "Modules" (Geist Regular outlines, 1 px non-scaling stroke), like the openmercato.com footer: an almost black
+// hairline #262626 on light and #4A4A4A on dark (spec 7.6 says --line-strong, 1.24:1 on white, which disappears;
+// amendment 23.10, review WP11b).
+import outline from './assets/modules-outline.svg?raw'
+import Wordmark from './Wordmark.astro'
+import { day, dayTime } from '../lib/format.ts'
+import { href } from '../lib/url.ts'
+import { isPreviewData, type DataAsOf } from '../lib/freshness.ts'
+import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
+import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+
+interface Props {
+  dataAsOf: DataAsOf
+  repoUrl?: string
+}
+const { dataAsOf, repoUrl = CATALOG_REPO_URL } = Astro.props
+const links = [
+  { label: 'modules.json', url: href('/modules.json') },
+  { label: 'llms.txt', url: href('/llms.txt') },
+  { label: 'MCP', url: href('/for-agents#connect') },
+  { label: 'Schema', url: href('/schema/modules-1.json') },
+  { label: 'GitHub', url: repoUrl },
+  { label: 'Submit', url: href('/submit') },
+]
+const refreshed = dataAsOf.nightly ?? dataAsOf.npm
+// the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one
+// preview sentence as its title (review r6); the day without the hour, as in the header stamp
+const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
+---
+
+<footer class="site-footer">
+  <div class="sheet ft">
+    <div class="ft__top">
+      <div class="ft__brand">
+        <Wordmark height={28} />
+        <p class="ft__claim">Descriptions come from authors. Everything else is measured.</p>
+      </div>
+      <nav class="ft__links" aria-label="Data and project">
+        {links.map((l) => <a href={l.url}>{l.label}</a>)}
+      </nav>
+      <p class="ft__data">
+        {refreshed ? <>Data refreshed {preview ? day(refreshed) : dayTime(refreshed)}.</> : <>No data yet.</>}
+        <br />
+        {
+          preview ? (
+            <>
+              Sources: npm, GitHub and a preview run.{' '}
+              <span class="chip chip--preview ft__chip" title={PREVIEW_SENTENCE}>
+                {PREVIEW_CHIP}
+              </span>
+            </>
+          ) : (
+            'Sources: npm, GitHub, nightly CI.'
+          )
+        }
+      </p>
+    </div>
+    <div class="ft__giant" set:html={outline} />
+  </div>
+</footer>
+
+<style>
+  .ft {
+    border-top: 1px solid var(--rail);
+    padding: 40px var(--pad) 0;
+    overflow: hidden;
+  }
+  /* the link list starts on the header nav's line: brand column, then the 32 px gap */
+  .ft__top {
+    display: grid;
+    grid-template-columns: var(--brand-col) minmax(0, 1fr) auto;
+    gap: 32px;
+    align-items: start;
+  }
+  .ft__claim {
+    margin-top: 16px;
+    max-width: 30ch;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .ft__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: start;
+    gap: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .ft__links a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .ft__links a:hover {
+    color: var(--ink);
+  }
+  /* prose, not a label: sentence case with periods (the DataStamp is the mono label) */
+  .ft__data {
+    justify-self: end;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .ft__chip {
+    margin-left: 6px;
+    vertical-align: 1px;
+  }
+  .ft__giant {
+    margin-top: 56px;
+    padding-bottom: 16px;
+    color: #262626;
+  }
+  :global(:root[data-theme='dark']) .ft__giant {
+    color: #4a4a4a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .ft__giant {
+      color: #4a4a4a;
+    }
+  }
+  .ft__giant :global(svg) {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  @media (max-width: 767px) {
+    .ft__top {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    /* phones: a 3-column grid of links, even gaps, each a 44 px target (spec 7.10) */
+    .ft__links {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 16px;
+    }
+    .ft__links a {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      border-bottom: 1px solid var(--line);
+    }
+    .ft__brand :global(.wm) {
+      min-height: 44px;
+    }
+    .ft__data {
+      justify-self: start;
+      text-align: left;
+    }
+    .ft__giant {
+      margin-top: 40px;
+      padding-bottom: 12px;
+    }
+  }
+</style>

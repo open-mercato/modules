@@ -1,0 +1,115 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@fast-white-cat%2Fintegration-ksef-direct"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@fast-white-cat/integration-ksef-direct",
+      "dist-tags": {
+        "latest": "0.1.2"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "gitHead": "82478018cec5253a25d60aaf316056de1be4f190",
+          "maintainers": [
+            {
+              "name": "fastwhitecat"
+            }
+          ],
+          "peerDependencies": {
+            "react": "^19.0.0",
+            "awilix": "^10.0.0",
+            "react-dom": "^19.0.0",
+            "@open-mercato/ui": ">=0.6.2 <0.7.0",
+            "@open-mercato/queue": ">=0.6.2 <0.7.0",
+            "@open-mercato/shared": ">=0.6.2 <0.7.0",
+            "@mikro-orm/migrations": "^6.5.9",
+            "@tanstack/react-table": "^8.0.0"
+          },
+          "scripts": {},
+          "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+          "dist": {
+            "integrity": "sha512-k/B49uPghj7zzV8R4Jqt82aTjignD7ulRu7NpdRppD8QHbvOC4jgpheN7oamQN53xXByM6+GTbCwMWe+4TBTQA==",
+            "tarball": "https://registry.npmjs.org/@fast-white-cat/integration-ksef-direct/-/integration-ksef-direct-0.1.0.tgz"
+          }
+        },
+        "0.1.1": {
+          "version": "0.1.1",
+          "gitHead": "b490c716f122913dc362cf134d34ef2e9e4000fc",
+          "maintainers": [
+            {
+              "name": "fastwhitecat"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.4.3",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "awilix": "^13.0.0",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^1.16.0",
+            "@open-mercato/ui": ">=0.6.4 <0.7.0",
+            "@open-mercato/core": ">=0.6.4 <0.7.0",
+            "@open-mercato/queue": ">=0.6.4 <0.7.0",
+            "@open-mercato/shared": ">=0.6.4 <0.7.0",
+            "@mikro-orm/decorators": "^7.1.1",
+            "@mikro-orm/migrations": "^7.1.1",
+            "@tanstack/react-table": "^8.0.0"
+          },
+          "scripts": {},
+          "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+          "dist": {
+            "integrity": "sha512-HzOrPbRIevFL+hXl5lFyELk1NR3C5AuvLrZc4cOoNnu2QoxiQfrGDH7lPj6ecmUdMFw8IGpdwGXjTz4NP84ZSw==",
+            "tarball": "https://registry.npmjs.org/@fast-white-cat/integration-ksef-direct/-/integration-ksef-direct-0.1.1.tgz"
+          }
+        },
+        "0.1.2": {
+          "version": "0.1.2",
+          "gitHead": "05b2daeb9881373354450feb7740cf921a5f9105",
+          "maintainers": [
+            {
+              "name": "fastwhitecat"
+            }
+          ],
+          "peerDependencies": {
+            "@mikro-orm/decorators": "^7.1.1",
+            "@mikro-orm/migrations": "^7.1.1",
+            "@open-mercato/core": ">=0.6.4 <0.7.0",
+            "@open-mercato/queue": ">=0.6.4 <0.7.0",
+            "@open-mercato/shared": ">=0.6.4 <0.7.0",
+            "@open-mercato/ui": ">=0.6.4 <0.7.0",
+            "@tanstack/react-table": "^8.0.0",
+            "awilix": "^13.0.0",
+            "lucide-react": "^1.16.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "zod": "^4.4.3"
+          },
+          "scripts": {},
+          "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+          "dist": {
+            "integrity": "sha512-BTVBG0l6PkWHmD9cyv/FP6n22l1ufe1wHIRU0ImlQ4ZUk24JCcJKKvwDy+lFDrbeDA0GbRODCGV1t1KPbO8o8g==",
+            "tarball": "https://registry.npmjs.org/@fast-white-cat/integration-ksef-direct/-/integration-ksef-direct-0.1.2.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-06-10T08:53:02.740Z",
+        "modified": "2026-06-10T16:04:07.452Z",
+        "0.1.0": "2026-06-10T08:53:03.124Z",
+        "0.1.1": "2026-06-10T15:33:03.710Z",
+        "0.1.2": "2026-06-10T16:04:07.316Z"
+      },
+      "maintainers": [
+        {
+          "name": "fastwhitecat"
+        }
+      ],
+      "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required."
+    }
+  }
+}

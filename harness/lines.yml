@@ -1,0 +1,31 @@
+# Harness patches per Open Mercato version range and cadence per line (spec 4.4, 5.3).
+# `applies` is a semver range of create-mercato-app (prereleases count as their own version).
+# Every change here changes harnessHash, so every cell runs again the next night (on purpose).
+#
+# api-keys range, checked statically on 2026-10-23 (tarballs, nothing executed):
+# - create-mercato-app 0.8.0 and 0.9.0: the empty preset has no api_keys; 0.10.1-develop.7583 has it.
+# - @open-mercato/core 0.9.0 locks ApiKey rows on every role and ACL write (auth/lib/authorizationStateLocks.js,
+#   used by auth/lib/setup-app.js and auth/cli.js), so `yarn initialize` fails with
+#   "Metadata for entity ApiKey not found" (Cezar spike, row X1).
+# - @open-mercato/core 0.8.0 has no authorizationStateLocks; ApiKey is only read for api_key: principals at request
+#   time (auth/services/rbacService.js), never during initialize. 0.8 does not need the patch.
+# So the range is the 0.9 line only. The script is idempotent, and a patch that changes nothing is not recorded.
+#
+# agent-examples-tsconfig range, checked statically on 2026-10-23 (tarballs) and in a preview run:
+# - create-mercato-app 0.8.0 and 0.9.0 ship the same src/modules/agent_examples (plain-script files under
+#   agents/**/scripts and agents/**/tools). 0.9.0 excludes both globs in tsconfig.json (#6695); 0.8.0 does not, so
+#   `yarn typecheck` and `yarn build` of the 0.8.0 empty app fail with TS2393/TS7006 (18 errors, preview run 23 Oct).
+# - After the patch the 0.8.0 tsconfig.json is byte for byte the 0.9.0 one. 0.7.0 and older are no line of ours.
+patches:
+  - id: api-keys
+    applies: ">=0.9.0 <0.10.0"
+    script: patches/api-keys.sh
+    why: "OM 0.9.0 empty preset omits api_keys (fixed on main in #7473, not in release/v0.9.x)"
+    ref: https://github.com/open-mercato/open-mercato/pull/7473
+  - id: agent-examples-tsconfig
+    applies: ">=0.8.0 <0.9.0"
+    script: patches/agent-examples-tsconfig.sh
+    why: "OM 0.8.0 template type-checks its sandboxed agent example scripts (excluded in 0.9.0 by #6695)"
+    ref: https://github.com/open-mercato/open-mercato/pull/6695
+cadence: { latest: nightly, next: nightly, previous: weekly }
+weeklyDay: 0

@@ -1,0 +1,8 @@
+# No github field: fullstackhouse/open-mercato-durable (repository.url) returns 404 (23 Oct 2026).
+
+npm: "@fullstackhouse/open-mercato-durable-work"
+category: storage-infrastructure
+tags: [background-jobs, durable, postgres]
+summary: Durable at-least-once background jobs on leased Postgres records, with epoch fencing, resumable slices and a reconciler.
+whenToUse: Use when background jobs run for hours or days and must survive deploys, crashes and worker kills without starting over.
+whenNotToUse: Short jobs that are cheap to retry run fine on the standard queue.

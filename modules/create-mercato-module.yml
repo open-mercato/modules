@@ -1,0 +1,7 @@
+npm: create-mercato-module
+github: open-mercato/create-mercato-module
+kind: tool
+category: devtools
+tags: [cli, publishing, scaffold]
+summary: CLI that turns one module of your app into an npm package and a GitHub repository, and installs or links modules.
+whenToUse: Use when a module built inside your app should be published for other apps, or you install a module from GitHub.

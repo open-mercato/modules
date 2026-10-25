@@ -1,0 +1,10 @@
+npm: "@open-mercato/gateway-przelewy24"
+category: payments-finance
+tags: [payments, poland]
+summary: Przelewy24 payment gateway provider. Only an orphaned canary build from March 2026 is published.
+whenToUse: Use when customers pay through Przelewy24, once a maintained release exists. No source code is available today.
+whenNotToUse: For PLN payments today use gateway-tpay or gateway-stripe.
+providers:
+  - { name: przelewy24, label: Przelewy24 }
+status: hold
+reason: Orphaned canary from March 2026. No source in any repository.

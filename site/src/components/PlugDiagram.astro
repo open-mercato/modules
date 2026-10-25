@@ -1,0 +1,304 @@
+---
+// Plug diagram (spec 7.6): the module in the middle, what it requires on the left (lime line), the hosts it extends
+// on the right (violet dashed). One HTML diagram at every width (review r1): left to right from a 640 px container,
+// a vertical stack below. Only the sides that exist are drawn (no empty `Extends nothing` box), a note is printed
+// only when it says more than the label, and identifiers wrap inside their box instead of running under the node.
+import { wbrHtml } from '../lib/wrap.ts'
+
+interface Props {
+  title: string
+  requires: { label: string; note?: string }[]
+  extends: { label: string; note?: string }[]
+}
+const { title, requires: rawReq, extends: rawExt } = Astro.props
+const clean = (xs: { label: string; note?: string }[]) =>
+  xs.map((x) => ({ ...x, note: x.note && x.note.replace(/​/g, '') !== x.label.replace(/​/g, '') ? x.note : undefined }))
+const requires = clean(rawReq)
+const ext = clean(rawExt)
+const label = `${title} requires ${requires.map((r) => r.label).join(', ') || 'nothing'}; extends ${ext.map((e) => e.label).join(', ') || 'nothing'}.`
+const cols = [requires.length > 0 ? 'req' : null, 'node', ext.length > 0 ? 'ext' : null].filter(Boolean).join('-')
+---
+
+<figure class="plug" role="img" aria-label={label}>
+  <div class:list={['plug__in', `plug--${cols}`]}>
+    {
+      requires.length > 0 && (
+        <div class="plug__side plug__side--req">
+          <p class="plug__cap">Requires</p>
+          <ul class:list={['plug__list', 'plug__list--req', { 'is-many': requires.length > 1 }]} role="list">
+            {requires.map((r) => (
+              <li class="plug__item">
+                <span class="plug__t" translate="no" set:html={wbrHtml(r.label)} />
+                {r.note && <span class="plug__n">{r.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    {requires.length > 0 && <span class="plug__wire plug__wire--req" aria-hidden="true" />}
+    <p class="plug__node" translate="no" set:html={wbrHtml(title)} />
+    {ext.length > 0 && <span class="plug__wire plug__wire--ext" aria-hidden="true" />}
+    {
+      ext.length > 0 && (
+        <div class="plug__side plug__side--ext">
+          <p class="plug__cap">Extends</p>
+          <ul class:list={['plug__list', 'plug__list--ext', { 'is-many': ext.length > 1 }]} role="list">
+            {ext.map((r) => (
+              <li class="plug__item plug__item--ext">
+                <span class="plug__t" translate="no" set:html={wbrHtml(r.label)} />
+                {r.note && <span class="plug__n">{r.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</figure>
+
+<style>
+  .plug {
+    margin: 0;
+    container: plug / inline-size;
+    font-family: var(--font-mono);
+    /* the module node: ink block on light, a dark plate with a lime edge on dark */
+    --node-fill: var(--ink);
+    --node-ink: var(--bg);
+    --node-stroke: transparent;
+    /* light: connectors in the ink tones of the signal colours (lime and violet on white are under 3:1) */
+    --req: #2f520b;
+    --ext: #6b55a0;
+  }
+  :global(:root[data-theme='dark']) .plug,
+  :global(.band--film) .plug {
+    --node-fill: var(--film-2);
+    --node-ink: var(--film-ink);
+    --node-stroke: #b4f372;
+    --req: #b4f372;
+    --ext: #bc9aff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .plug {
+      --node-fill: var(--film-2);
+      --node-ink: var(--film-ink);
+      --node-stroke: #b4f372;
+      --req: #b4f372;
+      --ext: #bc9aff;
+    }
+  }
+  .plug__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
+  .plug__side {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    width: 100%;
+  }
+  .plug__cap {
+    margin: 0;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .plug__list {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .plug__item {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2px 12px;
+    min-width: 0;
+    padding: 6px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    background: var(--bg);
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .plug__item--ext {
+    border: 1px dashed var(--ext);
+  }
+  /* an identifier wraps at its token boundaries and, as a last resort, anywhere inside its own box */
+  .plug__t {
+    min-width: 0;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .plug__t :global(.nw) {
+    white-space: normal;
+  }
+  .plug__n {
+    flex: none;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .plug__wire {
+    display: block;
+    width: 0;
+    height: 20px;
+    margin: 4px 0 4px 20px;
+  }
+  .plug__wire--req {
+    border-left: 2px solid var(--req);
+  }
+  .plug__wire--ext {
+    border-left: 1.5px dashed var(--ext);
+  }
+  .plug__node {
+    margin: 0;
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius-s);
+    background: var(--node-fill);
+    color: var(--node-ink);
+    box-shadow: inset 0 0 0 1px var(--node-stroke);
+    font-size: 13px;
+    line-height: 18px;
+    overflow-wrap: anywhere;
+  }
+  /*
+   * Left to right once there is room (review r2): the captions get a row of their own above the boxes, so the
+   * wires, the module and the boxes share one centre line. Each side is as wide as its content (up to a share of
+   * the row), the wires take the rest up to 120 px. A side with several boxes gets a spine with a stub per box,
+   * so the wire meets the spine instead of the gap between two boxes.
+   */
+  @container plug (min-width: 640px) {
+    /*
+     * Left to right once there is room (review r2): one row of boxes on a shared centre line, so the wires meet
+     * the middle of the boxes. The captions stand above their box, outside that line. Each side is as wide as its
+     * content (up to a share of the row); the wires take what is left, up to 120 px.
+     */
+    .plug__in {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 22px;
+    }
+    .plug__side {
+      position: relative;
+      flex: 0 1 auto;
+      width: auto;
+    }
+    /* the requires side and the module keep their width (up to a share); a long extends target wraps first */
+    .plug__side--req {
+      flex: 0 0 auto;
+      max-width: 34%;
+    }
+    .plug--req-node .plug__side--req {
+      max-width: 60%;
+    }
+    .plug__side--ext {
+      max-width: 44%;
+    }
+    /* an extends target is one line of its own as wide as its name (review r4: `integration:` and
+       `integration_ksef_direct` were cut in two beside free room), the note under it; it breaks only after its ':'
+       when the row really has no room */
+    .plug__item--ext {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .plug__item--ext .plug__t {
+      overflow-wrap: normal;
+    }
+    .plug--node-ext .plug__side--ext,
+    .plug--req-node-ext .plug__side--ext {
+      flex: 0 1 auto;
+      max-width: max-content;
+    }
+    .plug--node-ext .plug__side--ext {
+      max-width: 60%;
+    }
+    .plug__side > .plug__cap {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      white-space: nowrap;
+    }
+    .plug__node {
+      flex: 0 0 auto;
+      max-width: 34%;
+    }
+    .plug__wire {
+      /* the wires start at 20 px and take the free room up to 120 px, so a box keeps its name on one line as long as
+         the row has room for it (review r4) */
+      flex: 1 1 20px;
+      min-width: 20px;
+      max-width: 120px;
+      height: 0;
+      margin: 0;
+      border-left: 0;
+    }
+    .plug__wire--req {
+      border-top: 2px solid var(--req);
+    }
+    .plug__wire--ext {
+      border-top: 1.5px dashed var(--ext);
+    }
+    /* several boxes on one side: a stub from each box to a spine, so the wire meets the spine, not a gap */
+    .plug__list.is-many {
+      gap: 8px;
+    }
+    .plug__list--req.is-many {
+      padding-right: 14px;
+    }
+    .plug__list--ext.is-many {
+      padding-left: 14px;
+    }
+    .is-many > .plug__item::before,
+    .is-many > .plug__item::after {
+      content: '';
+      position: absolute;
+      pointer-events: none;
+    }
+    .is-many > .plug__item::after {
+      top: 50%;
+      width: 14px;
+      height: 0;
+    }
+    .is-many > .plug__item::before {
+      top: -5px;
+      bottom: -5px;
+      width: 0;
+    }
+    .is-many > .plug__item:first-child::before {
+      top: 50%;
+    }
+    .is-many > .plug__item:last-child::before {
+      bottom: 50%;
+    }
+    .plug__list--req.is-many > .plug__item::after {
+      right: -15px;
+      margin-top: -1px;
+      border-top: 2px solid var(--req);
+    }
+    .plug__list--req.is-many > .plug__item::before {
+      right: -15px;
+      border-left: 2px solid var(--req);
+    }
+    .plug__list--ext.is-many > .plug__item::after {
+      left: -15px;
+      border-top: 1.5px dashed var(--ext);
+    }
+    .plug__list--ext.is-many > .plug__item::before {
+      left: -15px;
+      border-left: 1.5px dashed var(--ext);
+    }
+  }
+</style>

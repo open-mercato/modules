@@ -1,0 +1,11 @@
+---
+// Origin chip (spec 6.7): 01 OFFICIAL, 02 COMMUNITY, 03 3RD-PARTY, BUILT-IN.
+import { TypeChipView } from '../lib/ui.tsx'
+import type { OriginType } from '../../../lib/schema/index.ts'
+
+interface Props {
+  type: OriginType | 'built-in'
+}
+---
+
+<TypeChipView type={Astro.props.type} />

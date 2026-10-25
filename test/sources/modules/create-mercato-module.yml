@@ -1,0 +1,5 @@
+npm: create-mercato-module
+kind: tool
+category: devtools
+summary: Creates and publishes a single module from an existing Open Mercato app.
+whenToUse: Use when a module built inside an app should become its own npm package.

@@ -1,0 +1,66 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@piotrkarwatka%2Fmarketing-consents"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@piotrkarwatka/marketing-consents",
+      "dist-tags": {
+        "latest": "0.1.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "UNLICENSED",
+          "repository": {
+            "url": "git+https://github.com/pkarw/marketing-consents.git",
+            "type": "git"
+          },
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "next": "16.3.6",
+            "react": "19.2.8",
+            "@open-mercato/ui": "0.9.0",
+            "@open-mercato/core": "0.9.0",
+            "@open-mercato/shared": "0.9.0",
+            "@mikro-orm/decorators": "7.2.3",
+            "@mikro-orm/migrations": "7.2.3",
+            "@mikro-orm/postgresql": "7.2.3"
+          },
+          "dependencies": {
+            "zod": "4.4.3",
+            "@tanstack/react-query": "5.104.1",
+            "@tanstack/react-table": "9.2.6"
+          },
+          "scripts": {},
+          "description": "Open Mercato module: marketing_consents",
+          "dist": {
+            "integrity": "sha512-ByUXs82VmoFMQa6c7kgE1yhKDBH9MNhZoMvTnkpU0ORD4KxHyv4/fQGUXOzmiUnfU6+Zsc4H1hncG7GbnaE2ig==",
+            "tarball": "https://registry.npmjs.org/@piotrkarwatka/marketing-consents/-/marketing-consents-0.1.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-14T11:48:45.884Z",
+        "modified": "2026-10-14T11:49:41.671Z",
+        "0.1.0": "2026-10-14T11:49:41.185Z"
+      },
+      "maintainers": [
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Open Mercato module: marketing_consents",
+      "repository": {
+        "url": "git+https://github.com/pkarw/marketing-consents.git",
+        "type": "git"
+      }
+    }
+  }
+}

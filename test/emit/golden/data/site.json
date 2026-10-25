@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "site": "https://wojciechszyjka.github.io/modules",
+  "base": "/modules",
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "dataVersion": "1.0.0-202610230305.hc8b167",
+  "dataAsOf": {
+    "nightly": "2026-10-23T02:17:00Z",
+    "npm": "2026-10-23T00:17:00Z",
+    "source": "ci"
+  },
+  "features": {
+    "cliSearch": false
+  },
+  "mcpUrl": "https://om-modules.example.workers.dev/mcp",
+  "originTrial": null,
+  "counts": {
+    "entries": 8,
+    "listed": 8,
+    "modules": 8,
+    "verifiedOnLatest": 3,
+    "omQuality": 0,
+    "builtIn": 3
+  },
+  "coreVersion": "0.9.0",
+  "peersSentence": "Peer ranges reject 11 of 14 combinations that fit statically.",
+  "firstNight": false,
+  "radarNext": {
+    "population": 4,
+    "verified": 1,
+    "broken": 0,
+    "quarantine": 0,
+    "notJudged": 0,
+    "queued": 3,
+    "skipped": 0
+  }
+}

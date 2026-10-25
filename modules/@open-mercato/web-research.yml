@@ -1,0 +1,9 @@
+npm: "@open-mercato/web-research"
+repo: open-mercato/open-mercato#main/packages/web-research
+kind: library
+category: ai-automation
+tags: [web-search, ai, agents]
+summary: Engine that runs several web search adapters under one deadline, fuses their results and reports each step.
+whenToUse: Use when AI agents in the app need web search or page reading. Add at least one adapter, for example web-research-model.
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

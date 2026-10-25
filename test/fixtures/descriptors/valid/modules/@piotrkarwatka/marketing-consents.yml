@@ -1,0 +1,5 @@
+# Fixture entry 33 (spec 11.1). No github field yet: pkarw/marketing-consents exists, but claims are a curator decision.
+npm: "@piotrkarwatka/marketing-consents"
+category: marketing-loyalty
+summary: Records and withdraws marketing consents for customers, with encrypted fields.
+whenToUse: Use when the app must store marketing consent records and let staff withdraw them.

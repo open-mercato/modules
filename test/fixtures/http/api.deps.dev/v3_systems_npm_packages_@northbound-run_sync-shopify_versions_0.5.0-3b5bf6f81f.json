@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40northbound-run%2Fsync-shopify/versions/0.5.0"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@northbound-run/sync-shopify",
+        "version": "0.5.0"
+      },
+      "publishedAt": "2026-08-19T15:40:40Z",
+      "slsaProvenances": [
+        {
+          "sourceRepository": "https://github.com/Northbound-Run/open-mercato-shopify",
+          "commit": "e1c17659c70365921d2193892c850543c156254c",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@northbound-run%2fsync-shopify@0.5.0",
+          "verified": true
+        }
+      ],
+      "attestations": [
+        {
+          "type": "https://slsa.dev/provenance/v1",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@northbound-run%2fsync-shopify@0.5.0",
+          "verified": true,
+          "sourceRepository": "https://github.com/Northbound-Run/open-mercato-shopify",
+          "commit": "e1c17659c70365921d2193892c850543c156254c"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@open-mercato%2Fweb-research-exa"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@open-mercato/web-research-exa",
+      "dist-tags": {
+        "latest": "0.9.0",
+        "develop": "0.10.1-develop.7583.1.0c886d0a14"
+      },
+      "versions": {
+        "0.8.0": {
+          "version": "0.8.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/web-research-exa"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "@open-mercato/web-research": "^0.6.0"
+          },
+          "dependencies": {
+            "zod": "^4.4.3"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-H9ab2ZLZLkyQX7SuZUpRy/moq75Zv+5ccCZPbKsfG5tAKwExmVst9DgPgeVtv7iGs3bJUl4wEUJGMCElBE21kg==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/web-research-exa/-/web-research-exa-0.8.0.tgz"
+          }
+        },
+        "0.9.0": {
+          "version": "0.9.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/web-research-exa"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "@open-mercato/web-research": "^0.6.0"
+          },
+          "dependencies": {
+            "zod": "^4.4.3"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-CfgMXxR/T+OZ20jffdUb1F0CpNJAjeGfouq2DYN0JG87GURN+Pewr+UUjDt4jbXDw2cAQ3Z96yGi6bJlcxEyyw==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/web-research-exa/-/web-research-exa-0.9.0.tgz"
+          }
+        },
+        "0.10.1-develop.7583.1.0c886d0a14": {
+          "version": "0.10.1-develop.7583.1.0c886d0a14",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/open-mercato.git",
+            "type": "git",
+            "directory": "packages/web-research-exa"
+          },
+          "maintainers": [
+            {
+              "name": "pat-lewczuk"
+            },
+            {
+              "name": "patryk.andrzejewski"
+            },
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "@open-mercato/web-research": "^0.6.0"
+          },
+          "dependencies": {
+            "zod": "^4.4.3"
+          },
+          "scripts": {},
+          "dist": {
+            "integrity": "sha512-8GI1gHcckm7JWlzsDeAZMrxkUkW/Gj1GFuQwjFSsYEg0Emlq05dK8whG9Fr3pWl60vtHZzx2wx9eC3of/MHzOg==",
+            "tarball": "https://registry.npmjs.org/@open-mercato/web-research-exa/-/web-research-exa-0.10.1-develop.7583.1.0c886d0a14.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-09-15T12:49:24.593Z",
+        "modified": "2026-10-22T13:50:33.029Z",
+        "0.8.0": "2026-09-18T11:36:59.222Z",
+        "0.9.0": "2026-10-09T19:28:31.102Z",
+        "0.10.1-develop.7583.1.0c886d0a14": "2026-10-22T13:50:32.662Z"
+      },
+      "maintainers": [
+        {
+          "name": "pat-lewczuk"
+        },
+        {
+          "name": "patryk.andrzejewski"
+        },
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "repository": {
+        "url": "git+https://github.com/open-mercato/open-mercato.git",
+        "type": "git",
+        "directory": "packages/web-research-exa"
+      }
+    }
+  }
+}

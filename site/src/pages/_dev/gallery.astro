@@ -1,0 +1,1207 @@
+---
+// Design gallery (dev only, WP11): every component of spec 7.6 that is not a page, rendered from test/fixtures.
+// The route exists only in `astro dev` or with OM_DEV_GALLERY=1 (astro.config.ts injects it); the theme switch in
+// the header toggles light and dark.
+import Base from '../../layouts/Base.astro'
+import AnatomyFilm from '../../components/AnatomyFilm.astro'
+import Banner from '../../components/Banner.astro'
+import BuiltInGrid from '../../components/BuiltInGrid.astro'
+import CommandChip from '../../components/CommandChip.astro'
+import CompatMatrix from '../../components/CompatMatrix.astro'
+import DataStamp from '../../components/DataStamp.astro'
+import EmptyState from '../../components/EmptyState.astro'
+import GradientRule from '../../components/GradientRule.astro'
+import Hive from '../../components/Hive.astro'
+import InstallPlan from '../../components/InstallPlan.astro'
+import LicenseChip from '../../components/LicenseChip.astro'
+import Nameplate from '../../components/Nameplate.astro'
+import PlugDiagram from '../../components/PlugDiagram.astro'
+import RadarTables from '../../components/RadarTables.astro'
+import Receipt from '../../components/Receipt.astro'
+import Seal from '../../components/Seal.astro'
+import Sigil from '../../components/Sigil.astro'
+import SignalStripDetailed from '../../components/SignalStripDetailed.astro'
+import TypeChip from '../../components/TypeChip.astro'
+import YMarks from '../../components/YMarks.astro'
+import Icon from '../../components/icons/Icon.astro'
+import { ICONS } from '../../components/icons/paths.ts'
+import type { IconName } from '../../components/icons/paths.ts'
+import ModuleRow, { ModuleRowHead } from '../../islands/ModuleRow.tsx'
+import { proseHtml, wbrHtml } from '../../lib/wrap.ts'
+import SignalStrip from '../../islands/SignalStrip.tsx'
+import { galleryData } from '../../lib/dev/fixtures.ts'
+import { firstError, lastReceipt } from '../../lib/receipts.ts'
+import { orderLines } from '../../lib/status.ts'
+import { shortIntegrity, day, timeUtc } from '../../lib/format.ts'
+import { glyphFromCounts, sigilPhase } from '../../../../lib/sigil/sigil.ts'
+import { badgeSvg } from '../../../../lib/emit/badges.ts'
+import type { SigilCounts } from '../../../../lib/sigil/sigil.ts'
+import type { CellStatus, IndexEntry } from '../../../../lib/schema/index.ts'
+import sigilCases from '../../../../test/design/fixtures/sigil-cases.json'
+
+const g = galleryData()
+/** Receipts, verdicts and the receipt-driven components: the fixture until the first nightly run. */
+const fx = g.receiptsOf('npm:@fastwhitecat/integration-ksef-direct').length ? g : g.fixture
+const real = g.source === 'real'
+const byPath = (p: string, from = g): IndexEntry => (from.entries.find((e) => e.path === p) ?? from.entries[0]) as IndexEntry
+const ksef = byPath('@fastwhitecat/integration-ksef-direct')
+const enterprise = byPath('@open-mercato/enterprise')
+const stripe = byPath('@open-mercato/gateway-stripe')
+const cpq = byPath('@dainamite/cpq')
+const fxKsef = byPath('@fastwhitecat/integration-ksef-direct', fx)
+const fxConsents = byPath('@piotrkarwatka/marketing-consents', fx)
+const fxDurableSync = byPath('@fullstackhouse/open-mercato-data-sync-durable', fx)
+const lines = orderLines(g.lines)
+const latest = lines.find((l) => l.source === 'latest')!
+const factsOf = (e: IndexEntry) => g.factsOf(e)
+const end = (fx.dataAsOf.nightly ?? '2026-10-23').slice(0, 10)
+const sourceNote = real
+  ? 'Numbers come from the data branch through the emitter. Receipt sections use test fixtures until the first nightly run.'
+  : 'Numbers on this page are fixture data from test/fixtures, not live data.'
+const peers = g.compat.peersRejectFitting
+const peersSentence = `Peer ranges reject ${peers.rejected} of ${peers.fitting} combinations that fit statically.`
+/** A registry slice: the eight entries of the fixture set plus a few that stress the layout (long names, providers). */
+const rowPaths = [
+  '@fastwhitecat/integration-ksef-direct',
+  '@fullstackhouse/open-mercato-data-sync-durable',
+  '@fullstackhouse/open-mercato-durable-work',
+  '@open-mercato/enterprise',
+  '@open-mercato/gateway-stripe',
+  '@open-mercato/gateway-tpay',
+  '@piotrkarwatka/marketing-consents',
+  'github/chmarusso/open-mercato-enrichment-treg',
+  '@dainamite/cpq-billing-connector',
+  '@open-mercato/web-research-exa',
+  '@freighttech/shipment-tracking',
+  'mercato-readiness-scanner',
+]
+const rowEntries = real ? rowPaths.map((p) => g.entries.find((e) => e.path === p)).filter((e): e is IndexEntry => !!e) : g.entries
+/** Anatomy hits for the demo rows: real identifiers from each entry's anatomy lists. */
+const hitOf = (e: IndexEntry, i: number): string | null => {
+  if (i === 0) {
+    const ev = e.anatomy?.lists.eventsEmitted.find((x) => x.endsWith('.sent')) ?? e.anatomy?.lists.eventsEmitted[0]
+    return ev ? `event ${ev}` : null
+  }
+  if (i === 8) {
+    const p = e.anatomy?.lists.aclFeatures[0]
+    return p ? `permission ${p}` : null
+  }
+  return null
+}
+const verifiedText = (e: IndexEntry): string =>
+  e.compat.verifiedOn.length ? `Verified on ${e.compat.verifiedOn.join(', ')}` : 'No receipt yet'
+/** `Built for 0.7 (peers >=0.7.0 <0.8.0)`: the site lines the peers accept, else the minor the range starts at. */
+const builtForText = (e: IndexEntry): string => {
+  const r = e.compat.builtFor.range
+  if (!r) return 'Built for: no peer range'
+  const minor = /(\d+\.\d+)\.\d+/.exec(r)?.[1]
+  return `Built for ${e.compat.builtFor.lines.join(', ') || minor || r} (peers ${r})`
+}
+const today = (g.dataAsOf.npm ?? '2026-10-23').slice(0, 10)
+const sigils = Object.fromEntries(
+  g.entries.map((e) => [
+    e.locator,
+    { glyph: e.sigil.glyph, phase: e.sigil.phase, kind: e.kind, enterprise: e.enterprise, publicRoutes: e.sigil.publicRoutes },
+  ]),
+)
+const errors: Record<string, string> = {}
+for (const e of g.entries)
+  for (const r of g.receiptsOf(e.locator)) {
+    const fe = firstError(r)
+    if (fe) errors[r.id] = fe
+  }
+/** The fixture matrix (receipt states in the 28 px cell) until real receipts exist. */
+const fxSigils = Object.fromEntries(
+  fx.entries.map((e) => [
+    e.locator,
+    { glyph: e.sigil.glyph, phase: e.sigil.phase, kind: e.kind, enterprise: e.enterprise, publicRoutes: e.sigil.publicRoutes },
+  ]),
+)
+const fxErrors: Record<string, string> = {}
+for (const e of fx.entries)
+  for (const r of fx.receiptsOf(e.locator)) {
+    const fe = firstError(r)
+    if (fe) fxErrors[r.id] = fe
+  }
+/** Day 0: how many real entries print the collapsed `Queued` strip (every line untested). */
+const queuedN = g.entries.filter((e) => lines.every((l) => (e.compat.lines[l.key]?.status ?? 'untested') === 'untested')).length
+const statuses: CellStatus[] = ['verified', 'broken', 'quarantine', 'harness-red', 'infra-error', 'untested', 'skipped']
+const ksefFacts = factsOf(ksef)
+const ksefReceipt = lastReceipt(fx.receiptsOf(fxKsef.locator), '0.9')!
+const consentsReceipt = lastReceipt(fx.receiptsOf(fxConsents.locator), '0.9')!
+const baseline = lastReceipt(fx.baseline, '0.9')!
+const rec = ksef.version.recommended[latest.key] ?? null
+const builtForLines = ksef.compat.builtFor.lines
+const forOutsideVerified = ksef.compat.verifiedOn.length > 0 && !ksef.compat.verifiedOn.every((l) => builtForLines.includes(l))
+const nameplate = [
+  { label: 'Module ID', value: ksef.moduleIds.join(', '), mono: true },
+  { label: 'Package', value: ksef.npm ?? '', mono: true, copy: ksef.npm ?? undefined },
+  {
+    label: 'Recommended',
+    value: rec ?? 'none yet',
+    mono: true,
+    muted: !rec,
+    note: rec ? verifiedText(ksef) : `Needs a verified receipt on ${latest.key}`,
+  },
+  {
+    label: 'Latest',
+    value: `${ksef.version.latest ?? ksef.version.preview}${ksef.version.publishedAt ? ` · ${day(ksef.version.publishedAt)}` : ''}`,
+    mono: true,
+  },
+  { label: 'Tarball', value: shortIntegrity(ksef.version.integrity), mono: true, copy: ksef.version.integrity ?? undefined },
+  { label: 'Built from', value: g.builtFrom(ksef) ?? 'unknown', mono: true, muted: !g.builtFrom(ksef) },
+  { label: 'License', value: ksef.license.spdx ?? 'unknown', mono: true },
+  {
+    label: 'Built for',
+    value: ksef.compat.builtFor.range ?? 'no peer range',
+    mono: true,
+    mismatch: forOutsideVerified
+      ? `Peers accept ${builtForLines.join(', ') || 'no listed line'}, receipts verify ${ksef.compat.verifiedOn.join(', ')}.`
+      : undefined,
+  },
+  {
+    label: 'Verified on',
+    value: ksef.compat.verifiedOn.join(', ') || 'not yet',
+    mono: true,
+    muted: !ksef.compat.verifiedOn.length,
+  },
+  { label: 'Requires', value: ksef.requires.map((r) => r.raw).join(', ') || 'nothing', mono: true },
+  { label: 'Replaces', value: ksef.replaces.join(', ') || 'nothing', mono: true, muted: !ksef.replaces.length },
+  {
+    label: 'Installable from',
+    value:
+      ksef.version.installableFrom && ksef.version.installableFrom > today
+        ? day(ksef.version.installableFrom)
+        : `now${ksef.version.installableFrom ? ` (since ${day(ksef.version.installableFrom)})` : ''}`,
+    mono: true,
+    muted: !ksef.version.installableFrom || ksef.version.installableFrom <= today,
+  },
+  ...(ksef.renamedFrom.length
+    ? [{ label: 'Renamed from', value: ksef.renamedFrom.map((l) => l.replace(/^npm:/, '')).join(', '), mono: true, wide: true }]
+    : []),
+]
+const golden = (sigilCases as { cases: { name: string; locator: string; kind: string; enterprise?: boolean; counts: SigilCounts | null }[] }).cases
+const icons = Object.keys(ICONS) as IconName[]
+const tokens = [
+  ['--bg', '--bg-2', '--bg-3', '--ink', '--ink-2', '--ink-3', '--line', '--line-strong'],
+  ['--film', '--film-2', '--film-line', '--film-ink', '--film-ink-2', '--paper', '--paper-ink', '--paper-ink-2'],
+  ['--ok-fill', '--ok-ink', '--ok-text', '--wait-fill', '--wait-ink', '--id-fill', '--id-ink', '--bad-fill', '--bad-ink'],
+]
+const sections = [
+  'Tokens',
+  'Type',
+  'Header and stamp',
+  'Hero film and Hive',
+  'Chips and seals',
+  'Commands and icons',
+  'Sigil',
+  'Signal strip',
+  'Module row',
+  'Nameplate',
+  'Detailed strip',
+  'Anatomy film',
+  'Plug diagram',
+  'Install plan',
+  'Banners',
+  'Receipt',
+  'Compatibility matrix',
+  'Radar tables',
+  'Built-in grid',
+  'Empty states',
+]
+/** Tonight's run per line (spec 7.7 A.2): verdict counts of the listed entries and the baseline time. */
+const runLines = lines.map((l) => {
+  const n = (st: CellStatus): number => g.entries.filter((e) => e.compat.lines[l.key]?.status === st).length
+  const b = l.baseline
+  return {
+    key: l.key,
+    name: l.key === 'next' ? 'next' : l.version,
+    source: l.source,
+    status: (b?.status ?? 'untested') as CellStatus,
+    baseline: b ? `baseline ${b.status === 'verified' ? 'pass' : b.status}${b.patches.length ? ` · ${b.patches.length} patch` : ''}` : 'baseline not run',
+    counts: b ? `${n('verified')} V · ${n('broken')} X · ${n('quarantine')} Q` : '',
+    at: b?.at ? `${timeUtc(b.at)}` : '',
+  }
+})
+/** Day 0: no line has a baseline yet (spec 7.8 `The first nightly run is tonight. Anatomy and fit are already here.`). */
+const firstNight = !lines.some((l) => l.baseline)
+const verifiedN = g.entries.filter((e) => e.tier === 'verified').length
+/** Hero counter (spec 7.7 A.2): before the first night the verified segment gives way to the time of the run. */
+const heroCount = [
+  `${g.hive.filter((c) => c.group !== 'core').length} modules`,
+  firstNight ? null : `${verifiedN} verified on ${latest.key}`,
+  `${g.hive.filter((c) => c.group === 'core').length} built-in`,
+  firstNight ? 'first run tonight 02:17 UTC' : null,
+].filter((x): x is string => !!x)
+/** README badges: the real state of ksef, plus the verified and failing states from the receipt fixtures. */
+const badges = [
+  { svg: badgeSvg(ksef, g.lines), note: real ? 'ksef' : 'ksef · fixture' },
+  { svg: badgeSvg(fxKsef, fx.lines), note: 'ksef · fixture receipts' },
+  { svg: badgeSvg(fxConsents, fx.lines), note: 'consents · fixture receipts' },
+]
+const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
+---
+
+<Base
+  title="Design gallery · Open Mercato Modules"
+  description="Every component of the catalog rendered from test fixtures, in both themes."
+  path="/_dev/gallery"
+  dataAsOf={g.dataAsOf}
+  noindex
+  skip={{ href: '#main', label: 'Skip to the gallery' }}
+>
+  <div class="band">
+    <div class="sheet section gal-intro">
+      <p class="t-tagline">// Design system · dev only</p>
+      <h1 class="t-display">Instruments, not decorations.</h1>
+      <p class="gal-lead">
+        Every component of spec 7.6 that is not a page. Use the theme switch in the header for dark. {sourceNote}
+      </p>
+      <nav class="gal-toc" aria-label="Sections">
+        {sections.map((s, i) => <a href={`#${sid(s)}`}><span>{String(i + 1).padStart(2, '0')}</span>{s}</a>)}
+      </nav>
+    </div>
+  </div>
+
+  <!-- 01 tokens -->
+  <section class="band" id={sid('Tokens')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 01 · Tokens · site/src/styles/tokens.css</p>
+      <div class="swatches">
+        {
+          tokens.map((row) => (
+            <div class="swatch-row">
+              {row.map((t) => (
+                <div class="swatch">
+                  <span class="swatch__chip" style={`background:var(${t})`} />
+                  <code>{t}</code>
+                </div>
+              ))}
+            </div>
+          ))
+        }
+        <div class="swatch-row">
+          <div class="swatch swatch--wide"><span class="swatch__chip" style="background:var(--grad)"></span><code>--grad</code></div>
+          <div class="swatch swatch--wide"><span class="swatch__chip" style="background:var(--grad-rule)"></span><code>--grad-rule</code></div>
+          <div class="swatch"><span class="swatch__chip" style="background:var(--lime)"></span><code>--lime</code></div>
+          <div class="swatch"><span class="swatch__chip" style="background:var(--yellow)"></span><code>--yellow</code></div>
+          <div class="swatch"><span class="swatch__chip" style="background:var(--violet)"></span><code>--violet</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 type -->
+  <section class="band" id={sid('Type')}>
+    <div class="sheet section type-specimen">
+      <p class="t-tagline">// 02 · Type · Geist 400, Geist Mono</p>
+      <p class="t-display">Extend everything.</p>
+      <p class="t-h1">Integration KSeF Direct</p>
+      <p class="t-h2">{peersSentence}</p>
+      <p class="t-h3">Read statically from the published tarball.</p>
+      <p class="t-body">
+        Start with 80% done. Every module here is read from its published code and installed in a fresh Open Mercato app,
+        night after night.
+      </p>
+      <p class="t-small t-muted">Small, UI: 14/1.5. Buttons use weight 500.</p>
+      <p class="t-tagline">// Proof, not promises</p>
+      <p class="t-data">{ksef.install.cli} · {shortIntegrity(ksef.version.integrity)}</p>
+      <p class="t-label t-muted">0.8 0.9 next</p>
+    </div>
+  </section>
+
+  <!-- 03 header and stamp -->
+  <section class="band" id={sid('Header and stamp')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 03 · Header, DataStamp · components/Header.astro, DataStamp.astro</p>
+      <p class="gal-note">The header at the top of this page is the real component. DataStamp states:</p>
+      <div class="row wrap gap-24 gal-demo">
+        <DataStamp dataAsOf={g.dataAsOf} now={g.dataAsOf.nightly ?? undefined} variant="inline" />
+        <DataStamp dataAsOf={{ nightly: '2026-10-20T03:12:00Z', npm: null }} now="2026-10-23T09:00:00Z" variant="inline" />
+        <DataStamp dataAsOf={{ nightly: null, npm: '2026-10-23T00:17:00Z' }} variant="inline" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 hero film and hive -->
+  <section class="band band--film" id={sid('Hero film and Hive')}>
+    <div class="sheet section hero-demo">
+      <YMarks tone="film" inset={8} />
+      <div class="hero-demo__left">
+        <p class="t-tagline">// Open Mercato Modules</p>
+        <h2 class="t-display">Extend everything.</h2>
+        <p class="hero-demo__sub">
+          Start with 80% done. Every module here is read from its published code and installed in a fresh Open Mercato
+          app, night after night.
+        </p>
+        <div class="hero-demo__ask">
+          <span class="hero-demo__prefix">/ search modules</span>
+          <span class="hero-demo__ph">name, event or table</span>
+          <Icon name="search" size={18} />
+        </div>
+        <ul class="hero-demo__chips" role="list" aria-label="Examples">
+          {['ksef', 'shopify', 'exchange rates', 'when a deal is won'].map((q) => <li><span class="chip chip--film">{q}</span></li>)}
+        </ul>
+        <ul class="hero-demo__count dotlist" role="list">
+          {heroCount.map((c) => <li>{c}</li>)}
+        </ul>
+        {
+          firstNight ? (
+            <div class="hero-demo__run">
+              <p class="t-tagline">Tonight's run</p>
+              <p class="hero-demo__first">The first nightly run is tonight. Anatomy and fit are already here.</p>
+              <p class="hero-demo__queue">
+                <span>{runLines.map((l) => l.name).join(' · ')}</span>
+                <span class="strip-queued">Queued</span>
+              </p>
+              <a class="hero-demo__all" href="#compatibility-matrix">All receipts</a>
+            </div>
+          ) : (
+            <div class="hero-demo__run">
+              <p class="t-tagline">Tonight's run</p>
+              {runLines.map((l) => (
+                <p class="hero-demo__line">
+                  <span class="hero-demo__lk">{l.name}<span class="hero-demo__ls">{l.source}</span></span>
+                  <SignalStrip cells={[{ key: l.key, status: l.status, label: `${l.key} baseline`, step: null, receipt: null }]} labels={false} />
+                  <span class="hero-demo__lb">{l.baseline}</span>
+                  <span class="hero-demo__lc">
+                    {l.counts && <span>{l.counts}</span>}
+                    {l.at && <span class="hero-demo__lt">{l.at}</span>}
+                  </span>
+                </p>
+              ))}
+              <a class="hero-demo__all" href="#compatibility-matrix">All receipts</a>
+            </div>
+          )
+        }
+      </div>
+      <div class="hero-demo__right">
+        <Hive cells={g.hive} always />
+      </div>
+    </div>
+  </section>
+  <div class="band">
+    <div class="sheet section section--tight"><GradientRule /></div>
+  </div>
+
+  <!-- 05 chips and seals -->
+  <section class="band" id={sid('Chips and seals')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 05 · TypeChip, LicenseChip, Seal</p>
+      <div class="gal-grid">
+        <div class="gal-cell">
+          <p class="gal-cap">TypeChip</p>
+          <div class="row wrap gap-8">
+            <TypeChip type="official" /><TypeChip type="community" /><TypeChip type="3rd-party" /><TypeChip type="built-in" />
+          </div>
+        </div>
+        <div class="gal-cell">
+          <p class="gal-cap">LicenseChip</p>
+          <div class="row wrap gap-8">
+            <LicenseChip license={{ spdx: 'MIT', kind: 'osi', mismatch: false }} />
+            <LicenseChip license={{ spdx: 'UNLICENSED', kind: 'proprietary', mismatch: false }} />
+            <LicenseChip license={{ spdx: null, kind: 'unknown', mismatch: false }} />
+            <LicenseChip license={{ spdx: 'MIT', kind: 'osi', mismatch: true }} />
+            <LicenseChip license={{ spdx: null, kind: 'enterprise', mismatch: false }} />
+          </div>
+        </div>
+        <div class="gal-cell">
+          <p class="gal-cap">Seal</p>
+          <div class="row wrap gap-12 gal-seals">
+            <span class="gal-spec"><Seal entry={ksef} latestKey={latest.key} /><code>ksef</code></span>
+            <span class="gal-spec"><Seal seal={{ kind: 'verified', line: latest.key, title: 'Verified' }} /><code>fixture</code></span>
+            <span class="gal-spec"><Seal seal={{ kind: 'quality', version: '1.4.2', until: '2027-10', title: 'OM Quality' }} /><code>fixture</code></span>
+            <span class="gal-spec"><Seal seal={{ kind: 'revoked', version: '1.4.2', at: '2026-11-02', title: 'Revoked' }} /><code>fixture</code></span>
+          </div>
+        </div>
+        <div class="gal-cell">
+          <p class="gal-cap">Buttons</p>
+          <div class="row wrap gap-8">
+            <a class="btn btn--primary" href="#chips-and-seals">Submit a module</a>
+            <a class="btn btn--secondary" href="#chips-and-seals">Browse built-in</a>
+            <a class="btn btn--tertiary" href="#chips-and-seals">Open in Claude Code</a>
+            <a class="btn btn--green" href="#chips-and-seals">Try in Cloud</a>
+          </div>
+        </div>
+        <div class="gal-cell gal-cell--full">
+          <p class="gal-cap">README badge · lib/emit/badges.ts · /badge/&lt;path&gt;.svg</p>
+          <div class="row wrap gap-16">
+            {
+              badges.map((b) => (
+                <span class="gal-spec gal-badge">
+                  <span set:html={b.svg} />
+                  <code>{b.note}</code>
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 commands and icons -->
+  <section class="band" id={sid('Commands and icons')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 06 · CommandChip, icons (Heroicons outline, MIT)</p>
+      <div class="gal-grid">
+        <div class="gal-cell gal-cell--wide">
+          <p class="gal-cap">CommandChip</p>
+          <CommandChip command={ksef.install.cli} />
+        </div>
+        <div class="gal-cell gal-cell--wide band--film gal-film-cell">
+          <p class="gal-cap">CommandChip on film</p>
+          <CommandChip command="claude mcp add --transport http om-modules https://om-modules.workers.dev/mcp" />
+        </div>
+        <div class="gal-cell gal-cell--full">
+          <p class="gal-cap">Icons</p>
+          <div class="row wrap gap-16 gal-icons">
+            {icons.map((n) => <span class="gal-icon"><Icon name={n} size={24} /><code>{n}</code></span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 sigil -->
+  <section class="band" id={sid('Sigil')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 07 · Sigil · lib/sigil/sigil.ts · golden cases</p>
+      <div class="sigil-row">
+        {
+          golden.map((c) => (
+            <figure class="sigil-card">
+              <Sigil
+                glyph={c.enterprise ? '0000000' : glyphFromCounts(c.counts!)}
+                phase={sigilPhase(c.locator)}
+                kind={c.kind as 'module'}
+                enterprise={c.enterprise}
+                counts={c.counts}
+                size={96}
+              />
+              <figcaption>
+                <span>{c.name}</span>
+                <code>{c.enterprise ? 'hidden' : glyphFromCounts(c.counts!)}</code>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="gal-cap">Sizes 16 / 24 / 32 / 48 / 96 and every fixture entry</p>
+      <div class="row wrap gap-24 sigil-sizes">
+        {([16, 24, 32, 48, 96] as const).map((s) => <Sigil entry={ksef} size={s} />)}
+        <span class="gal-sep" />
+        {g.entries.map((e) => <span title={e.locator}><Sigil entry={e} size={48} /></span>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 signal strip -->
+  <section class="band" id={sid('Signal strip')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 08 · SignalStrip · islands/SignalStrip.tsx</p>
+      <div class="row wrap gap-24 gal-states">
+        {
+          statuses.map((s) => (
+            <div class="gal-state">
+              <SignalStrip cells={[{ key: '0.9', status: s, label: `0.9: ${s}`, step: null, receipt: null }]} />
+              <code>{s}</code>
+            </div>
+          ))
+        }
+      </div>
+      <p class="gal-cap gal-demo">Real data, collapsed: every line untested prints one <code>Queued</code></p>
+      <div class="row wrap gap-24">
+        <div class="gal-state">
+          <SignalStrip entry={ksef} lines={lines} collapse />
+          <code>ksef · {real ? `real · ${queuedN} of ${g.entries.length} entries print this` : 'fixture'}</code>
+        </div>
+        {
+          fx !== g &&
+            [fxKsef, fxConsents].map((e) => (
+              <div class="gal-state">
+                <SignalStrip entry={e} lines={fx.lines} />
+                <code>{e.path.split('/').at(-1)} · fixture receipts</code>
+              </div>
+            ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 module row -->
+  <section class="band" id={sid('Module row')}>
+    <div class="sheet">
+      <div class="section section--tight">
+        <p class="t-tagline">// 09 · ModuleRow · islands/ModuleRow.tsx · {real ? `${rowEntries.length} of ${g.entries.length} entries` : 'all fixture entries'}</p>
+      </div>
+      <ModuleRowHead lines={lines} />
+      <div class="gal-registry" role="list">
+        {
+          rowEntries.map((e, i) => (
+            <div role="listitem">
+              <ModuleRow entry={e} lines={lines} categoryTitle={g.categoryTitle(e.category)} matched={hitOf(e, i)} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="section section--tight">
+        <p class="t-tagline">// Beside the 240 px filter rail (list about 920 px wide, spec 7.7 A.4)</p>
+      </div>
+      <div class="gal-railcase">
+        <div class="gal-rail" aria-hidden="true"><span>Filters · 240 px</span></div>
+        <div>
+          <ModuleRowHead lines={lines} />
+          <div class="gal-registry" role="list">
+            {
+              rowEntries.slice(0, 4).map((e, i) => (
+                <div role="listitem">
+                  <ModuleRow entry={e} lines={lines} categoryTitle={g.categoryTitle(e.category)} matched={hitOf(e, i)} />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 nameplate -->
+  <section class="band" id={sid('Nameplate')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 10 · Nameplate · module header</p>
+      <div class="mhead">
+        <YMarks inset={8} />
+        <div class="mhead__sig"><Sigil entry={ksef} size={96} transition /></div>
+        <div class="mhead__main">
+          <p class="t-label t-muted">
+            Modules / {g.categoryTitle(ksef.category)}<span class="mhead__crumb-loc"> / <code translate="no" set:html={wbrHtml(ksef.npm ?? '')} /></span>
+          </p>
+          <h2 class="t-h1">{ksef.title}</h2>
+          <p class="mhead__loc"><code translate="no" set:html={wbrHtml(ksef.locator)} /></p>
+          <p class="mhead__sum">{ksef.summary}</p>
+          <div class="row wrap gap-8">
+            <TypeChip type={ksef.type} /><span class="chip chip--line">{ksef.kind}</span><LicenseChip license={ksef.license} /><span class="chip chip--line">{g.categoryTitle(ksef.category)}</span><span class="chip chip--line">{ksef.identity.claimed ? 'Claimed' : 'Unclaimed'}</span>
+          </div>
+          <ul class="mhead__built dotlist" role="list"><li>{builtForText(ksef)}</li><li>{verifiedText(ksef)}</li></ul>
+        </div>
+        <div class="mhead__seal"><Seal entry={ksef} latestKey={latest.key} /></div>
+      </div>
+      <div class="gal-gap"><Nameplate rows={nameplate} /></div>
+    </div>
+  </section>
+
+  <!-- 11 detailed strip -->
+  <section class="band" id={sid('Detailed strip')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 11 · SignalStripDetailed · ksef, consents, data-sync-durable{fx !== g ? ' · fixture receipts' : ''}</p>
+      <div class="stack gap-16">
+        {
+          fx !== g && (
+            <figure class="gal-fig">
+              <figcaption class="gal-cap"><code>{ksef.npm}</code> · real data (no receipt yet)</figcaption>
+              <SignalStripDetailed entry={ksef} lines={g.lines} receipts={[]} end={end} />
+            </figure>
+          )
+        }
+        {
+          [fxKsef, fxConsents, fxDurableSync].map((e) => (
+            <figure class="gal-fig">
+              <figcaption class="gal-cap"><code>{e.npm ?? e.locator}</code> · {fx !== g ? 'fixture receipts' : 'fixture'}</figcaption>
+              <SignalStripDetailed entry={e} lines={fx.lines} receipts={fx.receiptsOf(e.locator)} end={end} />
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 anatomy film -->
+  <section class="band" id={sid('Anatomy film')}>
+    <div class="sheet section stack gap-24">
+      <p class="t-tagline">// 12 · AnatomyFilm · dark in both themes</p>
+      <AnatomyFilm entry={ksef} facts={ksefFacts} />
+      <AnatomyFilm entry={stripe} facts={factsOf(stripe)} />
+      {real && <AnatomyFilm entry={cpq} facts={factsOf(cpq)} />}
+      <AnatomyFilm entry={enterprise} facts={factsOf(enterprise)} />
+    </div>
+  </section>
+
+  <!-- 13 plug diagram -->
+  <section class="band" id={sid('Plug diagram')}>
+    <div class="sheet section stack gap-24">
+      <p class="t-tagline">// 13 · PlugDiagram</p>
+      <PlugDiagram
+        title={ksef.moduleIds[0] ?? ksef.title}
+        requires={ksef.requires.map((r) => ({ label: r.raw, note: r.resolvesTo?.startsWith('core:') ? 'core' : undefined }))}
+        extends={(ksefFacts?.modules.flatMap((m) => m.extends) ?? []).map((x) => ({ label: x.target, note: x.kind }))}
+      />
+      <PlugDiagram
+        title="cpq_billing_connector"
+        requires={[{ label: 'cpq', note: '@dainamite/cpq' }, { label: 'billing', note: '@dainamite/billing' }, { label: 'sales', note: 'core' }]}
+        extends={[{ label: 'sales.document', note: 'widget' }, { label: 'cpq.quote.accepted', note: 'subscriber' }]}
+      />
+    </div>
+  </section>
+
+  <!-- 14 install plan -->
+  <section class="band" id={sid('Install plan')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 14 · InstallPlan · plan_install for ksef on {latest.key}</p>
+      <div class="install-demo"><InstallPlan plan={g.plan} omVersion={latest.version} /></div>
+    </div>
+  </section>
+
+  <!-- 15 banners -->
+  <section class="band" id={sid('Banners')}>
+    <div class="sheet section stack gap-12">
+      <p class="t-tagline">// 15 · Banner · all variants</p>
+      <Banner variant="stale-data">Data from 20 Oct. The nightly run did not finish.</Banner>
+      <Banner variant="harness-red">Our test app failed on 0.9.0 tonight. Modules were not judged.</Banner>
+      <Banner variant="hold" link={{ href: '#banners', label: 'Built-in forms' }}>Moved into Open Mercato core (open-mercato#6770). Do not install.</Banner>
+      <Banner variant="replaces">Replaces the built-in data_sync module. You cannot enable both.</Banner>
+      <Banner variant="enterprise" link={{ href: '#banners', label: 'See the offer' }}>Anatomy not published. Commercial license. agent_orchestrator, record_locks, security, sso, system_status_overlays.</Banner>
+      <Banner variant="advisory">Open high severity advisory GHSA-xxxx-xxxx-xxxx. Do not install until fixed.</Banner>
+      <Banner variant="renamed">Renamed from @fast-white-cat/integration-ksef-direct.</Banner>
+      <Banner variant="quarantine">New release. A fresh app installs it from 28 Oct (Yarn 5-day age gate).</Banner>
+      <Banner variant="preview">No stable release yet. Tested on next only.</Banner>
+      <Banner variant="github-only">No npm package. Receipts install from GitHub at tag v0.1.0.</Banner>
+    </div>
+  </section>
+
+  <!-- 16 receipt -->
+  <section class="band" id={sid('Receipt')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 16 · Receipt · ksef on 0.9, consents on 0.9, empty app{fx !== g ? ' · fixture receipts' : ''}</p>
+      <div class="receipts">
+        <Receipt receipt={ksefReceipt} jsonHref="#receipt" />
+        <Receipt receipt={consentsReceipt} jsonHref="#receipt" />
+        <Receipt receipt={baseline} jsonHref="#receipt" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 compat -->
+  <section class="band" id={sid('Compatibility matrix')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 17 · CompatMatrix{fx !== g ? ' · real data, then fixture receipts' : ''}</p>
+      <CompatMatrix compat={g.compat} sigils={sigils} errors={errors} />
+      {
+        fx !== g && (
+          <figure class="gal-fig gal-fig--next">
+            <figcaption class="gal-cap">Fixture receipts: every cell state in the 28 px cell</figcaption>
+            <CompatMatrix compat={fx.compat} sigils={fxSigils} errors={fxErrors} idPrefix="cmfx" />
+          </figure>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 18 radar -->
+  <section class="band" id={sid('Radar tables')}>
+    <div class="sheet section stack gap-16">
+      <p class="t-tagline">// 18 · RadarTables · <span class="nw">next = <code>{g.radar.next}</code></span></p>
+      <p class="t-h3" set:html={proseHtml(g.radar.summary)} />
+      <RadarTables radar={g.radar} />
+    </div>
+  </section>
+
+  <!-- 19 built-in -->
+  <section class="band" id={sid('Built-in grid')}>
+    <div class="sheet section">
+      <p class="t-tagline">// 19 · BuiltInGrid</p>
+      <BuiltInGrid modules={g.builtIn} categories={g.categories} coreVersion={g.coreVersion} presetLine={latest.key} />
+    </div>
+  </section>
+
+  <!-- 20 empty -->
+  <section class="band" id={sid('Empty states')}>
+    <div class="sheet section">
+      <p class="t-tagline gal-gap-b">// 20 · EmptyState</p>
+      <div class="gal-grid gal-grid--center">
+      <div class="gal-cell gal-cell--wide">
+        <EmptyState
+          title="No module does that yet."
+          command="npx create-mercato-module init"
+          actions={[{ href: '#empty-states', label: 'Copy prompt' }]}
+        />
+      </div>
+      <div class="gal-cell gal-cell--wide">
+        <EmptyState
+          size="page"
+          title="This cell is empty."
+          command="npx create-mercato-module init"
+          actions={[{ href: '#main', label: 'Search modules', variant: 'primary' }]}
+        />
+      </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gal-intro {
+    display: grid;
+    gap: 20px;
+  }
+  .gal-lead {
+    max-width: 62ch;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+  .gal-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 0;
+    margin-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .gal-toc a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .gal-toc a span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .gal-toc a:hover {
+    color: var(--ok-text);
+  }
+  .section > .t-tagline:first-child,
+  .gal-cell > .t-tagline:first-child {
+    margin-bottom: 24px;
+  }
+  .gal-note,
+  .gal-cap {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .gal-demo {
+    margin-top: 24px;
+  }
+  .gal-gap {
+    margin-top: 24px;
+  }
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .section.gal-grid {
+    border-radius: 0;
+    border-width: 0;
+    padding: 0;
+  }
+  .gal-cell {
+    padding: 24px;
+    background: var(--bg);
+    min-width: 0;
+  }
+  .gal-cell--wide {
+    grid-column: span 1;
+  }
+  .gal-cell--full {
+    grid-column: 1 / -1;
+  }
+  .gal-spec {
+    display: inline-grid;
+    justify-items: start;
+    gap: 6px;
+  }
+  /* seals of one and two lines share a baseline at the bottom, so the captions line up */
+  .gal-seals {
+    align-items: flex-end;
+  }
+  .gal-fig {
+    margin: 0;
+  }
+  .gal-fig--next {
+    margin-top: 48px;
+  }
+  .gal-fig > .gal-cap code {
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .hero-demo__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: -8px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .chip--film {
+    height: 24px;
+    padding: 0 8px;
+    font-size: 12px;
+    border: 1px solid var(--film-line);
+    background: transparent;
+    color: var(--film-ink-2);
+    font-family: var(--font-mono);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .gal-spec code {
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .gal-badge :global(svg) {
+    display: block;
+  }
+  .gal-film-cell {
+    background: var(--film);
+  }
+  .gal-icons {
+    color: var(--ink);
+  }
+  .gal-icon {
+    display: inline-grid;
+    justify-items: center;
+    gap: 6px;
+    width: 88px;
+  }
+  .gal-icon code,
+  .gal-state code {
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .gal-state {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+  }
+  .swatches {
+    display: grid;
+    gap: 16px;
+  }
+  .swatch-row {
+    display: grid;
+    /* 9 tracks at full width: the longest group (signal colours, 9 tokens) fits one row */
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 8px;
+  }
+  .swatch {
+    display: grid;
+    gap: 6px;
+  }
+  .swatch--wide {
+    grid-column: span 2;
+  }
+  .swatch__chip {
+    height: 44px;
+    border-radius: var(--radius-m);
+    box-shadow: inset 0 0 0 1px #8080802e;
+  }
+  .swatch code {
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .type-specimen {
+    display: grid;
+    gap: 14px;
+  }
+  .hero-demo {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--col-gap);
+    align-items: center;
+    min-height: 560px;
+  }
+  .hero-demo__left {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    gap: 20px;
+    align-content: center;
+  }
+  .hero-demo__left .t-tagline {
+    color: var(--film-ink-2);
+  }
+  .hero-demo__sub {
+    max-width: 44ch;
+    color: var(--film-ink-2);
+  }
+  .hero-demo__ask {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+    color: var(--film-ink-2);
+    font-size: 15px;
+  }
+  .hero-demo__prefix {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #b4f372;
+    white-space: nowrap;
+  }
+  .hero-demo__ph {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hero-demo__count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--film-ink);
+  }
+  .hero-demo__run {
+    display: grid;
+    gap: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+  }
+  .gal-grid--center > .gal-cell {
+    display: grid;
+    align-content: center;
+  }
+  .gal-gap-b {
+    margin-bottom: 24px;
+  }
+  .hero-demo__all {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    justify-self: start;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--film-ink);
+    text-underline-offset: 3px;
+    text-decoration-color: var(--film-line);
+  }
+  .hero-demo__first {
+    padding-block: 8px 12px;
+    max-width: 36ch;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--film-ink);
+  }
+  .hero-demo__queue {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 10px;
+    border-top: 1px solid var(--film-line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--film-ink);
+  }
+  .hero-demo__queue .strip-queued {
+    color: #eefb63;
+  }
+  .hero-demo__line + .hero-demo__line {
+    border-top: 1px solid var(--film-line);
+  }
+  .hero-demo__lk {
+    display: grid;
+    width: 64px;
+    white-space: nowrap;
+    color: var(--film-ink);
+  }
+  .hero-demo__ls {
+    font-size: 10px;
+    color: var(--film-ink-2);
+  }
+  .hero-demo__lb {
+    white-space: nowrap;
+  }
+  .hero-demo__lc {
+    display: grid;
+    justify-items: end;
+    white-space: nowrap;
+    color: var(--film-ink);
+  }
+  .hero-demo__lt {
+    color: var(--film-ink-2);
+  }
+  .hero-demo__line {
+    display: grid;
+    grid-template-columns: auto 14px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+    padding-block: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--film-ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .sigil-row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .sigil-card {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 20px 12px 14px;
+    background: var(--bg-2);
+    border-radius: var(--radius-l);
+    color: var(--ink);
+  }
+  .sigil-card figcaption {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    max-width: 100%;
+    font-size: 13px;
+  }
+  .sigil-card figcaption span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sigil-card code {
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .sigil-sizes {
+    align-items: end;
+    color: var(--ink);
+  }
+  .gal-sep {
+    width: 1px;
+    height: 48px;
+    background: var(--line);
+  }
+  .gal-registry {
+    border-top: 1px solid var(--line);
+  }
+  .gal-railcase {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    border-top: 1px solid var(--line);
+  }
+  .gal-rail {
+    padding: 16px 20px;
+    border-right: 1px solid var(--line);
+    background: repeating-linear-gradient(135deg, transparent 0 8px, var(--bg-2) 8px 9px);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .gal-railcase .gal-registry {
+    border-top: 0;
+  }
+  .gal-railcase :global(.mrow__grid) {
+    padding-inline: 20px;
+  }
+  .mhead {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: 24px;
+    padding: 32px;
+    background: var(--bg-2);
+    border-radius: var(--radius-s);
+    color: var(--ink);
+  }
+  .mhead__main {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  /* phones: the package name is the locator under the H1 and PACKAGE on the plate; the breadcrumb ends at the
+     category */
+  @media (max-width: 479px) {
+    .mhead__crumb-loc {
+      display: none;
+    }
+  }
+  .mhead__loc code {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .mhead__sum {
+    max-width: 60ch;
+    font-size: 18px;
+    color: var(--ink-2);
+  }
+  .mhead__built {
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .install-demo {
+    max-width: 480px;
+  }
+  .receipts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 991px) {
+    .gal-railcase {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .gal-rail {
+      display: none;
+    }
+    .hero-demo {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+    }
+    .gal-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .sigil-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .mhead {
+      grid-template-columns: 1fr;
+      padding: 20px;
+    }
+    .mhead__sig :global(svg) {
+      width: 64px;
+      height: 64px;
+    }
+    .hero-demo__line {
+      grid-template-columns: auto 14px minmax(0, 1fr);
+      row-gap: 2px;
+    }
+    /* counts under the baseline text, on its column */
+    .hero-demo__lc {
+      grid-column: 3 / -1;
+      grid-auto-flow: column;
+      justify-content: start;
+      gap: 12px;
+      padding-left: 0;
+    }
+  }
+</style>

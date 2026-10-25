@@ -1,0 +1,419 @@
+/* Base: reset, type scale (spec 7.3), the sheet with rails, focus, utilities. Tokens live in tokens.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 72px;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+svg {
+  display: block;
+  flex-shrink: 0;
+}
+svg.icon,
+.inline-svg svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex: none;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+/* identifiers keep their case inside uppercase labels */
+code,
+kbd,
+samp {
+  text-transform: none;
+}
+/* identifiers inside headings: mono without the negative heading tracking, a touch smaller than the words */
+:is(h1, h2, h3, h4, .t-display, .t-h1, .t-h2, .t-h3) code {
+  letter-spacing: 0;
+  font-size: 0.86em;
+}
+::selection {
+  background: var(--lime);
+  color: #0c0c0c;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- type scale (spec 7.3): weight 400, tight tracking, no bold headings ---------- */
+.t-display {
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+}
+.t-h1,
+h1 {
+  font-size: 44px;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 400;
+}
+.t-h2,
+h2 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+.t-h3,
+h3 {
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+}
+.t-body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.t-small {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.t-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.33;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+/* identifiers inside uppercase taglines and labels keep their case: npm names, versions and hashes are
+   case-sensitive (a hash in capitals is a different string) */
+.t-tagline code,
+.t-label code {
+  text-transform: none;
+  letter-spacing: 0;
+  font: inherit;
+}
+.t-data {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.t-muted {
+  color: var(--ink-2);
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 479px) {
+  .t-display {
+    font-size: 40px;
+    line-height: 1.05;
+  }
+  .t-h1,
+  h1 {
+    font-size: 32px;
+  }
+  .t-h2,
+  h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  .t-h3,
+  h3 {
+    font-size: 18px;
+  }
+  .t-tagline {
+    font-size: 10px;
+  }
+}
+
+/* ---------- the sheet: a 1200 px frame with 1 px rails, sections split by hairlines (openmercato.com) ---------- */
+:root {
+  --sheet-margin: 24px;
+  --pad: 40px;
+  /* width of the brand column: header and footer navigation start on the same vertical line */
+  --brand-col: 232px;
+  --header-h: 56px;
+}
+@media (max-width: 991px) {
+  :root {
+    --pad: 32px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --sheet-margin: 0px;
+    --pad: var(--gutter);
+  }
+}
+.sheet {
+  width: min(var(--container), 100% - 2 * var(--sheet-margin));
+  margin-inline: auto;
+  border-inline: 1px solid var(--rail);
+  position: relative;
+}
+/* section hairlines run the width of the frame, between the rails, not across the viewport (spec 7.3) */
+.band > .sheet {
+  border-bottom: 1px solid var(--rail);
+}
+/* film: dark in both themes, with the quiet Tonik hex lattice of the AnatomyFilm and the Hive, so the hero reads as
+   film and not as more page in dark mode */
+.band--film {
+  background-color: var(--film);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231a1a1a' stroke-width='1'/%3E%3C/svg%3E");
+  background-position: center top;
+  border-block: 1px solid var(--film-line);
+  color: var(--film-ink);
+  --rail: var(--film-line);
+  --line: var(--film-line);
+  --line-strong: var(--film-line);
+  --ink: var(--film-ink);
+  --ink-2: var(--film-ink-2);
+  --ink-3: #8a8a8a;
+  --bg: var(--film);
+  --bg-2: var(--film-2);
+  --bg-3: color-mix(in srgb, var(--film-2) 70%, #2a2a2a);
+  --focus: #b4f372;
+  --ok-text: #b4f372;
+  --id-ink: #bc9aff;
+  --wait-ink: #eefb63;
+  --bad-ink: #ff6b6b;
+  color-scheme: dark;
+}
+/* dark theme: the film is #141414 (tokens.css), so its lattice steps up to #1F1F1F to stay a quiet texture */
+:root[data-theme='dark'] .band--film {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .band--film {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
+  }
+}
+/* the Hive draws its own lattice; two hex grids of different pitch would moire, so the band stays plain film */
+.band--film:has(.omhive) {
+  background-image: none !important;
+}
+.band--film .sheet {
+  border-inline-color: var(--film-line);
+}
+.band--film > .sheet,
+.band:has(+ .band--film) > .sheet {
+  border-bottom: 0;
+}
+.section {
+  padding: 64px var(--pad);
+}
+.section--tight {
+  padding-block: 32px;
+}
+@media (max-width: 767px) {
+  .section {
+    padding-block: 40px;
+  }
+  .sheet {
+    border-inline: 0;
+  }
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--col-gap);
+}
+@media (max-width: 479px) {
+  .grid-12 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+}
+
+/* ---------- utilities ---------- */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -100px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-m);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 8px;
+}
+/* a token that must not break (see lib/wrap.ts) */
+.nw {
+  white-space: nowrap;
+}
+/* An inline list with middots between items (callouts, counters, header lines). Each item keeps its own 16 px
+   gutter with the dot in it; the list starts 16 px to the left and clips that strip, so a dot that would open a
+   wrapped line is cut and a dot never ends a line. Items never break inside. */
+.dotlist {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 0 -16px;
+  padding: 0;
+  list-style: none;
+  clip-path: inset(0 0 0 16px);
+}
+.dotlist > li {
+  position: relative;
+  padding-left: 16px;
+  white-space: nowrap;
+}
+.dotlist > li::before {
+  content: '·';
+  position: absolute;
+  left: 5px;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+.row {
+  display: flex;
+  align-items: center;
+}
+.wrap {
+  flex-wrap: wrap;
+}
+.gap-4 {
+  gap: 4px;
+}
+.gap-8 {
+  gap: 8px;
+}
+.gap-12 {
+  gap: 12px;
+}
+.gap-16 {
+  gap: 16px;
+}
+.gap-24 {
+  gap: 24px;
+}
+
+/* ---------- motion (spec 7.3): view transitions between documents, nothing continuous ---------- */
+@view-transition {
+  navigation: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media print {
+  .no-print,
+  .site-header,
+  .site-footer {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
+
+/* without JavaScript nothing on a page is dead (review r4): every copy button (the text it copies stays on the page)
+   and every control marked data-needs-js (the theme switch) is not shown; the colour scheme of the system applies */
+@media (scripting: none) {
+  button[data-copy],
+  [data-needs-js] {
+    display: none !important;
+  }
+}

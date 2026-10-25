@@ -1,0 +1,251 @@
+---
+// Site header (spec 7.6, 7.7 A.1): wordmark + MODULES chip, navigation, DataStamp, theme switch, primary CTA.
+// 56 px, sticky, inside the sheet with rails. On phones the navigation folds into a <details> menu without JS.
+import Wordmark from './Wordmark.astro'
+import DataStamp from './DataStamp.astro'
+import type { DataAsOf } from '../lib/freshness.ts'
+import Icon from './icons/Icon.astro'
+import { href } from '../lib/url.ts'
+
+interface Props {
+  dataAsOf: DataAsOf
+  /** Site path of the current page, for aria-current. */
+  current?: string
+}
+const { dataAsOf, current = '' } = Astro.props
+const nav = [
+  { label: 'Modules', path: '/' },
+  { label: 'Compatibility', path: '/compat' },
+  { label: 'Radar', path: '/radar' },
+  { label: 'For agents', path: '/for-agents' },
+  { label: 'Quality', path: '/quality' },
+]
+const isCurrent = (p: string): boolean =>
+  p === '/'
+    ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')
+    : current.startsWith(p)
+---
+
+<header class="site-header">
+  <div class="sheet hdr">
+    <Wordmark />
+    <nav class="hdr__nav" aria-label="Main">
+      {
+        nav.map((n) => (
+          <a class="hdr__link" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="hdr__right">
+      <DataStamp dataAsOf={dataAsOf} />
+      <button type="button" class="btn btn--ghost btn--icon tt" data-theme-toggle data-needs-js aria-label="Switch color theme">
+        <Icon name="moon" size={18} class="icon i-moon" />
+        <Icon name="sun" size={18} class="icon i-sun" />
+      </button>
+      <a class="btn btn--primary hdr__cta" href={href('/submit')}>Submit a module</a>
+      <details class="hdr__menu">
+        <summary class="btn btn--secondary btn--sm" aria-label="Menu">
+          <span class="hdr__mword">Menu</span> <Icon name="chevron-down" size={14} />
+        </summary>
+        <div class="hdr__sheet">
+          <nav aria-label="Main, mobile">
+            {
+              nav.map((n) => (
+                <a class="hdr__mlink" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
+                  {n.label}
+                </a>
+              ))
+            }
+            <a class="hdr__mlink" href={href('/submit')}>Submit a module</a>
+          </nav>
+          <DataStamp dataAsOf={dataAsOf} variant="inline" />
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  const KEY = 'om-theme'
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    btn.addEventListener('click', () => {
+      const root = document.documentElement
+      const current =
+        root.dataset.theme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      const next = current === 'dark' ? 'light' : 'dark'
+      root.dataset.theme = next
+      try {
+        localStorage.setItem(KEY, next)
+      } catch {
+        /* private mode: the choice lasts for this page only */
+      }
+    })
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--bg);
+  }
+  /* the hairline stops at the rails, like the openmercato.com navbar */
+  .hdr {
+    border-bottom: 1px solid var(--rail);
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding-inline: var(--pad);
+  }
+  /* the brand takes a fixed column, so the nav starts where the footer links start (--brand-col + 32 px) */
+  @media (min-width: 992px) {
+    .hdr > :global(.wm) {
+      flex: 0 0 var(--brand-col);
+    }
+  }
+  .hdr__nav {
+    display: flex;
+    gap: 24px;
+  }
+  .hdr__link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding-block: 18px;
+    box-shadow: inset 0 -1px 0 transparent;
+    transition:
+      color var(--dur-1) var(--ease),
+      box-shadow var(--dur-1) var(--ease);
+  }
+  .hdr__link:hover {
+    color: var(--ink);
+  }
+  .hdr__link[aria-current='page'] {
+    color: var(--ink);
+    box-shadow: inset 0 -1px 0 var(--ink);
+  }
+  .hdr__right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hdr__right > :global(.stamp) {
+    margin-right: 4px;
+  }
+  .tt :global(.i-sun) {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .tt :global(.i-moon) {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .tt :global(.i-sun) {
+    display: inline-block;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .tt :global(.i-moon) {
+      display: none;
+    }
+    :global(:root:not([data-theme='light'])) .tt :global(.i-sun) {
+      display: inline-block;
+    }
+  }
+  .hdr__menu {
+    display: none;
+    position: relative;
+  }
+  .hdr__menu > summary {
+    list-style: none;
+  }
+  .hdr__menu > summary::-webkit-details-marker {
+    display: none;
+  }
+  .hdr__menu[open] > summary :global(svg) {
+    transform: rotate(180deg);
+  }
+  .hdr__sheet {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: min(320px, calc(100vw - 2 * var(--gutter)));
+    padding: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-float);
+    display: grid;
+    gap: 8px;
+  }
+  .hdr__sheet nav {
+    display: grid;
+  }
+  .hdr__mlink {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: var(--radius-m);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .hdr__mlink:hover,
+  .hdr__mlink[aria-current='page'] {
+    background: var(--bg-3);
+  }
+  .hdr__sheet > :global(.stamp) {
+    padding: 12px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 1119px) {
+    .hdr__right > :global(.stamp) {
+      display: none;
+    }
+  }
+  @media (max-width: 991px) {
+    .hdr__nav,
+    .hdr__cta {
+      display: none;
+    }
+    .hdr__menu {
+      display: block;
+    }
+  }
+  /* touch targets of at least 44 px on phones (spec 7.10) */
+  @media (max-width: 767px) {
+    .hdr__menu > summary,
+    .tt {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    .hdr__menu > summary {
+      padding-inline: 14px;
+    }
+  }
+  @media (max-width: 479px) {
+    .hdr {
+      gap: 12px;
+    }
+    .hdr__right {
+      gap: 8px;
+    }
+  }
+  /* small phones and folded screens (320-359 px): the menu is its chevron only (its name stays in aria-label) */
+  @media (max-width: 359px) {
+    .hdr__mword {
+      display: none;
+    }
+    .hdr__menu > summary {
+      justify-content: center;
+      padding-inline: 0;
+    }
+    .hdr__right {
+      gap: 4px;
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Amkadziolka&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 8,
+            "weekly": 1
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T14:41:07.423Z",
+          "searchScore": 10.468175,
+          "package": {
+            "name": "open-mercato-generator",
+            "keywords": [],
+            "version": "0.3.13",
+            "description": "Open Mercato OpenAPI -> Rust client generator tools",
+            "sanitized_name": "open-mercato-generator",
+            "publisher": {
+              "email": "m.kadziolka@gmail.com",
+              "username": "mkadziolka"
+            },
+            "maintainers": [
+              {
+                "email": "m.kadziolka@gmail.com",
+                "username": "mkadziolka"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-01-17T11:28:55.016Z",
+            "links": {
+              "homepage": "https://github.com/mkadzikolka/open-mercato-rust-client",
+              "repository": "git+https://github.com/mkadziolka/open-mercato-rust-client.git",
+              "bugs": "https://github.com/mkadziolka/open-mercato-rust-client/issues",
+              "npm": "https://www.npmjs.com/package/open-mercato-generator"
+            }
+          },
+          "score": {
+            "final": 10.468175,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 1,
+      "time": "2026-10-23T02:38:15.054Z"
+    }
+  }
+}

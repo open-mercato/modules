@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.github.com/repos/wojciechszyjka/modules/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4/pulls",
+    "synthetic": true
+  },
+  "response": {
+    "status": 200,
+    "json": [
+      {
+        "number": 11,
+        "user": {
+          "login": "someone-else"
+        },
+        "merged_at": "2026-11-03T12:00:00Z",
+        "base": {
+          "ref": "main"
+        }
+      }
+    ]
+  }
+}

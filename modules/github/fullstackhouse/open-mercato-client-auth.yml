@@ -1,0 +1,8 @@
+github: fullstackhouse/open-mercato-client-auth
+category: auth-security
+tags: [auth, oauth, sessions, mobile]
+summary: "Sign-in for SPAs and mobile apps: JSON session endpoints and Google and Apple OAuth, all issuing core auth sessions."
+whenToUse: Use when a customer-facing SPA or mobile app needs login, signup, refresh and password reset against the same users as the app.
+providers:
+  - { name: google, label: Google }
+  - { name: apple, label: Apple }

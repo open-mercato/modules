@@ -1,0 +1,166 @@
+---
+// State banners (spec 7.6, 7.7 B.7, 7.8). Text comes from the caller (fixed texts of 6.8 and 7.8).
+import Icon from './icons/Icon.astro'
+import type { IconName } from './icons/paths.ts'
+
+export type BannerVariant =
+  | 'stale-data'
+  | 'harness-red'
+  | 'hold'
+  | 'replaces'
+  | 'enterprise'
+  | 'advisory'
+  | 'renamed'
+  | 'quarantine'
+  | 'preview'
+  | 'github-only'
+
+interface Props {
+  variant: BannerVariant
+  /** Mono tagline before the text; defaults per variant. */
+  tag?: string
+  link?: { href: string; label: string }
+  id?: string
+  hidden?: boolean
+}
+const { variant, tag, link, id, hidden } = Astro.props
+/** `icon: null` keeps the icon slot empty (no allowed icon means 'renamed'; chevron-down read as 'expand'). */
+const meta: Record<BannerVariant, { tag: string; icon: IconName | null; role: 'status' | 'alert' | undefined }> = {
+  'stale-data': { tag: 'Stale data', icon: 'clock', role: 'status' },
+  'harness-red': { tag: 'Not judged', icon: 'warning', role: undefined },
+  hold: { tag: 'On hold', icon: 'warning', role: undefined },
+  replaces: { tag: 'Replaces built-in', icon: 'warning', role: undefined },
+  enterprise: { tag: 'Enterprise', icon: null, role: undefined },
+  advisory: { tag: 'Advisory', icon: 'warning', role: 'alert' },
+  renamed: { tag: 'Renamed', icon: null, role: undefined },
+  quarantine: { tag: 'Age gate', icon: 'clock', role: undefined },
+  preview: { tag: 'Preview only', icon: 'clock', role: undefined },
+  'github-only': { tag: 'GitHub only', icon: 'terminal', role: undefined },
+}
+const m = meta[variant]
+---
+
+<div class:list={['banner', `banner--${variant}`]} id={id} hidden={hidden} role={m.role}>
+  <span class="banner__icon">{m.icon && <Icon name={m.icon} size={16} />}</span>
+  <span class="banner__tag">{tag ?? m.tag}</span>
+  <span class="banner__text"><slot /></span>
+  {
+    link && (
+      <a class="banner__link" href={link.href}>
+        {link.label}
+      </a>
+    )
+  }
+</div>
+
+<style>
+  /* one plate in both themes (review WP11b): a neutral --bg-2 surface, a hairline and a 2 px signal edge on the left.
+     The tag and the icon carry the state in text; the edge only colours it. Enterprise stays dark (spec 7.7 B.7). */
+  .banner {
+    --b-accent: var(--ink-3);
+    --b-tag: var(--ink-2);
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 12px;
+    row-gap: 4px;
+    padding: 12px 16px 12px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    box-shadow: inset 2px 0 0 var(--b-accent);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .banner__icon {
+    min-width: 16px;
+    align-self: center;
+    display: inline-flex;
+    color: var(--b-tag);
+  }
+  .banner__tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--b-tag);
+    white-space: nowrap;
+  }
+  .banner__link {
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+  /* light: the yellow and lime of the brand are too pale for a 2 px line on #FAFAFA, so the edge takes a deeper
+     shade of the same hue; dark uses the brand colours themselves */
+  .banner--stale-data,
+  .banner--quarantine,
+  .banner--replaces {
+    --b-accent: #c4cf1d;
+    --b-tag: var(--wait-ink);
+  }
+  .banner--advisory {
+    --b-accent: #f32828;
+    --b-tag: var(--bad-ink);
+  }
+  .banner--preview {
+    --b-accent: #9a74f0;
+    --b-tag: var(--id-ink);
+  }
+  .banner--harness-red {
+    background:
+      repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--ink-3) 10%, transparent) 6px 7px),
+      var(--bg-2);
+  }
+  .banner--enterprise {
+    --b-accent: #b4f372;
+    --b-tag: #b4f372;
+    border-color: #2a2a2a;
+    background: #1b1b1b;
+    color: #fafafa;
+  }
+  .banner--enterprise .banner__link {
+    color: #fafafa;
+  }
+  :global(:root[data-theme='dark']) .banner--stale-data,
+  :global(:root[data-theme='dark']) .banner--quarantine,
+  :global(:root[data-theme='dark']) .banner--replaces {
+    --b-accent: #eefb63;
+  }
+  :global(:root[data-theme='dark']) .banner--preview {
+    --b-accent: #bc9aff;
+  }
+  :global(:root[data-theme='dark']) .banner--enterprise {
+    background: var(--bg-2);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .banner--stale-data,
+    :global(:root:not([data-theme='light'])) .banner--quarantine,
+    :global(:root:not([data-theme='light'])) .banner--replaces {
+      --b-accent: #eefb63;
+    }
+    :global(:root:not([data-theme='light'])) .banner--preview {
+      --b-accent: #bc9aff;
+    }
+    :global(:root:not([data-theme='light'])) .banner--enterprise {
+      background: var(--bg-2);
+    }
+  }
+  @media (max-width: 767px) {
+    .banner {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .banner__text,
+    .banner__link {
+      grid-column: 1 / -1;
+    }
+    .banner__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      justify-self: start;
+    }
+  }
+</style>

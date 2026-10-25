@@ -1,0 +1,9 @@
+# Spec 4.3 example (official from the monorepo)
+npm: "@open-mercato/gateway-stripe"
+repo: open-mercato/open-mercato#main/packages/gateway-stripe
+category: payments-finance
+summary: Card payments through Stripe for checkout and sales documents.
+whenToUse: Use when the app takes card payments and you already have a Stripe account.
+whenNotToUse: For PLN bank transfers and BLIK use gateway-tpay.
+providers:
+  - { name: stripe, label: Stripe }

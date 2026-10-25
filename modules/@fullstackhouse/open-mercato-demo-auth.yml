@@ -1,0 +1,8 @@
+npm: "@fullstackhouse/open-mercato-demo-auth"
+github: fullstackhouse/open-mercato-demo-auth
+kind: tool
+category: devtools
+tags: [dev-only, login, preview]
+summary: Dev-only widget that fills in and submits the login form from server env vars on dev and preview deployments.
+whenToUse: Use when a team signs in to dev or preview deployments many times a day and one image runs in every environment.
+whenNotToUse: "Never set its env vars in production: leaving them unset is the only safety gate."

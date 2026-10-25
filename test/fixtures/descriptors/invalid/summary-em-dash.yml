@@ -1,0 +1,5 @@
+# expect-path: summary
+npm: "@acme/thing"
+category: devtools
+summary: Syncs orders — fast and reliable for every store.
+whenToUse: Use when the summary carries a long dash, which the text rules forbid.

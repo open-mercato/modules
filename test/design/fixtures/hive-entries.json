@@ -1,0 +1,390 @@
+{
+  "source": "spec 11.1 (48 entries of kind module and provider, not on hold) and 4.4 (builtin-categories map)",
+  "entries": [
+    {
+      "locator": "npm:@open-mercato/ai-assistant",
+      "kind": "module",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-apns",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-discord",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-expo",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-fcm",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-gmail",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-imap",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-resend",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/channel-ses",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/checkout",
+      "kind": "module",
+      "type": "official",
+      "category": "orders-checkout",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/content",
+      "kind": "module",
+      "type": "official",
+      "category": "content-portal",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/documents",
+      "kind": "module",
+      "type": "official",
+      "category": "content-portal",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/enterprise",
+      "kind": "module",
+      "type": "official",
+      "category": "auth-security",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/events",
+      "kind": "module",
+      "type": "official",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/gateway-stripe",
+      "kind": "module",
+      "type": "official",
+      "category": "payments-finance",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/gateway-tpay",
+      "kind": "module",
+      "type": "official",
+      "category": "payments-finance",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/onboarding",
+      "kind": "module",
+      "type": "official",
+      "category": "content-portal",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/scheduler",
+      "kind": "module",
+      "type": "official",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/search",
+      "kind": "module",
+      "type": "official",
+      "category": "search-analytics",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/storage-s3",
+      "kind": "module",
+      "type": "official",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/sync-akeneo",
+      "kind": "module",
+      "type": "official",
+      "category": "integrations-sync",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/telemetry",
+      "kind": "module",
+      "type": "official",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/tillio",
+      "kind": "module",
+      "type": "official",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/webhooks",
+      "kind": "module",
+      "type": "official",
+      "category": "integrations-sync",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-browser",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-exa",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-firecrawl",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-model",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-searxng",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-serp",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@open-mercato/web-research-tavily",
+      "kind": "provider",
+      "type": "official",
+      "category": "ai-automation",
+      "tags": []
+    },
+    {
+      "locator": "npm:@piotrkarwatka/marketing-consents",
+      "kind": "module",
+      "type": "community",
+      "category": "marketing-loyalty",
+      "tags": []
+    },
+    {
+      "locator": "npm:@piotrkarwatka/visits",
+      "kind": "module",
+      "type": "community",
+      "category": "crm-sales",
+      "tags": ["example"]
+    },
+    {
+      "locator": "npm:@fastwhitecat/integration-ksef-direct",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "localization-compliance",
+      "tags": []
+    },
+    {
+      "locator": "npm:@freighttech/shipment-tracking",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "warehouse-shipping",
+      "tags": []
+    },
+    {
+      "locator": "npm:@freighttech/terminal-tracking",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "warehouse-shipping",
+      "tags": []
+    },
+    {
+      "locator": "npm:@fullstackhouse/open-mercato-health",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@fullstackhouse/open-mercato-durable-work",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "storage-infrastructure",
+      "tags": []
+    },
+    {
+      "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "integrations-sync",
+      "tags": []
+    },
+    {
+      "locator": "npm:@northbound-run/sync-shopify",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "integrations-sync",
+      "tags": []
+    },
+    {
+      "locator": "npm:@northbound-run/sync-google-sheets",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "integrations-sync",
+      "tags": []
+    },
+    {
+      "locator": "npm:@northbound-run/channel-cloudflare-email",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "communication",
+      "tags": []
+    },
+    {
+      "locator": "npm:@northbound-run/search-cloudflare",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "search-analytics",
+      "tags": []
+    },
+    {
+      "locator": "npm:@dainamite/cpq",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "catalog-pricing",
+      "tags": []
+    },
+    {
+      "locator": "npm:@dainamite/billing",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "payments-finance",
+      "tags": []
+    },
+    {
+      "locator": "npm:@dainamite/cpq-billing-connector",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "payments-finance",
+      "tags": []
+    },
+    {
+      "locator": "github:Chmarusso/open-mercato-enrichment-treg",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "crm-sales",
+      "tags": []
+    },
+    {
+      "locator": "github:fullstackhouse/open-mercato-client-auth",
+      "kind": "module",
+      "type": "3rd-party",
+      "category": "auth-security",
+      "tags": []
+    }
+  ],
+  "builtinCategories": {
+    "api_docs": "devtools",
+    "api_keys": "auth-security",
+    "attachments": "storage-infrastructure",
+    "audit_logs": "auth-security",
+    "auth": "auth-security",
+    "availability": "operations",
+    "business_rules": "ai-automation",
+    "catalog": "catalog-pricing",
+    "communication_channels": "communication",
+    "configs": "storage-infrastructure",
+    "currencies": "payments-finance",
+    "customer_accounts": "content-portal",
+    "customer_groups": "crm-sales",
+    "customers": "crm-sales",
+    "dashboards": "search-analytics",
+    "data_sync": "integrations-sync",
+    "design_system": "devtools",
+    "devices": "communication",
+    "dictionaries": "storage-infrastructure",
+    "directory": "auth-security",
+    "ecommerce": "orders-checkout",
+    "entities": "storage-infrastructure",
+    "eudr": "localization-compliance",
+    "feature_toggles": "devtools",
+    "forms": "content-portal",
+    "inbox_ops": "ai-automation",
+    "integrations": "integrations-sync",
+    "messages": "communication",
+    "notifications": "communication",
+    "payment_gateways": "payments-finance",
+    "perspectives": "search-analytics",
+    "phone_calls": "communication",
+    "planner": "operations",
+    "portal": "content-portal",
+    "progress": "storage-infrastructure",
+    "push_notifications": "communication",
+    "query_index": "search-analytics",
+    "resources": "operations",
+    "sales": "orders-checkout",
+    "seeds": "devtools",
+    "shipping_carriers": "warehouse-shipping",
+    "staff": "operations",
+    "sync_excel": "integrations-sync",
+    "translations": "localization-compliance",
+    "warranty_claims": "operations",
+    "wms": "warehouse-shipping",
+    "workflows": "ai-automation"
+  }
+}

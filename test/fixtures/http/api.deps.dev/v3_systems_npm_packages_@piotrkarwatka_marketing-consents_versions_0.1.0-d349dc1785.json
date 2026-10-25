@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40piotrkarwatka%2Fmarketing-consents/versions/0.1.0"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@piotrkarwatka/marketing-consents",
+        "version": "0.1.0"
+      },
+      "publishedAt": "2026-10-14T11:49:41Z",
+      "slsaProvenances": [],
+      "attestations": []
+    }
+  }
+}

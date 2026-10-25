@@ -1,0 +1,9 @@
+npm: "@open-mercato/tillio"
+repo: open-mercato/open-mercato#main/packages/tillio
+category: communication
+tags: [voip, telephony, calls]
+summary: "Tillio VoIP bridge for the phone_calls hub: attaches a Ringostat operator and pulls its calls into the app."
+whenToUse: Use when the team phones customers through Tillio with a Ringostat operator and the calls should be logged in the app.
+providers:
+  - { name: tillio, label: Tillio }
+  - { name: ringostat, label: Ringostat }

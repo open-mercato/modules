@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@jtomaszewski/bullmq@5.59.1?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@jtomaszewski/bullmq",
+      "version": "5.59.1",
+      "files": []
+    }
+  }
+}

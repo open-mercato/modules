@@ -1,0 +1,10 @@
+# In the empty preset of 0.9.0: the nightly add step is yarn add without registration (D10).
+
+npm: "@open-mercato/events"
+repo: open-mercato/open-mercato#main/packages/events
+category: storage-infrastructure
+tags: [events, subscribers, queue]
+summary: Event bus with module subscribers, inline or persistent delivery and a queue worker for async events.
+whenToUse: Use when modules must react to each other's domain events, with retries for persistent ones. New apps already enable it.
+links:
+  docs: https://docs.openmercato.com/framework/events/overview

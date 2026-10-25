@@ -1,0 +1,9 @@
+npm: "@open-mercato/forms"
+category: content-portal
+tags: [forms, questionnaires]
+summary: "Old canary of the forms module: versioned questionnaires, append-only submissions and role-sliced rendering."
+whenToUse: "Use when you need audit-grade questionnaires: the forms module that ships with Open Mercato core now does this."
+whenNotToUse: Do not install this canary. Enable forms from core instead.
+status: hold
+reason: Moved into Open Mercato core (open-mercato#6770).
+supersededBy: "core:forms"

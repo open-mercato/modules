@@ -1,0 +1,9 @@
+npm: "@open-mercato/pay-by-links"
+category: payments-finance
+tags: [pay-links, payments]
+summary: Pay-by-link pages (module payment_link_pages) from an orphaned canary build of March 2026.
+whenToUse: "Use when you need public payment link pages: the checkout module now provides them with templates and limits."
+whenNotToUse: Do not install this canary. Use checkout instead.
+status: hold
+reason: Orphaned canary from March 2026. No source in any repository.
+alternatives: ["npm:@open-mercato/checkout"]

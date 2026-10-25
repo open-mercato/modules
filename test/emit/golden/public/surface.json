@@ -1,0 +1,1072 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "base": "0.9.0",
+  "externalPackages": 4,
+  "symbols": [
+    {
+      "symbol": "@open-mercato/shared/lib/auth/server#getAuthFromRequest",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-data-sync-durable",
+        "npm:@fullstackhouse/open-mercato-durable-work",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/di/container#createRequestContainer",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-data-sync-durable",
+        "npm:@fullstackhouse/open-mercato-durable-work",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/di/container#AppContainer",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-data-sync-durable",
+        "npm:@fullstackhouse/open-mercato-durable-work"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-durable-work",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/queue#QueuedJob",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/queue#WorkerMeta",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/frontend/useOrganizationScope#useOrganizationScopeVersion",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/i18n/context#useT",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/logger#createLogger",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/openapi#OpenApiRouteDoc",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/events#createModuleEvents",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@fullstackhouse/open-mercato-durable-work"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/registry#ModuleInfo",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-durable-work",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/DataTable#DataTable",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#ErrorMessage",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#LoadingMessage",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/FlashMessages#flash",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/injection/useGuardedMutation#useGuardedMutation",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/Page#Page",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/Page#PageBody",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/alert#Alert",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/button#Button",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#Dialog",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#DialogContent",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#DialogHeader",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#DialogTitle",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/status-badge#StatusBadge",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/acl#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/acl#features",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/[id]/route#DELETE",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/[id]/route#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/[id]/route#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/[id]/route#PUT",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/route#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/route#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/mappings/route#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/options#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/options#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/run#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/run#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/cancel#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/cancel#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/retry#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/retry#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/route#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs/[id]/route#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/runs#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/[id]/route#DELETE",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/[id]/route#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/[id]/route#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/[id]/route#PUT",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/route#GET",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/route#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/route#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/schedules/serialize#serializeSchedule",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/validate#openApi",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/api/validate#POST",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/backend/data-sync/page.meta#metadata",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/backend/data-sync/page#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/backend/data-sync/runs/[id]/page.meta#metadata",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/backend/data-sync/runs/[id]/page#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/IntegrationScheduleTab#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/IntegrationScheduleTab#IntegrationScheduleTab",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#buildDefaultRunParameterValues",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#buildRetryFailureMessage",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#buildRunFailureMessage",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#buildRunParametersPayload",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#hasRequiredRunParameterWithoutDefault",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#resolveRunParameterText",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/components/RunParameterFields#RunParameterFields",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/entities#SyncCursor",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/entities#SyncMapping",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/entities#SyncRun",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/entities#SyncSchedule",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#createSyncScheduleSchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#listSyncRunsQuerySchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#listSyncSchedulesQuerySchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#retrySyncSchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#runSyncSchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#updateSyncScheduleSchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/data/validators#validateConnectionSchema",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/di#register",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/events#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/events#emitDataSyncEvent",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/events#eventsConfig",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/extension-points#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/extension-points#extensionPoints",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/index#metadata",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/adapter-registry#getAllDataSyncAdapters",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/adapter-registry#getDataSyncAdapter",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/adapter-registry#registerDataSyncAdapter",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/adapter-registry#resolveAdapterForIntegration",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/adapter-registry#resolveProviderKey",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/batch-stream#forEachBatch",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/id-mapping#createExternalIdMappingService",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_EXPORT_QUEUE",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_IMPORT_QUEUE",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_LOCK_DURATION_MS",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_MAX_STALLED_COUNT",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_QUEUE_ATTEMPTS",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue-policy#DATA_SYNC_RESUMABLE_QUEUES",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/queue#getSyncQueue",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/run-parameters#getApplicableRunParameters",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/run-parameters#isReservedRunParameterKey",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/run-parameters#normalizeRunParameters",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-cursor#persistsSharedCursor",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-cursor#resolveAdapterForIntegration",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-cursor#resolveStartCursor",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-run#DataSyncStartScope",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-run#StartDataSyncRunInput",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/sync-engine#createSyncEngine",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/sync-run-service#createSyncRunService",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/sync-run-service#SyncRunOwnershipConflictError",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/sync-schedule-service#createSyncScheduleService",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/syncRunStatus#getSyncRunStatusVariant",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/syncRunStatus#getSyncSummaryVariant",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/syncRunStatus#syncRunStatusVariants",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/syncRunStatus#syncSummaryVariants",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/migrations/Migration20260304113737#Migration20260304113737",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/migrations/Migration20260810120000#Migration20260810120000",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/setup#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/setup#setup",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/workers/sync-scheduled#default",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/workers/sync-scheduled#metadata",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/directory/utils/organizationScope#resolveOrganizationScopeForRequest",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/queue#createModuleQueue",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/queue#JobContext",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-data-sync-durable"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/commands#CommandBus",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/commands#CommandHandler",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/commands#registerCommand",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/errors#CrudHttpError",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/factory#CrudCtx",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/factory#makeCrudRoute",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/mutation-guard#runCrudMutationGuardAfterSuccess",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/mutation-guard#validateCrudMutationGuard",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/optimistic-lock-command#enforceCommandOptimisticLock",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/route-mutation-guard#runRouteMutationGuards",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/encryption/find#findOneWithDecryption",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/encryption/migration-backfill#buildEncryptionMapBackfillSql",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/http/readJsonSafe#readJsonSafe",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/openapi#OpenApiMethodDoc",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/encryption#ModuleEncryptionMap",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/integrations/types#IntegrationDefinition",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
+      "modules": [
+        "npm:@fullstackhouse/open-mercato-durable-work"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/registry#PageMetadata",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/CrudForm#CrudField",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/CrudForm#CrudForm",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#AccessDeniedMessage",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#DetailFieldConfig",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#DetailFieldsSection",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/detail#RecordNotFoundState",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/FilterBar#FilterDef",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/FilterBar#FilterValues",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/forms/FormHeader#FormHeader",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/injection/useAppEvent#useAppEvent",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/RowActions#RowActions",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/SectionHeader#SectionHeader",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/utils/apiCall#apiCall",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/utils/apiCall#readApiResultOrThrow",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/utils/crud#fetchCrudList",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/hooks/useDialogKeyHandler#useDialogKeyHandler",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/alert#AlertDescription",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/checkbox#Checkbox",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#DialogDescription",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/dialog#DialogFooter",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/form-field#FormField",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/icon-button#IconButton",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/input#Input",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/label#Label",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/primitives/spinner#Spinner",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+---
+// Install plan card (spec 7.6, K2 5.3): the plan_install result computed in the build, readable without JS.
+import type { InstallPlan } from '../../../lib/schema/index.ts'
+import CommandChip from './CommandChip.astro'
+import { wbrHtml } from '../lib/wrap.ts'
+import { grantRow } from '../lib/grant.ts'
+import { nbspDates } from '../lib/format.ts'
+import { EMPTY_PRESET_LEAD, REASON_LABELS } from '../../../lib/core/policy.ts'
+
+interface Props {
+  plan: InstallPlan
+  /** OM version of the plan's line, e.g. 0.9.0. */
+  omVersion: string
+  title?: string
+  /**
+   * A new app of the line already registers the package (review r9: `ADDS nothing` and `NEEDS nothing else` stood
+   * beside the anatomy's `ADDS 2 ROUTES`): no Adds and Needs rows; the Then row says there is nothing to install.
+   */
+  preset?: boolean
+}
+const { plan, omVersion, title, preset = false } = Astro.props
+// the plan is for a new app (the classic preset); an app from the empty preset gets its own, named row when its steps
+// differ (decision of 24 Oct; review r12: `NEEDS integrations (not enabled yet)` and `module enable` for an app that
+// has it on)
+const iso = plan.emptyPreset && plan.emptyPreset.commands.join('\n') !== plan.commands.join('\n') ? plan.emptyPreset : null
+const first = plan.order[0]
+const decision = plan.agentPolicy.decision
+const decisionText = { allow: 'Allow', ask: 'Ask first', refuse: 'Refuse' }[decision]
+/**
+ * A reason for people (review r8: `THIRD_PARTY` and `BROKEN` stood as raw codes, BROKEN in the colour of waiting): the
+ * word of the UI dictionary, its text without the word repeated, and a tone by what the reason does. The codes stay in
+ * the JSON, the tools and the agent view.
+ */
+const REFUSE = new Set(['HOLD', 'ADVISORY', 'BROKEN', 'NOT_INSTALLABLE', 'UNPINNED_GIT'])
+const ALLOW = new Set(['IN_PRESET', 'OFFICIAL_VERIFIED', 'BUILT_IN'])
+const reasonRows = plan.agentPolicy.reasons.map((r) => {
+  const label = (REASON_LABELS as Record<string, string>)[r.code] ?? r.code.replace(/_/g, ' ').toLowerCase()
+  const text = r.text.toLowerCase().startsWith(`${label.toLowerCase()}:`) ? r.text.slice(label.length + 1).trim() : r.text
+  const tone = REFUSE.has(r.code) ? 'bad' : ALLOW.has(r.code) ? 'ok' : 'wait'
+  return { code: r.code, label, text: text.charAt(0).toUpperCase() + text.slice(1), tone }
+})
+/** A value is plain text with identifiers set in mono (`code`), so `ksef_token` never reads as a word. */
+type Part = { t: string; code?: boolean; dots?: boolean; underscores?: boolean; num?: boolean }
+/** One line of a row: a mono kind (`table`, `credential`, `run`) and its value. */
+type Item = { kind: string; v: Part[]; sub?: { prefix: string; ids: string[]; rest: string[]; unnamed: number } }
+const txt = (t: string): Part[] => [{ t }]
+/** Counts are data: mono 13 with tabular figures (spec 7.3). */
+const n = (count: number, rest = ''): Part[] => [{ t: `${count}${rest}`, num: true }]
+const adds: Item[] = [
+  plan.adds.tables.length ? { kind: 'tables', v: n(plan.adds.tables.length) } : null,
+  plan.adds.routes ? { kind: 'routes', v: n(plan.adds.routes, ` (${plan.adds.publicRoutes.length} public)`) } : null,
+  plan.adds.aclFeatures.length ? { kind: 'permissions', v: n(plan.adds.aclFeatures.length) } : null,
+  // the film's words for the Events organ (`emits 9 · subscribes 1`), one row: one name per organ
+  plan.adds.eventsEmitted || plan.adds.eventsConsumed
+    ? {
+        kind: 'events',
+        v: [
+          {
+            t: [
+              plan.adds.eventsEmitted ? `emits ${plan.adds.eventsEmitted}` : '',
+              plan.adds.eventsConsumed ? `subscribes ${plan.adds.eventsConsumed}` : '',
+            ]
+              .filter(Boolean)
+              .join(' · '),
+            num: true,
+          },
+        ],
+      }
+    : null,
+  plan.adds.backendPages.length ? { kind: 'pages', v: n(plan.adds.backendPages.length) } : null,
+  plan.adds.widgets ? { kind: 'widgets', v: n(plan.adds.widgets) } : null,
+  plan.adds.aiTools.length ? { kind: 'AI tools', v: n(plan.adds.aiTools.length) } : null,
+].filter((x): x is Item => x !== null)
+const needs: Item[] = [
+  ...plan.builtInNeeded.map((b) => ({
+    kind: 'built-in',
+    v: [
+      { t: b.id, code: true },
+      {
+        t: b.enabled
+          ? ' (enabled)'
+          : b.enabled === false
+            ? ' (not enabled yet)'
+            : b.inNewApp
+              ? ' (on in a new app)'
+              : b.inNewApp === false
+                ? ' (off in a new app)'
+                : '',
+      },
+    ],
+  })),
+  ...plan.needs.credentials.map((c) => ({
+    kind: 'credential',
+    v: [{ t: c.key, code: true }, { t: ` ${c.type}${c.required ? '' : ', optional'}` }],
+  })),
+  // an environment variable breaks after its underscores (`OM_CHANNEL_IMAP_ALLOW_INSECURE_TRANSPORT` is 300 px wide)
+  ...plan.needs.env.map((e) => ({ kind: 'env', v: [{ t: e, code: true, underscores: e.length > 24 }] })),
+  ...plan.needs.hosts.map((h) => ({ kind: 'network', v: [{ t: h, code: true, dots: true }] })),
+]
+/**
+ * 'yarn db:migrate (ask the user first)': the command in mono, the remark in text. The Grant step counts and lists the
+ * plan's full list of permissions (`features`, round 16: its text lists ten and ends `and 4 more, see the card`), ten
+ * IDs and `+N more` opened in place, as the anatomy does.
+ */
+function thenItem(v: string, features?: readonly string[] | null): Item {
+  const cmd = /^((?:yarn|npx|npm|node|pnpm|bun) [^(]*?)(\s*\(.*\))?$/.exec(v)
+  if (cmd) return { kind: 'run', v: [{ t: cmd[1] as string, code: true }, ...(cmd[2] ? [{ t: cmd[2] }] : [])] }
+  const grant = grantRow(v, features)
+  if (grant)
+    return {
+      kind: 'grant',
+      v: txt(grant.label),
+      sub:
+        grant.shown.length || grant.unnamed
+          ? { prefix: grant.prefix, ids: grant.shown, rest: grant.rest, unnamed: grant.unnamed }
+          : undefined,
+    }
+  // `Already enabled. <package> is registered in src/modules.ts.`: the identifiers in mono, never split at a hyphen
+  const enabled = /^Already enabled\. (\S+) is registered in (\S+?)\.$/.exec(v)
+  if (enabled)
+    return {
+      kind: '',
+      v: [{ t: 'Already enabled. ' }, { t: enabled[1] as string, code: true }, { t: ' is registered in ' }, { t: enabled[2] as string, code: true }, { t: '.' }],
+    }
+  // a plain next step has no kind of its own (review r8: `THEN` over `then`)
+  return { kind: '', v: txt(v) }
+}
+/** A license in words: `MIT, open source`, `BUSL-1.1, proprietary`, `unknown`. */
+function licenseParts(l: InstallPlan['license'][number]): Part[] {
+  return [
+    ...(l.spdx ? [{ t: l.spdx, code: true }] : [{ t: l.kind === 'unknown' ? 'unknown' : l.kind }]),
+    ...(l.spdx && l.kind === 'osi' ? [{ t: ', open source' }] : l.spdx && l.kind !== 'osi' ? [{ t: `, ${l.kind}` }] : []),
+  ]
+}
+/** One line when every package has the same license (`MIT, open source (3 packages)`), else one per package, named. */
+function licenseItems(ls: InstallPlan['license']): Item[] {
+  const key = (l: InstallPlan['license'][number]) => `${l.spdx ?? ''}|${l.kind}`
+  const first = ls[0]
+  if (!first) return [{ kind: '', v: txt('none') }]
+  if (ls.every((l) => key(l) === key(first)))
+    return [{ kind: '', v: [...licenseParts(first), ...(ls.length > 1 ? [{ t: ` (${ls.length} packages)` }] : [])] }]
+  return ls.map((l) => ({
+    kind: '',
+    v: [{ t: l.locator.replace(/^npm:|^github:/, ''), code: true }, { t: ': ' }, ...licenseParts(l)],
+  }))
+}
+const rows: { k: string; items: Item[]; tone?: 'warn' }[] = [
+  // the Then row says `Already enabled. <package> is registered in src/modules.ts.` once
+  ...(preset
+    ? []
+    : [
+        { k: 'Adds', items: adds.length ? adds : [{ kind: '', v: txt('nothing') }] },
+        { k: 'Needs', items: needs.length ? needs : [{ kind: '', v: txt('nothing else') }] },
+      ]),
+  {
+    k: 'Conflicts',
+    items: plan.conflicts.length
+      ? plan.conflicts.map((c) => ({ kind: c.kind, v: txt(c.detail) }))
+      : [{ kind: '', v: txt('none') }],
+    tone: plan.conflicts.length ? 'warn' : undefined,
+  },
+  {
+    // one value per license (review r8: `OSI` in the kind column and `MIT` next to it read as three values); round 15:
+    // three packages of one license said `MIT, open source` three times, so one line counts them, and different
+    // licenses name their packages
+    k: 'License',
+    items: licenseItems(plan.license),
+  },
+  { k: 'Then', items: plan.then.map((v) => thenItem(v, plan.adds.aclFeatures)) },
+  // the same plan for an app from the empty preset, named as such: its commands, then its next steps
+  ...(iso
+    ? [
+        {
+          k: 'Empty preset',
+          items: [
+            { kind: '', v: txt(EMPTY_PRESET_LEAD) },
+            ...iso.commands.map((c) => ({ kind: 'run', v: [{ t: c, code: true }] })),
+            // every step of that app, the Grant step too (round 15: the card and the demo list it; a filter left it
+            // out where it equals a new app's)
+            ...iso.then.map((v) => thenItem(v, iso.aclFeatures)),
+          ],
+        },
+      ]
+    : []),
+]
+---
+
+<article class="iplan" aria-label="Install plan">
+  <header class="iplan__head">
+    <p class="iplan__tag">
+      {`// Install plan · `}<code translate="no" set:html={wbrHtml(title ?? (first ? `${first.locator.replace(/^npm:|^github:/, '')}@${first.version}` : 'empty'))} />{' '}<span class="nw">→ OM <code>{omVersion}</code></span>
+    </p>
+    <p class:list={['iplan__policy', `iplan__policy--${decision}`]}>
+      Agent policy: <strong>{decisionText}</strong>
+    </p>
+    {
+      plan.agentPolicy.reasons.length > 0 && (
+        <ul class="iplan__why" role="list">
+          {reasonRows.map((r) => (
+            <li class={`iplan__why--${r.tone}`} title={r.code}>
+              <span class="iplan__rk">{r.label}</span>
+              <span>{nbspDates(r.text)}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </header>
+  <dl class="iplan__rows">
+    {
+      rows.map((r) => (
+        <div class="iplan__row">
+          <dt>{r.k}</dt>
+          <dd class:list={{ 'is-warn': r.tone === 'warn' }}>
+            <ul class="iplan__list" role="list">
+              {r.items.map((it) => (
+                <li class:list={{ 'is-bare': !it.kind }}>
+                  {it.kind && <span class="iplan__kind">{it.kind}</span>}
+                  <span class="iplan__val">
+                    {it.v.map((p) => (p.code ? <code translate="no" set:html={wbrHtml(p.t, { dots: p.dots, underscores: p.underscores })} /> : p.num ? <span class="iplan__num">{p.t}</span> : p.t))}
+                    {it.sub && (
+                      <span class="iplan__sub">
+                        {it.sub.prefix && <code class="iplan__prefix" translate="no" set:html={wbrHtml(it.sub.prefix, { dots: true })} />}
+                        {it.sub.ids.map((id) => (
+                          <code translate="no" set:html={wbrHtml(id, { dots: true })} />
+                        ))}
+                        {it.sub.rest.length > 0 && (
+                          <details class="iplan__more">
+                            <summary>+{it.sub.rest.length} more</summary>
+                            <span class="iplan__sub iplan__sub--rest">
+                              {it.sub.rest.map((id) => (
+                                <code translate="no" set:html={wbrHtml(id, { dots: true })} />
+                              ))}
+                            </span>
+                          </details>
+                        )}
+                        {it.sub.unnamed > 0 && <span class="iplan__more">+{it.sub.unnamed} more</span>}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      ))
+    }
+    {
+      /* nothing to run (a module a new app already registers): no empty Command row (review r8) */
+      plan.commands.length > 0 && (
+        <div class="iplan__row iplan__row--cmd">
+          <dt>Command</dt>
+          <dd class="iplan__cmds">{plan.commands.map((c) => <CommandChip command={c} />)}</dd>
+        </div>
+      )
+    }
+  </dl>
+  {
+    plan.consentText && (
+      <p class="iplan__consent">
+        To install, the user types: <code translate="no" set:html={wbrHtml(plan.consentText)} />
+      </p>
+    )
+  }
+  <p class="iplan__notice">{plan.untrustedNotice}</p>
+</article>
+
+<style>
+  .iplan {
+    container: iplan / inline-size;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    font-size: 14px;
+  }
+  .iplan__head {
+    display: grid;
+    gap: 6px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .iplan__tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .iplan__tag code {
+    font: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .iplan__policy strong {
+    font-weight: 500;
+  }
+  .iplan__app {
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--ink-2);
+  }
+  .iplan__app-h {
+    color: var(--ink);
+  }
+  .iplan__policy--allow strong {
+    color: var(--ok-text);
+  }
+  .iplan__policy--ask strong {
+    color: var(--wait-ink);
+  }
+  .iplan__policy--refuse strong {
+    color: var(--bad-ink);
+  }
+  .iplan__why {
+    display: grid;
+    gap: 2px;
+    margin: 2px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .iplan__why li {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .iplan__rk {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 19px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wait-ink);
+  }
+  .iplan__why--bad .iplan__rk {
+    color: var(--bad-ink);
+  }
+  .iplan__why--ok .iplan__rk {
+    color: var(--ok-text);
+  }
+  .iplan__list {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* one item per line: the kind in a fixed mono column, the value next to it; nothing runs into the next item */
+  .iplan__list li {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: baseline;
+  }
+  /* a row without a kind (`none`, `nothing`) keeps the value column of the ledger */
+  .iplan__list li.is-bare > .iplan__val {
+    grid-column: 2;
+  }
+  .iplan__num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .iplan__kind {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .iplan__val {
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .iplan__sub {
+    display: grid;
+    margin-top: 4px;
+    padding-left: 10px;
+    border-left: 1px solid var(--line-strong);
+    line-height: 19px;
+  }
+  .iplan__sub .iplan__prefix {
+    color: var(--ink-2);
+  }
+  /* '+N more' opens the rest of the permissions in place (no JS), as the anatomy does */
+  .iplan__sub--rest {
+    margin-top: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .iplan__more {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .iplan__more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .iplan__more summary::-webkit-details-marker {
+    display: none;
+  }
+  .iplan__more summary::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+  }
+  details.iplan__more[open] > summary::after {
+    transform: translateY(1px) rotate(-135deg);
+  }
+  .iplan__more summary:hover {
+    color: var(--ink);
+  }
+  @media (max-width: 767px) {
+    .iplan__more summary {
+      min-height: 44px;
+    }
+  }
+  .iplan__rows {
+    margin: 0;
+    padding: 4px 0;
+  }
+  .iplan__row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px;
+    padding: 7px 16px;
+  }
+  .iplan__row dt {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .iplan__row dd {
+    margin: 0;
+    line-height: 20px;
+    min-width: 0;
+  }
+  .iplan__row dd.is-warn {
+    color: var(--wait-ink);
+  }
+  .iplan__row dd code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  /* the command spans the card under its label, so it wraps into two lines, not four */
+  .iplan__row--cmd {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .iplan__cmds {
+    display: grid;
+    gap: 6px;
+  }
+  .iplan__consent,
+  .iplan__notice {
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .iplan__consent code {
+    font-size: 12px;
+    color: var(--ink);
+  }
+  /* a narrow card (the 4-column side of a module page, a phone): each label over its list, so a value gets the card's
+     width instead of a third of it (review r4: `integrations (not enabled yet)` broke into three lines and ran 8 px
+     out of its cell) */
+  @container iplan (max-width: 440px) {
+    .iplan__row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .iplan__why li {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    /* a value without a kind (`none`, `MIT, open source`, a next step) starts under its label, not 94 px in */
+    .iplan__list li.is-bare > .iplan__val {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

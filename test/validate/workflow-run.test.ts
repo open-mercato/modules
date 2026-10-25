@@ -1,0 +1,303 @@
+// Runs the shell steps of watch.yml and sync.yml as GitHub would (`bash --noprofile --norc -eo pipefail`), with
+// `yarn` and `gh` replaced by recorders, against a local bare repository as `origin`. Proves the step logic
+// itself: the order of commands, the queue conditions, the single commit on `data` through data-branch.ts,
+// no commit when nothing changed, the discovery issue edited in place (created only once), and for pages.yml the
+// data checkout (empty on the first day), the artifact checks and the effect of include-hidden-files.
+import { execFileSync, spawnSync } from 'node:child_process'
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { parse } from 'yaml'
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
+const hasJq = spawnSync('jq', ['--version']).status === 0
+
+interface Step {
+  name: string
+  run?: string
+}
+const stepRun = (file: string, name: string): string => {
+  const w = parse(readFileSync(join(ROOT, '.github', 'workflows', file), 'utf8')) as {
+    jobs: Record<string, { steps: Step[] }>
+  }
+  const s = Object.values(w.jobs)
+    .flatMap((j) => j.steps)
+    .find((x) => x.name === name)
+  if (!s?.run) throw new Error(`${file}: no run step ${name}`)
+  return s.run
+}
+
+const FAKE_YARN = `#!/usr/bin/env bash
+set -euo pipefail
+echo "$*" >> "$CALLS"
+if [ "$1" = build ]; then
+  mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
+  if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p dist/.well-known/mcp; echo '{}' > dist/.well-known/mcp/server-card.json; fi
+  exit 0
+fi
+[ "$1" = om ] || exit 0
+cmd="$2"; shift 2
+case "$cmd" in
+  watch) mkdir -p out; cp "$QUEUE" out/queue.json; echo '{"lines":1}' > .data/lines.json ;;
+  scan) mkdir -p .data/builtin .data/facts; if [ "$1" = --builtin ]; then echo '{}' > ".data/builtin/$2.json"; else echo "$*" > .data/facts/queue.txt; fi ;;
+  sync) mkdir -p .data/sync; echo '{"synced":true}' > .data/sync/x.json ;;
+  discover) mkdir -p out; echo '## Missing official packages' > out/discover.md ;;
+  *) echo "$*" > ".data/$cmd.txt" ;;
+esac
+`
+const FAKE_GH = `#!/usr/bin/env bash
+set -euo pipefail
+echo "gh $*" >> "$CALLS"
+if [ "$1 $2" = "issue list" ]; then printf '%s' "\${FAKE_ISSUE:-}"; fi
+`
+
+let tmp: string
+let work: string
+let origin: string
+let calls: string
+
+function git(cwd: string, ...args: string[]): string {
+  return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+}
+
+function runStep(script: string, env: Record<string, string> = {}): { code: number; out: string } {
+  const r = spawnSync('bash', ['--noprofile', '--norc', '-eo', 'pipefail', '-c', script], {
+    cwd: work,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      PATH: `${join(tmp, 'bin')}:${process.env.PATH}`,
+      CALLS: calls,
+      GITHUB_TOKEN: 'test-token',
+      GIT_AUTHOR_NAME: 'test',
+      GIT_AUTHOR_EMAIL: 'test@example.com',
+      GIT_COMMITTER_NAME: 'test',
+      GIT_COMMITTER_EMAIL: 'test@example.com',
+      ...env,
+    },
+  })
+  return { code: r.status ?? 1, out: `${r.stdout}${r.stderr}` }
+}
+
+const queue = (o: { coreChanged: boolean; changed: string[]; items: { locator: string; version: string }[] }) => {
+  const file = join(tmp, `queue-${Math.random().toString(36).slice(2)}.json`)
+  writeFileSync(
+    file,
+    JSON.stringify({ items: o.items, lines: { changed: o.changed, coreLatest: '0.9.0', coreChanged: o.coreChanged } }),
+  )
+  return file
+}
+const callLog = () => (existsSync(calls) ? readFileSync(calls, 'utf8').trim().split('\n') : [])
+const dataLog = () => {
+  try {
+    return git(origin, 'log', 'data', '--format=%s').split('\n')
+  } catch {
+    return []
+  }
+}
+
+beforeEach(() => {
+  tmp = mkdtempSync(join(tmpdir(), 'om-wf-'))
+  origin = join(tmp, 'origin.git')
+  work = join(tmp, 'work')
+  calls = join(tmp, 'calls.log')
+  mkdirSync(join(tmp, 'bin'))
+  for (const [n, body] of [
+    ['yarn', FAKE_YARN],
+    ['gh', FAKE_GH],
+  ] as const) {
+    writeFileSync(join(tmp, 'bin', n), body)
+    chmodSync(join(tmp, 'bin', n), 0o755)
+  }
+  execFileSync('git', ['init', '--quiet', '--bare', '-b', 'main', origin])
+  execFileSync('git', ['init', '--quiet', '-b', 'main', work])
+  writeFileSync(join(work, 'README.md'), 'catalog\n')
+  writeFileSync(join(work, '.gitignore'), '.data/\nout/\nlib\n')
+  symlinkSync(join(ROOT, 'lib'), join(work, 'lib'))
+  git(work, 'add', '-A')
+  git(work, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', 'init')
+  git(work, 'remote', 'add', 'origin', origin)
+  git(work, 'push', '--quiet', 'origin', 'main')
+})
+
+afterEach(() => {
+  rmSync(tmp, { recursive: true, force: true })
+})
+
+describe.skipIf(!hasJq)('watch.yml steps', () => {
+  it('runs the chain in order and commits once on data; a second run with the same inputs commits nothing', () => {
+    expect(runStep(stepRun('watch.yml', 'Prepare data checkout')).code).toBe(0)
+    const q = queue({
+      coreChanged: true,
+      changed: [],
+      items: [
+        { locator: 'npm:@a/b', version: '1.2.3' },
+        { locator: 'github:o/r', version: 'v1' },
+      ],
+    })
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), { QUEUE: q })
+    expect(r.code, r.out).toBe(0)
+    expect(callLog()).toEqual([
+      'om watch --keepalive',
+      'om scan --builtin 0.9.0',
+      'om scan --queue out/queue.json',
+      'om fit --modules npm:@a/b@1.2.3,github:o/r@v1',
+      'om radar',
+      'om health --changed',
+      'om hive',
+    ])
+    const log = dataLog()
+    expect(log).toHaveLength(1)
+    expect(log[0]).toMatch(/^chore\(data\): watch \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
+    const files = git(origin, 'ls-tree', '-r', '--name-only', 'data').split('\n')
+    expect(files).toEqual(
+      expect.arrayContaining([
+        'lines.json',
+        'builtin/0.9.0.json',
+        'facts/queue.txt',
+        'fit.txt',
+        'radar.txt',
+        'health.txt',
+        'hive.txt',
+      ]),
+    )
+    // main is untouched by the data write
+    expect(git(origin, 'log', 'main', '--format=%s')).toBe('init')
+
+    // second run: the data branch now holds builtin/0.9.0.json and nothing new is queued
+    writeFileSync(calls, '')
+    const q2 = queue({
+      coreChanged: false,
+      changed: [],
+      items: [
+        { locator: 'npm:@a/b', version: '1.2.3' },
+        { locator: 'github:o/r', version: 'v1' },
+      ],
+    })
+    const r2 = runStep(stepRun('watch.yml', 'Watch and commit to data'), { QUEUE: q2 })
+    expect(r2.code, r2.out).toBe(0)
+    expect(callLog()).not.toContain('om scan --builtin 0.9.0')
+    expect(r2.out).toContain('data-branch: no changes')
+    expect(dataLog()).toHaveLength(1)
+  })
+
+  it('a new line version refits everything; an empty queue skips scan and fit', () => {
+    runStep(stepRun('watch.yml', 'Prepare data checkout'))
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: ['next'], items: [] }),
+    })
+    expect(r.code, r.out).toBe(0)
+    const c = callLog()
+    expect(c).toContain('om fit')
+    expect(c.some((l) => l.startsWith('om scan --queue'))).toBe(false)
+    expect(c.some((l) => l.startsWith('om fit --modules'))).toBe(false)
+
+    writeFileSync(calls, '')
+    const r2 = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: [], items: [] }),
+    })
+    expect(r2.code, r2.out).toBe(0)
+    expect(callLog().some((l) => l.startsWith('om fit') || l.startsWith('om scan --queue'))).toBe(false)
+  })
+
+  it('a failing command aborts without a commit', () => {
+    runStep(stepRun('watch.yml', 'Prepare data checkout'))
+    writeFileSync(
+      join(tmp, 'bin', 'yarn'),
+      FAKE_YARN.replace('case "$cmd" in', '[ "$cmd" = radar ] && exit 3\ncase "$cmd" in'),
+    )
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: [], items: [] }),
+    })
+    expect(r.code).not.toBe(0)
+    expect(dataLog()).toHaveLength(0)
+  })
+})
+
+describe.skipIf(!hasJq)('sync.yml steps', () => {
+  it('commits the sync on data, then creates the discovery issue once and edits it afterwards', () => {
+    runStep(stepRun('sync.yml', 'Prepare data checkout'))
+    const r = runStep(stepRun('sync.yml', 'Sync and commit to data'))
+    expect(r.code, r.out).toBe(0)
+    expect(callLog()).toEqual(['om sync --all', 'om health --all'])
+    expect(dataLog()[0]).toMatch(/^chore\(data\): sync /)
+
+    expect(runStep(stepRun('sync.yml', 'Discover packages')).code).toBe(0)
+    writeFileSync(calls, '')
+    const created = runStep(stepRun('sync.yml', 'Update the discovery issue'))
+    expect(created.code, created.out).toBe(0)
+    expect(callLog().at(-1)).toBe(
+      'gh issue create --title Discovered packages --label discovery --body-file out/discover.md',
+    )
+
+    writeFileSync(calls, '')
+    const edited = runStep(stepRun('sync.yml', 'Update the discovery issue'), { FAKE_ISSUE: '7' })
+    expect(edited.code, edited.out).toBe(0)
+    expect(callLog().at(-1)).toBe('gh issue edit 7 --body-file out/discover.md')
+    expect(callLog().some((l) => l.includes('comment'))).toBe(false)
+  })
+})
+
+/** The archive command of actions/upload-pages-artifact v5.0.0 (action.yml, Linux branch), for both flag values. */
+function packLikeUploadPagesArtifact(includeHidden: boolean): void {
+  const tar = join(tmp, 'runner', 'artifact.tar')
+  mkdirSync(dirname(tar), { recursive: true })
+  const args = ['--dereference', '--directory', join(work, 'dist'), '-cf', tar, '--exclude=.git', '--exclude=.github']
+  if (!includeHidden) args.push('--exclude=.[^/]*')
+  execFileSync('tar', [...args, '.'])
+}
+
+describe('pages.yml steps', () => {
+  const env = () => ({ GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'), RUNNER_TEMP: join(tmp, 'runner') })
+
+  it('builds on empty data when the data branch does not exist yet', () => {
+    const r = runStep(stepRun('pages.yml', 'Read data branch'), env())
+    expect(r.code, r.out).toBe(0)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe('No data branch yet: building on empty data.\n')
+    expect(runStep(stepRun('pages.yml', 'Build'), env()).code).toBe(0)
+    expect(readFileSync(join(work, 'dist', 'data-files.txt'), 'utf8')).toBe('')
+    expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
+  })
+
+  it('builds on the data branch, and the packed artifact keeps .well-known only with include-hidden-files', () => {
+    // a data branch on origin
+    const seed = join(tmp, 'seed')
+    execFileSync('git', ['clone', '--quiet', origin, seed])
+    git(seed, 'checkout', '--quiet', '--orphan', 'data')
+    git(seed, 'rm', '-rfq', '.')
+    writeFileSync(join(seed, 'lines.json'), '{}\n')
+    git(seed, 'add', '-A')
+    git(seed, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', 'data')
+    git(seed, 'push', '--quiet', 'origin', 'data')
+
+    expect(runStep(stepRun('pages.yml', 'Read data branch'), env()).code).toBe(0)
+    expect(readFileSync(join(work, '.data', 'lines.json'), 'utf8')).toBe('{}\n')
+    expect(runStep(stepRun('pages.yml', 'Build'), env()).code).toBe(0)
+    expect(readFileSync(join(work, 'dist', 'data-files.txt'), 'utf8')).toContain('lines.json')
+    expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
+
+    packLikeUploadPagesArtifact(true)
+    expect(runStep(stepRun('pages.yml', 'Check the packed artifact'), env()).code).toBe(0)
+    packLikeUploadPagesArtifact(false)
+    expect(runStep(stepRun('pages.yml', 'Check the packed artifact'), env()).code).not.toBe(0)
+  })
+
+  it('a build without the server card stops before upload', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_CARD: '0' })
+    const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('dist/.well-known/mcp/server-card.json is missing')
+  })
+})

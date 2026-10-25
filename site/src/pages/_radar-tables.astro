@@ -1,0 +1,13 @@
+---
+// /radar text layer (not a route: the leading underscore): renders the RadarTables passed as its slot and marks the
+// load-bearing APIs that changed (_radar-text.ts).
+import { markChangedLoadBearing } from './_radar-text.ts'
+
+interface Props {
+  changed: Map<string, string>
+}
+const raw = await Astro.slots.render('default')
+const r = markChangedLoadBearing(raw, Astro.props.changed)
+---
+
+<Fragment set:html={r.html} />

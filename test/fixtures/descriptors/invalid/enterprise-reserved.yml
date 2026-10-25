@@ -1,0 +1,8 @@
+# expect-path: enterprise
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when someone else claims the enterprise block for a package.
+enterprise:
+  offerUrl: https://acme.example/offer
+  modules: [thing]

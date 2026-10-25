@@ -1,0 +1,51 @@
+/* Design tokens (spec 7.2), verbatim except --paper: #F4F3EA, the receipt paper of 7.9 (17.56 / 6.00); 7.2 printed
+   #FAFAFA, which is indistinguishable from the page. Dark theme (review r1 P0): film is #141414 with #1B1B1B panels,
+   so the hero and the anatomy film keep an edge against the #0C0C0C page instead of melting into it.
+   Do not edit without changing the spec. Prettier keeps the layout. */
+/* prettier-ignore */
+:root {
+  color-scheme: light;
+  --bg: #FFFFFF; --bg-2: #FAFAFA; --bg-3: #F2F2F2;
+  --ink: #0C0C0C; --ink-2: #6D6D6D; --ink-3: #757575;          /* ink-3 tylko tekst pomocniczy ≥ 12 px */
+  --line: #ECECEC; --line-strong: #E7E7E7; --rail: #ECECEC;
+  --film: #0C0C0C; --film-2: #141414; --film-line: #2A2A2A; --film-ink: #FAFAFA; --film-ink-2: #9E9E9E;  /* hero, klisza, panele agenta: ciemne w obu motywach */
+  --paper: #F4F3EA; --paper-ink: #0C0C0C; --paper-ink-2: #5C5C5C;                                       /* paragon: jasny w obu motywach */
+  --ok-fill: #B4F372; --ok-ink: #2F520B; --ok-text: #2F520B;
+  --wait-fill: #EEFB63; --wait-ink: #6B5E00;
+  --id-fill: #EFE7FF; --id-ink: #6B55A0;
+  --bad-fill: #F32828; --bad-ink: #B3261E; --bad-on: #FFFFFF;
+  --lime: #B4F372; --yellow: #EEFB63; --violet: #BC9AFF;
+  --grad: linear-gradient(189deg, #B4F372 12%, #EEFB63 58%, #BC9AFF 100%);
+  --grad-rule: linear-gradient(90deg, #BC9AFF, #EEFB63 50%, #B4F372);
+  --focus: #2F520B;
+  --shadow-float: 0 24px 48px -12px #0000002e;
+  --radius-s: 2px; --radius-m: 4px; --radius-l: 8px;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --container: 75rem; --gutter: 16px; --col-gap: 24px;
+  --dur-1: 120ms; --dur-2: 200ms; --dur-3: 320ms; --ease: cubic-bezier(.2, 0, 0, 1);
+}
+/* prettier-ignore */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0C0C0C; --bg-2: #141414; --bg-3: #1B1B1B;
+    --ink: #FAFAFA; --ink-2: #9E9E9E; --ink-3: #8A8A8A;
+    --line: #1F1F1F; --line-strong: #2A2A2A; --rail: #1F1F1F;
+    --film: #141414; --film-2: #1B1B1B;
+    --ok-text: #B4F372; --id-ink: #BC9AFF; --wait-ink: #EEFB63; --bad-ink: #FF6B6B; --focus: #B4F372;
+  }
+}
+/* prettier-ignore */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0C0C0C; --bg-2: #141414; --bg-3: #1B1B1B;
+  --ink: #FAFAFA; --ink-2: #9E9E9E; --ink-3: #8A8A8A;
+  --line: #1F1F1F; --line-strong: #2A2A2A; --rail: #1F1F1F;
+  --film: #141414; --film-2: #1B1B1B;
+  --ok-text: #B4F372; --id-ink: #BC9AFF; --wait-ink: #EEFB63; --bad-ink: #FF6B6B; --focus: #B4F372;
+}
+/* prettier-ignore */
+html { background: var(--bg); }
+/* prettier-ignore */
+body { background: var(--bg); color: var(--ink); font-family: var(--font-sans); }

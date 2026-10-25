@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-resend"
+repo: open-mercato/open-mercato#main/packages/channel-resend
+category: communication
+tags: [email, transactional]
+summary: Sends transactional email through the Resend API from a configured from address. Outbound only.
+whenToUse: Use when the app sends receipts, notifications or other transactional email and you have a Resend account.
+whenNotToUse: It does not receive mail. For two-way mailboxes use channel-gmail or channel-imap.
+providers:
+  - { name: resend, label: Resend }
+links:
+  docs: https://docs.openmercato.com/user-guide/communication-channels

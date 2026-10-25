@@ -1,0 +1,143 @@
+{
+  "exchange rates": {
+    "modules": [
+      "@dainamite/billing",
+      "@dainamite/cpq"
+    ],
+    "builtIn": [
+      "currencies"
+    ]
+  },
+  "ksef": {
+    "modules": [
+      "@fastwhitecat/integration-ksef-direct"
+    ],
+    "builtIn": []
+  },
+  "e-invoicing poland": {
+    "modules": [
+      "@fastwhitecat/integration-ksef-direct"
+    ],
+    "builtIn": []
+  },
+  "shopify": {
+    "modules": [
+      "@northbound-run/sync-shopify"
+    ],
+    "builtIn": []
+  },
+  "stripe": {
+    "modules": [
+      "@open-mercato/gateway-stripe"
+    ],
+    "builtIn": []
+  },
+  "card payments": {
+    "modules": [
+      "@open-mercato/gateway-stripe",
+      "@open-mercato/gateway-tpay",
+      "@dainamite/billing"
+    ],
+    "builtIn": []
+  },
+  "tpay": {
+    "modules": [
+      "@open-mercato/gateway-tpay",
+      "@open-mercato/checkout"
+    ],
+    "builtIn": []
+  },
+  "container tracking": {
+    "modules": [
+      "@freighttech/terminal-tracking",
+      "@freighttech/shipment-tracking"
+    ],
+    "builtIn": []
+  },
+  "durable jobs": {
+    "modules": [
+      "@fullstackhouse/open-mercato-durable-work",
+      "@fullstackhouse/open-mercato-data-sync-durable",
+      "@open-mercato/scheduler"
+    ],
+    "builtIn": []
+  },
+  "data_sync": {
+    "modules": [
+      "@fullstackhouse/open-mercato-data-sync-durable",
+      "@northbound-run/sync-shopify",
+      "@northbound-run/sync-google-sheets"
+    ],
+    "builtIn": [
+      "data_sync"
+    ]
+  },
+  "google sheets": {
+    "modules": [
+      "@northbound-run/sync-google-sheets"
+    ],
+    "builtIn": []
+  },
+  "quotes": {
+    "modules": [
+      "@dainamite/cpq"
+    ],
+    "builtIn": []
+  },
+  "subscriptions billing": {
+    "modules": [
+      "@dainamite/cpq-billing-connector",
+      "@dainamite/billing",
+      "@dainamite/cpq"
+    ],
+    "builtIn": []
+  },
+  "akeneo": {
+    "modules": [
+      "@open-mercato/sync-akeneo"
+    ],
+    "builtIn": []
+  },
+  "warehouse": {
+    "modules": [
+      "@freighttech/shipment-tracking",
+      "@freighttech/terminal-tracking"
+    ],
+    "builtIn": [
+      "wms",
+      "shipping_carriers"
+    ]
+  },
+  "web search for agents": {
+    "modules": [
+      "@open-mercato/web-research",
+      "@open-mercato/search",
+      "@northbound-run/search-cloudflare"
+    ],
+    "builtIn": []
+  },
+  "s3": {
+    "modules": [
+      "@open-mercato/storage-s3"
+    ],
+    "builtIn": []
+  },
+  "health check": {
+    "modules": [
+      "@fullstackhouse/open-mercato-health",
+      "@open-mercato/checkout",
+      "@open-mercato/gateway-stripe"
+    ],
+    "builtIn": []
+  },
+  "when a deal is won": {
+    "modules": [
+      "@open-mercato/channel-discord",
+      "@open-mercato/checkout",
+      "@open-mercato/content"
+    ],
+    "builtIn": [
+      "customers"
+    ]
+  }
+}

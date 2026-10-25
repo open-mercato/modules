@@ -1,0 +1,5 @@
+npm: "@piotrkarwatka/visits"
+category: crm-sales
+tags: [example]
+summary: Example module that records customer visits in the CRM.
+whenToUse: Use when you want a small example of a CRM module that records visits.

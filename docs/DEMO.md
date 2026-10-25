@@ -1,0 +1,59 @@
+# Demo scripts
+
+Two scripts for the Open Mercato core team call (spec appendix C). Real data only: no fixture, no hand-edited
+numbers. C1 is the 60 second version from milestone M1 (no receipts needed), C2 the 2 minute version from M2.
+
+Both were rehearsed on 25 Oct 2026 in Chromium at 1440 x 900, dark theme, on a build of the receipts state of
+24 Oct (preview receipts from the local Docker runner, before the first nightly CI run). The notes under each step
+say what the screen showed then. Numbers move with the data; read them off the screen, not from this file.
+
+## Before the call
+
+1. Build the site from the data you will show and serve it like GitHub Pages:
+
+   ```sh
+   E2E_DATA=<checkout of the data branch> node test/e2e/build.ts
+   node test/e2e/serve.ts out/e2e/real 4410
+   ```
+
+   Then open `http://127.0.0.1:4410/modules/`. Or present the deployed site.
+
+2. Rehearse in a browser: `yarn e2e test/e2e/demo.spec.ts` clicks every step below and saves one screenshot per
+   step to `out/e2e/demo/` (the report in `playwright-report/` lists what each step showed).
+3. Use a window at least 992 px wide: the Hive is hidden below that width.
+4. Open two tabs in advance: `/` and the KSeF page `/m/@fastwhitecat/integration-ksef-direct`.
+
+## C1. After M1, 60 seconds, no receipts
+
+| #   | Time | Do                                                                                                           | Say                                                                                    | Shown in the rehearsal                                                                                                                                                                                                                                                                                                                                      |
+| --- | ---- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 10 s | Open `/`. Point at the Hive.                                                                                 | The grey core in the middle is what Open Mercato already has. The rest is here.        | 92 cells: 46 core cells in the middle, then 31 official, 7 community and 8 third-party around them. Legend `Built into core 46 · Official 31 · Community 7 · Third-party 8`, `Color is the type, not a receipt.`                                                                                                                                            |
+| 2   | 15 s | Click the search (or press `/`) and type `exchange rates`.                                                   | The bank case: before you build it, it is already in core.                             | The answer `Already in Open Mercato core` with the built-in `currencies` (`Matched entity exchange_rates`, `On in a new app on 0.9: nothing to enable.`). The Hive dims every cell except `Currencies`; under the search: `In core: currencies`. The query is in the URL (`?q=exchange+rates`).                                                             |
+| 3   | 25 s | Open the KSeF page. Point at the sigil, then the Anatomy and Hygiene, then click an `entities.ts:19 ↗` link. | Read from the published code, not from the README. Every line points into the tarball. | Sigil `Anatomy: 3 tables, 11 routes (0 public), 4 pages, 10 events, 3 queues, 1 extension`. Hygiene shows the `event-prefix` warning (`9 of 9 event IDs do not start with integration_ksef_direct`). The link opens `entities.ts` of `@fastwhitecat/integration-ksef-direct@0.1.8` on jsDelivr; jsDelivr has no line anchors, so point at line 19 yourself. |
+| 4   | 10 s | Click `Agent` in the `Human / Agent` switch at the top right of the page.                                    | This is exactly what an agent gets.                                                    | The agent card (`locator: npm:@fastwhitecat/integration-ksef-direct`, `level: verified`, `install: yarn mercato module add ...`), about 1,900 tokens, with tabs `Card .md` and `get_module JSON`.                                                                                                                                                           |
+
+Note on step 3: the script expects `Fits statically` on 0.9 and `next` with `Not installed yet`. That text appears
+only while a module has no receipt on a line. With the receipts state of 24 Oct, KSeF has receipts on every line,
+so the header says `Verified on 0.8, 0.9 and next` and the static fit sits in the Quality tab (`VER-2 Fits
+statically on 0.9: ok`). On data without receipts the header shows the fit sentence instead.
+
+## C2. After M2, 2 minutes
+
+| #   | Time | Do                                                                                                                                                                                                                      | Say                                                                                                            | Shown in the rehearsal                                                                                                                                                                                                                                                                                                                                                                                               |
+| --- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 10 s | Open `/`. Point at the Hive.                                                                                                                                                                                            | The rest is here.                                                                                              | As in C1 step 1.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2   | 20 s | Type `exchange rates`.                                                                                                                                                                                                  | Built-in first.                                                                                                | As in C1 step 2.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 3   | 30 s | On the KSeF page: the sigil, an `entities.ts:19 ↗` link, then the Receipts strip under the header. Click the strip, then in the drawer click `In isolation (empty preset): verified on 23 Oct.` under `0.9.0 · latest`. | Installed every night in a fresh app on each line. When the harness patches Open Mercato, the receipt says so. | Header chip `Verified · 0.9`, strip squares for 0.8.0, 0.9.0 and next, sentence `Verified on 0.8, 0.9 and next.`, chip `Preview, not CI`. The drawer lists `Verified on 0.9 since 24 Oct.` and `Verified on next since 24 Oct.` with `View receipt`. The isolation link opens receipt `r_20261023_2a1a0468960a`: `PATCH api-keys (OM #7473)`, preset `empty (in isolation)`, nine steps OK, `Verified in isolation`. |
+| 4   | 20 s | Click `Compatibility`. Point at the first row, then scroll to the large sentence.                                                                                                                                       | Open Mercato itself is the first row; peer ranges are a declaration, not a test.                               | First row `Open Mercato itself`; the panel counts 120 cells (40 modules x 3 lines): 37 verified, 24 broken, 51 not judged (age gate), 8 skipped. Sentence: `Peer ranges reject 48 of 96 combinations that fit statically.`                                                                                                                                                                                           |
+| 5   | 20 s | Click `Radar`.                                                                                                                                                                                                          | These APIs break the ecosystem when they change.                                                               | `15 of 16` modules import `createRequestContainer` (`@open-mercato/shared/lib/di/container`); `9 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0.`; the frozen list reads `Changing these breaks the ecosystem. Consider them frozen.`                                                                                                                                               |
+| 6   | 20 s | Back on the KSeF page, click `Agent`. Then open `For agents`.                                                                                                                                                           | The same data for agents, and one command to give it to Claude Code.                                           | The agent card as in C1 step 4. On `/for-agents` the `01 · Claude Code` Plugin section, right under the hero, shows `claude plugin marketplace add open-mercato/modules` and `claude plugin install om-modules@open-mercato`, each with a copy button.                                                                                                                                                               |
+
+Notes on C2:
+
+- Step 3: the `api-keys` patch is on the receipt of the app from the empty preset on 0.9 (the isolation dot), not
+  on the classic-preset receipt behind `View receipt`. The 0.8 receipts carry a different patch
+  (`agent-examples-tsconfig`), which the home panel counts as `1 harness patch` under 0.8.0.
+- Until the first nightly CI run, every receipt says `Preview, not CI` and the header stamp reads `Preview 24 Oct`.
+  Say it once: the receipts come from the same harness on the maintainer's machine, CI replaces them.
+- Plan for the network: `/submit` and the agent pane on `/for-agents` call npm, jsDelivr and GitHub only when you
+  press a button. Every page loads with no third-party request.

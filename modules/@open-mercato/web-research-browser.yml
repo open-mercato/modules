@@ -1,0 +1,13 @@
+npm: "@open-mercato/web-research-browser"
+repo: open-mercato/open-mercato#main/packages/web-research-browser
+kind: provider
+category: ai-automation
+tags: [web-search, playwright, browser]
+summary: Renders blocked search pages and JavaScript-only sites in a Playwright sidecar for web-research.
+whenToUse: Use when other web-research adapters come back blocked or empty and the server may run headless Chromium.
+whenNotToUse: It downloads Chromium on first use and starts a separate process, so skip it where that is not allowed.
+providers:
+  - { name: playwright, label: Playwright }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

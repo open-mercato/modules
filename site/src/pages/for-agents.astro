@@ -1,0 +1,1162 @@
+---
+// /for-agents (spec 7.7 I, 8.1-8.8): how a coding agent connects, the tool contract rendered from
+// /schema/tools-1.json, the agent policy table, the AgentPane demo (real lib/core calls in the browser), deeplinks
+// and WebMCP. The WebMCP sentence depends on the origin trial token emit found for this origin (D20).
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import Base from '../layouts/Base.astro'
+import CommandChip from '../components/CommandChip.astro'
+import AgentPane, {
+  POLICY_ROWS,
+  SCENARIOS,
+  describeSchema,
+  runAgent,
+  webmcpSentence,
+  type JsonSchema,
+  type PaneData,
+} from '../islands/AgentPane.tsx'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { TOOL_SUMMARIES } from '../../../lib/emit/wellknown.ts'
+import { POLICY_CODES } from '../../../lib/core/policy.ts'
+import { CLIPBOARD_NOTE, FIRST_TIME_HINT, TARGETS, URL_BUDGET } from '../../../lib/core/deeplinks.ts'
+import { href } from '../lib/url.ts'
+import { CATALOG_REPO } from '../../../lib/core/home.ts'
+import { wbrHtml } from '../lib/wrap.ts'
+
+const data = loadSiteData()
+const { meta } = data
+const site = meta.site.replace(/\/+$/, '')
+const latest = data.modules.lines.find((l) => l.source === 'latest')
+const omVersion = latest?.version ?? meta.coreVersion
+const tools = JSON.parse(readFileSync(join(data.root, 'public', 'schema', 'tools-1.json'), 'utf8')) as {
+  $defs: Record<string, JsonSchema>
+  'x-tools': Record<string, { input: string; output: string }>
+}
+const defOf = (ref: string): JsonSchema => tools.$defs[ref.replace('#/$defs/', '')] ?? {}
+const toolList = Object.entries(tools['x-tools']).map(([name, io]) => {
+  const input = defOf(io.input)
+  const output = defOf(io.output)
+  return {
+    name,
+    summary: TOOL_SUMMARIES[name] ?? '',
+    params: describeSchema(input),
+    output: Object.keys(output.properties ?? {}),
+  }
+})
+const LEFT = new Set(['search_modules', 'get_changes'])
+const toolCols = [toolList.filter((t) => LEFT.has(t.name)), toolList.filter((t) => !LEFT.has(t.name))]
+const policyRows = POLICY_CODES.map((code) => ({ code, ...(POLICY_ROWS[code] ?? { decision: 'ask', when: '' }) }))
+const mcpUrl = meta.mcpUrl
+const mcpConfig = mcpUrl ? JSON.stringify({ mcpServers: { 'om-modules': { type: 'http', url: mcpUrl } } }, null, 2) : null
+const cursorLink = mcpUrl
+  ? `cursor://anysphere.cursor-deeplink/mcp/install?name=om-modules&config=${encodeURIComponent(Buffer.from(JSON.stringify({ url: mcpUrl })).toString('base64'))}`
+  : null
+const readFiles = [
+  { path: '/llms.txt', what: 'Index for agents with links to every card (llmstxt.org).' },
+  { path: '/llms-full.txt', what: 'Every listed card in one file, plus the built-in modules.' },
+  { path: '/raw/modules.md', what: 'All modules as Markdown, by category.' },
+  { path: '/modules.json', what: 'The full index: levels, receipts per line, anatomy, agent policy, install commands.' },
+  { path: '/built-in.json', what: 'Modules that ship with Open Mercato core. Check them before you build.' },
+  { path: '/schema/tools-1.json', what: 'JSON Schema of the five tools below.' },
+  { path: '/schema/modules-1.json', what: 'JSON Schema of modules.json.' },
+]
+const ot = meta.originTrial
+const webmcp = webmcpSentence(ot)
+// hero teaser: the first scenario of the demo, run at build time on the same published files the pane loads
+// (deterministic: the clock is modules.generatedAt), so the page shows the calls before any JS runs
+const pub = (f: string): unknown => JSON.parse(readFileSync(join(data.root, 'public', f), 'utf8'))
+const paneData: PaneData = {
+  modules: data.modules,
+  builtIn: pub('built-in.json') as PaneData['builtIn'],
+  search: pub('search-index.json') as PaneData['search'],
+}
+const teaser = runAgent(SCENARIOS[0], paneData, omVersion)
+// Sections in render order. While the MCP server is not deployed, Connect is one muted line after Read, so the page
+// opens with the channels that work today; the numbers follow the order on the page.
+const ORDER = [
+  ...(mcpUrl ? ['connect'] : []),
+  'plugin',
+  'skill',
+  'read',
+  ...(mcpUrl ? [] : ['connect']),
+  'tools',
+  'policy',
+  'demo',
+  'deeplinks',
+  'webmcp',
+  'rules',
+] as const
+const TOC: Record<(typeof ORDER)[number], string> = {
+  connect: 'Connect',
+  plugin: 'Plugin',
+  skill: 'Skill',
+  read: 'Read',
+  tools: 'Tool contract',
+  policy: 'Agent policy',
+  demo: 'Demo',
+  deeplinks: 'Deeplinks',
+  webmcp: 'WebMCP',
+  rules: 'Rules',
+}
+const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1).padStart(2, '0')
+---
+
+<Base
+  title="For agents · Open Mercato Modules"
+  description="Connect a coding agent to Open Mercato Modules: MCP server, Claude Code plugin, skill, plain files and the tool contract."
+  path="/for-agents"
+  dataAsOf={meta.dataAsOf}
+  webmcp
+>
+  <section class="band band--film">
+    <div class="sheet section fa-hero">
+      <div class="fa-herocopy">
+        <p class="t-tagline">// For agents</p>
+        <h1 class="fa-title">Ask before you build.</h1>
+        <p class="fa-lede">
+          Before an agent writes a new module, it can ask the catalog: is it already in Open Mercato core, is there a
+          module for it, is that module verified on this app's version, and what will it add to the app. Read-only,
+          the same answers as on this site.
+        </p>
+        <nav class="fa-toc" aria-label="On this page">
+          {ORDER.map((id) => <a href={`#${id}`}>{TOC[id]}</a>)}
+        </nav>
+      </div>
+      <figure class="fa-term" aria-label={`The demo, run on this site's data: ${teaser.query}`}>
+        <p class="fa-term__q"><span aria-hidden="true">&gt;</span> {teaser.query}</p>
+        <ol class="fa-term__calls" role="list">
+          {
+            teaser.calls.map((c, i) => (
+              <li>
+                <p class="fa-term__tool">
+                  <span class="fa-term__n">{i + 1}</span> {c.tool}
+                </p>
+                {(c.error ? [c.error] : c.gist.slice(0, 2)).map((g) => (
+                  <p class="fa-term__out">{g}</p>
+                ))}
+              </li>
+            ))
+          }
+        </ol>
+        <a class="fa-term__run" href="#demo">Run it on this page</a>
+      </figure>
+    </div>
+  </section>
+
+  {
+    mcpUrl && (
+      <section class="band" id="connect" aria-labelledby="fa-connect">
+        <div class="sheet section fa-grid">
+          <div>
+            <p class="t-tagline">// {num('connect')} · MCP</p>
+            <h2 id="fa-connect">Connect</h2>
+          </div>
+          <div class="fa-body">
+            <p>Streamable HTTP, no authentication, no state. Claude Code:</p>
+            <CommandChip command={`claude mcp add --transport http om-modules ${mcpUrl}`} />
+            <p>
+              Cursor: <a href={cursorLink!}>add om-modules to Cursor</a>. Any other client, as JSON:
+            </p>
+            <pre class="fa-pre">{mcpConfig}</pre>
+            <p class="fa-small">
+              Five tools: search_modules, get_module, check_compat, plan_install, get_changes. No install tool: the
+              app's own agent installs, after the user agrees.
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="band" id="plugin" aria-labelledby="fa-plugin">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('plugin')} · Claude Code</p>
+        <h2 id="fa-plugin">Plugin</h2>
+      </div>
+      <div class="fa-body">
+        <p>The plugin brings the om-find-module skill{mcpUrl ? ' and the MCP server' : ''} in one install.</p>
+        <CommandChip command={`claude plugin marketplace add ${CATALOG_REPO}`} />
+        <CommandChip command="claude plugin install om-modules@open-mercato" />
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="skill" aria-labelledby="fa-skill">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('skill')} · Agent Skills</p>
+        <h2 id="fa-skill">Skill</h2>
+      </div>
+      <div class="fa-body">
+        <p>
+          For any agent that reads Agent Skills: search built-in modules first, shortlist, show the install plan,
+          install only after consent.
+        </p>
+        <CommandChip command={`npx skills add ${CATALOG_REPO} --skill om-find-module`} />
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="read" aria-labelledby="fa-read">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('read')} · Plain files</p>
+        <h2 id="fa-read">Read</h2>
+      </div>
+      <div class="fa-body">
+        <p>Every module page has a Markdown twin at the same address with <code>.md</code>. An agent never needs the HTML.</p>
+        <ul class="fa-files" role="list">
+          {
+            readFiles.map((f) => (
+              <li>
+                <a href={href(f.path)}>
+                  <code>{f.path}</code>
+                </a>
+                <span>{f.what}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {
+    !mcpUrl && (
+      <section class="band" id="connect" aria-labelledby="fa-connect">
+        <div class="sheet section section--tight fa-grid">
+          <div>
+            <p class="t-tagline">// {num('connect')} · MCP</p>
+            <h2 id="fa-connect">Connect</h2>
+          </div>
+          <p class="fa-later">
+            <span class="fa-chip">after first deploy</span>
+            The MCP server (five read-only tools) gets its Claude Code line, Cursor link and JSON here. Until then the
+            plugin, the skill and the files above give an agent the same data.
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="band" id="tools" aria-labelledby="fa-tools">
+    <div class="sheet section fa-tools">
+      <p class="t-tagline">// {num('tools')} · tools@1</p>
+      <h2 id="fa-tools">Tool contract</h2>
+      <p class="fa-lede2">
+        Rendered from <a href={href('/schema/tools-1.json')}><code>tools-1.json</code></a>. Names and required fields are
+        frozen in version 1; new inputs are only ever optional. Every tool is read-only and idempotent.
+      </p>
+      {/* two balanced columns (review r1): search_modules and get_changes on the left, the three per-module tools on
+          the right; the last card of a column stretches, so both columns end on one line */}
+      <div class="fa-toolgrid">
+        {
+          toolCols.map((col) => (
+            <div class="fa-toolcol">
+              {col.map((t) => (
+            <article class="fa-tool">
+              <h3>
+                <code>{t.name}</code>
+              </h3>
+              <p class="fa-small">{t.summary}</p>
+              <table class="fa-params">
+                <caption class="sr-only">Input of {t.name}</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Input</th>
+                    <th scope="col">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {t.params.map((p) => (
+                    <tr>
+                      <th scope="row">
+                        <code>{p.name}</code>
+                        {p.required && <span class="fa-req">required</span>}
+                      </th>
+                      <td set:html={wbrHtml(p.type)} />
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p class="fa-out">
+                Returns{' '}
+                {t.output.map((o, i) => (
+                  <>
+                    {i > 0 ? ', ' : ''}
+                    <code>{o}</code>
+                  </>
+                ))}
+              </p>
+            </article>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="policy" aria-labelledby="fa-policy">
+    <div class="sheet section fa-tools">
+      <p class="t-tagline">// {num('policy')} · Agent policy</p>
+      <h2 id="fa-policy">Agent policy</h2>
+      <p class="fa-lede2">
+        Every entry carries a decision per line. The first matching group wins; the reasons of every matching rule
+        are listed. The same rules on this site, in MCP, in WebMCP and in the skill.
+      </p>
+      <dl class="fa-decisions">
+        <div><dt><span class="fa-dec fa-dec--allow">allow</span></dt><dd>Show the install plan and go ahead after the user's plain yes. It is not consent on the user's behalf.</dd></div>
+        <div><dt><span class="fa-dec fa-dec--ask">ask</span></dt><dd>Show the plan and wait until the user types the plan's consent text in this conversation. Consent stored in a file is not enough.</dd></div>
+        <div><dt><span class="fa-dec fa-dec--refuse">refuse</span></dt><dd>Do not install, unless the user writes <code>install &lt;package&gt;@&lt;version&gt; anyway</code>; the agent then quotes it in the pull request.</dd></div>
+      </dl>
+      <table class="fa-policy">
+        <thead>
+          <tr><th scope="col">Decision</th><th scope="col">Code</th><th scope="col">When</th></tr>
+        </thead>
+        <tbody>
+          {
+            policyRows.map((r) => (
+              <tr>
+                <td><span class={`fa-dec fa-dec--${r.decision}`}>{r.decision}</span></td>
+                <th scope="row"><code>{r.code}</code></th>
+                <td>{r.when}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="fa-small">
+        Built-in modules: allow on the app's own core line (<code>BUILT_IN</code>), ask on any other line
+        (<code>BUILT_IN_LINE</code>). Unattended runs install only allow, or ask when the approved spec says{' '}
+        <code>Approved modules: &lt;package&gt;@&lt;version&gt;</code>; never refuse.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--film" id="demo" aria-labelledby="fa-demo">
+    <div class="sheet section fa-tools">
+      <p class="t-tagline">// {num('demo')} · Demo</p>
+      <h2 id="fa-demo">What your agent gets</h2>
+      <AgentPane client:painted="visible" omVersion={omVersion} site={site} initialRun={teaser} />
+    </div>
+  </section>
+
+  <section class="band" id="deeplinks" aria-labelledby="fa-deep">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('deeplinks')} · Open in</p>
+        <h2 id="fa-deep">Deeplinks</h2>
+      </div>
+      <div class="fa-body">
+        <p>
+          Module pages open an install prompt in a coding agent. The prompt is built only from catalog fields that
+          passed validation, never from author text; lists stop at 10 items.
+        </p>
+        <ul class="fa-files" role="list">
+          {
+            TARGETS.map((t) => (
+              <li>
+                <code class="fa-url" set:html={wbrHtml(t.prefix.replace(/[?].*$/, ''))} />
+                <span>
+                  {t.label}
+                  {t.maxPrompt ? `, prompt up to ${t.maxPrompt.toLocaleString('en-US')} characters` : ''}
+                  {t.cwd ? ', with the app folder you enter' : ''}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="fa-small">
+          A link stays under {URL_BUDGET.toLocaleString('en-US')} characters; when the prompt does not fit, the page
+          copies the full prompt: "{CLIPBOARD_NOTE}" {FIRST_TIME_HINT}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="webmcp" aria-labelledby="fa-webmcp">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('webmcp')} · In the browser</p>
+        <h2 id="fa-webmcp">WebMCP</h2>
+      </div>
+      <div class="fa-body">
+        <p>
+          {webmcp.text}
+          {webmcp.code && <code>{webmcp.code}</code>}
+          {webmcp.after}
+        </p>
+        <p class="fa-small">
+          Registers search_modules, get_module, check_compat and plan_install on this page, the home page and every
+          module page. Nothing loads in browsers without WebMCP.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="rules" aria-labelledby="fa-rules">
+    <div class="sheet section fa-grid">
+      <div>
+        <p class="t-tagline">// {num('rules')} · Rules</p>
+        <h2 id="fa-rules">Rules our tools follow</h2>
+      </div>
+      <div class="fa-body">
+        <ul class="fa-rules" role="list">
+          <li><strong>Read-only.</strong> No tool writes anything, anywhere.</li>
+          <li><strong>No install tool.</strong> Installing changes the app's code; the app's own agent does it.</li>
+          <li><strong>Author text is marked untrusted.</strong> READMEs come back in a separate untrusted field, as data, not instructions.</li>
+          <li><strong>Installs only after human consent.</strong> Agent policy says how much consent each module needs.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fa-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 24px 48px;
+    align-items: start;
+  }
+  .fa-herocopy {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+  /* hero teaser: the three calls of the first scenario as a static terminal, the demo below runs them live */
+  .fa-term {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 16px 18px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-l);
+    background: var(--film-2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--film-ink);
+    min-width: 0;
+  }
+  .fa-term__q span {
+    color: #b4f372;
+  }
+  .fa-term__calls {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .fa-term__tool {
+    color: #bc9aff;
+  }
+  .fa-term__n {
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    border: 1px solid #bc9aff;
+    border-radius: 2px;
+    font-size: 10px;
+  }
+  .fa-term__out {
+    padding-left: 22px;
+    color: #b4f372;
+    overflow-wrap: anywhere;
+  }
+  .fa-term__run {
+    justify-self: start;
+    color: var(--film-ink);
+    font-size: 12px;
+  }
+  @media (max-width: 991px) {
+    .fa-hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .fa-term {
+      display: none;
+    }
+  }
+  .fa-title {
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  .fa-lede {
+    max-width: 64ch;
+    color: var(--ink-2);
+  }
+  .fa-toc {
+    /* two even rows of anchors, so the last one never drops to a line of its own */
+    display: grid;
+    grid-template-columns: repeat(5, max-content);
+    gap: 6px 24px;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .fa-toc a {
+    color: var(--ink-2);
+  }
+  .fa-toc a:hover {
+    color: var(--ink);
+  }
+  .fa-grid {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: 24px;
+  }
+  .fa-grid h2 {
+    margin-top: 8px;
+  }
+  .fa-body {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    min-width: 0;
+    max-width: 72ch;
+  }
+  .fa-small {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .fa-pre {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    font-size: 13px;
+    overflow-x: auto;
+  }
+  .fa-files {
+    display: grid;
+    gap: 0;
+  }
+  .fa-files li {
+    display: grid;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .fa-files li span {
+    color: var(--ink-2);
+  }
+  .fa-files code {
+    font-size: 13px;
+  }
+  .fa-url {
+    overflow-wrap: anywhere;
+  }
+  .fa-later {
+    align-self: end;
+    max-width: 72ch;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .fa-chip {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 1px 6px;
+    border: 1px dashed var(--ink-3);
+    border-radius: var(--radius-s);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .fa-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .fa-lede2 {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  .fa-toolgrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .fa-toolcol {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .fa-toolcol > .fa-tool:last-child {
+    flex: 1;
+  }
+  .fa-tool {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 20px;
+    background: var(--bg);
+    min-width: 0;
+  }
+  .fa-tool h3 code {
+    font-size: 17px;
+  }
+  .fa-params {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .fa-params th,
+  .fa-params td {
+    padding: 6px 8px 6px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .fa-params thead th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .fa-params tbody th {
+    white-space: nowrap;
+    width: 40%;
+  }
+  .fa-params td {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .fa-req {
+    margin-left: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ok-text);
+  }
+  .fa-out {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .fa-decisions {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    max-width: 80ch;
+  }
+  .fa-decisions > div {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 12px;
+    font-size: 14px;
+  }
+  .fa-decisions dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .fa-dec {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: var(--radius-s);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .fa-dec--allow {
+    background: var(--ok-fill);
+    color: var(--ok-ink);
+  }
+  .fa-dec--ask {
+    background: var(--wait-fill);
+    color: #0c0c0c;
+  }
+  .fa-dec--refuse {
+    background: #b3261e;
+    color: #fff;
+  }
+  .fa-policy {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .fa-policy th,
+  .fa-policy td {
+    padding: 8px 12px 8px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .fa-policy thead th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .fa-policy td:first-child {
+    width: 90px;
+  }
+  .fa-policy tbody th {
+    width: 180px;
+  }
+  .fa-rules {
+    display: grid;
+    gap: 10px;
+    color: var(--ink-2);
+  }
+  .fa-rules strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  @media (max-width: 991px) {
+    .fa-toolgrid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .fa-toc {
+      grid-template-columns: repeat(2, max-content);
+    }
+  }
+  @media (max-width: 767px) {
+    .fa-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .fa-files li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .fa-policy tbody th {
+      width: auto;
+    }
+    /* 44 px targets (spec 7.10, review r6: 38 px with the padding alone) */
+    .fa-toc {
+      row-gap: 0;
+    }
+    .fa-toc a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  @media (max-width: 479px) {
+    .fa-title {
+      font-size: 40px;
+      line-height: 1.05;
+    }
+    .fa-tool {
+      padding: 14px;
+    }
+    .fa-params tbody th {
+      white-space: normal;
+    }
+  }
+
+  /* ---------- AgentPane island (site/src/islands/AgentPane.tsx), on film in both themes ---------- */
+  :global(.ap) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-l);
+    background: var(--film);
+    color: var(--film-ink);
+  }
+  :global(.ap__bar) {
+    display: grid;
+    gap: 8px;
+  }
+  :global(.ap__label) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__row) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 12px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+  }
+  :global(.ap__prompt) {
+    font-family: var(--font-mono);
+    color: #b4f372;
+  }
+  :global(.ap__input) {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--film-ink);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  :global(.ap__input:focus) {
+    outline: none;
+  }
+  :global(.ap__row:focus-within) {
+    outline: 2px solid #b4f372;
+    outline-offset: 2px;
+  }
+  :global(.ap__run) {
+    margin: 4px;
+  }
+  :global(.ap__chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  :global(.ap__chip) {
+    min-height: 32px;
+    padding: 4px 10px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+    color: var(--film-ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  :global(.ap__chip:hover) {
+    border-color: #b4f372;
+  }
+  /* the scenario on screen */
+  :global(.ap__chip[aria-pressed='true']) {
+    border-color: #b4f372;
+    color: #b4f372;
+  }
+  :global(.ap__log) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    min-width: 0;
+  }
+  :global(.ap__idle),
+  :global(.ap__caption) {
+    font-size: 13px;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__err) {
+    color: #ff6b6b;
+    font-size: 14px;
+  }
+  :global(.ap__call) {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+    min-width: 0;
+  }
+  :global(.ap__tool) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #bc9aff;
+  }
+  :global(.ap__n) {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    border: 1px solid #bc9aff;
+    border-radius: 2px;
+    font-size: 11px;
+  }
+  :global(.ap__args),
+  :global(.ap__res) {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  :global(.ap__args) {
+    color: var(--film-ink);
+  }
+  :global(.ap__res) {
+    max-height: 360px;
+    overflow: auto;
+    color: #b4f372;
+  }
+  :global(.ap__res--err) {
+    color: #ff6b6b;
+  }
+  :global(.ap__gist) {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #b4f372;
+    overflow-wrap: anywhere;
+  }
+  :global(.ap__full summary) {
+    width: fit-content;
+    padding: 4px 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+    cursor: pointer;
+  }
+  :global(.ap__full summary:hover) {
+    color: var(--film-ink);
+  }
+  :global(.ap__json) {
+    max-height: 420px;
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film);
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  :global(.ap__k) {
+    color: #9e9e9e;
+  }
+  :global(.ap__v) {
+    color: #b4f372;
+  }
+  :global(.ap__more) {
+    color: var(--film-ink-2);
+  }
+  :global(.ap__empty) {
+    padding: 12px 14px;
+    border: 1px dashed var(--film-line);
+    border-radius: var(--radius-m);
+    font-size: 14px;
+  }
+  :global(.ap__plan) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid #2f520b;
+    border-radius: var(--radius-m);
+    background: #101410;
+  }
+  :global(.ap__planhead) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__decision) {
+    padding: 2px 6px;
+    border-radius: 2px;
+    color: #0c0c0c;
+  }
+  :global(.ap__decision--allow) {
+    background: #b4f372;
+  }
+  :global(.ap__decision--ask) {
+    background: #eefb63;
+  }
+  :global(.ap__decision--refuse) {
+    background: #ff6b6b;
+  }
+  :global(.ap__line),
+  :global(.ap__list),
+  :global(.ap__then),
+  :global(.ap__consent) {
+    min-width: 0;
+    font-size: 14px;
+    color: var(--film-ink);
+    overflow-wrap: anywhere;
+  }
+  :global(.ap__list) {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__list code),
+  :global(.ap__line code),
+  :global(.ap__consent code) {
+    color: #b4f372;
+    font-size: 13px;
+  }
+  :global(.ap__cmds) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  :global(.ap__then) {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding-left: 20px;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__then > li) {
+    min-width: 0;
+  }
+  /* a note under its step, unnumbered (round 15): the card's `   - note` */
+  :global(.ap__subnote) {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--film-ink-2);
+  }
+  :global(.ap__thencmd) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #b4f372;
+  }
+  :global(.ap__thennote) {
+    font-size: 14px;
+    color: var(--film-ink-2);
+  }
+  /* permission IDs: a list of chips that breaks between IDs, never inside one */
+  :global(.ap__ids) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  :global(.ap__ids li) {
+    display: inline-flex;
+    max-width: 100%;
+  }
+  :global(.ap__ids code) {
+    padding: 1px 6px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-s);
+    font-size: 12px;
+    color: #b4f372;
+    overflow-wrap: anywhere;
+  }
+  :global(.ap__own) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--film-line);
+  }
+  :global(.ap__own .btn--secondary) {
+    background: var(--film-2);
+    color: var(--film-ink);
+    border-color: var(--film-line);
+  }
+  @media (max-width: 767px) {
+    :global(.ap) {
+      padding: 14px;
+    }
+    :global(.ap__chip) {
+      min-height: 44px;
+    }
+    /* JSON keeps its indentation on phones: it scrolls sideways inside its own box instead of wrapping */
+    :global(.ap__json) {
+      white-space: pre;
+      overflow-wrap: normal;
+      overflow-x: auto;
+    }
+    :global(.ap__full summary) {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+  }
+  /* phones: the pane runs edge to edge and the call cards lose their frame, so the text gets the width */
+  @media (max-width: 479px) {
+    :global(.ap) {
+      margin-inline: -16px;
+      padding: 14px 16px;
+      border-inline: 0;
+      border-radius: 0;
+    }
+    :global(.ap__call) {
+      padding: 12px 0 0;
+      border: 0;
+      border-top: 1px solid var(--film-line);
+      border-radius: 0;
+      background: transparent;
+    }
+    :global(.ap__plan) {
+      padding: 14px 10px;
+    }
+    :global(.ap__ids code) {
+      font-size: 11px;
+    }
+  }
+  /* touch targets of at least 44 px on phones (spec 7.10, review r2) */
+  @media (max-width: 767px) {
+    .fa-files a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  /* the smallest phones (320-479 px): each policy row becomes decision and code on one line, the case under them,
+     so a long code never pushes the page sideways (review r2) */
+  @media (max-width: 479px) {
+    .fa-policy thead {
+      display: none;
+    }
+    .fa-policy tr {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 4px 12px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .fa-policy th,
+    .fa-policy td {
+      width: auto !important;
+      padding: 0;
+      border: 0;
+    }
+    .fa-policy td:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

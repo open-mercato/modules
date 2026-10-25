@@ -1,0 +1,901 @@
+---
+// Home (spec 7.7 A): dark hero with the Ask bar, the counter and Tonight's run next to The Hive; the registry with
+// filters; the built-in pointer; the agent band. Everything is read from the emitted data (loadSiteData).
+import Base from '../layouts/Base.astro'
+import Hive from '../components/Hive.astro'
+import GradientRule from '../components/GradientRule.astro'
+import CommandChip from '../components/CommandChip.astro'
+import YMarks from '../components/YMarks.astro'
+import Sigil from '../components/Sigil.astro'
+import Icon from '../components/icons/Icon.astro'
+import SignalStrip from '../islands/SignalStrip.tsx'
+import AskBar from '../islands/AskBar.tsx'
+import { packEntry } from '../lib/registry-pack.ts'
+import Registry, { registryCandidates, toRegistryEntry } from '../islands/Registry.tsx'
+import HiveHover from '../islands/HiveHover.tsx'
+import type { HiveCard } from '../islands/HiveHover.tsx'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { lineVerdicts } from '../../../lib/core/lines.ts'
+import { QUARANTINE_TEXT, heldBack, judgedLines, otherVersionCells, withJudgedLines } from '../../../lib/core/policy.ts'
+import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
+import type { CellStatus, IndexEntry } from '../../../lib/schema/index.ts'
+import { STATUS, orderLines } from '../lib/status.ts'
+import { levelNote } from '../lib/chips.ts'
+import { day, shortVersion, timeUtc } from '../lib/format.ts'
+import { schedule } from '../lib/schedule.ts'
+import { baselineNote, isPreviewData, receiptSpan } from '../lib/freshness.ts'
+import { absoluteUrl, builtInPage, href, modulePage } from '../lib/url.ts'
+import { registryDefault } from './c/_data.ts'
+import { glyphFromCounts, sigilPhase } from '../../../lib/sigil/sigil.ts'
+import './c/_registry.css'
+import { CATALOG_REPO } from '../../../lib/core/home.ts'
+
+const data = loadSiteData()
+const { meta, modules, builtIn } = data
+const lines = orderLines(modules.lines)
+const latest = lines.find((l) => l.source === 'latest') ?? lines[0]
+// a green latest-line square next to Listed says why (the first failed VER rule of /m/<path>.json, review r3)
+const noteOf = (e: IndexEntry): string | null =>
+  latest ? levelNote(e, data.detail(e.path)?.rules, latest.key) : null
+const listed = modules.entries.filter((e) => e.listed)
+const candidates = registryCandidates(modules.entries)
+const categories = modules.categories.map((c) => ({ id: c.id, title: c.title }))
+const site = meta.site
+
+// receipts from a preview run (dataAsOf.source, review r6) say so before anyone reads a number: the counter names
+// it, and the run panel carries the one preview note of this page
+const previewRun = !meta.firstNight && isPreviewData(meta.dataAsOf)
+// counter (spec 7.7 A.2): modules (the default set of the registry and the Hive: listed modules and providers, no
+// examples, so the hero, the list and the legend agree), verified on the latest line, built into core. The spec's
+// nouns (review r6): `listed` collided with the level Listed, and `46 more in core` next to `46 listed` read as a typo
+const moduleCount = registryDefault(modules.entries).length
+const counter = [
+  // review r11: `46 modules · 46 built into core` still read as one number twice on day 0; two nouns now, the
+  // modules you add and the ones core already has
+  `${moduleCount} modules to add`,
+  ...(meta.firstNight || !latest
+    ? []
+    : [`${modules.counts.verifiedOnLatest} verified on ${latest.key}${previewRun ? ' (preview)' : ''}`]),
+  `${modules.counts.builtIn} more built into core`,
+]
+const sched = schedule()
+
+// The run panel: one row per line. Before the first night it says when each line runs (`Next run`); afterwards
+// it is the last night (`Last run`): the baseline square, verdicts in words and the time of the baseline receipt.
+const when = (cadence: string): string =>
+  `${cadence === 'weekly' && sched.weeklyDay ? sched.weeklyDay : 'tonight'}${sched.nightly ? ` ${sched.nightly}` : ''}`
+const run = lines.map((l) => {
+  // verdicts on the versions a fresh app installs: a receipt of another version is not counted (review r6)
+  const judged = listed.map(withJudgedLines)
+  const verdicts = lineVerdicts(judged, l.key)
+  const n = (st: CellStatus): number => verdicts[st]
+  // a dependency the age gate held back (round 14) is counted apart from a release of a module in the gate
+  const held = judged.filter((e) => heldBack(e.compat.lines[l.key])).length
+  const b = l.baseline
+  const patches = b?.patches.length ?? 0
+  return {
+    key: l.key,
+    name: l.key === 'next' ? 'next' : l.version,
+    sub: l.source === 'develop' ? shortVersion(l.version).replace(/^\d+\.\d+\.\d+-/, '') : l.source,
+    status: (b?.status ?? 'untested') as CellStatus,
+    step: b?.step ?? null,
+    held,
+    // a red baseline held against packages a new app ships names them (review of 24 Oct), never Open Mercato alone
+    baseline: b
+      ? `baseline ${b.status === 'verified' ? 'pass' : b.status === 'harness-red' ? 'red' : b.status}${
+          b.status === 'harness-red' && data.compat.baselineCulprits?.[l.key]?.length
+            ? ` (${data.compat.baselineCulprits[l.key]!.map((n) => n.replace(/^@open-mercato\//, '')).join(', ')})`
+            : ''
+        }`
+      : 'queued',
+    when: when(l.cadence),
+    patch: patches ? `${patches} harness patch${patches === 1 ? '' : 'es'}` : '',
+    // verdicts in words; a zero is left out, except verified (the number people look for)
+    counts: b
+      ? [
+          // a count stays with its first word on a phone (round 14: `20` ended a line before `not judged`)
+          `${n('verified')}\u00a0verified`,
+          ...(n('broken') ? [`${n('broken')}\u00a0broken`] : []),
+          ...(held ? [`${held}\u00a0${STATUS.quarantine.word}`] : []),
+          ...(n('quarantine') > held ? [`${n('quarantine') - held}\u00a0new release (age gate)`] : []),
+        ].join(' · ')
+      : '',
+    at: b?.at ? `${day(b.at)} ${timeUtc(b.at)}` : '',
+  }
+})
+
+// a preview build is several runs on two harness versions, not one night (review r7): the panel is `Preview receipts`
+// with the span of the receipts its counts come from (review r8: the oldest counted cell, not the newest baseline), and
+// a line names its baseline only when that is not where the span starts
+const span = receiptSpan(lines.flatMap((l) => listed.map((e) => judgedLines(e)[l.key] ?? { at: null })))
+const previewSpan: string[] | null = previewRun && span ? [span.text] : null
+const runAt = (l: (typeof run)[number]): string =>
+  previewSpan ? baselineNote(lines.find((x) => x.key === l.key)?.baseline?.at ?? null, span) : l.at || l.when
+
+// the core answer card of a query draws the built-in sigil
+const builtInSigils = Object.fromEntries(
+  builtIn.modules.map((b) => [b.id, { glyph: glyphFromCounts(b.anatomy.counts), phase: sigilPhase(`core:${b.id}`) }]),
+)
+
+// Hive hover cards, keyed like the cells
+const cardOf: Record<string, HiveCard> = {}
+const byLocator = new Map(modules.entries.map((e) => [e.locator, e]))
+for (const c of data.hive) {
+  if (c.key.startsWith('core:')) {
+    const b = builtIn.modules.find((m) => `core:${m.id}` === c.key)
+    if (b) cardOf[c.key] = { t: b.title, ty: 'built-in', s: b.description, st: '' }
+    continue
+  }
+  const e = byLocator.get(c.key)
+  if (e)
+    cardOf[c.key] = {
+      t: e.title,
+      ty: e.type,
+      s: e.summary,
+      st: lines
+        .map((l) => STATUS[judgedLines(e)[l.key]?.status ?? (e.enterprise ? 'skipped' : 'untested')].letter)
+        .join(''),
+    }
+}
+
+// built-in band: one named module per category (the one with the largest anatomy), then "N more"
+const anatomySize = (b: (typeof builtIn.modules)[number]): number =>
+  Object.values(b.anatomy?.counts ?? {}).reduce<number>((n, v) => n + (typeof v === 'number' ? v : 0), 0)
+const coreByCategory = new Map<string, (typeof builtIn.modules)[number]>()
+for (const b of builtIn.modules) {
+  const cur = coreByCategory.get(b.category)
+  if (!cur || anatomySize(b) > anatomySize(cur) || (anatomySize(b) === anatomySize(cur) && b.id < cur.id))
+    coreByCategory.set(b.category, b)
+}
+const catOrder = new Map(modules.categories.map((c, i) => [c.id, i]))
+/**
+ * The band's examples (exchange rates, workflows, a customer portal) are on in a new app (review r11: the band said
+ * `Enable them`, while the classic preset create-mercato-app makes already enables them); the sentence says so only
+ * when built-in.json says it for each of them on the latest line.
+ */
+const bandIds = ['currencies', 'workflows', 'portal']
+const bandOnByDefault =
+  !!latest &&
+  bandIds.every((id) => {
+    const b = builtIn.modules.find((x) => x.id === id)
+    return !!b && b.inPresets.includes(latest.key)
+  })
+const coreShown = [...coreByCategory.values()].sort(
+  (a, b) => (catOrder.get(a.category) ?? 99) - (catOrder.get(b.category) ?? 99) || a.id.localeCompare(b.id),
+)
+const coreMore = builtIn.modules.length - coreShown.length
+
+const agents = [
+  meta.mcpUrl
+    ? {
+        n: '01',
+        title: 'Connect the MCP server',
+        text: 'Five read-only tools: search, module, compatibility, install plan, changes.',
+        commands: [`claude mcp add --transport http om-modules ${meta.mcpUrl}`],
+      }
+    : {
+        n: '01',
+        title: 'Add the skill',
+        text: 'Your agent searches the catalog before it builds and asks before it installs.',
+        commands: [`npx skills add ${CATALOG_REPO} --skill om-find-module`],
+      },
+  {
+    n: '02',
+    title: 'Install the Claude Code plugin',
+    text: meta.mcpUrl ? 'The skill and the MCP server in one install.' : 'The om-find-module skill in one install.',
+    commands: [`claude plugin marketplace add ${CATALOG_REPO}`, 'claude plugin install om-modules@open-mercato'],
+  },
+  {
+    n: '03',
+    title: 'Read without tools',
+    text: 'Every module page has a Markdown twin. Agents never need the HTML.',
+    commands: [`curl ${site}/llms.txt`],
+    // the card shows the URL without its scheme, so it reads on two lines; the copy is the whole command
+    display: [`curl ${site.replace(/^https:\/\//, '')}/llms.txt`],
+  },
+]
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Open Mercato Modules',
+  numberOfItems: listed.length,
+  itemListElement: listed.map((e, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: absoluteUrl(site, modulePage(e.path)),
+    name: e.title,
+  })),
+}
+---
+
+<Base
+  title="Open Mercato Modules · Extend everything."
+  description="Open Mercato modules with source anatomy, nightly install receipts for every release line, and a tool contract for coding agents."
+  path="/"
+  dataAsOf={meta.dataAsOf}
+  webmcp
+  jsonLd={jsonLd}
+  skip={{ href: '#registry', label: 'Skip to modules' }}
+>
+  <section class="band band--film hero" aria-labelledby="hero-title">
+    <div class="sheet hero__sheet">
+      <YMarks tone="film" inset={8} />
+      <div class="hero__left">
+        <p class="t-tagline hero__tag">// Open Mercato Modules</p>
+        <h1 class="t-display hero__h1" id="hero-title">Extend everything.</h1>
+        <p class="hero__sub">
+          Start with 80% done. Every module here is read from its published code, and every installable one goes into a
+          fresh Open Mercato app on each release line.
+        </p>
+        <AskBar
+          client:painted
+          indexUrl={href('/search-index.json')}
+          cliSearch={meta.features.cliSearch}
+          examples={['ksef', 'shopify', 'exchange rates', 'when a deal is won']}
+          resultsId="registry"
+        />
+        <noscript><p class="hero__nojs">Search needs JavaScript. Every module is in the list below.</p></noscript>
+        <ul class="hero__count" role="list">
+          {counter.map((c) => <li>{c}</li>)}
+        </ul>
+        <div class="hero__run" aria-labelledby="run-h">
+          <div class="hero__run-head">
+            <p class="t-tagline" id="run-h">{meta.firstNight ? 'Next run' : previewSpan ? 'Preview receipts' : 'Last run'}</p>
+            {/* before the first night /compat holds no receipt yet: the link names what is there (review r4) */}
+            <a class="hero__all" href={href('/compat')}>{meta.firstNight ? 'Compatibility matrix' : 'All receipts'}</a>
+          </div>
+          {
+            previewRun && (
+              <p class="hero__preview">
+                <span class="chip chip--preview">{PREVIEW_CHIP}</span>
+                <span>{PREVIEW_SENTENCE}</span>
+              </p>
+            )
+          }
+          {
+            previewSpan && (
+              <p class="hero__span">
+                {previewSpan.map((part, i) => (
+                  <>
+                    {i > 0 && ' · '}
+                    <span>{part}</span>
+                  </>
+                ))}
+              </p>
+            )
+          }
+          {
+            meta.firstNight ? (
+              <>
+                {/* the one place on the site that says the first night has not happened yet (7.8) */}
+                <p class="hero__first">The first nightly run is tonight. Anatomy and fit are already here.</p>
+                {run.map((l) => (
+                  <p class="hero__line hero__line--q">
+                    <span class="hero__lk">
+                      {l.name}
+                      <span class="hero__ls">{l.sub}</span>
+                    </span>
+                    <span class="hero__lc">
+                      <span class="hero__lt">{l.when}</span>
+                    </span>
+                  </p>
+                ))}
+              </>
+            ) : (
+              run.map((l) => (
+                <p class="hero__line">
+                  <span class="hero__lk">
+                    {l.name}
+                    <span class="hero__ls">{l.sub}</span>
+                  </span>
+                  <SignalStrip
+                    cells={[{ key: l.key, status: l.status, label: `${l.key} baseline: ${l.status}`, step: l.step, receipt: null }]}
+                    labels={false}
+                  />
+                  <span class="hero__lb">
+                    {l.baseline}
+                    {l.patch && <span class="hero__lp">{l.patch}</span>}
+                  </span>
+                  <span class="hero__lc">
+                    <span class="hero__lt">{runAt(l)}</span>
+                  </span>
+                  {l.counts && <span class="hero__lv">{l.counts}</span>}
+                </p>
+              ))
+            )
+          }
+          {/* why `not judged (age gate)` is no release of a module (round 14): one calm sentence under the counts */}
+          {!meta.firstNight && run.some((l) => l.held > 0) && <p class="hero__held">{QUARANTINE_TEXT}</p>}
+        </div>
+      </div>
+      <div class="hero__right">
+        <Hive cells={data.hive} />
+        <HiveHover client:media="(min-width: 992px)" cards={cardOf} lines={lines.map((l) => l.key)} />
+      </div>
+      {/* the brand rule closes the film on its bottom edge, so the hero has an edge in both themes */}
+      <GradientRule class="hero__rule" />
+    </div>
+  </section>
+
+
+  <section class="band" id="registry" aria-labelledby="registry-h" tabindex="-1">
+    <div class="sheet section reg-section">
+      <div class="reg-head">
+        <p class="t-tagline">// Registry</p>
+        <h2 class="t-h2" id="registry-h">Modules, read from source</h2>
+        <p class="reg-head__note">
+          Sigils show the anatomy.{' '}
+          {meta.firstNight ? 'Receipts appear after the first night.' : 'Squares show the last receipt for the version a new app installs on each line.'}{' '}
+          Listed and Verified come from the machine, OM Quality from people: <a href={href('/quality')}>how levels work</a>.
+          {/* a preview build says so once on this page, at the run panel of the hero (review r6) */}
+        </p>
+      </div>
+      <Registry
+        client:painted="idle"
+        entries={candidates.map((e) => packEntry(toRegistryEntry(withJudgedLines(e), lines, noteOf(e), otherVersionCells(e))))}
+        lines={lines.map((l) => ({ key: l.key, version: l.version, source: l.source }))}
+        categories={categories}
+        indexUrl={href('/search-index.json')}
+        site={site}
+        builtInCount={builtIn.modules.length}
+        signals={!meta.firstNight}
+        builtInSigils={builtInSigils}
+        preview={previewRun}
+      />
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="core-h">
+    <div class="sheet section core-band">
+      <div class="core-band__text">
+        <p class="t-tagline">// Ask before you build</p>
+        <h2 class="t-h2 core-band__h" id="core-h">
+          {builtIn.modules.length} built-in modules ship with Open Mercato core.
+        </h2>
+        <p class="core-band__sub">
+          {
+            bandOnByDefault
+              ? 'Search them before you build. Exchange rates, workflows, a customer portal and more are already on in a new app; an app from the empty preset enables them with one command.'
+              : `Search them before you build. Exchange rates, workflows, a customer portal and more are already in ${builtIn.coreVersion}. Enable them with one command.`
+          }
+        </p>
+        <a class="btn btn--secondary" href={href('/built-in')}>Browse built-in</a>
+      </div>
+      <ul class="core-band__grid" role="list" aria-label="Modules built into core, one per category">
+        {
+          coreShown.map((b) => (
+            <li>
+              <a href={href(builtInPage(b.id))} title={b.description}>
+                <Sigil builtIn={b} size={32} />
+                <span class="core-band__t">{b.title}</span>
+                <code class="core-band__id" translate="no">{b.id}</code>
+              </a>
+            </li>
+          ))
+        }
+        {
+          coreMore > 0 && (
+            <li class="core-band__desk">
+              <a class="core-band__more" href={href('/built-in')}>
+                <span class="core-band__n">+{coreMore}</span>
+                <span class="core-band__t">more built-in</span>
+              </a>
+            </li>
+          )
+        }
+        {/* phones list six and link the rest */}
+        <li class="core-band__phone">
+          <a class="core-band__more" href={href('/built-in')}>
+            <span class="core-band__n">+{builtIn.modules.length - 6}</span>
+            <span class="core-band__t">more built-in</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band band--film" aria-labelledby="agents-h">
+    <div class="sheet section agents">
+      <div class="agents__head">
+        <p class="t-tagline">// For agents</p>
+        <h2 class="t-h2" id="agents-h">Your coding agent asks the catalog first.</h2>
+        <a class="agents__more" href={href('/for-agents')}>Tool contract, deeplinks and policy <Icon name="external" size={14} /></a>
+      </div>
+      <ol class="agents__cols" role="list">
+        {
+          agents.map((a) => (
+            <li class="agents__col">
+              <p class="agents__n">{a.n}</p>
+              <h3 class="t-h3">{a.title}</h3>
+              <p class="agents__text">{a.text}</p>
+              <div class="agents__cmds">
+                {a.commands.map((c, i) => (
+                  <CommandChip command={c} display={'display' in a ? a.display?.[i] : undefined} />
+                ))}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- hero (7.7 A.2): film in both themes, 5/7 columns, min 560 px ---------- */
+  .hero__sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--col-gap);
+    align-items: center;
+    min-height: 560px;
+    padding: 56px var(--pad) 48px;
+  }
+  .hero__left {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    min-width: 0;
+    align-content: center;
+  }
+  .hero__tag {
+    color: var(--film-ink-2);
+  }
+  .hero__h1 {
+    color: var(--film-ink);
+  }
+  .hero__sub {
+    max-width: 44ch;
+    color: var(--film-ink-2);
+  }
+  /* the separator ends a line (review r11): a dot after each item but the last, never clipped at a wrap, and each
+     number stays with its noun */
+  .hero__count {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    row-gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--film-ink);
+  }
+  /* while a query is typed the Ask bar prints its own answer line (matches, in core) in this place; both lines are
+     18 px and the answer sits as far below the bar as the counter (20 px column gap = 12 px bar gap + 8 px), so the
+     hero keeps its height and the Hive does not move at the first key (review r2) */
+  .hero__left:has(:global(.ask--q)) .hero__count {
+    display: none;
+  }
+  .hero__count {
+    line-height: 18px;
+  }
+  .hero__count > li {
+    white-space: nowrap;
+  }
+  .hero__count > li:not(:last-child)::after {
+    content: '·';
+    padding: 0 6px 0 7px;
+  }
+  .hero__nojs {
+    font-size: 13px;
+    color: var(--film-ink-2);
+  }
+  .hero__left :global(.ask__found) {
+    margin-top: 8px;
+    line-height: 18px;
+  }
+  .hero__run {
+    display: grid;
+    padding: 12px 16px 10px;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-2);
+  }
+  .hero__run-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 6px;
+  }
+  .hero__run-head .t-tagline {
+    color: var(--film-ink-2);
+  }
+  .hero__all {
+    font-size: 13px;
+    color: var(--film-ink);
+    text-decoration-color: var(--film-line);
+  }
+  .hero__all:hover {
+    text-decoration-color: currentColor;
+  }
+  .hero__line {
+    display: grid;
+    grid-template-columns: 88px 14px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 12px;
+    padding-block: 8px;
+    border-top: 1px solid var(--film-line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__lk {
+    display: grid;
+    white-space: nowrap;
+    color: var(--film-ink);
+    text-transform: none;
+  }
+  .hero__ls {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+  }
+  .hero__lb {
+    display: grid;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .hero__lp {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--film-ink-2);
+  }
+  .hero__lc {
+    display: grid;
+    justify-items: end;
+    white-space: nowrap;
+    color: var(--film-ink);
+  }
+  .hero__lt {
+    color: var(--film-ink-2);
+  }
+  /* the night's verdicts, under the baseline of the line */
+  .hero__lv {
+    grid-column: 3 / -1;
+    margin-top: 2px;
+    color: var(--film-ink);
+    white-space: normal;
+  }
+  /* the preview chip on film: dashed in the film's secondary ink */
+  .hero__preview {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-block: 2px 10px;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--film-ink-2);
+    text-wrap: pretty;
+  }
+  /* why the age-gate count judged nothing (round 14): one calm sentence under the line rows */
+  .hero__held {
+    padding-top: 10px;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--film-ink-2);
+    text-wrap: pretty;
+  }
+  /* the span of a preview build: first baseline to last receipt, in the film's secondary ink */
+  .hero__span {
+    padding-bottom: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  /* each half stays whole: a phone breaks between them, never before `UTC` */
+  .hero__span span {
+    white-space: nowrap;
+  }
+  .hero__preview .chip {
+    flex: none;
+    border-color: var(--film-ink-2);
+    color: var(--film-ink);
+  }
+  .hero__first {
+    padding-block: 4px 12px;
+    max-width: 40ch;
+    text-wrap: pretty;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--film-ink);
+  }
+  .hero__line--q {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+  .hero__right {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    min-width: 0;
+  }
+  .hero__sheet :global(.hero__rule) {
+    position: absolute;
+    left: var(--pad);
+    bottom: 0;
+    width: calc(100% - 2 * var(--pad));
+  }
+
+  /* ---------- registry heading ---------- */
+  .reg-section {
+    padding-top: 56px;
+  }
+  .reg-head {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .reg-head__note {
+    max-width: 70ch;
+    color: var(--ink-2);
+    font-size: 15px;
+  }
+  #registry:focus {
+    outline: none;
+  }
+
+  /* ---------- Ask before you build ---------- */
+  /* the text over a full-width ledger of named modules (one per category), 4 columns of about 280 px */
+  .core-band {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .core-band__text {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    grid-template-areas: 'tag tag' 'h sub' 'h btn';
+    gap: 14px 48px;
+    align-items: start;
+    justify-items: start;
+  }
+  .core-band__text > .t-tagline {
+    grid-area: tag;
+  }
+  .core-band__h {
+    grid-area: h;
+  }
+  .core-band__sub {
+    grid-area: sub;
+  }
+  .core-band__text > .btn {
+    grid-area: btn;
+  }
+  @media (max-width: 991px) {
+    .core-band__text {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'tag' 'h' 'sub' 'btn';
+    }
+  }
+  .core-band__sub {
+    max-width: 46ch;
+    color: var(--ink-2);
+  }
+  .core-band__sub code {
+    font-size: 0.9em;
+    color: var(--ink);
+  }
+  .core-band__h {
+    text-wrap: balance;
+  }
+  /* one named module per category: a sigil, the title and the ID, a ledger of 4 columns */
+  .core-band__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--line);
+    overflow: hidden;
+  }
+  .core-band__grid li {
+    display: grid;
+    min-width: 0;
+    background: var(--bg);
+  }
+  /* titles start on one line across a row and the IDs sit on one baseline at the bottom (review r4: a title that took
+     two lines pushed its ID below its neighbours') */
+  .core-band__grid a {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: 'sig t' 'sig id';
+    column-gap: 10px;
+    row-gap: 2px;
+    align-items: start;
+    min-height: 64px;
+    padding: 10px 12px;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: background-color var(--dur-1) var(--ease);
+  }
+  .core-band__grid a > :global(svg) {
+    grid-area: sig;
+  }
+  .core-band__grid a:hover {
+    background: var(--bg-2);
+    color: var(--ink);
+  }
+  /* a long name takes two lines instead of an ellipsis (review r2): Customer Relationship Management reads whole */
+  .core-band__t {
+    grid-area: t;
+    min-width: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    text-wrap: balance;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ink);
+  }
+  .core-band__phone {
+    display: none !important;
+  }
+  .core-band__id {
+    grid-area: id;
+    align-self: end;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--ink-2);
+  }
+  .core-band__more {
+    grid-template-rows: auto !important;
+    grid-template-areas: 'sig t' !important;
+    align-items: center !important;
+    align-content: center;
+  }
+  .core-band__n {
+    grid-area: sig;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* ---------- For agents ---------- */
+  .agents {
+    display: grid;
+    gap: 40px;
+  }
+  .agents__head {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+  }
+  .agents__head .t-tagline {
+    color: var(--film-ink-2);
+  }
+  .agents__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--film-ink);
+    text-decoration-color: var(--film-line);
+  }
+  @media (max-width: 767px) {
+    .agents__more {
+      min-height: 44px;
+    }
+  }
+  .agents__cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--film-line);
+    border-radius: var(--radius-m);
+    background: var(--film-line);
+    overflow: hidden;
+  }
+  .agents__col {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    padding: 24px;
+    background: var(--film);
+    min-width: 0;
+  }
+  .agents__n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #b4f372;
+  }
+  .agents__text {
+    font-size: 14px;
+    color: var(--film-ink-2);
+  }
+  .agents__cmds {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  /* the whole command is visible: it wraps at spaces and after '/' (CommandChip), 13/1.4 mono */
+  .agents__cmds :global(.cmd__text) {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 991px) {
+    .hero__sheet {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+      padding-block: 48px 40px;
+    }
+    .hero__right {
+      display: none;
+    }
+    .core-band {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+    .agents__cols {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .hero__sheet {
+      padding-block: 40px 32px;
+    }
+    .hero__line {
+      grid-template-columns: 80px 14px minmax(0, 1fr);
+      row-gap: 2px;
+    }
+    .hero__lc {
+      grid-column: 3 / -1;
+      justify-items: start;
+      white-space: normal;
+      gap: 2px;
+    }
+    .hero__line.hero__line--q {
+      grid-template-columns: 80px minmax(0, 1fr);
+    }
+    .hero__line--q .hero__lc {
+      grid-column: auto;
+      justify-content: end;
+    }
+    .core-band__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .core-band__grid > li:nth-child(n + 7):not(.core-band__phone) {
+      display: none;
+    }
+    .core-band__phone {
+      display: grid !important;
+    }
+    .agents__col {
+      padding: 20px 16px;
+    }
+  }
+  /* touch target of at least 44 px on phones (spec 7.10, review r2), without moving the panel */
+  @media (max-width: 767px) {
+    .hero__all {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-block: -12px;
+    }
+  }
+</style>

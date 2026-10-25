@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.github.com/repos/Chmarusso/open-mercato-enrichment-treg/tags?per_page=30"
+  },
+  "response": {
+    "status": 200,
+    "json": []
+  }
+}

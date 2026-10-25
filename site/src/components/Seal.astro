@@ -1,0 +1,23 @@
+---
+// Tier seal (spec 6.7): LISTED, VERIFIED · 0.9, OM QUALITY (chamfered, brand gradient) or revoked.
+import { sealOf } from '../lib/chips.ts'
+import type { SealModel } from '../lib/chips.ts'
+import { SealView } from '../lib/ui.tsx'
+import type { IndexEntry } from '../../../lib/schema/index.ts'
+
+interface Props {
+  entry?: Pick<IndexEntry, 'tier' | 'quality' | 'compat'> & {
+    revoked?: { version: string; at: string } | null
+    /** Why the level is Listed while the latest-line square is green (`levelNote` of lib/chips.ts). */
+    levelNote?: string | null
+  }
+  latestKey?: string
+  seal?: SealModel
+  /** The receipts come from a preview run: the Verified seal's title says so (review r10). */
+  preview?: boolean
+}
+const { entry, latestKey = '0.9', seal, preview = false } = Astro.props
+const model: SealModel = seal ?? (entry ? sealOf(entry, latestKey, preview) : { kind: 'none', title: '' })
+---
+
+<SealView seal={model} />

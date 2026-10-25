@@ -1,0 +1,159 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/create-mercato-module"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "create-mercato-module",
+      "dist-tags": {
+        "latest": "0.5.1"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+            "type": "git"
+          },
+          "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "typescript": "6.0.3"
+          },
+          "scripts": {},
+          "description": "Create and publish a single module from an existing Open Mercato app.",
+          "dist": {
+            "integrity": "sha512-rGBM6lGhDAcZBD/x/DI+JQeGXkdcM7YpTuvVhxEM8/dFMLgmbraeMGrNh4LofT2nZGtU/QCoDUyECQJ5ZFldaA==",
+            "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.1.0.tgz"
+          }
+        },
+        "0.2.0": {
+          "version": "0.2.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+            "type": "git"
+          },
+          "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "typescript": "6.0.3"
+          },
+          "scripts": {
+            "prepare": "npm run build"
+          },
+          "description": "Create and publish a single module from an existing Open Mercato app.",
+          "dist": {
+            "integrity": "sha512-GgbAS/3l4ZQ3uTccQpWLcT7G0JsJ9G4/UiOmNaPCgbhFHWHOiLA63N/3qBucazTyPjYu1LnA5shV2VAXYjIcSw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.2.0.tgz"
+          }
+        },
+        "0.4.0": {
+          "version": "0.4.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+            "type": "git"
+          },
+          "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "typescript": "6.0.3"
+          },
+          "scripts": {
+            "prepare": "npm run build"
+          },
+          "description": "Create and publish a single module from an existing Open Mercato app.",
+          "dist": {
+            "integrity": "sha512-EAMXQLR3Xu1hFyFk6y4P6Nhs/+zkaXW1gq8Fm2hNzSNIjdnnJS8o2qirq0tkBbsnaY8guWk/+57xLruPT+feSw==",
+            "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.4.0.tgz"
+          }
+        },
+        "0.5.0": {
+          "version": "0.5.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+            "type": "git"
+          },
+          "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "typescript": "6.0.3"
+          },
+          "scripts": {
+            "prepare": "npm run build"
+          },
+          "description": "Create and publish a single module from an existing Open Mercato app.",
+          "dist": {
+            "integrity": "sha512-9BiK+HIzokU0tYbA7o01Qk/qNpMl+sE7NhslqpYxaOw9UnKCBAxn8JXaG18hVAU7wzs2/1MdCqTQejzCdcdKRg==",
+            "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.5.0.tgz"
+          }
+        },
+        "0.5.1": {
+          "version": "0.5.1",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+            "type": "git"
+          },
+          "keywords": ["open-mercato", "mercato", "module", "cli", "scaffold", "npm", "sandbox"],
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "dependencies": {
+            "typescript": "6.0.3"
+          },
+          "scripts": {
+            "prepare": "npm run build"
+          },
+          "description": "Create and publish a single module from an existing Open Mercato app.",
+          "dist": {
+            "integrity": "sha512-GxfzZdbYoMaW/tsdRg9GUIqxjLRur2R40cqTc3SioKdZAZFZb6rdqpTt5GUl7VC0O0VLxXFCJ+vws+rzVTATZQ==",
+            "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.5.1.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-09T08:00:04.435Z",
+        "modified": "2026-10-14T13:58:53.124Z",
+        "0.1.0": "2026-10-09T08:03:14.490Z",
+        "0.2.0": "2026-10-09T09:03:09.735Z",
+        "0.4.0": "2026-10-12T16:44:15.049Z",
+        "0.5.0": "2026-10-14T13:25:54.631Z",
+        "0.5.1": "2026-10-14T13:58:52.713Z"
+      },
+      "maintainers": [
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Create and publish a single module from an existing Open Mercato app.",
+      "repository": {
+        "url": "git+https://github.com/open-mercato/create-mercato-module.git",
+        "type": "git"
+      }
+    }
+  }
+}

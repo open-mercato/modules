@@ -1,0 +1,52 @@
+# Core module ID -> category (spec 4.4): the 46 modules of @open-mercato/core 0.9.0 plus ecommerce (0.10, listed in
+# builtin-upcoming.yml until a released core ships it).
+# widgets is not a module (core 0.9.0 has only src/modules/widgets/lib/injection.ts). The built-in generator
+# puts a core module missing here in operations and warns; validate fails on it only in a PR.
+
+api_docs: devtools
+api_keys: auth-security
+attachments: storage-infrastructure
+audit_logs: auth-security
+auth: auth-security
+availability: operations
+business_rules: ai-automation
+catalog: catalog-pricing
+communication_channels: communication
+configs: storage-infrastructure
+currencies: payments-finance
+customer_accounts: content-portal
+customer_groups: crm-sales
+customers: crm-sales
+dashboards: search-analytics
+data_sync: integrations-sync
+design_system: devtools
+devices: communication
+dictionaries: storage-infrastructure
+directory: auth-security
+ecommerce: orders-checkout
+entities: storage-infrastructure
+eudr: localization-compliance
+feature_toggles: devtools
+forms: content-portal
+inbox_ops: ai-automation
+integrations: integrations-sync
+messages: communication
+notifications: communication
+payment_gateways: payments-finance
+perspectives: search-analytics
+phone_calls: communication
+planner: operations
+portal: content-portal
+progress: storage-infrastructure
+push_notifications: communication
+query_index: search-analytics
+resources: operations
+sales: orders-checkout
+seeds: devtools
+shipping_carriers: warehouse-shipping
+staff: operations
+sync_excel: integrations-sync
+translations: localization-compliance
+warranty_claims: operations
+wms: warehouse-shipping
+workflows: ai-automation

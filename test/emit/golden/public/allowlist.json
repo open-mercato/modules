@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "locators": [
+    "npm:@fastwhitecat/integration-ksef-direct",
+    "npm:@fullstackhouse/open-mercato-data-sync-durable",
+    "npm:@fullstackhouse/open-mercato-durable-work",
+    "npm:@open-mercato/gateway-stripe",
+    "npm:@open-mercato/gateway-tpay"
+  ]
+}

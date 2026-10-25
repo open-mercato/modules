@@ -1,0 +1,8 @@
+# Fixture entry 13 (spec 11.1). offerUrl points to the package README until an offer page exists.
+npm: "@open-mercato/enterprise"
+category: auth-security
+summary: Commercial Open Mercato modules for SSO, security, record locks and agent orchestration.
+whenToUse: Use when a production app needs SSO, record locks or agent orchestration under a commercial license.
+enterprise:
+  offerUrl: https://github.com/open-mercato/open-mercato/blob/main/packages/enterprise/README.md
+  modules: [agent_orchestrator, record_locks, security, sso, system_status_overlays]

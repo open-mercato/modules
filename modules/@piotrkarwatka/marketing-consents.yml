@@ -1,0 +1,7 @@
+npm: "@piotrkarwatka/marketing-consents"
+github: pkarw/marketing-consents
+category: marketing-loyalty
+tags: [consents, gdpr, marketing]
+summary: "Register of marketing consent proofs: exact text with a SHA-256 digest, withdrawal with a reason, personal fields encrypted."
+whenToUse: Use when the app must keep evidence of each marketing consent and let staff withdraw it with a recorded reason.
+whenNotToUse: "It sends nothing and grants no permission to send: your sending system must read the consent state."

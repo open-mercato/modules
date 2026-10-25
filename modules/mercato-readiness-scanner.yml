@@ -1,0 +1,8 @@
+npm: mercato-readiness-scanner
+github: open-mercato/mercato-readiness-scanner
+kind: tool
+category: devtools
+tags: [cli, security, production, ci]
+summary: Read-only scan of a create-mercato-app project for weak credentials, encryption keys and deployment gaps.
+whenToUse: Use when you prepare an app for production or want a CI gate that fails on high-severity readiness findings.
+renamedFrom: ["npm:@open-mercato/readiness-scanner"]

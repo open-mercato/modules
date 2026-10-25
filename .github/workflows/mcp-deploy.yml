@@ -1,0 +1,91 @@
+# Remote MCP server (spec 5.1, 5.2, 8.3): `wrangler deploy` of mcp/worker.ts to Cloudflare Workers when the Worker,
+# lib/core or lib/schema change on main, or by hand. Without the CLOUDFLARE_API_TOKEN secret (environment `mcp`,
+# spec 5.6 item 6) the job ends with a notice, not an error. No module code runs here.
+name: mcp-deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "mcp/**"
+      - "lib/core/**"
+      - "lib/schema/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcp-deploy
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: mcp
+    steps:
+      - name: Check token
+        id: token
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" = "true" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=mcp-deploy::No CLOUDFLARE_API_TOKEN in environment mcp; the Worker was not deployed."
+            echo "No CLOUDFLARE_API_TOKEN in environment \`mcp\`: the Worker was not deployed (spec 5.6 item 6)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Checkout
+        if: ${{ steps.token.outputs.present == 'true' }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        if: ${{ steps.token.outputs.present == 'true' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        if: ${{ steps.token.outputs.present == 'true' }}
+        run: corepack enable
+
+      - name: Install
+        if: ${{ steps.token.outputs.present == 'true' }}
+        # The Worker bundles lib/core, zod, minisearch and the MCP SDK from the repo's locked dependencies.
+        run: yarn install --immutable
+
+      - name: Deploy
+        id: deploy
+        if: ${{ steps.token.outputs.present == 'true' }}
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          workingDirectory: mcp
+          command: deploy
+
+      - name: Summary
+        if: ${{ steps.token.outputs.present == 'true' }}
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          {
+            echo "Worker deployed: ${DEPLOYMENT_URL:-see the wrangler output}"
+            echo ""
+            echo "First deploy: set the repo variable MCP_URL to <worker URL>/mcp, then run"
+            echo "\`MCP_URL=<worker URL>/mcp yarn om plugin-sync\` and commit plugins/om-modules/.mcp.json."
+          } >> "$GITHUB_STEP_SUMMARY"

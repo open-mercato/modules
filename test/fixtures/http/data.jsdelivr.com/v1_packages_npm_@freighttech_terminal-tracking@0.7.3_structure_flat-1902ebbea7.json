@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@freighttech/terminal-tracking@0.7.3?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@freighttech/terminal-tracking",
+      "version": "0.7.3",
+      "files": [
+        {
+          "name": "/dist/modules/terminal_tracking/acl.js"
+        },
+        {
+          "name": "/src/modules/terminal_tracking/index.ts"
+        }
+      ]
+    }
+  }
+}

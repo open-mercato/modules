@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.npmjs.org/downloads/point/last-month/@open-mercato%2Fgateway-tpay"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "downloads": 3762,
+      "start": "2026-09-19",
+      "end": "2026-10-18",
+      "package": "@open-mercato/gateway-tpay"
+    }
+  }
+}

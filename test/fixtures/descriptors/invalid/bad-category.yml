@@ -1,0 +1,5 @@
+# expect-path: category
+npm: "@acme/thing"
+category: crm
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when the category is an old research slug instead of an ID.

@@ -1,0 +1,744 @@
+---
+// The X-ray film (spec 7.6): dark in both themes. Sigil 96 with the organ legend, then nine sections in a 3x3 grid;
+// every fact is a mono row with its `file:line` source link into the published tarball.
+import type { Facts, IndexEntry, ModuleFacts } from '../../../lib/schema/index.ts'
+import { ORGANS, PETAL_ANGLES, brandStop } from '../../../lib/sigil/sigil.ts'
+import type { Organ } from '../../../lib/sigil/sigil.ts'
+import Sigil from './Sigil.astro'
+import { anatomyNote } from '../../../lib/core/entry.ts'
+import { sourceLink } from '../lib/url.ts'
+import { commonSegmentPrefix, middleEllipsis, wbrHtml } from '../lib/wrap.ts'
+import { rowSpans } from '../pages/c/_data.ts'
+
+interface Props {
+  entry: IndexEntry
+  facts: Facts | null
+  /** Items per section before "+N more". */
+  limit?: number
+}
+const { entry, facts, limit = 5 } = Astro.props
+const ms: ModuleFacts[] = facts?.modules ?? []
+const version = facts?.package.version ?? entry.version.latest
+const src = { npm: entry.npm, github: entry.github, version, gitRef: facts?.package.gitRef ?? entry.version.gitRef }
+
+interface Item {
+  /** Fixed-width kind column (HTTP method, `emits`, `queue`), printed before the value. */
+  lead?: string
+  /** The identifier: path, event id, table, host. Never end-truncated. */
+  text: string
+  tag?: string
+  tagTone?: 'bad' | 'ok' | 'wait'
+  file?: string | null
+  line?: number | null
+}
+const loc = (s: { file: string; line: number } | null | undefined) => ({ file: s?.file ?? null, line: s?.line ?? null })
+
+const uniqBy = <T,>(xs: T[], key: (x: T) => string): T[] => {
+  const seen = new Set<string>()
+  return xs.filter((x) => (seen.has(key(x)) ? false : (seen.add(key(x)), true)))
+}
+/** Unique tables with the source of their first entity; entities without a table are counted in the note. */
+const tableItems: Item[] = uniqBy(
+  ms.flatMap((m) => m.data.entities.filter((e) => !!e.table).map((e) => ({ text: e.table as string, ...loc(e.src) }))),
+  (i) => i.text,
+)
+const untabled = ms.reduce((a, m) => a + m.data.entities.filter((e) => !e.table).length, 0)
+const customEntities = ms.reduce((a, m) => a + m.data.customEntities, 0)
+
+const sections: { id: string; title: string; items: Item[]; empty: string; absent: string; note?: string }[] = [
+  {
+    id: 'data',
+    absent: 'tables',
+    title: 'Data',
+    items: tableItems,
+    empty: 'No tables.',
+    note: [
+      untabled ? `${untabled} entit${untabled === 1 ? 'y' : 'ies'} without a table` : '',
+      customEntities ? `${customEntities} custom entit${customEntities === 1 ? 'y' : 'ies'}` : '',
+    ]
+      .filter(Boolean)
+      .join(' · '),
+  },
+  {
+    id: 'api',
+    absent: 'API routes',
+    title: 'API',
+    items: ms.flatMap((m) =>
+      m.http.routes.map((r) => ({
+        lead: r.method.padEnd(6, ' '),
+        text: r.path,
+        tag: r.requireAuth === false ? 'public' : undefined,
+        tagTone: 'bad' as const,
+        ...loc(r.src),
+      })),
+    ),
+    empty: 'No API routes.',
+  },
+  {
+    id: 'security',
+    absent: 'permissions',
+    title: 'Security',
+    items: uniqBy(
+      ms.flatMap((m) => m.security.aclFeatures.map((a) => ({ text: a }))),
+      (i) => i.text,
+    ),
+    empty: 'No permissions.',
+  },
+  {
+    id: 'events',
+    absent: 'events',
+    title: 'Events',
+    items: [
+      ...uniqBy(
+        ms.flatMap((m) => m.events.emits.map((e) => ({ lead: 'emits  ', text: e.id, ...loc(e.src) }))),
+        (i) => i.text,
+      ),
+      ...uniqBy(
+        ms.flatMap((m) => m.events.subscribes.map((e) => ({ lead: 'subscribes', text: e.event, ...loc(e.src) }))),
+        (i) => i.text,
+      ),
+    ],
+    empty: 'No events.',
+  },
+  {
+    id: 'ui',
+    absent: 'UI',
+    title: 'UI',
+    items: ms.flatMap((m) => [
+      ...m.ui.backendPages.map((p) => ({ text: p.path })),
+      ...m.ui.frontendPages.map((p) => ({ text: p.path, tag: 'public page', tagTone: 'wait' as const })),
+      ...(m.ui.widgets ? [{ text: `${m.ui.widgets} widget${m.ui.widgets === 1 ? '' : 's'}` }] : []),
+    ]),
+    empty: 'No pages.',
+  },
+  {
+    id: 'background',
+    absent: 'background jobs',
+    title: 'Background',
+    items: ms.flatMap((m) => [
+      ...m.background.workers.map((w) => ({ lead: 'queue', text: w.queue })),
+      ...m.background.cli.map((c) => ({ lead: 'cli  ', text: c })),
+    ]),
+    empty: 'No queues or CLI commands.',
+  },
+  {
+    id: 'ai',
+    absent: 'AI tools',
+    title: 'AI',
+    items: ms.flatMap((m) => [
+      ...m.ai.tools.map((t) => ({ lead: 'tool ', text: t })),
+      ...m.ai.agents.map((a) => ({ lead: 'agent', text: a })),
+    ]),
+    empty: 'No AI tools.',
+  },
+  {
+    id: 'config',
+    absent: 'credentials',
+    title: 'Config',
+    items: ms.flatMap((m) => [
+      // the lead says what the field is: only a secret-type credential is a secret (`nip (text)` is a plain field)
+      ...m.config.credentials.map((c) => ({
+        lead: c.type === 'secret' ? 'secret' : 'field',
+        text: c.type === 'secret' ? c.key : `${c.key} (${c.type})`,
+        tag: c.required ? 'required' : undefined,
+        tagTone: 'wait' as const,
+      })),
+      ...m.config.env.map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src) })),
+    ]),
+    empty: 'No credentials or env.',
+  },
+  {
+    id: 'network',
+    absent: 'hosts',
+    title: 'Network',
+    items: ms.flatMap((m) =>
+      m.network.hosts.map((h) => ({
+        text: h.host,
+        tag: m.network.undeclared.includes(h.host) ? 'undeclared' : h.confidence === 'low' ? 'low confidence' : undefined,
+        tagTone: 'wait' as const,
+        ...loc(h.src),
+      })),
+    ),
+    // the same words as the agent card (`Talks to: no hosts found in the code`)
+    empty: 'No hosts found in the code.',
+  },
+]
+
+/**
+ * Rows of one section: the shared prefix of the identifiers is printed once under the section title and each row
+ * shows only its suffix ('/api/integration-ksef-direct/' + 'documents/send'). Without a shared prefix a long value
+ * gets a middle ellipsis at build time; the full value stays in title=. Identifiers are never cut at the end.
+ */
+function rows(items: Item[]) {
+  const prefix = commonSegmentPrefix(items.map((i) => i.text))
+  return {
+    prefix,
+    // identifiers wrap after '/' and '.'; only a pathological value (> 64 chars) is shortened
+    items: items.map((it) => ({ ...it, full: it.text, shown: middleEllipsis(it.text.slice(prefix.length), 24, 37) })),
+  }
+}
+/** Identifier rows break after '/' and '.' only; every segment is a no-wrap token, never split at '-' or '_'. */
+// an identifier of the film breaks at its own separators (dots, '_' and '-'), never past its column (review r4: the
+// queue `sync-akeneo-delete-products` ran into the next section)
+const idHtml = (v: string): string => wbrHtml(v, { dots: true, underscores: true, hyphens: true })
+
+/**
+ * One number per organ (review WP11b): the film uses the emitter's definitions (lib/core/entry.ts `counts`), so the
+ * legend, the section headers, the callout (`entry.anatomy.callout`, the string modules.json, the .md card and MCP
+ * carry) and the agent card agree. Data = unique tables (custom entities and entities without a table are a note),
+ * API = routes, Security = unique permissions, Events = unique emitted ids plus `subscribes N`, UI = pages and
+ * widgets, Background = queues and CLI commands (never called jobs), AI = tools and agents, Extends = contributions
+ * to other modules' extension points. A section with one kind prints a bare number; a mixed one names each part.
+ */
+const k = entry.anatomy?.counts ?? null
+const sec = (id: string) => sections.find((s) => s.id === id)!
+/** Non-zero parts with their unit (`['18 pages', '4 widgets']`); a section of one kind prints its bare number. */
+const parts = (...xs: [number, string, string][]): string[] => {
+  const nz = xs.filter(([n]) => n > 0)
+  if (nz.length < 2) return [String(nz[0]?.[0] ?? 0)]
+  return nz.map(([n, one, many]) => `${n} ${n === 1 ? one : many}`)
+}
+const pagesN = ms.reduce((a, m) => a + m.ui.backendPages.length + m.ui.frontendPages.length, 0)
+const widgetsN = ms.reduce((a, m) => a + m.ui.widgets, 0)
+const queuesN = ms.reduce((a, m) => a + m.background.workers.length, 0)
+const cliN = ms.reduce((a, m) => a + m.background.cli.length, 0)
+const toolsN = ms.reduce((a, m) => a + m.ai.tools.length, 0)
+const agentsN = ms.reduce((a, m) => a + m.ai.agents.length, 0)
+const credsN = ms.reduce((a, m) => a + m.config.credentials.length, 0)
+const envN = ms.reduce((a, m) => a + m.config.env.length, 0)
+const emitsN = k?.eventsEmitted ?? sec('events').items.filter((i) => i.lead?.startsWith('emits')).length
+const subsN = k?.eventsConsumed ?? sec('events').items.filter((i) => i.lead?.startsWith('subscribes')).length
+const extendsN = ms.reduce((a, m) => a + m.extends.length, 0)
+/** Count text of a section header and of its legend row (one function, so the two never disagree). */
+const countParts: Record<string, string[]> = {
+  data: [String(k?.tables ?? tableItems.length)],
+  api: [k && k.routes === null ? 'n/a' : String(k?.routes ?? sec('api').items.length)],
+  security: [String(k?.aclFeatures ?? sec('security').items.length)],
+  events: emitsN && subsN ? [`emits ${emitsN}`, `subscribes ${subsN}`] : subsN ? [`subscribes ${subsN}`] : [String(emitsN)],
+  ui: parts([pagesN, 'page', 'pages'], [widgetsN, 'widget', 'widgets']),
+  background: parts([queuesN, 'queue', 'queues'], [cliN, 'cli', 'cli']),
+  ai: parts([toolsN, 'tool', 'tools'], [agentsN, 'agent', 'agents']),
+  config: parts([credsN, 'credential', 'credentials'], [envN, 'env', 'env']),
+  network: [String(sec('network').items.length)],
+  extends: [String(extendsN)],
+}
+// Section header and legend row print the same parts, joined by middots and broken only between them (review r3:
+// stacked parts made the Events row two lines tall and pushed the legend's other column out of step).
+const legendNames: Record<Organ, string> = {
+  data: 'Data',
+  api: 'API',
+  ui: 'UI',
+  events: 'Events',
+  background: 'Background',
+  ai: 'AI',
+  extends: 'Extends',
+}
+/** Petal levels as drawn by the sigil (the glyph of the entry), so a swatch never disagrees with its petal. */
+const glyph = entry.sigil.glyph
+const legend = ORGANS.map((o, i) => ({
+  organ: o,
+  name: legendNames[o],
+  n: countParts[o] ?? ['0'],
+  level: Number(glyph[i] ?? 0) as 0 | 1 | 2 | 3,
+  color: o === 'data' ? '#FAFAFA' : brandStop(PETAL_ANGLES[o as Exclude<Organ, 'data'>] + entry.sigil.phase),
+}))
+/** Legend swatch: the petal of that organ at its level, drawn like the sigil (outline, inner hex, full, full + edge). */
+function swatch(level: number, color: string, center = false): string {
+  const hex = (r: number): string => {
+    const w = (r * Math.sqrt(3)) / 2
+    return `M7 ${7 - r}l${w} ${r / 2}v${r}l-${w} ${r / 2}-${w}-${r / 2}v-${r}z`
+  }
+  const frame = `<path d="${hex(6)}" fill="none" stroke="currentColor" stroke-opacity=".4"/>`
+  if (level === 0) return frame
+  if (level === 1) return `${frame}<path d="${hex(3.2)}" fill="${color}"/>`
+  if (level === 2 && center) return `<path d="${hex(6)}" fill="${color}" fill-opacity=".5" stroke="${color}"/>`
+  if (level === 2) return `<path d="${hex(6)}" fill="${color}"/>`
+  if (center) return `<path d="${hex(6)}" fill="${color}"/>`
+  return `<path d="${hex(6)}" fill="${color}" stroke="currentColor" stroke-width="1.25"/>`
+}
+/**
+ * Only sections with facts get a cell (review r1: Durable had 8 of 9 empty cells, Stripe 7); the rest are named once
+ * under the grid. A section with long identifiers takes two columns; spans are computed per layout so every row of
+ * the grid ends at its edge.
+ */
+const present = sections.filter((s) => s.items.length > 0)
+const absent = sections.filter((s) => s.items.length === 0)
+const longest = (xs: readonly string[]): number => xs.reduce((n, x) => Math.max(n, x.length), 0)
+// widths are measured on what a row prints: the shared prefix is printed once above the rows
+const want: Record<string, number> = Object.fromEntries(
+  present.map((s) => {
+    const r = rows(s.items)
+    const len = longest(r.items.map((i) => `${i.lead ? `${i.lead.trim()}  ` : ''}${i.shown}`))
+    const wide = s.id === 'data' || s.id === 'network' ? len > 26 : s.id === 'config' ? len > 22 : len > 34
+    return [s.id, wide ? 2 : 1]
+  }),
+)
+const ids = present.map((s) => s.id)
+const span3 = rowSpans(ids, want, 3)
+const span2 = rowSpans(ids, want, 2)
+const absentText = absent.length ? `Not present: ${absent.map((s) => s.absent).join(', ')}.` : ''
+// the agent card's sentence (lib/core/entry.ts anatomyNote, review r9): the yellow `plugs into a host` only when the
+// facts show it, else a neutral line in the film's secondary ink
+const partial = anatomyNote(entry)
+const hidden = entry.enterprise || !facts
+/** The callout is the emitter's string (spec 7.7 B.6), the one the agent gets; zero counts are already left out. */
+const calloutItems = (entry.anatomy?.callout ?? '').split(' · ').filter(Boolean)
+---
+
+<section class="film band--film" aria-labelledby={`film-${entry.path}`}>
+  <header class="film__head">
+    <p class="t-tagline" id={`film-${entry.path}`}>// Anatomy</p>
+    <p class="film__src">
+      {hidden ? 'Not published' : <><span class="nw">Read from <code>src/</code> ·</span> <code translate="no" set:html={wbrHtml(`${entry.npm ?? entry.github}@${version}`)} /></>}
+    </p>
+  </header>
+  {
+    calloutItems.length > 0 && !hidden && (
+      <ul class="film__callout dotlist" role="list" aria-label="What it adds">
+        {calloutItems.map((c) => <li>{c}</li>)}
+      </ul>
+    )
+  }
+  <div class="film__body">
+    <div class="film__plate">
+      <div class="film__sigil">
+        <Sigil entry={entry} size={96} />
+      </div>
+      <ul class="film__legend" role="list">
+        {
+          legend.map((l) => (
+            <li class:list={['film__organ', { 'is-empty': l.level === 0 }]}>
+              <svg class="film__swatch" viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={hidden ? swatch(0, l.color) : swatch(l.level, l.color, l.organ === 'data')} />
+              <span>{l.name}</span>
+              <span class="film__n">
+                {hidden ? '·' : l.n.map((p, i) => (
+                  <>
+                    {i > 0 && ' · '}
+                    <span class="nw">{p}</span>
+                  </>
+                ))}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    {
+      hidden ? (
+        <div class="film__hidden">
+          <p class="t-h3">Anatomy not published. Commercial license.</p>
+          <p class="film__fine">The enterprise package ships compiled code only. The catalog lists its modules, not their contracts.</p>
+        </div>
+      ) : (
+        <div class="film__grid">
+          {present.map((s) => {
+            const r = rows(s.items)
+            const shown = r.items.slice(0, limit)
+            const rest = r.items.slice(limit)
+            const leadW = Math.max(0, ...s.items.map((i) => i.lead?.trim().length ?? 0))
+            const item = (it: (typeof r.items)[number]) => {
+              const link = it.file ? sourceLink(src, it.file, it.line) : null
+              return (
+                <li class:list={['film__item', { 'film__item--lead': it.lead }]}>
+                  {it.lead && <span class="film__lead">{it.lead.trim()}</span>}
+                  <span class="film__text" title={`${it.lead ? `${it.lead.trim()} ` : ''}${it.full}`} translate="no" set:html={idHtml(it.shown)} />
+                  {(it.tag || (it.file && link)) && (
+                    <span class="film__meta">
+                      {it.tag && <span class:list={['film__tag', `film__tag--${it.tagTone ?? 'wait'}`]}>{it.tag}</span>}
+                      {it.file && link && (
+                        <a class="film__src-link" href={link} rel="noopener noreferrer" title={`${it.file}${it.line ? `:${it.line}` : ''}`}>
+                          {it.file.split('/').at(-1)}
+                          {it.line ? `:${it.line}` : ''} ↗
+                        </a>
+                      )}
+                    </span>
+                  )}
+                </li>
+              )
+            }
+            return (
+              <section class="film__sec" aria-label={s.title} style={`--s3:${span3[s.id] ?? 1};--s2:${span2[s.id] ?? 1}`}>
+                <h4 class="film__sectitle">
+                  <span>{s.title}</span>
+                  {/* the count breaks between its parts only: `emits 6 ·` / `subscribes 5`, never `subscribes` / `5` */}
+                  <span class="film__count">
+                    {(countParts[s.id] ?? ['0']).map((p, i) => (
+                      <>
+                        {i > 0 && ' · '}
+                        <span class="nw">{p}</span>
+                      </>
+                    ))}
+                  </span>
+                </h4>
+                {r.prefix && (
+                  <p class="film__prefix" translate="no" title={r.prefix} set:html={idHtml(r.prefix)} />
+                )}
+                {s.items.length === 0 ? (
+                  <p class="film__none">{s.empty}</p>
+                ) : (
+                  <ul class="film__items" role="list" style={`--lead:${leadW}ch`}>
+                    {shown.map(item)}
+                    {rest.length > 0 && (
+                      <li class="film__more">
+                        <details>
+                          <summary>+{rest.length} more</summary>
+                          <ul class="film__items" role="list" style={`--lead:${leadW}ch`}>
+                            {rest.map(item)}
+                          </ul>
+                        </details>
+                      </li>
+                    )}
+                  </ul>
+                )}
+                {s.note && <p class="film__note">{s.note}</p>}
+              </section>
+            )
+          })}
+        </div>
+      )
+    }
+  </div>
+  {!hidden && absentText && <p class="film__absent">{absentText}</p>}
+  {partial && <p class:list={['film__partial', { 'film__partial--plain': !partial.plugs }]}>{partial.text}</p>}
+  {!hidden && <p class="film__fine film__foot">
+    Read statically from src/ in the published tarball. Code was not executed. Describes what the code declares, not
+    whether it is safe.
+  </p>}
+</section>
+
+<style>
+  .film {
+    position: relative;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--film-line);
+    background:
+      radial-gradient(120% 80% at 0% 0%, #b4f3720d, transparent 55%),
+      linear-gradient(var(--film), var(--film));
+    overflow: hidden;
+  }
+  .film::before {
+    /* faint hex lattice, the brand book motif, only on the film */
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231a1a1a' stroke-width='1'/%3E%3C/svg%3E");
+    mask-image: linear-gradient(to bottom, #000, transparent 70%);
+  }
+  .film > * {
+    position: relative;
+  }
+  .film__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 20px 0;
+  }
+  .film__src {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+    text-align: right;
+  }
+  .film__callout {
+    margin-top: 10px;
+    padding-right: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.06em;
+    color: #b4f372;
+    font-variant-numeric: tabular-nums;
+  }
+  /* the callout lines up with the header text: the list's own 16 px dot gutter sits in the film padding */
+  .film__callout.dotlist {
+    margin-left: 4px;
+  }
+  .film__body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 1px;
+    margin-top: 16px;
+    border-top: 1px solid var(--film-line);
+    background: var(--film-line);
+  }
+  .film__plate,
+  .film__grid,
+  .film__hidden {
+    background: var(--film);
+  }
+  .film__plate {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+  .film__sigil {
+    color: var(--film-ink);
+    padding: 8px;
+  }
+  .film__legend {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .film__organ {
+    display: grid;
+    grid-template-columns: 12px auto minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    color: var(--film-ink);
+  }
+  .film__organ > .film__swatch {
+    margin-top: 2px;
+  }
+  .film__organ.is-empty {
+    color: var(--film-ink-2);
+  }
+  .film__swatch {
+    display: block;
+    color: var(--film-ink);
+    overflow: visible;
+  }
+  /* one line where the legend has two columns; a single phone column may wrap between the parts */
+  .film__n {
+    font-size: 11px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--film-ink-2);
+  }
+  .film__note {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 14px;
+    color: var(--film-ink-2);
+  }
+  .film__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--film-line);
+  }
+  .film__sec {
+    grid-column: span var(--s3, 1);
+    min-width: 0;
+    padding: 14px 16px 16px;
+    background: var(--film);
+  }
+  @media (max-width: 991px) {
+    .film__sec {
+      grid-column: span var(--s2, 1);
+    }
+  }
+  @media (max-width: 767px) {
+    .film__sec {
+      grid-column: auto;
+    }
+  }
+  /* sections without facts, named once instead of drawn as empty cells */
+  .film__absent {
+    margin: 0;
+    padding: 12px 20px;
+    border-top: 1px solid var(--film-line);
+    font-size: 13px;
+    color: var(--film-ink-2);
+  }
+  .film__sectitle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2px 12px;
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+  }
+  .film__count {
+    color: var(--film-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .film__items {
+    display: grid;
+    gap: 8px;
+  }
+  /* one fact: [kind] identifier, and under it the tag and the file:line link; nothing is cut */
+  .film__item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 10px;
+    row-gap: 1px;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .film__item--lead {
+    /* one lead column per section, as wide as its longest kind word (`emits`, `subscribes`) */
+    grid-template-columns: var(--lead, 7ch) minmax(0, 1fr);
+  }
+  .film__lead {
+    color: var(--film-ink-2);
+  }
+  .film__text {
+    min-width: 0;
+    color: var(--film-ink);
+    overflow-wrap: normal;
+  }
+  .film__meta {
+    grid-column: -2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 10px;
+  }
+  .film__prefix {
+    margin: -4px 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 14px;
+    color: var(--film-ink-2);
+  }
+  .film__src code {
+    font: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .film__tag {
+    flex: none;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .film__tag--bad {
+    color: #ff6b6b;
+  }
+  .film__tag--wait {
+    color: #eefb63;
+  }
+  .film__tag--ok {
+    color: #b4f372;
+  }
+  .film__src-link {
+    flex: none;
+    color: #bc9aff;
+    text-decoration: none;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .film__src-link:hover {
+    text-decoration: underline;
+  }
+  .film__more,
+  .film__none {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--film-ink-2);
+  }
+  /* '+N more' opens the rest in place (no JS): every fact keeps its file:line */
+  .film__more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    cursor: pointer;
+    list-style: none;
+    color: var(--film-ink-2);
+  }
+  .film__more summary::-webkit-details-marker {
+    display: none;
+  }
+  .film__more summary::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+  }
+  .film__more details[open] > summary::after {
+    transform: translateY(1px) rotate(-135deg);
+  }
+  .film__more summary:hover {
+    color: var(--film-ink);
+  }
+  .film__more details[open] > summary {
+    margin-bottom: 8px;
+  }
+  @media (max-width: 767px) {
+    .film__more summary {
+      min-height: 44px;
+    }
+  }
+  .film__hidden {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+    padding: 32px;
+  }
+  .film__partial {
+    margin: 0;
+    padding: 12px 20px;
+    border-top: 1px solid var(--film-line);
+    color: #eefb63;
+    font-size: 14px;
+  }
+  .film__partial--plain {
+    color: var(--film-ink-2);
+  }
+  .film__fine {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--film-ink-2);
+  }
+  .film__foot {
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--film-line);
+  }
+  @media (max-width: 991px) {
+    .film__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 479px) {
+    .film__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .film__src {
+      text-align: left;
+    }
+  }
+  /* phones: each file:line link is a 44 px target; rows are spaced so neighbouring targets never overlap */
+  @media (max-width: 767px) {
+    .film__items:has(.film__src-link) {
+      gap: 14px;
+    }
+    .film__src-link {
+      padding-block: 14px;
+      margin-block: -14px;
+    }
+    .film__body {
+      grid-template-columns: 1fr;
+    }
+    .film__grid {
+      grid-template-columns: 1fr;
+    }
+    .film__plate {
+      grid-template-columns: auto 1fr;
+      justify-items: start;
+      align-items: center;
+    }
+  }
+</style>

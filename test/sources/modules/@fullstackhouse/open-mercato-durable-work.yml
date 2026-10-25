@@ -1,0 +1,4 @@
+npm: "@fullstackhouse/open-mercato-durable-work"
+category: storage-infrastructure
+summary: Durable at-least-once background work on leased job records in Postgres.
+whenToUse: Use when long background jobs must survive worker restarts without running twice.

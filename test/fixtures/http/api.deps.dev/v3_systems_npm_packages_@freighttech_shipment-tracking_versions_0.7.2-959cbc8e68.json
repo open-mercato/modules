@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40freighttech%2Fshipment-tracking/versions/0.7.2"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@freighttech/shipment-tracking",
+        "version": "0.7.2"
+      },
+      "publishedAt": "2026-09-24T19:26:05Z",
+      "slsaProvenances": [],
+      "attestations": []
+    }
+  }
+}

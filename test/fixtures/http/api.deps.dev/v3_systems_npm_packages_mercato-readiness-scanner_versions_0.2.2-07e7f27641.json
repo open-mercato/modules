@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/mercato-readiness-scanner/versions/0.2.2"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "mercato-readiness-scanner",
+        "version": "0.2.2"
+      },
+      "publishedAt": "2026-10-22T15:21:00Z",
+      "slsaProvenances": [],
+      "attestations": []
+    }
+  }
+}

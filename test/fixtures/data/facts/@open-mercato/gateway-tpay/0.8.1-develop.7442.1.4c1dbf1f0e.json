@@ -1,0 +1,235 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "fixture-wp01",
+    "durationMs": 25
+  },
+  "package": {
+    "locator": "npm:@open-mercato/gateway-tpay",
+    "name": "@open-mercato/gateway-tpay",
+    "version": "0.8.1-develop.7442.1.4c1dbf1f0e",
+    "integrity": "sha512-HGCiENOGtHStItm8ekf6I02pWbgmQR+7LalF60XIBgK4qWHe8f+h7GPpYlr9S1JtBxUCB0YJLHNQeHqYfCEO+g==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "gateway_tpay",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.1-develop.7442.1.4c1dbf1f0e"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.8.1-develop.7442.1.4c1dbf1f0e",
+    "zod": "^4.4.3"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "gateway_tpay",
+      "title": "Tpay Payment Gateway",
+      "description": "Accept hosted PLN payments, BLIK, cards, and bank transfers via Tpay.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": ["gateway_tpay.view", "gateway_tpay.configure"],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": ["configure-from-env", "help"]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "environment",
+            "type": "select",
+            "required": true
+          },
+          {
+            "key": "notificationUrl",
+            "type": "url",
+            "required": false
+          },
+          {
+            "key": "notificationSecurityCode",
+            "type": "secret",
+            "required": false
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "docs-api.tpay.com",
+            "src": {
+              "file": "src/modules/gateway_tpay/integration.ts",
+              "line": 11
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.tpay.com",
+            "src": {
+              "file": "src/modules/gateway_tpay/lib/tpay-client.ts",
+              "line": 6
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "openapi.sandbox.tpay.com",
+            "src": {
+              "file": "src/modules/gateway_tpay/lib/tpay-client.ts",
+              "line": 7
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "tpay"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/core/__integration__/helpers/api": ["apiRequest"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService", "createCredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService", "createIntegrationLogService"],
+          "modules/integrations/lib/state-service": ["IntegrationStateService", "createIntegrationStateService"]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/crud/errors": ["CrudHttpError", "isCrudHttpError"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/logger": ["createLogger"],
+          "lib/telemetry/runtime": ["getTelemetryRuntime"],
+          "modules/integrations/types": ["IntegrationBundle", "IntegrationDefinition", "IntegrationScope"],
+          "modules/payment_gateways/types": [
+            "CancelResult",
+            "CaptureResult",
+            "CreateSessionInput",
+            "CreateSessionResult",
+            "GatewayAdapter",
+            "GatewayPaymentStatus",
+            "GetStatusInput",
+            "RefundResult",
+            "UnifiedPaymentStatus",
+            "WebhookEvent",
+            "registerGatewayAdapter",
+            "registerPaymentGatewayDescriptor"
+          ],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "gateway_tpay",
+        "tables": [],
+        "aclFeatures": ["gateway_tpay.view", "gateway_tpay.configure"],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000201",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Open Mercato peers are pinned to an exact version.",
+          "anchor": null,
+          "src": {
+            "file": "package.json",
+            "line": 2
+          }
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "The package ships no AGENTS.md.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball contains __tests__.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": [
+    "[module-facts] module registry unavailable (registryPath not provided); API route auth omitted for gateway_tpay"
+  ]
+}

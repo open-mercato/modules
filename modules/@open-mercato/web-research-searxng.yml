@@ -1,0 +1,12 @@
+npm: "@open-mercato/web-research-searxng"
+repo: open-mercato/open-mercato#main/packages/web-research-searxng
+kind: provider
+category: ai-automation
+tags: [web-search, self-hosted]
+summary: Client adapter for web-research that queries a SearXNG instance you run. The AGPL server is not bundled.
+whenToUse: Use when agent searches must go through a metasearch server you control instead of a paid API.
+providers:
+  - { name: searxng, label: SearXNG }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

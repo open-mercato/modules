@@ -1,0 +1,68 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Abernard-fwc&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 42,
+            "weekly": 30
+          },
+          "dependents": 0,
+          "updated": "2026-10-22T09:51:08.220Z",
+          "searchScore": 20.10489,
+          "package": {
+            "name": "@fastwhitecat/integration-ksef-direct",
+            "keywords": [],
+            "version": "0.1.8",
+            "description": "OpenMercato module for direct integration with the Polish National e-Invoice System ([KSeF](https://ksef.mf.gov.pl)) via the official Ministry of Finance REST API v2 — no third-party middleware required.",
+            "sanitized_name": "@fastwhitecat/integration-ksef-direct",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "7a7aa871-7409-4a03-83c6-def80393f97f",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "bernard.van.der.esch@fastwhitecat.com",
+                "username": "bernard-fwc"
+              },
+              {
+                "email": "lukasz@lbajsarowicz.me",
+                "username": "lbajsarowicz"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-10-15T09:45:06.770Z",
+            "links": {
+              "homepage": "https://github.com/FastWhiteCat/openmercato-module-ksef#readme",
+              "repository": "git+https://github.com/FastWhiteCat/openmercato-module-ksef.git",
+              "bugs": "https://github.com/FastWhiteCat/openmercato-module-ksef/issues",
+              "npm": "https://www.npmjs.com/package/@fastwhitecat/integration-ksef-direct"
+            }
+          },
+          "score": {
+            "final": 20.10489,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 1,
+      "time": "2026-10-23T02:38:13.142Z"
+    }
+  }
+}

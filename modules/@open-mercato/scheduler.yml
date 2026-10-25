@@ -1,0 +1,8 @@
+npm: "@open-mercato/scheduler"
+repo: open-mercato/open-mercato#main/packages/scheduler
+category: storage-infrastructure
+tags: [cron, jobs, scheduling]
+summary: Database-managed scheduled jobs with cron or interval timing, time zones, run history and an admin UI.
+whenToUse: Use when the app must run commands or enqueue queue jobs on a schedule that admins can change without a deploy.
+links:
+  docs: https://docs.openmercato.com/framework/scheduler/overview

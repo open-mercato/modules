@@ -1,0 +1,6 @@
+npm: "@fullstackhouse/open-mercato-health"
+github: fullstackhouse/open-mercato-health
+category: storage-infrastructure
+tags: [health-check, kubernetes, probes]
+summary: Liveness and readiness endpoints that check the database, cache, queue, search, KMS, email and AI providers.
+whenToUse: Use when Kubernetes or a load balancer must know whether the app is up and ready to take traffic.

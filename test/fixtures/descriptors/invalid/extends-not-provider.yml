@@ -1,0 +1,6 @@
+# expect-path: extends
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when extends is set on a module that is not a provider.
+extends: "npm:@open-mercato/web-research"

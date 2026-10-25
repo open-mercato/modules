@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40open-mercato%2Fgateway-tpay/versions/0.8.1-develop.7442.1.4c1dbf1f0e"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@open-mercato/gateway-tpay",
+        "version": "0.8.1-develop.7442.1.4c1dbf1f0e"
+      },
+      "publishedAt": "2026-10-10T09:39:43Z",
+      "slsaProvenances": [
+        {
+          "sourceRepository": "https://github.com/open-mercato/open-mercato",
+          "commit": "4c1dbf1f0e3ba38fcb0554615fbcfb9325c49014",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@open-mercato%2fgateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e",
+          "verified": true
+        }
+      ],
+      "attestations": [
+        {
+          "type": "https://slsa.dev/provenance/v1",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@open-mercato%2fgateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e",
+          "verified": true,
+          "sourceRepository": "https://github.com/open-mercato/open-mercato",
+          "commit": "4c1dbf1f0e3ba38fcb0554615fbcfb9325c49014"
+        }
+      ]
+    }
+  }
+}

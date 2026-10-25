@@ -1,0 +1,173 @@
+---
+// The Hive (spec 7.5, review r1): a round plate. The core is the grey disc in the middle, catalog modules ring it,
+// one sector per category (the dial names them), coloured by type exactly like the type chips: official lime,
+// community violet outline, third party yellow outline. Static SVG from the build, max 560 px wide, hidden below
+// 992 px. aria-hidden: the registry is its text twin.
+import { renderHive, TYPE_COLOUR } from '../../../lib/hive/render.ts'
+import type { HiveCell } from '../../../lib/hive/render.ts'
+import { href } from '../lib/url.ts'
+
+interface Props {
+  /** Cells with site paths in `href` (the component adds the base path). */
+  cells: HiveCell[]
+  /** Show at every width (design gallery). */
+  always?: boolean
+}
+const { cells, always = false } = Astro.props
+const svg = renderHive(
+  cells.map((c) => ({ ...c, href: href(c.href) })),
+  { className: 'hive__svg' },
+)
+const typeOf = (c: HiveCell): string =>
+  c.group === 'core' ? 'core' : (c.type ?? (c.group === 'official' ? 'official' : '3rd-party'))
+const counts = {
+  core: cells.filter((c) => typeOf(c) === 'core').length,
+  official: cells.filter((c) => typeOf(c) === 'official').length,
+  community: cells.filter((c) => typeOf(c) === 'community').length,
+  third: cells.filter((c) => typeOf(c) === '3rd-party').length,
+}
+---
+
+<figure class:list={['hive', { 'hive--always': always }]} data-hive>
+  <div class="hive__map">
+    <Fragment set:html={svg} />
+    {[0, 1, 2].map(() => <span class="hive__tag" data-hive-tag hidden></span>)}
+  </div>
+  <figcaption class="hive__legend">
+    <span><i class="hive__k hive__k--core" aria-hidden="true"></i>Built into core <b>{counts.core}</b></span>
+    {
+      counts.official > 0 && (
+        <span>
+          <i class="hive__k" style={`background:${TYPE_COLOUR.official}`} aria-hidden="true" />
+          Official <b>{counts.official}</b>
+        </span>
+      )
+    }
+    {
+      counts.community > 0 && (
+        <span>
+          <svg class="hive__kl" viewBox="0 0 10 11.5" aria-hidden="true">
+            <polygon points="5,0.9 9.1,3.25 9.1,8.25 5,10.6 0.9,8.25 0.9,3.25" stroke={TYPE_COLOUR.community} />
+          </svg>
+          Community <b>{counts.community}</b>
+        </span>
+      )
+    }
+    {
+      counts.third > 0 && (
+        <span>
+          <svg class="hive__kl" viewBox="0 0 10 11.5" aria-hidden="true">
+            <polygon points="5,0.9 9.1,3.25 9.1,8.25 5,10.6 0.9,8.25 0.9,3.25" stroke={TYPE_COLOUR['3rd-party']} />
+          </svg>
+          Third-party <b>{counts.third}</b>
+        </span>
+      )
+    }
+    {/* the lime of official cells is the type chip's, which the strip also uses for verified (review r8): said once */}
+    <span class="hive__note">Color is the type, not a receipt.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .hive {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+    width: 100%;
+  }
+  .hive__map {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+  }
+  .hive__map :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+  .hive__map :global(a:hover use),
+  .hive__map :global(a:focus use) {
+    stroke: #fafafa;
+    stroke-width: 1.5;
+  }
+  /* a query (HiveHover): matching cells get a 2 px lime edge, the rest step back to 12 % */
+  .hive__map :global(a.is-dim) {
+    opacity: 0.12;
+  }
+  .hive__map :global(a.is-hit use) {
+    stroke: #b4f372;
+    stroke-width: 2.5;
+  }
+  /* a sector name an answer's label still covers steps back while the answer is on the map (review r11) */
+  .hive__map :global(.hl text) {
+    transition: opacity var(--dur-1) var(--ease);
+  }
+  .hive__map :global(.hl text.is-under) {
+    opacity: 0;
+  }
+  /* the first three cells that answer the query (core or catalog) get their names next to them */
+  .hive__tag {
+    position: absolute;
+    transform: translateY(-50%);
+    padding: 2px 6px;
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius-s);
+    background: var(--film-2);
+    color: #b4f372;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .hive__tag.is-left {
+    transform: translate(-100%, -50%);
+  }
+  .hive__legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--film-ink-2);
+  }
+  .hive__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hive__note {
+    flex-basis: 100%;
+    justify-content: center;
+    color: var(--film-ink-2);
+  }
+  .hive__legend b {
+    font-weight: 400;
+    color: var(--film-ink);
+  }
+  .hive__k {
+    width: 10px;
+    height: 11.5px;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+  .hive__k--core {
+    background: #3a3a3a;
+  }
+  /* an outlined hex, like a community or third-party cell */
+  .hive__kl {
+    width: 10px;
+    height: 11.5px;
+  }
+  .hive__kl polygon {
+    fill: none;
+    stroke-width: 1.4;
+  }
+  @media (max-width: 991px) {
+    .hive:not(.hive--always) {
+      display: none;
+    }
+  }
+</style>

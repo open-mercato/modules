@@ -1,0 +1,65 @@
+---
+// Anatomy sigil (spec 7.4). Pass an IndexEntry, a built-in module, or raw glyph data.
+import { renderSigil, sigilLabel, sigilPhase } from '../../../lib/sigil/sigil.ts'
+import type { SigilKind, SigilSize, SigilCounts } from '../../../lib/sigil/sigil.ts'
+import { glyphFromCounts } from '../../../lib/sigil/sigil.ts'
+import type { BuiltInModule, IndexEntry } from '../../../lib/schema/index.ts'
+import { transitionNames } from '../lib/vt.ts'
+
+interface Props {
+  entry?: IndexEntry
+  builtIn?: BuiltInModule
+  glyph?: string
+  phase?: number
+  kind?: SigilKind
+  enterprise?: boolean
+  publicRoutes?: boolean
+  counts?: SigilCounts | null
+  size?: SigilSize
+  /** Give the sigil its view-transition name (list row and module header only). */
+  transition?: boolean
+  class?: string
+}
+const p = Astro.props
+let svg: string
+if (p.entry) {
+  const e = p.entry
+  svg = renderSigil({
+    glyph: e.sigil.glyph,
+    phase: e.sigil.phase,
+    kind: e.kind,
+    enterprise: e.enterprise,
+    publicRoutes: e.sigil.publicRoutes,
+    size: p.size ?? 32,
+    optical: (p.size ?? 32) <= 16,
+    label: sigilLabel(e.anatomy?.counts ?? null, { enterprise: e.enterprise }),
+    className: p.class,
+    transitionName: p.transition ? transitionNames(e.locator).sigil : undefined,
+  })
+} else if (p.builtIn) {
+  const b = p.builtIn
+  svg = renderSigil({
+    glyph: glyphFromCounts(b.anatomy.counts),
+    phase: sigilPhase(`core:${b.id}`),
+    kind: 'built-in',
+    size: p.size ?? 32,
+    optical: (p.size ?? 32) <= 16,
+    label: sigilLabel(b.anatomy.counts),
+    className: p.class,
+  })
+} else {
+  svg = renderSigil({
+    glyph: p.glyph ?? (p.counts ? glyphFromCounts(p.counts) : '0000000'),
+    phase: p.phase ?? 0,
+    kind: p.kind ?? 'module',
+    enterprise: p.enterprise,
+    publicRoutes: p.publicRoutes,
+    size: p.size ?? 32,
+    optical: (p.size ?? 32) <= 16,
+    label: sigilLabel(p.counts ?? null, { enterprise: p.enterprise }),
+    className: p.class,
+  })
+}
+---
+
+<Fragment set:html={svg} />

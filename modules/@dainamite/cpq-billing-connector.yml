@@ -1,0 +1,8 @@
+npm: "@dainamite/cpq-billing-connector"
+github: dainamite-technologies/dainamite-core
+repo: dainamite-technologies/dainamite-core#main/packages/cpq-billing-connector
+category: payments-finance
+tags: [cpq, billing, subscriptions]
+summary: Turns CPQ subscription events (activated, amended, renewed, cancelled, merged) into billing accounts and items.
+whenToUse: Use when you run both Dainamite CPQ and Billing and subscriptions sold in CPQ must be billed automatically.
+whenNotToUse: "It has no UI or tables of its own: without cpq and billing it does nothing."

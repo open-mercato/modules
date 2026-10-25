@@ -1,0 +1,9 @@
+npm: "@northbound-run/search-cloudflare"
+github: Northbound-Run/open-mercato-cloudflare-ai-search
+category: search-analytics
+tags: [search, cloudflare, fulltext]
+summary: "Cloudflare AI Search as a fulltext driver for search: hybrid BM25 and vector retrieval with no search server to run."
+whenToUse: Use when you would rather not operate Meilisearch and accept about 250 ms search latency from a managed service.
+whenNotToUse: "Indexed text leaves your infrastructure: decide which fields may be sent before indexing production data."
+providers:
+  - { name: cloudflare-ai-search, label: Cloudflare AI Search }

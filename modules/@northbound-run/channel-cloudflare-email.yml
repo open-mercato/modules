@@ -1,0 +1,9 @@
+npm: "@northbound-run/channel-cloudflare-email"
+github: Northbound-Run/open-mercato-cloudflare-email
+category: communication
+tags: [email, cloudflare]
+summary: "Cloudflare Email Service channel: inbound mail through Email Routing and a Worker, outbound through the REST API."
+whenToUse: Use when your domain mail runs on Cloudflare and threads should land in the app's communication channels with real delivery status.
+whenNotToUse: "There is no history import: the channel sees mail only from the moment its routing rule goes live."
+providers:
+  - { name: cloudflare-email, label: Cloudflare Email Service }

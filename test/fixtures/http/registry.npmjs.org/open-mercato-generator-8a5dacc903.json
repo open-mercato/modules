@@ -1,0 +1,52 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/open-mercato-generator"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "open-mercato-generator",
+      "dist-tags": {
+        "latest": "0.3.13"
+      },
+      "versions": {
+        "0.3.13": {
+          "version": "0.3.13",
+          "license": "MIT",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/mkadziolka/open-mercato-rust-client.git"
+          },
+          "gitHead": "3fbc5bee39f7bef3afe73e79717a322e0bf36dcb",
+          "maintainers": [
+            {
+              "name": "mkadziolka"
+            }
+          ],
+          "scripts": {},
+          "description": "Open Mercato OpenAPI -> Rust client generator tools",
+          "dist": {
+            "integrity": "sha512-tgQJFqBxKYxt3anxmPkbP3udPRaeKixJqp6cRkwYZ80KOI3XQxT53szXZCb3WD5xhFlNS/gifknEMOYu/ogC3A==",
+            "tarball": "https://registry.npmjs.org/open-mercato-generator/-/open-mercato-generator-0.3.13.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-01-17T11:28:54.870Z",
+        "0.3.13": "2026-01-17T11:28:55.016Z",
+        "modified": "2026-01-17T11:28:55.234Z"
+      },
+      "maintainers": [
+        {
+          "name": "mkadziolka"
+        }
+      ],
+      "description": "Open Mercato OpenAPI -> Rust client generator tools",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mkadziolka/open-mercato-rust-client.git"
+      }
+    }
+  }
+}

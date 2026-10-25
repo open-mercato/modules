@@ -1,0 +1,10 @@
+npm: "@open-mercato/gateway-payu"
+category: payments-finance
+tags: [payments, poland]
+summary: PayU payment gateway provider. Only an orphaned canary build from March 2026 is published.
+whenToUse: Use when customers pay through PayU, once a maintained release exists. No source code is available today.
+whenNotToUse: For PLN payments today use gateway-tpay or gateway-stripe.
+providers:
+  - { name: payu, label: PayU }
+status: hold
+reason: Orphaned canary from March 2026. No source in any repository.

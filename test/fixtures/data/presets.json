@@ -1,0 +1,168 @@
+{
+  "0.8": {
+    "omVersion": "0.8.0",
+    "empty": [
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "configs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "entities",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "query_index",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_docs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "audit_logs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "notifications",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dashboards",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "events",
+        "from": "@open-mercato/events"
+      },
+      {
+        "id": "search",
+        "from": "@open-mercato/search"
+      },
+      {
+        "id": "attachments",
+        "from": "@open-mercato/core"
+      }
+    ],
+    "at": "2026-10-23T03:05:00Z"
+  },
+  "0.9": {
+    "omVersion": "0.9.0",
+    "empty": [
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "configs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "entities",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "query_index",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_docs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "audit_logs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "notifications",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dashboards",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "events",
+        "from": "@open-mercato/events"
+      },
+      {
+        "id": "search",
+        "from": "@open-mercato/search"
+      },
+      {
+        "id": "attachments",
+        "from": "@open-mercato/core"
+      }
+    ],
+    "at": "2026-10-23T03:05:00Z"
+  },
+  "next": {
+    "omVersion": "0.10.1-develop.7583.1.0c886d0a14",
+    "empty": [
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "configs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "entities",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "query_index",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_docs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "audit_logs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "notifications",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dashboards",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "events",
+        "from": "@open-mercato/events"
+      },
+      {
+        "id": "search",
+        "from": "@open-mercato/search"
+      },
+      {
+        "id": "attachments",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_keys",
+        "from": "@open-mercato/core"
+      }
+    ],
+    "at": "2026-10-23T03:05:00Z"
+  }
+}

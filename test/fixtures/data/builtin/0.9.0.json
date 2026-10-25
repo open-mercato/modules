@@ -1,0 +1,773 @@
+{
+  "factsVersion": 1,
+  "coreVersion": "0.9.0",
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0",
+    "factsContractVersion": 2,
+    "source": "module-facts.v2.json",
+    "cliVersion": "0.9.0"
+  },
+  "computedAt": "2026-10-23T00:17:00Z",
+  "routesMeasured": false,
+  "modules": [
+    {
+      "id": "currencies",
+      "title": "Currencies",
+      "description": "Currencies and Exchange rate management",
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [
+          {
+            "id": "currencies:currency",
+            "table": "currencies",
+            "src": null
+          },
+          {
+            "id": "currencies:exchange_rate",
+            "table": "exchange_rates",
+            "src": null
+          },
+          {
+            "id": "currencies:currency_fetch_config",
+            "table": "currency_fetch_configs",
+            "src": null
+          }
+        ],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 0
+      },
+      "security": {
+        "aclFeatures": [
+          "currencies.view",
+          "currencies.manage",
+          "currencies.rates.view",
+          "currencies.rates.manage",
+          "currencies.fetch.view",
+          "currencies.fetch.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "currencies.currency.created",
+            "src": null
+          },
+          {
+            "id": "currencies.currency.updated",
+            "src": null
+          },
+          {
+            "id": "currencies.currency.deleted",
+            "src": null
+          },
+          {
+            "id": "currencies.exchange_rate.created",
+            "src": null
+          },
+          {
+            "id": "currencies.exchange_rate.updated",
+            "src": null
+          },
+          {
+            "id": "currencies.exchange_rate.deleted",
+            "src": null
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/config/currency-fetching",
+            "requireFeatures": ["currencies.fetch.view"]
+          },
+          {
+            "path": "/backend/currencies",
+            "requireFeatures": ["currencies.view"]
+          },
+          {
+            "path": "/backend/currencies/[id]",
+            "requireFeatures": ["currencies.manage"]
+          },
+          {
+            "path": "/backend/currencies/create",
+            "requireFeatures": ["currencies.manage"]
+          },
+          {
+            "path": "/backend/exchange-rates",
+            "requireFeatures": ["currencies.rates.view"]
+          },
+          {
+            "path": "/backend/exchange-rates/[id]",
+            "requireFeatures": ["currencies.rates.manage"]
+          },
+          {
+            "path": "/backend/exchange-rates/create",
+            "requireFeatures": ["currencies.rates.manage"]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 29
+      },
+      "background": {
+        "workers": [],
+        "cli": ["seed", "fetch-rates", "list-providers"]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {},
+      "collisionKeys": {
+        "moduleId": "currencies",
+        "tables": ["currencies", "exchange_rates", "currency_fetch_configs"],
+        "aclFeatures": [
+          "currencies.view",
+          "currencies.manage",
+          "currencies.rates.view",
+          "currencies.rates.manage",
+          "currencies.fetch.view",
+          "currencies.fetch.manage"
+        ],
+        "eventIds": [
+          "currencies.currency.created",
+          "currencies.currency.updated",
+          "currencies.currency.deleted",
+          "currencies.exchange_rate.created",
+          "currencies.exchange_rate.updated",
+          "currencies.exchange_rate.deleted"
+        ],
+        "backendRoutes": [
+          "/backend/config/currency-fetching",
+          "/backend/currencies",
+          "/backend/currencies/[id]",
+          "/backend/currencies/create",
+          "/backend/exchange-rates",
+          "/backend/exchange-rates/[id]",
+          "/backend/exchange-rates/create"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "2022200",
+      "lint": []
+    },
+    {
+      "id": "data_sync",
+      "title": "Data Sync",
+      "description": "Streaming data sync hub for import/export integrations.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "data_sync:sync_run",
+            "table": "sync_runs",
+            "src": null
+          },
+          {
+            "id": "data_sync:sync_cursor",
+            "table": "sync_cursors",
+            "src": null
+          },
+          {
+            "id": "data_sync:sync_mapping",
+            "table": "sync_mappings",
+            "src": null
+          },
+          {
+            "id": "data_sync:sync_schedule",
+            "table": "sync_schedules",
+            "src": null
+          }
+        ],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 0
+      },
+      "security": {
+        "aclFeatures": ["data_sync.view", "data_sync.run", "data_sync.configure"],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "data_sync.run.started",
+            "src": null
+          },
+          {
+            "id": "data_sync.run.completed",
+            "src": null
+          },
+          {
+            "id": "data_sync.run.failed",
+            "src": null
+          },
+          {
+            "id": "data_sync.run.cancelled",
+            "src": null
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/data-sync",
+            "requireFeatures": ["data_sync.view"]
+          },
+          {
+            "path": "/backend/data-sync/runs/[id]",
+            "requireFeatures": ["data_sync.view"]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 21
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {},
+      "collisionKeys": {
+        "moduleId": "data_sync",
+        "tables": ["sync_runs", "sync_cursors", "sync_mappings", "sync_schedules"],
+        "aclFeatures": ["data_sync.view", "data_sync.run", "data_sync.configure"],
+        "eventIds": [
+          "data_sync.run.started",
+          "data_sync.run.completed",
+          "data_sync.run.failed",
+          "data_sync.run.cancelled"
+        ],
+        "backendRoutes": ["/backend/data-sync", "/backend/data-sync/runs/[id]"]
+      },
+      "publicRoutes": 0,
+      "glyph": "2022000",
+      "lint": []
+    },
+    {
+      "id": "wms",
+      "title": "Warehouse Management System",
+      "description": "Warehouse topology, inventory balances, reservations, and movement ledger.",
+      "requires": [
+        {
+          "raw": "catalog",
+          "resolvesTo": "core:catalog"
+        },
+        {
+          "raw": "sales",
+          "resolvesTo": "core:sales"
+        },
+        {
+          "raw": "feature_toggles",
+          "resolvesTo": "core:feature_toggles"
+        }
+      ],
+      "ejectable": true,
+      "data": {
+        "entities": [
+          {
+            "id": "wms:warehouse",
+            "table": "wms_warehouses",
+            "src": null
+          },
+          {
+            "id": "wms:warehouse_zone",
+            "table": "wms_warehouse_zones",
+            "src": null
+          },
+          {
+            "id": "wms:warehouse_location",
+            "table": "wms_warehouse_locations",
+            "src": null
+          },
+          {
+            "id": "wms:product_inventory_profile",
+            "table": "wms_product_inventory_profiles",
+            "src": null
+          },
+          {
+            "id": "wms:inventory_lot",
+            "table": "wms_inventory_lots",
+            "src": null
+          },
+          {
+            "id": "wms:inventory_balance",
+            "table": "wms_inventory_balances",
+            "src": null
+          },
+          {
+            "id": "wms:inventory_reservation",
+            "table": "wms_inventory_reservations",
+            "src": null
+          },
+          {
+            "id": "wms:sales_order_warehouse_assignment",
+            "table": "wms_sales_order_warehouse_assignments",
+            "src": null
+          },
+          {
+            "id": "wms:inventory_movement",
+            "table": "wms_inventory_movements",
+            "src": null
+          }
+        ],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 0
+      },
+      "security": {
+        "aclFeatures": [
+          "wms.view",
+          "wms.manage_warehouses",
+          "wms.manage_zones",
+          "wms.manage_locations",
+          "wms.manage_inventory",
+          "wms.manage_reservations",
+          "wms.adjust_inventory",
+          "wms.receive_inventory",
+          "wms.cycle_count",
+          "wms.import"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "wms.warehouse.created",
+            "src": null
+          },
+          {
+            "id": "wms.warehouse.updated",
+            "src": null
+          },
+          {
+            "id": "wms.zone.created",
+            "src": null
+          },
+          {
+            "id": "wms.zone.updated",
+            "src": null
+          },
+          {
+            "id": "wms.location.created",
+            "src": null
+          },
+          {
+            "id": "wms.location.updated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_profile.created",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_profile.updated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_balance.created",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_balance.updated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_balance.deleted",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_reservation.created",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_reservation.updated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_reservation.deleted",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_movement.created",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_movement.updated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory_movement.deleted",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.received",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.adjusted",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.reserved",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.released",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.allocated",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.moved",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.reconciled",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.low_stock",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.balance_drift",
+            "src": null
+          },
+          {
+            "id": "wms.inventory.reservation_shortfall",
+            "src": null
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "wms.inventory_balance.*",
+            "src": null
+          },
+          {
+            "event": "availability.policy.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory_profile.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory_balance.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory_movement.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory_profile.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory_reservation.*",
+            "src": null
+          },
+          {
+            "event": "sales.line.*",
+            "src": null
+          },
+          {
+            "event": "sales.order.*",
+            "src": null
+          },
+          {
+            "event": "catalog.variant.*",
+            "src": null
+          },
+          {
+            "event": "wms.warehouse.*",
+            "src": null
+          },
+          {
+            "event": "wms.inventory.low_stock",
+            "src": null
+          },
+          {
+            "event": "wms.inventory.reservation_shortfall",
+            "src": null
+          },
+          {
+            "event": "sales.order.cancelled",
+            "src": null
+          },
+          {
+            "event": "sales.order.confirmed",
+            "src": null
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/config/wms",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/inventory",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/location/[id]",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/locations",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/lot/[id]",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/lots",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/movements",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/reservations",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/sku/[id]",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/warehouses",
+            "requireFeatures": ["wms.view"]
+          },
+          {
+            "path": "/backend/wms/zones",
+            "requireFeatures": ["wms.view"]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 185
+      },
+      "background": {
+        "workers": [],
+        "cli": ["verify-balances"]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "api-interceptor",
+          "target": "catalog/products"
+        },
+        {
+          "kind": "api-interceptor",
+          "target": "catalog/variants"
+        },
+        {
+          "kind": "crud-form",
+          "target": "crud-form:catalog.catalog_product_variant:fields"
+        },
+        {
+          "kind": "crud-form",
+          "target": "crud-form:catalog.product:fields"
+        },
+        {
+          "kind": "data-table",
+          "target": "data-table:sales.order.items:columns"
+        },
+        {
+          "kind": "response-enricher",
+          "target": "catalog:catalog_product"
+        },
+        {
+          "kind": "response-enricher",
+          "target": "catalog:catalog_product_variant"
+        },
+        {
+          "kind": "response-enricher",
+          "target": "sales:sales_order"
+        },
+        {
+          "kind": "subscriber",
+          "target": "availability.policy.*"
+        },
+        {
+          "kind": "subscriber",
+          "target": "sales.line.*"
+        },
+        {
+          "kind": "subscriber",
+          "target": "sales.order.*"
+        },
+        {
+          "kind": "subscriber",
+          "target": "catalog.variant.*"
+        },
+        {
+          "kind": "subscriber",
+          "target": "sales.order.cancelled"
+        },
+        {
+          "kind": "subscriber",
+          "target": "sales.order.confirmed"
+        },
+        {
+          "kind": "widget",
+          "target": "sales.document.detail.order:details"
+        }
+      ],
+      "omImports": {},
+      "collisionKeys": {
+        "moduleId": "wms",
+        "tables": [
+          "wms_warehouses",
+          "wms_warehouse_zones",
+          "wms_warehouse_locations",
+          "wms_product_inventory_profiles",
+          "wms_inventory_lots",
+          "wms_inventory_balances",
+          "wms_inventory_reservations",
+          "wms_sales_order_warehouse_assignments",
+          "wms_inventory_movements"
+        ],
+        "aclFeatures": [
+          "wms.view",
+          "wms.manage_warehouses",
+          "wms.manage_zones",
+          "wms.manage_locations",
+          "wms.manage_inventory",
+          "wms.manage_reservations",
+          "wms.adjust_inventory",
+          "wms.receive_inventory",
+          "wms.cycle_count",
+          "wms.import"
+        ],
+        "eventIds": [
+          "wms.warehouse.created",
+          "wms.warehouse.updated",
+          "wms.zone.created",
+          "wms.zone.updated",
+          "wms.location.created",
+          "wms.location.updated",
+          "wms.inventory_profile.created",
+          "wms.inventory_profile.updated",
+          "wms.inventory_balance.created",
+          "wms.inventory_balance.updated",
+          "wms.inventory_balance.deleted",
+          "wms.inventory_reservation.created",
+          "wms.inventory_reservation.updated",
+          "wms.inventory_reservation.deleted",
+          "wms.inventory_movement.created",
+          "wms.inventory_movement.updated",
+          "wms.inventory_movement.deleted",
+          "wms.inventory.received",
+          "wms.inventory.adjusted",
+          "wms.inventory.reserved",
+          "wms.inventory.released",
+          "wms.inventory.allocated",
+          "wms.inventory.moved",
+          "wms.inventory.reconciled",
+          "wms.inventory.low_stock",
+          "wms.inventory.balance_drift",
+          "wms.inventory.reservation_shortfall"
+        ],
+        "backendRoutes": [
+          "/backend/config/wms",
+          "/backend/wms",
+          "/backend/wms/inventory",
+          "/backend/wms/location/[id]",
+          "/backend/wms/locations",
+          "/backend/wms/lot/[id]",
+          "/backend/wms/lots",
+          "/backend/wms/movements",
+          "/backend/wms/reservations",
+          "/backend/wms/sku/[id]",
+          "/backend/wms/warehouses",
+          "/backend/wms/zones"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "2033103",
+      "lint": []
+    }
+  ],
+  "diagnostics": [
+    "fixture: 3 of 46 core modules (currencies, data_sync, wms); migrations and widgets are not in module-facts.v2.json"
+  ]
+}

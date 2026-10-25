@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-expo"
+repo: open-mercato/open-mercato#main/packages/channel-expo
+category: communication
+tags: [push, expo, mobile]
+summary: Sends push notifications to Expo apps through the Expo push service, with an optional access token.
+whenToUse: Use when your mobile app is built with Expo and order or account updates should reach users as push.
+whenNotToUse: For native iOS or Android apps without Expo use channel-apns or channel-fcm.
+providers:
+  - { name: expo, label: Expo }
+links:
+  docs: https://docs.openmercato.com/framework/modules/push-notifications

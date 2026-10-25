@@ -1,0 +1,168 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@dainamite%2Fcpq"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@dainamite/cpq",
+      "dist-tags": {
+        "latest": "0.4.0"
+      },
+      "versions": {
+        "0.2.2": {
+          "version": "0.2.2",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "type": "git",
+            "directory": "packages/cpq"
+          },
+          "gitHead": "9ec7ea2e2442a26e259765f2a5c923b5cef55389",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "next": "^16.0.0",
+            "xlsx": "^0.18.0",
+            "react": "^19.0.0",
+            "awilix": "^12.0.0",
+            "bcryptjs": "^3.0.0",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.400.0",
+            "@mikro-orm/core": "^7.0.0",
+            "@open-mercato/ui": "^0.6.0",
+            "@open-mercato/core": "^0.6.0",
+            "@open-mercato/events": "^0.6.0",
+            "@open-mercato/shared": "^0.6.0",
+            "@mikro-orm/decorators": "^7.0.0",
+            "@mikro-orm/postgresql": "^7.0.0",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0"
+          },
+          "scripts": {},
+          "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+          "dist": {
+            "integrity": "sha512-ZcnXBayBPasg27qt9sq4Fwlezlignkd3n+Hi+ObcaitNIKiaPMYyNk2cK6NYbdxESxqZ94I0kWauH/eQROEoZA==",
+            "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.2.2.tgz"
+          }
+        },
+        "0.3.0": {
+          "version": "0.3.0",
+          "license": "MIT",
+          "repository": {
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "type": "git",
+            "directory": "packages/cpq"
+          },
+          "gitHead": "ad015655f0396201e5fe861eb2869c3c87f9a5b4",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "zod": "^4.0.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "awilix": "^12.0.0",
+            "bcryptjs": "^3.0.0",
+            "react-dom": "^19.0.0",
+            "lucide-react": "^0.400.0",
+            "@mikro-orm/core": "^7.0.0",
+            "@open-mercato/ui": "^0.6.0",
+            "@open-mercato/core": "^0.6.0",
+            "@open-mercato/events": "^0.6.0",
+            "@open-mercato/shared": "^0.6.0",
+            "@mikro-orm/decorators": "^7.0.0",
+            "@mikro-orm/postgresql": "^7.0.0",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0"
+          },
+          "dependencies": {
+            "xlsx": "^0.18.0"
+          },
+          "scripts": {},
+          "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+          "dist": {
+            "integrity": "sha512-ofAIYLQWybfMivkIsKJmfl8hOzX/0MNPz+DPagW9juQ7BQWI/1bOmXF4JZQVMlkdqw5K96M1puLiWil1wvyBUw==",
+            "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.3.0.tgz"
+          }
+        },
+        "0.4.0": {
+          "version": "0.4.0",
+          "license": "MIT",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+            "directory": "packages/cpq"
+          },
+          "gitHead": "bf641f89e1493ae88a88234140f0cf43daaa0849",
+          "maintainers": [
+            {
+              "name": "dainamite-acc"
+            },
+            {
+              "name": "kamyyylo"
+            }
+          ],
+          "peerDependencies": {
+            "@mikro-orm/core": "^7.1.5",
+            "@mikro-orm/decorators": "^7.1.5",
+            "@mikro-orm/postgresql": "^7.1.5",
+            "@open-mercato/core": "^0.6.7",
+            "@open-mercato/events": "^0.6.7",
+            "@open-mercato/shared": "^0.6.7",
+            "@open-mercato/ui": "^0.6.7",
+            "@tanstack/react-table": "^8.0.0 || ^9.0.0",
+            "awilix": "^12.0.0",
+            "bcryptjs": "^3.0.0",
+            "lucide-react": "^0.400.0",
+            "next": "^16.0.0",
+            "react": "^19.0.0",
+            "react-dom": "^19.0.0",
+            "zod": "^4.0.0"
+          },
+          "dependencies": {
+            "xlsx": "^0.18.0"
+          },
+          "scripts": {},
+          "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+          "dist": {
+            "integrity": "sha512-ZLQRTwele2z6yJ0ZuhqFd5c3QJLgFfBZeL/A4hfRMpYODctCT8PBLQHPId+r72fUaKBsCrHsOXyqmRUMCEuJ1A==",
+            "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.4.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-05-15T21:27:32.982Z",
+        "modified": "2026-08-25T10:53:51.641Z",
+        "0.2.2": "2026-05-15T21:27:33.260Z",
+        "0.3.0": "2026-06-09T11:51:35.189Z",
+        "0.4.0": "2026-08-25T10:53:51.413Z"
+      },
+      "maintainers": [
+        {
+          "name": "dainamite-acc"
+        },
+        {
+          "name": "kamyyylo"
+        }
+      ],
+      "description": "Dainamite CPQ — Configure, Price, Quote engine for Open Mercato (configurable products, multi-charge pricing tables, guided quoting, customer inventory, orders).",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+        "directory": "packages/cpq"
+      }
+    }
+  }
+}

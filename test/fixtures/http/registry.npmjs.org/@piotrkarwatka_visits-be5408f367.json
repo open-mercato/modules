@@ -1,0 +1,64 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@piotrkarwatka%2Fvisits"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "name": "@piotrkarwatka/visits",
+      "dist-tags": {
+        "latest": "0.1.0"
+      },
+      "versions": {
+        "0.1.0": {
+          "version": "0.1.0",
+          "license": "UNLICENSED",
+          "repository": {
+            "url": "git+https://github.com/pkarw/visits-example.git",
+            "type": "git"
+          },
+          "maintainers": [
+            {
+              "name": "piotrkarwatka"
+            }
+          ],
+          "peerDependencies": {
+            "next": "16.3.3",
+            "react": "19.2.8",
+            "@open-mercato/ui": "0.8.0",
+            "@open-mercato/core": "0.8.0",
+            "@open-mercato/shared": "0.8.0"
+          },
+          "dependencies": {
+            "zod": "4.4.3",
+            "lucide-react": "1.52.0",
+            "@tanstack/react-query": "5.104.1",
+            "@tanstack/react-table": "9.2.5"
+          },
+          "scripts": {},
+          "description": "Open Mercato module: visits",
+          "dist": {
+            "integrity": "sha512-TqJBZSugVSmqYNBvDJmEgk1WKgBIjqbvNR+MVhPj61aP6NSmRZs0RREekWzc02o8r29kMRzt2xG3YLux6qrsqg==",
+            "tarball": "https://registry.npmjs.org/@piotrkarwatka/visits/-/visits-0.1.0.tgz"
+          }
+        }
+      },
+      "time": {
+        "created": "2026-10-09T12:24:21.860Z",
+        "modified": "2026-10-09T12:24:57.278Z",
+        "0.1.0": "2026-10-09T12:24:57.137Z"
+      },
+      "maintainers": [
+        {
+          "name": "piotrkarwatka"
+        }
+      ],
+      "description": "Open Mercato module: visits",
+      "repository": {
+        "url": "git+https://github.com/pkarw/visits-example.git",
+        "type": "git"
+      }
+    }
+  }
+}

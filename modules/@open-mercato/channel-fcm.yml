@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-fcm"
+repo: open-mercato/open-mercato#main/packages/channel-fcm
+category: communication
+tags: [push, android, firebase, mobile]
+summary: Sends push notifications to Android and iOS devices through Firebase Cloud Messaging HTTP v1.
+whenToUse: Use when your mobile app already uses Firebase and you can provide a service account JSON for FCM.
+whenNotToUse: For apps built with Expo use channel-expo.
+providers:
+  - { name: fcm, label: Firebase Cloud Messaging }
+links:
+  docs: https://docs.openmercato.com/framework/modules/push-notifications

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.npmjs.org/downloads/point/last-month/create-mercato-module,mercato-readiness-scanner,open-mercato-generator"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "create-mercato-module": {
+        "downloads": 646,
+        "package": "create-mercato-module",
+        "start": "2026-09-19",
+        "end": "2026-10-18"
+      },
+      "mercato-readiness-scanner": null,
+      "open-mercato-generator": {
+        "downloads": 3,
+        "package": "open-mercato-generator",
+        "start": "2026-09-19",
+        "end": "2026-10-18"
+      }
+    }
+  }
+}

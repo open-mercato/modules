@@ -1,0 +1,35 @@
+name: Report a module
+description: A listed module is broken, malicious, abandoned or described wrongly.
+title: "Report: "
+labels: [curator]
+body:
+  - type: markdown
+    attributes:
+      value: For a vulnerability that should not be public yet, use private vulnerability reporting instead (see SECURITY.md).
+  - type: input
+    id: locator
+    attributes:
+      label: Module
+      description: Locator or page, for example npm:@scope/name or /m/@scope/name.
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: Reason
+      options:
+        - Malicious or suspicious code
+        - Does not install or run
+        - Abandoned
+        - Wrong description or category
+        - Name squatting or impersonation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Evidence
+      description: File and line, receipt link, logs or steps. Facts, please.
+    validations:
+      required: true

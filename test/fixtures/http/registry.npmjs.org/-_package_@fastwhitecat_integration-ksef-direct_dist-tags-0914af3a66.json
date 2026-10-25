@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@fastwhitecat%2Fintegration-ksef-direct/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.1.8"
+    }
+  }
+}

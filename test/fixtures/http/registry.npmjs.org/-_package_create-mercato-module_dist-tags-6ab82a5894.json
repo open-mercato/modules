@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/create-mercato-module/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.5.1"
+    }
+  }
+}

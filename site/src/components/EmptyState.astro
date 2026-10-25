@@ -1,0 +1,73 @@
+---
+// Empty states and errors (spec 7.8, 7.7 L): an empty hex cell, a sentence, an optional command and actions.
+import CommandChip from './CommandChip.astro'
+
+interface Props {
+  title: string
+  text?: string
+  command?: string
+  actions?: { href: string; label: string; variant?: 'primary' | 'secondary' }[]
+  size?: 'page' | 'inline'
+}
+const { title, text, command, actions = [], size = 'inline' } = Astro.props
+---
+
+<div class:list={['empty', `empty--${size}`]}>
+  <svg class="empty__hex" viewBox="0 0 64 64" width={size === 'page' ? 96 : 48} height={size === 'page' ? 96 : 48} aria-hidden="true">
+    <polygon points="32,5 55.4,18.5 55.4,45.5 32,59 8.6,45.5 8.6,18.5" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></polygon>
+  </svg>
+  <p class:list={['empty__title', size === 'page' ? 't-h1' : 't-h3']}>{title}</p>
+  {text && <p class="empty__text">{text}</p>}
+  {command && <div class="empty__cmd"><CommandChip command={command} /></div>}
+  {
+    actions.length > 0 && (
+      <div class="empty__actions">
+        {actions.map((a) => (
+          <a class:list={['btn', a.variant === 'primary' ? 'btn--primary' : 'btn--secondary']} href={a.href}>
+            {a.label}
+          </a>
+        ))}
+      </div>
+    )
+  }
+  <slot />
+</div>
+
+<style>
+  .empty {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 40px var(--pad);
+  }
+  .empty--page {
+    padding-block: 96px;
+    gap: 16px;
+  }
+  .empty__hex {
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .empty__text {
+    max-width: 52ch;
+    color: var(--ink-2);
+  }
+  .empty__cmd {
+    width: min(100%, 420px);
+    text-align: left;
+  }
+  .empty__cmd :global(.cmd) {
+    justify-content: flex-start;
+  }
+  .empty__cmd :global(.cmd__text) {
+    text-align: left;
+  }
+  .empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 4px;
+  }
+</style>

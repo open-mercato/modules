@@ -1,0 +1,6 @@
+# expect-path: tags
+npm: "@acme/thing"
+category: devtools
+tags: [a1, b2, c3, d4, e5, f6, g7, h8, i9]
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when the descriptor has more than eight tags in the list.

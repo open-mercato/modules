@@ -1,0 +1,12 @@
+npm: "@open-mercato/web-research-serp"
+repo: open-mercato/open-mercato#main/packages/web-research-serp
+kind: provider
+category: ai-automation
+tags: [web-search, free]
+summary: Free web-research adapter that reads public DuckDuckGo result pages. No API key, no dependencies, off by default.
+whenToUse: Use when you need a no-cost search source and accept that result pages can block requests or change markup.
+providers:
+  - { name: duckduckgo, label: DuckDuckGo }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

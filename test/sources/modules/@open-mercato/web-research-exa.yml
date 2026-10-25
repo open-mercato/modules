@@ -1,0 +1,7 @@
+npm: "@open-mercato/web-research-exa"
+repo: open-mercato/open-mercato#main/packages/web-research-exa
+kind: provider
+category: ai-automation
+summary: Exa search provider for the Open Mercato web research library.
+whenToUse: Use when AI agents in the app should search the web through the Exa API.
+extends: "npm:@open-mercato/web-research"

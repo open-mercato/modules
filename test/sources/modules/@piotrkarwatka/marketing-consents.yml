@@ -1,0 +1,5 @@
+npm: "@piotrkarwatka/marketing-consents"
+github: pkarw/marketing-consents
+category: marketing-loyalty
+summary: Records and manages marketing consents of customers with their history.
+whenToUse: Use when the app must collect marketing consents and prove when each was given.

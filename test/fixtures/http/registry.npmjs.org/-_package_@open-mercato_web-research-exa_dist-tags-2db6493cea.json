@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/package/@open-mercato%2Fweb-research-exa/dist-tags"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "latest": "0.9.0",
+      "develop": "0.10.1-develop.7583.1.0c886d0a14"
+    }
+  }
+}

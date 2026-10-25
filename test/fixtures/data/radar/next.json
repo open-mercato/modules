@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "next": "0.10.1-develop.7583.1.0c886d0a14",
+  "base": "0.9.0",
+  "summary": "0.10.1-develop.7583.1.0c886d0a14 changes 3 APIs used by fixture modules. createRequestContainer is used by 15 of 16 packages outside the org.",
+  "changedApis": [
+    {
+      "symbol": "@open-mercato/shared/lib/commands#CommandHandler",
+      "change": "signature",
+      "modules": ["npm:@piotrkarwatka/marketing-consents"]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+      "change": "signature",
+      "modules": ["npm:@piotrkarwatka/marketing-consents"]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
+      "change": "signature",
+      "modules": ["npm:@fullstackhouse/open-mercato-durable-work"]
+    }
+  ],
+  "staticBreaks": [],
+  "receiptsOnNext": {
+    "verified": 1,
+    "broken": 0
+  },
+  "sameFailure": [],
+  "loadBearing": [
+    {
+      "symbol": "@open-mercato/shared/lib/di/container#createRequestContainer",
+      "modules": 15,
+      "of": 16
+    }
+  ]
+}

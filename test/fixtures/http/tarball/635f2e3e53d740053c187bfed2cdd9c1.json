@@ -1,0 +1,7 @@
+{
+  "url": "https://registry.npmjs.org/create-mercato-app/-/create-mercato-app-0.9.0.tgz",
+  "integrity": "sha512-JuPuedKgPhJNcN98cIx/M8YVcSpQbLBZoYDeLOgznFlv6Y0x9Eg4j3jUjp5TC9f6fCvjZBAtdDLFOrOUO8wwfA==",
+  "files": {
+    "package/template/.yarnrc.yml.template": "nodeLinker: node-modules\n\n# Yarn refuses versions younger than `npmMinimalAgeGate` (default 1 day) with\n# \"All versions satisfying ... are quarantined\". Raised to 5 days to close the\n# supply-chain window where a compromised maintainer account pushes a malicious\n# patch before any advisory exists. For urgent patches use --no-time-gate.\n# This app pins the exact @open-mercato release it was scaffolded from, which\n# is usually minutes old, so the first-party scope opts out while every\n# third-party package keeps the cooldown. A per-scope `npmRegistryServer` entry\n# shadows a top-level `npmMinimalAgeGate: 0`, so the opt-out has to be\n# expressed as a preapproval.\nnpmMinimalAgeGate: 5d\nnpmPreapprovedPackages:\n  - \"@open-mercato/*\"\n{{REGISTRY_CONFIG}}\n"
+  }
+}

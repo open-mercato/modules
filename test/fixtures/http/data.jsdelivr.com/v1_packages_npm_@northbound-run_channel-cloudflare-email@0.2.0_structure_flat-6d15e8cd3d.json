@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@northbound-run/channel-cloudflare-email@0.2.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@northbound-run/channel-cloudflare-email",
+      "version": "0.2.0",
+      "files": [
+        {
+          "name": "/dist/modules/channel_cloudflare_email/acl.js"
+        },
+        {
+          "name": "/src/modules/channel_cloudflare_email/index.ts"
+        }
+      ]
+    }
+  }
+}

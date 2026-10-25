@@ -1,0 +1,237 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?text=maintainer%3Anorthboundrun&size=250"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "objects": [
+        {
+          "downloads": {
+            "monthly": 92,
+            "weekly": 14
+          },
+          "dependents": 0,
+          "updated": "2026-10-21T18:16:21.922Z",
+          "searchScore": 23.486263,
+          "package": {
+            "name": "@northbound-run/sync-shopify",
+            "keywords": ["open-mercato", "open-mercato-module", "shopify", "data-sync", "ecommerce"],
+            "version": "0.5.0",
+            "description": "Shopify → Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+            "sanitized_name": "@northbound-run/sync-shopify",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:4716e9da-6fd0-4841-9caa-c089b30e12ef",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-19T15:40:40.378Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-shopify",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-shopify/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-shopify"
+            }
+          },
+          "score": {
+            "final": 23.486263,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 75,
+            "weekly": 5
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T00:26:15.685Z",
+          "searchScore": 22.26936,
+          "package": {
+            "name": "@northbound-run/sync-google-sheets",
+            "keywords": [
+              "open-mercato",
+              "google-sheets",
+              "data-sync",
+              "oauth",
+              "integration",
+              "bidirectional-sync",
+              "etl"
+            ],
+            "version": "0.2.0",
+            "description": "Google Sheets ↔ Open Mercato Data Sync adapter: production-ready import, plus experimental scheduled sync and bidirectional export. Entity-agnostic and reusable — not tied to any specific project.",
+            "sanitized_name": "@northbound-run/sync-google-sheets",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:5a0ef4ab-5f79-4c39-ab88-fea6b6b3b1b6",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-07-23T23:23:28.297Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-google-sheets#readme",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-google-sheets.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-google-sheets/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/sync-google-sheets"
+            }
+          },
+          "score": {
+            "final": 22.26936,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 37,
+            "weekly": 3
+          },
+          "dependents": 0,
+          "updated": "2026-10-23T01:01:09.554Z",
+          "searchScore": 18.999945,
+          "package": {
+            "name": "@northbound-run/channel-cloudflare-email",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "email",
+              "email-routing",
+              "email-sending",
+              "communication-channels"
+            ],
+            "version": "0.2.0",
+            "description": "Cloudflare Email Service channel for Open Mercato: inbound email via Email Routing + a thin Email Worker, outbound via the Email Sending REST API, with real delivery status from Queues event subscriptions.",
+            "sanitized_name": "@northbound-run/channel-cloudflare-email",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:d9cf3a19-ece2-4c44-8ceb-2bd4942b6e9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-07T00:08:18.861Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-email",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-email.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-email/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/channel-cloudflare-email"
+            }
+          },
+          "score": {
+            "final": 18.999945,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        },
+        {
+          "downloads": {
+            "monthly": 28,
+            "weekly": 6
+          },
+          "dependents": 0,
+          "updated": "2026-10-17T19:31:15.445Z",
+          "searchScore": 17.92652,
+          "package": {
+            "name": "@northbound-run/search-cloudflare",
+            "keywords": [
+              "open-mercato",
+              "open-mercato-module",
+              "cloudflare",
+              "ai-search",
+              "autorag",
+              "search",
+              "fulltext",
+              "hybrid-search",
+              "rag"
+            ],
+            "version": "0.1.1",
+            "description": "Cloudflare AI Search as a pluggable fulltext driver for Open Mercato: hybrid BM25 + vector retrieval behind the stock FullTextSearchDriver contract, with no search service to operate.",
+            "sanitized_name": "@northbound-run/search-cloudflare",
+            "publisher": {
+              "email": "npm-oidc-no-reply@github.com",
+              "trustedPublisher": {
+                "oidcConfigId": "oidc:aab4aba8-e523-4926-ab07-d15eaad6ae9e",
+                "id": "github"
+              },
+              "username": "GitHub Actions"
+            },
+            "maintainers": [
+              {
+                "email": "matt@northbound.run",
+                "username": "northboundrun"
+              }
+            ],
+            "license": "MIT",
+            "date": "2026-08-08T18:43:20.080Z",
+            "links": {
+              "homepage": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search",
+              "repository": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search.git",
+              "bugs": "https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search/issues",
+              "npm": "https://www.npmjs.com/package/@northbound-run/search-cloudflare"
+            }
+          },
+          "score": {
+            "final": 17.92652,
+            "detail": {
+              "popularity": 1,
+              "quality": 1,
+              "maintenance": 1
+            }
+          },
+          "flags": {
+            "insecure": 0
+          }
+        }
+      ],
+      "total": 4,
+      "time": "2026-10-23T02:38:15.747Z"
+    }
+  }
+}

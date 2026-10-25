@@ -1,0 +1,9 @@
+npm: "@open-mercato/onboarding"
+repo: open-mercato/open-mercato#main/packages/onboarding
+category: content-portal
+tags: [onboarding, signup, tenants]
+summary: "Self-service sign-up: email verification, then a new tenant, organization and admin account with demo CRM data."
+whenToUse: Use when visitors of a demo, sandbox or pilot program should create their own tenant without an operator.
+whenNotToUse: "Off by default and not meant for most production apps: everyone who signs up gets an admin account."
+links:
+  docs: https://docs.openmercato.com/user-guide/self-service-onboarding

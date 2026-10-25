@@ -1,0 +1,6 @@
+# expect-path: replaces
+npm: "@acme/thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when replaces names a module without the core prefix.
+replaces: [data_sync]

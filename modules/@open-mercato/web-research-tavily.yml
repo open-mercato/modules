@@ -1,0 +1,12 @@
+npm: "@open-mercato/web-research-tavily"
+repo: open-mercato/open-mercato#main/packages/web-research-tavily
+kind: provider
+category: ai-automation
+tags: [web-search, ai]
+summary: "Tavily adapter for web-research: a search API whose results are shaped for LLM consumption."
+whenToUse: Use when agents need search results ready for an LLM and you have a Tavily API key.
+providers:
+  - { name: tavily, label: Tavily }
+extends: "npm:@open-mercato/web-research"
+links:
+  docs: https://docs.openmercato.com/framework/ai-assistant/web-research

@@ -1,0 +1,67 @@
+# Closed list of 16 categories. Slugs are stable. `wedge` is the Hive wedge.
+# `aliases` are old research slugs; `om format` rewrites an alias in a descriptor to its category.
+categories:
+  - id: crm-sales
+    title: "CRM & Sales"
+    wedge: sell
+    aliases: [crm]
+  - id: catalog-pricing
+    title: "Catalog & Pricing"
+    wedge: sell
+    aliases: [catalog]
+  - id: orders-checkout
+    title: "Orders & Checkout"
+    wedge: sell
+    aliases: [commerce, checkout]
+  - id: marketing-loyalty
+    title: "Marketing & Loyalty"
+    wedge: sell
+    aliases: [marketing]
+  - id: warehouse-shipping
+    title: "Warehouse & Shipping"
+    wedge: operate
+    aliases: [logistics, shipping]
+  - id: operations
+    title: "Operations & Services"
+    wedge: operate
+    aliases: [scheduling, hr, industry-packs]
+  - id: payments-finance
+    title: "Payments & Finance"
+    wedge: money
+    aliases: [payments, finance]
+  - id: localization-compliance
+    title: "Localization & Compliance"
+    wedge: money
+    aliases: [e-invoicing, compliance]
+  - id: integrations-sync
+    title: "Integrations & Data Sync"
+    wedge: connect
+    aliases: [data-sync, integration]
+  - id: communication
+    title: "Communication & Notifications"
+    wedge: connect
+    aliases: [communication-channels, telephony]
+  - id: ai-automation
+    title: "AI & Automation"
+    wedge: think
+    aliases: [ai, automation, ai-providers]
+  - id: search-analytics
+    title: "Search & Analytics"
+    wedge: think
+    aliases: [search]
+  - id: auth-security
+    title: "Auth & Security"
+    wedge: platform
+    aliases: [auth, enterprise]
+  - id: content-portal
+    title: "Content & Portal"
+    wedge: platform
+    aliases: [content]
+  - id: storage-infrastructure
+    title: "Storage & Infrastructure"
+    wedge: platform
+    aliases: [storage, infrastructure, platform]
+  - id: devtools
+    title: "Developer Tools"
+    wedge: platform
+    aliases: [dev-tools, example]

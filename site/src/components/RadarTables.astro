@@ -1,0 +1,400 @@
+---
+// Release Radar tables (spec 7.7 E): changed APIs in use, static breaks, the same failure in several modules and the
+// load-bearing APIs (top 15, a meter per symbol). All numbers come from radar/next.json.
+import type { Radar } from '../../../lib/schema/index.ts'
+import { href, modulePage } from '../lib/url.ts'
+import { locatorToPath } from '../../../lib/schema/locator.ts'
+import { wbrHtml } from '../lib/wrap.ts'
+
+interface Props {
+  radar: Radar
+  bcUrl?: string
+}
+const { radar, bcUrl = 'https://github.com/open-mercato/open-mercato/blob/main/BACKWARD_COMPATIBILITY.md' } = Astro.props
+const short = (loc: string): string => loc.replace(/^npm:|^github:/, '')
+const splitSymbol = (s: string): { pkg: string; name: string } => {
+  const i = s.lastIndexOf('#')
+  return i < 0 ? { pkg: s, name: '' } : { pkg: s.slice(0, i), name: s.slice(i + 1) }
+}
+const loadBearing = [...radar.loadBearing].sort((a, b) => b.modules - a.modules).slice(0, 15)
+/** Ranks run down the left column, then the right one (two columns from 992 px). */
+const meterRows = Math.ceil(loadBearing.length / 2)
+/**
+ * Changed APIs grouped by symbol name: `CommandHandler` exported from two paths is one row with both paths under it,
+ * not two rows that look like a duplicate. Modules are the union of both paths' users.
+ */
+const changedGroups = (() => {
+  const by = new Map<string, { name: string; pkgs: string[]; changes: string[]; modules: string[] }>()
+  for (const c of radar.changedApis) {
+    const s = splitSymbol(c.symbol)
+    const key = s.name || s.pkg
+    const g = by.get(key) ?? { name: key, pkgs: [], changes: [], modules: [] }
+    if (s.name && !g.pkgs.includes(s.pkg)) g.pkgs.push(s.pkg)
+    if (!g.changes.includes(c.change)) g.changes.push(c.change)
+    for (const m of c.modules) if (!g.modules.includes(m)) g.modules.push(m)
+    by.set(key, g)
+  }
+  // one path per symbol (the shortest, where it is defined or first exported); the others are re-exports
+  for (const g of by.values()) g.pkgs.sort((a, b) => a.length - b.length || (a < b ? -1 : 1))
+  return [...by.values()].sort((a, b) => b.modules.length - a.modules.length || (a.name < b.name ? -1 : 1))
+})()
+---
+
+<div class="radar">
+  <section class="radar__block" aria-labelledby="rt-changed">
+    <h3 id="rt-changed" class="radar__h">Changed APIs in use <span class="radar__n">{changedGroups.length}</span></h3>
+    {
+      radar.changedApis.length === 0 ? (
+        <p class="radar__empty">No API used by a listed module changed since {radar.base}.</p>
+      ) : (
+        <div class="radar__scroll">
+          <table class="radar__table">
+            <thead>
+              <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Change</th>
+                <th scope="col">Used by</th>
+              </tr>
+            </thead>
+            <tbody>
+              {changedGroups.map((g) => (
+                <tr>
+                  <td>
+                    <div class="radar__sym">
+                      <code class="radar__name" translate="no" set:html={wbrHtml(g.name)} />
+                      {g.pkgs[0] && <code class="radar__pkg" translate="no" set:html={wbrHtml(g.pkgs[0])} />}
+                      {g.pkgs.length > 1 && (
+                        <span class="radar__also">
+                          also re-exported from{' '}
+                          {g.pkgs.slice(1).map((p, i) => (
+                            <>
+                              {i > 0 && ', '}
+                              <code translate="no" set:html={wbrHtml(p.replace(g.pkgs[0] ?? '', '…'))} />
+                            </>
+                          ))}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    {g.changes.map((c) => (
+                      <span class:list={['radar__chg', `radar__chg--${c}`]}>{c === 'signature' ? 'signature changed' : c}</span>
+                    ))}
+                  </td>
+                  <td>
+                    <div class="radar__mods">
+                      {g.modules.map((m) => (
+                        <a href={href(modulePage(locatorToPath(m)))} translate="no" set:html={wbrHtml(short(m))} />
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+  </section>
+
+  <section class="radar__block" aria-labelledby="rt-breaks">
+    <h3 id="rt-breaks" class="radar__h">Static breaks <span class="radar__n">{radar.staticBreaks.length}</span></h3>
+    {
+      radar.staticBreaks.length === 0 ? (
+        <p class="radar__empty">No listed module breaks statically on next.</p>
+      ) : (
+        <ul class="radar__list" role="list">
+          {radar.staticBreaks.map((b) => (
+            <li>
+              <a href={href(modulePage(locatorToPath(b.locator)))} translate="no" set:html={wbrHtml(short(b.locator))} />
+              <span class="radar__missing">
+                missing <code translate="no" set:html={wbrHtml(b.missing.join(', '), { dots: true })} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="radar__block" aria-labelledby="rt-same">
+    <h3 id="rt-same" class="radar__h">Same failure in several modules <span class="radar__n">{radar.sameFailure.length}</span></h3>
+    {
+      radar.sameFailure.length === 0 ? (
+        <p class="radar__empty">No failure signature repeats across modules on next.</p>
+      ) : (
+        <ul class="radar__list" role="list">
+          {radar.sameFailure.map((f) => (
+            <li>
+              <code>{f.signature.slice(0, 12)}</code>
+              <span>at {f.step}</span>
+              <span class="radar__missing" translate="no" set:html={wbrHtml(f.modules.map(short).join(', '))} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="radar__block" aria-labelledby="rt-load">
+    <h3 id="rt-load" class="radar__h">Load-bearing APIs</h3>
+    <p class="radar__note">
+      Changing these breaks the ecosystem. Consider them frozen. <a href={bcUrl} rel="noopener noreferrer">BACKWARD_COMPATIBILITY.md</a>
+    </p>
+    <ol class="radar__meters" role="list" style={`--rows:${meterRows}`}>
+      {
+        loadBearing.map((l) => {
+          const s = splitSymbol(l.symbol)
+          return (
+            <li class="radar__meter">
+              <span class="radar__sym">
+                <code class="radar__name" translate="no" set:html={wbrHtml(s.name || s.pkg)} />
+                {s.name && <code class="radar__pkg" translate="no" set:html={wbrHtml(s.pkg)} />}
+              </span>
+              <span class="radar__bar" style={`--v:${l.of ? l.modules / l.of : 0}`} aria-hidden="true">
+                <i />
+              </span>
+              <span class="radar__of">
+                {l.modules} of {l.of}
+              </span>
+            </li>
+          )
+        })
+      }
+    </ol>
+  </section>
+</div>
+
+<style>
+  .radar__also {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .radar__also code {
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .radar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .radar__block {
+    padding: 20px;
+    background: var(--bg);
+    min-width: 0;
+  }
+  /* the two lists that grow with the ecosystem span the sheet; the two short verdicts sit side by side */
+  .radar__block:first-child,
+  .radar__block:last-child {
+    grid-column: 1 / -1;
+  }
+  .radar__table th:first-child {
+    width: 38%;
+  }
+  .radar__table th:nth-child(2) {
+    width: 14%;
+  }
+  .radar__h {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    font-size: 18px;
+  }
+  .radar__n {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .radar__empty,
+  .radar__note {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .radar__note {
+    margin-bottom: 14px;
+  }
+  .radar__scroll {
+    overflow-x: auto;
+  }
+  .radar__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .radar__table th {
+    padding: 0 8px 8px 0;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  /* real table cells: one hairline per row, the same height in every column (layout lives in inner divs) */
+  .radar__table td {
+    display: table-cell;
+    padding: 9px 12px 9px 0;
+    border-top: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .radar__table td:last-child,
+  .radar__table th:last-child {
+    padding-right: 0;
+  }
+  .radar__table tr:last-child td {
+    border-bottom: 1px solid var(--line);
+  }
+  .radar__sym {
+    display: grid;
+    min-width: 0;
+  }
+  .radar__name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  /* symbol packages wrap after '/', never end in an ellipsis */
+  .radar__pkg {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .radar__missing code {
+    font: inherit;
+  }
+  .radar__chg {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--wait-ink);
+  }
+  .radar__chg--removed {
+    color: var(--bad-ink);
+  }
+  /* every module link is at least 24 px tall (WCAG 2.2 2.5.8, review r3: 18 px links stacked without a gap) */
+  .radar__mods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 10px;
+    font-size: 12px;
+  }
+  .radar__mods a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+  .radar__list {
+    display: grid;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .radar__list li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  .radar__missing {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .radar__meters {
+    display: grid;
+    row-gap: 10px;
+  }
+  /* two columns from 992 px: ranks 1-8 down the left, 9-15 down the right, a hairline between them */
+  @media (min-width: 992px) {
+    .radar__meters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(var(--rows), auto);
+      grid-auto-flow: column;
+      column-gap: 48px;
+      background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat;
+    }
+  }
+  .radar__meter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px 64px;
+    align-items: center;
+    gap: 12px;
+  }
+  /* a plain ink meter: the brand gradient on content belongs to the OM Quality seal only (spec 6.7) */
+  .radar__bar {
+    height: 4px;
+    background: var(--bg-3);
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .radar__bar i {
+    display: block;
+    height: 100%;
+    width: calc(var(--v) * 100%);
+    background: var(--ink);
+  }
+  .radar__of {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 767px) {
+    .radar {
+      grid-template-columns: 1fr;
+    }
+    .radar__meter {
+      grid-template-columns: minmax(0, 1fr) 64px;
+    }
+    .radar__bar {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+  /* phones: each change is a small card (symbol, change, used by), no horizontal table */
+  @media (max-width: 479px) {
+    .radar__table,
+    .radar__table tbody,
+    .radar__table tr,
+    .radar__table td {
+      display: block;
+    }
+    .radar__table thead {
+      display: none;
+    }
+    .radar__table tr {
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+    .radar__table td {
+      padding: 0;
+      border-top: 0;
+    }
+    .radar__table td + td {
+      padding-top: 4px;
+    }
+    .radar__block {
+      padding: 16px;
+    }
+    /* each module link is a 44 px target (spec 7.10) */
+    .radar__mods {
+      flex-direction: column;
+      gap: 0;
+    }
+    .radar__mods a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

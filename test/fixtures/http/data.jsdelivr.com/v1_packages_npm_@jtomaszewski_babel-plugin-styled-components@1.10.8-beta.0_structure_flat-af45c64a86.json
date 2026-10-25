@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://data.jsdelivr.com/v1/packages/npm/@jtomaszewski/babel-plugin-styled-components@1.10.8-beta.0?structure=flat"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "type": "npm",
+      "name": "@jtomaszewski/babel-plugin-styled-components",
+      "version": "1.10.8-beta.0",
+      "files": []
+    }
+  }
+}

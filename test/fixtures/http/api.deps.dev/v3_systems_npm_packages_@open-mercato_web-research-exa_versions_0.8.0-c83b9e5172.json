@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.deps.dev/v3/systems/npm/packages/%40open-mercato%2Fweb-research-exa/versions/0.8.0"
+  },
+  "response": {
+    "status": 200,
+    "json": {
+      "versionKey": {
+        "system": "NPM",
+        "name": "@open-mercato/web-research-exa",
+        "version": "0.8.0"
+      },
+      "publishedAt": "2026-09-18T11:36:59Z",
+      "slsaProvenances": [
+        {
+          "sourceRepository": "https://github.com/open-mercato/open-mercato",
+          "commit": "ab23d45ffc3aeca5e7d994eb57d5526c5b0a4712",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@open-mercato%2fweb-research-exa@0.8.0",
+          "verified": true
+        }
+      ],
+      "attestations": [
+        {
+          "type": "https://slsa.dev/provenance/v1",
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@open-mercato%2fweb-research-exa@0.8.0",
+          "verified": true,
+          "sourceRepository": "https://github.com/open-mercato/open-mercato",
+          "commit": "ab23d45ffc3aeca5e7d994eb57d5526c5b0a4712"
+        }
+      ]
+    }
+  }
+}

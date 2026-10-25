@@ -1,0 +1,184 @@
+{
+  "id": "currencies",
+  "title": "Currencies",
+  "description": "Currencies and Exchange rate management",
+  "requires": [],
+  "ejectable": true,
+  "data": {
+    "entities": [
+      {
+        "id": "currencies:currency",
+        "table": "currencies",
+        "src": null
+      },
+      {
+        "id": "currencies:exchange_rate",
+        "table": "exchange_rates",
+        "src": null
+      },
+      {
+        "id": "currencies:currency_fetch_config",
+        "table": "currency_fetch_configs",
+        "src": null
+      }
+    ],
+    "migrations": {
+      "count": 0,
+      "first": null,
+      "last": null
+    },
+    "customEntities": 0
+  },
+  "http": {
+    "routes": [],
+    "legacyRouteFiles": 0,
+    "authResolved": 0
+  },
+  "security": {
+    "aclFeatures": [
+      "currencies.view",
+      "currencies.manage",
+      "currencies.rates.view",
+      "currencies.rates.manage",
+      "currencies.fetch.view",
+      "currencies.fetch.manage"
+    ],
+    "setupDefaultRoleFeatures": true
+  },
+  "events": {
+    "emits": [
+      {
+        "id": "currencies.currency.created",
+        "src": null
+      },
+      {
+        "id": "currencies.currency.updated",
+        "src": null
+      },
+      {
+        "id": "currencies.currency.deleted",
+        "src": null
+      },
+      {
+        "id": "currencies.exchange_rate.created",
+        "src": null
+      },
+      {
+        "id": "currencies.exchange_rate.updated",
+        "src": null
+      },
+      {
+        "id": "currencies.exchange_rate.deleted",
+        "src": null
+      }
+    ],
+    "subscribes": []
+  },
+  "ui": {
+    "backendPages": [
+      {
+        "path": "/backend/config/currency-fetching",
+        "requireFeatures": [
+          "currencies.fetch.view"
+        ]
+      },
+      {
+        "path": "/backend/currencies",
+        "requireFeatures": [
+          "currencies.view"
+        ]
+      },
+      {
+        "path": "/backend/currencies/[id]",
+        "requireFeatures": [
+          "currencies.manage"
+        ]
+      },
+      {
+        "path": "/backend/currencies/create",
+        "requireFeatures": [
+          "currencies.manage"
+        ]
+      },
+      {
+        "path": "/backend/exchange-rates",
+        "requireFeatures": [
+          "currencies.rates.view"
+        ]
+      },
+      {
+        "path": "/backend/exchange-rates/[id]",
+        "requireFeatures": [
+          "currencies.rates.manage"
+        ]
+      },
+      {
+        "path": "/backend/exchange-rates/create",
+        "requireFeatures": [
+          "currencies.rates.manage"
+        ]
+      }
+    ],
+    "frontendPages": [],
+    "widgets": 0,
+    "extensionHosts": 29
+  },
+  "background": {
+    "workers": [],
+    "cli": [
+      "seed",
+      "fetch-rates",
+      "list-providers"
+    ]
+  },
+  "ai": {
+    "tools": [],
+    "agents": []
+  },
+  "config": {
+    "credentials": [],
+    "env": []
+  },
+  "network": {
+    "hosts": [],
+    "undeclared": []
+  },
+  "extends": [],
+  "omImports": {},
+  "collisionKeys": {
+    "moduleId": "currencies",
+    "tables": [
+      "currencies",
+      "exchange_rates",
+      "currency_fetch_configs"
+    ],
+    "aclFeatures": [
+      "currencies.view",
+      "currencies.manage",
+      "currencies.rates.view",
+      "currencies.rates.manage",
+      "currencies.fetch.view",
+      "currencies.fetch.manage"
+    ],
+    "eventIds": [
+      "currencies.currency.created",
+      "currencies.currency.updated",
+      "currencies.currency.deleted",
+      "currencies.exchange_rate.created",
+      "currencies.exchange_rate.updated",
+      "currencies.exchange_rate.deleted"
+    ],
+    "backendRoutes": [
+      "/backend/config/currency-fetching",
+      "/backend/currencies",
+      "/backend/currencies/[id]",
+      "/backend/currencies/create",
+      "/backend/exchange-rates",
+      "/backend/exchange-rates/[id]",
+      "/backend/exchange-rates/create"
+    ]
+  },
+  "publicRoutes": 0,
+  "glyph": "2022200",
+  "lint": []
+}

@@ -1,0 +1,3211 @@
+{
+  "source": "spikes/g2/out (scan.mjs, 2026-10-23)",
+  "packages": [
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/ai-assistant",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "dependencies": {
+        "@ai-sdk/anthropic": "^4.0.44",
+        "@ai-sdk/azure": "^4.0.0",
+        "@ai-sdk/google": "^4.0.56",
+        "@ai-sdk/openai": "^4.0.50",
+        "@modelcontextprotocol/sdk": "^1.30.0",
+        "ai": "^7.0.83",
+        "cmdk": "^1.0.0",
+        "framer-motion": "^13.1.1",
+        "isolated-vm": "^7.0.1",
+        "react-json-view-lite": "^2.5.0",
+        "react-markdown": "^10.1.0",
+        "zod-to-json-schema": "^3.25.2"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/api_keys/data/entities": ["ApiKey"],
+          "modules/api_keys/services/apiKeyService": [
+            "(dynamic/require)",
+            "bindOpencodeSessionToApiKey",
+            "createApiKey",
+            "createSessionApiKey",
+            "deleteApiKey",
+            "findApiKeyByOpencodeSessionId",
+            "findApiKeyBySecret",
+            "findSessionApiKeyWithSecret",
+            "generateSessionToken"
+          ],
+          "modules/attachments/data/entities": ["(dynamic/require)", "Attachment"],
+          "modules/attachments/lib/metadata": ["(dynamic/require)"],
+          "modules/attachments/lib/storage": ["(dynamic/require)"],
+          "modules/auth/data/entities": ["User", "UserRole"],
+          "modules/auth/lib/emailHash": ["emailHashLookupValues"],
+          "modules/auth/services/rbacService": ["RbacService"],
+          "modules/configs/lib/module-config-service": ["ModuleConfigService"],
+          "modules/directory/data/entities": ["Organization"],
+          "modules/notifications/lib/notificationBuilder": ["buildNotificationFromType"],
+          "modules/notifications/lib/notificationService": ["resolveNotificationService"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/search": {
+          "service": ["SearchService"],
+          "types": ["IndexableRecord", "SearchEntityConfig", "SearchResultPresenter", "SearchStrategyId"]
+        },
+        "@open-mercato/shared": {
+          "lib/ai/llm-provider": ["EnvLookup", "LlmCreateModelOptions", "LlmModelInfo", "LlmProvider"],
+          "lib/ai/llm-provider-registry": [
+            "LlmProviderRegistry",
+            "ResolveFirstConfiguredOptions",
+            "llmProviderRegistry"
+          ],
+          "lib/ai/model-id": ["joinProviderModel"],
+          "lib/ai/opencode-provider": [
+            "OPEN_CODE_PROVIDERS",
+            "OPEN_CODE_PROVIDER_IDS",
+            "getOpenCodeProviderConfiguredEnvKey",
+            "isOpenCodeProviderConfigured",
+            "resolveOpenCodeModel"
+          ],
+          "lib/ai/opencode-tool-parts": ["normalizeOpenCodeToolPart"],
+          "lib/ai/safety-identifier": ["computeEndUserIdentifier"],
+          "lib/auth/server": [
+            "AuthContext",
+            "TrustedAuthContextEnvelope",
+            "attachTrustedAuthContext",
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/bootstrap/appResolver": ["(dynamic/require)"],
+          "lib/bootstrap/dynamicLoader": ["(dynamic/require)"],
+          "lib/db/entityMetadata": ["listEntityMetadata"],
+          "lib/db/mikro": ["(dynamic/require)"],
+          "lib/di/container": ["(dynamic/require)", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/http/fetchWithTimeout": ["fetchWithTimeout", "resolveTimeoutMs"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/config": ["defaultLocale"],
+          "lib/i18n/context": ["useLocale", "useT"],
+          "lib/i18n/server": ["loadDictionary", "resolveTranslations"],
+          "lib/i18n/translate": ["createTranslator"],
+          "lib/logger": ["createLogger", "resetServerLoggerCache"],
+          "lib/modules/registry": ["(dynamic/require)"],
+          "lib/openapi": ["OpenApiDocument", "OpenApiRouteDoc", "buildOpenApiDocument"],
+          "lib/ratelimit/config": ["readEndpointRateLimitConfig"],
+          "lib/ratelimit/helpers": ["RATE_LIMIT_ERROR_FALLBACK", "RATE_LIMIT_ERROR_KEY", "checkRateLimit"],
+          "lib/ratelimit/service": ["RateLimiterService"],
+          "lib/search/entityAccess": [
+            "SearchEntityAccessSubject",
+            "SearchEntityConfigLookup",
+            "SearchEntityDenyReason",
+            "canReadSearchEntity",
+            "filterSearchResultsByEntityAccess",
+            "resolveReadableEntityTypes"
+          ],
+          "lib/time": ["formatRelativeTime"],
+          "lib/utils": ["cn"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents"],
+          "modules/notifications/types": ["NotificationRendererProps", "NotificationTypeDefinition"],
+          "modules/overrides": ["ModuleOverrideEntry", "registerModuleOverrideApplier"],
+          "modules/registry": [
+            "(dynamic/require)",
+            "ApiRouteManifestEntry",
+            "Module",
+            "ModuleCli",
+            "ModuleInfo",
+            "RouteMatchParams",
+            "findApiRouteManifestMatch",
+            "getApiRouteManifests"
+          ],
+          "modules/search": ["SearchOptions", "SearchResult", "SearchStrategyId"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "security/featurePolicy": ["authorizeFeatures"],
+          "security/features": ["hasAllFeatures"]
+        },
+        "@open-mercato/ui": {
+          "ai": [
+            "AiChat",
+            "AiChatDebugPromptSection",
+            "AiChatDebugTool",
+            "ConversationShareButton",
+            "ConversationShareDialog",
+            "LoopDisabledBanner",
+            "createAiUiPartRegistry",
+            "useAiShortcuts"
+          ],
+          "ai/AiAssistantLauncher": ["AI_ASSISTANT_LAUNCHER_OPEN_EVENT"],
+          "ai/AiIcon": ["AiIcon"],
+          "backend/DataTable": ["DataTable"],
+          "backend/EmptyState": ["EmptyState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/utils/api": ["apiFetch"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow"],
+          "hooks/useDialogKeyHandler": ["useDialogKeyHandler"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/radio": ["Radio", "RadioGroup"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/status-badge": ["StatusBadge", "StatusMap"],
+          "primitives/switch": ["Switch"],
+          "primitives/tabs": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
+          "primitives/textarea": ["Textarea"],
+          "primitives/tooltip": ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipTrigger"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-apns",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@parse/node-apn": "^6.0.1"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": ["SendMessageInput", "SendMessageResult"],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/push-adapter": [
+            "BasePushChannelAdapter",
+            "MISSING_PUSH_TOKEN_RESULT",
+            "deviceUnregisteredResult",
+            "readPushToken"
+          ],
+          "modules/communication_channels/lib/push-connect-error": [
+            "resolvePushConnectErrorMessage",
+            "resolvePushConnectFieldErrors"
+          ],
+          "modules/communication_channels/lib/push-credential-errors": [
+            "PUSH_CREDENTIAL_ERROR_INVALID_BUNDLE_ID",
+            "PUSH_CREDENTIAL_ERROR_INVALID_KEY_ID",
+            "PUSH_CREDENTIAL_ERROR_INVALID_P8",
+            "PUSH_CREDENTIAL_ERROR_INVALID_TEAM_ID",
+            "PUSH_CREDENTIAL_ERROR_REQUIRED"
+          ],
+          "modules/communication_channels/lib/push-envelope": ["PushEnvelope", "readPushEnvelope", "resolvePushBody"],
+          "modules/communication_channels/lib/refcounted-client-cache": ["createRefCountedClientCache"],
+          "modules/push_notifications/lib/fake-provider-recorder": [
+            "isPushFakeProvidersEnabled",
+            "recordFakePush",
+            "warnPushFakeProvidersActive"
+          ],
+          "modules/push_notifications/lib/push-health": ["makePushClientConfigHealthCheck"]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/di/container": ["AppContainer"],
+          "lib/i18n/context": ["useT"],
+          "modules/integrations/types": ["IntegrationBundle", "IntegrationDefinition"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/textarea": ["Textarea"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-discord",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/ai-assistant": "0.9.0",
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "imports": {
+        "@open-mercato/ai-assistant": {
+          ".": ["(dynamic/require)"],
+          "modules/ai_assistant/lib/ai-agent-definition": ["AiAgentDefinition"]
+        },
+        "@open-mercato/core": {
+          "helpers/integration/queue": ["drainIntegrationQueue"],
+          "modules/communication_channels/data/entities": [
+            "ChannelThreadMapping",
+            "CommunicationChannel",
+            "ExternalConversation"
+          ],
+          "modules/communication_channels/events": ["emitCommunicationChannelsEvent"],
+          "modules/communication_channels/lib/access-control": [
+            "ChannelAccessDeniedError",
+            "assertCanAccessChannel",
+            "assertCanManageChannel",
+            "channelOrgScopeWhereFromFilter",
+            "channelOwnerScopeWhere"
+          ],
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "DeleteChannelMessageInput",
+            "EditChannelMessageInput",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "InboundMessage",
+            "InboundReactionEvent",
+            "MessageStatus",
+            "NormalizedAttachment",
+            "NormalizedInboundMessage",
+            "RemoveReactionInput",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "SendReactionInput",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/queue": [
+            "COMMUNICATION_CHANNELS_QUEUES",
+            "getCommunicationChannelsQueue"
+          ],
+          "modules/communication_channels/lib/reaction-processor-types": ["ReactionInboundJob"],
+          "modules/communication_channels/lib/route-mutation-guard": ["validateRouteMutationGuard"],
+          "modules/communication_channels/lib/system-user": [
+            "COMMUNICATION_CHANNELS_SYSTEM_USER_ID",
+            "resolveCommunicationChannelsSystemUserId"
+          ],
+          "modules/communication_channels/workers/inbound-processor": ["InboundProcessorPayload"],
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"],
+          "modules/directory/utils/organizationScopeFilter": ["resolveOrganizationScopeFilter"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService", "createCredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService", "createIntegrationLogService"],
+          "modules/messages/data/entities": ["Message"]
+        },
+        "@open-mercato/queue": {
+          ".": ["(dynamic/require)", "Queue", "QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/commands": ["CommandBus", "CommandHandler", "registerCommand"],
+          "lib/commands/errors": ["getCommandInterceptorHttpRejection"],
+          "lib/commands/flush": ["withAtomicFlush"],
+          "lib/crud/errors": ["isCrudHttpError"],
+          "lib/crud/optimistic-lock-command": ["enforceCommandOptimisticLockWithGuards"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/html/htmlToPlainText": ["htmlToPlainText"],
+          "lib/html/sanitizeRichText": ["sanitizeRichTextHtml"],
+          "lib/http/fetchWithTimeout": ["FetchTimeoutError", "fetchWithTimeout"],
+          "lib/i18n/context": ["TranslateFn", "useT"],
+          "lib/i18n/server": ["(dynamic/require)", "resolveTranslations"],
+          "lib/i18n/translate": ["createTranslator"],
+          "lib/logger": ["createLogger"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/messages/types": ["MessageAction", "MessageTypeDefinition"],
+          "modules/registry": ["ModuleCli", "PageMetadata"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "security/featurePolicy": ["authorizeFeatures"]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": ["CrudField", "CrudForm"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage", "RecordNotFoundState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/utils/apiCall": ["apiCall"],
+          "backend/utils/crud": ["updateCrud"],
+          "backend/utils/serverErrors": ["createCrudFormError"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"],
+          "primitives/tag": ["Tag"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-expo",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "expo-server-sdk": "^3.15.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": ["SendMessageInput", "SendMessageResult"],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/push-adapter": [
+            "BasePushChannelAdapter",
+            "MISSING_PUSH_TOKEN_RESULT",
+            "PushReceiptChecker",
+            "PushReceiptOutcome",
+            "deviceUnregisteredResult",
+            "readPushToken"
+          ],
+          "modules/communication_channels/lib/push-connect-error": [
+            "resolvePushConnectErrorMessage",
+            "resolvePushConnectFieldErrors"
+          ],
+          "modules/communication_channels/lib/push-envelope": ["PushEnvelope", "readPushEnvelope", "resolvePushBody"],
+          "modules/push_notifications/lib/fake-provider-recorder": [
+            "isPushFakeProvidersEnabled",
+            "recordFakePush",
+            "warnPushFakeProvidersActive"
+          ],
+          "modules/push_notifications/lib/push-health": ["makePushClientConfigHealthCheck"]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer"],
+          "lib/i18n/context": ["useT"],
+          "modules/integrations/types": ["IntegrationBundle", "IntegrationDefinition"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-fcm",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "firebase-admin": "^13.0.2"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": ["SendMessageInput", "SendMessageResult"],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/push-adapter": [
+            "BasePushChannelAdapter",
+            "MISSING_PUSH_TOKEN_RESULT",
+            "deviceUnregisteredResult",
+            "readPushToken"
+          ],
+          "modules/communication_channels/lib/push-connect-error": [
+            "resolvePushConnectErrorMessage",
+            "resolvePushConnectFieldErrors"
+          ],
+          "modules/communication_channels/lib/push-credential-errors": [
+            "PUSH_CREDENTIAL_ERROR_INVALID_JSON",
+            "PUSH_CREDENTIAL_ERROR_MISSING_FIELDS",
+            "PUSH_CREDENTIAL_ERROR_REQUIRED"
+          ],
+          "modules/communication_channels/lib/push-envelope": ["PushEnvelope", "readPushEnvelope", "resolvePushBody"],
+          "modules/communication_channels/lib/refcounted-client-cache": ["createRefCountedClientCache"],
+          "modules/push_notifications/lib/fake-provider-recorder": [
+            "isPushFakeProvidersEnabled",
+            "recordFakePush",
+            "warnPushFakeProvidersActive"
+          ],
+          "modules/push_notifications/lib/push-health": ["makePushClientConfigHealthCheck"]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer"],
+          "lib/i18n/context": ["useT"],
+          "modules/integrations/types": ["IntegrationBundle", "IntegrationDefinition"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/textarea": ["Textarea"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-gmail",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@types/mailparser": "^3.4.5",
+        "mailparser": "^3.9.17"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ApplyPushNotificationInput",
+            "BuildOAuthAuthorizeUrlInput",
+            "BuildOAuthAuthorizeUrlResult",
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "DeleteChannelMessageInput",
+            "ExchangeOAuthCodeInput",
+            "ExchangeOAuthCodeResult",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "ImportHistoryInput",
+            "ImportHistoryPage",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "PushRegistration",
+            "RefreshCredentialsInput",
+            "RefreshedCredentials",
+            "RegisterPushInput",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "UnregisterPushInput",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": ["baseEmailCapabilities"],
+          "modules/communication_channels/lib/email-contact": ["emailResolveContact"],
+          "modules/communication_channels/lib/email-mime": [
+            "ParsedMail",
+            "assembleRfc2822",
+            "decodeCursor",
+            "encodeCursor",
+            "escapeQuotes",
+            "generateMessageId",
+            "htmlToText",
+            "normalizeMimeInbound",
+            "referencesFromMeta",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/import-history-limits": [
+            "IMPORT_HISTORY_DEFAULT_MAX_MESSAGES",
+            "IMPORT_HISTORY_DEFAULT_SINCE_DAYS",
+            "getImportHistoryMaxMessages",
+            "getImportHistoryMaxSinceDays"
+          ],
+          "modules/communication_channels/lib/oauth-token": [
+            "OAuthTokenResponse",
+            "requestOAuthToken",
+            "tokenResponseToExpiresAt"
+          ],
+          "modules/communication_channels/lib/provider-health": ["makeClientConfigHealthCheck"],
+          "modules/communication_channels/lib/use-connect-channel": ["useConnectChannel"]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer"],
+          "lib/http/fetchWithTimeout": ["FetchTimeoutError", "fetchWithTimeout"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/social-button": ["SocialButton"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-imap",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@types/mailparser": "^3.4.5",
+        "@types/nodemailer": "^8.0.1",
+        "imapflow": "^1.7.6",
+        "mailparser": "^3.9.17",
+        "nodemailer": "^10.0.10"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "ImportHistoryInput",
+            "ImportHistoryPage",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": ["baseEmailCapabilities"],
+          "modules/communication_channels/lib/email-contact": ["emailResolveContact"],
+          "modules/communication_channels/lib/email-mime": [
+            "ParsedMail",
+            "decodeCursor",
+            "encodeCursor",
+            "htmlToText",
+            "normalizeMimeInbound",
+            "referencesFromMeta",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/import-history-limits": ["getImportHistoryLimits"]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/di/container": ["AppContainer"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/network": ["isPrivateIPv6"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-resend",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/ai-assistant": "0.9.0",
+        "@open-mercato/shared": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "resend": "^6.24.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "SendMessageInput",
+            "SendMessageResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": ["baseEmailCapabilities"],
+          "modules/communication_channels/lib/email-mime": [
+            "htmlToText",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/ensure-system-email-channel": ["ensureSystemEmailChannel"],
+          "modules/communication_channels/lib/system-email-provider-config": [
+            "isSelectedSystemEmailProvider",
+            "registerSystemEmailProviderConfigResolver"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer"],
+          "lib/email/config": ["normalizeEnvString", "resolveDefaultEmailFromAddress"],
+          "lib/http/fetchWithTimeout": ["fetchWithTimeout"],
+          "lib/logger": ["createLogger"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/channel-ses",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/ai-assistant": "0.9.0",
+        "@open-mercato/shared": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "dependencies": {
+        "@aws-sdk/client-sesv2": "^3.946.0",
+        "@open-mercato/core": "0.9.0",
+        "@types/nodemailer": "^8.0.1",
+        "nodemailer": "^10.0.10"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "SendMessageInput",
+            "SendMessageResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": ["baseEmailCapabilities"],
+          "modules/communication_channels/lib/email-mime": [
+            "htmlToText",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/ensure-system-email-channel": ["ensureSystemEmailChannel"],
+          "modules/communication_channels/lib/system-email-provider-config": [
+            "isSelectedSystemEmailProvider",
+            "registerSystemEmailProviderConfigResolver"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer"],
+          "lib/email/config": ["normalizeEnvString", "resolveDefaultEmailFromAddress"],
+          "lib/http/fetchWithTimeout": ["withTimeout"],
+          "lib/logger": ["createLogger"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/checkout",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "bcryptjs": "^3.0.3"
+      },
+      "imports": {
+        "@open-mercato/checkout": {
+          "modules/checkout/extension-points": ["extensionPoints"]
+        },
+        "@open-mercato/core": {
+          "modules/auth/services/rbacService": ["RbacService"],
+          "modules/core/__integration__/helpers/api": ["apiRequest"],
+          "modules/core/__integration__/helpers/generalFixtures": ["readJsonSafe"],
+          "modules/entities/data/entities": ["CustomFieldEntityConfig"],
+          "modules/entities/lib/field-definitions": ["ensureCustomFieldDefinitions"],
+          "modules/entities/lib/fieldsets": ["loadEntityFieldsetConfigs"],
+          "modules/notifications/lib/deliveryConfig": [
+            "DEFAULT_NOTIFICATION_DELIVERY_CONFIG",
+            "resolveNotificationDeliveryConfig"
+          ],
+          "modules/notifications/lib/notificationBuilder": ["buildFeatureNotificationFromType"],
+          "modules/notifications/lib/notificationService": ["resolveNotificationService"],
+          "modules/payment_gateways/data/entities": ["GatewayTransaction"],
+          "modules/payment_gateways/lib/gateway-service": ["PaymentGatewayService"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta", "createQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["AuthContext", "getAuthFromRequest"],
+          "lib/commands": ["CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/commands/command-bus": ["CommandBus"],
+          "lib/commands/customFieldSnapshots": [
+            "CustomFieldSnapshot",
+            "buildCustomFieldResetMap",
+            "loadCustomFieldSnapshot"
+          ],
+          "lib/commands/errors": ["getCommandInterceptorHttpRejection"],
+          "lib/commands/helpers": ["setCustomFieldsIfAny"],
+          "lib/commands/operationMetadata": ["serializeOperationMetadata"],
+          "lib/commands/redo": ["resolveRedoSnapshot"],
+          "lib/commands/scope": ["ensureOrganizationScope", "ensureTenantScope"],
+          "lib/commands/types": ["CommandRuntimeContext"],
+          "lib/commands/undo": ["extractUndoPayload"],
+          "lib/crud/custom-fields": [
+            "CustomFieldDisplayEntry",
+            "decorateRecordWithCustomFields",
+            "loadCustomFieldDefinitionIndex",
+            "loadCustomFieldValues"
+          ],
+          "lib/crud/errors": ["CrudHttpError", "isCrudHttpError"],
+          "lib/crud/optimistic-lock-command": ["enforceCommandOptimisticLockWithGuards", "enforceRecordGoneIsConflict"],
+          "lib/custom-fields/normalize": ["normalizeCustomFieldResponse"],
+          "lib/data/engine": ["DataEngine"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["createRequestContainer"],
+          "lib/email/send": ["sendEmail"],
+          "lib/encryption/find": ["findAndCountWithDecryption", "findOneWithDecryption", "findWithDecryption"],
+          "lib/encryption/tenantDataEncryptionService": ["parseDecryptedFieldValue"],
+          "lib/i18n/config": ["Locale"],
+          "lib/i18n/context": ["TranslateFn", "useLocale", "useSupportedLocales", "useT"],
+          "lib/i18n/locale": ["resolveLocaleFromCandidates"],
+          "lib/i18n/locale-label": ["resolveLocaleLabel"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/logger": ["createLogger"],
+          "lib/number": ["parseLocaleNumber"],
+          "lib/ratelimit/config": ["readEndpointRateLimitConfig"],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_FALLBACK_KEY",
+            "RATE_LIMIT_UNAVAILABLE_FALLBACK",
+            "checkRateLimit",
+            "getClientIp",
+            "rateLimitErrorSchema"
+          ],
+          "lib/ratelimit/service": ["RateLimiterService"],
+          "lib/ratelimit/types": ["RateLimitConfig"],
+          "lib/search/tokenLookup": ["SearchTokenDatabase", "findEntityIdsBySearchTokens"],
+          "lib/slugify": ["slugify"],
+          "lib/time": ["formatRelativeTime"],
+          "lib/utils": ["cn"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/entities": ["CustomEntitySpec", "CustomFieldDefinition"],
+          "modules/entities/validators": ["fieldsetCodeRegex"],
+          "modules/events": ["createModuleEvents"],
+          "modules/notifications/types": ["NotificationRendererProps", "NotificationTypeDefinition"],
+          "modules/payment_gateways/client": ["PaymentGatewayRendererProps", "getPaymentGatewayRenderer"],
+          "modules/payment_gateways/types": ["PaymentGatewayClientSession", "getPaymentGatewayDescriptor"],
+          "modules/registry": ["ModuleInfo"],
+          "modules/search": ["SearchModuleConfig"],
+          "modules/setup": ["InitSetupContext", "ModuleSetupConfig"],
+          "modules/widgets/component-registry": ["ComponentOverride"],
+          "modules/widgets/extension-points": [
+            "componentExtensionHost",
+            "dataTableExtensionHost",
+            "defineModuleExtensionPoints",
+            "injectionExtensionHost"
+          ],
+          "modules/widgets/injection": ["InjectionWidgetModule", "ModuleInjectionTable"]
+        },
+        "@open-mercato/ui": {
+          "backend/conflicts": ["surfaceRecordConflict"],
+          "backend/CrudForm": ["CrudField", "CrudForm", "CrudFormGroup", "CrudFormGroupComponentProps"],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["RecordNotFoundState"],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/filters/ListEmptyState": ["ListEmptyState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms": ["FormHeader"],
+          "backend/injection/InjectionSpot": ["InjectionSpot", "useInjectionSpotEvents", "useInjectionWidgets"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/injection/useRegisteredComponent": ["useRegisteredComponent"],
+          "backend/inputs": ["ComboboxInput", "ComboboxOption", "SwitchableMarkdownInput"],
+          "backend/markdown/MarkdownContent": ["MarkdownContent"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActions"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow", "readApiResultOrThrow", "withScopedApiRequestHeaders"],
+          "backend/utils/customFieldValues": ["collectCustomFieldValues"],
+          "backend/utils/optimisticLock": ["buildOptimisticLockHeader"],
+          "backend/utils/serverErrors": [
+            "createCrudFormError",
+            "mapCrudServerErrorToFormErrors",
+            "normalizeCrudServerError"
+          ],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/card": ["Card", "CardContent", "CardHeader", "CardTitle"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/color-picker": ["ColorPicker"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogHeader", "DialogTitle"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"],
+          "primitives/radio": ["Radio", "RadioGroup"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/tabs": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
+          "primitives/textarea": ["Textarea"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/content",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/utils": ["cn"],
+          "modules/registry": ["ModuleInfo"]
+        },
+        "@open-mercato/ui": {
+          "primitives/button": ["Button"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/documents",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@floating-ui/dom": "^1.7.5",
+        "@hocuspocus/extension-redis": "^4.3.0",
+        "@hocuspocus/provider": "^4.3.0",
+        "@hocuspocus/server": "^4.4.0",
+        "@hocuspocus/transformer": "^4.3.0",
+        "@mikro-orm/core": "^7.1.14",
+        "@open-mercato/events": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@tiptap/core": "^3",
+        "@tiptap/extension-bubble-menu": "^3",
+        "@tiptap/extension-collaboration": "^3.27.3",
+        "@tiptap/extension-collaboration-caret": "^3.27.3",
+        "@tiptap/extension-highlight": "^3",
+        "@tiptap/extension-image": "^3",
+        "@tiptap/extension-link": "^3",
+        "@tiptap/extension-list": "^3.27.3",
+        "@tiptap/extension-placeholder": "^3",
+        "@tiptap/extension-table": "^3",
+        "@tiptap/extension-table-cell": "^3",
+        "@tiptap/extension-table-header": "^3",
+        "@tiptap/extension-table-row": "^3",
+        "@tiptap/extension-task-item": "^3",
+        "@tiptap/extension-task-list": "^3",
+        "@tiptap/extension-text-align": "^3",
+        "@tiptap/extension-text-style": "^3",
+        "@tiptap/extensions": "^3",
+        "@tiptap/html": "^3.27.3",
+        "@tiptap/pm": "^3",
+        "@tiptap/react": "^3",
+        "@tiptap/starter-kit": "^3",
+        "@tiptap/suggestion": "^3",
+        "@tiptap/y-tiptap": "^3.0.6",
+        "happy-dom": "^20.10.6",
+        "jszip": "^3.10.1",
+        "prosemirror-model": "^1.25.9",
+        "prosemirror-state": "^1.4.4",
+        "prosemirror-view": "^1.41.9",
+        "puppeteer-core": "^25.3.0",
+        "y-prosemirror": "^1.3.7",
+        "y-protocols": "^1.0.7",
+        "yjs": "^13.6.31"
+      },
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/auth/featureMatch": ["hasAllFeatures"],
+          "lib/auth/jwt": ["signJwt", "verifyJwt"],
+          "lib/auth/organizationScope": ["ORGANIZATION_SCOPE_REQUIRED_ERROR_CODE", "resolveActiveOrganizationId"],
+          "lib/auth/principal-service": ["ApiKeyPrincipalService", "AuthPrincipalService", "OrganizationScopeService"],
+          "lib/auth/server": ["AuthContext", "getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/commands/command-interceptor": [
+            "CommandInterceptor",
+            "CommandInterceptorContext",
+            "CommandInterceptorUndoContext"
+          ],
+          "lib/commands/errors": ["getCommandInterceptorHttpRejection"],
+          "lib/commands/flush": ["withAtomicFlush"],
+          "lib/commands/helpers": ["emitCrudSideEffects", "emitCrudUndoSideEffects"],
+          "lib/commands/operationMetadata": ["serializeOperationMetadata"],
+          "lib/commands/undo": ["extractUndoPayload"],
+          "lib/crud/errors": ["CrudHttpError", "forbidden", "isCrudHttpError"],
+          "lib/crud/optimistic-lock-command": [
+            "assertOptimisticLock",
+            "buildOptimisticLockConflictBody",
+            "enforceCommandOptimisticLockWithGuards",
+            "enforceRecordGoneIsConflict"
+          ],
+          "lib/crud/optimistic-lock-headers": ["OPTIMISTIC_LOCK_CONFLICT_CODE"],
+          "lib/crud/route-mutation-guard": ["RouteMutationGuardPassed", "runRouteMutationGuards"],
+          "lib/data/engine": ["DataEngine"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findAndCountWithDecryption", "findOneWithDecryption", "findWithDecryption"],
+          "lib/html/htmlToPlainText": ["htmlToPlainText"],
+          "lib/html/sanitizeRichText": ["sanitizeRichTextHtml"],
+          "lib/http/fetchWithTimeout": ["FetchWithTimeoutInit", "fetchWithTimeout", "resolveTimeoutMs", "withTimeout"],
+          "lib/i18n/context": ["TranslateFn", "useLocale", "useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/logger": ["createLogger"],
+          "lib/openapi": ["OpenApiHttpMethod", "OpenApiRouteDoc"],
+          "lib/query/encrypted-sort": ["sortRowsInMemory"],
+          "lib/query/types": ["QueryEngine", "QueryOptions", "QueryResult", "SortDir"],
+          "lib/search/config": ["resolveSearchMinTokenLength"],
+          "lib/url": ["getSecurityEmailBaseUrl"],
+          "lib/utils": ["cn"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/entities": ["CustomEntitySpec", "EntityExtension"],
+          "modules/events": ["EventPayload", "createModuleEvents"],
+          "modules/notifications/types": ["NotificationTypeDefinition"],
+          "modules/registry": ["ModuleInfo"],
+          "modules/search": ["SearchBuildContext", "SearchIndexSource", "SearchModuleConfig", "SearchResultPresenter"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "modules/widgets/injection-loader": [
+            "getEnabledModuleIds",
+            "getInjectionRegistryVersion",
+            "subscribeToInjectionRegistryChanges"
+          ],
+          "security/enabledModulesRegistry": ["getEnabledModuleIds"]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/conflicts": ["surfaceRecordConflict"],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage", "RecordNotFoundState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody", "PageHeader"],
+          "backend/RowActions": ["RowActionItem", "RowActions"],
+          "backend/SectionHeader": ["SectionHeader"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow", "withScopedApiRequestHeaders"],
+          "backend/utils/optimisticLock": ["buildOptimisticLockHeader"],
+          "hooks/useDialogKeyHandler": ["useDialogKeyHandler"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/avatar": ["Avatar"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/checkbox-field": ["CheckboxField"],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/empty-state": ["EmptyState"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/link-button": ["LinkButton"],
+          "primitives/popover": ["Popover", "PopoverClose", "PopoverContent", "PopoverTrigger"],
+          "primitives/progress": ["Progress"],
+          "primitives/radio": ["Radio", "RadioGroup"],
+          "primitives/segmented-control": ["SegmentedControl", "SegmentedControlItem"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/status-badge": ["StatusBadge"],
+          "primitives/switch": ["Switch"],
+          "primitives/tag": ["Tag"],
+          "primitives/textarea": ["Textarea"],
+          "primitives/tooltip": ["SimpleTooltip"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/enterprise",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@ai-sdk/anthropic": "^4.0.1",
+        "@ai-sdk/openai": "^4.0.2",
+        "@dnd-kit/core": "^6.3.1",
+        "@dnd-kit/sortable": "^10.0.0",
+        "@dnd-kit/utilities": "^3.2.2",
+        "@open-mercato/ai-assistant": "0.9.0",
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/scheduler": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@open-mercato/web-research": "0.9.0",
+        "@simplewebauthn/browser": "^13.3.0",
+        "@simplewebauthn/server": "^13.3.2",
+        "@simplewebauthn/types": "^12.0.0",
+        "@types/qrcode": "^1.5.5",
+        "ai": "^7.0.4",
+        "openid-client": "^6.8.4",
+        "otpauth": "9.5.1",
+        "qrcode": "^1.5.4"
+      },
+      "imports": {
+        "@open-mercato/ai-assistant": {
+          "modules/ai_assistant/lib/agent-registry": ["(dynamic/require)"],
+          "modules/ai_assistant/lib/agent-runtime": ["runAiAgentObject"],
+          "modules/ai_assistant/lib/ai-agent-definition": ["AiAgentDefinition", "defineAiAgent"],
+          "modules/ai_assistant/lib/ai-tool-definition": ["defineAiTool"],
+          "modules/ai_assistant/lib/attachment-bridge-types": ["AiChatRequestContext"],
+          "modules/ai_assistant/lib/generated-registry-loader": ["(dynamic/require)"],
+          "modules/ai_assistant/lib/model-factory": ["AiModelFactoryError", "createModelFactory"],
+          "modules/ai_assistant/lib/sandbox": ["createSandbox"],
+          "modules/ai_assistant/lib/tool-loader": ["(dynamic/require)"],
+          "modules/ai_assistant/lib/tool-registry": ["(dynamic/require)"],
+          "modules/ai_assistant/lib/types": ["AiToolDefinition", "McpToolContext"]
+        },
+        "@open-mercato/core": {
+          "generated-shims/entities.ids.generated": ["E"],
+          "modules/api_keys/data/entities": ["ApiKey"],
+          "modules/api_keys/services/apiKeyService": [
+            "createApiKey",
+            "createSessionApiKey",
+            "deleteSessionApiKey",
+            "generateSessionToken",
+            "verifyApiKey"
+          ],
+          "modules/attachments/data/entities": ["Attachment"],
+          "modules/attachments/lib/createFromBuffer": ["CreateAttachmentFromBufferInput", "createAttachmentFromBuffer"],
+          "modules/attachments/lib/ocrService": ["(dynamic/require)", "OcrService"],
+          "modules/audit_logs/data/entities": ["ActionLog"],
+          "modules/audit_logs/lib/display-helpers": ["ChangeRow", "ChangedFieldsTable"],
+          "modules/audit_logs/services/actionLogService": ["ActionLogService"],
+          "modules/auth/data/entities": ["(dynamic/require)", "*", "Role", "Session", "User", "UserRole"],
+          "modules/auth/frontend/login-injection": ["LoginFormWidgetContext"],
+          "modules/auth/lib/authorizationStateLocks": [
+            "lockAuthorizationState",
+            "lockUserRoleWriterAuthorizationState"
+          ],
+          "modules/auth/lib/emailHash": ["computeEmailHash"],
+          "modules/auth/lib/tenantAccess": ["enforceTenantSelection", "resolveIsSuperAdmin"],
+          "modules/auth/services/authService": ["AuthService"],
+          "modules/auth/services/rbacService": ["RbacService"],
+          "modules/configs/data/entities": ["ModuleConfig"],
+          "modules/configs/lib/module-config-service": ["ModuleConfigService"],
+          "modules/customers/data/entities": ["(dynamic/require)", "*"],
+          "modules/directory/components/OrganizationSelect": ["OrganizationSelect"],
+          "modules/directory/components/TenantSelect": ["TenantSelect"],
+          "modules/directory/data/entities": ["Organization", "Tenant"],
+          "modules/directory/utils/organizationScope": [
+            "resolveFeatureCheckContext",
+            "resolveOrganizationScopeForRequest"
+          ],
+          "modules/directory/utils/organizationScopeFilter": ["resolveSingleOrganizationIdOrDeny"],
+          "modules/notifications/lib/notificationBuilder": [
+            "buildFeatureNotificationFromType",
+            "buildNotificationFromType"
+          ],
+          "modules/notifications/lib/notificationService": ["resolveNotificationService"],
+          "modules/workflows/data/entities": ["(dynamic/require)", "*", "WorkflowDefinitionData"],
+          "modules/workflows/lib/activity-registry": ["(dynamic/require)", "*"],
+          "modules/workflows/lib/agent-disposition-task": ["(dynamic/require)", "*", "AgentDispositionReview"],
+          "modules/workflows/lib/collect-validation-issues": ["WorkflowIssueTranslator", "WorkflowValidationIssue"],
+          "modules/workflows/lib/definition-grant": ["(dynamic/require)", "*", "authorizeWorkflowGrantChange"],
+          "modules/workflows/lib/run-gantt": ["COLLAPSE_FACTOR", "MIN_COLLAPSIBLE_MS"],
+          "modules/workflows/lib/signal-handler": ["(dynamic/require)", "*"],
+          "modules/workflows/lib/visual-editor-navigation": ["WORKFLOW_STUDIO_CREATE_HREF"],
+          "modules/workflows/lib/work-inbox/provider": [
+            "WorkInboxAction",
+            "WorkInboxQuery",
+            "WorkInboxRow",
+            "WorkInboxScope",
+            "WorkInboxSourceContext",
+            "WorkInboxSourceProvider",
+            "WorkInboxSourceResult",
+            "deriveWorkInboxOverdue",
+            "normalizeWorkInboxPriority",
+            "registerWorkInboxSources"
+          ],
+          "modules/workflows/lib/workflow-safe-commands": ["(dynamic/require)", "*"]
+        },
+        "@open-mercato/enterprise": {
+          "modules/record_locks/lib/clientLockStore": [
+            "RecordLockFormState",
+            "RecordLockUiConflict",
+            "RecordLockUiView",
+            "clearRecordLockFormState",
+            "getRecordLockFormState",
+            "setRecordLockFormState",
+            "subscribeRecordLockFormState"
+          ],
+          "modules/record_locks/lib/optimisticLockFloor": ["isOptimisticLockFloorConflict"],
+          "modules/record_locks/notifications.handlers": [
+            "RECORD_LOCKS_FORCE_RELEASED_EVENT",
+            "RECORD_LOCKS_INCOMING_CHANGES_EVENT",
+            "RECORD_LOCKS_LOCK_CONTENDED_EVENT",
+            "RECORD_LOCKS_RECORD_DELETED_EVENT"
+          ],
+          "modules/security/extension-points": ["extensionPoints"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "Queue", "QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/scheduler": {
+          ".": ["validateCronExpression"],
+          "modules/scheduler/lib/cronParser": ["validateCronExpression"]
+        },
+        "@open-mercato/shared": {
+          "lib/ai/opencode-tool-parts": ["normalizeOpenCodeToolPart"],
+          "lib/ai/token-count": ["TOKEN_ENCODING", "countTokens"],
+          "lib/auth/featureMatch": ["hasAllFeatures"],
+          "lib/auth/jwt": ["deriveJwtAudienceSecret", "signAudienceJwt", "signJwt", "verifyAudienceJwt", "verifyJwt"],
+          "lib/auth/mfaPendingAccess": ["registerMfaPendingAccessRoutes"],
+          "lib/auth/passwordPolicy": [
+            "PasswordPolicy",
+            "PasswordRequirement",
+            "PasswordRequirementId",
+            "PasswordValidationResult",
+            "buildPasswordSchema",
+            "getPasswordPolicy",
+            "getPasswordRequirements",
+            "validatePassword"
+          ],
+          "lib/auth/server": ["AuthContext", "getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/commands/command-interceptor": ["CommandInterceptor"],
+          "lib/commands/errors": ["getCommandInterceptorHttpRejection"],
+          "lib/commands/flush": ["withAtomicFlush"],
+          "lib/commands/undo": ["extractUndoPayload"],
+          "lib/crud/api-interceptor": ["ApiInterceptor"],
+          "lib/crud/cache": ["canonicalizeResourceTag", "invalidateCrudCache"],
+          "lib/crud/errors": ["CrudHttpError", "conflict", "forbidden", "isCrudHttpError"],
+          "lib/crud/factory": ["CrudCtx", "makeCrudRoute"],
+          "lib/crud/mutation-guard": [
+            "CrudMutationGuardAfterSuccessInput",
+            "CrudMutationGuardValidateInput",
+            "CrudMutationGuardValidationResult",
+            "runCrudMutationGuardAfterSuccess",
+            "validateCrudMutationGuard"
+          ],
+          "lib/crud/optimistic-lock": [
+            "OptimisticLockConfig",
+            "createOptimisticLockGuardService",
+            "parseOptimisticLockEnv"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "createCommandOptimisticLockGuardService",
+            "enforceCommandOptimisticLock",
+            "enforceRecordGoneIsConflict"
+          ],
+          "lib/crud/optimistic-lock-headers": ["OPTIMISTIC_LOCK_ENV_VAR"],
+          "lib/crud/optimistic-lock-store": ["getAllOptimisticLockReaders"],
+          "lib/db/buildIlikeTerm": ["buildIlikeTerm"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/email/send": ["sendEmail"],
+          "lib/encryption/aes": ["decryptWithAesGcm", "encryptWithAesGcm"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/encryption/tenantDataEncryptionService": ["TenantDataEncryptionService", "parseDecryptedFieldValue"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/context": ["TranslateFn", "useLocale", "useT"],
+          "lib/i18n/server": ["(dynamic/require)", "getModules", "resolveTranslations"],
+          "lib/i18n/translate": ["TranslateWithFallbackFn", "createFallbackTranslator", "translateWithFallback"],
+          "lib/logger": ["createLogger"],
+          "lib/modules/registry": ["tryGetModules"],
+          "lib/openapi": ["JsonSchema", "OpenApiRouteDoc", "zodToJsonSchema"],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "lib/query/types": ["QueryEngine"],
+          "lib/ratelimit/config": ["readEndpointRateLimitConfig"],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_ERROR_FALLBACK",
+            "RATE_LIMIT_FALLBACK_KEY",
+            "RATE_LIMIT_UNAVAILABLE_FALLBACK",
+            "checkRateLimit",
+            "getClientIp",
+            "rateLimitErrorSchema"
+          ],
+          "lib/ratelimit/service": ["RateLimiterService"],
+          "lib/ratelimit/types": ["RateLimitConfig"],
+          "lib/time": ["formatRelativeTime"],
+          "lib/url": ["toAbsoluteUrl"],
+          "lib/url-safety": [
+            "HostLookup",
+            "UnsafeOutboundUrlError",
+            "UrlSafetyReason",
+            "parseOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "lib/utils": ["cn"],
+          "lib/version": ["APP_VERSION"],
+          "lib/webhooks/secrets": ["parseWebhookSecret"],
+          "lib/webhooks/verify": ["verifyWebhookSignature"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents"],
+          "modules/generators": ["GeneratorPlugin"],
+          "modules/middleware/page": ["CONTINUE_PAGE_MIDDLEWARE", "PageRouteMiddleware"],
+          "modules/notifications/handler": ["NotificationHandler"],
+          "modules/notifications/types": ["NotificationRendererProps", "NotificationTypeDefinition"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/component-registry": ["ComponentOverride"],
+          "modules/widgets/extension-points": [
+            "dataTableExtensionHost",
+            "defineModuleExtensionPoints",
+            "injectionExtensionHost"
+          ],
+          "modules/widgets/injection": [
+            "InjectionMenuItemWidget",
+            "InjectionRowActionWidget",
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "modules/widgets/injection-position": ["InjectionPosition"],
+          "security/features": ["hasFeature"]
+        },
+        "@open-mercato/ui": {
+          "backend/BackendChromeProvider": ["useBackendChrome"],
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/conflicts": ["registerRecordLockConflictHandler", "surfaceRecordConflict"],
+          "backend/crud/usePersistedBooleanFlag": ["usePersistedBooleanFlag"],
+          "backend/CrudForm": [
+            "CrudCustomFieldRenderProps",
+            "CrudField",
+            "CrudFieldOption",
+            "CrudForm",
+            "CrudFormGroup"
+          ],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage", "RecordNotFoundState"],
+          "backend/EmptyState": ["EmptyState"],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms": ["FormHeader"],
+          "backend/forms/FormHeader": ["FormHeader"],
+          "backend/forms/FormHeader.tsx": ["FormHeader"],
+          "backend/injection/InjectionSpot": ["InjectionSpot"],
+          "backend/injection/mutationEvents": ["BACKEND_MUTATION_ERROR_EVENT"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/injection/useRegisteredComponent": ["useRegisteredComponent"],
+          "backend/inputs": ["TagsInput"],
+          "backend/inputs/TagsInput": ["TagsInput"],
+          "backend/JsonBuilder": ["JsonBuilder"],
+          "backend/JsonDisplay": ["JsonDisplay"],
+          "backend/markdown/MarkdownContent": ["MarkdownContent"],
+          "backend/nav/navBadges": ["clearNavBadge", "setNavBadge"],
+          "backend/Page": ["Page", "PageBody", "PageHeader"],
+          "backend/RowActions": ["RowActions"],
+          "backend/SectionHeader": ["CollapsibleSection", "SectionHeader"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow", "readApiResultOrThrow", "withScopedApiRequestHeaders"],
+          "backend/utils/crud": ["createCrud", "deleteCrud", "updateCrud"],
+          "backend/utils/optimisticLock": ["buildOptimisticLockHeader", "extractOptimisticLockConflict"],
+          "backend/utils/serverErrors": ["createCrudFormError", "normalizeCrudServerError"],
+          "primitives/accordion": ["Accordion", "AccordionContent", "AccordionItem", "AccordionTrigger"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/avatar": ["Avatar"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/card": ["Card", "CardContent", "CardDescription", "CardHeader", "CardTitle"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogDescription", "DialogHeader", "DialogTitle"],
+          "primitives/drawer": [
+            "Drawer",
+            "DrawerBody",
+            "DrawerClose",
+            "DrawerContent",
+            "DrawerDescription",
+            "DrawerFooter",
+            "DrawerHeader",
+            "DrawerTitle"
+          ],
+          "primitives/empty-state": ["EmptyState"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/kbd": ["Kbd", "KbdShortcut"],
+          "primitives/label": ["Label"],
+          "primitives/pagination": ["Pagination"],
+          "primitives/password-input": ["PasswordInput"],
+          "primitives/popover": ["Popover", "PopoverContent", "PopoverTrigger"],
+          "primitives/progress": ["Progress"],
+          "primitives/radio": ["Radio", "RadioGroup"],
+          "primitives/search-input": ["SearchInput"],
+          "primitives/segmented-control": ["SegmentedControl", "SegmentedControlItem"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/slider": ["Slider"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/status-badge": ["StatusBadge", "StatusBadgeVariant", "StatusMap"],
+          "primitives/switch": ["Switch"],
+          "primitives/switch-field": ["SwitchField"],
+          "primitives/table": ["Table", "TableBody", "TableCell", "TableHead", "TableHeader", "TableRow"],
+          "primitives/tabs": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
+          "primitives/tag": ["Tag"],
+          "primitives/textarea": ["Textarea"],
+          "primitives/tooltip": ["SimpleTooltip"]
+        },
+        "@open-mercato/web-research": {
+          ".": [
+            "AdapterRegistryEntry",
+            "DEFAULT_POLICY",
+            "EngineAdapterEntry",
+            "MODEL_ADAPTER_TIMEOUT_MS",
+            "ResultCache",
+            "SearchEngine",
+            "SearchEngineResult",
+            "SearchPolicy",
+            "SearchPolicyInput",
+            "SearchStep",
+            "StepSink",
+            "createHttpClient",
+            "createSearchEngine",
+            "describeOptionsSchema",
+            "instantiateAdapter",
+            "maskSecrets",
+            "resolveAdapterModules",
+            "resolvePolicy",
+            "searchPolicySchema",
+            "unmaskSecrets"
+          ]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/events",
+      "version": "0.9.0",
+      "omPeers": {},
+      "dependencies": {
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/shared": "0.9.0",
+        "pg": "8.23.0"
+      },
+      "imports": {
+        "@open-mercato/queue": {
+          ".": ["JobContext", "Queue", "QueuedJob", "WorkerMeta", "createQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/api/context": ["resolveRequestContext"],
+          "lib/auth/principal-service": ["OrganizationScopeService"],
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/db/ssl": ["getSslConfig"],
+          "lib/events/patterns": ["matchEventPattern"],
+          "lib/logger": ["createLogger"],
+          "lib/modules/resource-usage": ["inferModuleIdFromResourceId", "withModuleResourceUsage"],
+          "lib/number": ["parseNumberWithDefault"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/redis/connection": ["getRedisUrlOrThrow"],
+          "modules/events": [
+            "getDeclaredEvents",
+            "isBroadcastEvent",
+            "isCoalescedBroadcastEvent",
+            "isCrossProcessBroadcastEvent",
+            "isPrivateCrossProcessEventEmitter"
+          ],
+          "modules/registry": ["ModuleInfo"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/gateway-stripe",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "@stripe/react-stripe-js": "^6.8.2",
+        "@stripe/stripe-js": "^9.14.0",
+        "stripe": "^22.3.1"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/integrations/lib/credentials-service": ["CredentialsService", "createCredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService", "createIntegrationLogService"],
+          "modules/integrations/lib/state-service": ["IntegrationStateService", "createIntegrationStateService"],
+          "modules/payment_gateways/lib/gateway-service": ["PaymentGatewayService"],
+          "modules/payment_gateways/lib/webhook-utils": ["claimWebhookProcessing", "releaseWebhookClaim"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/queue/dispatchOrigin": ["isTrustedWebhookDispatch"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationCredentialWebhookHelp",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/payment_gateways/client": [
+            "EmbeddedPaymentGatewayRendererProps",
+            "registerEmbeddedPaymentGatewayRenderer"
+          ],
+          "modules/payment_gateways/types": [
+            "CancelInput",
+            "CancelResult",
+            "CaptureInput",
+            "CaptureResult",
+            "CreateSessionInput",
+            "CreateSessionResult",
+            "GatewayAdapter",
+            "GatewayPaymentStatus",
+            "GetStatusInput",
+            "PaymentGatewayPresentationRequest",
+            "RefundInput",
+            "RefundResult",
+            "UnifiedPaymentStatus",
+            "VerifyWebhookInput",
+            "WebhookEvent",
+            "registerGatewayAdapter",
+            "registerPaymentGatewayDescriptor",
+            "registerWebhookHandler"
+          ],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/button": ["Button"],
+          "primitives/spinner": ["Spinner"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/onboarding",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "bootstrap": ["getCachedRateLimiterService"],
+          "modules/auth/data/entities": ["User", "UserConsent"],
+          "modules/auth/lib/consentIntegrity": ["computeConsentIntegrityHash"],
+          "modules/auth/lib/rateLimitCheck": ["checkAuthRateLimit"],
+          "modules/auth/lib/setup-app": ["setupInitialTenant"]
+        },
+        "@open-mercato/onboarding": {
+          "modules/onboarding/data/entities": ["OnboardingRequest"],
+          "modules/onboarding/data/validators": ["onboardingStartSchema", "onboardingVerifySchema"],
+          "modules/onboarding/emails/AdminNotificationEmail": ["default"],
+          "modules/onboarding/emails/FeedbackEmail": ["default"],
+          "modules/onboarding/emails/VerificationEmail": ["default"],
+          "modules/onboarding/emails/WorkspaceReadyEmail": ["default"],
+          "modules/onboarding/lib/consentClientIp": ["resolveConsentClientIp"],
+          "modules/onboarding/lib/deferred-provisioning": ["resolveProvisioningIds", "runDeferredProvisioning"],
+          "modules/onboarding/lib/existing-account-notice": ["sendExistingAccountNotice"],
+          "modules/onboarding/lib/preparation-claim": ["PREPARATION_CLAIM_STALE_MS", "isPreparationClaimActive"],
+          "modules/onboarding/lib/provisioning": ["runBestEffortProvisioningStep"],
+          "modules/onboarding/lib/ready-email": ["sendWorkspaceReadyEmail"],
+          "modules/onboarding/lib/service": ["OnboardingService"],
+          "modules/onboarding/lib/verify-base-url": ["resolveVerifyRedirectBaseUrl"],
+          "modules/onboarding/lib/verify-redirects": ["redirectToLogin", "redirectToPreparing", "redirectWithStatus"]
+        },
+        "@open-mercato/search": {
+          ".": ["SearchIndexer"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/passwordPolicy": ["buildPasswordSchema", "formatPasswordRequirements", "getPasswordPolicy"],
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/crud/errors": ["isUniqueViolation"],
+          "lib/di/container": ["createRequestContainer"],
+          "lib/email/send": ["sendEmail"],
+          "lib/encryption/aes": ["hashForLookup", "lookupHashCandidates"],
+          "lib/encryption/entityIds": ["getEntityIds"],
+          "lib/encryption/find": ["findOneWithDecryption"],
+          "lib/entities/system-entities": ["flattenSystemEntityIds"],
+          "lib/i18n/config": ["Locale", "defaultLocale", "locales"],
+          "lib/i18n/context": ["useLocale", "useT"],
+          "lib/i18n/server": ["loadDictionary"],
+          "lib/i18n/translate": ["createFallbackTranslator", "translateWithFallback"],
+          "lib/logger": ["createLogger"],
+          "lib/modules/registry": ["getModules"],
+          "lib/openapi": ["OpenApiMethodDoc", "OpenApiRouteDoc"],
+          "lib/ratelimit/config": ["readEndpointRateLimitConfig"],
+          "lib/ratelimit/helpers": ["getClientIp", "rateLimitErrorSchema"],
+          "lib/ratelimit/types": ["RateLimitConfig"],
+          "lib/url": [
+            "AppOriginConfigurationError",
+            "AppOriginRejectedError",
+            "assertAllowedAppOrigin",
+            "getSecurityEmailBaseUrl",
+            "mapSecurityEmailUrlError",
+            "resolveRequestOrigin"
+          ],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/registry": ["ModuleInfo"]
+        },
+        "@open-mercato/ui": {
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription"],
+          "primitives/button": ["Button"],
+          "primitives/card": ["Card", "CardContent", "CardDescription", "CardHeader", "CardTitle"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/email-input": ["EmailInput"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"],
+          "primitives/spinner": ["Spinner"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/scheduler",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/events": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "cron-parser": "^5.6.2"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "helpers/integration/api": ["apiRequest"],
+          "helpers/integration/generalFixtures": ["readJsonSafe"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "Queue", "QueuedJob", "WorkerMeta", "createQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": ["resolveCrudRecordId"],
+          "lib/auth/server": ["AuthContext", "getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/commands/errors": ["getCommandInterceptorHttpRejection"],
+          "lib/commands/redo": ["makeCreateRedo"],
+          "lib/commands/registry": ["commandRegistry"],
+          "lib/commands/scope": ["ensureOrganizationScope"],
+          "lib/commands/undo": ["UndoPayload", "extractUndoPayload"],
+          "lib/crud/errors": ["CrudHttpError"],
+          "lib/crud/factory": ["makeCrudRoute"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/i18n/context": ["useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/i18n/translate": ["TranslateWithFallbackFn", "createFallbackTranslator"],
+          "lib/logger": ["createLogger"],
+          "lib/modules/registry": ["getModules"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "lib/redis/connection": ["getRedisUrlOrThrow", "parseRedisUrl"],
+          "lib/schedule/interval": [
+            "MIN_SCHEDULE_INTERVAL_MS",
+            "isValidScheduleInterval",
+            "matchScheduleInterval",
+            "parseScheduleInterval"
+          ],
+          "lib/schedule/invalidScheduleValue": ["createInvalidScheduleValueError"],
+          "lib/time": ["formatDateTime"],
+          "modules/events": ["createModuleEvents", "getGlobalEventBus"],
+          "modules/registry": ["ModuleCli", "ModuleInfo", "ModuleWorker"],
+          "modules/setup": ["ModuleSetupConfig"]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/CrudForm": ["CrudCustomFieldRenderProps", "CrudField", "CrudForm", "CrudFormGroup"],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage", "RecordNotFoundState"],
+          "backend/filters/ListEmptyState": ["ListEmptyState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/inputs/ComboboxInput": ["ComboboxInput", "ComboboxOption"],
+          "backend/JsonBuilder": ["JsonBuilder"],
+          "backend/Page": ["Page", "PageBody", "PageHeader"],
+          "backend/RowActions": ["RowActionItem", "RowActions"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow"],
+          "backend/utils/crud": ["createCrud", "updateCrud"],
+          "backend/ValueIcons": ["BooleanIcon"],
+          "primitives/alert": ["Alert", "AlertDescription"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/card": ["Card", "CardContent", "CardHeader", "CardTitle"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogHeader", "DialogTitle"],
+          "primitives/label": ["Label"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/switch": ["Switch"],
+          "primitives/tabs": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/search",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@ai-sdk/amazon-bedrock": "^5.0.2",
+        "@ai-sdk/cohere": "^4.0.14",
+        "@ai-sdk/google": "^4.0.56",
+        "@ai-sdk/mistral": "^4.0.16",
+        "@ai-sdk/openai": "^4.0.50",
+        "ai": "^7.0.83",
+        "ai-sdk-ollama": "4.1.0",
+        "meilisearch": "^0.60.0",
+        "pg": "8.23.0",
+        "zod": "^4.4.3"
+      },
+      "imports": {
+        "@open-mercato/cache": {
+          ".": ["CacheStrategy"]
+        },
+        "@open-mercato/core": {
+          "modules/configs/lib/module-config-service": ["ConfigScope", "ModuleConfigService"],
+          "modules/directory/constants": ["isAllOrganizationsSelection"],
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"],
+          "modules/directory/utils/organizationScopeFilter": ["resolveOrganizationScopeFilter"],
+          "modules/directory/utils/scopeCookies": ["parseSelectedOrganizationCookie"],
+          "modules/progress/data/entities": ["ProgressJob"],
+          "modules/progress/lib/progressService": ["ProgressService"],
+          "modules/query_index/lib/coverage": ["refreshCoverageSnapshot", "writeCoverageCounts"],
+          "modules/query_index/lib/jobs": ["JobScope", "finalizeJob", "prepareJob"],
+          "modules/query_index/lib/reindexer": ["DEFAULT_REINDEX_PARTITIONS", "reindexEntity"],
+          "modules/query_index/lib/search-entity-policy": ["(dynamic/require)"],
+          "modules/query_index/lib/search-tokens": ["(dynamic/require)"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "Queue", "QueuedJob", "WorkerMeta", "createQueue"],
+          "worker": ["(dynamic/require)"]
+        },
+        "@open-mercato/search": {
+          ".": ["SearchService"],
+          "indexer": ["SearchIndexer"],
+          "strategies": ["FullTextSearchStrategy"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/cli/progress": ["createProgressBar"],
+          "lib/custom-fields/kinds": [
+            "CustomFieldKindMapResolver",
+            "buildCustomFieldKindIndex",
+            "createCustomFieldKindMapResolver"
+          ],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/indexDoc": ["decryptIndexDocForSearch"],
+          "lib/encryption/tenantDataEncryptionService": ["TenantDataEncryptionService", "parseDecryptedFieldValue"],
+          "lib/frontend/organizationEvents": ["getCurrentOrganizationScope", "subscribeOrganizationScopeChanged"],
+          "lib/http/fetchWithTimeout": ["resolveTimeoutMs"],
+          "lib/i18n/context": ["TranslateFn", "useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/indexers/error-log": ["recordIndexerError"],
+          "lib/indexers/status-log": ["recordIndexerLog"],
+          "lib/logger": ["Logger", "createLogger"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/query/engine": ["resolveEntityTableName"],
+          "lib/query/types": ["QueryEngine"],
+          "lib/redis/connection": ["getRedisUrlOrThrow"],
+          "lib/search/auto-indexing": [
+            "SEARCH_AUTO_INDEX_CONFIG_KEY",
+            "SEARCH_AUTO_INDEX_CONFIG_MODULE",
+            "envDisablesAutoIndexing"
+          ],
+          "lib/search/config": ["(dynamic/require)", "resolveSearchMinTokenLength"],
+          "lib/search/entityAccess": ["*"],
+          "lib/search/tokenize": ["(dynamic/require)"],
+          "lib/url-safety": [
+            "HostLookup",
+            "SafeOutboundFetchOptions",
+            "UrlSafetyReason",
+            "assertStaticallySafeOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "lib/utils": ["cn"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/entities": ["EntityId"],
+          "modules/events": ["createModuleEvents"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/search": [
+            "IndexableRecord",
+            "PresenterEnricherFn",
+            "ResultMergeConfig",
+            "SearchBuildContext",
+            "SearchDeletePayload",
+            "SearchEntityConfig",
+            "SearchFieldPolicy",
+            "SearchIndexPayload",
+            "SearchIndexSource",
+            "SearchModuleConfig",
+            "SearchOptions",
+            "SearchResult",
+            "SearchResultLink",
+            "SearchResultPresenter",
+            "SearchServiceOptions",
+            "SearchStrategy",
+            "SearchStrategyId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/vector": [
+            "VectorDriverId",
+            "VectorEntityConfig",
+            "VectorIndexEntry",
+            "VectorIndexSource",
+            "VectorLinkDescriptor",
+            "VectorModuleConfig",
+            "VectorQueryRequest",
+            "VectorResultPresenter",
+            "VectorSearchHit"
+          ],
+          "security/featurePolicy": ["authorizeFeatures"]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": ["DataTable"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActions"],
+          "backend/utils/api": ["ForbiddenError"],
+          "backend/utils/apiCall": ["readApiResultOrThrow"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogTitle"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/tabs": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/storage-s3",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@aws-sdk/client-s3": "^3.1085.0",
+        "@aws-sdk/s3-request-presigner": "^3.1085.0",
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/attachments/lib/drivers": [
+            "PrepareFilePayload",
+            "ReadFileResult",
+            "StorageDriver",
+            "StoreFilePayload",
+            "StoredFile",
+            "registerExternalCredentialEnhancer",
+            "registerExternalStorageDriver"
+          ],
+          "modules/attachments/lib/quota-service": ["AttachmentQuotaService"],
+          "modules/attachments/lib/security": [
+            "buildAttachmentContentDisposition",
+            "canRenderInlineAttachment",
+            "detectAttachmentMimeType",
+            "hasDangerousExecutableExtension",
+            "isActiveContentAttachment",
+            "sanitizeUploadedFileName"
+          ],
+          "modules/attachments/lib/upload-limits": [
+            "isMultipartRequestWithinUploadLimit",
+            "isMultipartUploadLimitError",
+            "parseMultipartFormDataWithinUploadLimit",
+            "resolveAttachmentMaxBytes",
+            "willExceedAttachmentTenantQuota"
+          ],
+          "modules/directory/data/entities": ["Organization"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService", "createCredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService", "createIntegrationLogService"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findWithDecryption"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/logger": ["createLogger"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/url-safety": [
+            "HostLookup",
+            "ResolvedHostAddress",
+            "UrlSafetyReason",
+            "assertSafeOutboundUrl",
+            "assertStaticallySafeOutboundUrl",
+            "parseOutboundUrl",
+            "resolveSafeOutboundUrl"
+          ],
+          "modules/integrations/types": ["IntegrationBundle", "IntegrationDefinition", "IntegrationScope"],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/sync-akeneo",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "node-html-markdown": "^2.0.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/attachments/data/entities": ["Attachment"],
+          "modules/attachments/lib/crud": ["attachmentCrudEvents", "attachmentCrudIndexer"],
+          "modules/attachments/lib/imageUrls": [
+            "buildAttachmentFileUrl",
+            "buildAttachmentImageUrl",
+            "slugifyAttachmentFileName"
+          ],
+          "modules/attachments/lib/metadata": ["mergeAttachmentMetadata"],
+          "modules/attachments/lib/partitions": ["ensureDefaultPartitions", "resolveDefaultPartitionCode"],
+          "modules/attachments/lib/storage": ["deletePartitionFile", "storePartitionFile"],
+          "modules/catalog/commands/shared": ["emitCatalogQueryIndexEvent"],
+          "modules/catalog/data/entities": [
+            "CatalogOffer",
+            "CatalogOptionSchemaTemplate",
+            "CatalogPriceKind",
+            "CatalogProduct",
+            "CatalogProductCategory",
+            "CatalogProductPrice",
+            "CatalogProductVariant",
+            "CatalogProductVariantRelation"
+          ],
+          "modules/data_sync/data/entities": ["SyncCursor", "SyncMapping"],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "FieldMapping",
+            "ImportBatch",
+            "ImportItem",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": ["registerDataSyncAdapter"],
+          "modules/data_sync/lib/id-mapping": ["ExternalIdMappingService"],
+          "modules/data_sync/lib/queue": ["getSyncQueue"],
+          "modules/data_sync/lib/start-run": ["startDataSyncRun"],
+          "modules/data_sync/lib/sync-run-service": ["SyncRunService"],
+          "modules/entities/api/definitions.cache": ["invalidateDefinitionsCache"],
+          "modules/entities/data/entities": ["CustomFieldDef", "CustomFieldEntityConfig"],
+          "modules/entities/lib/field-definitions": ["ensureCustomFieldDefinitions"],
+          "modules/entities/lib/fieldsets": ["CustomFieldsetDefinition", "normalizeEntityFieldsetConfig"],
+          "modules/integrations/data/entities": ["SyncExternalIdMapping"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService"],
+          "modules/integrations/lib/log-service": ["IntegrationLogService"],
+          "modules/integrations/lib/state-service": ["IntegrationStateService"],
+          "modules/progress/data/entities": ["ProgressJob"],
+          "modules/progress/lib/progressService": ["ProgressService", "ProgressServiceContext"],
+          "modules/sales/data/entities": ["SalesChannel"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/commands": ["CommandBus", "CommandRuntimeContext"],
+          "lib/commands/flush": ["withAtomicFlush"],
+          "lib/commands/helpers": ["emitCrudSideEffects", "setCustomFieldsIfAny"],
+          "lib/data/engine": ["DataEngine"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/http/fetchWithTimeout": ["FetchTimeoutError", "FetchWithTimeoutInit", "resolveTimeoutMs"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/url-safety": ["HostLookup", "SafeOutboundFetchOptions", "UrlSafetyReason", "safeOutboundFetch"],
+          "modules/entities": ["CustomFieldDefinition"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/NextStepCallout": ["NextStepCallout"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/progress": ["Progress"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/telemetry",
+      "version": "0.9.0",
+      "omPeers": {},
+      "dependencies": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/auth/server": ["AuthContext"],
+          "lib/boolean": ["parseBooleanWithDefault"],
+          "lib/di/container": ["createRequestContainer"],
+          "lib/logger": ["LoggerExtensionRecord", "createLogger", "registerLoggerExtension"],
+          "lib/ratelimit/service": ["RateLimiterService"],
+          "lib/ratelimit/types": ["RateLimitConfig"],
+          "lib/telemetry/error-code": ["groupableCode"],
+          "lib/telemetry/runtime": ["TelemetryRuntime", "isTelemetryBackendEnabled", "registerTelemetryRuntime"],
+          "modules/registry": ["ModuleInfo"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/tillio",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/ai-assistant": "0.9.0",
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/integrations/data/entities": ["IntegrationState"],
+          "modules/phone_calls/commands/calls": ["IngestPhoneCallResult", "PHONE_CALLS_CALL_INGEST_COMMAND_ID"],
+          "modules/phone_calls/events": ["emitPhoneCallsEvent"],
+          "modules/progress/lib/progressService": ["ProgressService", "ProgressServiceContext"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "Queue", "QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/commands": ["CommandBus", "CommandRuntimeContext"],
+          "lib/crud/route-mutation-guard": ["runRouteMutationGuards"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption"],
+          "lib/http/fetchWithTimeout": ["FetchTimeoutError"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/number": ["parseNumberWithDefault"],
+          "lib/url-safety": [
+            "HostLookup",
+            "UnsafeOutboundUrlError",
+            "assertStaticallySafeOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/phone_calls/provider": ["PhoneCallProviderAdapter", "registerPhoneCallProvider"],
+          "modules/phone_calls/types": [
+            "FetchPhoneCallsInput",
+            "NormalizedPhoneCall",
+            "NormalizedPhoneCallBatch",
+            "NormalizedPhoneCallParticipant",
+            "NormalizedPhoneCallRecording",
+            "PHONE_CALL_RESOURCE_KIND",
+            "PhoneCallBatchAnomaly",
+            "PhoneCallDirection",
+            "PhoneCallStatus",
+            "ProviderValidationResult",
+            "ValidatePhoneCallProviderInput"
+          ],
+          "modules/registry": ["ModuleCli"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/date-range/dateRanges": ["DateRange"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/button": ["Button"],
+          "primitives/date-range-picker": ["DateRangePicker"],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/form-field": ["FormField"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/status-badge": ["StatusBadge"]
+        }
+      }
+    },
+    {
+      "set": "control",
+      "locator": "npm:@open-mercato/webhooks",
+      "version": "0.9.0",
+      "omPeers": {
+        "@open-mercato/shared": "0.9.0"
+      },
+      "dependencies": {
+        "@open-mercato/cache": "0.9.0",
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/queue": "0.9.0",
+        "@open-mercato/ui": "0.9.0",
+        "svix": "^1.99.1"
+      },
+      "imports": {
+        "@open-mercato/cache": {
+          ".": ["CacheStrategy", "runWithCacheTenant"]
+        },
+        "@open-mercato/core": {
+          "helpers/integration/api": ["apiRequest", "getAuthToken"],
+          "helpers/integration/authFixtures": ["createUserFixture", "deleteUserIfExists"],
+          "helpers/integration/dbFixtures": ["deleteUserAclInDb", "setUserAclInDb"],
+          "helpers/integration/generalFixtures": ["expectId", "readJsonSafe"],
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService"],
+          "modules/integrations/lib/state-service": ["createIntegrationStateService"],
+          "modules/notifications/lib/notificationBuilder": ["buildFeatureNotificationFromType"],
+          "modules/notifications/lib/notificationService": ["resolveNotificationService"]
+        },
+        "@open-mercato/events": {
+          "types": ["SubscriberContext"]
+        },
+        "@open-mercato/queue": {
+          ".": ["Queue", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/organizationScope": ["resolveSingleOrganizationIdOrDeny"],
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken", "parseBooleanWithDefault"],
+          "lib/crud/errors": ["isCrudHttpError"],
+          "lib/crud/factory": ["CrudCtx", "makeCrudRoute"],
+          "lib/crud/optimistic-lock-command": ["enforceCommandOptimisticLockWithGuards"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["(dynamic/require)", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/events/patterns": ["matchAnyWebhookEventPattern", "matchWebhookEventPattern"],
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/i18n/context": ["TranslateFn", "useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/logger": ["createLogger"],
+          "lib/network": ["isPrivateIpAddress"],
+          "lib/number": ["parseNumberWithDefault"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/openapi/crud": ["createCrudOpenApiFactory"],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_ERROR_FALLBACK",
+            "RATE_LIMIT_ERROR_KEY",
+            "checkRateLimit",
+            "getClientIp"
+          ],
+          "lib/ratelimit/service": ["RateLimiterService"],
+          "lib/url-safety": [
+            "HostLookup",
+            "SafeOutboundFetchOptions",
+            "UrlSafetyReason",
+            "assertSafeOutboundUrl",
+            "assertStaticallySafeOutboundUrl",
+            "parseOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "lib/webhooks": [
+            "InboundWebhookRequest",
+            "WEBHOOK_SIGNATURE_TOLERANCE_SECONDS",
+            "WebhookBodyTooLargeError",
+            "WebhookHandlerContext",
+            "WebhookHandlerPayload",
+            "WebhookHandlerRegistryEntry",
+            "WebhookHandlerResult",
+            "WebhookIngestionStatus",
+            "WebhookSourceConfig",
+            "buildWebhookHeaders",
+            "generateMessageId",
+            "generateWebhookSecret",
+            "isWebhookTimestampWithinTolerance",
+            "readBoundedRequestBody"
+          ],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents", "getDeclaredEvents"],
+          "modules/generators": ["GeneratorPlugin"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/notifications/types": ["NotificationTypeDefinition"],
+          "modules/registry": ["ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/extension-points": ["dataTableExtensionHost", "defineModuleExtensionPoints"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "security/features": ["hasFeature"]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/conflicts": ["surfaceRecordConflict"],
+          "backend/CrudForm": [
+            "CrudCustomFieldRenderProps",
+            "CrudField",
+            "CrudFieldOption",
+            "CrudForm",
+            "CrudFormGroup"
+          ],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage", "RecordNotFoundState"],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/filters/ListEmptyState": ["ListEmptyState"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms": ["FormHeader"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/JsonBuilder": ["JsonBuilder"],
+          "backend/JsonDisplay": ["JsonDisplay"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActions"],
+          "backend/utils/apiCall": ["apiCall"],
+          "backend/utils/crud": ["createCrud", "deleteCrud", "updateCrud"],
+          "backend/utils/optimisticLock": ["buildOptimisticLockHeader"],
+          "backend/utils/serverErrors": ["createCrudFormError"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/badge": ["Badge"],
+          "primitives/button": ["Button"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/switch": ["Switch"]
+        },
+        "@open-mercato/webhooks": {
+          "modules/webhooks/extension-points": ["extensionPoints"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@dainamite/billing",
+      "version": "0.19.0",
+      "omPeers": {
+        "@open-mercato/core": "^0.6.7",
+        "@open-mercato/events": "^0.6.7",
+        "@open-mercato/queue": "^0.6.7",
+        "@open-mercato/shared": "^0.6.7",
+        "@open-mercato/ui": "^0.6.7"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "modules/configs/data/entities": ["ModuleConfig"],
+          "modules/dictionaries/data/entities": ["Dictionary", "DictionaryEntry"],
+          "modules/directory/data/entities": ["(dynamic/require)"],
+          "modules/payment_gateways/lib/gateway-service": ["PaymentGatewayService"],
+          "modules/sales/data/entities": ["SalesInvoice", "SalesInvoiceLine"],
+          "modules/sales/services/salesDocumentNumberGenerator": ["SalesDocumentNumberGenerator"],
+          "modules/sales/services/taxCalculationService": ["TaxCalculationService"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": ["withScopedPayload"],
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/commands": ["registerCommand"],
+          "lib/commands/flush": ["withAtomicFlush"],
+          "lib/commands/helpers": ["emitCrudSideEffects", "requireId"],
+          "lib/commands/scope": ["ensureOrganizationScope", "ensureTenantScope"],
+          "lib/commands/types": ["CommandHandler", "CommandRuntimeContext"],
+          "lib/crud/errors": ["CrudHttpError"],
+          "lib/crud/factory": ["makeCrudRoute"],
+          "lib/data/engine": ["DataEngine"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/i18n/context": ["useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "lib/openapi/types": ["OpenApiRouteDoc"],
+          "modules/entities": ["CustomEntitySpec"],
+          "modules/events": ["createModuleEvents"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage"],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms": ["FormHeader"],
+          "backend/inputs": ["ComboboxInput", "ComboboxOption"],
+          "backend/Page": ["Page", "PageBody", "PageHeader"],
+          "backend/utils/apiCall": ["apiCall", "apiCallOrThrow", "readApiResultOrThrow"],
+          "backend/utils/serverErrors": ["normalizeCrudServerError"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/kbd": ["Kbd", "KbdShortcut"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/switch": ["Switch"],
+          "primitives/tag": ["Tag"],
+          "primitives/textarea": ["Textarea"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@dainamite/cpq",
+      "version": "0.4.0",
+      "omPeers": {
+        "@open-mercato/core": "^0.6.7",
+        "@open-mercato/events": "^0.6.7",
+        "@open-mercato/shared": "^0.6.7",
+        "@open-mercato/ui": "^0.6.7"
+      },
+      "dependencies": {
+        "xlsx": "^0.18.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "helpers/integration/api": ["apiRequest"],
+          "helpers/integration/crmFixtures": ["createCompanyFixture"],
+          "modules/auth/data/entities": ["Role", "User", "UserRole"],
+          "modules/auth/lib/emailHash": ["computeEmailHash"],
+          "modules/auth/lib/setup-app": ["setupInitialTenant"],
+          "modules/catalog/data/entities": ["(dynamic/require)"],
+          "modules/currencies/data/entities": ["(dynamic/require)"],
+          "modules/customers/data/entities": ["CustomerEntity"],
+          "modules/directory/data/entities": ["(dynamic/require)"],
+          "modules/directory/utils/organizationScope": ["OrganizationScope", "resolveFeatureCheckContext"],
+          "modules/sales/data/entities": ["SalesOrder", "SalesOrderLine", "SalesQuote", "SalesQuoteLine"],
+          "modules/sales/services/salesDocumentNumberGenerator": ["SalesDocumentNumberGenerator"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption"],
+          "lib/encryption/kms": ["createKmsService"],
+          "lib/encryption/tenantDataEncryptionService": ["TenantDataEncryptionService"],
+          "lib/encryption/toggles": ["isTenantDataEncryptionEnabled"],
+          "lib/i18n/context": ["useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "modules/entities": ["CustomEntitySpec"],
+          "modules/events": ["createModuleEvents"],
+          "modules/registry": ["Module", "ModuleCli", "ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/confirm-dialog": ["useConfirmDialog"],
+          "backend/DataTable": ["BulkAction", "DataTable"],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms": ["FormHeader"],
+          "backend/forms/ActionsDropdown": ["ActionItem"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActionItem", "RowActions"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription", "AlertTitle"],
+          "primitives/button": ["Button"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/input": ["Input", "InputProps"],
+          "primitives/select": ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
+          "primitives/tag": ["Tag", "TagMap"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@dainamite/cpq-billing-connector",
+      "version": "1.0.0",
+      "omPeers": {
+        "@open-mercato/core": "^0.6.7",
+        "@open-mercato/events": "^0.6.7",
+        "@open-mercato/shared": "^0.6.7"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/commands/command-bus": ["CommandBus"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "modules/entities": ["CustomEntitySpec"],
+          "modules/registry": ["ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@fast-white-cat/integration-ksef-direct",
+      "version": "0.1.2",
+      "omPeers": {
+        "@open-mercato/core": ">=0.6.4 <0.7.0",
+        "@open-mercato/queue": ">=0.6.4 <0.7.0",
+        "@open-mercato/shared": ">=0.6.4 <0.7.0",
+        "@open-mercato/ui": ">=0.6.4 <0.7.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "modules/directory/data/entities": ["(dynamic/require)"]
+        },
+        "@open-mercato/queue": {
+          ".": ["QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/crud/mutation-guard": ["runCrudMutationGuardAfterSuccess", "validateCrudMutationGuard"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/context": ["useT"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "modules/events": ["createModuleEvents"],
+          "modules/integrations/types": ["IntegrationDefinition"],
+          "modules/setup": ["ModuleSetupConfig"]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/SectionHeader": ["SectionHeader"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/form-field": ["FormField"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/status-badge": ["StatusBadge"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@fastwhitecat/integration-ksef-direct",
+      "version": "0.1.8",
+      "omPeers": {
+        "@open-mercato/core": ">=0.7.0 <0.8.0",
+        "@open-mercato/queue": ">=0.7.0 <0.8.0",
+        "@open-mercato/shared": ">=0.7.0 <0.8.0",
+        "@open-mercato/ui": ">=0.7.0 <0.8.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "modules/directory/data/entities": ["(dynamic/require)"]
+        },
+        "@open-mercato/queue": {
+          ".": ["QueuedJob", "WorkerMeta", "createModuleQueue"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/crud/mutation-guard": ["runCrudMutationGuardAfterSuccess", "validateCrudMutationGuard"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/i18n/context": ["useT"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "modules/events": ["createModuleEvents"],
+          "modules/integrations/types": ["IntegrationDefinition"],
+          "modules/setup": ["ModuleSetupConfig"]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": ["ErrorMessage", "LoadingMessage"],
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useAppEvent": ["useAppEvent"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/SectionHeader": ["SectionHeader"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/alert": ["Alert", "AlertDescription"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/form-field": ["FormField"],
+          "primitives/icon-button": ["IconButton"],
+          "primitives/input": ["Input"],
+          "primitives/spinner": ["Spinner"],
+          "primitives/status-badge": ["StatusBadge"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@freighttech/shipment-tracking",
+      "version": "0.7.2",
+      "omPeers": {
+        "@open-mercato/cache": "0.6.2",
+        "@open-mercato/core": "0.6.2",
+        "@open-mercato/events": "0.6.2",
+        "@open-mercato/queue": "0.6.2",
+        "@open-mercato/scheduler": "0.6.2",
+        "@open-mercato/shared": "0.6.2"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "modules/audit_logs/data/entities": ["ActionLog"],
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"],
+          "modules/notifications/lib/notificationBuilder": ["buildNotificationFromType"],
+          "modules/notifications/lib/notificationService": ["resolveNotificationService"]
+        },
+        "@open-mercato/events": {
+          ".": ["EventBus"]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": ["createScopedApiHelpers"],
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/crud/factory": ["makeCrudRoute"],
+          "lib/db/escapeLikePattern": ["escapeLikePattern"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/i18n/context": ["useLocale", "useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "modules/dashboard/widgets": [
+            "DashboardWidgetComponentProps",
+            "DashboardWidgetModule",
+            "lazyDashboardWidget"
+          ],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents"],
+          "modules/notifications/types": ["NotificationTypeDefinition"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@freighttech/terminal-tracking",
+      "version": "0.7.3",
+      "omPeers": {
+        "@open-mercato/cache": "0.6.2",
+        "@open-mercato/core": "0.6.2",
+        "@open-mercato/events": "0.6.2",
+        "@open-mercato/queue": "0.6.2",
+        "@open-mercato/scheduler": "0.6.2",
+        "@open-mercato/shared": "0.6.2"
+      },
+      "dependencies": {
+        "fuse.js": "^7.1.0",
+        "undici": "^7.25.0"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"]
+        },
+        "@open-mercato/events": {
+          ".": ["EventBus"]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": ["createScopedApiHelpers"],
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/boolean": ["parseBooleanToken"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/crud/factory": ["makeCrudRoute"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption"],
+          "lib/i18n/context": ["useT"],
+          "lib/i18n/server": ["resolveTranslations"],
+          "lib/openapi": ["OpenApiRouteDoc"],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents"],
+          "modules/registry": ["ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",
+      "version": "0.6.0",
+      "omPeers": {
+        "@open-mercato/core": ">=0.7.0 <0.8.0",
+        "@open-mercato/queue": ">=0.7.0 <0.8.0",
+        "@open-mercato/shared": ">=0.7.0 <0.8.0",
+        "@open-mercato/ui": ">=0.7.0 <0.8.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/core": {
+          "modules/data_sync/acl": ["*", "default", "features"],
+          "modules/data_sync/api/mappings/[id]/route": ["*", "DELETE", "GET", "PUT", "openApi"],
+          "modules/data_sync/api/mappings/route": ["*", "GET", "POST", "openApi"],
+          "modules/data_sync/api/options": ["*", "GET", "openApi"],
+          "modules/data_sync/api/run": ["POST", "openApi"],
+          "modules/data_sync/api/runs": ["*", "GET", "openApi"],
+          "modules/data_sync/api/runs/[id]/cancel": ["POST", "openApi"],
+          "modules/data_sync/api/runs/[id]/retry": ["*", "POST", "openApi"],
+          "modules/data_sync/api/runs/[id]/route": ["*", "GET", "openApi"],
+          "modules/data_sync/api/schedules/[id]/route": ["*", "DELETE", "GET", "PUT", "openApi"],
+          "modules/data_sync/api/schedules/route": ["*", "GET", "POST", "openApi"],
+          "modules/data_sync/api/schedules/serialize": ["*", "serializeSchedule"],
+          "modules/data_sync/api/validate": ["*", "POST", "openApi"],
+          "modules/data_sync/backend/data-sync/page": ["*", "default"],
+          "modules/data_sync/backend/data-sync/page.meta": ["*", "metadata"],
+          "modules/data_sync/backend/data-sync/runs/[id]/page": ["*", "default"],
+          "modules/data_sync/backend/data-sync/runs/[id]/page.meta": ["*", "metadata"],
+          "modules/data_sync/components/IntegrationScheduleTab": ["*", "IntegrationScheduleTab", "default"],
+          "modules/data_sync/components/RunParameterFields": [
+            "*",
+            "RunParameterFields",
+            "buildDefaultRunParameterValues",
+            "buildRetryFailureMessage",
+            "buildRunFailureMessage",
+            "buildRunParametersPayload",
+            "hasRequiredRunParameterWithoutDefault",
+            "resolveRunParameterText"
+          ],
+          "modules/data_sync/data/entities": ["*", "SyncCursor", "SyncMapping", "SyncRun", "SyncSchedule"],
+          "modules/data_sync/data/validators": [
+            "*",
+            "createSyncScheduleSchema",
+            "listSyncRunsQuerySchema",
+            "listSyncSchedulesQuerySchema",
+            "retrySyncSchema",
+            "runSyncSchema",
+            "updateSyncScheduleSchema",
+            "validateConnectionSchema"
+          ],
+          "modules/data_sync/di": ["register"],
+          "modules/data_sync/events": ["*", "default", "emitDataSyncEvent", "eventsConfig"],
+          "modules/data_sync/extension-points": ["*", "default", "extensionPoints"],
+          "modules/data_sync/index": ["*", "metadata"],
+          "modules/data_sync/lib/adapter": ["*"],
+          "modules/data_sync/lib/adapter-registry": [
+            "*",
+            "getAllDataSyncAdapters",
+            "getDataSyncAdapter",
+            "registerDataSyncAdapter",
+            "resolveAdapterForIntegration",
+            "resolveProviderKey"
+          ],
+          "modules/data_sync/lib/batch-stream": ["*", "forEachBatch"],
+          "modules/data_sync/lib/id-mapping": ["*", "createExternalIdMappingService"],
+          "modules/data_sync/lib/queue": ["*", "getSyncQueue"],
+          "modules/data_sync/lib/queue-policy": [
+            "*",
+            "DATA_SYNC_EXPORT_QUEUE",
+            "DATA_SYNC_IMPORT_QUEUE",
+            "DATA_SYNC_LOCK_DURATION_MS",
+            "DATA_SYNC_MAX_STALLED_COUNT",
+            "DATA_SYNC_QUEUE_ATTEMPTS",
+            "DATA_SYNC_RESUMABLE_QUEUES"
+          ],
+          "modules/data_sync/lib/run-parameters": [
+            "*",
+            "getApplicableRunParameters",
+            "isReservedRunParameterKey",
+            "normalizeRunParameters"
+          ],
+          "modules/data_sync/lib/start-cursor": [
+            "*",
+            "persistsSharedCursor",
+            "resolveAdapterForIntegration",
+            "resolveStartCursor"
+          ],
+          "modules/data_sync/lib/start-run": ["DataSyncStartScope", "StartDataSyncRunInput"],
+          "modules/data_sync/lib/sync-engine": ["*", "createSyncEngine"],
+          "modules/data_sync/lib/sync-run-service": ["*", "SyncRunOwnershipConflictError", "createSyncRunService"],
+          "modules/data_sync/lib/sync-schedule-service": ["*", "createSyncScheduleService"],
+          "modules/data_sync/lib/syncRunStatus": [
+            "*",
+            "getSyncRunStatusVariant",
+            "getSyncSummaryVariant",
+            "syncRunStatusVariants",
+            "syncSummaryVariants"
+          ],
+          "modules/data_sync/migrations/Migration20260304113737": ["*", "Migration20260304113737"],
+          "modules/data_sync/migrations/Migration20260810120000": ["*", "Migration20260810120000"],
+          "modules/data_sync/setup": ["*", "default", "setup"],
+          "modules/data_sync/workers/sync-scheduled": ["*", "default", "metadata"]
+        },
+        "@open-mercato/queue": {
+          ".": ["JobContext", "QueuedJob", "WorkerMeta"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/di/container": ["(dynamic/require)", "AppContainer", "createRequestContainer"],
+          "lib/logger": ["createLogger"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@fullstackhouse/open-mercato-durable-work",
+      "version": "0.6.0",
+      "omPeers": {
+        "@open-mercato/core": ">=0.7.0 <0.8.0",
+        "@open-mercato/shared": ">=0.7.0 <0.8.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/di/container": ["(dynamic/require)", "AppContainer", "createRequestContainer"],
+          "modules/events": ["createModuleEvents"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@fullstackhouse/open-mercato-health",
+      "version": "0.3.0",
+      "omPeers": {
+        "@open-mercato/cache": "*",
+        "@open-mercato/shared": "*"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/di/container": ["createRequestContainer"],
+          "lib/openapi": ["OpenApiMethodDoc", "OpenApiRouteDoc"],
+          "modules/registry": ["ModuleInfo"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@northbound-run/channel-cloudflare-email",
+      "version": "0.2.0",
+      "omPeers": {
+        "@open-mercato/core": ">=0.6.6 <0.7.0",
+        "@open-mercato/shared": ">=0.6.0 <0.7.0",
+        "@open-mercato/ui": ">=0.6.0 <0.7.0"
+      },
+      "dependencies": {
+        "awilix": "^12.1.1"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/attachments/data/entities": ["Attachment", "AttachmentPartition"],
+          "modules/attachments/lib/access": ["assertAttachmentScopeInvariant"],
+          "modules/attachments/lib/drivers": ["StorageDriver", "StorageDriverFactory"],
+          "modules/attachments/lib/imageUrls": ["buildAttachmentFileUrl"],
+          "modules/attachments/lib/ocrService": ["OcrService", "shouldUseLlmOcr"],
+          "modules/attachments/lib/partitions": ["ensureDefaultPartitions", "resolveDefaultPartitionCode"],
+          "modules/attachments/lib/security": ["sanitizeUploadedFileName"],
+          "modules/attachments/lib/textExtraction": ["extractAttachmentContent"],
+          "modules/auth/data/entities": ["User"],
+          "modules/communication_channels/data/entities": ["CommunicationChannel", "MessageChannelLink"],
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedAttachment",
+            "NormalizedInboundMessage",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": ["baseEmailCapabilities"],
+          "modules/communication_channels/lib/email-contact": ["emailResolveContact"],
+          "modules/communication_channels/lib/pg-errors": ["isUniqueViolation"],
+          "modules/inbox_ops/data/entities": ["InboxEmail"],
+          "modules/inbox_ops/events": ["emitInboxOpsEvent"],
+          "modules/inbox_ops/lib/htmlToPlainText": ["htmlToPlainText"],
+          "modules/integrations/lib/credentials-service": ["CredentialsService"]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findWithDecryption"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/registry": ["ModuleInfo"],
+          "modules/setup": ["ModuleSetupConfig"],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": ["flash"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogFooter", "DialogHeader", "DialogTitle"],
+          "primitives/input": ["Input"],
+          "primitives/label": ["Label"],
+          "primitives/password-input": ["PasswordInput"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@northbound-run/search-cloudflare",
+      "version": "0.1.1",
+      "omPeers": {
+        "@open-mercato/search": ">=0.6.6 <0.7.0",
+        "@open-mercato/shared": ">=0.6.0 <0.7.0"
+      },
+      "dependencies": {},
+      "imports": {
+        "@open-mercato/search": {
+          "di": ["addSearchStrategy"],
+          "fulltext": [
+            "DocumentLookupKey",
+            "FullTextSearchDocument",
+            "FullTextSearchDriver",
+            "FullTextSearchHit",
+            "FullTextSearchQuery",
+            "IndexStats"
+          ],
+          "lib/field-policy": ["extractSearchableFields"],
+          "strategies/fulltext.strategy": ["FullTextSearchStrategy"]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/http/fetchWithTimeout": ["fetchWithTimeout", "resolveTimeoutMs"],
+          "modules/entities": ["EntityId"],
+          "modules/registry": ["ModuleCli", "ModuleInfo"],
+          "modules/search": ["SearchFieldPolicy", "SearchModuleConfig", "getSearchModuleConfigs"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@northbound-run/sync-google-sheets",
+      "version": "0.2.0",
+      "omPeers": {
+        "@open-mercato/core": "^0.6.5",
+        "@open-mercato/shared": "^0.6.5"
+      },
+      "dependencies": {
+        "awilix": "^12.1.1"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/data_sync/data/entities": ["SyncMapping"],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "ExportBatch",
+            "ExportItemResult",
+            "FieldMapping",
+            "ImportBatch",
+            "ImportItem",
+            "StreamExportInput",
+            "StreamImportInput",
+            "TenantScope",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": ["registerDataSyncAdapter"],
+          "modules/data_sync/lib/start-run": ["startDataSyncRun"],
+          "modules/data_sync/lib/sync-run-service": ["SyncRunService"],
+          "modules/integrations/data/entities": ["SyncExternalIdMapping"],
+          "modules/integrations/lib/state-service": ["IntegrationStateService"],
+          "modules/progress/lib/progressService": ["ProgressService"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/commands": ["CommandBus", "CommandRuntimeContext"],
+          "lib/di/container": ["AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "lib/http/readJsonSafe": ["readJsonSafe"],
+          "lib/query/types": ["QueryEngine"],
+          "lib/url": ["toAbsoluteUrl"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/events": ["createModuleEvents"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@northbound-run/sync-shopify",
+      "version": "0.5.0",
+      "omPeers": {
+        "@open-mercato/core": ">=0.6.6 <0.7.0",
+        "@open-mercato/shared": ">=0.6.0 <0.7.0"
+      },
+      "dependencies": {
+        "@shopify/admin-api-client": "^1.1.2",
+        "awilix": "^12.1.1"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/catalog/data/entities": [
+            "CatalogPriceKind",
+            "CatalogProduct",
+            "CatalogProductCategory",
+            "CatalogProductCategoryAssignment",
+            "CatalogProductPrice",
+            "CatalogProductVariant"
+          ],
+          "modules/customers/data/entities": ["CustomerAddress", "CustomerEntity"],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "ImportBatch",
+            "ImportItem",
+            "StreamImportInput",
+            "TenantScope",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": ["registerDataSyncAdapter"],
+          "modules/data_sync/lib/id-mapping": ["ExternalIdMappingService"],
+          "modules/integrations/data/entities": ["(dynamic/require)", "SyncExternalIdMapping"]
+        },
+        "@open-mercato/shared": {
+          "lib/commands": ["CommandBus"],
+          "lib/commands/helpers": ["setCustomFieldsIfAny"],
+          "lib/data/engine": ["DataEngine"],
+          "lib/di/container": ["(dynamic/require)", "AppContainer", "createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption", "findWithDecryption"],
+          "modules/entities": ["CustomEntitySpec"],
+          "modules/events/factory": ["createModuleEvents"],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": ["ModuleSetupConfig"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@piotrkarwatka/marketing-consents",
+      "version": "0.1.0",
+      "omPeers": {
+        "@open-mercato/core": "0.9.0",
+        "@open-mercato/shared": "0.9.0",
+        "@open-mercato/ui": "0.9.0"
+      },
+      "dependencies": {
+        "@tanstack/react-query": "5.104.1",
+        "@tanstack/react-table": "9.2.6",
+        "zod": "4.4.3"
+      },
+      "imports": {
+        "@open-mercato/core": {
+          "modules/directory/utils/organizationScope": ["resolveOrganizationScopeForRequest"]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": ["getAuthFromRequest"],
+          "lib/commands": ["CommandBus", "CommandHandler", "CommandRuntimeContext", "registerCommand"],
+          "lib/crud/errors": ["CrudHttpError"],
+          "lib/crud/factory": ["CrudCtx", "makeCrudRoute"],
+          "lib/crud/optimistic-lock-command": ["enforceCommandOptimisticLock"],
+          "lib/crud/route-mutation-guard": ["runRouteMutationGuards"],
+          "lib/di/container": ["createRequestContainer"],
+          "lib/encryption/find": ["findOneWithDecryption"],
+          "lib/encryption/migration-backfill": ["buildEncryptionMapBackfillSql"],
+          "lib/encryption/tenantDataEncryptionService": ["TenantDataEncryptionService"],
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/i18n/context": ["useT"],
+          "lib/logger": ["createLogger"],
+          "lib/openapi": ["OpenApiMethodDoc", "OpenApiRouteDoc"],
+          "modules/encryption": ["ModuleEncryptionMap"],
+          "modules/registry": ["ModuleInfo", "PageMetadata"],
+          "modules/setup": ["ModuleSetupConfig"]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": ["CrudField", "CrudForm"],
+          "backend/DataTable": ["DataTable"],
+          "backend/detail": [
+            "AccessDeniedMessage",
+            "DetailFieldConfig",
+            "DetailFieldsSection",
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/FilterBar": ["FilterDef", "FilterValues"],
+          "backend/FlashMessages": ["flash"],
+          "backend/forms/FormHeader": ["FormHeader"],
+          "backend/injection/useGuardedMutation": ["useGuardedMutation"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActions"],
+          "backend/utils/apiCall": ["readApiResultOrThrow"],
+          "backend/utils/crud": ["fetchCrudList"],
+          "hooks/useDialogKeyHandler": ["useDialogKeyHandler"],
+          "primitives/alert": ["Alert"],
+          "primitives/button": ["Button"],
+          "primitives/checkbox": ["Checkbox"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogDescription", "DialogHeader", "DialogTitle"],
+          "primitives/label": ["Label"],
+          "primitives/status-badge": ["StatusBadge"]
+        }
+      }
+    },
+    {
+      "set": "external",
+      "locator": "npm:@piotrkarwatka/visits",
+      "version": "0.1.0",
+      "omPeers": {
+        "@open-mercato/core": "0.8.0",
+        "@open-mercato/shared": "0.8.0",
+        "@open-mercato/ui": "0.8.0"
+      },
+      "dependencies": {
+        "@tanstack/react-query": "5.104.1",
+        "@tanstack/react-table": "9.2.5",
+        "lucide-react": "1.52.0",
+        "zod": "4.4.3"
+      },
+      "imports": {
+        "@open-mercato/shared": {
+          "lib/frontend/useOrganizationScope": ["useOrganizationScopeVersion"],
+          "lib/i18n/context": ["useLocale", "useT"],
+          "lib/modules/registry": ["getModules"],
+          "modules/registry": ["ModuleInfo", "PageMetadata"]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": ["DataTable"],
+          "backend/Page": ["Page", "PageBody"],
+          "backend/RowActions": ["RowActions"],
+          "backend/utils/apiCall": ["apiCall"],
+          "primitives/button": ["Button"],
+          "primitives/dialog": ["Dialog", "DialogContent", "DialogDescription", "DialogHeader", "DialogTitle"],
+          "primitives/status-badge": ["StatusBadge"]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+npm: "@dainamite/cpq"
+category: catalog-pricing
+summary: Configure, price and quote engine with configurable products and pricing tables.
+whenToUse: Use when sales builds quotes from configurable products with multi-charge pricing.

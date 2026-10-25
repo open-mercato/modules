@@ -1,0 +1,1972 @@
+{
+  "source": "test/fit/g2-repro.ts on Cezar (lib/fit, tarballs from registry.npmjs.org)",
+  "measuredAt": "2026-10-23T02:31:56.045Z",
+  "node": "v24.21.0",
+  "asOf": "2026-10-22T12:00:00.000Z",
+  "latest": "0.9.0",
+  "versions": ["0.7.0", "0.8.0", "0.9.0", "0.10.1-develop.7583.1.0c886d0a14"],
+  "durationMs": {
+    "externalFit": 95759,
+    "total": 138658
+  },
+  "templates": {
+    "0.7.0": {
+      "reactTable": "^9.0.0",
+      "ageGateMinutes": 0,
+      "preapproved": ["@open-mercato/*"]
+    },
+    "0.8.0": {
+      "reactTable": "^9.2.3",
+      "ageGateMinutes": 7200,
+      "preapproved": ["@open-mercato/*"]
+    },
+    "0.9.0": {
+      "reactTable": "^9.2.3",
+      "ageGateMinutes": 7200,
+      "preapproved": ["@open-mercato/*"]
+    },
+    "0.10.1-develop.7583.1.0c886d0a14": {
+      "reactTable": "^9.2.3",
+      "ageGateMinutes": 7200,
+      "preapproved": ["@open-mercato/*"]
+    }
+  },
+  "external": {
+    "0.7.0": {
+      "npm:@dainamite/billing@0.19.0": {
+        "status": "drift",
+        "checked": 75,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+          "@open-mercato/queue#WorkerMeta",
+          "@open-mercato/shared/lib/commands/types#CommandHandler",
+          "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+          "@open-mercato/shared/lib/data/engine#DataEngine",
+          "@open-mercato/shared/lib/i18n/server#resolveTranslations",
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/backend/Page#PageHeader",
+          "@open-mercato/ui/primitives/dialog#DialogHeader",
+          "@open-mercato/ui/primitives/tag#Tag"
+        ],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq@0.4.0": {
+        "status": "drift",
+        "checked": 60,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/auth/data/entities#User",
+          "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+          "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+          "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+          "@open-mercato/shared/lib/i18n/server#resolveTranslations",
+          "@open-mercato/shared/modules/registry#Module",
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/backend/forms/ActionsDropdown#ActionItem",
+          "@open-mercato/ui/primitives/alert#AlertDescription",
+          "@open-mercato/ui/primitives/input#InputProps",
+          "@open-mercato/ui/primitives/tag#Tag"
+        ],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq-billing-connector@1.0.0": {
+        "status": "drift",
+        "checked": 6,
+        "missing": [],
+        "drift": ["@open-mercato/shared/lib/commands/command-bus#CommandBus"],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fast-white-cat/integration-ksef-direct@0.1.2": {
+        "status": "drift",
+        "checked": 38,
+        "missing": [],
+        "drift": [
+          "@open-mercato/queue#WorkerMeta",
+          "@open-mercato/queue#createModuleQueue",
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/backend/SectionHeader#SectionHeader",
+          "@open-mercato/ui/primitives/alert#AlertDescription",
+          "@open-mercato/ui/primitives/dialog#DialogHeader",
+          "@open-mercato/ui/primitives/form-field#FormField",
+          "@open-mercato/ui/primitives/status-badge#StatusBadge"
+        ],
+        "declared": {
+          "range": ">=0.6.4 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+        "status": "drift",
+        "checked": 38,
+        "missing": [],
+        "drift": [
+          "@open-mercato/queue#WorkerMeta",
+          "@open-mercato/queue#createModuleQueue",
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/backend/SectionHeader#SectionHeader",
+          "@open-mercato/ui/primitives/alert#AlertDescription",
+          "@open-mercato/ui/primitives/dialog#DialogHeader",
+          "@open-mercato/ui/primitives/form-field#FormField",
+          "@open-mercato/ui/primitives/status-badge#StatusBadge"
+        ],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/shipment-tracking@0.7.2": {
+        "status": "drift",
+        "checked": 36,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+          "@open-mercato/shared/lib/i18n/server#resolveTranslations"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/terminal-tracking@0.7.3": {
+        "status": "drift",
+        "checked": 25,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+          "@open-mercato/shared/lib/i18n/server#resolveTranslations"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+        "status": "drift",
+        "checked": 105,
+        "missing": [],
+        "drift": ["@open-mercato/queue#WorkerMeta"],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+        "status": "ok",
+        "checked": 7,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+        "status": "ok",
+        "checked": 4,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "*",
+          "kind": "star",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+        "status": "drift",
+        "checked": 66,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/auth/data/entities#User",
+          "@open-mercato/core/modules/communication_channels/data/entities#CommunicationChannel",
+          "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+          "@open-mercato/core/modules/communication_channels/lib/adapter#ValidateCredentialsResult",
+          "@open-mercato/ui/primitives/dialog#DialogHeader"
+        ],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/search-cloudflare@0.1.1": {
+        "status": "drift",
+        "checked": 19,
+        "missing": [],
+        "drift": [
+          "@open-mercato/search/fulltext#FullTextSearchDriver",
+          "@open-mercato/search/strategies/fulltext.strategy#FullTextSearchStrategy"
+        ],
+        "declared": {
+          "range": ">=0.6.0 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-google-sheets@0.2.0": {
+        "status": "drift",
+        "checked": 34,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/data_sync/lib/adapter#DataSyncAdapter",
+          "@open-mercato/core/modules/data_sync/lib/adapter#StreamExportInput",
+          "@open-mercato/core/modules/data_sync/lib/adapter#StreamImportInput",
+          "@open-mercato/core/modules/progress/lib/progressService#ProgressService",
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "^0.6.5",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-shopify@0.5.0": {
+        "status": "drift",
+        "checked": 32,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/data_sync/lib/adapter#DataSyncAdapter",
+          "@open-mercato/core/modules/data_sync/lib/adapter#StreamImportInput",
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/data/engine#DataEngine"
+        ],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+        "status": "no-fit",
+        "checked": 53,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/encryption/migration-backfill",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+          "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+          "@open-mercato/ui/backend/CrudForm#CrudForm",
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/primitives/dialog#DialogHeader",
+          "@open-mercato/ui/primitives/status-badge#StatusBadge"
+        ],
+        "declared": {
+          "range": "0.9.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.5"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.6",
+            "appVersion": "9.3.1"
+          }
+        ]
+      },
+      "npm:@piotrkarwatka/visits@0.1.0": {
+        "status": "drift",
+        "checked": 18,
+        "missing": [],
+        "drift": [
+          "@open-mercato/ui/backend/DataTable#DataTable",
+          "@open-mercato/ui/primitives/dialog#DialogHeader",
+          "@open-mercato/ui/primitives/status-badge#StatusBadge"
+        ],
+        "declared": {
+          "range": "0.8.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.5"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.5",
+            "appVersion": "9.3.1"
+          }
+        ]
+      }
+    },
+    "0.8.0": {
+      "npm:@dainamite/billing@0.19.0": {
+        "status": "drift",
+        "checked": 75,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+          "@open-mercato/shared/lib/commands/types#CommandHandler",
+          "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+          "@open-mercato/shared/lib/data/engine#DataEngine",
+          "@open-mercato/ui/backend/DataTable#DataTable"
+        ],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq@0.4.0": {
+        "status": "drift",
+        "checked": 60,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+          "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+          "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+          "@open-mercato/ui/backend/DataTable#DataTable"
+        ],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq-billing-connector@1.0.0": {
+        "status": "drift",
+        "checked": 6,
+        "missing": [],
+        "drift": ["@open-mercato/shared/lib/commands/command-bus#CommandBus"],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fast-white-cat/integration-ksef-direct@0.1.2": {
+        "status": "drift",
+        "checked": 38,
+        "missing": [],
+        "drift": ["@open-mercato/ui/backend/DataTable#DataTable"],
+        "declared": {
+          "range": ">=0.6.4 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+        "status": "drift",
+        "checked": 38,
+        "missing": [],
+        "drift": ["@open-mercato/ui/backend/DataTable#DataTable"],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/shipment-tracking@0.7.2": {
+        "status": "drift",
+        "checked": 36,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/terminal-tracking@0.7.3": {
+        "status": "drift",
+        "checked": 25,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+        "status": "ok",
+        "checked": 105,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+        "status": "ok",
+        "checked": 7,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+        "status": "ok",
+        "checked": 4,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "*",
+          "kind": "star",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+        "status": "drift",
+        "checked": 66,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/communication_channels/data/entities#CommunicationChannel",
+          "@open-mercato/core/modules/communication_channels/lib/adapter#ValidateCredentialsResult"
+        ],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/search-cloudflare@0.1.1": {
+        "status": "drift",
+        "checked": 19,
+        "missing": [],
+        "drift": [
+          "@open-mercato/search/fulltext#FullTextSearchDriver",
+          "@open-mercato/search/strategies/fulltext.strategy#FullTextSearchStrategy"
+        ],
+        "declared": {
+          "range": ">=0.6.0 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-google-sheets@0.2.0": {
+        "status": "drift",
+        "checked": 34,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/data_sync/lib/adapter#DataSyncAdapter",
+          "@open-mercato/core/modules/progress/lib/progressService#ProgressService",
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "^0.6.5",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-shopify@0.5.0": {
+        "status": "drift",
+        "checked": 32,
+        "missing": [],
+        "drift": [
+          "@open-mercato/core/modules/data_sync/lib/adapter#DataSyncAdapter",
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/data/engine#DataEngine"
+        ],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+        "status": "no-fit",
+        "checked": 53,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/encryption/migration-backfill",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandBus",
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+          "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+          "@open-mercato/ui/backend/CrudForm#CrudForm",
+          "@open-mercato/ui/backend/DataTable#DataTable"
+        ],
+        "declared": {
+          "range": "0.9.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.6",
+            "appVersion": "9.3.1"
+          }
+        ]
+      },
+      "npm:@piotrkarwatka/visits@0.1.0": {
+        "status": "drift",
+        "checked": 18,
+        "missing": [],
+        "drift": ["@open-mercato/ui/backend/DataTable#DataTable"],
+        "declared": {
+          "range": "0.8.0",
+          "kind": "exact-pin",
+          "satisfied": true
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.5",
+            "appVersion": "9.3.1"
+          }
+        ]
+      }
+    },
+    "0.9.0": {
+      "npm:@dainamite/billing@0.19.0": {
+        "status": "ok",
+        "checked": 75,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq@0.4.0": {
+        "status": "ok",
+        "checked": 60,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq-billing-connector@1.0.0": {
+        "status": "ok",
+        "checked": 6,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fast-white-cat/integration-ksef-direct@0.1.2": {
+        "status": "ok",
+        "checked": 38,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.4 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+        "status": "ok",
+        "checked": 38,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/shipment-tracking@0.7.2": {
+        "status": "ok",
+        "checked": 36,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/terminal-tracking@0.7.3": {
+        "status": "ok",
+        "checked": 25,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+        "status": "ok",
+        "checked": 105,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+        "status": "ok",
+        "checked": 7,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+        "status": "ok",
+        "checked": 4,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "*",
+          "kind": "star",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+        "status": "ok",
+        "checked": 66,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/search-cloudflare@0.1.1": {
+        "status": "ok",
+        "checked": 19,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.0 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-google-sheets@0.2.0": {
+        "status": "ok",
+        "checked": 34,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "^0.6.5",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-shopify@0.5.0": {
+        "status": "ok",
+        "checked": 32,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+        "status": "ok",
+        "checked": 54,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "0.9.0",
+          "kind": "exact-pin",
+          "satisfied": true
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.6",
+            "appVersion": "9.3.1"
+          }
+        ]
+      },
+      "npm:@piotrkarwatka/visits@0.1.0": {
+        "status": "ok",
+        "checked": 18,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "0.8.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.5",
+            "appVersion": "9.3.1"
+          }
+        ]
+      }
+    },
+    "0.10.1-develop.7583.1.0c886d0a14": {
+      "npm:@dainamite/billing@0.19.0": {
+        "status": "drift",
+        "checked": 75,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands/types#CommandHandler",
+          "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+          "@open-mercato/shared/modules/registry#ModuleCli"
+        ],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq@0.4.0": {
+        "status": "drift",
+        "checked": 60,
+        "missing": [],
+        "drift": ["@open-mercato/shared/modules/registry#ModuleCli"],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@dainamite/cpq-billing-connector@1.0.0": {
+        "status": "ok",
+        "checked": 6,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "^0.6.7",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fast-white-cat/integration-ksef-direct@0.1.2": {
+        "status": "ok",
+        "checked": 38,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.4 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+        "status": "ok",
+        "checked": 38,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/shipment-tracking@0.7.2": {
+        "status": "drift",
+        "checked": 36,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+          "@open-mercato/shared/modules/registry#ModuleCli"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@freighttech/terminal-tracking@0.7.3": {
+        "status": "drift",
+        "checked": 25,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "0.6.2",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+        "status": "ok",
+        "checked": 105,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+        "status": "drift",
+        "checked": 7,
+        "missing": [],
+        "drift": ["@open-mercato/shared/modules/registry#ModuleCli"],
+        "declared": {
+          "range": ">=0.7.0 <0.8.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+        "status": "ok",
+        "checked": 4,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "*",
+          "kind": "star",
+          "satisfied": true
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+        "status": "ok",
+        "checked": 66,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/search-cloudflare@0.1.1": {
+        "status": "drift",
+        "checked": 19,
+        "missing": [],
+        "drift": ["@open-mercato/shared/modules/registry#ModuleCli"],
+        "declared": {
+          "range": ">=0.6.0 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-google-sheets@0.2.0": {
+        "status": "drift",
+        "checked": 34,
+        "missing": [],
+        "drift": ["@open-mercato/shared/lib/commands#CommandRuntimeContext"],
+        "declared": {
+          "range": "^0.6.5",
+          "kind": "caret-0x",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@northbound-run/sync-shopify@0.5.0": {
+        "status": "drift",
+        "checked": 32,
+        "missing": [],
+        "drift": ["@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice"],
+        "declared": {
+          "range": ">=0.6.6 <0.7.0",
+          "kind": "bounded",
+          "satisfied": false
+        },
+        "hostDuplicates": []
+      },
+      "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+        "status": "drift",
+        "checked": 54,
+        "missing": [],
+        "drift": [
+          "@open-mercato/shared/lib/commands#CommandHandler",
+          "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+        ],
+        "declared": {
+          "range": "0.9.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.6",
+            "appVersion": "9.3.1"
+          }
+        ]
+      },
+      "npm:@piotrkarwatka/visits@0.1.0": {
+        "status": "ok",
+        "checked": 18,
+        "missing": [],
+        "drift": [],
+        "declared": {
+          "range": "0.8.0",
+          "kind": "exact-pin",
+          "satisfied": false
+        },
+        "hostDuplicates": [
+          {
+            "name": "@tanstack/react-query",
+            "moduleRange": "5.104.1",
+            "appVersion": "5.104.3"
+          },
+          {
+            "name": "@tanstack/react-table",
+            "moduleRange": "9.2.5",
+            "appVersion": "9.3.1"
+          }
+        ]
+      }
+    }
+  },
+  "control": {
+    "0.7.0": {
+      "npm:@open-mercato/ai-assistant@0.9.0": {
+        "checked": 143,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/ai/opencode-tool-parts",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/search/entityAccess",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-apns@0.9.0": {
+        "checked": 45,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-discord@0.9.0": {
+        "checked": 111,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/access-control",
+            "symbol": "channelOwnerScopeWhere",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/html/htmlToPlainText",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-expo@0.9.0": {
+        "checked": 39,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-fcm@0.9.0": {
+        "checked": 41,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-gmail@0.9.0": {
+        "checked": 61,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/import-history-limits",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-imap@0.9.0": {
+        "checked": 62,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/import-history-limits",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-resend@0.9.0": {
+        "checked": 28,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/ensure-system-email-channel",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/system-email-provider-config",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/email/config",
+            "symbol": "normalizeEnvString",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-ses@0.9.0": {
+        "checked": 28,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/ensure-system-email-channel",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/system-email-provider-config",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/email/config",
+            "symbol": "normalizeEnvString",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/checkout@0.9.0": {
+        "checked": 158,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/api",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/generalFixtures",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/i18n/context",
+            "symbol": "useSupportedLocales",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/i18n/locale-label",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/number",
+            "symbol": "parseLocaleNumber",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/content@0.9.0": {
+        "checked": 3,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/documents@0.9.0": {
+        "checked": 134,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/auth/principal-service",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/html/htmlToPlainText",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/enterprise@0.9.0": {
+        "checked": 305,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/attachments/lib/createFromBuffer",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/auth/lib/authorizationStateLocks",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/directory/utils/organizationScopeFilter",
+            "symbol": "resolveSingleOrganizationIdOrDeny",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/activity-registry",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/agent-disposition-task",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/collect-validation-issues",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/definition-grant",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/run-gantt",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/visual-editor-navigation",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/workflows/lib/work-inbox/provider",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/scheduler",
+            "subpath": ".",
+            "symbol": "validateCronExpression",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/scheduler",
+            "subpath": "modules/scheduler/lib/cronParser",
+            "symbol": "validateCronExpression",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/ai/opencode-tool-parts",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/ai/token-count",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/auth/mfaPendingAccess",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/openapi",
+            "symbol": "JsonSchema",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/openapi",
+            "symbol": "zodToJsonSchema",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/ui",
+            "subpath": "backend/nav/navBadges",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/web-research",
+            "subpath": ".",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/events@0.9.0": {
+        "checked": 21,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/auth/principal-service",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/events",
+            "symbol": "isCoalescedBroadcastEvent",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/events",
+            "symbol": "isCrossProcessBroadcastEvent",
+            "kind": "symbol"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/events",
+            "symbol": "isPrivateCrossProcessEventEmitter",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/gateway-stripe@0.9.0": {
+        "checked": 49,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/queue/dispatchOrigin",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/onboarding@0.9.0": {
+        "checked": 77,
+        "missing": [
+          {
+            "pkg": "@open-mercato/onboarding",
+            "subpath": "modules/onboarding/lib/existing-account-notice",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/scheduler@0.9.0": {
+        "checked": 91,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/schedule/interval",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/schedule/invalidScheduleValue",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/search@0.9.0": {
+        "checked": 115,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/query_index/lib/search-entity-policy",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/custom-fields/kinds",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/search/entityAccess",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/storage-s3@0.9.0": {
+        "checked": 49,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/sync-akeneo@0.9.0": {
+        "checked": 101,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/telemetry@0.9.0": {
+        "checked": 12,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/telemetry/error-code",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/tillio@0.9.0": {
+        "checked": 56,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/phone_calls/commands/calls",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/phone_calls/events",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/phone_calls/provider",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/phone_calls/types",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/webhooks@0.9.0": {
+        "checked": 120,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/auth/organizationScope",
+            "symbol": "resolveSingleOrganizationIdOrDeny",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      }
+    },
+    "0.8.0": {
+      "npm:@open-mercato/ai-assistant@0.9.0": {
+        "checked": 150,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-apns@0.9.0": {
+        "checked": 45,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-discord@0.9.0": {
+        "checked": 112,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-expo@0.9.0": {
+        "checked": 39,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-fcm@0.9.0": {
+        "checked": 41,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-gmail@0.9.0": {
+        "checked": 61,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/import-history-limits",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-imap@0.9.0": {
+        "checked": 62,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/communication_channels/lib/import-history-limits",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-resend@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-ses@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/checkout@0.9.0": {
+        "checked": 159,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/api",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/generalFixtures",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/content@0.9.0": {
+        "checked": 3,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/documents@0.9.0": {
+        "checked": 138,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/enterprise@0.9.0": {
+        "checked": 350,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/auth/lib/authorizationStateLocks",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/directory/utils/organizationScopeFilter",
+            "symbol": "resolveSingleOrganizationIdOrDeny",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/events@0.9.0": {
+        "checked": 22,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "modules/events",
+            "symbol": "isCoalescedBroadcastEvent",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/gateway-stripe@0.9.0": {
+        "checked": 50,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/onboarding@0.9.0": {
+        "checked": 78,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/scheduler@0.9.0": {
+        "checked": 91,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/schedule/interval",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/schedule/invalidScheduleValue",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/search@0.9.0": {
+        "checked": 115,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/custom-fields/kinds",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/storage-s3@0.9.0": {
+        "checked": 49,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/sync-akeneo@0.9.0": {
+        "checked": 101,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/telemetry@0.9.0": {
+        "checked": 13,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/tillio@0.9.0": {
+        "checked": 72,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/webhooks@0.9.0": {
+        "checked": 120,
+        "missing": [
+          {
+            "pkg": "@open-mercato/shared",
+            "subpath": "lib/auth/organizationScope",
+            "symbol": "resolveSingleOrganizationIdOrDeny",
+            "kind": "symbol"
+          }
+        ],
+        "unknown": 0
+      }
+    },
+    "0.9.0": {
+      "npm:@open-mercato/ai-assistant@0.9.0": {
+        "checked": 150,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-apns@0.9.0": {
+        "checked": 45,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-discord@0.9.0": {
+        "checked": 112,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-expo@0.9.0": {
+        "checked": 39,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-fcm@0.9.0": {
+        "checked": 41,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-gmail@0.9.0": {
+        "checked": 65,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-imap@0.9.0": {
+        "checked": 63,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-resend@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-ses@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/checkout@0.9.0": {
+        "checked": 159,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/api",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/generalFixtures",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/content@0.9.0": {
+        "checked": 3,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/documents@0.9.0": {
+        "checked": 138,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/enterprise@0.9.0": {
+        "checked": 352,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/events@0.9.0": {
+        "checked": 22,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/gateway-stripe@0.9.0": {
+        "checked": 50,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/onboarding@0.9.0": {
+        "checked": 78,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/scheduler@0.9.0": {
+        "checked": 96,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/search@0.9.0": {
+        "checked": 118,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/storage-s3@0.9.0": {
+        "checked": 49,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/sync-akeneo@0.9.0": {
+        "checked": 101,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/telemetry@0.9.0": {
+        "checked": 13,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/tillio@0.9.0": {
+        "checked": 72,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/webhooks@0.9.0": {
+        "checked": 120,
+        "missing": [],
+        "unknown": 0
+      }
+    },
+    "0.10.1-develop.7583.1.0c886d0a14": {
+      "npm:@open-mercato/ai-assistant@0.9.0": {
+        "checked": 150,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-apns@0.9.0": {
+        "checked": 45,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-discord@0.9.0": {
+        "checked": 112,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-expo@0.9.0": {
+        "checked": 39,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-fcm@0.9.0": {
+        "checked": 41,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-gmail@0.9.0": {
+        "checked": 65,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-imap@0.9.0": {
+        "checked": 63,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-resend@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/channel-ses@0.9.0": {
+        "checked": 31,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/checkout@0.9.0": {
+        "checked": 159,
+        "missing": [
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/api",
+            "symbol": null,
+            "kind": "subpath"
+          },
+          {
+            "pkg": "@open-mercato/core",
+            "subpath": "modules/core/__integration__/helpers/generalFixtures",
+            "symbol": null,
+            "kind": "subpath"
+          }
+        ],
+        "unknown": 0
+      },
+      "npm:@open-mercato/content@0.9.0": {
+        "checked": 3,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/documents@0.9.0": {
+        "checked": 138,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/enterprise@0.9.0": {
+        "checked": 352,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/events@0.9.0": {
+        "checked": 22,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/gateway-stripe@0.9.0": {
+        "checked": 50,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/onboarding@0.9.0": {
+        "checked": 78,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/scheduler@0.9.0": {
+        "checked": 96,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/search@0.9.0": {
+        "checked": 118,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/storage-s3@0.9.0": {
+        "checked": 49,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/sync-akeneo@0.9.0": {
+        "checked": 101,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/telemetry@0.9.0": {
+        "checked": 13,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/tillio@0.9.0": {
+        "checked": 72,
+        "missing": [],
+        "unknown": 0
+      },
+      "npm:@open-mercato/webhooks@0.9.0": {
+        "checked": 120,
+        "missing": [],
+        "unknown": 0
+      }
+    }
+  }
+}

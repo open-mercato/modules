@@ -1,0 +1,5 @@
+# expect-path: npm
+npm: "@Acme/Thing"
+category: devtools
+summary: A valid summary that is long enough to pass.
+whenToUse: Use when the npm name has upper case letters, which npm forbids.

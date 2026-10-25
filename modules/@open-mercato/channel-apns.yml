@@ -1,0 +1,11 @@
+npm: "@open-mercato/channel-apns"
+repo: open-mercato/open-mercato#main/packages/channel-apns
+category: communication
+tags: [push, ios, mobile]
+summary: Sends push notifications to iOS apps through Apple Push Notification service with token-based .p8 auth.
+whenToUse: Use when the app must push order or account updates to your own iOS app and you have an APNs key, Team ID and bundle ID.
+whenNotToUse: For apps built with Expo use channel-expo. For Android devices use channel-fcm.
+providers:
+  - { name: apns, label: Apple Push Notification service }
+links:
+  docs: https://docs.openmercato.com/framework/modules/push-notifications

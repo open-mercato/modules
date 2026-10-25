@@ -1,0 +1,7 @@
+dist/
+out/
+.data/
+site/.generated/
+test/**/golden/
+quality/reviews/
+.wp/
