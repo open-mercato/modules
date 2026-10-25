@@ -13,6 +13,7 @@ import { CategoriesFile, IgnoreFile } from '../../../lib/schema/policy.ts'
 import { CURATOR_FIELDS } from '../../../lib/schema/descriptor.ts'
 import { sigilLabel } from '../../../lib/sigil/sigil.ts'
 import { orderLines } from '../lib/status.ts'
+import { href, modulePage } from '../lib/url.ts'
 import { otherVersionCells, withJudgedLines } from '../../../lib/core/policy.ts'
 import type { CellStatus, IndexEntry } from '../../../lib/schema/index.ts'
 
@@ -151,7 +152,8 @@ const EARLY_SUBMIT_JS = `document.addEventListener('submit',function(e){var f=e.
       <div>
         <h2 class="t-h3">Building a module?</h2>
         <p>
-          Publish it with <code>create-mercato-module</code>, then paste its npm name here.
+          Publish it with <a href={href(modulePage('create-mercato-module'))}><code>create-mercato-module</code></a>, then paste its
+          npm name here.
         </p>
       </div>
       <div>

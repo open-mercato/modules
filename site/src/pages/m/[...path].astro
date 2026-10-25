@@ -903,7 +903,21 @@ const linkFor = (r: { raw: string; resolvesTo: string | null }): { href: string;
     : { href: href(`/?q=${encodeURIComponent(r.raw)}`), label: r.raw, note: 'not in the catalog' }
 }
 
-const readme = facts?.readmeExcerpt ?? null
+/**
+ * The author's README as the page shows it: plain text, with the HTML tags of a GitHub header (`<p align="center">`,
+ * badges, `<h1>`) left out so the text reads (finding of 25 Oct: create-mercato-module opened on a wall of tags). Only
+ * known HTML elements are removed; `Array<string>` in a code block stays. The card keeps the excerpt as it is.
+ */
+const README_TAG =
+  /<\/?(?:p|h[1-6]|img|a|br|strong|em|b|i|div|span|picture|source|sub|sup|details|summary|table|thead|tbody|tr|td|th|ul|ol|li|hr|center)\b[^>]*>/gi
+const readme = facts?.readmeExcerpt
+  ? facts.readmeExcerpt
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(README_TAG, '')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim() || null
+  : null
 const title = `${entry.title} · ${name} · Open Mercato Modules`
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -916,13 +930,19 @@ const jsonLd = {
   ...(entry.version.latest ? { version: entry.version.latest } : {}),
   url: absoluteUrl(meta.site, modulePage(entry.path)),
 }
-const tabs = [
+const tabsOrder = [
   { id: 'anatomy', label: 'Anatomy' },
   { id: 'versions', label: 'Versions' },
   { id: 'receipts', label: 'Receipts' },
   { id: 'readme', label: 'Readme' },
   { id: 'quality', label: 'Quality' },
 ]
+// a tool or library ships no module, so its anatomy is empty: the page opens on how to use it, its README (finding of 25
+// Oct: create-mercato-module, the first stop of a new author, opened on a black panel of zeros)
+const readmeFirst = entry.moduleIds.length === 0 && (entry.kind === 'tool' || entry.kind === 'library') && !!readme
+const tabs = readmeFirst
+  ? [tabsOrder[3]!, ...tabsOrder.filter((t) => t.id !== 'readme')]
+  : tabsOrder
 ---
 
 <Base
