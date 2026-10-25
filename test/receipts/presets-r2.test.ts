@@ -83,14 +83,14 @@ describe('the memory limit of a preview cell (P2)', () => {
     const log =
       'Creating an optimized production build ...\n[harness] cell out of memory: the 8g limit of the preview runner killed 1 process(es)\n'
     for (const attempt of [1, 2]) {
-      const f = classifyStep('build', log, { attempt })
+      const f = classifyStep('build', log, { attempt, oom: true })
       expect([f.classification, f.rule]).toEqual(['infra', 'cell-oom'])
     }
     // the tail of the classic baseline of 0.9 at 8g on Cezar (24 Oct): next build's type check lost to the limit; without
     // the marker the `type-check` rule made it a red baseline, every classic cell of the line `harness-red`
     const real =
       '  Creating an optimized production build ...\n✓ Compiled successfully in 108s\n  Running TypeScript ...\n✓ Finished writing to filesystem cache in 20.1s\nFailed to type check.\n\n[harness] cell out of memory: the 8g limit of the preview runner killed 1 process(es)\n'
-    expect(classifyStep('build', real, { attempt: 1 }).rule).toBe('cell-oom')
+    expect(classifyStep('build', real, { attempt: 1, oom: true }).rule).toBe('cell-oom')
     expect(classifyStep('build', real.replace(/\n\[harness\].*\n$/, '\n'), { attempt: 1 }).rule).toBe('type-check')
     const m = plan(fx, { onlyPresets: ['classic'], runner: 'preview-docker' })
     const ksef = of(m, LOC.ksef, '0.9', 'classic')!
@@ -105,6 +105,31 @@ describe('the memory limit of a preview cell (P2)', () => {
     expect(runCell).toContain('/sys/fs/cgroup/memory.events')
     expect(runCell).toContain('[harness] cell out of memory')
     expect(runCell).toContain('"runner_memory":"%s"')
+    // the kill count goes into the step entry of job.json, outside what the module can write (finding of 25 Oct)
+    expect(runCell).toContain('${5:+,\\"oom_kills\\":$5}')
+    expect(runCell).toContain('add_step "$step" "${outcome[$step]}" "$t0" "$t1" "$oom"')
+  })
+
+  it('a marker line the module prints decides nothing: only the runner-counted oom_kills makes the step infra', () => {
+    // a module can print the marker from add, build or start (its stdout is the step log)
+    const forged =
+      "src/modules/x/index.ts(3,1): error TS2307: Cannot find module './missing'.\n[harness] cell out of memory: the 8g limit of the preview runner killed 1 process(es)\n"
+    for (const attempt of [1, 2]) {
+      const f = classifyStep('typecheck', forged, { attempt })
+      expect([f.classification, f.rule]).toEqual(['module-fail', 'ts-error'])
+    }
+    expect(classifyStep('typecheck', forged, { attempt: 1, oom: true })).toMatchObject({
+      classification: 'infra',
+      rule: 'cell-oom',
+    })
+    // a forged marker on a step without any other rule is an ordinary unmatched failure of the module
+    expect(classifyStep('start', '[harness] cell out of memory: x\n', { attempt: 1 }).classification).toBe(
+      'module-fail',
+    )
+    // tampered files still blame the module, OOM or not
+    expect(classifyStep('add', 'tampered-files: src/modules.ts\n', { attempt: 1, oom: true }).rule).toBe(
+      'tampered-files',
+    )
   })
 })
 

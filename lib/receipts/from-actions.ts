@@ -28,6 +28,11 @@ export interface ApiStep {
   conclusion: string | null
   started_at?: string | null
   completed_at?: string | null
+  /**
+   * Processes the memory limit of the cell killed during the step, counted by the preview runner outside the cell
+   * (harness/local/run-cell.sh, cgroup memory.events); absent on GitHub Actions.
+   */
+  oom_kills?: number
 }
 export interface ApiJob {
   id?: number
@@ -247,7 +252,10 @@ function outcomeOf(cell: MatrixCell, job: ApiJob | null, src: OutcomeSource): Ce
       ? ladder[name as StepT].conclusion
       : harnessSteps[name as (typeof HARNESS_STEPS)[number]]
     if (!failed(c ?? null)) continue
-    failures.push(classifyStep(name, art?.logs[name] ?? '', { attempt: src.attempt, cancelled: c === 'cancelled' }))
+    const oom = (steps.get(name)?.oom_kills ?? 0) > 0
+    failures.push(
+      classifyStep(name, art?.logs[name] ?? '', { attempt: src.attempt, cancelled: c === 'cancelled', oom }),
+    )
   }
   return {
     key: cell.key,

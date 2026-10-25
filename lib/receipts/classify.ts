@@ -82,7 +82,9 @@ export const STEP_TIMEOUT_RE = /^\[harness\] step timed out/
 export const SMOKE_FAIL_RE = /^smoke: FAIL /
 /**
  * Written by the preview runner (harness/local/run-cell.sh) when the memory limit of the cell killed a process during a
- * failed step (review of 24 Oct): the limit is the runner's, not the module's (a CI runner has 16 GB).
+ * failed step (review of 24 Oct): the limit is the runner's, not the module's (a CI runner has 16 GB). Only the place
+ * of the excerpt: the step log carries the module's own output, so the class comes from `oom_kills` the runner counts
+ * outside the cell (ClassifyContext.oom, finding of 25 Oct: one printed marker made every real failure infra).
  */
 export const CELL_OOM_RE = /^\[harness\] cell out of memory/
 
@@ -103,10 +105,6 @@ export const RULES: readonly Rule[] = [
     steps: ['add', 'typecheck', 'build', 'start'],
     classify: 'module-fail',
   },
-  // the preview runner's memory limit cut the step short: infra on every attempt, so a retry under the same limit never
-  // confirms `broken` (review of 24 Oct; at `--memory 8g` the build of a classic baseline lost its type check to the
-  // limit on Cezar, which the rule `type-check` below would have made a red baseline)
-  { name: 'cell-oom', re: CELL_OOM_RE, steps: ANY, classify: 'infra' },
   { name: 'quarantine', re: /YN0016|quarantined/, steps: ['install', 'add'], classify: 'quarantine' },
   { name: 'missing-entity', re: /Metadata for entity (\w+) not found/, steps: ['initialize'], classify: 'module-fail' },
   // `yarn mercato generate` refuses a backend page URL another module of the app already has (round 13: freighttech
@@ -141,6 +139,14 @@ export const RULES: readonly Rule[] = [
   { name: 'infra', re: INFRA_RE, steps: ANY, classify: 'infra' },
 ]
 
+/**
+ * The preview runner's memory limit cut the step short: infra on every attempt, so a retry under the same limit never
+ * confirms `broken` (review of 24 Oct; at `--memory 8g` the build of a classic baseline lost its type check to the limit
+ * on Cezar, which the rule `type-check` would have made a red baseline). Applies only when the runner counted a kill
+ * (ClassifyContext.oom), never because a log line says so; `tampered-files` still comes first.
+ */
+const CELL_OOM: Rule = { name: 'cell-oom', re: CELL_OOM_RE, steps: ANY, classify: 'infra' }
+
 function applies(rule: Rule, step: AnyStep): boolean {
   return rule.steps === ANY || rule.steps.includes(step)
 }
@@ -174,12 +180,16 @@ export interface ClassifyContext {
    * without a matching rule that is infra, never module-fail.
    */
   cancelled?: boolean
+  /** The preview runner counted an oom_kill of the cell during this step (job.json `oom_kills`, outside the cell). */
+  oom?: boolean
 }
 
 /** Classify one failed step from its log. */
 export function classifyStep(step: AnyStep, log: string, ctx: ClassifyContext): StepFailure {
   const lines = logLines(log)
-  const rule = RULES.find((r) => applies(r, step) && lines.some((l) => r.re.test(l))) ?? null
+  const matches = (r: Rule) => applies(r, step) && lines.some((l) => r.re.test(l))
+  const tampered = RULES.find((r) => r.name === 'tampered-files' && matches(r)) ?? null
+  const rule = tampered ?? (ctx.oom ? CELL_OOM : null) ?? RULES.find(matches) ?? null
   const index = firstErrorIndex(lines, rule ? [rule.re] : [])
   const errorLine = lines[index] ?? ''
   let classification: RawClass

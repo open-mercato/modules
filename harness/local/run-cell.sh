@@ -170,18 +170,20 @@ declare -A outcome=()
 # 124 or 137 from inside a step before the backstop time is an ordinary failure.
 steps_json=''
 number=0
-add_step() { # name conclusion started completed
+add_step() { # name conclusion started completed [oom_kills]
   number=$((number + 1))
-  steps_json+="${steps_json:+,}{\"name\":\"$1\",\"number\":$number,\"status\":\"completed\",\"conclusion\":\"$2\",\"started_at\":\"$3\",\"completed_at\":\"$4\"}"
+  steps_json+="${steps_json:+,}{\"name\":\"$1\",\"number\":$number,\"status\":\"completed\",\"conclusion\":\"$2\",\"started_at\":\"$3\",\"completed_at\":\"$4\"${5:+,\"oom_kills\":$5}}"
 }
 stopped=0
 # The memory limit of the cell (--memory) is the preview runner's, not CI's (a GitHub runner has 16 GB): a step that
-# fails while the kernel killed a process of the cell for it is marked in its log, and collect classifies the marker as
-# infra on every attempt (classify.ts `cell-oom`), never as the module's failure (review of 24 Oct). oom_kill of the
-# cell's cgroup v2 memory.events counts those kills; the container sees its own cgroup at /sys/fs/cgroup.
+# fails while the kernel killed a process of the cell for it gets `oom_kills` in its job.json entry, and collect
+# classifies it as infra on every attempt (classify.ts `cell-oom`), never as the module's failure (review of 24 Oct).
+# The count is the runner's, read from outside the step: the step log carries the module's own output, so a marker
+# line there is for people only and decides nothing (finding of 25 Oct). oom_kill of the cell's cgroup v2
+# memory.events counts those kills; the container sees its own cgroup at /sys/fs/cgroup.
 oom_kills() { docker exec "$name" awk '/^oom_kill / {print $2}' /sys/fs/cgroup/memory.events 2>/dev/null || true; }
 run_step() { # name timeout-seconds workdir condition(0/1)
-  local step=$1 secs=$2 workdir=$3 cond=$4 t0 t1 rc k0 k1 script=/opt/harness/steps.sh
+  local step=$1 secs=$2 workdir=$3 cond=$4 t0 t1 rc k0 k1 oom='' script=/opt/harness/steps.sh
   if [[ "$stopped" == 1 || "$cond" != 1 ]]; then
     outcome[$step]=skipped
     add_step "$step" skipped "$(iso)" "$(iso)"
@@ -199,6 +201,7 @@ run_step() { # name timeout-seconds workdir condition(0/1)
   t1=$(iso)
   k1=$(oom_kills)
   if [[ "$rc" != 0 && "${k1:-0}" =~ ^[0-9]+$ && "${k0:-0}" =~ ^[0-9]+$ && "${k1:-0}" -gt "${k0:-0}" ]]; then
+    oom=$((k1 - k0))
     # the step log is root's in the container (steps.sh writes it): the marker goes in the same way
     docker exec "$name" bash -c 'printf "[harness] cell out of memory: the %s limit of the preview runner killed %s process(es)\n" "$1" "$2" >>"/out/$3.log"' \
       marker "$memory" "$((k1 - k0))" "$step" || true
@@ -212,7 +215,7 @@ run_step() { # name timeout-seconds workdir condition(0/1)
     outcome[$step]=failure
   fi
   log "step $step -> ${outcome[$step]} (exit $rc)"
-  add_step "$step" "${outcome[$step]}" "$t0" "$t1"
+  add_step "$step" "${outcome[$step]}" "$t0" "$t1" "$oom"
   [[ -n "$until" && "$step" == "$until" ]] && stopped=1
   return 0
 }

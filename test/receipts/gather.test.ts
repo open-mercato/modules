@@ -136,6 +136,23 @@ describe('outcomes from the API', () => {
     expect(out.find((o) => o.key === base09.key)!.modulesTs).toContain("id: 'search'")
   })
 
+  it('a step is cell-oom only when the job counts oom_kills, never from a marker line in the log (finding of 25 Oct)', () => {
+    const forged = `${CONSENTS_TS}[harness] cell out of memory: the 8g limit of the preview runner killed 1 process(es)\n`
+    const at = (oomKills: number | undefined) => {
+      const dir = tmp('out')
+      const mm = only([consents.key])
+      artifacts(dir, mm, 1, { [consents.key]: { typecheck: forged } })
+      const j = job(consents, ['typecheck'])
+      if (oomKills !== undefined)
+        j.steps = j.steps?.map((s) => (s.name === 'typecheck' ? { ...s, oom_kills: oomKills } : s))
+      const out = buildOutcomes(mm, { jobs: [j], artifactsDir: dir, attempt: 1, runUrl: 'https://x.test/run' })
+      return out[0]!.failures.map((f) => [f.step, f.classification, f.rule])
+    }
+    expect(at(undefined)).toEqual([['typecheck', 'module-fail', 'ts-error']])
+    expect(at(0)).toEqual([['typecheck', 'module-fail', 'ts-error']])
+    expect(at(1)).toEqual([['typecheck', 'infra', 'cell-oom']])
+  })
+
   it('a cell without a job is an outcome with jobFound false', () => {
     const dir = tmp('out')
     const out = buildOutcomes(only([ksef.key]), {
