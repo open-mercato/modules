@@ -21,6 +21,13 @@ export const ENTRY_MAX_BYTES = 10 * KB
 export const ENTRY_AVG_MAX_BYTES = 6 * KB
 export const INDEX_MAX_GZIP_BYTES = 60 * KB
 
+/**
+ * `compat.json` budget, owner decision H of 25 Oct (errata to spec 4.6): at most 80 KB raw (instead of 60 KB). The
+ * matrix grows with every listed module and line (57 KB on the data of 25 Oct). Like every budget here, going over it
+ * is a warning of `emit`, never a failed build or CI check.
+ */
+export const COMPAT_MAX_BYTES = 80 * KB
+
 export interface Budget {
   /** Glob-like test on the published path. */
   test: (path: string) => boolean
@@ -33,7 +40,7 @@ export const BUDGETS: readonly Budget[] = [
   { label: 'modules.json', test: (p) => p === 'modules.json', maxGzipBytes: INDEX_MAX_GZIP_BYTES },
   { label: 'built-in.json', test: (p) => p === 'built-in.json', maxBytes: 80 * KB },
   { label: 'picker.json', test: (p) => p === 'picker.json', maxBytes: 60 * KB },
-  { label: 'compat.json', test: (p) => p === 'compat.json', maxBytes: 60 * KB },
+  { label: 'compat.json', test: (p) => p === 'compat.json', maxBytes: COMPAT_MAX_BYTES },
   { label: 'changes.json', test: (p) => p === 'changes.json', maxBytes: 60 * KB },
   { label: 'radar/next.json', test: (p) => p === 'radar/next.json', maxBytes: 30 * KB },
   { label: 'surface.json', test: (p) => p === 'surface.json', maxBytes: 60 * KB },
