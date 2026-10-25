@@ -144,6 +144,12 @@ const bareOf = (name: string): string => name.slice(name.lastIndexOf('/') + 1)
 export interface NameHit {
   other: string
   distance: number
+  /**
+   * The hit is only the same bare name under a scope that is not a look-alike, of an owner that is not
+   * `@open-mercato` (finding of 25 Oct: every `@<you>/visits` made from the create-mercato-module example failed as a
+   * typosquat of `@piotrkarwatka/visits`). A warning a curator reads, never an error.
+   */
+  sameNameOnly?: boolean
 }
 
 /**
@@ -177,7 +183,8 @@ export function typosquatHits(
     // bare names catch a known name under another scope; short ones (crm, cpq, ui) only when equal
     const bareHit = Math.min(a.length, b.length) >= 5 ? bare <= 2 : bare === 0
     const dist = Math.min(full, bareHit ? bare : Number.POSITIVE_INFINITY)
-    if (dist <= 2) hits.push({ other: o.label, distance: dist })
+    const sameNameOnly = full > 2 && bare === 0 && o.owner !== '@open-mercato'
+    if (dist <= 2) hits.push({ other: o.label, distance: dist, ...(sameNameOnly ? { sameNameOnly } : {}) })
   }
   return hits.sort((a, b) => a.distance - b.distance || a.other.localeCompare(b.other))
 }
@@ -248,12 +255,20 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
   const suffix = reviewed ? ' (name-reviewed)' : '. A curator can add the name-reviewed label'
   for (const h of typosquatHits(d, catalog).slice(0, 3))
     findings.push(
-      f(
-        'name',
-        nameSeverity,
-        'typosquat',
-        `${h.distance === 0 ? 'same package name as' : `name is ${h.distance} edit${h.distance > 1 ? 's' : ''} away from`} ${h.other}, another owner${suffix}`,
-      ),
+      h.sameNameOnly
+        ? // the same module name under a scope of its own (`@acme/visits` and `@piotrkarwatka/visits`): a curator reads it
+          f(
+            'name',
+            reviewed ? 'info' : 'warning',
+            'typosquat',
+            `same module name as ${h.other} under another scope; a curator checks that it is not posing as it${reviewed ? ' (name-reviewed)' : ''}`,
+          )
+        : f(
+            'name',
+            nameSeverity,
+            'typosquat',
+            `${h.distance === 0 ? 'same package name as' : `name is ${h.distance} edit${h.distance > 1 ? 's' : ''} away from`} ${h.other}, another owner${suffix}`,
+          ),
     )
   const official = d.npm?.startsWith('@open-mercato/') ?? false
   const bare = bareOf(nameOf(d))

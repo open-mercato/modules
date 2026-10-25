@@ -94,6 +94,29 @@ describe('step 6: names', () => {
     for (const e of catalog.entries.values()) expect(typosquatHits(e.d, catalog), e.locator).toEqual([])
   })
 
+  it('the module name of a listed entry under a scope of its own is a warning, never an error (25 Oct)', () => {
+    // the create-mercato-module example is `visits`, and @piotrkarwatka/visits is listed
+    const text = `npm: "@acme/visits"
+category: crm-sales
+summary: Lists CRM visits on a backend page with search and paging.
+whenToUse: Use when sales reps log customer visits and managers review them in one list.
+`
+    const r = run('modules/@acme/visits.yml', text)
+    expect(messages(r)).toEqual([])
+    expect(messages(r, 'warning')).toContain(
+      'same module name as npm:@piotrkarwatka/visits under another scope; a curator checks that it is not posing as it',
+    )
+    // a look-alike scope, or the name of an official package, stays an error
+    const official = `npm: "@acme/gateway-stripe"
+category: payments-finance
+summary: Takes card payments through Stripe for orders in the checkout.
+whenToUse: Use when the app must take card payments through Stripe at checkout.
+`
+    expect(messages(run('modules/@acme/gateway-stripe.yml', official))[0]).toMatch(
+      /^same package name as npm:@open-mercato\/gateway-stripe, another owner/,
+    )
+  })
+
   it('a look-alike of another owner is an error until a curator adds name-reviewed', () => {
     const text = `npm: "@fastwhite-cat/integration-ksef-direct"
 category: localization-compliance

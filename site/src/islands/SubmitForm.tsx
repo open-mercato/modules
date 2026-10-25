@@ -603,6 +603,8 @@ function repoInfo(j: GithubRepoJson, tag: string | null): RepoInfo {
 export interface NameHit {
   other: string
   distance: number
+  /** Only the same bare name under a scope of its own, not of @open-mercato: CI warns, never fails (25 Oct). */
+  sameNameOnly?: boolean
 }
 const ownerOf = (name: string): string | null =>
   name.startsWith('@') ? name.slice(0, name.indexOf('/')) : name.includes('/') ? `gh:${name.split('/')[0]}` : null
@@ -619,8 +621,10 @@ export function typosquatHits(t: Target, catalog: readonly CatalogRef[]): NameHi
     const a = bare(name)
     const b = bare(other)
     const bareHit = Math.min(a.length, b.length) >= 5 ? distance(a, b) <= 2 : a === b
-    const d = Math.min(distance(name, other), bareHit ? distance(a, b) : Number.POSITIVE_INFINITY)
-    if (d <= 2) hits.push({ other: e.locator, distance: d })
+    const full = distance(name, other)
+    const d = Math.min(full, bareHit ? distance(a, b) : Number.POSITIVE_INFINITY)
+    const sameNameOnly = full > 2 && a === b && ownerOf(other) !== '@open-mercato'
+    if (d <= 2) hits.push({ other: e.locator, distance: d, ...(sameNameOnly ? { sameNameOnly } : {}) })
   }
   return hits.sort((x, y) => x.distance - y.distance || x.other.localeCompare(y.other))
 }
@@ -923,7 +927,14 @@ export function liveRules(
   out.push(
     names.length === 0
       ? { id: 'LST-6', state: 'pass', text: 'The name is not close to a listed one.' }
-      : { id: 'LST-6', state: 'fail', text: `Close to ${names[0]?.other}. A curator reviews the name.` },
+      : names.every((n) => n.sameNameOnly)
+        ? // the module name of someone else's listed module under your own scope: CI warns, a curator reads it (25 Oct)
+          {
+            id: 'LST-6',
+            state: 'unknown',
+            text: `Same module name as ${names[0]?.other} under another scope. A curator checks the name.`,
+          }
+        : { id: 'LST-6', state: 'fail', text: `Close to ${names[0]?.other}. A curator reviews the name.` },
   )
   return out
 }
