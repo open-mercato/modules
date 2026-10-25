@@ -349,7 +349,9 @@ Before the repository is public:
    forms apply `new-entry`; `sync.yml` adds `discovery` to its issue once the label exists; `validate` reads
    `name-reviewed` from the PR when it runs (not from the event), so after adding it a curator re-runs the
    `validate` check of the PR.
-3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs).
+3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs). While the repository is
+   private the `autofix` job is skipped (the action fetches without credentials, which a private repository refuses),
+   so authors and testers run `yarn om format modules` themselves; the validate message says so.
 4. Settings > Actions > General: require approval for first-time contributors; workflow permissions: read.
 
 At the switch to the public address:

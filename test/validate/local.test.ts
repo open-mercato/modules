@@ -44,7 +44,7 @@ colour: blue
     )
     expect(r.d).toBeNull()
     expect(messages(r)).toEqual([
-      'category: "crm" is an old name of crm-sales; autofix rewrites it',
+      'category: "crm" is an old name of crm-sales; autofix rewrites it, or run yarn om format modules',
       'tags.0: Invalid string: must match pattern /^[a-z0-9-]{2,24}$/',
       'summary: min 20 characters',
       'whenToUse: start with "Use when ", min 40 characters',

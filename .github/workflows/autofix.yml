@@ -22,6 +22,10 @@ defaults:
 jobs:
   autofix:
     name: autofix
+    # autofix-ci/action fetches the PR head without credentials, which a private repository refuses (run 40202361840:
+    # `could not read Username`, a red check on every PR with a fix). Until the repository is public and the app is
+    # installed (docs/RUNBOOK.md), the job is skipped and validate tells the author to run `yarn om format modules`.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

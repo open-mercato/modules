@@ -186,6 +186,8 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(w.on).toEqual({ pull_request: { paths: ['modules/**'] } })
     expect(w.permissions).toEqual({ contents: 'read' })
     expect(Object.values(w.jobs)[0]?.['timeout-minutes']).toBe(5)
+    // skipped while the repository is private: the action cannot fetch without credentials (finding of 25 Oct)
+    expect((Object.values(w.jobs)[0] as { if?: string }).if).toBe('${{ !github.event.repository.private }}')
     const s = steps(w)
     const runs = s.filter((x) => x.run).map((x) => x.run?.trim())
     expect(runs).toEqual(['corepack enable', 'yarn install --immutable', 'yarn om format modules'])

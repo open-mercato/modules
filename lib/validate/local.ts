@@ -60,7 +60,7 @@ export function issueMessage(
   if (path === 'category') {
     const v = raw.category
     if (typeof v === 'string' && aliases.has(v))
-      return `category: ${JSON.stringify(v)} is an old name of ${aliases.get(v)}; autofix rewrites it`
+      return `category: ${JSON.stringify(v)} is an old name of ${aliases.get(v)}; autofix rewrites it, or run yarn om format modules`
     return `category: must be one of ${CategoryId.options.join(', ')}`
   }
   const value = issue.path.reduce<unknown>(

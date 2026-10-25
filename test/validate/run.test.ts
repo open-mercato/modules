@@ -202,7 +202,7 @@ whenToUse: Use when the shop rewards repeat customers with points they can spend
     const [broken, loyalty] = report.entries
     expect(broken?.status).toBe('fail')
     expect(broken?.findings.map((f) => f.message)).toEqual([
-      'category: "crm" is an old name of crm-sales; autofix rewrites it',
+      'category: "crm" is an old name of crm-sales; autofix rewrites it, or run yarn om format modules',
       'summary: min 20 characters',
       'whenToUse: required',
     ])
