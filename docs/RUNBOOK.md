@@ -324,8 +324,8 @@ The signature is `sha1(step + ':' + first error line)` with paths reduced to fil
 
 ## Repository setup (owner clicks)
 
-Spec 5.6 was written for a public `wojciechszyjka/modules`; the catalog lives in the private `open-mercato/modules`.
-These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
+Spec 5.6 was written for a public repository of a personal account; the catalog lives in the private
+`open-mercato/modules`. These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
 never change them. State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
 answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty).
 
