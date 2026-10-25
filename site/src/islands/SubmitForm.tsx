@@ -536,6 +536,11 @@ export async function runChecks(t: Target, ctx: CheckContext, deps: Deps): Promi
     else if (r.pkg?.bin) r.kind = 'tool'
     else r.kind = 'library'
   }
+  // a listed package that ships no module keeps the kind a curator gave it (finding of 25 Oct: Demo Auth, a listed
+  // tool without a bin, read as a library, and Propose an edit would have changed its kind)
+  const listedKind = r.existing?.kind
+  const listedNoModule = !!listedKind && listedKind !== 'module' && r.kind !== null && r.kind !== 'module'
+  if (listedNoModule) r.kind = listedKind
 
   // module IDs that core already ships (lint collision-core): CI rejects them unless the entry declares replaces
   const core = t.kind === 'npm' && t.name === CORE_PACKAGE
@@ -553,7 +558,9 @@ export async function runChecks(t: Target, ctx: CheckContext, deps: Deps): Promi
   if (r.existing) r.states.push('listed')
   if (r.renamedTo) r.states.push('renamed')
   if (r.collisions.length > 0) r.states.push('collision')
-  if (r.gate && r.gate.modules.length === 0) r.states.push('not-module')
+  // a listed library, provider or tool is expected to ship no module: a note, not the red state
+  if (r.gate && r.gate.modules.length === 0 && !listedNoModule) r.states.push('not-module')
+  if (listedNoModule) note('info', `Listed as a ${listedKind}: no src/modules and dist/modules pair is expected.`)
   if (t.kind === 'github' && found !== false && !r.existing?.npm) r.states.push('github-only')
   if (r.ignored) r.states.push('ignored')
   return r
@@ -879,6 +886,9 @@ export function liveRules(
           }
         : { id: 'LST-3', state: 'fail', text: r.gate.reason ?? 'No src/dist pair.' },
     )
+  else if (r.existing?.kind === r.kind)
+    // listed with this kind: a curator already checked it (finding of 25 Oct)
+    out.push({ id: 'LST-3', state: 'pass', text: `Kind ${r.kind}: listed, no module in the package is expected.` })
   else if (
     r.pkg &&
     ![...Object.keys(r.pkg.peers), ...Object.keys(r.pkg.dependencies)].some((d) => d.startsWith('@open-mercato/'))
@@ -1179,11 +1189,15 @@ function Banner({ tone, tag, alert, children }: { tone: Tone; tag?: string; aler
  * one is since when they do. It speaks of the age gate only (finding of 25 Oct: `A fresh app installs it today` stood
  * beside packages broken at typecheck on every line); whether it installs is the nightly run's verdict.
  */
-export function installableText(from: string | null, today: string): string {
+export function installableText(from: string | null, today: string, kind: CheckResult['kind'] = 'module'): string {
   if (!from) return 'Unknown.'
-  return from > today
-    ? `From ${dayText(from)}. New apps refuse it until then (Yarn ${AGE_GATE_DAYS}-day age gate).`
-    : `Past the Yarn ${AGE_GATE_DAYS}-day age gate since ${dayText(from)}. The nightly run decides whether it installs.`
+  if (from > today) return `From ${dayText(from)}. New apps refuse it until then (Yarn ${AGE_GATE_DAYS}-day age gate).`
+  // the nightly run installs modules only (spec 5.3): a library, provider or tool is read, never installed
+  const run =
+    kind === null || kind === 'module'
+      ? 'The nightly run decides whether it installs.'
+      : `The nightly run installs modules only, so a ${kind} is never verified.`
+  return `Past the Yarn ${AGE_GATE_DAYS}-day age gate since ${dayText(from)}. ${run}`
 }
 
 /**
@@ -1456,7 +1470,7 @@ export default function SubmitForm(props: SubmitFormProps) {
                     <div>
                       <dt>Installable</dt>
                       <dd>
-                        {installableText(result.installableFrom, new Date().toISOString().slice(0, 10))}
+                        {installableText(result.installableFrom, new Date().toISOString().slice(0, 10), result.kind)}
                         {(() => {
                           // a listed package: the verdict of the catalog's last run on the latest line (25 Oct)
                           const run = listedRunText(

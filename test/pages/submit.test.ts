@@ -269,6 +269,9 @@ test('Installable: a future date is "From", a past one "Since"', () => {
   expect(installableText('2026-10-20', '2026-10-23')).toBe(
     'Past the Yarn 5-day age gate since 20 Oct 2026. The nightly run decides whether it installs.',
   )
+  expect(installableText('2026-10-20', '2026-10-23', 'tool')).toBe(
+    'Past the Yarn 5-day age gate since 20 Oct 2026. The nightly run installs modules only, so a tool is never verified.',
+  )
   expect(installableText(null, '2026-10-23')).toBe('Unknown.')
 })
 
@@ -396,6 +399,38 @@ describe('acceptance cases', () => {
     // the YAML and the preview are those of the npm entry (spec 4.3: npm takes precedence over github)
     expect(effectiveTarget(gh, r)).toEqual(npm(KSEF))
     expect(effectiveTarget(npm(KSEF), r)).toEqual(npm(KSEF))
+  })
+
+  test('a listed tool that ships no module keeps its kind: no red state, and an edit keeps kind tool (25 Oct)', async () => {
+    const DEMO = '@fullstackhouse/open-mercato-demo-auth'
+    const descriptor = {
+      npm: DEMO,
+      kind: 'tool',
+      category: 'developer-tools',
+      summary: 'Demo login switcher for Open Mercato apps with seeded users.',
+      whenToUse: 'Use when a demo app needs one-click logins as seeded users.',
+    }
+    const ctx: CheckContext = { ...CTX, catalog: [ref(DEMO, DEMO, { kind: 'tool', descriptor })] }
+    const { deps } = mockFetch([
+      [
+        /registry\.npmjs\.org\/@fullstackhouse%2Fopen-mercato-demo-auth$/,
+        { body: packument(DEMO, '0.3.0', { license: 'MIT', peerDependencies: { '@open-mercato/core': '^0.9.0' } }) },
+      ],
+      [
+        /jsdelivr\.com\/v1\/packages\/npm\/@fullstackhouse/,
+        { body: files('/package.json', '/dist/index.js', '/src/index.ts') },
+      ],
+    ])
+    const r = await runChecks(npm(DEMO), ctx, deps)
+    // no bin, so the files alone read as a library; the curator's kind wins
+    expect(r.kind).toBe('tool')
+    expect(r.states).toEqual(['listed'])
+    expect(r.notices.map((n) => n.text)).toContain(
+      'Listed as a tool: no src/modules and dist/modules pair is expected.',
+    )
+    const f = formFromPackage(r, [], emptyForm())
+    expect(buildDescriptor(npm(DEMO), r, f).kind).toBe('tool')
+    expect(liveRules(npm(DEMO), r, [], []).find((x) => x.id === 'LST-3')).toMatchObject({ state: 'pass' })
   })
 
   test('renamed: an old name of a listed entry', async () => {
