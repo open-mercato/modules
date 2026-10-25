@@ -644,6 +644,15 @@ html[data-view='agent'] [data-human] {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+/* the catalog's line under an excerpt Rentgen cut: outside the author's text, in the caption's voice */
+.readme__cut {
+  margin: 0;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line-strong);
+  background: var(--bg-2);
+  font-size: 13px;
+  color: var(--ink-2);
+}
 .readme__links {
   display: flex;
   gap: 20px;

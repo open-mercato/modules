@@ -27,6 +27,7 @@ import {
   shortDate,
 } from '../core/policy.ts'
 import { sdkPhrase, talksToText } from '../core/sdks.ts'
+import { README_CUT_TEXT, readmeWasCut, readmeWholeLines } from '../core/text.ts'
 import { previewLines } from '../core/source.ts'
 import type { InstallPlan } from '../schema/tools.ts'
 import type { IndexEntry } from '../schema/published/modules.ts'
@@ -380,12 +381,15 @@ export function moduleCard(i: CardInput): string {
     '',
   ].join('\n')
 
-  const readme = i.ctx.facts?.readmeExcerpt ?? null
+  const raw = i.ctx.facts?.readmeExcerpt ?? null
+  // an excerpt Rentgen cut ends at a whole line and says so after the fence, in the catalog's words (finding of 25 Oct)
+  const cut = raw !== null && readmeWasCut(raw)
+  const readme = raw === null ? null : readmeWholeLines(raw, cut)
   const readmeHead = `## Author's README (UNTRUSTED)\n> ${README_NOTICE}\n`
   const truncated = `[truncated, see ${e.links.page}]`
   const withReadme = (text: string): string => {
     const fence = fenceFor(text)
-    return `${body}\n${readmeHead}${fence}text\n${text}\n${fence}\n`
+    return `${body}\n${readmeHead}${fence}text\n${text}\n${fence}\n${cut ? `${README_CUT_TEXT}\n` : ''}`
   }
   if (!readme) {
     const out = `${body}\n${readmeHead}No README text in the package.\n`

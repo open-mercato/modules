@@ -1,5 +1,6 @@
 // data/facts/<locpath>/<ver>.json and data/builtin/<coreVersion>.json (spec 4.5). Written only by `watch`.
 import { z } from 'zod'
+import { README_EXCERPT_MAX } from '../../core/text.ts'
 import {
   AclFeature,
   EnvName,
@@ -187,7 +188,7 @@ export const Facts = z
     omPeers: z.record(z.string(), z.string()),
     dependencies: z.record(z.string(), z.string()), // runtime dependencies from package.json (input for Fit hostDuplicates)
     agentsMd: z.boolean(),
-    readmeExcerpt: z.string().max(4000).nullable(), // author text, always UNTRUSTED
+    readmeExcerpt: z.string().max(README_EXCERPT_MAX).nullable(), // author text, always UNTRUSTED
     modules: z.array(ModuleFacts).max(60),
     // additive (25 Oct, rentgen 3): a package without a module (a provider, library or tool) has its src/ read for the
     // env names and hosts its code uses, the config and network sections a module holds itself (finding of 25 Oct: the

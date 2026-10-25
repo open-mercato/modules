@@ -100,3 +100,19 @@ export function clipText(s: string, max: number): string {
   const head = (cut > max / 2 ? room.slice(0, cut) : room).replace(/[\s,;:.(]+$/, '')
   return `${head}\u2026`
 }
+
+/** Characters of the author's README that Rentgen keeps (Facts.readmeExcerpt). */
+export const README_EXCERPT_MAX = 4000
+
+/** The catalog's line after a README excerpt that Rentgen cut (finding of 25 Oct: it ended mid-table, unmarked). */
+export const README_CUT_TEXT = `First ${README_EXCERPT_MAX.toLocaleString('en-US')} characters. Full README on npm or in the repository.`
+
+/** Rentgen cut this excerpt at README_EXCERPT_MAX (a README of exactly that length reads as cut too). */
+export const readmeWasCut = (raw: string): boolean => raw.length >= README_EXCERPT_MAX
+
+/** A cut excerpt ends at its last whole line, so no half row or half sentence is shown; an uncut one is unchanged. */
+export function readmeWholeLines(text: string, cut: boolean): string {
+  if (!cut) return text
+  const at = text.lastIndexOf('\n')
+  return at > 0 ? text.slice(0, at).trimEnd() : text
+}

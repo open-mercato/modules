@@ -32,6 +32,7 @@ import { licenseFileOf, resolveLicense } from './license.ts'
 import { finding, lintModule, lintPackage } from './lint.ts'
 import type { ExtractorModule, OmModuleFacts } from './om-cli.d.ts'
 import { scanRoutes, type RouteScan } from './routes.ts'
+import { README_EXCERPT_MAX } from '../core/text.ts'
 import { Sanitizer, stripControl } from './sanitize.ts'
 import {
   fetchGithubArchive,
@@ -686,7 +687,7 @@ export async function scanPackageDir(pkgRoot: string, ctx: ScanContext): Promise
     omPeers,
     dependencies,
     agentsMd,
-    readmeExcerpt: readme ? stripControl(readFileSync(readme, 'utf8')).slice(0, 4000) : null,
+    readmeExcerpt: readme ? stripControl(readFileSync(readme, 'utf8')).slice(0, README_EXCERPT_MAX) : null,
     modules,
     ...(packageCode ? { packageCode } : {}),
     coverage: {
