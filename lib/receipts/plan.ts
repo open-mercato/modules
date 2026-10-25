@@ -214,7 +214,8 @@ interface Ctx {
  * `requiresSpecs` of a cell, deepest first (spec 5.3): module IDs from facts `requires` and catalog peers
  * (data-sync-durable -> durable-work). IDs the cell's preset registers are skipped (an app from the classic preset has
  * integrations, catalog and sales on); an ID of a catalog entry becomes `<npm>@<install version>`, an ID of a core
- * module `core:<id>`; anything else makes the cell untested.
+ * module `core:<id>`, a catalog library the package peers on `lib:<npm>@<install version>` (`yarn add`, never `module
+ * add`: terminal-tracking and @freighttech/ui); anything else makes the cell untested.
  */
 function resolveRequires(
   ctx: Ctx,
@@ -242,7 +243,7 @@ function resolveRequires(
     const r = resolveRequires(ctx, dep, depFacts, depIds, line, [...stack, dep.locator], presetId)
     if (!r.ok) return r.reason
     r.specs.forEach(add)
-    add(`${depNpm}@${v}`)
+    add(`${dep.d.kind === 'library' ? 'lib:' : ''}${depNpm}@${v}`)
     return null
   }
   for (const m of modulesOf(facts, ids)) {

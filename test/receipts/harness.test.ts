@@ -288,6 +288,27 @@ describe('steps.sh: the starter preset is a parameter of the cell (24 Oct)', () 
   })
 })
 
+describe('steps.sh add: a catalog library the module peers on (25 Oct)', () => {
+  it('lib:<npm>@<version> is yarn add before the module, never module add', () => {
+    const t = tmp('yarn-args')
+    const argsFile = join(t, 'yarn.args')
+    const c = fakeCell(`echo "$@" >> ${JSON.stringify(argsFile)}`)
+    const r = c.step('add', { REQUIRES_SPECS: 'lib:@freighttech/ui@0.14.9' })
+    expect(r.status, r.stderr).toBe(0)
+    const calls = readFileSync(argsFile, 'utf8').trim().split('\n')
+    expect(calls[0]).toBe('add @freighttech/ui@0.14.9')
+    expect(calls.join('\n')).not.toMatch(/module add @freighttech\/ui/)
+    expect(calls.join('\n')).toContain('mercato module add @acme/mod@1.0.0 --allow-third-party')
+  })
+
+  it('a lib: item that is no package spec is refused before anything runs', () => {
+    const c = fakeCell('true')
+    const r = c.step('add', { REQUIRES_SPECS: 'lib:@freighttech/ui@latest;rm' })
+    expect(r.status).toBe(1)
+    expect(readFileSync(join(c.out, 'add.log'), 'utf8')).toMatch(/invalid REQUIRES_SPECS item/)
+  })
+})
+
 // GNU timeout is on ubuntu-latest and in the preview image, not on macOS.
 const hasTimeout = spawnSync('timeout', ['--version']).status === 0
 describe.skipIf(!hasTimeout)('steps.sh step time limit (review round 2)', () => {

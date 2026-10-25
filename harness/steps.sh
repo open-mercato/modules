@@ -16,7 +16,8 @@
 #   MODULE_SPEC    <npm>@<version>, or <npm>@https://codeload.github.com/... for a GitHub-only tag
 #   MODULE_NPM     package name; MODULE_IDS space-separated module IDs; MODULE_FLAG --module value or empty
 #   THIRD_PARTY    1 when the package is outside @open-mercato/* (adds --allow-third-party)
-#   REQUIRES_SPECS space-separated, deepest first: core:<id> or <npm>@<version>
+#   REQUIRES_SPECS space-separated, deepest first: core:<id>, <npm>@<version> (a module) or lib:<npm>@<version> (a
+#                  library the module peers on: yarn add, not module add)
 #   REPLACES       space-separated core module IDs removed from src/modules.ts before add (slot swap)
 #   PATCHES        space-separated harness patch IDs (harness/lines.yml) that apply to OM_VERSION
 #   MODE           realistic | early (early: the package is preapproved for this run only)
@@ -127,7 +128,8 @@ check_inputs() {
     local s
     for s in ${REQUIRES_SPECS:-}; do
       if [[ "$s" == core:* ]]; then check REQUIRES_SPECS "${s#core:}" "$ID_RE"; else
-        [[ "${s%@*}" =~ $NPM_RE && "${s##*@}" =~ $VER_RE ]] || fail "invalid REQUIRES_SPECS item: $s"
+        local spec=${s#lib:}
+        [[ "${spec%@*}" =~ $NPM_RE && "${spec##*@}" =~ $VER_RE ]] || fail "invalid REQUIRES_SPECS item: $s"
       fi
     done
   fi
@@ -334,6 +336,11 @@ add)
   # an app from the classic preset most official packages are registered already: add is then `yarn add` of the tested
   # version only, with the note in-preset.
   for s in ${REQUIRES_SPECS:-}; do
+    # a library the module peers on: a dependency of the app, never `module add` (it has no module)
+    if [[ "$s" == lib:* ]]; then
+      cell "$APP" "$YARN_SAFE yarn add ${s#lib:}"
+      continue
+    fi
     if [[ "$s" == core:* ]] && registered "${s#core:}" @open-mercato/core; then
       say "requires ${s#core:}: already registered from @open-mercato/core"
       continue

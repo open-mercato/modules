@@ -18,12 +18,15 @@ const PresetSmoke = z
   .string()
   .max(260)
   .regex(/^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*=\/[A-Za-z0-9/_.-]+$/)
-/** `core:<id>` (enable a core module) or `<npm>@<exact version>` (catalog module). */
+/**
+ * `core:<id>` (enable a core module), `<npm>@<exact version>` (catalog module) or `lib:<npm>@<exact version>` (a
+ * catalog library the module peers on, installed with `yarn add`).
+ */
 const RequireSpec = z
   .string()
   .max(220)
   .regex(
-    /^(core:[a-z][a-z0-9_]*|(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*@\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)$/,
+    /^(core:[a-z][a-z0-9_]*|(?:lib:)?(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*@\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)$/,
   )
 /** `<npm>@<exact version>`, or `<npm>@https://codeload.github.com/<owner>/<repo>/tar.gz/<tag>` for GitHub-only tags. */
 const ModuleSpec = z

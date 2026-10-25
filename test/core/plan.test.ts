@@ -77,6 +77,40 @@ describe('install commands', () => {
     })
   })
 
+  it('a library is a dependency and a CLI tool runs with npx: neither gets module add (finding of 25 Oct)', () => {
+    const version = {
+      latest: '0.5.1',
+      preview: null,
+      publishedAt: null,
+      integrity: null,
+      installableFrom: null,
+      gitRef: null,
+      recommended: { '0.9': '0.5.1' },
+    }
+    const target = {
+      npm: 'create-mercato-module',
+      locator: 'npm:create-mercato-module',
+      moduleIds: [],
+      moduleFlag: null,
+    }
+    expect(installInfo({ ...target, version, kind: 'tool', tags: ['cli', 'scaffold'] }, '0.9')).toEqual({
+      cli: 'npx create-mercato-module@0.5.1',
+      cmm: null,
+      needsAllowThirdParty: false,
+      moduleFlag: null,
+    })
+    // a tool without a command line (a dev-only widget) is a dependency
+    expect(installInfo({ ...target, version, kind: 'tool', tags: ['dev-only'] }, '0.9').cli).toBe(
+      'yarn add create-mercato-module@0.5.1',
+    )
+    const ui = { npm: '@freighttech/ui', locator: 'npm:@freighttech/ui', moduleIds: [], moduleFlag: null }
+    expect(installInfo({ ...ui, version, kind: 'library' }, '0.9').cli).toBe('yarn add @freighttech/ui@0.5.1')
+    // a module keeps module add
+    expect(installInfo({ ...ui, version, kind: 'module' }, '0.9').cli).toBe(
+      'yarn mercato module add @freighttech/ui@0.5.1 --allow-third-party',
+    )
+  })
+
   it('GitHub-only entries install through create-mercato-module with --ref', () => {
     const version = {
       latest: '0.2.0',

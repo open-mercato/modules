@@ -533,6 +533,8 @@ function commandFor(m: ModuleMeta, line: string | null, latest: string | null): 
       version: { ...m.version, publishedAt: null, integrity: null },
       ...(m.installable ? { installableVersions: m.installable } : {}),
       moduleFlag: m.moduleFlag,
+      kind: m.kind,
+      tags: m.tags,
     },
     line,
     both ? m.moduleIds.map((id) => ({ id, from: m.npm as string })) : null,

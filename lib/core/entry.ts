@@ -235,7 +235,11 @@ export interface CatalogRef {
   kind: IndexEntry['kind']
 }
 
-/** `requires` items from peer dependencies that are other catalog modules (kind `module`, listed or not). */
+/**
+ * `requires` items from peer dependencies that are other catalog modules or libraries (kind `module` or `library`,
+ * listed or not). A library peer is installed with `yarn add` (finding of 25 Oct: terminal-tracking peers on
+ * @freighttech/ui, which neither its receipts nor its install plan installed, so every cell failed at TS2307).
+ */
 export function catalogPeerRequires(
   self: string,
   peers: Readonly<Record<string, string>> | null | undefined,
@@ -246,7 +250,9 @@ export function catalogPeerRequires(
   const out: IndexEntry['requires'] = []
   for (const name of Object.keys(peers).sort()) {
     if (optionalPeers.includes(name)) continue
-    const hit = catalog.find((c) => c.npm === name && c.locator !== self && c.kind === 'module')
+    const hit = catalog.find(
+      (c) => c.npm === name && c.locator !== self && (c.kind === 'module' || c.kind === 'library'),
+    )
     if (hit) out.push({ raw: name, resolvesTo: hit.locator })
   }
   return out
@@ -288,6 +294,8 @@ function indexEntryOf(i: EntryInput, ev: Evaluation): IndexEntry {
     version: ev.version,
     installableVersions: ev.installableVersions,
     moduleFlag,
+    kind: ev.kind,
+    tags: d.tags ?? [],
   }
   const install = installInfo(
     target,

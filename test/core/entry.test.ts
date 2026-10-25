@@ -50,7 +50,8 @@ describe('IndexEntry from the fixture', () => {
     expect(get(LOC.datasync).requires).toEqual([
       { raw: '@fullstackhouse/open-mercato-durable-work', resolvesTo: LOC.durable },
     ])
-    // real peers (npm latest, 23 Oct): libraries, optional peers and packages outside the catalog stay out
+    // real peers (npm latest, 23 Oct): optional peers and packages outside the catalog stay out; a catalog library is
+    // required too (25 Oct: terminal-tracking failed every cell without @freighttech/ui)
     const catalog = [
       { locator: 'npm:@dainamite/cpq', npm: '@dainamite/cpq', kind: 'module' as const },
       { locator: 'npm:@dainamite/billing', npm: '@dainamite/billing', kind: 'module' as const },
@@ -75,7 +76,10 @@ describe('IndexEntry from the fixture', () => {
         catalog,
         ['@open-mercato/scheduler'],
       ),
-    ).toEqual([{ raw: '@open-mercato/events', resolvesTo: 'npm:@open-mercato/events' }])
+    ).toEqual([
+      { raw: '@freighttech/ui', resolvesTo: 'npm:@freighttech/ui' },
+      { raw: '@open-mercato/events', resolvesTo: 'npm:@open-mercato/events' },
+    ])
     expect(catalogPeerRequires('npm:@dainamite/cpq', { '@dainamite/cpq': '*' }, catalog)).toEqual([])
     expect(catalogPeerRequires('npm:@dainamite/cpq', { '@dainamite/billing': '*' }, undefined)).toEqual([])
   })

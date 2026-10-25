@@ -75,7 +75,21 @@ export type InstallTarget = Pick<IndexEntry, 'npm' | 'locator' | 'moduleIds' | '
   Pick<VersionSource, 'installableVersions' | '_meta'> & {
     /** `--module <id>` for packages with several modules (descriptor `module` or the facts gate). */
     moduleFlag: string | null
+    /** Entry kind; absent reads as a module. A library or a tool is no module to add (`packageCommand`). */
+    kind?: IndexEntry['kind']
+    /** Descriptor tags; the tag `cli` marks a tool that runs with npx. */
+    tags?: readonly string[]
   }
+
+/**
+ * The command of a package that is no Open Mercato module (finding of 25 Oct: create-mercato-module got `yarn mercato
+ * module add ... --allow-third-party`): a library is a dependency of the app (`yarn add`), a tool tagged `cli` runs on
+ * its own (`npx`), any other tool is a dependency too. Null for a module or a provider.
+ */
+export function packageCommand(e: Pick<InstallTarget, 'kind' | 'tags'>, spec: string): string | null {
+  if (e.kind === 'tool') return e.tags?.includes('cli') ? `npx ${spec}` : `yarn add ${spec}`
+  return e.kind === 'library' ? `yarn add ${spec}` : null
+}
 
 /** True when every module of the entry is already registered from this package (an app's src/modules.ts, D10). */
 export function inPreset(
@@ -105,6 +119,8 @@ export function installInfo(
     return { cli: cmd, cmm: cmd, needsAllowThirdParty: false, moduleFlag: e.moduleFlag }
   }
   const spec = version ? `${e.npm}@${version}` : e.npm
+  const own = packageCommand(e, spec)
+  if (own) return { cli: own, cmm: null, needsAllowThirdParty: false, moduleFlag: null }
   const thirdParty = !e.npm.startsWith('@open-mercato/')
   const cmm = `npx create-mercato-module install ${spec}`
   if (inPreset(e, preset)) return { cli: `yarn add ${spec}`, cmm, needsAllowThirdParty: false, moduleFlag: null }
@@ -318,7 +334,8 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
       if (caution) notes.push(caution)
     }
     const then: string[] = [...notes]
-    if (installing.length > 0 || enabling > 0) then.push('yarn generate')
+    // a library or a tool adds no module, so nothing to generate for it
+    if (installing.some((x) => x.kind === 'module' || x.kind === 'provider') || enabling > 0) then.push('yarn generate')
     const migrations = installing.some(
       (e) => (e.anatomy?.counts.migrations ?? 0) > 0 || (e.anatomy?.counts.tables ?? 0) > 0,
     )

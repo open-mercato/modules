@@ -66,6 +66,16 @@ describe('plan on the fixture (Friday night)', () => {
     expect(c.requiresSpecs).toEqual(['@fullstackhouse/open-mercato-durable-work@0.6.0'])
   })
 
+  it('a catalog library the module peers on is installed with yarn add (lib:), never module add', () => {
+    // terminal-tracking peers on @freighttech/ui (kind library): here durable-work stands in as that library
+    const entries = fixturePlanEntries(fx).map((e) =>
+      e.locator === LOC.durable ? { ...e, d: { ...e.d, kind: 'library' as const } } : e,
+    )
+    const c = plan(fx, { entries }).cells.find((x) => x.locator === LOC.datasync && x.line === '0.9')!
+    expect(c.requiresSpecs).toEqual(['lib:@fullstackhouse/open-mercato-durable-work@0.6.0'])
+    expect(Matrix.safeParse(plan(fx, { entries })).success).toBe(true)
+  })
+
   it('runs the official preview without a stable release only on next', () => {
     expect(m.cells.filter((c) => c.locator === LOC.tpay).map((c) => c.line)).toEqual(['next'])
     const skipped = m.notRun.find((n) => n.locator === LOC.tpay && n.line === '0.9')!

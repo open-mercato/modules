@@ -3,6 +3,7 @@
 import type { IndexEntry } from '../schema/published/modules.ts'
 import { byLineKey } from './lines.ts'
 import { installVersion, judgeLine, listAnd, type VersionSource } from './policy.ts'
+import { packageCommand } from './plan.ts'
 
 const RE = {
   npm: /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/,
@@ -19,7 +20,7 @@ const RE = {
   site: /^https:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[A-Za-z0-9._~-]+)*$/,
   gitRef: /^[A-Za-z0-9._-]{1,100}$/,
   command:
-    /^(?:yarn mercato module add|yarn add|npx create-mercato-module install) [A-Za-z0-9@/._~-]+(?: --allow-third-party)?(?: --module [a-z][a-z0-9_]*)?(?: --ref [A-Za-z0-9._-]+)?$/,
+    /^(?:yarn mercato module add|yarn add|npx create-mercato-module install|npx) [A-Za-z0-9@/._~-]+(?: --allow-third-party)?(?: --module [a-z][a-z0-9_]*)?(?: --ref [A-Za-z0-9._-]+)?$/,
 } as const
 
 const ok = (re: RegExp, v: string | null | undefined): v is string =>
@@ -40,7 +41,8 @@ export type PromptEntry = Pick<
   IndexEntry,
   'npm' | 'locator' | 'path' | 'version' | 'compat' | 'anatomy' | 'install' | 'moduleIds'
 > &
-  Pick<VersionSource, 'installableVersions' | '_meta'>
+  Pick<VersionSource, 'installableVersions' | '_meta'> &
+  Partial<Pick<IndexEntry, 'kind' | 'tags'>>
 
 export interface PromptOptions {
   /** Site root without a trailing slash, https only. */
@@ -96,7 +98,7 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
   if (!command && name && version && e.npm) {
     const third = e.npm.startsWith('@open-mercato/') ? '' : ' --allow-third-party'
     const mod = ok(RE.moduleId, e.install.moduleFlag) ? ` --module ${e.install.moduleFlag}` : ''
-    command = `yarn mercato module add ${e.npm}@${version}${third}${mod}`
+    command = packageCommand(e, `${e.npm}@${version}`) ?? `yarn mercato module add ${e.npm}@${version}${third}${mod}`
   }
   const lists = e.anatomy?.lists
   const ids = clean(e.moduleIds, RE.moduleId)
