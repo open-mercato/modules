@@ -832,6 +832,12 @@
     overflow: visible;
     white-space: normal;
   }
+  /* the icon stays with the title in a card several lines tall (finding of 25 Oct: in the /submit preview it floated
+     at mid-height beside the wrapped locator) */
+  .mrow__sig {
+    align-self: start;
+    padding-top: 4px;
+  }
   .mrow__strip {
     justify-self: start;
     align-self: end;
