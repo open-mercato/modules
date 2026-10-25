@@ -1,5 +1,6 @@
 // `triage` (D29, spec 5.4): one line per open `new-entry` pull request with the locator, a verdict and flags,
-// from the `validate` check of the PR and the offline steps of validate run locally on the PR's descriptor.
+// from the checks of the PR (every job of validate.yml, REQUIRED_CHECKS) and the offline steps of validate run
+// locally on the PR's descriptor.
 // Merging is a separate, confirmed step: `gh pr merge --squash --match-head-commit <sha>` per ready PR, from the
 // curator's own `gh` login. Nothing is merged without the confirmation.
 import { existsSync, readFileSync } from 'node:fs'
@@ -63,9 +64,34 @@ export interface TriageLine {
   flags: string[]
   /** Why the PR is not ready (errors of the offline checks, CI state, files). */
   reasons: string[]
+  /** State of each required check; `ci` is the worst of them. */
+  checks?: Record<string, CiState>
 }
 
-/** State of the `validate` check (the newest run when the job ran more than once). */
+/**
+ * The jobs of .github/workflows/validate.yml a PR needs green before a batch merge. `validate` alone let a PR with a
+ * red `checks` (the unit tests) through as ready (finding of 25 Oct).
+ */
+export const REQUIRED_CHECKS = ['validate', 'checks', 'build'] as const
+
+/** The worst state among the required checks, and each check's own state. */
+export function requiredCiState(
+  pr: Pick<GhPr, 'statusCheckRollup'>,
+  checks: readonly string[] = REQUIRED_CHECKS,
+): { ci: CiState; byCheck: Record<string, CiState> } {
+  const byCheck = Object.fromEntries(checks.map((c) => [c, ciState(pr, c)])) as Record<string, CiState>
+  const states = Object.values(byCheck)
+  const ci: CiState = states.includes('fail')
+    ? 'fail'
+    : states.includes('pending')
+      ? 'pending'
+      : states.includes('none')
+        ? 'none'
+        : 'pass'
+  return { ci, byCheck }
+}
+
+/** State of one check, `validate` by default (the newest run when the job ran more than once). */
 export function ciState(pr: Pick<GhPr, 'statusCheckRollup'>, check = 'validate'): CiState {
   const runs = (pr.statusCheckRollup ?? []).filter((c) => (c.name ?? c.context) === check)
   if (runs.length === 0) return 'none'
@@ -152,13 +178,19 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
       }
     }
   }
-  const ci = ciState(pr)
+  const { ci, byCheck } = requiredCiState(pr)
+  const named = (state: CiState, one: string, many: string) => {
+    const names = Object.keys(byCheck).filter((c) => byCheck[c] === state)
+    return `${names.length > 1 ? many : one}: ${names.join(', ')}`
+  }
   if (ci === 'fail') {
-    reasons.push('validate check failed')
+    reasons.push(named('fail', 'failed check', 'failed checks'))
     blocked = true
-  } else if (ci === 'pending') reasons.push('validate check still running')
+  } else if (ci === 'pending') reasons.push(named('pending', 'check still running', 'checks still running'))
   else if (ci === 'none')
-    reasons.push('validate check has not run (approve the workflow run of a first-time contributor)')
+    reasons.push(
+      `${named('none', 'check not run', 'checks not run')} (approve the workflow run of a first-time contributor)`,
+    )
   const verdict: Verdict = blocked ? 'blocked' : reasons.length > 0 ? 'hold' : 'ready'
   return {
     number: pr.number,
@@ -170,6 +202,7 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
     ci,
     flags: [...new Set(flags)],
     reasons,
+    checks: byCheck,
   }
 }
 

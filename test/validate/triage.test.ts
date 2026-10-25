@@ -1,5 +1,5 @@
 // `yarn om triage` on recorded gh answers (spec 12.2 WP10, D29): one line per open new-entry PR with a verdict,
-// the validate check and flags; only ready PRs are merged, each pinned to the triaged head commit, and nothing is
+// the checks of validate.yml (validate, checks, build) and flags; only ready PRs are merged, each pinned to the triaged head commit, and nothing is
 // merged without confirmation.
 import { join } from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
@@ -17,7 +17,7 @@ beforeAll(async () => {
 })
 
 describe('triage', () => {
-  it('gives one verdict per PR from the validate check and the offline steps', async () => {
+  it('gives one verdict per PR from the validate.yml checks and the offline steps', async () => {
     const lines = await triage(replayGh(SESSION), REPO, catalog)
     expect(lines.map((l) => [l.number, l.verdict, l.ci, l.locators.join(','), l.flags.join(',')])).toEqual([
       [101, 'ready', 'pass', 'npm:@acme-labs/om-loyalty', 'fork,new'],
@@ -26,14 +26,22 @@ describe('triage', () => {
       [104, 'hold', 'pass', 'npm:@fastwhitecat/integration-ksef-direct', 'fork,update,curator-fields'],
       [105, 'hold', 'pass', 'npm:@acme-labs/om-bins', 'fork,other-files,new'],
       [106, 'hold', 'none', 'npm:@acme-labs/om-bins', 'fork,draft,conflict,new'],
+      // validate green, checks red: not ready (finding of 25 Oct)
+      [108, 'blocked', 'fail', 'npm:@acme-labs/om-returns', 'fork,new'],
     ])
+    expect(lines.find((l) => l.number === 108)?.reasons).toEqual(['failed check: checks'])
+    expect(lines.find((l) => l.number === 108)?.checks).toEqual({ validate: 'pass', checks: 'fail', build: 'pass' })
+    expect(lines.find((l) => l.number === 102)?.reasons.at(-1)).toBe('failed checks: validate, checks')
+    expect(lines.find((l) => l.number === 106)?.reasons.at(-1)).toBe(
+      'checks not run: validate, checks, build (approve the workflow run of a first-time contributor)',
+    )
     const r103 = lines.find((l) => l.number === 103)
     expect(r103?.reasons[0]).toBe(
       'npm:@fastwhite-cat/integration-ksef-direct: same package name as npm:@fastwhitecat/integration-ksef-direct, another owner. A curator can add the name-reviewed label',
     )
     const text = renderLines(lines)
     expect(text.split('\n')[0]).toBe('#101  ready    ci:pass     npm:@acme-labs/om-loyalty  [fork, new]')
-    expect(text.split('\n').at(-1)).toBe('6 open, 1 ready to merge.')
+    expect(text.split('\n').at(-1)).toBe('7 open, 1 ready to merge.')
   })
 
   it('uses the newest run of the validate check', () => {
@@ -68,7 +76,7 @@ describe('triage', () => {
     console.log = (s: string) => out.push(String(s))
     try {
       expect(await main(['triage', '--replay', SESSION])).toBe(0)
-      expect(out.join('\n')).toContain('6 open, 1 ready to merge.')
+      expect(out.join('\n')).toContain('7 open, 1 ready to merge.')
       out.length = 0
       expect(await main(['triage', '--replay', SESSION, '--merge'])).toBe(0)
       expect(out.at(-1)).toBe('Nothing merged.')
@@ -77,7 +85,7 @@ describe('triage', () => {
       expect(out.at(-1)).toBe('#101 merged')
       out.length = 0
       expect(await main(['triage', '--replay', SESSION, '--json'])).toBe(0)
-      expect((JSON.parse(out.join('\n')) as unknown[]).length).toBe(6)
+      expect((JSON.parse(out.join('\n')) as unknown[]).length).toBe(7)
     } finally {
       console.log = log
     }

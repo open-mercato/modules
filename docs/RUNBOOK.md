@@ -366,6 +366,7 @@ At the switch to the public address:
 ## Triage of submissions
 
 `yarn om triage` lists every open PR that is labelled `new-entry` or changes `modules/**` (a fork and the `/submit`
-form cannot set labels), one line each with a verdict (`ready`, `hold`, `blocked`), the `validate` check and flags.
+form cannot set labels), one line each with a verdict (`ready`, `hold`, `blocked`), the state of the `validate.yml`
+checks and flags. `ready` needs all three jobs green (`validate`, `checks`, `build`), not only the required one.
 `yarn om triage --merge` squash-merges the ready ones after a confirmation, each pinned to the head commit it judged,
 with the curator's own `gh` login.
