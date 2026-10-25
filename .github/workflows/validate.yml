@@ -2,6 +2,10 @@
 # ends (GitHub shows a step summary when its job finishes; with check, test and the builds in the same job it took
 # minutes longer, finding of 25 Oct). Read-only token, no secrets, no privileged trigger. Branch protection should
 # require the `validate` job (spec 5.6 item 4, an owner click, not set yet; docs/RUNBOOK.md "Repository setup").
+# A pull request that changes only modules/ skips `yarn test` in `checks`: its invariants over the live modules/
+# (test/validate/run.test.ts, seed.test.ts) only repeat what `validate` reports, one problem as two red checks
+# (finding of 25 Oct). `yarn check` still runs there (Prettier is what the format warning of validate points to), and
+# any change outside modules/ runs the whole suite, so a policy change that breaks a descriptor is still caught.
 name: validate
 
 on:
@@ -104,12 +108,25 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Scope
+        id: scope
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          changed="$(git diff --name-only "origin/$BASE_REF...HEAD")"
+          if [ -n "$changed" ] && ! grep -qv '^modules/' <<<"$changed"; then
+            echo "descriptors_only=true" >>"$GITHUB_OUTPUT"
+            echo "Only modules/ changed: validate reports the descriptors, the test suite is skipped."
+          else
+            echo "descriptors_only=false" >>"$GITHUB_OUTPUT"
+          fi
+
       - name: Check
         if: ${{ !cancelled() }}
         run: yarn check
 
       - name: Test
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.scope.outputs.descriptors_only != 'true' }}
         run: yarn test
 
   build:

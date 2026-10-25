@@ -266,6 +266,33 @@ describe.skipIf(!hasJq)('watch.yml steps', () => {
   })
 })
 
+describe('validate.yml checks scope', () => {
+  // the Scope step against a branch of `work`: only modules/ changed -> descriptors_only=true (finding of 25 Oct)
+  const scope = (files: Record<string, string>) => {
+    git(work, 'fetch', '--quiet', 'origin', 'main')
+    git(work, 'checkout', '--quiet', '-B', 'pr', 'origin/main')
+    for (const [f, body] of Object.entries(files)) {
+      mkdirSync(dirname(join(work, f)), { recursive: true })
+      writeFileSync(join(work, f), body)
+    }
+    git(work, 'add', '-A')
+    git(work, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', 'pr')
+    const out = join(tmp, `out-${Math.random().toString(36).slice(2)}`)
+    writeFileSync(out, '')
+    const r = runStep(stepRun('validate.yml', 'Scope'), { BASE_REF: 'main', GITHUB_OUTPUT: out })
+    expect(r.code, r.out).toBe(0)
+    return readFileSync(out, 'utf8').trim()
+  }
+
+  it('only descriptors: the test suite is skipped; anything else runs it', () => {
+    expect(scope({ 'modules/@acme/x.yml': 'npm: "@acme/x"\n' })).toBe('descriptors_only=true')
+    expect(scope({ 'modules/@acme/y.yml': 'npm: "@acme/y"\n', 'policy/ignore.yml': '[]\n' })).toBe(
+      'descriptors_only=false',
+    )
+    expect(scope({ 'site/x.txt': 'x\n' })).toBe('descriptors_only=false')
+  })
+})
+
 describe.skipIf(!hasJq)('sync.yml steps', () => {
   it('commits the sync on data, then creates the discovery issue once and edits it afterwards', () => {
     runStep(stepRun('sync.yml', 'Prepare data checkout'))

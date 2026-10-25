@@ -175,7 +175,13 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(Object.keys(w.jobs)).toEqual(['validate', 'checks', 'build'])
     expect(names('validate').at(-1)).toBe('Validate descriptors')
     expect(names('validate')).not.toContain('Check')
-    expect(names('checks')).toEqual(expect.arrayContaining(['Check', 'Test']))
+    expect(names('checks')).toEqual(expect.arrayContaining(['Scope', 'Check', 'Test']))
+    // a descriptor-only pull request skips the test suite, never the check (finding of 25 Oct)
+    const checks = (w.jobs.checks as Job).steps
+    expect(checks.find((x) => x.name === 'Test')?.if).toBe(
+      "${{ !cancelled() && steps.scope.outputs.descriptors_only != 'true' }}",
+    )
+    expect(checks.find((x) => x.name === 'Check')?.if).toBe('${{ !cancelled() }}')
     expect(names('build')).toContain('Build site on day-0 data')
     for (const k of Object.keys(w.jobs)) expect((w.jobs[k] as Job)['timeout-minutes'], k).toBe(15)
   })
