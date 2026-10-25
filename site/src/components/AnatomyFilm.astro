@@ -145,8 +145,9 @@ const sections: { id: string; title: string; items: Item[]; empty: string; absen
         tag: c.required ? 'required' : undefined,
         tagTone: 'wait' as const,
       })),
-      ...m.config.env.map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src) })),
-    ]).concat((pkgCode?.env ?? []).map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src) }))),
+      // a name the code only checks is set (rentgen 4 `ifSet`) is tagged `if set`: the package runs without it
+      ...m.config.env.map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src), ...(e.ifSet ? { tag: 'if set', tagTone: 'wait' as const } : {}) })),
+    ]).concat((pkgCode?.env ?? []).map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src), ...(e.ifSet ? { tag: 'if set', tagTone: 'wait' as const } : {}) }))),
     // a package without a module is not read (25 Oct): `none` would be a claim about code nobody read
     empty: ms.length === 0 && !pkgCode ? 'Not measured: no module in the package.' : 'No credentials or env.',
   },

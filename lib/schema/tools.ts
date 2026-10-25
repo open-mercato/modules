@@ -222,6 +222,8 @@ export const InstallPlan = z.object({
   }),
   needs: z.object({
     env: z.array(EnvName),
+    // additive (25 Oct): env names the code only checks are set; optional, not settings the module needs
+    envIfSet: z.array(EnvName).optional(),
     credentials: z.array(z.object({ key: z.string(), type: z.string(), required: z.boolean() })),
     hosts: z.array(Host),
   }),

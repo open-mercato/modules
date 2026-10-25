@@ -17,6 +17,12 @@ import {
 } from '../common.ts'
 
 export const Src = z.object({ file: z.string().max(300), line: z.number().int().positive() }).strict()
+/**
+ * One env name the code reads, with its first read. additive (25 Oct, rentgen 4): `ifSet` when every read only checks
+ * whether the name is set (`Boolean(process.env.A || process.env.B)`, a read inside `isConfigured()`), so the package
+ * works without it. Absent in older facts and for a name whose value the code uses.
+ */
+export const EnvRead = z.object({ name: EnvName, src: Src, ifSet: z.literal(true).optional() }).strict()
 export const LintFinding = z
   .object({
     code: z.string(),
@@ -107,7 +113,7 @@ export const ModuleFacts = z
               .strict(),
           )
           .max(30),
-        env: z.array(z.object({ name: EnvName, src: Src }).strict()).max(100),
+        env: z.array(EnvRead).max(100),
       })
       .strict(),
     network: z
@@ -188,7 +194,7 @@ export const Facts = z
     // web-research adapters read `no hosts found in the code` while they call api.exa.ai). Absent in older facts.
     packageCode: z
       .object({
-        env: z.array(z.object({ name: EnvName, src: Src }).strict()).max(100),
+        env: z.array(EnvRead).max(100),
         hosts: z.array(z.object({ host: Host, src: Src, confidence: z.enum(['high', 'low']) }).strict()).max(100),
       })
       .strict()

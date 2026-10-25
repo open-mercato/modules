@@ -43,12 +43,27 @@ function counts(modules: readonly ModuleFacts[], routesMeasured: boolean): Anato
   }
 }
 
+/**
+ * Env names split by use: `env` the settings the code uses the value of, `envIfSet` the names it only checks are set
+ * (rentgen 4 `ifSet`; a name used both ways counts as used). First 20 each.
+ */
+export function splitEnv(reads: readonly { name: string; ifSet?: true }[]): { env: string[]; envIfSet: string[] } {
+  const used = new Set(reads.filter((r) => !r.ifSet).map((r) => r.name))
+  const names = uniq(reads.map((r) => r.name))
+  return {
+    env: names.filter((n) => used.has(n)).slice(0, 20),
+    envIfSet: names.filter((n) => !used.has(n)).slice(0, 20),
+  }
+}
+
 function lists(modules: readonly ModuleFacts[]): AnatomySummary['lists'] {
+  const env = splitEnv(modules.flatMap((m) => m.config.env))
   return {
     aclFeatures: uniq(modules.flatMap((m) => m.security.aclFeatures)).slice(0, 20),
     eventsEmitted: uniq(modules.flatMap((m) => m.events.emits.map((e) => e.id))).slice(0, 20),
     eventsConsumed: uniq(modules.flatMap((m) => m.events.subscribes.map((e) => e.event))).slice(0, 20),
-    env: uniq(modules.flatMap((m) => m.config.env.map((e) => e.name))).slice(0, 20),
+    env: env.env,
+    ...(env.envIfSet.length > 0 ? { envIfSet: env.envIfSet } : {}),
     hosts: uniq(modules.flatMap((m) => m.network.hosts.map((h) => h.host))).slice(0, 20),
     tables: uniq(modules.flatMap((m) => m.data.entities.map((e) => e.table).filter((t): t is string => !!t))).slice(
       0,
@@ -90,7 +105,10 @@ export function anatomySummary(
   const l = lists(facts.modules)
   // a package without a module: the env names and hosts its own src/ uses (rentgen 3, `packageCode`)
   if (facts.packageCode) {
-    l.env = uniq([...l.env, ...facts.packageCode.env.map((e) => e.name)]).slice(0, 20)
+    const env = splitEnv([...facts.modules.flatMap((m) => m.config.env), ...facts.packageCode.env])
+    l.env = env.env
+    if (env.envIfSet.length > 0) l.envIfSet = env.envIfSet
+    else delete l.envIfSet
     l.hosts = uniq([...l.hosts, ...facts.packageCode.hosts.map((h) => h.host)]).slice(0, 20)
   }
   let diff: AnatomySummary['diff'] = null

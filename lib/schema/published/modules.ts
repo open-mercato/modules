@@ -89,6 +89,15 @@ export const AnatomySummary = z.object({
     eventsEmitted: z.array(EventId).max(20),
     eventsConsumed: z.array(EventId).max(20),
     env: z.array(EnvName).max(20),
+    // additive (25 Oct, rentgen 4): names the code only checks are set, so the package works without them; `env`
+    // leaves them out (finding of 25 Oct: health listed 18 provider keys as settings it needs)
+    envIfSet: z
+      .array(EnvName)
+      .max(20)
+      .optional()
+      .describe(
+        'Env names the code only checks are set, or reads as an opt-in flag in an isXEnabled() function: optional, not needed to run. Absent: none, or facts older than rentgen 4.',
+      ),
     hosts: z.array(Host).max(20),
     tables: z.array(z.string()).max(20),
     publicRoutes: z.array(z.string()).max(10),

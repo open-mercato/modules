@@ -97,6 +97,8 @@ function addsSection(c: EntryContext, lines: readonly LineInfo[]): string[] {
   out.push(
     `- Settings needed (names only): ${settings.length ? listMore(settings, 10) : unread ? NOT_MEASURED_TEXT : 'none'}`,
   )
+  // names the code only checks are set, or reads as an opt-in flag in `isXEnabled()` (rentgen 4): it runs without them
+  if (l.envIfSet?.length) out.push(`- Optional settings, read if set (names only): ${listMore(l.envIfSet, 10)}`)
   out.push(
     `- Talks to: ${l.hosts.length ? listMore(l.hosts, 10) : unread ? NOT_MEASURED_TEXT : 'no hosts found in the code'}`,
   )

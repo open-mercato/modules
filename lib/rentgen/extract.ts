@@ -49,9 +49,10 @@ import {
  * Bump when Rentgen's own readers change what they write (cache key with the engine version). 2 (25 Oct): tables, the
  * bundle's credentials and injection widgets read through consts of the package, env names in key lists. 3 (25 Oct):
  * the src/ of a package without a module is read for env names and hosts (`packageCode`), and a `DEFAULT_` base URL
- * const counts as a high-confidence host.
+ * const counts as a high-confidence host. 4 (25 Oct): an env name whose every read only checks whether it is set (in
+ * `Boolean()`, after `!`, against undefined, in `isConfigured()`) carries `ifSet`.
  */
-export const RENTGEN_VERSION = 3
+export const RENTGEN_VERSION = 4
 
 /** Official module package by name (spec 6.1: `npm:@open-mercato/*`). */
 export function isOfficialName(name: string): boolean {
@@ -183,7 +184,7 @@ export interface ModuleExtras {
   moduleRoot: string | null
   routes: RouteScan | null
   integration: IntegrationRead | null
-  env: { name: string; src: Src }[]
+  env: { name: string; src: Src; ifSet?: true }[]
   hosts: { host: string; src: Src; confidence: 'high' | 'low' }[]
   imports: ModuleFacts['omImports']
   /** Tables of `@Entity` classes and migrations the engine did not list (raw, sanitized here); absent: none read. */

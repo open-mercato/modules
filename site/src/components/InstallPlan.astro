@@ -95,6 +95,19 @@ const needs: Item[] = [
   })),
   // an environment variable breaks after its underscores (`OM_CHANNEL_IMAP_ALLOW_INSECURE_TRANSPORT` is 300 px wide)
   ...plan.needs.env.map((e) => ({ kind: 'env', v: [{ t: e, code: true, underscores: e.length > 24 }] })),
+  // names the code only checks are set (rentgen 4): one row, marked optional (health checks 18 provider keys)
+  ...(plan.needs.envIfSet?.length
+    ? [
+        {
+          kind: 'env',
+          v: [
+            { t: 'Optional, read if set: ' },
+            { t: plan.needs.envIfSet.slice(0, 4).join(', '), code: true },
+            ...(plan.needs.envIfSet.length > 4 ? [{ t: ` and ${plan.needs.envIfSet.length - 4} more` }] : []),
+          ],
+        },
+      ]
+    : []),
   ...plan.needs.hosts.map((h) => ({ kind: 'network', v: [{ t: h, code: true, dots: true }] })),
 ]
 /**

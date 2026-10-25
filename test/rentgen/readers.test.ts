@@ -7,6 +7,7 @@ import { hostDeclared, hostOf } from '../../lib/rentgen/hosts.ts'
 import { licenseKind, normalizeLicense, resolveLicense } from '../../lib/rentgen/license.ts'
 import { lintPackage } from '../../lib/rentgen/lint.ts'
 import { defaultVersion } from '../../lib/rentgen/unpack.ts'
+import { splitEnv } from '../../lib/core/entry.ts'
 import type { Facts } from '../../lib/schema/data/facts.ts'
 import { makeTarball, modulePackage } from './helpers.ts'
 
@@ -228,6 +229,61 @@ describe('env and hosts', async () => {
     expect(hostOf('wss://stream.vendor.io')).toBe('stream.vendor.io')
     expect(hostDeclared('eu.api.vendor.com', ['*.vendor.com'])).toBe(true)
     expect(hostDeclared('vendor.org', ['*.vendor.com'])).toBe(false)
+  })
+})
+
+describe('env names the code only checks are set (rentgen 4 ifSet)', async () => {
+  // the shapes of @fullstackhouse/open-mercato-health 0.3.0 (finding of 25 Oct: its card asked for 18 provider keys)
+  const f = await scanFiles('chk_mod', {
+    'src/modules/chk_mod/lib/strategies.ts': [
+      `export class Ai { isConfigured(): boolean { return Boolean(process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY) } }`,
+      `export class Kms { isConfigured(): boolean { const on = process.env.ENCRYPTION_ENABLED === 'true'; return on && Boolean(process.env.VAULT_ADDR && process.env.VAULT_TOKEN) } }`,
+      `export const debug = !process.env.QUIET_LOGS`,
+      `export const hasRegion = process.env.REGION_X !== undefined`,
+      `export function smtp() { if (process.env.SMTP_HOST) return send(process.env.SMTP_HOST); return null }`,
+      `export const key = process.env.SERVICE_KEY`,
+      `export const url = process.env.PRIMARY_URL || process.env.FALLBACK_URL`,
+      `declare function send(h: string): null`,
+      '',
+    ].join('\n'),
+  })
+  const env = (f.modules[0] as Facts['modules'][number]).config.env
+
+  it('marks names every read of which only checks they are set', () => {
+    expect(env.filter((e) => e.ifSet).map((e) => e.name)).toEqual([
+      'OPENAI_API_KEY',
+      'ANTHROPIC_API_KEY',
+      'ENCRYPTION_ENABLED',
+      'VAULT_ADDR',
+      'VAULT_TOKEN',
+      'QUIET_LOGS',
+      'REGION_X',
+    ])
+  })
+
+  it('keeps a name needed once any read uses its value', () => {
+    expect(env.filter((e) => !e.ifSet).map((e) => e.name)).toEqual([
+      'SMTP_HOST',
+      'SERVICE_KEY',
+      'PRIMARY_URL',
+      'FALLBACK_URL',
+    ])
+  })
+
+  it('splits the anatomy lists: env is what the module needs, envIfSet the rest', () => {
+    expect(splitEnv(env)).toEqual({
+      env: ['SMTP_HOST', 'SERVICE_KEY', 'PRIMARY_URL', 'FALLBACK_URL'],
+      envIfSet: [
+        'OPENAI_API_KEY',
+        'ANTHROPIC_API_KEY',
+        'ENCRYPTION_ENABLED',
+        'VAULT_ADDR',
+        'VAULT_TOKEN',
+        'QUIET_LOGS',
+        'REGION_X',
+      ],
+    })
+    expect(splitEnv([{ name: 'A_KEY', ifSet: true }, { name: 'A_KEY' }])).toEqual({ env: ['A_KEY'], envIfSet: [] })
   })
 })
 

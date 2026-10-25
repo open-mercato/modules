@@ -441,8 +441,12 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
     widgets: lists.reduce((n, a) => n + (a?.counts.widgets ?? 0), 0),
     aiTools: [],
   }
+  const needEnv = uniq(lists.flatMap((a) => a?.lists.env ?? []))
+  // names the code only checks are set (rentgen 4): optional, never asked for as settings the module needs
+  const ifSet = uniq(lists.flatMap((a) => a?.lists.envIfSet ?? [])).filter((n) => !needEnv.includes(n))
   const needs: InstallPlan['needs'] = {
-    env: uniq(lists.flatMap((a) => a?.lists.env ?? [])),
+    env: needEnv,
+    ...(ifSet.length > 0 ? { envIfSet: ifSet } : {}),
     credentials: lists
       .flatMap((a) => a?.lists.credentials ?? [])
       .filter((c, i, all) => all.findIndex((x) => x.key === c.key) === i),
