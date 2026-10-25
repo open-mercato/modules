@@ -68,6 +68,11 @@ const sampleEntry =
   modules.entries.find((e) => e.listed && e.type !== 'official' && e.npm && authorOnly(e.path)) ??
   null
 const sample = sampleEntry ? authorOnly(sampleEntry.path) : null
+/**
+ * A Check pressed before the form island hydrates (finding of 25 Oct): the native submit would reload the page and drop
+ * the name. The script stops it and keeps the value in `window.__omSubmit`; the island runs the check when it hydrates.
+ */
+const EARLY_SUBMIT_JS = `document.addEventListener('submit',function(e){var f=e.target;if(!f||!f.closest||!f.classList.contains('sf__lookup')||!f.closest('astro-island[ssr]'))return;e.preventDefault();var i=f.querySelector('#sf-pkg');window.__omSubmit=i?i.value:''},true)`
 ---
 
 <Base
@@ -111,6 +116,8 @@ const sample = sampleEntry ? authorOnly(sampleEntry.path) : null
           <a href={`${REPO}/issues/new?template=listing-request.yml`} rel="noopener noreferrer">request a listing</a>.
         </p>
       </noscript>
+      {/* before the island: a Check pressed before it hydrates is kept, never a page reload (25 Oct) */}
+      <script is:inline set:html={EARLY_SUBMIT_JS} />
       <SubmitForm
         client:painted
         catalog={catalog}

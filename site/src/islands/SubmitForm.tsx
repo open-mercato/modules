@@ -1230,6 +1230,22 @@ export default function SubmitForm(props: SubmitFormProps) {
   }
 
   useEffect(() => {
+    // a name typed, or a Check pressed, before the island hydrated (it hydrates after first paint, spec 7.11; finding of
+    // 25 Oct: the native submit reloaded the page, or the field kept text the state did not have): the page's inline
+    // script keeps the submitted value in `window.__omSubmit`, and the field keeps what was typed
+    const w = window as unknown as { __omSubmit?: string }
+    const early = typeof w.__omSubmit === 'string' ? w.__omSubmit.slice(0, 220) : null
+    delete w.__omSubmit
+    const typedEarly = (document.getElementById('sf-pkg') as HTMLInputElement | null)?.value.slice(0, 220) ?? ''
+    if (early !== null && early.trim()) {
+      setInput(early)
+      void check(early)
+      return
+    }
+    if (typedEarly.trim()) {
+      setInput(typedEarly)
+      return
+    }
     let q: URLSearchParams
     try {
       q = new URLSearchParams(window.location.search)
