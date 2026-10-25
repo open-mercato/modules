@@ -171,7 +171,7 @@
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0 and 2 more). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0 and 2 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

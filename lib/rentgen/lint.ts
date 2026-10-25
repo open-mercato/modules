@@ -108,7 +108,9 @@ export function lintPackage(p: PackageLintInput): LintFinding[] {
     out.push(
       finding(
         'peer-exact-pin',
-        `Peer dependencies pin Open Mercato exactly (${exact[0]?.[0]} ${exact[0]?.[1]}${exact.length > 1 ? ` and ${exact.length - 1} more` : ''}). Use a range.`,
+        // the fact and its effect, no advice (finding of 25 Oct: `Use a range.` stood on every module that
+        // create-mercato-module publishes, and its publish writes exact peers whatever the author sets)
+        `Peer dependencies pin Open Mercato exactly (${exact[0]?.[0]} ${exact[0]?.[1]}${exact.length > 1 ? ` and ${exact.length - 1} more` : ''}), so an app on any other release of Open Mercato gets a Yarn peer warning.`,
       ),
     )
   if (p.latestOm) {

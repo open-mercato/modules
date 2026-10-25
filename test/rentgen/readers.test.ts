@@ -252,7 +252,11 @@ describe('lint rules (spec 6.6)', () => {
     }).map((l) => [l.code, l.severity, l.message])
     expect(codes).toEqual([
       ['install-scripts', 'error', 'Declares install scripts (postinstall) without scriptsRequired in the descriptor.'],
-      ['peer-exact-pin', 'warn', 'Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0). Use a range.'],
+      [
+        'peer-exact-pin',
+        'warn',
+        'Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0), so an app on any other release of Open Mercato gets a Yarn peer warning.',
+      ],
       ['peer-range-behind', 'info', 'Built for 0.8.0 does not include Open Mercato 0.9.0.'],
       [
         'host-dependency-duplication',

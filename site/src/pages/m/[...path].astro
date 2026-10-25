@@ -686,6 +686,8 @@ const lintMessage = (m: string): string =>
     .replace(/^1 extension contributions target /, '1 extension contribution targets ')
     .replace(/^1 of (\d+) routes do not /, '1 of $1 routes does not ')
     .replace(/^1 of (\d+) routes have no /, '1 of $1 routes has no ')
+    // facts read before 25 Oct end `peer-exact-pin` with advice the publish of create-mercato-module undoes
+    .replace(/\)\. Use a range\.$/, '), so an app on any other release of Open Mercato gets a Yarn peer warning.')
 // lint `backend-route-collision` (round 14): computed against a new app of each line, not stored in the facts
 const collideLines = new Map<string, { c: NonNullable<IndexEntry['compat']['collisions']>[string][number]; keys: string[] }>()
 for (const l of lines)
