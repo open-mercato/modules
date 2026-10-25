@@ -1,7 +1,7 @@
 npm: "@open-mercato/channel-discord"
 repo: open-mercato/open-mercato#main/packages/channel-discord
-category: communication
-tags: [discord, chat, bot]
+category: communication-channels
+tags: [discord, chat, bot, notifications]
 summary: "Two-way Discord bot channel: REST outbound, real-time Gateway inbound, slash commands and optional AI auto-reply."
 whenToUse: Use when customers or staff talk to the business in a Discord server and those threads belong in the app's communication channels.
 providers:
