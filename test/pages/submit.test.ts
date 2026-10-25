@@ -21,6 +21,8 @@ import {
   descriptorIssues,
   descriptorYaml,
   emptyForm,
+  formForCheck,
+  formFromPackage,
   gateFromFiles,
   liveRules,
   listingRequestUrl,
@@ -31,6 +33,7 @@ import {
   repoFromUrl,
   runChecks,
   showsCommand,
+  targetKey,
   typosquatHits,
   type CatalogRef,
   type CheckContext,
@@ -641,6 +644,28 @@ describe('listed entries', () => {
     expect(r.pkg?.version).toBe('0.1.8')
     expect(installCommand(npm(KSEF), r)).toBe(`yarn mercato module add ${KSEF}@0.1.7 --allow-third-party`)
     expect(installCommand(npm(NEW), null)).toBeNull()
+  })
+
+  test('a Check of another package starts from an empty form, so no value of the previous one carries over', async () => {
+    const { deps } = mockFetch(KSEF_ROUTES)
+    const r = await runChecks(npm(KSEF), ctx, deps)
+    const before = {
+      ...emptyForm(),
+      category: 'marketing',
+      tags: 'i18n, content',
+      summary: 'This plugin enables to create, to read and to update content in different languages.',
+      whenToUse: 'Use when content needs translations.',
+    }
+    // checking the same package again keeps what the user typed
+    const same = formFromPackage(r, [], formForCheck(before, targetKey(npm(KSEF)), targetKey(npm(KSEF))))
+    expect(same.summary).toBe(before.summary)
+    // checking another package fills every field from that package
+    const other = formFromPackage(r, [], formForCheck(before, targetKey(npm(STRAPI)), targetKey(npm(KSEF))))
+    expect(other.summary).toBe(descriptor.summary)
+    expect(other.category).toBe(descriptor.category)
+    expect(other.whenToUse).toBe(descriptor.whenToUse)
+    expect(other.tags).toBe((descriptor.tags as string[]).join(', '))
+    expect(targetKey({ kind: 'github', repo: 'Owner/Repo' })).toBe(targetKey({ kind: 'github', repo: 'owner/repo' }))
   })
 
   test('every descriptor in modules/ round-trips through the form YAML unchanged (comments aside)', () => {

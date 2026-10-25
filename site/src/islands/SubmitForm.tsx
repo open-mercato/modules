@@ -881,6 +881,19 @@ export function liveRules(
 
 const GENERIC_KEYWORDS = new Set(['open-mercato', 'open-mercato-module', 'openmercato', 'mercato', 'module', 'modules'])
 
+/** The key of a target, so the form knows whether a Check is for the same package as the values it holds. */
+export const targetKey = (t: Target): string =>
+  t.kind === 'npm' ? `npm:${t.name.toLowerCase()}` : `github:${t.repo.toLowerCase()}`
+
+/**
+ * The form a Check starts from. Checking the same package again keeps what the user typed; checking another package
+ * starts from an empty form, so no value of the previous package (filled from its packument or typed for it) ends up
+ * in the descriptor of the new one.
+ */
+export function formForCheck(prev: FormState, prevKey: string | null, key: string): FormState {
+  return prevKey === key ? prev : emptyForm()
+}
+
 export function formFromPackage(
   r: CheckResult,
   categories: readonly { id: string; aliases?: readonly string[] }[],
@@ -1171,6 +1184,7 @@ export default function SubmitForm(props: SubmitFormProps) {
   const [form, setForm] = useState<FormState>(emptyForm())
   const [copied, setCopied] = useState(false)
   const run = useRef(0)
+  const formKey = useRef<string | null>(null)
 
   const check = async (raw: string) => {
     const parsed = parseTarget(raw)
@@ -1183,6 +1197,10 @@ export default function SubmitForm(props: SubmitFormProps) {
     setTarget(parsed)
     setBusy(true)
     setResult(null)
+    const key = targetKey(parsed)
+    const prevKey = formKey.current
+    formKey.current = key
+    setForm((f) => formForCheck(f, prevKey, key))
     const id = ++run.current
     const res = await runChecks(parsed, ctx, { fetch: (u, i) => fetch(u, i) })
     if (id !== run.current) return
