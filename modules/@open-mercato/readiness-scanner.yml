@@ -1,0 +1,7 @@
+npm: "@open-mercato/readiness-scanner"
+github: open-mercato/mercato-readiness-scanner
+kind: tool
+category: devtools
+tags: [security, readiness, cli, typescript]
+summary: Static production-readiness scanner for Open Mercato applications.
+whenToUse: Use when you prepare an Open Mercato app for production and want a static check of its configuration first.
