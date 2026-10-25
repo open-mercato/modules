@@ -75,6 +75,7 @@ import { isolationReceipts, mainReceipts } from '../../../../lib/core/lines.ts'
 import {
   BACKEND_ROUTE_COLLISION,
   HOST_DEPENDENCY_DUPLICATION,
+  collisionFix,
   collisionLintText,
   duplicateTypeError,
   hostDuplicateFix,
@@ -348,6 +349,12 @@ const dupFixOn = (key: string): string | null => {
   const failed = lastByLine[key]?.steps.find((s) => s.status === 'fail')
   if (others[key] || c?.status !== 'broken' || c.step !== 'typecheck') return null
   return duplicateTypeError(failed?.excerpt, fs.map((f) => f.name)) ? hostDuplicateFix(fs) : null
+}
+/** `add` broke on a backend route a new app already has (lint `backend-route-collision`): the route to move (25 Oct). */
+const collisionFixOn = (key: string): string | null => {
+  const c = entry.compat.lines[key]
+  if (others[key] || c?.status !== 'broken' || c.step !== 'add') return null
+  return collisionFix(raw.compat.collisions?.[key] ?? [])
 }
 for (const l of lines) {
   const fix = dupFixOn(l.key)
@@ -796,6 +803,7 @@ const verSignals = [
         : rcpL === 'broken'
           ? `${
               dupFixOn(latest.key) ??
+              collisionFixOn(latest.key) ??
               `Fix the failing step (${entry.compat.lines[latest.key]?.step ?? 'see the receipt'})`
             }, then publish a new version; ${previewData ? 'the first nightly CI run' : "tonight's run"} picks it up.`
           : rcpL === 'untested'

@@ -174,6 +174,19 @@ export function collisionText(cs: readonly RouteCollision[], app = 'a new app', 
   return `Static check: ${subject} adds ${routes}, which ${app} already has from ${ownerText(first.module, first.from)}.${more}`
 }
 
+/**
+ * What to fix when `add` broke on a backend route a new app already has (finding of 25 Oct: VER-1 said only `Fix the
+ * failing step (add)` while the page named the collision three times): `Nest the backend page /backend/webhooks under
+ * a folder of the module's own; a new app already has it from the webhooks module (@open-mercato/webhooks)`, the
+ * advice `yarn generate` prints. Null without a collision.
+ */
+export function collisionFix(cs: readonly RouteCollision[]): string | null {
+  const first = cs[0]
+  if (!first) return null
+  const more = cs.length > 1 ? ` (and ${cs.length - 1} more)` : ''
+  return `Nest the backend page ${first.route}${more} under a folder of the module's own; a new app already has it from ${ownerText(first.module, first.from)}`
+}
+
 /** The lint message of the rule on the module page (the Hygiene list): `Adds the backend route ... on 0.8 and 0.9 ...`. */
 export function collisionLintText(c: RouteCollision, lines: readonly string[]): string {
   const on = lines.length <= 1 ? (lines[0] ?? '') : `${lines.slice(0, -1).join(', ')} and ${lines[lines.length - 1]}`
