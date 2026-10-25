@@ -123,7 +123,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not installed by the catalog: commercial license."
         },
         {
           "code": "LICENSE",
@@ -137,7 +137,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not installed by the catalog: commercial license."
         },
         {
           "code": "LICENSE",
@@ -151,7 +151,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not installed by the catalog: commercial license."
         },
         {
           "code": "LICENSE",

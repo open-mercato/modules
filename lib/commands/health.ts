@@ -178,8 +178,18 @@ export default function health(ctx: CommandContext): number {
       return l ? (fitFor(l.version)?.cells[`${locator}@${v}`] ?? null) : null
     }
     // facts and Fit of the version a fresh app installs (D46), not of a release still in the age gate
-    const judged = judgedFacts({ locator, sync, receipts, lines: lines.lines, now: opts.now, fitOf, presets }, (v) =>
-      readJson(join(data, 'facts', path, `${v}.json`), Facts),
+    const judged = judgedFacts(
+      {
+        locator,
+        sync,
+        receipts,
+        lines: lines.lines,
+        now: opts.now,
+        fitOf,
+        presets,
+        descriptor: parsed.success ? parsed.data : null,
+      },
+      (v) => readJson(join(data, 'facts', path, `${v}.json`), Facts),
     )
     const version = judged.version
     const facts = judged.facts

@@ -327,6 +327,15 @@ export function presetsOrFallback(
   return out
 }
 
+/**
+ * A tool tagged `cli` runs with npx (`packageCommand` in plan.ts), outside the app, so the age gate of a new app
+ * (Yarn's `npmMinimalAgeGate` in its .yarnrc.yml) never applies to it (finding of 25 Oct: the agent refused
+ * mercato-readiness-scanner until 27 Oct over a gate npx does not have).
+ */
+export function runsWithNpx(e: { kind?: string | null; tags?: readonly string[] | null }): boolean {
+  return e.kind === 'tool' && !!e.tags?.includes('cli')
+}
+
 /** Yarn `npmPreapprovedPackages` match: exact name or a pattern ending in `*`. */
 export function isPreapproved(name: string | null | undefined, patterns: readonly string[] | undefined): boolean {
   if (!name || !patterns) return false

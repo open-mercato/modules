@@ -85,7 +85,7 @@ export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: 
       return l ? (data.fit.get(l.version)?.cells[`${locator}@${v}`] ?? null) : null
     }
     const judged = judgedFacts(
-      { locator, sync, receipts, lines, now: opts.now, fitOf, presets: data.presets },
+      { locator, sync, receipts, lines, now: opts.now, fitOf, presets: data.presets, descriptor: d.descriptor },
       (v) => allFacts.get(v) ?? null,
     )
     const fit: Record<string, FitCell | null> = {}

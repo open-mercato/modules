@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.hae0671",
+  "dataVersion": "1.0.0-202610230305.hf4ac5f",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -2156,7 +2156,7 @@
           "reasons": [
             {
               "code": "NOT_VERIFIED",
-              "text": "Not yet tested in a new app on 0.9."
+              "text": "Not installed by the catalog: commercial license."
             },
             {
               "code": "LICENSE",
@@ -2170,7 +2170,7 @@
           "reasons": [
             {
               "code": "NOT_VERIFIED",
-              "text": "Not yet tested in a new app on 0.8."
+              "text": "Not installed by the catalog: commercial license."
             },
             {
               "code": "LICENSE",
@@ -2184,7 +2184,7 @@
           "reasons": [
             {
               "code": "NOT_VERIFIED",
-              "text": "Not yet tested in a new app on next."
+              "text": "Not installed by the catalog: commercial license."
             },
             {
               "code": "LICENSE",

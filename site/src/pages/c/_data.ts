@@ -1,6 +1,7 @@
 // Page helpers shared by `/`, `/c/*`, `/m/*`, `/r/*` and `/404` (WP12). The underscore keeps the file out of routing.
 // Isomorphic (no Node API): the Registry island imports it too.
 import type { CellSummary, IndexEntry, Line } from '../../../../lib/schema/index.ts'
+import { catalogSkipText } from '../../../../lib/core/policy.ts'
 
 type ReceiptLike = { id: string; run: { attempt?: number | null }; transition?: { confirmed?: boolean } }
 
@@ -44,10 +45,8 @@ export function registryDefault<T extends Pick<IndexEntry, 'listed' | 'kind' | '
  * null when it does. Such lines are `skipped`, not `untested`.
  */
 export function catalogSkip(entry: Pick<IndexEntry, 'enterprise' | 'kind'>): string | null {
-  if (entry.enterprise) return 'Not installed by the catalog: commercial license.'
-  if (entry.kind === 'module') return null
-  const what = entry.kind === 'library' ? 'libraries' : `${entry.kind}s`
-  return `Not installed by the catalog: the nightly run installs modules, not ${what}.`
+  // the words of the agent policy (lib/core/policy.ts), so the strip and the reason never part
+  return catalogSkipText(entry)
 }
 
 /**

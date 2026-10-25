@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate"
 installable_from: 2026-10-09
-data_version: 1.0.0-202610230305.hae0671
+data_version: 1.0.0-202610230305.hf4ac5f
 ---
 # Enterprise
 Commercial Open Mercato modules for SSO, security, record locks and agent orchestration.
@@ -32,7 +32,7 @@ Anatomy not published. Commercial license.
 2. yarn generate
 3. yarn db:migrate (ask the user first)
 
-Agent policy (0.9): ask. Not yet tested in a new app on 0.9. License: enterprise (SEE LICENSE IN LICENSE.md).
+Agent policy (0.9): ask. Not installed by the catalog: commercial license. License: enterprise (SEE LICENSE IN LICENSE.md).
 Consent: the user types "Install @open-mercato/enterprise@0.9.0".
 
 ## Trust

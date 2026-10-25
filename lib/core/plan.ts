@@ -8,6 +8,7 @@ import {
   latestLine,
   presetModules,
   resolveLine,
+  runsWithNpx,
   type LineInfo,
   type PresetMap,
   type PresetModule,
@@ -94,7 +95,7 @@ export function packageCommand(
   e: Pick<InstallTarget, 'kind' | 'tags'> & { moduleIds?: readonly string[] },
   spec: string,
 ): string | null {
-  if (e.kind === 'tool') return e.tags?.includes('cli') ? `npx ${spec}` : `yarn add ${spec}`
+  if (e.kind === 'tool') return runsWithNpx(e) ? `npx ${spec}` : `yarn add ${spec}`
   if (e.kind === 'provider' && (e.moduleIds?.length ?? 0) === 0) return `yarn add ${spec}`
   return e.kind === 'library' ? `yarn add ${spec}` : null
 }

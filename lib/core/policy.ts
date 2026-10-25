@@ -2,7 +2,7 @@
 // The first group that matches decides (refuse, then ask, then allow). Isomorphic: no Node APIs.
 import type { Policy } from '../schema/data/health.ts'
 import type { CellSummary, IndexEntry } from '../schema/published/modules.ts'
-import { AGE_GATE_DAYS, VERDICT_STATES, type VersionStatus } from './lines.ts'
+import { AGE_GATE_DAYS, runsWithNpx, VERDICT_STATES, type VersionStatus } from './lines.ts'
 import { compareVersions, isStable, isVersion, satisfiesRange } from './semver.ts'
 import { clipText } from './text.ts'
 import { collisionText } from './finding.ts'
@@ -42,6 +42,10 @@ export type PolicyEntry = Pick<
    */
   installStatus?: Readonly<Record<string, VersionStatus | null>>
   _meta?: Readonly<Record<string, unknown>>
+  /** The enterprise bundle (IndexEntry.enterprise): the nightly run never installs it (`catalogSkipText`). */
+  enterprise?: boolean
+  /** Descriptor tags (IndexEntry.tags): `cli` on a tool means it runs with npx, outside the app's age gate. */
+  tags?: readonly string[]
 }
 
 export interface AppContext {
@@ -775,6 +779,18 @@ export function effectiveStatus(
   return judgeLine(e, line).cell?.status ?? 'untested'
 }
 
+/**
+ * Why the nightly run never installs an entry (spec 5.3: `kind: module` rows only, the enterprise bundle needs flags),
+ * or null when it does. The strips of the site and the agent policy say the same words (finding of 25 Oct: every tool
+ * read `Not yet tested in a new app`, a test that never comes).
+ */
+export function catalogSkipText(e: { enterprise?: boolean; kind?: IndexEntry['kind'] }): string | null {
+  if (e.enterprise) return 'Not installed by the catalog: commercial license.'
+  if (!e.kind || e.kind === 'module') return null
+  const what = e.kind === 'library' ? 'libraries' : `${e.kind}s`
+  return `Not installed by the catalog: the nightly run installs modules, not ${what}.`
+}
+
 /** A line of a package that publishes preview builds only (review r9): the words of the strip and the policy. */
 export const PREVIEW_ONLY_TEXT = 'No stable release for this line yet. Only preview builds are published.'
 
@@ -838,8 +854,8 @@ export function agentPolicy(e: PolicyEntry, line: string, app?: AppContext, opts
       broken(cell.step, cell.since)
   }
   // QUARANTINE only when nothing stable is installable today: an older stable release past the gate is the
-  // install version instead (spec 4.6, 6.5)
-  if (!preset && recommended === null && !installableOn(e, line)) {
+  // install version instead (spec 4.6, 6.5). A tool that runs with npx never meets Yarn's gate (finding of 25 Oct).
+  if (!preset && !runsWithNpx(e) && recommended === null && !installableOn(e, line)) {
     const until = e.version.installableFrom
     // a run the gate stopped on a dependency (heldBack) is not the module's release in the gate (round 13)
     const gated =
@@ -873,10 +889,13 @@ export function agentPolicy(e: PolicyEntry, line: string, app?: AppContext, opts
     // a package with preview builds only (tpay): the strip's sentence, not a queue that never comes (review r9)
     // on the lines the nightly run skips for it (0.8 and 0.9; next installs the preview build and gets a receipt)
     const previewOnly = e.version.latest === null && e.version.preview !== null && e.signals.receipt[line] === 'skipped'
+    // a kind the nightly run never installs (a tool, library or provider, the enterprise bundle): why, not `not yet`
+    const skip = !previewOnly && e.signals?.receipt?.[line] === 'skipped' ? catalogSkipText(e) : null
     const iso = e.compat.isolation?.[line] ?? null
     add(
       'NOT_VERIFIED',
-      other ?? (previewOnly ? PREVIEW_ONLY_TEXT : (prior ?? notVerifiedText(status, line, at, iso, target, step))),
+      other ??
+        (previewOnly ? PREVIEW_ONLY_TEXT : (skip ?? prior ?? notVerifiedText(status, line, at, iso, target, step))),
     )
     // why the signal in isolation broke, in a reason of its own, when its finding explains it (review of 24 Oct: the
     // reason above has room for the state only, so an agent read `broken at smoke` without the workflows.view cause);

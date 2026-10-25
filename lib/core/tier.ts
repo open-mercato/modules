@@ -171,10 +171,12 @@ export function newestInstallable(
   line: LineInfo | null,
   now: string,
   fitOn?: FitOn,
+  /** No age gate applies (a tool that runs with npx, `runsWithNpx`): every stable release is installable. */
+  ungated = false,
 ): string | null {
   const n = sync?.npm
   if (!n) return null
-  const pre = isPreapproved(n.name, line?.preapproved)
+  const pre = ungated || isPreapproved(n.name, line?.preapproved)
   const candidates = [n.latestStable, n.previousStable].filter(
     (v): v is string => !!v && isStable(v) && isInstallable(n.publishedAt[v], pre, now),
   )

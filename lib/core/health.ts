@@ -23,6 +23,7 @@ import {
   newerBreak,
   presetModules,
   registeredIn,
+  runsWithNpx,
   type NewerBreak,
   recommendedVersions,
   shippedVersion,
@@ -169,7 +170,13 @@ interface VersionData {
   installableVersions: Record<string, string | null>
 }
 
-type VersionInput = Pick<HealthInput, 'locator' | 'sync' | 'receipts' | 'lines' | 'now' | 'fitOf' | 'presets'>
+type VersionInput = Pick<HealthInput, 'locator' | 'sync' | 'receipts' | 'lines' | 'now' | 'fitOf' | 'presets'> &
+  Partial<Pick<HealthInput, 'descriptor' | 'facts'>>
+
+/** No age gate applies to the entry: a tool that runs with npx, outside the app (`runsWithNpx`, finding of 25 Oct). */
+function ungated(i: Partial<Pick<HealthInput, 'descriptor' | 'facts'>>): boolean {
+  return runsWithNpx({ kind: i.facts?.kind ?? i.descriptor?.kind, tags: i.descriptor?.tags })
+}
 
 function versionData(i: VersionInput): VersionData {
   const parsed = parseLocator(i.locator)
@@ -186,8 +193,9 @@ function versionData(i: VersionInput): VersionData {
   })
   const installableVersions: Record<string, string | null> = {}
   const fitOf = i.fitOf
+  const npx = ungated(i)
   for (const l of i.lines)
-    installableVersions[l.key] = newestInstallable(i.sync, l, i.now, fitOf ? (v) => fitOf(v, l.key) : undefined)
+    installableVersions[l.key] = newestInstallable(i.sync, l, i.now, fitOf ? (v) => fitOf(v, l.key) : undefined, npx)
   return {
     npm,
     tag,
@@ -283,7 +291,8 @@ export function evaluateEntry(i: HealthInput): Evaluation {
   const { tag, latestVersion, preview, recommended, installableVersions } = versionData(i)
   const current = latestVersion ?? preview
   const publishedAt = current && n ? (n.publishedAt[current] ?? null) : null
-  const pre = isPreapproved(npm, latest?.preapproved)
+  // a tool that runs with npx has no age gate to wait for (finding of 25 Oct), as a preapproved package
+  const pre = isPreapproved(npm, latest?.preapproved) || ungated(i)
   const version: IndexEntry['version'] = {
     latest: latestVersion,
     preview,
@@ -539,6 +548,8 @@ export function evaluateEntry(i: HealthInput): Evaluation {
     licenseValue: i.facts?.license.value ?? i.sync?.npm?.license ?? null,
     installableVersions,
     installStatus,
+    enterprise,
+    tags: d?.tags ?? [],
   }
   const policies: Record<string, Policy> = {}
   for (const l of i.lines) policies[l.key] = agentPolicy(policyEntry, l.key, undefined, { now: i.now })
