@@ -50,9 +50,11 @@ import {
  * bundle's credentials and injection widgets read through consts of the package, env names in key lists. 3 (25 Oct):
  * the src/ of a package without a module is read for env names and hosts (`packageCode`), and a `DEFAULT_` base URL
  * const counts as a high-confidence host. 4 (25 Oct): an env name whose every read only checks whether it is set (in
- * `Boolean()`, after `!`, against undefined, in `isConfigured()`) carries `ifSet`.
+ * `Boolean()`, after `!`, against undefined, in `isConfigured()`) carries `ifSet`. 5 (25 Oct): the license kind is
+ * the SPDX tree's (`MIT AND BUSL-1.1` proprietary, an unlisted id or a LicenseRef unknown), and a computed object key
+ * is read statically or hides the object (`{ [KEY]: false }` metadata gives requireAuth null, not true).
  */
-export const RENTGEN_VERSION = 4
+export const RENTGEN_VERSION = 5
 
 /** Official module package by name (spec 6.1: `npm:@open-mercato/*`). */
 export function isOfficialName(name: string): boolean {
