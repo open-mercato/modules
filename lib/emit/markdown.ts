@@ -313,7 +313,8 @@ export function moduleCard(i: CardInput): string {
     e.summary,
     e.whenToUse,
   ]
-  if (e.whenNotToUse) head.push(`Not for: ${e.whenNotToUse}`)
+  // `When not to use it:` reads with every phrasing of the field (finding of 25 Oct: `Not for: For PLN bank transfers`)
+  if (e.whenNotToUse) head.push(`When not to use it: ${e.whenNotToUse}`)
   if (e.status === 'hold' || e.status === 'delisted')
     head.push('', `On hold: ${(i.ctx.descriptor.reason ?? 'see the catalog page').replace(/\.$/, '')}. Do not install.`)
   if (e.supersededBy) head.push('', `Superseded by ${e.supersededBy.replace(/^core:/, 'the built-in module ')}.`)
