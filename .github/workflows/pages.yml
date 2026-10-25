@@ -68,13 +68,19 @@ jobs:
         run: yarn install --immutable
 
       - name: Read data branch
+        # Empty data only when the branch does not exist. A fetch that fails for any other reason (network,
+        # credentials) stops the deploy instead of publishing an empty catalog over the live one.
         run: |
-          if git ls-remote --exit-code --heads origin data >/dev/null; then
-            git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data 2>"$err"; then
             git worktree add --detach .data origin/data
-          else
+          elif grep -q "couldn't find remote ref" "$err"; then
             mkdir -p .data
             echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$err"
+            echo "::error::Cannot read the data branch; not deploying."
+            exit 1
           fi
 
       - name: Build

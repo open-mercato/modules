@@ -42,14 +42,17 @@ jobs:
         run: yarn install --immutable
 
       - name: Read data branch
-        # Read only: lines and built-in modules for Fit and collision checks. Missing on the first day.
+        # Read only: lines and built-in modules for Fit and collision checks. Missing on the first day. The checkout
+        # above (fetch-depth: 0) has every branch already. A second `ls-remote` or fetch has no credentials, so in a
+        # private repository it failed and the step said "No data branch yet" next to an existing branch, and Fit was
+        # skipped on every pull request (finding of 25 Oct).
         run: |
-          if git ls-remote --exit-code --heads origin data >/dev/null; then
-            git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data
+          if git rev-parse --verify -q refs/remotes/origin/data >/dev/null; then
             git worktree add --detach .data origin/data
+            echo "Data branch at $(git rev-parse --short refs/remotes/origin/data)."
           else
             mkdir -p .data
-            echo "No data branch yet: Fit is skipped, built-in modules come from the pinned CLI."
+            echo "No data branch in the checkout (refs/remotes/origin/data): Fit is skipped, built-in modules come from the pinned CLI."
           fi
 
       - name: Validate descriptors

@@ -300,11 +300,55 @@ describe('pages.yml steps', () => {
     expect(runStep(stepRun('pages.yml', 'Check the packed artifact'), env()).code).not.toBe(0)
   })
 
+  it('stops instead of building on empty data when the data branch cannot be read', () => {
+    git(work, 'remote', 'set-url', 'origin', join(tmp, 'gone.git'))
+    const r = runStep(stepRun('pages.yml', 'Read data branch'), env())
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('Cannot read the data branch; not deploying.')
+    expect(existsSync(join(work, '.data'))).toBe(false)
+  })
+
   it('a build without the server card stops before upload', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
     runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_CARD: '0' })
     const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
     expect(r.code).not.toBe(0)
     expect(r.out).toContain('dist/.well-known/mcp/server-card.json is missing')
+  })
+})
+
+describe('validate.yml steps', () => {
+  // the checkout (fetch-depth: 0) has every branch already; the step reads it without a second, unauthenticated
+  // fetch, which failed in the private repository and skipped Fit with "No data branch yet" (finding of 25 Oct)
+  const checkout = () => {
+    const dir = join(tmp, 'pr')
+    execFileSync('git', ['clone', '--quiet', '--no-single-branch', origin, dir])
+    return dir
+  }
+
+  it('reads origin/data from the checkout, with no network', () => {
+    const seed = join(tmp, 'seed')
+    execFileSync('git', ['clone', '--quiet', origin, seed])
+    git(seed, 'checkout', '--quiet', '--orphan', 'data')
+    git(seed, 'rm', '-rfq', '.')
+    writeFileSync(join(seed, 'lines.json'), '{}\n')
+    git(seed, 'add', '-A')
+    git(seed, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', 'data')
+    git(seed, 'push', '--quiet', 'origin', 'data')
+    work = checkout()
+    // no remote to talk to: what the checkout fetched is all there is, as for a token-less fetch in a private repo
+    git(work, 'remote', 'set-url', 'origin', join(tmp, 'gone.git'))
+    const r = runStep(stepRun('validate.yml', 'Read data branch'))
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toMatch(/^Data branch at [0-9a-f]+\.$/m)
+    expect(readFileSync(join(work, '.data', 'lines.json'), 'utf8')).toBe('{}\n')
+  })
+
+  it('says so and goes on with empty data when the repository has no data branch', () => {
+    work = checkout()
+    const r = runStep(stepRun('validate.yml', 'Read data branch'))
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('No data branch in the checkout (refs/remotes/origin/data)')
+    expect(existsSync(join(work, '.data'))).toBe(true)
   })
 })
