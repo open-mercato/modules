@@ -3,7 +3,9 @@
 // descriptors and policy. The only source of those files; the Astro integration (lib/emit/astro-integration.ts)
 // copies public/ into dist/. Works on an empty or missing `.data` (first day: empty states).
 // Extra flags: --to <dir> (default site/.generated), --modules <dir>, --policy <dir>, --skills <dir>,
-// --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, MCP_URL, WEBMCP_OT_TOKENS.
+// --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, MCP_URL, WEBMCP_OT_TOKENS, GITHUB_SHA
+// (the build stamp in the footer; otherwise `git rev-parse` of the repo).
+import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -14,6 +16,7 @@ import { loadEmitData } from '../emit/load.ts'
 import { writeEmit } from '../emit/write.ts'
 import { byteLength } from '../emit/util.ts'
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
+import type { BuildStamp } from '../emit/types.ts'
 
 export const description = 'published files and site data from .data'
 
@@ -41,6 +44,20 @@ export function siteUrl(siteRaw: string, baseRaw: string): { site: string; base:
   const base = basePath === '/' ? '/' : basePath
   const origin = u.origin
   return { site: base === '/' ? origin : `${origin}${base}`, base }
+}
+
+/**
+ * The catalog commit a build comes from (footer stamp, finding of 25 Oct): GITHUB_SHA on Actions, else `git rev-parse`
+ * of the repo, `dirty` when tracked files differ from that commit. Outside git: no commit.
+ */
+export function buildStamp(root: string, env: NodeJS.ProcessEnv = process.env): BuildStamp {
+  const sha = env.GITHUB_SHA?.trim()
+  if (sha && /^[0-9a-f]{7,40}$/.test(sha)) return { commit: sha.slice(0, 7), dirty: false }
+  const git = (...args: string[]) => spawnSync('git', ['-C', root, ...args], { encoding: 'utf8' })
+  const head = git('rev-parse', '--short=7', 'HEAD')
+  if (head.status !== 0 || !/^[0-9a-f]{7,40}$/.test(head.stdout.trim())) return { commit: null, dirty: false }
+  const status = git('status', '--porcelain', '--untracked-files=no')
+  return { commit: head.stdout.trim(), dirty: status.status === 0 && status.stdout.trim() !== '' }
 }
 
 export default function emit(ctx: CommandContext): number {
@@ -104,6 +121,7 @@ export default function emit(ctx: CommandContext): number {
       now: now.toISOString().replace(/\.\d{3}Z$/, 'Z'),
       mcpUrl,
       originTrialTokens: process.env.WEBMCP_OT_TOKENS ?? null,
+      build: buildStamp(ctx.root),
     })
   } catch (err) {
     console.error(`om emit: ${(err as Error).message}`)

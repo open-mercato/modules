@@ -10,6 +10,7 @@ import { href } from '../lib/url.ts'
 import { isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
 import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
 
 interface Props {
   dataAsOf: DataAsOf
@@ -28,6 +29,10 @@ const refreshed = dataAsOf.nightly ?? dataAsOf.npm
 // the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one
 // preview sentence as its title (review r6); the day without the hour, as in the header stamp
 const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
+// which catalog commit this build shows (finding of 25 Oct: a preview link served a build 40 commits behind main and
+// nothing said so); data emitted before the stamp existed has none, and the line is left out
+const { meta } = loadSiteData()
+const build = meta.build?.commit ? meta.build : null
 ---
 
 <footer class="site-footer">
@@ -53,6 +58,17 @@ const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
             </>
           ) : (
             'Sources: npm, GitHub, nightly CI.'
+          )
+        }
+        {
+          build && (
+            <>
+              <br />
+              <span class="ft__build" data-build={build.commit}>
+                Built from <code>{build.commit}</code>
+                {build.dirty ? ' with local changes' : ''} on {dayTime(meta.generatedAt)}.
+              </span>
+            </>
           )
         }
       </p>
@@ -103,6 +119,10 @@ const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
     font-size: 13px;
     line-height: 1.6;
     color: var(--ink-2);
+  }
+  .ft__build code {
+    font-family: var(--font-mono);
+    font-size: 12px;
   }
   .ft__chip {
     margin-left: 6px;

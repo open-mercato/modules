@@ -282,6 +282,7 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
     peersSentence: peersSentence(compat.peersRejectFitting),
     firstNight: index.dataAsOf.nightly === null,
     ...(radar ? { radarNext: radarTile(radarNextRows, radarPop.size) } : {}),
+    ...(opts.build ? { build: opts.build } : {}),
   }
   const site: FileMap = new Map()
   site.set('site.json', toPrettyJson(meta))

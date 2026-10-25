@@ -17,6 +17,7 @@ import type { Change } from '../schema/data/index.ts'
 import type { ModuleDetail, ModuleReceipts, ModulesIndex } from '../schema/published/modules.ts'
 import type { Radar, Surface } from '../schema/published/radar.ts'
 import type { InstallPlan } from '../schema/tools.ts'
+import type { BuildStamp } from './types.ts'
 import { LocPath } from '../schema/common.ts'
 
 export interface SiteMeta {
@@ -38,6 +39,8 @@ export interface SiteMeta {
   peersSentence: string
   /** No nightly receipt yet: `First run tonight at 02:17 UTC.` */
   firstNight: boolean
+  /** The catalog commit of this build (footer stamp); absent in data emitted before 25 Oct. */
+  build?: BuildStamp
   /**
    * The `Receipts on next` tile of /radar (review r9): the radar's population by the state of its next line, so the
    * parts sum up to `population`. Absent without a radar.

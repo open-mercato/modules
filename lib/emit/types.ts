@@ -102,6 +102,17 @@ export interface EmitOptions {
   mcpUrl: string | null
   /** WEBMCP_OT_TOKENS: `{ "<origin>": { "token": "...", "expires": "YYYY-MM-DD" } }` as JSON text, or null. */
   originTrialTokens: string | null
+  /** The catalog commit the build comes from (footer build stamp), when known. */
+  build?: BuildStamp
+}
+
+/**
+ * Which catalog commit a build shows (finding of 25 Oct: a preview link served a build 40 commits behind main and
+ * nothing on the page said so). `commit` is a short SHA or null outside git; `dirty` when tracked files differ from it.
+ */
+export interface BuildStamp {
+  commit: string | null
+  dirty: boolean
 }
 
 /** Per-entry state the emitter keeps next to the IndexEntry. */
