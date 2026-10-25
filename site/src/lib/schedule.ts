@@ -59,7 +59,7 @@ export function queuedSentence(cadence: 'nightly' | 'weekly' | string, s: Schedu
  * `Runs: 0.9 and next every night, 0.8 every Sunday.` from the lines' cadence. `planned`: while the receipts come from
  * a preview run no nightly CI run exists yet, so the sentence says `Planned runs: ...` (review r9). `presetWeekly`: the
  * nightly lines whose cells of the packages a new app already has run on the weekly night only (`cellCadence`), added
- * as `A package a new app already has runs on next every Sunday only.` (review of 24 Oct).
+ * as `On next, modules a new app already has run every Sunday only.` (review of 24 Oct).
  */
 export function cadenceSentence(
   lines: readonly { key: string; cadence: string }[],
@@ -78,7 +78,8 @@ export function cadenceSentence(
   ]
   if (parts.length === 0) return ''
   const preset = presetWeekly.filter((k) => nightly.includes(k))
-  const tail = preset.length ? ` A package a new app already has runs on ${and(preset)} ${when} only.` : ''
+  // finding of 25 Oct: `A package a new app already has runs on next every Sunday only.` read as garbled
+  const tail = preset.length ? ` On ${and(preset)}, modules a new app already has run ${when} only.` : ''
   return `${planned ? 'Planned runs' : 'Runs'}: ${parts.join(', ')}.${tail}`
 }
 

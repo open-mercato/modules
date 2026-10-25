@@ -6,7 +6,7 @@
 import Base from '../layouts/Base.astro'
 import CompatMatrix from '../components/CompatMatrix.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
-import { stepsList } from '../../../lib/core/steps.ts'
+import { STEPS, STEPS_WORD } from '../../../lib/core/steps.ts'
 import type { CompatIndex, IsolationCell } from '../../../lib/schema/index.ts'
 import type { SigilKind } from '../../../lib/sigil/sigil.ts'
 import { appModules, errorLine, whyHtml } from '../lib/receipts.ts'
@@ -235,10 +235,9 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
         <p class="t-tagline">// Compatibility</p>
         <h1 class="cp-title">A fresh app per line. A receipt per module.</h1>
         <p class="cp-lede">
-          {cadenceSentence(lines, sched, previewRun, presetWeekly)} A cell is a receipt of {stepsList()} in a new Open Mercato app of that line,
-          from the classic preset that create-mercato-app makes. The first row is Open Mercato itself, a new app with
-          nothing added. A dot beside a square is the signal in isolation: the module in an app from the empty preset,
-          never the cell's verdict.
+          {cadenceSentence(lines, sched, previewRun, presetWeekly)} A cell is one module added to a new app of that line,
+          from the classic preset, and run through {STEPS_WORD} steps from {STEPS[0]} to {STEPS[STEPS.length - 1]}. The first
+          row is Open Mercato itself.
         </p>
         <dl class="cp-facts">
           <div><dt>Rows</dt><dd class="num">{compat.rows.length} modules in {categoriesShown} categories</dd></div>
