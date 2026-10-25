@@ -21,7 +21,13 @@ describe('withInstalledPeers', () => {
   })
 
   it('a broken cell without the library reads as our test app failing; one that installed it keeps its verdict', () => {
-    const receipts = fx.receipts(LOC.consents)
+    // the failed steps name the library, as TS2307 on `@acme/ui/...` does
+    const receipts = fx.receipts(LOC.consents).map((r) => ({
+      ...r,
+      steps: r.steps.map((st) =>
+        st.status === 'fail' ? { ...st, excerpt: "TS2307: Cannot find module '@acme/ui/backend/Page'" } : st,
+      ),
+    }))
     const broken = receipts.filter((r) => r.result.status === 'broken')
     expect(broken.length).toBeGreaterThan(0)
     const read = withInstalledPeers(receipts, ['@acme/ui'])
@@ -40,10 +46,17 @@ describe('withInstalledPeers', () => {
       installed.map((r) => r.result.status),
     )
     expect(withInstalledPeers(receipts, [])).toEqual(receipts)
+    // a break that does not name the library is the module's own (shipment-tracking: a route a new app has)
+    const own = fx.receipts(LOC.consents)
+    expect(withInstalledPeers(own, ['@acme/ui']).map((r) => r.result.status)).toEqual(own.map((r) => r.result.status))
   })
 
   it('the line is not judged and an agent does not refuse for a break the test caused', () => {
-    const receipts = withInstalledPeers(fx.receipts(LOC.consents), ['@acme/ui'])
+    const named = fx.receipts(LOC.consents).map((r) => ({
+      ...r,
+      steps: r.steps.map((st) => (st.status === 'fail' ? { ...st, excerpt: "Can't resolve '@acme/ui/backend'" } : st)),
+    }))
+    const receipts = withInstalledPeers(named, ['@acme/ui'])
     const before = fixtureEntry(fx, LOC.consents)
     const after = fixtureEntry(fx, LOC.consents, { receipts })
     expect(before.agentPolicy['0.9']?.decision).toBe('refuse')

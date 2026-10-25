@@ -281,22 +281,27 @@ export function libraryPeers(
 }
 
 /**
- * A broken receipt of a cell that did not install a catalog library the package peers on (finding of 25 Oct: the
- * receipts of terminal-tracking before cbf74c7 never installed @freighttech/ui, so every cell failed at TS2307 on
- * `@freighttech/ui/...` imports): the test was wrong, not the module. It reads as `harness-red` (`our test app
+ * A broken receipt of a cell that did not install a catalog library the package peers on, whose failed step names
+ * that library (finding of 25 Oct: the receipts of terminal-tracking before cbf74c7 never installed @freighttech/ui,
+ * so every cell failed at TS2307 on `@freighttech/ui/...` imports): the test was wrong, not the module. It reads as `harness-red` (`our test app
  * failed`, never the module's fault) until a receipt that installed the library judges it, so the page, the policy
  * and the counts never call the module broken for it. Only libraries: a cell always adds them (`yarn add`), while a
  * module peer a new app registers is left out on purpose (`resolveRequires`).
  */
-export function withInstalledPeers<R extends Pick<Receipt, 'requiresInstalled' | 'result' | 'transition'>>(
-  receipts: readonly R[],
-  libraries: readonly string[],
-): R[] {
+export function withInstalledPeers<
+  R extends Pick<Receipt, 'requiresInstalled' | 'result' | 'transition'> & {
+    steps: readonly Pick<Receipt['steps'][number], 'status' | 'excerpt'>[]
+  },
+>(receipts: readonly R[], libraries: readonly string[]): R[] {
   if (libraries.length === 0) return [...receipts]
   return receipts.map((r) => {
     if (r.result.status !== 'broken') return r
     const installed = r.requiresInstalled.map((s) => s.replace(/^lib:/, '').replace(/(.)@[^@/]+$/, '$1'))
-    if (libraries.every((name) => installed.includes(name))) return r
+    const missing = libraries.filter((name) => !installed.includes(name))
+    // only a break that names the missing library (TS2307 on its imports): shipment-tracking breaks at add on a route
+    // that a new app already has, which has nothing to do with @freighttech/ui and stays its own break
+    const named = r.steps.some((st) => st.status === 'fail' && missing.some((name) => st.excerpt?.includes(name)))
+    if (missing.length === 0 || !named) return r
     return {
       ...r,
       result: { ...r.result, status: 'harness-red', classification: 'harness-red' },
