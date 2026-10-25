@@ -38,12 +38,38 @@ export function toolsJsonSchema(): JsonObject {
 }
 
 /**
+ * descriptor-1.json with the cross-field rules of Descriptor's superRefine that JSON Schema can say (finding of 25 Oct:
+ * z.toJSONSchema drops refinements, so `summary: x` or `status: hold` without a reason validated): npm or github, a
+ * reason for a status other than active, `extends` only on a provider. Runtime-only, said in CI and /submit: plain
+ * text (no URL, markdown, HTML), `enterprise` reserved for @open-mercato/enterprise, and policy/ignore.yml.
+ */
+export function descriptorJsonSchema(): JsonObject {
+  const base = z.toJSONSchema(Descriptor, { io: 'input' }) as JsonObject
+  if (base.anyOf !== undefined || base.allOf !== undefined)
+    throw new Error('descriptor schema: anyOf/allOf already set')
+  return {
+    ...base,
+    anyOf: [{ required: ['npm'] }, { required: ['github'] }],
+    allOf: [
+      {
+        if: { properties: { status: { enum: ['hold', 'unmaintained', 'delisted'] } }, required: ['status'] },
+        then: { required: ['reason'] },
+      },
+      {
+        if: { required: ['extends'] },
+        then: { properties: { kind: { const: 'provider' } }, required: ['kind'] },
+      },
+    ],
+  }
+}
+
+/**
  * All published JSON Schemas, keyed by name. `siteUrl` (e.g. https://open-mercato.github.io/modules)
  * sets `$id` to `<siteUrl>/schema/<name>-1.json`.
  */
 export function publishedJsonSchemas(siteUrl?: string): Record<PublishedSchemaName, JsonObject> {
   const out: Record<PublishedSchemaName, JsonObject> = {
-    descriptor: z.toJSONSchema(Descriptor, { io: 'input' }) as JsonObject,
+    descriptor: descriptorJsonSchema(),
     modules: z.toJSONSchema(ModulesIndex) as JsonObject,
     compat: z.toJSONSchema(CompatIndex) as JsonObject,
     facts: z.toJSONSchema(Facts) as JsonObject,

@@ -56,6 +56,42 @@ describe('JSON Schema from Zod (spec 4, 4.6)', () => {
     expect(v.validate({ npm: '@acme/x', category: 'crm', summary: 'x', whenToUse: 'y' }).valid).toBe(false)
   })
 
+  it('descriptor-1.json rejects what Descriptor rejects, for every rule JSON Schema can say (finding of 25 Oct)', () => {
+    const v = validator(publishedJsonSchemas().descriptor)
+    const ok = {
+      npm: '@acme/x',
+      category: 'crm-sales',
+      summary: 'Sends quotes to customers by email.',
+      whenToUse: 'Use when sales teams need to send quotes to customers.',
+    }
+    const bad: [string, Record<string, unknown>][] = [
+      ['missing locator', { ...ok, npm: undefined }],
+      ['short summary', { ...ok, summary: 'Too short.' }],
+      ['whenToUse without the prefix', { ...ok, whenToUse: 'When sales teams need to send quotes to customers.' }],
+      ['short whenToUse', { ...ok, whenToUse: 'Use when quoting.' }],
+      ['hold without reason', { ...ok, status: 'hold' }],
+      ['delisted without reason', { ...ok, status: 'delisted' }],
+      ['extends on a module', { ...ok, extends: 'npm:@acme/base' }],
+      ['extends with kind module', { ...ok, kind: 'module', extends: 'npm:@acme/base' }],
+    ]
+    const clean = (d: Record<string, unknown>) => JSON.parse(JSON.stringify(d)) as Record<string, unknown>
+    expect(schema.Descriptor.safeParse(ok).success).toBe(true)
+    expect(v.validate(ok).valid).toBe(true)
+    for (const [name, d] of bad) {
+      expect(schema.Descriptor.safeParse(clean(d)).success, `zod: ${name}`).toBe(false)
+      expect(v.validate(clean(d)).valid, `json schema: ${name}`).toBe(false)
+    }
+    // the same rules accept what they should: a reason with a status, extends on a provider, github alone
+    for (const d of [
+      { ...ok, status: 'hold', reason: 'Waiting for a security fix.' },
+      { ...ok, kind: 'provider', extends: 'npm:@acme/base' },
+      { ...ok, npm: undefined, github: 'acme/x' },
+    ]) {
+      expect(schema.Descriptor.safeParse(clean(d)).success).toBe(true)
+      expect(v.validate(clean(d)).valid).toBe(true)
+    }
+  })
+
   it('accepts search_modules({ query }) with tools-1.json because inputs use io input', () => {
     const tools = toolsJsonSchema()
     const v = validator(tools, '#/$defs/SearchModulesInput')

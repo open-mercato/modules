@@ -60,11 +60,10 @@ export const Descriptor = z
       .array(z.string().regex(/^[a-z0-9-]{2,24}$/))
       .max(8)
       .default([]),
-    summary: PlainText(140).refine((s) => s.length >= 20, 'min 20 characters'),
-    whenToUse: PlainText(240).refine(
-      (s) => s.startsWith('Use when ') && s.length >= 40,
-      'start with "Use when ", min 40 characters',
-    ),
+    // length and prefix as JSON-Schema-compatible checks (finding of 25 Oct): descriptor-1.json carries them too, so an
+    // editor or agent validating against the published file sees what CI says; one check each, one message each
+    summary: PlainText(140).min(20, 'min 20 characters'),
+    whenToUse: PlainText(240).regex(/^Use when [\s\S]{31,}$/, 'start with "Use when ", min 40 characters'),
     whenNotToUse: PlainText(160).optional(),
     providers: z
       .array(z.object({ name: z.string().regex(/^[a-z0-9-]{2,32}$/), label: PlainText(40) }).strict())

@@ -73,8 +73,11 @@ export function issueMessage(
   }
   if (issue.code === 'too_big' && typeof value === 'string')
     return `${path}: ${value.length} characters, max ${(issue as { maximum: number | bigint }).maximum}`
+  // a minimum with its own message (summary `min 20 characters`) keeps it; Zod's default one gets the count
   if (issue.code === 'too_small' && typeof value === 'string')
-    return `${path}: ${value.length} characters, min ${(issue as { minimum: number | bigint }).minimum}`
+    return /^Too small/.test(issue.message)
+      ? `${path}: ${value.length} characters, min ${(issue as { minimum: number | bigint }).minimum}`
+      : `${path}: ${issue.message}`
   if (issue.code === 'invalid_type' && value === undefined) return `${path}: required`
   return `${path || 'descriptor'}: ${issue.message}`
 }
