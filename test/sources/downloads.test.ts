@@ -20,7 +20,7 @@ function fakeHttp(answer: (url: string) => { status: number; json: unknown }): {
 }
 
 describe('downloadsLastMonth', () => {
-  it('counts scoped names a few at a time and says which call failed', async () => {
+  it('counts scoped names one at a time and says which call failed', async () => {
     const { http, peak } = fakeHttp((url) =>
       url.endsWith('%2Fvisits') || url.endsWith('/visits')
         ? { status: 429, json: { error: 'rate limited' } }
@@ -29,10 +29,11 @@ describe('downloadsLastMonth', () => {
           : { status: 200, json: { downloads: 29 } },
     )
     const names = ['@piotrkarwatka/visits', '@piotrkarwatka/marketing-consents', '@x/new-one', '@a/b', '@c/d', '@e/f']
-    const r = await downloadsLastMonth(http, names)
+    const r = await downloadsLastMonth(http, names, { gapMs: 0 })
     expect(r.counts.get('@piotrkarwatka/marketing-consents')).toBe(29)
     expect(r.counts.get('@piotrkarwatka/visits')).toBeNull()
     expect(r.errors).toEqual(['downloads @piotrkarwatka/visits: HTTP 429'])
-    expect(peak()).toBeLessThanOrEqual(3)
+    // three at a time still met the rate limit of api.npmjs.org (finding of 25 Oct)
+    expect(peak()).toBe(1)
   })
 })

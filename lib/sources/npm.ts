@@ -307,7 +307,10 @@ export async function orgPackages(http: Http, org: string): Promise<string[]> {
 export async function downloadsLastMonth(
   http: Http,
   names: string[],
+  /** Pause between two scoped calls (default 300 ms live, none on recorded responses). */
+  opts: { gapMs?: number } = {},
 ): Promise<{ counts: Map<string, number | null>; errors: string[] }> {
+  const gapMs = opts.gapMs ?? (http.mode === 'offline' ? 0 : 300)
   const counts = new Map<string, number | null>()
   const errors: string[] = []
   const unscoped = names.filter((n) => !n.startsWith('@'))
@@ -333,13 +336,15 @@ export async function downloadsLastMonth(
       for (const n of chunk) counts.set(n, null)
     }
   }
-  // scoped names one by one (the bulk endpoint takes no scoped names), a few at a time: a burst of every name at once
-  // ran into the rate limit of api.npmjs.org, and the nulls it left were silent (finding of 25 Oct: visits and
-  // marketing-consents had no downloads although npm counts 218 and 29)
-  const limit = pLimit(3)
+  // scoped names one by one (the bulk endpoint takes no scoped names), one at a time with a pause: a burst of every
+  // name at once ran into the rate limit of api.npmjs.org, and the nulls it left were silent (finding of 25 Oct: visits
+  // and marketing-consents had no downloads although npm counts 218 and 29); three at a time still got 429 for 5 to 9
+  // of 57 names in one `sync --all` (finding of 25 Oct), after the retries of lib/sources/http.ts
+  const limit = pLimit(1)
   await Promise.all(
-    scoped.map((n) =>
+    scoped.map((n, i) =>
       limit(async () => {
+        if (i > 0 && gapMs > 0) await new Promise((r) => setTimeout(r, gapMs))
         try {
           const res = await http.request(`${DOWNLOADS_API}/point/last-month/${encodeName(n)}`)
           const d = (res.json as { downloads?: number } | null)?.downloads
