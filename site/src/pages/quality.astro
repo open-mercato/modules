@@ -14,11 +14,17 @@ import { FIT_GLYPH, fitOf } from '../lib/compat-cells.ts'
 import { STEPS, STEPS_WORD } from '../../../lib/core/steps.ts'
 import { plural } from '../lib/format.ts'
 import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
+import { isPreviewData } from '../lib/freshness.ts'
+import { receiptOrigin } from '../lib/receipt-origin.ts'
 
 const REPO = CATALOG_REPO_URL
 const { meta, modules } = loadSiteData()
 const latest = modules.lines.find((l) => l.source === 'latest')
 const latestKey = latest?.key ?? '0.9'
+// a preview build names the preview run (review r6/r7), as /about does
+const previewData = isPreviewData(meta.dataAsOf)
+const origin = receiptOrigin(previewData)
 
 const listed = TIER_RULES.filter((r) => r.level === 'listed')
 const verified = TIER_RULES.filter((r) => r.level === 'verified')
@@ -36,7 +42,7 @@ const SIGNALS: { id: string; name: string; states: string; rule: string }[] = [
     id: 'SIG-RCP',
     name: 'Receipt, per line',
     states: 'verified, broken, not judged (test app failed, run did not finish, or the age gate held back a dependency), queued, skipped',
-    rule: `A fresh app of the line adds the module and runs ${STEPS_WORD} steps, ${STEPS[0]} to ${STEPS[STEPS.length - 1]}. Status comes from the GitHub Actions API, not from files the module could write.`,
+    rule: `A fresh app of the line adds the module and runs ${STEPS_WORD} steps, ${STEPS[0]} to ${STEPS[STEPS.length - 1]}. ${origin.status}`,
   },
   {
     id: 'SIG-FIT',
@@ -127,9 +133,14 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
         <li>
           <SealView seal={{ kind: 'verified', line: latestKey, title: `Verified on ${latestKey}` }} />
           <p>
-            Installed in a fresh Open Mercato {latest?.version ?? ''} app by the nightly run, per version, granted and
+            Installed in a fresh Open Mercato {latest?.version ?? ''} app by {origin.run}, per version, granted and
             lost automatically.
           </p>
+          {previewData && (
+            <p>
+              <span class="chip chip--preview">{PREVIEW_CHIP}</span> {PREVIEW_SENTENCE}
+            </p>
+          )}
         </li>
         <li>
           <span class="seal seal--quality" title="OM Quality">

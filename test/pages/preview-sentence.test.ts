@@ -11,6 +11,7 @@ import { PREVIEW_CHIP, PREVIEW_LINE, PREVIEW_QUEUED, PREVIEW_SENTENCE, receiptSo
 import type { Receipt } from '../../lib/schema/data/index.ts'
 import type { ModulesIndex } from '../../lib/schema/published/modules.ts'
 import { OPTS, ROOT, fixtureData, skillsDir } from '../emit/helpers.ts'
+import { receiptOrigin } from '../../site/src/lib/receipt-origin.ts'
 
 function previewData() {
   const data = fixtureData({ skills: skillsDir() })
@@ -35,6 +36,23 @@ function files(dir: string, out: string[] = []): string[] {
 }
 
 const count = (text: string, needle: string): number => text.split(needle).length - 1
+
+describe('/quality on preview data (finding of 25 Oct)', () => {
+  test('names the preview run and its sentence, never the nightly run or the Actions API', () => {
+    const preview = receiptOrigin(true)
+    expect(preview.run).toBe('the preview run')
+    expect(preview.status).not.toMatch(/GitHub Actions|nightly/)
+    expect(receiptOrigin(false)).toEqual({
+      status: 'Status comes from the GitHub Actions API, not from files the module could write.',
+      run: 'the nightly run',
+    })
+    const page = code(readFileSync(join(ROOT, 'site', 'src', 'pages', 'quality.astro'), 'utf8'))
+    expect(page).toContain('receiptOrigin(previewData)')
+    expect(page).toContain('{previewData && (')
+    expect(page).toContain('{PREVIEW_SENTENCE}')
+    expect(page).not.toMatch(/by the nightly run|Status comes from the GitHub Actions API/)
+  })
+})
 
 describe('one preview sentence (review r6)', () => {
   test('the sources say it only through lib/core/source.ts', () => {
