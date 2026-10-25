@@ -384,6 +384,21 @@ const EARLY_SUBMIT_JS = `document.addEventListener('submit',function(e){var f=e.
     display: grid;
     gap: 8px;
   }
+  /* the `replaces` tick of a collision with a core module ID (finding of 25 Oct): its own line under the sentence */
+  :global(.sf__tick) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  :global(.sf__tick input) {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--ink);
+  }
   /* one banner language for every state and network notice: a 3 px signal bar on --bg-2 (Banner of spec 7.6) */
   :global(.sf__banner) {
     display: grid;

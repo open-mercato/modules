@@ -661,6 +661,8 @@ export interface FormState {
   whenToUse: string
   providers: { name: string; label: string }[]
   kind: 'module' | 'provider' | 'library' | 'tool'
+  /** The author says the module replaces the core modules its IDs collide with (`replaces: core:<id>`, a curator confirms). */
+  replacesCore?: boolean
 }
 
 export const emptyForm = (): FormState => ({
@@ -717,7 +719,24 @@ function withForm(d: Record<string, unknown>, r: CheckResult | null, f: FormStat
     .filter((p) => p.name || p.label)
   if (providers.length > 0) d.providers = providers
   else delete d.providers
+  // a core module ID only with the author's tick (finding of 25 Oct: the form opened a pull request the collision-core
+  // lint rejects); `replaces` is a curator field, the curator confirms it in review
+  const collisions = r?.collisions ?? []
+  if (f.replacesCore && collisions.length > 0) {
+    const had = Array.isArray(d.replaces) ? (d.replaces as string[]) : []
+    d.replaces = [...new Set([...had, ...collisions.map((id) => `core:${id}`)])]
+  }
   return d
+}
+
+/**
+ * Why a collision with a core module ID keeps the pull request closed, or null: without the `replaces` tick CI's
+ * collision-core lint rejects the entry, as it does an archived or deprecated package (finding of 25 Oct).
+ */
+export function collisionBlock(r: CheckResult | null, f: FormState): string | null {
+  const ids = r?.collisions ?? []
+  if (ids.length === 0 || f.replacesCore) return null
+  return `Module ${ids.length === 1 ? 'ID' : 'IDs'} ${andList(ids)} ${ids.length === 1 ? 'is' : 'are'} built into core. Rename the module, or tick that it replaces core.`
 }
 
 /** Keys in the order of spec 4.3 (`yarn om format`); unknown keys keep their place after the known ones. */
@@ -1411,7 +1430,8 @@ export default function SubmitForm(props: SubmitFormProps) {
   const rulesPass = rules.length > 0 && rules.every((r) => r.state !== 'fail')
   // CI would fail the pull request (archived, deprecated, no stable version): the button stays off (25 Oct)
   const rejected = t ? ciRejection(t, result) : null
-  const blocked = issues.length > 0 || !!rejected
+  const collisionStop = result?.existing ? null : collisionBlock(result, form)
+  const blocked = issues.length > 0 || !!rejected || !!collisionStop
   const yaml = descriptor ? descriptorYaml(descriptor) : ''
   const states = result?.states ?? []
   const stopped = states.includes('not-found') || states.includes('core')
@@ -1489,7 +1509,14 @@ export default function SubmitForm(props: SubmitFormProps) {
 
         {result && typed && t && (
           <section class="sf__result" aria-label="Checks">
-            <States r={result} t={typed} repo={props.repo} catalog={props.catalog} />
+            <States
+              r={result}
+              t={typed}
+              repo={props.repo}
+              catalog={props.catalog}
+              replaces={!!form.replacesCore}
+              onReplaces={(v) => set('replacesCore', v)}
+            />
             {/* one leading banner (review r1): the state, else the first finding; network notices keep their own
                 banner; the other findings are lines under it */}
             {(() => {
@@ -1833,9 +1860,10 @@ export default function SubmitForm(props: SubmitFormProps) {
             <pre class="sf__yaml" aria-label="Descriptor YAML">
               <code>{yaml}</code>
             </pre>
-            {(issues.length > 0 || rejected) && (
+            {(issues.length > 0 || rejected || collisionStop) && (
               <ul class="sf__issues" role="list" aria-label="Fill before opening the pull request">
                 {rejected && !result.existing && <li>{rejected}</li>}
+                {collisionStop && <li>{collisionStop}</li>}
                 {issues.slice(0, 6).map((i) => (
                   <li>{i.message}</li>
                 ))}
@@ -1922,7 +1950,21 @@ export function listedMatches(name: string, catalog: readonly CatalogRef[], max 
     .slice(0, max)
 }
 
-function States({ r, t, repo, catalog }: { r: CheckResult; t: Target; repo: string; catalog: readonly CatalogRef[] }) {
+function States({
+  r,
+  t,
+  repo,
+  catalog,
+  replaces,
+  onReplaces,
+}: {
+  r: CheckResult
+  t: Target
+  repo: string
+  catalog: readonly CatalogRef[]
+  replaces: boolean
+  onReplaces: (v: boolean) => void
+}) {
   if (r.states.length === 0)
     return (
       <Banner tone="ok" tag="Ready">
@@ -1941,8 +1983,12 @@ function States({ r, t, repo, catalog }: { r: CheckResult; t: Target; repo: stri
           )}
           {s === 'collision' && (
             <>
-              The package ships a module ID that Open Mercato core already has. Add{' '}
-              <code>replaces: ["core:&lt;id&gt;"]</code> to the YAML in the pull request, or rename the module.
+              The package ships a module ID that Open Mercato core already has. Rename the module, or say that it
+              replaces the core one: the YAML then carries <code>replaces</code> and a curator confirms it.
+              <label class="sf__tick">
+                <input type="checkbox" checked={replaces} onChange={(e) => onReplaces(e.currentTarget.checked)} /> This
+                module replaces core {andList(r.collisions)}
+              </label>
             </>
           )}
           {s === 'listed' && r.existing && (

@@ -12,6 +12,7 @@ import {
   TEXT,
   buildDescriptor,
   ciRejection,
+  collisionBlock,
   collisionText,
   installCommand,
   installableText,
@@ -660,6 +661,26 @@ describe('core module IDs', () => {
       },
     ])
     expect(collisionText(['customers', 'workflows'], '0.9.0')).toMatch(/^Module IDs customers and workflows are built/)
+  })
+
+  test('a collision keeps the pull request closed until the author ticks replaces; then the YAML carries it', async () => {
+    const { deps } = mockFetch(routes('@someone/customers-plus', 'customers'))
+    const r = await runChecks(npm('@someone/customers-plus'), ctx, deps)
+    const f = {
+      ...emptyForm(),
+      category: 'crm-sales',
+      summary: 'Adds loyalty tiers to customer records.',
+      whenToUse: 'Use when customers need loyalty tiers and points on top of the built-in records.',
+    }
+    expect(collisionBlock(r, f)).toBe(
+      'Module ID customers is built into core. Rename the module, or tick that it replaces core.',
+    )
+    expect(buildDescriptor(npm('@someone/customers-plus'), r, f).replaces).toBeUndefined()
+    const ticked = { ...f, replacesCore: true }
+    expect(collisionBlock(r, ticked)).toBeNull()
+    const d = buildDescriptor(npm('@someone/customers-plus'), r, ticked)
+    expect(d.replaces).toEqual(['core:customers'])
+    expect(descriptorIssues(d)).toEqual([])
   })
 
   test('a listed entry that declares replaces does not collide', async () => {
