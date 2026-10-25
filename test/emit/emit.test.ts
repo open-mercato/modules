@@ -60,7 +60,7 @@ function schemaOf(path: string): z.ZodType | 'json' | null {
   if (/^m\/.+\/v\/[^/]+\/facts\.json$/.test(path)) return Facts
   if (/^m\/.+\/receipts\.json$/.test(path)) return ModuleReceipts
   if (/^m\/.+\.json$/.test(path)) return ModuleDetail
-  if (/^r\/r_\d{8}_[a-f0-9]{12}\.json$/.test(path)) return Receipt
+  if (/^r\/r_\d{8}_[a-f0-9]{12}(?:_\d{1,3})?\.json$/.test(path)) return Receipt
   if (/^badge\/.+\.json$/.test(path)) return ShieldsBadge
   if (path === 'search-index.json' || /^schema\/.+-1\.json$/.test(path)) return 'json'
   return null

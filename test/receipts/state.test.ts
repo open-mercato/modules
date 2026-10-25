@@ -270,6 +270,48 @@ describe('module cells', () => {
   })
 })
 
+describe('receipt ids of two runs on one UTC day (finding of 25 Oct)', () => {
+  const base09 = cell(null)
+  const durable = cell(LOC.durable)
+  /** The same night again, dispatched later the same day as another run. */
+  const rerun = (b: NightBundle, id: number, at: string): NightBundle => ({
+    ...b,
+    night: { ...b.night, id, at },
+    attempts: b.attempts.map((a) => ({ ...a, run: { ...a.run, id, at } })),
+  })
+
+  it('a later run of the cell gets `_2`, `_3`; the first keeps its plain id; collect run again keeps its own', () => {
+    const first = receiptOf(apply(bundle([outcome(base09), outcome(durable)])), LOC.durable)!
+    expect(first.id).toMatch(/^r_20261023_[a-f0-9]{12}$/)
+    const red = { smoke: 'smoke: FAIL module api GET /api/x -> 500' }
+    let stored: Receipt[] = [first]
+    const history: History = (loc) => (loc === LOC.durable ? stored : [])
+    const second = receiptOf(
+      apply(rerun(bundle([outcome(base09), outcome(durable, { fail: red })]), 300, '2026-10-23T09:00:00Z'), history),
+      LOC.durable,
+    )!
+    expect(second.id).toBe(`${first.id}_2`)
+    stored = [first, second]
+    const third = receiptOf(
+      apply(rerun(bundle([outcome(base09), outcome(durable)]), 400, '2026-10-23T15:00:00Z'), history),
+      LOC.durable,
+    )!
+    expect(third.id).toBe(`${first.id}_3`)
+    expect(Receipt.parse(third).id).toBe(third.id)
+    // the first night collected again (same run id): its own id, no suffix
+    const onlyFirst: History = (loc) => (loc === LOC.durable ? [first] : [])
+    const again = receiptOf(apply(bundle([outcome(base09), outcome(durable, { fail: red })]), onlyFirst), LOC.durable)!
+    expect(again.id).toBe(first.id)
+    // another UTC day starts plain again
+    stored = [first, second, third]
+    const nextDay = receiptOf(
+      apply(rerun(bundle([outcome(base09), outcome(durable, { fail: red })]), 500, '2026-10-24T02:17:00Z'), history),
+      LOC.durable,
+    )!
+    expect(nextDay.id).toMatch(/^r_20261024_[a-f0-9]{12}$/)
+  })
+})
+
 describe('retention and quarantine', () => {
   const base09 = cell(null, '0.9')
 

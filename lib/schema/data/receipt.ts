@@ -5,7 +5,9 @@ import { CellStatus, IsoDate, IsoDateTime, LineKey, Locator, NpmName, SemVer, St
 export const Receipt = z
   .object({
     schema: z.literal(1),
-    id: z.string().regex(/^r_\d{8}_[a-f0-9]{12}$/), // r_<yyyymmdd>_<12 chars of cellKey>
+    // r_<yyyymmdd>_<12 chars of cellKey>, and `_2`, `_3` ... for a later run of the same cell on the same UTC day
+    // (additive, 25 Oct: the first run keeps the plain id, lib/receipts/state.ts uniqueReceiptId)
+    id: z.string().regex(/^r_\d{8}_[a-f0-9]{12}(?:_\d{1,3})?$/),
     cellKey: z.string().regex(/^[a-f0-9]{64}$/),
     module: z.object({ locator: Locator, version: SemVer, integrity: z.string().nullable() }).strict().nullable(), // null = baseline
     // preset (additive, 24 Oct): `classic` receipts give the main verdict, `empty` ones the signal `in isolation`; every

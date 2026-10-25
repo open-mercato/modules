@@ -622,7 +622,10 @@ def receipt(line, omv, module, times, result, transition, attempt=1, baseline_re
             steps.append({'name': st, 'status': 'skipped', 'sec': None, 'signature': None, 'excerpt': None, 'file': None, 'line': None})
         else:
             steps.append({'name': st, 'status': 'pass', 'sec': sec, 'signature': None, 'excerpt': None, 'file': None, 'line': None})
-    run_id = RUN_IDS[attempt]
+    # run.id is the night's on every attempt, as collect writes it (lib/receipts/state.ts: bundle.night.id); the url is
+    # the attempt's own run. Two runs of one cell on one day get distinct ids (`_2`, finding of 25 Oct); two attempts of
+    # one night share the night's id and the decisive one is r/<id>.json.
+    run_id = RUN_IDS[1]
     durations = sum(s['sec'] or 0 for s in steps)
     return {
         'schema': 1, 'id': f'r_20261023_{key[:12]}', 'cellKey': key, 'module': module,
@@ -631,7 +634,7 @@ def receipt(line, omv, module, times, result, transition, attempt=1, baseline_re
                     'patches': [API_KEYS] if omv.startswith('0.9.') else []},
         'baseline': baseline_ref, 'requiresInstalled': requires or [], 'steps': steps,
         'result': result, 'transition': transition,
-        'run': {'id': run_id, 'attempt': attempt, 'url': f'https://github.com/wojciechszyjka/modules/actions/runs/{run_id}', 'at': T_NIGHT, 'durationSec': durations},
+        'run': {'id': run_id, 'attempt': attempt, 'url': f'https://github.com/wojciechszyjka/modules/actions/runs/{RUN_IDS[attempt]}', 'at': T_NIGHT, 'durationSec': durations},
         'attestation': None,
     }
 

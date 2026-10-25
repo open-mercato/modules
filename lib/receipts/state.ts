@@ -300,6 +300,19 @@ function shouldWrite(prev: Receipt | null, next: Receipt, retried: boolean): boo
   )
 }
 
+/**
+ * `base` (receiptId of the run's UTC day and the cell key) unless a receipt of another run already holds it, then
+ * `base_2`, `base_3` ... (finding of 25 Oct: a rerun of a night or a second preview run on the same day gave the same
+ * id, and r/<id>.json of the first run was replaced silently). The first run keeps the plain id, so ids already
+ * published never change; a receipt of the same run (collect run again) keeps its own.
+ */
+export function uniqueReceiptId(base: string, runId: number, taken: readonly Pick<Receipt, 'id' | 'run'>[]): string {
+  const clash = (id: string) => taken.some((r) => r.id === id && r.run.id !== runId)
+  if (!clash(base)) return base
+  for (let n = 2; n <= 999; n++) if (!clash(`${base}_${n}`)) return `${base}_${n}`
+  throw new Error(`receipt id ${base}: more than 999 runs of one cell on one day`)
+}
+
 function newestAt(times: readonly string[]): string {
   return times.reduce((a, b) => (Date.parse(b) > Date.parse(a) ? b : a))
 }
@@ -321,6 +334,10 @@ export function applyNight(input: ApplyInput): ApplyResult {
     report: [],
   }
   const outcomeIn = (a: BundleAttempt | null, key: string) => a?.outcomes.find((o) => o.key === key) ?? null
+  // ids are checked against every stored receipt of the subject (any runner) and the ones this collect writes
+  const issued: Receipt[] = []
+  const idFor = (at: string, key: string, locator: string | null) =>
+    uniqueReceiptId(receiptId(at, key), bundle.night.id, [...input.history(locator), ...issued])
   const runAt = (a: BundleAttempt) => a.run.at
 
   // Baselines first: their final status decides harness-red for the module cells of the line.
@@ -355,7 +372,7 @@ export function applyNight(input: ApplyInput): ApplyResult {
     if (dec.flaky) notes.push('flaky')
     const receipt = Receipt.parse({
       schema: 1,
-      id: receiptId(at, cell.key),
+      id: idFor(at, cell.key, cell.locator),
       cellKey: cell.key,
       module: cell.locator ? { locator: cell.locator, version: cell.version, integrity: cell.integrity } : null,
       om: { line: cell.line, version: cell.omVersion, createApp: cell.createApp, preset: cell.preset },
@@ -393,7 +410,10 @@ export function applyNight(input: ApplyInput): ApplyResult {
     })
     if (cell.baseline) baselineFinal.set(scope(cell), { status: dec.status, id: receipt.id, culprits: heldAgainst })
     const retried = o2 !== null
-    if (shouldWrite(prev, receipt, retried)) out.receipts.push({ locator: cell.locator, receipt })
+    if (shouldWrite(prev, receipt, retried)) {
+      out.receipts.push({ locator: cell.locator, receipt })
+      issued.push(receipt)
+    }
     out.report.push(
       `${cell.label}: ${dec.status}${dec.raw.failedStep ? ` at ${dec.raw.failedStep}` : ''}${dec.confirmed ? '' : ' (unconfirmed)'}${notes.length ? ` [${notes.join(', ')}]` : ''}${heldAgainst ? ` (held against ${heldAgainst.join(', ')})` : ''}`,
     )
@@ -434,8 +454,11 @@ export function applyNight(input: ApplyInput): ApplyResult {
     if (nr.status !== 'quarantine' || !nr.version) continue
     const own = history(nr.locator)
     const prev = lastOf(own, nr.line, nr.mode, nr.preset)
-    const receipt = quarantineReceipt(nr, bundle, hv, prev)
-    if (shouldWrite(prev, receipt, false)) out.receipts.push({ locator: nr.locator, receipt })
+    const receipt = quarantineReceipt(nr, bundle, hv, prev, idFor(bundle.night.at, nr.key, nr.locator))
+    if (shouldWrite(prev, receipt, false)) {
+      out.receipts.push({ locator: nr.locator, receipt })
+      issued.push(receipt)
+    }
     out.report.push(
       `${nr.locator}@${nr.version} on ${nr.line}${nr.preset === 'classic' ? ' (classic)' : ''}: quarantine until ${nr.quarantineUntil ?? '?'}`,
     )
@@ -449,10 +472,10 @@ export function applyNight(input: ApplyInput): ApplyResult {
   return out
 }
 
-function quarantineReceipt(nr: NotRunCell, bundle: NightBundle, hv: string, prev: Receipt | null): Receipt {
+function quarantineReceipt(nr: NotRunCell, bundle: NightBundle, hv: string, prev: Receipt | null, id: string): Receipt {
   return Receipt.parse({
     schema: 1,
-    id: receiptId(bundle.night.at, nr.key),
+    id,
     cellKey: nr.key,
     module: { locator: nr.locator, version: nr.version, integrity: nr.integrity },
     om: {

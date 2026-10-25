@@ -226,7 +226,16 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   const allReceipts: ReceiptT[] = [...data.baseline, ...ctxs.flatMap((c) => c.receipts)].sort(
     (a, b) => Date.parse(a.run.at) - Date.parse(b.run.at) || a.id.localeCompare(b.id),
   )
-  for (const r of allReceipts) put(`r/${r.id}.json`, Receipt, r)
+  // one file per id: two receipts of different runs under one id would replace evidence at a public URL (finding of
+  // 25 Oct); collect gives a later run `_2`, so this only stops a data branch written before that
+  const byId = new Map<string, ReceiptT>()
+  for (const r of allReceipts) {
+    const other = byId.get(r.id)
+    if (other && other.run.id !== r.run.id)
+      throw new Error(`emit: receipt id ${r.id} is used by runs ${other.run.id} and ${r.run.id}`)
+    byId.set(r.id, r)
+    put(`r/${r.id}.json`, Receipt, r)
+  }
 
   // search and agents
   const listedEntries = entries.filter((e) => e.listed)
