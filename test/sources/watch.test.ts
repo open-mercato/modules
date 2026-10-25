@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Lines } from '../../lib/schema/index.ts'
 import { pickLines, preapprovedFrom } from '../../lib/sources/lines.ts'
 import type { Packument } from '../../lib/sources/npm.ts'
-import { keepaliveDue, QueueFile, runWatch } from '../../lib/sources/watch.ts'
+import { KEEPALIVE_WORKFLOWS, keepaliveDue, keepaliveWorkflows, QueueFile, runWatch } from '../../lib/sources/watch.ts'
+import type { Http, RequestOptions } from '../../lib/sources/http.ts'
 import { MODULES, NOW, offlineHttp, ROOT, tempDir } from './helpers.ts'
 
 const cleanups: (() => void)[] = []
@@ -82,5 +83,57 @@ describe('yarn om watch --offline', () => {
     expect(keepaliveDue(null, NOW)).toBe(true)
     expect(keepaliveDue('2026-10-01T00:00:00Z', NOW)).toBe(false)
     expect(keepaliveDue('2026-09-20T00:00:00Z', NOW)).toBe(true)
+  })
+})
+
+describe('keepalive', () => {
+  /** A GitHub API that answers each workflow's state and records the enable calls. */
+  function api(states: Record<string, string | number>): { http: Http; enabled: string[] } {
+    const enabled: string[] = []
+    const http: Http = {
+      mode: 'live',
+      fixturesDir: null,
+      bytes: () => Promise.reject(new Error('no bytes')),
+      async request(url: string, o: RequestOptions = {}) {
+        const wf = /workflows\/([^/]+?)(\/enable)?$/.exec(url)
+        const name = wf?.[1] ?? ''
+        if (o.method === 'PUT') {
+          enabled.push(name)
+          return { status: 204, json: null, text: '' }
+        }
+        const st = states[name]
+        if (typeof st === 'number') return { status: st, json: null, text: '' }
+        return { status: 200, json: { state: st }, text: '' }
+      },
+    }
+    return { http, enabled }
+  }
+
+  it('enables active and inactivity-disabled workflows, never one disabled by hand (finding of 25 Oct)', async () => {
+    const { http, enabled } = api({
+      'nightly.yml': 'disabled_manually',
+      'watch.yml': 'active',
+      'sync.yml': 'disabled_inactivity',
+      'collect.yml': 'active',
+    })
+    const log: string[] = []
+    const r = await keepaliveWorkflows(http, 'open-mercato/modules', (l) => log.push(l))
+    expect(enabled).toEqual(['watch.yml', 'sync.yml', 'collect.yml'])
+    expect(r).toEqual({ ok: true, errors: [], leftOff: ['nightly.yml'] })
+    expect(log).toEqual(['keepalive: nightly.yml was disabled by hand; left off'])
+  })
+
+  it('a workflow whose state cannot be read is never enabled, and the keepalive is not marked done', async () => {
+    const { http, enabled } = api({
+      'nightly.yml': 403,
+      'watch.yml': 'active',
+      'sync.yml': 'active',
+      'collect.yml': 'active',
+    })
+    const r = await keepaliveWorkflows(http, 'open-mercato/modules')
+    expect(enabled).not.toContain('nightly.yml')
+    expect(r.ok).toBe(false)
+    expect(r.errors).toEqual(['keepalive nightly.yml: state not read (HTTP 403)'])
+    expect(KEEPALIVE_WORKFLOWS).toContain('nightly.yml')
   })
 })

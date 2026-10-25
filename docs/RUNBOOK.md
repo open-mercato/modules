@@ -300,6 +300,15 @@ SITE_URL=https://<preview host> BASE_PATH=/modules node lib/cli.ts emit --data <
 
 The pages rewrite their copy commands, links and Claude Code prompts to the host they are served from either way.
 
+## Stop the night
+
+To stop the nightly install at once (a hostile module, an Actions bill), disable the workflow by hand:
+`gh workflow disable nightly.yml` (or Actions > nightly > Disable workflow). `collect` runs only after a night, so it
+stops with it. The keepalive of `watch` (every 30 days, spec 5.2 step 5) reads each workflow's state first: it calls
+`enable` on an `active` or `disabled_inactivity` workflow and leaves a `disabled_manually` one off, with the line
+`keepalive: nightly.yml was disabled by hand; left off` in its log. To stop every scheduled job, disable `watch.yml`
+and `sync.yml` as well. `gh workflow enable nightly.yml` turns the night back on.
+
 ## Classification
 
 `lib/receipts/classify.ts`, first match wins, and every rule that blames the module comes before infra:
@@ -326,7 +335,8 @@ The signature is `sha1(step + ':' + first error line)` with paths reduced to fil
 
 Spec 5.6 was written for a public repository of a personal account; the catalog lives in the private
 `open-mercato/modules`. These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
-never change them. State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
+never change them. The one workflow call that touches Actions state is the keepalive of `watch`, which calls `enable` only on
+workflows that are active or that GitHub turned off for inactivity, never on one disabled by hand (see Stop the night). State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
 answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty).
 
 Before the repository is public:

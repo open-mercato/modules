@@ -68,6 +68,50 @@ function readLines(dataDir: string): LinesT | null {
 const hasFacts = (dataDir: string, path: string, version: string) =>
   existsSync(join(dataDir, 'facts', path, `${version}.json`))
 
+/**
+ * The keepalive of the cron workflows (spec 5.2 step 5): `enable` on each workflow resets GitHub's inactivity timer.
+ * It reads the state first and never turns on a workflow someone disabled by hand (finding of 25 Oct: watch re-enabled
+ * every workflow, so disabling nightly.yml as an emergency stop lasted until the next keepalive). `active` and
+ * `disabled_inactivity` get `enable`; `disabled_manually` is left off and logged. `ok` is true when every workflow was
+ * handled; a workflow whose state could not be read is never enabled.
+ */
+export async function keepaliveWorkflows(
+  http: Http,
+  repo: string,
+  log: (line: string) => void = () => {},
+): Promise<{ ok: boolean; errors: string[]; leftOff: string[] }> {
+  const errors: string[] = []
+  const leftOff: string[] = []
+  let handled = 0
+  for (const wf of KEEPALIVE_WORKFLOWS) {
+    const url = `${GITHUB_API}/repos/${repo}/actions/workflows/${wf}`
+    try {
+      const got = await http.request(url)
+      const state = (got.json as { state?: unknown } | null)?.state
+      if (got.status !== 200 || typeof state !== 'string') {
+        errors.push(`keepalive ${wf}: state not read (HTTP ${got.status})`)
+        continue
+      }
+      if (state === 'disabled_manually') {
+        leftOff.push(wf)
+        log(`keepalive: ${wf} was disabled by hand; left off`)
+        handled++
+        continue
+      }
+      if (state !== 'active' && state !== 'disabled_inactivity') {
+        errors.push(`keepalive ${wf}: state ${state}, left as it is`)
+        continue
+      }
+      const res = await http.request(`${url}/enable`, { method: 'PUT' })
+      if (res.status === 204) handled++
+      else errors.push(`keepalive ${wf}: HTTP ${res.status}`)
+    } catch (err) {
+      errors.push(errText(`keepalive ${wf}`, err))
+    }
+  }
+  return { ok: handled === KEEPALIVE_WORKFLOWS.length, errors, leftOff }
+}
+
 export function keepaliveDue(keepaliveAt: string | null, now: Date): boolean {
   if (!keepaliveAt) return true
   return now.getTime() - new Date(keepaliveAt).getTime() >= KEEPALIVE_DAYS * 86_400_000
@@ -91,19 +135,9 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
   }
 
   if (lines && o.keepalive && keepaliveDue(lines.keepaliveAt, o.now)) {
-    let ok = 0
-    for (const wf of KEEPALIVE_WORKFLOWS) {
-      try {
-        const res = await o.http.request(`${GITHUB_API}/repos/${o.keepalive.repo}/actions/workflows/${wf}/enable`, {
-          method: 'PUT',
-        })
-        if (res.status === 204) ok++
-        else errors.push(`keepalive ${wf}: HTTP ${res.status}`)
-      } catch (err) {
-        errors.push(errText(`keepalive ${wf}`, err))
-      }
-    }
-    if (ok === KEEPALIVE_WORKFLOWS.length) lines = Lines.parse({ ...lines, keepaliveAt: isoSeconds(o.now) })
+    const k = await keepaliveWorkflows(o.http, o.keepalive.repo, log)
+    errors.push(...k.errors)
+    if (k.ok) lines = Lines.parse({ ...lines, keepaliveAt: isoSeconds(o.now) })
   }
   if (lines) writeJson(join(o.dataDir, 'lines.json'), lines)
 
