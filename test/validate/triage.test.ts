@@ -37,7 +37,7 @@ describe('triage', () => {
     )
     const r103 = lines.find((l) => l.number === 103)
     expect(r103?.reasons[0]).toBe(
-      'npm:@fastwhite-cat/integration-ksef-direct: same package name as npm:@fastwhitecat/integration-ksef-direct, another owner. A curator can add the name-reviewed label',
+      'npm:@fastwhite-cat/integration-ksef-direct: same name as npm:@fastwhitecat/integration-ksef-direct under the look-alike scope @fastwhite-cat, another owner. A curator can add the name-reviewed label',
     )
     const text = renderLines(lines)
     expect(text.split('\n')[0]).toBe('#101  ready    ci:pass     npm:@acme-labs/om-loyalty  [fork, new]')

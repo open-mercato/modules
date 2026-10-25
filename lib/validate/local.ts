@@ -150,6 +150,12 @@ export interface NameHit {
    * typosquat of `@piotrkarwatka/visits`). A warning a curator reads, never an error.
    */
   sameNameOnly?: boolean
+  /**
+   * The bare names are equal and the full names differ by this many edits: the hit is the same name under another
+   * scope or owner, not the same package name (finding of 25 Oct: `@open-mercat0/gateway-stripe` read `same package
+   * name as npm:@open-mercato/gateway-stripe`). At most 2: a look-alike scope.
+   */
+  scopeDistance?: number
 }
 
 /**
@@ -184,7 +190,13 @@ export function typosquatHits(
     const bareHit = Math.min(a.length, b.length) >= 5 ? bare <= 2 : bare === 0
     const dist = Math.min(full, bareHit ? bare : Number.POSITIVE_INFINITY)
     const sameNameOnly = full > 2 && bare === 0 && o.owner !== '@open-mercato'
-    if (dist <= 2) hits.push({ other: o.label, distance: dist, ...(sameNameOnly ? { sameNameOnly } : {}) })
+    if (dist <= 2)
+      hits.push({
+        other: o.label,
+        distance: dist,
+        ...(sameNameOnly ? { sameNameOnly } : {}),
+        ...(bare === 0 ? { scopeDistance: full } : {}),
+      })
   }
   return hits.sort((a, b) => a.distance - b.distance || a.other.localeCompare(b.other))
 }
@@ -267,7 +279,15 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
             'name',
             nameSeverity,
             'typosquat',
-            `${h.distance === 0 ? 'same package name as' : `name is ${h.distance} edit${h.distance > 1 ? 's' : ''} away from`} ${h.other}, another owner${suffix}`,
+            `${
+              h.distance === 0
+                ? `same name as ${h.other} under ${
+                    (h.scopeDistance ?? 99) <= 2
+                      ? `the look-alike ${d.npm ? 'scope' : 'owner'} ${nameOf(d).slice(0, nameOf(d).lastIndexOf('/'))}`
+                      : `another ${d.npm ? 'scope' : 'owner'}`
+                  }`
+                : `name is ${h.distance} edit${h.distance > 1 ? 's' : ''} away from ${h.other}`
+            }, another owner${suffix}`,
           ),
     )
   const official = d.npm?.startsWith('@open-mercato/') ?? false

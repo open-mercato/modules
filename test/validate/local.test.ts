@@ -113,8 +113,12 @@ summary: Takes card payments through Stripe for orders in the checkout.
 whenToUse: Use when the app must take card payments through Stripe at checkout.
 `
     expect(messages(run('modules/@acme/gateway-stripe.yml', official))[0]).toMatch(
-      /^same package name as npm:@open-mercato\/gateway-stripe, another owner/,
+      /^same name as npm:@open-mercato\/gateway-stripe under another scope, another owner/,
     )
+    // a scope one edit from @open-mercato is named as a look-alike, not as the same package name (finding of 25 Oct)
+    expect(
+      messages(run('modules/@open-mercat0/gateway-stripe.yml', official.replace('@acme/', '@open-mercat0/')))[0],
+    ).toMatch(/^same name as npm:@open-mercato\/gateway-stripe under the look-alike scope @open-mercat0, another owner/)
   })
 
   it('a look-alike of another owner is an error until a curator adds name-reviewed', () => {
@@ -125,7 +129,7 @@ whenToUse: Use when the app must issue or receive structured invoices in KSeF (P
 `
     const file = 'modules/@fastwhite-cat/integration-ksef-direct.yml'
     expect(messages(run(file, text))).toEqual([
-      'same package name as npm:@fastwhitecat/integration-ksef-direct, another owner. A curator can add the name-reviewed label',
+      'same name as npm:@fastwhitecat/integration-ksef-direct under the look-alike scope @fastwhite-cat, another owner. A curator can add the name-reviewed label',
     ])
     const reviewed = run(file, text, { labels: ['name-reviewed'] })
     expect(messages(reviewed)).toEqual([])
