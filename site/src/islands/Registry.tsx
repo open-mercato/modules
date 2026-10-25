@@ -794,6 +794,23 @@ export default function Registry({
           return !!e && passes(e, cleared)
         }).length
       : 0
+  // a query that matches only held entries (Przelewy24, PayU, InPost) is not `No module does that yet` with `Build it`:
+  // say which held entries match and offer to show them (finding of 25 Oct)
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+  const heldText = (e: RegistryEntry): string =>
+    `${e.title} ${e.npm ?? e.locator} ${e.summary} ${e.tags.join(' ')}`.toLowerCase()
+  const heldHits =
+    searching && exactRows.length === 0 && hidden === 0 && !f.held
+      ? entries.filter(
+          (e) =>
+            isHeld(e) &&
+            passes(e, { ...cleared, held: true }) &&
+            (search.poolExact.includes(e.locator) || (words.length > 0 && words.every((w) => heldText(e).includes(w)))),
+        )
+      : []
+  // a list without a query says how many held entries its filters leave out (a category with held gateways)
+  const heldHidden =
+    !searching && !f.held ? entries.filter((e) => isHeld(e) && passes(e, { ...f, held: true })).length : 0
   const matches = (n: number): string => `${n} ${n === 1 ? 'match' : 'matches'}`
   // the words the results answer: the query, or the spelling of it the search fell back to (`stirpe` -> `stripe`)
   const asked = search.didYouMean ? `"${search.didYouMean}" (no match for "${search.q}")` : `"${search.q}"`
@@ -812,7 +829,7 @@ export default function Registry({
               .map((b) => b.title)
               .join(', ')}${loose}`
           : `No exact match for ${asked}`
-    : `${shown.length} ${shown.length === 1 ? unit[0] : unit[1]}`
+    : `${shown.length} ${shown.length === 1 ? unit[0] : unit[1]}${heldHidden > 0 ? ` · ${heldHidden} held, not shown` : ''}`
   // the squares of the list in words, once above it (review r4: four glyphs and no legend on / and on phones); only
   // the states the list shows, the same words as /compat
   // one entry per mark (round 14): a dependency the age gate held back is not a release in the gate
@@ -1012,6 +1029,25 @@ export default function Registry({
                     <div class="reg__empty-actions">
                       <button type="button" class="btn btn--secondary btn--sm" onClick={clearAll}>
                         Clear filters
+                      </button>
+                    </div>
+                  </>
+                ) : q && heldHits.length > 0 ? (
+                  <>
+                    <p class="t-h3">
+                      {heldHits.length === 1 ? 'One held entry matches' : `${heldHits.length} held entries match`}:{' '}
+                      {heldHits
+                        .slice(0, 3)
+                        .map((e) => e.title)
+                        .join(', ')}
+                      {heldHits.length > 3 ? ` and ${heldHits.length - 3} more` : ''}.
+                    </p>
+                    <p class="reg__empty-text">
+                      Held entries are hidden: they cannot be installed or recommended yet. Each page says why.
+                    </p>
+                    <div class="reg__empty-actions">
+                      <button type="button" class="btn btn--secondary btn--sm" onClick={() => update({ held: true })}>
+                        Show held entries
                       </button>
                     </div>
                   </>
