@@ -373,6 +373,15 @@ At the switch to the public address:
    that TXT and a CNAME `modules.openmercato.com` -> `open-mercato.github.io` (the CNAME replaces the wildcard for this
    name), then Settings > Pages > Custom domain `modules.openmercato.com` and Enforce HTTPS once the certificate is
    issued. Change `SITE_URL` and `BASE_PATH` (step 5) in the same sitting and rerun `pages`.
+10. Right after the repository is public: test the fork path, which the private repository cannot test (forking is off
+    there, and the only test pull request so far, #1, came from a branch of the repository). From a fork, open a pull
+    request with one new valid descriptor and one broken one. Check that the `validate` summary appears within 3 minutes
+    and reads the data branch (Fit is not skipped), that `checks` and `build` are green for the valid file alone, that
+    `autofix` runs, that a typosquat error goes away after a curator adds `name-reviewed` and re-runs `validate`, that
+    the first-time contributor approval of step 4 holds the run until approved, and that `yarn om triage` lists the pull
+    request with the right verdict. Close it and write the run ids into the report. The CI fixes of 25 Oct (`checks`,
+    the data branch read in `validate`, `collect` and the nightly plan, the current labels, the private autofix skip)
+    were tested locally only; this is their first run on Actions unless a test pull request ran before.
 
 ## Triage of submissions
 
