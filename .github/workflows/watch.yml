@@ -1,6 +1,8 @@
-# Every 6 hours and after a descriptor or policy change on main (spec 5.1, 5.2): release lines, new versions,
-# Rentgen (static, no module code runs), Fit, Radar, health, Hive slots, one commit on the data branch through
-# lib/sources/data-branch.ts (fetch, reset, replay the whole write, commit, push; 3 attempts), keepalive.
+# Every 6 hours and after a descriptor or policy change on main (spec 5.1, 5.2): release lines, new versions, a sync
+# of the entries watch found without a sync record or with a moved dist-tag (`needsSync`: a new entry is Listed and
+# planned for the next night instead of after the weekly sync), Rentgen (static, no module code runs), Fit, Radar,
+# health, Hive slots, one commit on the data branch through lib/sources/data-branch.ts (fetch, reset, replay the whole
+# write, commit, push; 3 attempts), keepalive.
 name: watch
 
 on:
@@ -70,6 +72,9 @@ jobs:
           node lib/sources/data-branch.ts --dir .data --message "chore(data): watch $(date -u +%Y-%m-%dT%H:%M:%SZ)" -- \
             bash -euo pipefail -c '
               yarn om watch --keepalive
+              if [ "$(jq ".needsSync | length" out/queue.json)" -gt 0 ]; then
+                yarn om sync $(jq -r ".needsSync | join(\" \")" out/queue.json)
+              fi
               if [ "$(jq -r ".lines.coreChanged" out/queue.json)" = "true" ] || [ ! -f ".data/builtin/$(jq -r ".lines.coreLatest" out/queue.json).json" ]; then
                 yarn om scan --builtin "$(jq -r ".lines.coreLatest" out/queue.json)"
               fi

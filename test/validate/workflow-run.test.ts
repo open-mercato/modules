@@ -98,11 +98,20 @@ function runStep(script: string, env: Record<string, string> = {}): { code: numb
   return { code: r.status ?? 1, out: `${r.stdout}${r.stderr}` }
 }
 
-const queue = (o: { coreChanged: boolean; changed: string[]; items: { locator: string; version: string }[] }) => {
+const queue = (o: {
+  coreChanged: boolean
+  changed: string[]
+  items: { locator: string; version: string }[]
+  needsSync?: string[]
+}) => {
   const file = join(tmp, `queue-${Math.random().toString(36).slice(2)}.json`)
   writeFileSync(
     file,
-    JSON.stringify({ items: o.items, lines: { changed: o.changed, coreLatest: '0.9.0', coreChanged: o.coreChanged } }),
+    JSON.stringify({
+      items: o.items,
+      needsSync: o.needsSync ?? [],
+      lines: { changed: o.changed, coreLatest: '0.9.0', coreChanged: o.coreChanged },
+    }),
   )
   return file
 }
@@ -198,6 +207,30 @@ describe.skipIf(!hasJq)('watch.yml steps', () => {
     expect(callLog()).not.toContain('om scan --builtin 0.9.0')
     expect(r2.out).toContain('data-branch: no changes')
     expect(dataLog()).toHaveLength(1)
+  })
+
+  it('syncs the entries watch found without a record or with a moved dist-tag before scan and health', () => {
+    runStep(stepRun('watch.yml', 'Prepare data checkout'))
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({
+        coreChanged: false,
+        changed: [],
+        items: [{ locator: 'npm:@a/b', version: '1.2.3' }],
+        needsSync: ['github:o/r', 'npm:@a/b'],
+      }),
+    })
+    expect(r.code, r.out).toBe(0)
+    const c = callLog()
+    expect(c.slice(0, 2)).toEqual(['om watch --keepalive', 'om sync github:o/r npm:@a/b'])
+    expect(c.indexOf('om scan --queue out/queue.json')).toBeGreaterThan(1)
+    expect(c.indexOf('om health --changed')).toBeGreaterThan(c.indexOf('om sync github:o/r npm:@a/b'))
+    expect(git(origin, 'ls-tree', '-r', '--name-only', 'data').split('\n')).toContain('sync/x.json')
+
+    writeFileSync(calls, '')
+    runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: [], items: [] }),
+    })
+    expect(callLog().some((l) => l.startsWith('om sync'))).toBe(false)
   })
 
   it('a new line version refits everything; an empty queue skips scan and fit', () => {

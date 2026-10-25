@@ -3,10 +3,11 @@ import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Lines } from '../../lib/schema/index.ts'
 import { pickLines, preapprovedFrom } from '../../lib/sources/lines.ts'
+import { runSync } from '../../lib/sources/sync.ts'
 import type { Packument } from '../../lib/sources/npm.ts'
 import { KEEPALIVE_WORKFLOWS, keepaliveDue, keepaliveWorkflows, QueueFile, runWatch } from '../../lib/sources/watch.ts'
 import type { Http, RequestOptions } from '../../lib/sources/http.ts'
-import { MODULES, NOW, offlineHttp, ROOT, tempDir } from './helpers.ts'
+import { MODULES, NOW, offlineHttp, POLICY, ROOT, tempDir } from './helpers.ts'
 
 const cleanups: (() => void)[] = []
 afterEach(() => cleanups.splice(0).forEach((c) => c()))
@@ -62,6 +63,34 @@ describe('yarn om watch --offline', () => {
     ).toEqual(['0.8.0'])
     expect(second.queue.lines.changed).toEqual([])
     expect(second.queue.lines.coreChanged).toBe(false)
+  })
+
+  it('needsSync: every entry without a sync record, then only the one whose dist-tag moved (finding of 25 Oct)', async () => {
+    const first = await watch()
+    // a new descriptor has no sync record: watch.yml syncs it so LST-2 and the nightly plan do not wait a week
+    expect(first.queue.needsSync).toHaveLength(16)
+    expect(first.queue.needsSync).toContain('github:Chmarusso/open-mercato-enrichment-treg')
+    expect(first.queue.needsSync).toContain('npm:@open-mercato/gateway-stripe')
+    await runSync({
+      http: offlineHttp(),
+      root: ROOT,
+      modulesDir: MODULES,
+      policyDir: POLICY,
+      dataDir: first.dataDir,
+      outDir: first.out,
+      now: NOW,
+      only: null,
+      modulesRepo: 'wojciechszyjka/modules',
+      claims: false,
+    })
+    const synced = await watch(first.dataDir)
+    expect(synced.queue.needsSync).toEqual([])
+    // a release moved `latest` past the stored record: health and plan read installable versions from it
+    const file = join(first.dataDir, 'sync', '@dainamite', 'cpq.json')
+    const r = JSON.parse(readFileSync(file, 'utf8')) as { npm: { distTags: Record<string, string> } }
+    r.npm.distTags = { latest: '0.0.1' }
+    writeFileSync(file, JSON.stringify(r))
+    expect((await watch(first.dataDir)).queue.needsSync).toEqual(['npm:@dainamite/cpq'])
   })
 
   it('picks the previous minor or a latest-X.Y tag', () => {

@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Claims, Stats, SyncRecord } from '../../lib/schema/index.ts'
@@ -12,7 +12,7 @@ import { EXPECTED_TYPES, HTTP_FIXTURES, MODULES, NOW, offlineHttp, POLICY, ROOT,
 const cleanups: (() => void)[] = []
 afterEach(() => cleanups.splice(0).forEach((c) => c()))
 
-async function sync(http: Http = offlineHttp(), dataDir?: string, now = NOW) {
+async function sync(http: Http = offlineHttp(), dataDir?: string, now = NOW, only: Set<string> | null = null) {
   const t = tempDir('sync')
   cleanups.push(t.cleanup)
   const data = dataDir ?? join(t.dir, 'data')
@@ -24,7 +24,7 @@ async function sync(http: Http = offlineHttp(), dataDir?: string, now = NOW) {
     dataDir: data,
     outDir: join(t.dir, 'out'),
     now,
-    only: null,
+    only,
     modulesRepo: 'wojciechszyjka/modules',
     claims: false,
   })
@@ -115,6 +115,25 @@ describe('yarn om sync --offline on recorded responses (16 real entries)', () =>
     expect(after?.checkedAt).toBe('2026-10-30T04:17:00Z')
     expect(after?.npm).toEqual(before.npm)
     expect(after?.errors.some((e) => e.startsWith('npm: HTTP 503'))).toBe(true)
+  })
+
+  it('a sync of named entries (watch.yml needsSync) leaves every other record, claim and stat as it was', async () => {
+    const first = await sync()
+    const file = (p: string) => readFileSync(join(first.data, p), 'utf8')
+    const others = (readdirSync(join(first.data, 'sync'), { recursive: true, encoding: 'utf8' }) as string[])
+      .filter((p) => p.endsWith('.json') && p !== join('@dainamite', 'cpq.json'))
+      .sort()
+    expect(others).toHaveLength(15)
+    const before = Object.fromEntries(others.map((p) => [p, file(join('sync', p))]))
+    const claims = file('claims.json')
+    const stats = Stats.parse(JSON.parse(file('stats.json')))
+    const later = new Date('2026-10-23T10:17:00Z')
+    const second = await sync(offlineHttp(), first.data, later, new Set(['npm:@dainamite/cpq']))
+    expect(second.res.records.map((r) => r.locator)).toEqual(['npm:@dainamite/cpq'])
+    expect(rec(first.data, '@dainamite/cpq').checkedAt).toBe('2026-10-23T10:17:00Z')
+    for (const p of others) expect(file(join('sync', p)), p).toBe(before[p])
+    expect(file('claims.json')).toBe(claims)
+    expect(Stats.parse(JSON.parse(file('stats.json'))).entries).toEqual(stats.entries)
   })
 })
 

@@ -13,7 +13,11 @@ import { compareVersions, isoSeconds, isSemVer, parseVersion } from './semver.ts
 import { writeJson } from './sync.ts'
 import { githubArchiveUrl } from './tarball.ts'
 
-/** out/queue.json: versions without facts on the data branch (input of `scan --queue`). */
+/**
+ * out/queue.json: versions without facts on the data branch (input of `scan --queue`), and the entries whose sync
+ * record is missing or older than the registry (`needsSync`, input of `sync <locator>...` in watch.yml, finding of
+ * 25 Oct: without it a new entry waited for the weekly sync to be Listed and installed).
+ */
 export const QueueFile = z
   .object({
     generatedAt: z.string(),
@@ -32,6 +36,7 @@ export const QueueFile = z
         })
         .strict(),
     ),
+    needsSync: z.array(Locator),
     errors: z.array(z.string()),
   })
   .strict()
@@ -143,6 +148,7 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
 
   const { entries } = loadEntries(o.modulesDir)
   const items: QueueItem[] = []
+  const needsSync = new Set<string>()
   await Promise.all(
     entries.map(async (e) => {
       const rec = readSyncRecord(o.dataDir, e.path)
@@ -150,6 +156,8 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
         if (e.locator.startsWith('npm:')) {
           const name = e.locator.slice(4)
           const tags = await fetchDistTags(o.http, name)
+          // no record yet: the sync writes one (also `not found`), so LST-2 and the nightly plan do not wait a week
+          if (rec === null) needsSync.add(e.locator)
           if (!tags) return
           const known = rec?.npm ?? null
           const same =
@@ -160,6 +168,8 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
                   .filter(([, v]) => isSemVer(v))
                   .sort(),
               )
+          // a dist-tag moved: health and the plan read installable versions from the sync record
+          if (!same) needsSync.add(e.locator)
           let versions = known ? [known.latestStable, known.previousStable, known.preview] : []
           const missing = () => versions.filter((v): v is string => !!v && !hasFacts(o.dataDir, e.path, v))
           if (same && missing().length === 0) return
@@ -190,8 +200,9 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
             .filter((t) => isSemVer(t.version) && parseVersion(t.version))
             .sort((a, b) => compareVersions(a.version, b.version))
           const top = semverTags.at(-1)
-          if (!top || hasFacts(o.dataDir, e.path, top.version)) return
           const knownTags = new Set((rec?.github?.tags ?? []).map((t) => t.name))
+          if (rec === null || (top && !knownTags.has(top.tag))) needsSync.add(e.locator)
+          if (!top || hasFacts(o.dataDir, e.path, top.version)) return
           items.push({
             locator: e.locator,
             path: e.path,
@@ -213,9 +224,12 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
     generatedAt: isoSeconds(o.now),
     lines: { changed, coreLatest: lines?.coreLatest ?? '', coreChanged },
     items,
+    needsSync: [...needsSync].sort(),
     errors,
   })
   writeJson(join(o.outDir, 'queue.json'), queue)
-  log(`watch: ${items.length} versions queued, lines changed: ${changed.join(', ') || 'none'}`)
+  log(
+    `watch: ${items.length} versions queued, ${needsSync.size} entries to sync, lines changed: ${changed.join(', ') || 'none'}`,
+  )
   return { lines, queue }
 }
