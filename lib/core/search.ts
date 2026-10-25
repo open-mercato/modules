@@ -614,11 +614,14 @@ export const SEARCH_DEFAULTS = { verifiedOnly: false, includeBuiltIn: true, incl
 /**
  * `search_modules` (tools@1). The caller validates untrusted input with SearchModulesInput (the MCP handler and the
  * CLI do; the site passes typed input), this function applies the defaults; `combineWith` is AND, with OR as a
- * fallback when nothing matches. Zod stays out of this module so the site's search chunk does not carry it.
+ * fallback when nothing matches. Without a query (absent or blank) the filters alone pick the modules, in the
+ * relevance order of the registry; built-ins then come only with a category, event or kind filter. Zod stays out of
+ * this module so the site's search chunk does not carry it.
  */
 export function searchModules(searcher: Searcher, rawInput: SearchModulesInput): SearchModulesOutput {
   const input = {
     ...rawInput,
+    query: rawInput.query ?? '',
     verifiedOnly: rawInput.verifiedOnly ?? SEARCH_DEFAULTS.verifiedOnly,
     includeBuiltIn: rawInput.includeBuiltIn ?? SEARCH_DEFAULTS.includeBuiltIn,
     includeExamples: rawInput.includeExamples ?? SEARCH_DEFAULTS.includeExamples,
@@ -656,6 +659,86 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
     !input.verifiedOnly &&
     (!input.emits || b.ids.emits.includes(input.emits)) &&
     (!input.consumes || b.ids.consumes.includes(input.consumes))
+
+  const moduleCard = (m: ModuleMeta, chips: string[]): ModuleCard => ({
+    locator: m.locator,
+    path: m.path,
+    title: m.title,
+    summary: m.summary,
+    whenToUse: m.whenToUse,
+    type: m.type,
+    kind: m.kind,
+    category: m.category,
+    license: m.license,
+    tier: m.tier,
+    omQuality: m.omQuality,
+    verifiedOn: m.verifiedOn,
+    line,
+    status: line ? statusOn(m, line) : null,
+    agentPolicy: line ? (m.policy[line] ?? null) : null,
+    installableFrom: m.version.installableFrom,
+    ...installFields(m, line, latest),
+    matchedOn: chips,
+    card: absolute(data.site, m.page),
+  })
+  const builtInCard = (b: BuiltInMeta, chips: string[]): BuiltInCard => ({
+    id: b.id,
+    title: b.title,
+    description: b.description,
+    category: b.category,
+    enabled: null,
+    install: b.install || builtInEnableCommand(b.id),
+    page: absolute(data.site, b.page),
+    matchedOn: chips,
+    presetNote: builtInPresetNote(b, line),
+  })
+  const output = (
+    results: ModuleCard[],
+    builtIn: BuiltInCard[],
+    total: number,
+    didYouMean: string | null,
+  ): SearchModulesOutput => ({
+    results,
+    builtIn,
+    total,
+    line,
+    dataVersion: data.dataVersion,
+    generatedAt: data.generatedAt,
+    ...(data.receiptSource !== undefined ? { receiptSource: data.receiptSource } : {}),
+    ...(didYouMean ? { didYouMean } : {}),
+  })
+
+  // no query (finding of 25 Oct: `{ consumes }` alone and `query: ""` were refused): the filters pick, the chips name
+  // the filters a card matched
+  if (input.query.trim() === '') {
+    const filterChips = (category: string, providers: readonly { name: string; label: string }[]): string[] => [
+      ...(input.emits ? [`event ${input.emits}`] : []),
+      ...(input.consumes && input.consumes !== input.emits ? [`event ${input.consumes}`] : []),
+      ...(input.provider
+        ? providers
+            .filter(
+              (p) =>
+                p.name === input.provider!.toLowerCase() || p.label.toLowerCase() === input.provider!.toLowerCase(),
+            )
+            .slice(0, 1)
+            .map((p) => `provider ${p.label}`)
+        : []),
+      ...(input.category ? [`category ${category}`] : []),
+    ]
+    const mods = Object.values(data.modules).filter(moduleOk).sort(relevanceCompare(line))
+    const narrowed = !!(input.category || input.emits || input.consumes || wantKinds)
+    const bis = narrowed
+      ? Object.values(data.builtIn)
+          .filter(builtInOk)
+          .sort((a, b) => a.title.localeCompare(b.title))
+      : []
+    return output(
+      mods.slice(0, input.limit).map((m) => moduleCard(m, filterChips(m.category, m.providers))),
+      bis.slice(0, BUILTIN_MAX).map((b) => builtInCard(b, filterChips(b.category, []))),
+      mods.length,
+      null,
+    )
+  }
 
   const run = (combineWith: 'AND' | 'OR', query: string = input.query) => {
     const hits = searcher.ms.search(query, {
@@ -721,48 +804,7 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
         r.score >= BUILTIN_RATIO * best || b.title.toLowerCase() === q || b.id === q.replace(/[\s-]+/g, '_'),
     )
     .slice(0, BUILTIN_MAX)
-    .map(({ b, r }) => ({
-      id: b.id,
-      title: b.title,
-      description: b.description,
-      category: b.category,
-      enabled: null,
-      install: b.install || builtInEnableCommand(b.id),
-      page: absolute(data.site, b.page),
-      matchedOn: matchedOn(r.match, { ids: b.ids }, r.queryTerms),
-      presetNote: builtInPresetNote(b, line),
-    }))
-
-  const results: ModuleCard[] = found.mods.slice(0, input.limit).map(({ m, r }) => ({
-    locator: m.locator,
-    path: m.path,
-    title: m.title,
-    summary: m.summary,
-    whenToUse: m.whenToUse,
-    type: m.type,
-    kind: m.kind,
-    category: m.category,
-    license: m.license,
-    tier: m.tier,
-    omQuality: m.omQuality,
-    verifiedOn: m.verifiedOn,
-    line,
-    status: line ? statusOn(m, line) : null,
-    agentPolicy: line ? (m.policy[line] ?? null) : null,
-    installableFrom: m.version.installableFrom,
-    ...installFields(m, line, latest),
-    matchedOn: matchedOn(r.match, m, r.queryTerms),
-    card: absolute(data.site, m.page),
-  }))
-
-  return {
-    results,
-    builtIn,
-    total: found.mods.length,
-    line,
-    dataVersion: data.dataVersion,
-    generatedAt: data.generatedAt,
-    ...(data.receiptSource !== undefined ? { receiptSource: data.receiptSource } : {}),
-    ...(didYouMean ? { didYouMean } : {}),
-  }
+    .map(({ b, r }) => builtInCard(b, matchedOn(r.match, { ids: b.ids }, r.queryTerms)))
+  const results = found.mods.slice(0, input.limit).map(({ m, r }) => moduleCard(m, matchedOn(r.match, m, r.queryTerms)))
+  return output(results, builtIn, found.mods.length, didYouMean)
 }

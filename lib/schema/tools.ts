@@ -90,7 +90,14 @@ export const BuiltInCard = z.object({
 })
 
 export const SearchModulesInput = z.object({
-  query: z.string().min(1).max(200),
+  // optional and may be blank (additive, 25 Oct): the filters alone then pick the modules
+  query: z
+    .string()
+    .max(200)
+    .optional()
+    .describe(
+      'Words to search for. Leave it out, or pass "", to list what the filters (emits, consumes, category...) pick.',
+    ),
   omVersion: z.string().max(40).optional(),
   category: CategoryId.optional(),
   type: z.array(OriginType).max(3).optional(),

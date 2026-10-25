@@ -128,9 +128,9 @@ describe('/for-agents metadata', () => {
   test('tool inputs from /schema/tools-1.json', () => {
     const tools = json<{ $defs: Record<string, Parameters<typeof describeSchema>[0]> }>(r, 'schema/tools-1.json')
     const search = describeSchema(tools.$defs.SearchModulesInput!)
-    expect(search.find((p) => p.name === 'query')).toEqual({
+    expect(search.find((p) => p.name === 'query')).toMatchObject({
       name: 'query',
-      required: true,
+      required: false,
       type: 'string, at most 200 chars',
     })
     expect(search.find((p) => p.name === 'limit')?.type).toBe('integer, 1 to 20, default 10')

@@ -290,6 +290,20 @@ describe('errors', () => {
     await client.close()
   })
 
+  it('search_modules takes a filter without query, and query "" (finding of 25 Oct: -32602)', async () => {
+    const client = await connect()
+    for (const args of [
+      { consumes: 'customers.deal.won' },
+      { query: '' },
+      { query: '', emits: 'customers.deal.won' },
+    ]) {
+      const r = await client.callTool({ name: 'search_modules', arguments: args })
+      expect(r.isError, JSON.stringify(args)).toBeFalsy()
+      expect(TOOLS.search_modules.output.safeParse(r.structuredContent).success).toBe(true)
+    }
+    await client.close()
+  })
+
   it('catalog outage: the tool answers isError; a stale copy is served after a failed refresh', async () => {
     const stub = siteStub()
     stub.failing.add('modules.json')

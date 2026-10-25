@@ -105,6 +105,35 @@ describe('weak hits are cut (finding of 25 Oct)', () => {
   })
 })
 
+describe('no query: the filters alone (finding of 25 Oct)', () => {
+  it('a filter without query, or with query "", lists what the filter picks in relevance order', () => {
+    const emits = searchModules(corpusIdx, { emits: 'customers.deal.won' })
+    expect(SearchModulesOutput.safeParse(emits).success).toBe(true)
+    expect(emits.builtIn.map((b) => b.id)).toEqual(['customers'])
+    expect(emits.builtIn[0]?.matchedOn).toEqual(['event customers.deal.won'])
+    expect(emits.results).toEqual([])
+    // no listed module consumes it: an empty answer, not an input error
+    const consumes = searchModules(corpusIdx, { consumes: 'customers.deal.won' })
+    expect([consumes.total, consumes.results.length]).toEqual([0, 0])
+    const blank = searchModules(corpusIdx, { query: '', category: 'payments-finance' })
+    expect(blank).toEqual(searchModules(corpusIdx, { query: '  ', category: 'payments-finance' }))
+    expect(blank.results.length).toBeGreaterThan(0)
+    expect(
+      blank.results.every((c) => c.category === 'payments-finance' && c.matchedOn[0] === 'category payments-finance'),
+    ).toBe(true)
+    expect(blank.results.map((c) => c.locator)).toContain('npm:@open-mercato/gateway-stripe')
+  })
+
+  it('no query and no filter: every listed module, the limit applies, no built-in', () => {
+    const all = searchModules(corpusIdx, { limit: 20 })
+    expect(all.results).toHaveLength(20)
+    expect(all.total).toBeGreaterThan(20)
+    expect(all.builtIn).toEqual([])
+    // a query of stop words only is still a query: it finds nothing
+    expect(searchModules(corpusIdx, { query: 'the' }).total).toBe(0)
+  })
+})
+
 describe('golden queries (Appendix B) on the 59 entries and 46 built-ins', () => {
   it.each(GOLDEN)('%s', (query, modules, builtIn) => {
     const r = searchModules(corpusIdx, { query })
@@ -287,7 +316,8 @@ describe('search behaviour (8.2)', () => {
   })
 
   it('input is validated by SearchModulesInput before the search (MCP, WebMCP, CLI); the search applies defaults', () => {
-    expect(() => SearchModulesInput.parse({ query: '' })).toThrow()
+    expect(SearchModulesInput.parse({ query: '' }).query).toBe('')
+    expect(SearchModulesInput.parse({ consumes: 'customers.deal.won' }).query).toBeUndefined()
     expect(() => SearchModulesInput.parse({ query: 'x'.repeat(201) })).toThrow()
     expect(searchModules(fixtureIdx, { query: 'ksef', limit: 1 }).results).toHaveLength(1)
     // the same defaults as the schema, without Zod in the browser search chunk

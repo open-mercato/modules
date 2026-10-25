@@ -40,7 +40,7 @@ export const ANNOTATIONS = { readOnlyHint: true, openWorldHint: true, idempotent
 export const TOOL_DESCRIPTIONS: Record<ToolName, string> = {
   search_modules: [
     'Search Open Mercato modules: official, community and third-party packages, plus the modules built into Open Mercato core.',
-    'WHEN TO USE: before building a feature in an Open Mercato app ("is there a module for X", "build or install"); to find modules that emit or consume an event; to filter by what is verified on the app\'s Open Mercato version.',
+    'WHEN TO USE: before building a feature in an Open Mercato app ("is there a module for X", "build or install"); to find modules that emit or consume an event (a filter works without `query`); to filter by what is verified on the app\'s Open Mercato version.',
     "WHEN NOT TO USE: to install anything (use plan_install, then the app's CLI after the user agrees); for Open Mercato framework documentation.",
     'OUTPUT: up to 20 compact cards with level, lines the catalog verified, license, agent policy for the requested line and why each result matched. Built-in matches come first in `builtIn`: if one fits, enable it instead of installing a package.',
   ].join('\n'),
@@ -76,6 +76,7 @@ export const INPUT_EXAMPLES: Record<ToolName, Record<string, unknown>[]> = {
     { query: 'send invoices to KSeF', omVersion: '0.9.0' },
     { query: 'exchange rates' },
     { query: 'deal won', emits: 'customers.deal.won' },
+    { consumes: 'customers.deal.won' },
   ],
   get_module: [
     { ref: 'npm:@fastwhitecat/integration-ksef-direct' },

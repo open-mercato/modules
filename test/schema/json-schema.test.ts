@@ -62,7 +62,11 @@ describe('JSON Schema from Zod (spec 4, 4.6)', () => {
     expect(v.validate({ query: 'send invoices to KSeF' }).valid).toBe(true)
     expect(v.validate({ query: 'send invoices to KSeF', omVersion: '0.9.0' }).valid).toBe(true)
     expect(v.validate({ query: 'deal won', emits: 'customers.deal.won' }).valid).toBe(true)
-    expect(v.validate({}).valid).toBe(false)
+    // no query, or a blank one: the filters alone (finding of 25 Oct)
+    expect(v.validate({}).valid).toBe(true)
+    expect(v.validate({ query: '' }).valid).toBe(true)
+    expect(v.validate({ consumes: 'customers.deal.won' }).valid).toBe(true)
+    expect(v.validate({ query: 'x'.repeat(201) }).valid).toBe(false)
     expect(v.validate({ query: 'x', limit: 50 }).valid).toBe(false)
     // the default io 'output' would make every .default() field required and reject the call
     const outputMode = new Validator(z.toJSONSchema(SearchModulesInput) as never, '2020-12', false)
