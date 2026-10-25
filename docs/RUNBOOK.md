@@ -337,7 +337,9 @@ Spec 5.6 was written for a public repository of a personal account; the catalog 
 `open-mercato/modules`. These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
 never change them. The one workflow call that touches Actions state is the keepalive of `watch`, which calls `enable` only on
 workflows that are active or that GitHub turned off for inactivity, never on one disabled by hand (see Stop the night). State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
-answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty).
+answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty). One thing exists already:
+the environment `mcp`, which GitHub created on the first `mcp-deploy` run (25 Oct 11:07 UTC; a job that names an
+environment creates it), with no protection rules and no deployment branch policy.
 
 Before the repository is public:
 
@@ -356,7 +358,9 @@ At the switch to the public address:
 6. Settings > Pages > Source: GitHub Actions. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on
    their own once the repository is public; while it is private they run only by hand (Actions minutes).
 7. Environments `github-pages` and `mcp` (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`), and the WebMCP origin
-   trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 items 6 and 8).
+   trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 items 6 and 8). `mcp` exists already: set its deployment branch policy
+   to `main` (Settings > Environments > mcp > Deployment branches) before adding `CLOUDFLARE_API_TOKEN`, so no other
+   branch can deploy with it.
 8. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
 
 ## Triage of submissions
