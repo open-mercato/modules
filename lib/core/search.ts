@@ -614,8 +614,9 @@ export const SEARCH_DEFAULTS = { verifiedOnly: false, includeBuiltIn: true, incl
 /**
  * `search_modules` (tools@1). The caller validates untrusted input with SearchModulesInput (the MCP handler and the
  * CLI do; the site passes typed input), this function applies the defaults; `combineWith` is AND, with OR as a
- * fallback when nothing matches. Without a query (absent or blank) the filters alone pick the modules, in the
- * relevance order of the registry; built-ins then come only with a category, event or kind filter. Zod stays out of
+ * fallback when nothing matches. Without a query (absent, blank, or stop words only next to a filter) the
+ * filters alone pick the modules, in the relevance order of the registry; built-ins then come only with a category,
+ * event or kind filter. Zod stays out of
  * this module so the site's search chunk does not carry it.
  */
 export function searchModules(searcher: Searcher, rawInput: SearchModulesInput): SearchModulesOutput {
@@ -709,8 +710,19 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
   })
 
   // no query (finding of 25 Oct: `{ consumes }` alone and `query: ""` were refused): the filters pick, the chips name
-  // the filters a card matched
-  if (input.query.trim() === '') {
+  // the filters a card matched. A query of stop words only (`when`, `use`) next to a filter counts as no query, so a
+  // filler word does not empty the answer the filter alone gives (review of 25 Oct); without a filter it finds nothing.
+  const filtered = !!(
+    input.category ||
+    input.emits ||
+    input.consumes ||
+    input.provider ||
+    input.type ||
+    wantKinds ||
+    input.verifiedOnly
+  )
+  const words = tokenize(input.query).some((t) => processTerm(t) !== null)
+  if (input.query.trim() === '' || (filtered && !words)) {
     const filterChips = (category: string, providers: readonly { name: string; label: string }[]): string[] => [
       ...(input.emits ? [`event ${input.emits}`] : []),
       ...(input.consumes && input.consumes !== input.emits ? [`event ${input.consumes}`] : []),

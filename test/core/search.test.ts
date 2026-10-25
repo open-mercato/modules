@@ -124,6 +124,20 @@ describe('no query: the filters alone (finding of 25 Oct)', () => {
     expect(blank.results.map((c) => c.locator)).toContain('npm:@open-mercato/gateway-stripe')
   })
 
+  it('a query of stop words only next to a filter is no query: the filter alone answers (review of 25 Oct)', () => {
+    // `when` and `use` are stop words; with them a filter once gave nothing while the filter alone gave results
+    const event = searchModules(corpusIdx, { query: 'when', emits: 'customers.deal.won' })
+    expect(event).toEqual(searchModules(corpusIdx, { emits: 'customers.deal.won' }))
+    expect(event.builtIn.map((b) => b.id)).toEqual(['customers'])
+    const category = searchModules(corpusIdx, { query: 'use', category: 'payments-finance' })
+    expect(category).toEqual(searchModules(corpusIdx, { category: 'payments-finance' }))
+    expect(category.results.length).toBeGreaterThan(0)
+    // a real word next to the filter still searches
+    expect(searchModules(corpusIdx, { query: 'stripe', category: 'payments-finance' }).results[0]?.locator).toBe(
+      'npm:@open-mercato/gateway-stripe',
+    )
+  })
+
   it('no query and no filter: every listed module, the limit applies, no built-in', () => {
     const all = searchModules(corpusIdx, { limit: 20 })
     expect(all.results).toHaveLength(20)
