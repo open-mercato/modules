@@ -863,6 +863,8 @@ const note = levelNote(entry, detail?.rules, latest.key)
 const repoUrl = CATALOG_REPO_URL
 const issueUrl = (template: string): string =>
   `${repoUrl}/issues/new?template=${template}&title=${encodeURIComponent(`${template === 'om-quality-request.yml' ? 'OM Quality review' : 'Report'}: ${name}`)}`
+/** Keeps a click on the view toggle that lands before hydration (ViewToggle reads `window.__omView`). */
+const EARLY_VIEW_JS = `document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('.vt [data-view]');if(!b||!b.closest('astro-island[ssr]'))return;window.__omView=b.getAttribute('data-view');var bs=b.parentNode.querySelectorAll('[data-view]');for(var i=0;i<bs.length;i++)bs[i].setAttribute('aria-pressed',String(bs[i]===b))},true)`
 /** A link of the data under the site root as a site path, so it stays on the host that serves the page. */
 const siteRoot = meta.site.replace(/\/+$/, '')
 const sitePath = (u: string): string => (u.startsWith(`${siteRoot}/`) ? href(u.slice(siteRoot.length)) : u)
@@ -980,6 +982,8 @@ const tabs = [
         </div>
         <div class="mhd__side">
           <ViewToggle client:painted="idle" md={href(moduleMd(entry.path))} json={href(`/m/${entry.path}.json`)} target="agent-view" />
+          {/* a click on Human or Agent before the island hydrates: shown at once, replayed by the island (25 Oct) */}
+          <script is:inline set:html={EARLY_VIEW_JS} />
         </div>
       </header>
 

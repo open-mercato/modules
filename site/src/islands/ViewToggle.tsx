@@ -32,6 +32,15 @@ export default function ViewToggle({ md, json, target }: ViewToggleProps) {
 
   useEffect(() => {
     setHost(document.getElementById(target))
+    // a click before hydration (the island hydrates after first paint, spec 7.11) is kept by the page's inline
+    // script and replayed here (finding of 25 Oct: the first click on Agent did nothing)
+    const w = window as unknown as { __omView?: string }
+    const early = w.__omView
+    delete w.__omView
+    if (early === 'agent' || early === 'human') {
+      setView(early)
+      return
+    }
     try {
       if (localStorage.getItem(KEY) === 'agent') setView('agent')
     } catch {
@@ -108,10 +117,10 @@ export default function ViewToggle({ md, json, target }: ViewToggleProps) {
   return (
     <>
       <div class="vt" role="group" aria-label="View">
-        <button type="button" aria-pressed={view === 'human'} onClick={() => setView('human')}>
+        <button type="button" data-view="human" aria-pressed={view === 'human'} onClick={() => setView('human')}>
           Human
         </button>
-        <button type="button" aria-pressed={view === 'agent'} onClick={() => setView('agent')}>
+        <button type="button" data-view="agent" aria-pressed={view === 'agent'} onClick={() => setView('agent')}>
           Agent
         </button>
       </div>
