@@ -811,6 +811,11 @@ function notVerifiedText(
   return untestedText(line, iso ? { ...iso, finding: null } : null, installs)
 }
 
+/** ` (fixed in 2.0.0)` after an advisory id, or nothing when OSV names no fix. */
+export function fixedInText(fixedIn: string | null): string {
+  return fixedIn === null ? '' : ` (fixed in ${fixedIn})`
+}
+
 /**
  * Agent policy of an entry on a line (spec 6.5). `app` adds the SLOT rule. Reasons come from every rule that
  * hit, the decision from the first group (refuse > ask > allow). `ask` carries `consentText`.
@@ -831,9 +836,10 @@ export function agentPolicy(e: PolicyEntry, line: string, app?: AppContext, opts
     else add('HOLD', e.status === 'hold' ? `On hold:${why || ' see the card.'}` : `Delisted:${why || ' see the card.'}`)
   }
   if (e.advisories) {
+    // every advisory affects the listed version (OSV is queried by version); `fixedIn` is remediation text only
     for (const a of e.advisories)
-      if ((a.severity === 'high' || a.severity === 'critical') && a.fixedIn === null)
-        add('ADVISORY', `Open ${a.severity} severity advisory ${a.id}.`)
+      if (a.severity === 'high' || a.severity === 'critical')
+        add('ADVISORY', `Open ${a.severity} severity advisory ${a.id}${fixedInText(a.fixedIn)}.`)
   }
   const cell = e.compat.lines[line]
   const recommended = e.version.recommended[line] ?? null

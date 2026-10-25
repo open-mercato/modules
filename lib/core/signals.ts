@@ -6,6 +6,7 @@ import type { FitCell } from '../schema/data/fit.ts'
 import type { Signals } from '../schema/data/health.ts'
 import type { SyncRecord } from '../schema/data/sync.ts'
 import { daysBetween, type LineInfo } from './lines.ts'
+import { fixedInText } from './policy.ts'
 
 const DAY_MS = 86_400_000
 
@@ -78,13 +79,15 @@ export function supplyChainSignal(
     .filter(([, r]) => /^(git\+|git:|github:|https?:|file:|link:)/.test(r) || /^[\w-]+\/[\w.-]+(#.*)?$/.test(r))
     .map(([n]) => n)
   if (offRegistry.length > 0) fail.push(`Dependencies outside the registry: ${offRegistry.slice(0, 5).join(', ')}.`)
+  // every advisory of the sync affects the version it queried (OSV `querybatch` by version, finding of 25 Oct):
+  // `fixedIn` names a release with the fix, it does not close the advisory for the version the catalog lists
   for (const a of sync?.advisories ?? []) {
-    if (a.fixedIn !== null) continue
+    const fix = fixedInText(a.fixedIn)
     if (a.severity === 'high' || a.severity === 'critical') {
       const age = (Date.parse(now) - Date.parse(a.publishedAt)) / DAY_MS
-      if (age > 30) fail.push(`Open ${a.severity} advisory ${a.id} for more than 30 days.`)
-      else warn.push(`Open ${a.severity} advisory ${a.id}.`)
-    } else if (a.severity === 'moderate') warn.push(`Open moderate advisory ${a.id}.`)
+      if (age > 30) fail.push(`Open ${a.severity} advisory ${a.id} for more than 30 days${fix}.`)
+      else warn.push(`Open ${a.severity} advisory ${a.id}${fix}.`)
+    } else if (a.severity === 'moderate') warn.push(`Open moderate advisory ${a.id}${fix}.`)
   }
   if (sync?.provenance.status === 'lost') warn.push('Provenance lost: the previous release had it.')
   const status = fail.length > 0 ? 'fail' : warn.length > 0 ? 'warn' : 'ok'

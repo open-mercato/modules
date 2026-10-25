@@ -15,7 +15,15 @@ import {
   versionStatus,
   type LineInfo,
 } from './lines.ts'
-import { brokenText, notJudgedText, otherVersionText, shortDate, untestedText, type IsolationOf } from './policy.ts'
+import {
+  brokenText,
+  fixedInText,
+  notJudgedText,
+  otherVersionText,
+  shortDate,
+  untestedText,
+  type IsolationOf,
+} from './policy.ts'
 import { compareVersions, isStable, isVersion, maxVersion } from './semver.ts'
 
 export type Rule = Health['rules'][number]
@@ -113,10 +121,11 @@ export function listedRules(i: ListedInput): Rule[] {
   const lic = i.license.spdx ?? i.licenseValue ?? i.license.kind
   out.push(rule('LST-4', true, `License: ${lic}${i.license.mismatch ? ' (sources differ)' : ''}.`))
 
-  const critical = (i.sync?.advisories ?? []).filter((a) => a.severity === 'critical' && a.fixedIn === null)
+  // an advisory of the sync affects the listed version; `fixedIn` only names a release with the fix
+  const critical = (i.sync?.advisories ?? []).filter((a) => a.severity === 'critical')
   out.push(
-    critical.length > 0
-      ? rule('LST-5', false, `Open critical advisory ${critical[0]?.id ?? ''}.`)
+    critical[0]
+      ? rule('LST-5', false, `Open critical advisory ${critical[0].id}${fixedInText(critical[0].fixedIn)}.`)
       : rule('LST-5', true, 'No known malware or open critical advisory.'),
   )
   out.push(rule('LST-6', true, 'Name reviewed at merge.'))

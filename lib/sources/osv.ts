@@ -2,7 +2,7 @@
 import type { SyncRecord } from '../schema/index.ts'
 import type { Http } from './http.ts'
 import { getJson } from './http.ts'
-import { isoSeconds } from './semver.ts'
+import { compareVersions, isoSeconds } from './semver.ts'
 
 export const API = 'https://api.osv.dev/v1'
 export type Advisory = SyncRecord['advisories'][number]
@@ -23,13 +23,19 @@ const SEVERITY: Record<string, Advisory['severity']> = {
   CRITICAL: 'critical',
 }
 
-export function toAdvisory(v: OsvVuln, pkg: string): Advisory {
-  const fixed = (v.affected ?? [])
+/**
+ * `version` is the version the advisory was queried for: `fixedIn` is then the lowest fix above it (a fix on
+ * another major says nothing about the listed one), or null when no range has one.
+ */
+export function toAdvisory(v: OsvVuln, pkg: string, version?: string): Advisory {
+  const fixes = (v.affected ?? [])
     .filter((a) => a.package?.name === pkg)
     .flatMap((a) => a.ranges ?? [])
     .flatMap((r) => r.events ?? [])
     .map((e) => e.fixed)
-    .find((f): f is string => typeof f === 'string')
+    .filter((f): f is string => typeof f === 'string')
+  const fixed =
+    version === undefined ? fixes[0] : fixes.filter((f) => compareVersions(f, version) > 0).sort(compareVersions)[0]
   return {
     id: v.id,
     // without a GitHub severity the advisory is kept as moderate (shown, does not fail Supply chain alone)
@@ -47,6 +53,7 @@ export async function advisories(
   const out = new Map<string, Advisory[]>()
   if (queries.length === 0) return out
   const ids = new Map<string, Set<string>>()
+  const versions = new Map(queries.map((q) => [q.name, q.version]))
   for (let i = 0; i < queries.length; i += 1000) {
     const chunk = queries.slice(i, i + 1000)
     const res = await getJson<{ results?: { vulns?: { id: string }[] }[] }>(http, `${API}/querybatch`, {
@@ -70,7 +77,7 @@ export async function advisories(
         .sort()
         .map((id) => details.get(id))
         .filter((v): v is OsvVuln => !!v)
-        .map((v) => toAdvisory(v, name)),
+        .map((v) => toAdvisory(v, name, versions.get(name))),
     )
   return out
 }
