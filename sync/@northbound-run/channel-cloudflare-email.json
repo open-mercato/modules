@@ -1,6 +1,6 @@
 {
   "locator": "npm:@northbound-run/channel-cloudflare-email",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@northbound-run/channel-cloudflare-email",
@@ -85,6 +85,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 37,
+  "downloads30d": 30,
   "errors": []
 }

@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 237
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 16
   },
   "package": {
     "locator": "github:fullstackhouse/open-mercato-client-auth",
@@ -313,7 +313,8 @@
             "src": {
               "file": "src/config.ts",
               "line": 67
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "CLIENT_AUTH_DEFAULT_ROLE",

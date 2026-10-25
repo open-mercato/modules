@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/telemetry",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -28,12 +28,12 @@
   "signals": {
     "receipt": {
       "0.9": "verified",
-      "0.8": "broken",
+      "0.8": "untested",
       "next": "verified"
     },
     "fit": {
       "0.9": "ok",
-      "0.8": "drift",
+      "0.8": "ok",
       "next": "unknown"
     },
     "anatomy": "partial",
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.8, 0.9; verified on 0.9, next."
+        "No Open Mercato peer range; verified on 0.9, next."
       ]
     }
   },
@@ -131,13 +131,14 @@
       ]
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.8 since 24 Oct."
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 0.8.0 on 0.8 yet; the receipt is for 0.9.0 (broken at typecheck, 24 Oct)."
         }
-      ]
+      ],
+      "consentText": "Install @open-mercato/telemetry@0.8.0"
     },
     "next": {
       "decision": "allow",
@@ -161,7 +162,7 @@
   },
   "evaluated": {
     "0.9": "0.9.0",
-    "0.8": "0.9.0",
+    "0.8": "0.8.0",
     "next": "0.10.1-develop.7583.1.0c886d0a14"
   },
   "verdictPreset": "classic"

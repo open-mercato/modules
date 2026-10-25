@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
   "version": "0.7.3",
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "broken",
-      "0.8": "broken",
-      "next": "broken"
+      "0.9": "harness-red",
+      "0.8": "harness-red",
+      "next": "harness-red"
     },
     "fit": {
       "0.9": "ok",
@@ -92,7 +92,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at typecheck on 0.9 since 24 Oct."
+      "detail": "Not judged on 0.9: our test app failed on 24 Oct."
     },
     {
       "id": "VER-2",
@@ -111,51 +111,54 @@
     },
     {
       "id": "VER-5",
-      "pass": true,
-      "detail": "No repository in the descriptor to compare."
+      "pass": false,
+      "detail": "Not checked: neither the descriptor nor the tarball names a repository."
     }
   ],
   "tier": "listed",
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.9 since 24 Oct."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not judged on 0.9: our test app failed on 24 Oct."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.3"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.8 since 24 Oct."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not judged on 0.8: our test app failed on 24 Oct."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.3"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on next since 24 Oct."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not judged on next: our test app failed on 24 Oct."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.3"
     }
   },
   "state": "active",

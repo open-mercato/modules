@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 532
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 129
   },
   "package": {
     "locator": "npm:@freighttech/shipment-tracking",
@@ -1055,7 +1055,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 85
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "api.maersk.com",
@@ -1063,7 +1063,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 58
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "api.shipsgo.com",
@@ -1079,7 +1079,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 64
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "apigw.zim.com",
@@ -1087,7 +1087,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 91
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "apis.cargosmart.com",
@@ -1095,7 +1095,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 97
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "apis.cma-cgm.net",
@@ -1103,7 +1103,7 @@
               "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
               "line": 79
             },
-            "confidence": "low"
+            "confidence": "high"
           },
           {
             "host": "ecomm.one-line.com",
@@ -1419,7 +1419,7 @@
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

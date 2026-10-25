@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 289
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 52
   },
   "package": {
     "locator": "npm:@open-mercato/sync-akeneo",
@@ -176,7 +176,7 @@
       "ui": {
         "backendPages": [],
         "frontendPages": [],
-        "widgets": 0,
+        "widgets": 1,
         "extensionHosts": 0
       },
       "background": {
@@ -225,7 +225,365 @@
             "required": true
           }
         ],
-        "env": []
+        "env": [
+          {
+            "name": "OM_INTEGRATION_AKENEO_API_URL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 118
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_API_URL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 118
+            }
+          },
+          {
+            "name": "AKENEO_API_URL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 118
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_CLIENT_ID",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 119
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_CLIENT_ID",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 119
+            }
+          },
+          {
+            "name": "AKENEO_CLIENT_ID",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 119
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_CLIENT_SECRET",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 120
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_CLIENT_SECRET",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 120
+            }
+          },
+          {
+            "name": "AKENEO_CLIENT_SECRET",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 120
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_USERNAME",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 121
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_USERNAME",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 121
+            }
+          },
+          {
+            "name": "AKENEO_USERNAME",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 121
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_PASSWORD",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 122
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_PASSWORD",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 122
+            }
+          },
+          {
+            "name": "AKENEO_PASSWORD",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 122
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 150
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 150
+            }
+          },
+          {
+            "name": "AKENEO_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 150
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_PRODUCT_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 151
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_PRODUCT_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 151
+            }
+          },
+          {
+            "name": "AKENEO_PRODUCT_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 151
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_CATEGORY_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 152
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_CATEGORY_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 152
+            }
+          },
+          {
+            "name": "AKENEO_CATEGORY_LOCALE",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 152
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_PRODUCT_CHANNEL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 153
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_PRODUCT_CHANNEL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 153
+            }
+          },
+          {
+            "name": "AKENEO_PRODUCT_CHANNEL",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 153
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_IMPORT_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 154
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_IMPORT_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 154
+            }
+          },
+          {
+            "name": "AKENEO_IMPORT_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 154
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_IMPORT_ALL_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 155
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_IMPORT_ALL_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 155
+            }
+          },
+          {
+            "name": "AKENEO_IMPORT_ALL_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 155
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_CREATE_MISSING_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 156
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_CREATE_MISSING_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 156
+            }
+          },
+          {
+            "name": "AKENEO_CREATE_MISSING_CHANNELS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 156
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_SYNC_ASSOCIATIONS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 157
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_SYNC_ASSOCIATIONS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 157
+            }
+          },
+          {
+            "name": "AKENEO_SYNC_ASSOCIATIONS",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 157
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_ATTRIBUTE_FAMILY_FILTER",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 158
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_ATTRIBUTE_FAMILY_FILTER",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 158
+            }
+          },
+          {
+            "name": "AKENEO_ATTRIBUTE_FAMILY_FILTER",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 158
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_PRODUCTS_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 161
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_PRODUCTS_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 161
+            }
+          },
+          {
+            "name": "AKENEO_PRODUCTS_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 161
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_CATEGORIES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 166
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_CATEGORIES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 166
+            }
+          },
+          {
+            "name": "AKENEO_CATEGORIES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 166
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AKENEO_ATTRIBUTES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 171
+            }
+          },
+          {
+            "name": "OPENMERCATO_AKENEO_ATTRIBUTES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 171
+            }
+          },
+          {
+            "name": "AKENEO_ATTRIBUTES_SETTINGS_JSON",
+            "src": {
+              "file": "src/modules/sync_akeneo/lib/preset.ts",
+              "line": 171
+            }
+          }
+        ]
       },
       "network": {
         "hosts": [],
@@ -470,12 +828,12 @@
         "backendRoutes": []
       },
       "publicRoutes": 0,
-      "glyph": "0200201",
+      "glyph": "0210201",
       "lint": [
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

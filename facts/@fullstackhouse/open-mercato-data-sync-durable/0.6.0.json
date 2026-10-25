@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 51
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 15
   },
   "package": {
     "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",
@@ -578,7 +578,7 @@
         {
           "code": "unresolved-extension-target",
           "severity": "warn",
-          "message": "1 extension contributions target a host that is not found.",
+          "message": "1 extension contribution targets a host that is not found.",
           "anchor": "module-facts extensionSurfaces.unresolved",
           "src": {
             "file": "src/modules/data_sync/extension-points.ts",

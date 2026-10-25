@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 350
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 82
   },
   "package": {
     "locator": "npm:@northbound-run/sync-shopify",
@@ -65,7 +65,16 @@
       ],
       "ejectable": true,
       "data": {
-        "entities": [],
+        "entities": [
+          {
+            "id": "sync_shopify:shopify_inventory_snapshot",
+            "table": "sync_shopify_inventory_snapshots",
+            "src": {
+              "file": "src/modules/sync_shopify/data/entities.ts",
+              "line": 33
+            }
+          }
+        ],
         "migrations": {
           "count": 1,
           "first": "2026-07-20",
@@ -133,7 +142,28 @@
         "agents": []
       },
       "config": {
-        "credentials": [],
+        "credentials": [
+          {
+            "key": "shopDomain",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "apiVersion",
+            "type": "select",
+            "required": true
+          }
+        ],
         "env": []
       },
       "network": {
@@ -213,7 +243,9 @@
       },
       "collisionKeys": {
         "moduleId": "sync_shopify",
-        "tables": [],
+        "tables": [
+          "sync_shopify_inventory_snapshots"
+        ],
         "aclFeatures": [
           "sync_shopify.view",
           "sync_shopify.configure",
@@ -227,7 +259,7 @@
         "backendRoutes": []
       },
       "publicRoutes": 0,
-      "glyph": "1002200",
+      "glyph": "2002200",
       "lint": [
         {
           "code": "no-agents-md",
@@ -255,7 +287,7 @@
   ],
   "coverage": {
     "routesAuthResolved": 1,
-    "integrationTs": "unparsed"
+    "integrationTs": "expanded"
   },
   "diagnostics": []
 }

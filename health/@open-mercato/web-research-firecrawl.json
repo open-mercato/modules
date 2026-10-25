@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/web-research-firecrawl",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -120,7 +120,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not installed by the catalog: the nightly run installs modules, not providers."
         }
       ],
       "consentText": "Install @open-mercato/web-research-firecrawl@0.9.0"
@@ -130,17 +130,17 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not installed by the catalog: the nightly run installs modules, not providers."
         }
       ],
-      "consentText": "Install @open-mercato/web-research-firecrawl@0.9.0"
+      "consentText": "Install @open-mercato/web-research-firecrawl@0.8.0"
     },
     "next": {
       "decision": "ask",
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not installed by the catalog: the nightly run installs modules, not providers."
         }
       ],
       "consentText": "Install @open-mercato/web-research-firecrawl@0.9.0"
@@ -154,7 +154,7 @@
   },
   "evaluated": {
     "0.9": "0.9.0",
-    "0.8": "0.9.0",
+    "0.8": "0.8.0",
     "next": "0.9.0"
   },
   "verdictPreset": "classic"

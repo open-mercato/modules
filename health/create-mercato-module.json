@@ -1,7 +1,7 @@
 {
   "locator": "npm:create-mercato-module",
   "version": "0.5.1",
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "official",
     "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
@@ -51,10 +51,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for 0.8, 0.9, next; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -122,7 +120,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install create-mercato-module@0.5.1"
@@ -132,7 +130,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install create-mercato-module@0.5.1"
@@ -142,7 +140,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install create-mercato-module@0.5.1"

@@ -1,6 +1,6 @@
 {
   "locator": "npm:@northbound-run/search-cloudflare",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@northbound-run/search-cloudflare",
@@ -67,6 +67,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 23,
+  "downloads30d": 28,
   "errors": []
 }

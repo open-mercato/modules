@@ -1,6 +1,6 @@
 {
   "locator": "npm:mercato-readiness-scanner",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "mercato-readiness-scanner",
@@ -52,6 +52,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
-  "downloads30d": null,
+  "downloads30d": 671,
   "errors": []
 }

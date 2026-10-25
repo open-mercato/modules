@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 19
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 14
   },
   "package": {
     "locator": "npm:@fullstackhouse/open-mercato-health",
@@ -119,126 +119,144 @@
             "src": {
               "file": "src/strategies/email-delivery.ts",
               "line": 19
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "SENDGRID_API_KEY",
             "src": {
               "file": "src/strategies/email-delivery.ts",
               "line": 20
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "POSTMARK_API_TOKEN",
             "src": {
               "file": "src/strategies/email-delivery.ts",
               "line": 21
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "RESEND_API_KEY",
             "src": {
               "file": "src/strategies/email-delivery.ts",
               "line": 22
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "OPENAI_API_KEY",
             "src": {
               "file": "src/strategies/external-ai.ts",
               "line": 19
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "ANTHROPIC_API_KEY",
             "src": {
               "file": "src/strategies/external-ai.ts",
               "line": 20
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "AZURE_OPENAI_API_KEY",
             "src": {
               "file": "src/strategies/external-ai.ts",
               "line": 21
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "TENANT_DATA_ENCRYPTION_ENABLED",
             "src": {
               "file": "src/strategies/kms.ts",
               "line": 18
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "VAULT_ADDR",
             "src": {
               "file": "src/strategies/kms.ts",
               "line": 20
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "VAULT_TOKEN",
             "src": {
               "file": "src/strategies/kms.ts",
               "line": 20
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "QUEUE_STRATEGY",
             "src": {
               "file": "src/strategies/queue-redis.ts",
               "line": 18
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "REDIS_URL",
             "src": {
               "file": "src/strategies/queue-redis.ts",
               "line": 21
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "QUEUE_REDIS_URL",
             "src": {
               "file": "src/strategies/queue-redis.ts",
               "line": 21
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "MEILISEARCH_HOST",
             "src": {
               "file": "src/strategies/search-fulltext.ts",
               "line": 18
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "SEARCH_FULLTEXT_URL",
             "src": {
               "file": "src/strategies/search-fulltext.ts",
               "line": 18
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "SEARCH_VECTOR_URL",
             "src": {
               "file": "src/strategies/search-vector.ts",
               "line": 19
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "QDRANT_URL",
             "src": {
               "file": "src/strategies/search-vector.ts",
               "line": 20
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "PINECONE_API_KEY",
             "src": {
               "file": "src/strategies/search-vector.ts",
               "line": 21
-            }
+            },
+            "ifSet": true
           }
         ]
       },

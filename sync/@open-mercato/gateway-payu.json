@@ -1,6 +1,6 @@
 {
   "locator": "npm:@open-mercato/gateway-payu",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/gateway-payu",
@@ -41,6 +41,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 9,
+  "downloads30d": 13,
   "errors": []
 }

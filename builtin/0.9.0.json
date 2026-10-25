@@ -7,7 +7,7 @@
     "source": "module-facts.v2.json",
     "cliVersion": "0.9.0"
   },
-  "computedAt": "2026-10-23T09:41:43.125Z",
+  "computedAt": "2026-10-25T20:28:18.059Z",
   "routesMeasured": false,
   "modules": [
     {
@@ -11343,7 +11343,6 @@
     }
   ],
   "diagnostics": [
-    "Routes, migrations, env and hosts are not in module-facts.v2.json.",
-    "policy/builtin-categories.yml lists ecommerce, which is not a core module of 0.9.0."
+    "Routes, migrations, env and hosts are not in module-facts.v2.json."
   ]
 }

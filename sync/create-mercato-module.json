@@ -1,6 +1,6 @@
 {
   "locator": "npm:create-mercato-module",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "create-mercato-module",
@@ -88,6 +88,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
-  "downloads30d": 646,
+  "downloads30d": 654,
   "errors": []
 }

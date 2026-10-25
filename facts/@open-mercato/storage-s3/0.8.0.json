@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 117
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 28
   },
   "package": {
     "locator": "npm:@open-mercato/storage-s3",
@@ -227,6 +227,63 @@
             "src": {
               "file": "src/modules/storage_s3/lib/endpoint-safety.ts",
               "line": 173
+            },
+            "ifSet": true
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_ACCESS_KEY_ID",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 46
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_SECRET_ACCESS_KEY",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 47
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_SESSION_TOKEN",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 48
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_REGION",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 49
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_BUCKET",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 50
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_ENDPOINT",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 72
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_FORCE_PATH_STYLE",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 73
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STORAGE_S3_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/storage_s3/lib/preset.ts",
+              "line": 87
             }
           },
           {
@@ -372,7 +429,7 @@
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

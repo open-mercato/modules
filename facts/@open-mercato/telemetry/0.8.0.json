@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 14
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 6
   },
   "package": {
     "locator": "npm:@open-mercato/telemetry",
@@ -39,6 +39,46 @@
   "agentsMd": true,
   "readmeExcerpt": "# @open-mercato/telemetry\n\nVendor-neutral tracing, metrics, log export, and error reporting for Open\nMercato, backed by a pluggable provider with OpenTelemetry (OTLP) as the default\ntransport.\n\nTelemetry is explicitly opt-in. The platform checks `TELEMETRY_BACKEND` from\nshared code before importing this package, so the telemetry runtime is not\nevaluated when the variable is unset, `noop`, or unknown. OpenTelemetry packages\nare optional dependencies and are dynamically imported only for an OTLP backend.\nPackage managers may still install optional dependencies; the guarantee is zero\ndisabled-path runtime loading, hook registration, or export traffic.\n\nSee [the telemetry spec](../../.ai/specs/2026-04-29-telemetry-and-otel.md).\n\n## Usage\n\nThe canonical application logger remains\n`@open-mercato/shared/lib/logger`. Telemetry extends it after successful\ninitialization with trace correlation and one remote sink; it does not create a\nsecond logger or local output path.\n\n```ts\nimport { createLogger } from '@open-mercato/shared/lib/logger'\nimport { withSpan, counter, reportError } from '@open-mercato/telemetry'\n\nconst log = createLogger('orders').child({ module: 'sales' })\nlog.info('Order placed', { orderId })\n\nawait withSpan('orders.checkout', async (span) => {\n  span.setAttribute('om.tenant_id', tenantId)\n  // pg/undici auto-spans nest here when OTLP is enabled\n})\n\ncounter('om.errors', 1, { module: 'orders' })\n\ntry {\n  // ...\n} catch (error) {\n  reportError(error, { module: 'orders' })\n  throw error\n}\n```\n\nUse `OM_LOG_LEVEL`, `OM_LOG_PRETTY`, and `OM_LOG_DESTINATION` for both the\nnormal local logger and telemetry-backed log export. Remote records follow the\nsame shared level gate as local records.\n\n## Enabling\n\nLeave `TELEMETRY_BACKEND` unset (or set it to `noop`) to keep telemetry off.\nUnknown values also resolve to off.\n\n```dotenv\nTELEMETRY_BACKEND=otlp\nTELEMETRY_SAMPLING_RATIO=0.1\nOTEL_EXPORTER_OTLP_ENDPOINT=https://<your-collector>:4318\nOTEL_EXPORTER_OTLP_HEADERS=<auth-header>=<key>\nOTEL_SERVICE_NAME=open-mercato\nOTEL_RESOURCE_ATTRIBUTES=deployment.environment=production\n```\n\n`otlp`, `signoz`, and `newrelic` select the same OTLP provider and differ\nonly by endpoint and headers. `console` is an explicit local span/metric\ndiagnostic backend.\n\n`TELEMETRY_TRUST_INBOUND_TRACE` defaults to false. In that mode both\n`traceparent` and `x-original-traceparent` from inbound/global carriers are\nignored because either header is caller-controlled. Set it to true only behind a\ntrusted upstream when global W3C continuation is required. The queue package's\ndedicated `metadata._trace` carrier does not require this flag. The richer\n`bullmq-otel` queue spans do use the process-global propagator, so they stay\ndisabled while this flag is false; async queues then use the dedicated carrier.\n\nCustom providers remain supported through `registerProvider()`. Because the\ndefault host guard deliberately imports telemetry only for built-in backend\nnames, a custom-provider bootstrap must import `@open-mercato/telemetry`,\nregister a provider whose `name` matches `TELEMETRY_BACKEND`, and call\n`initTelemetry()` directly. Unregistered names remain a hard no-op.\n\n## Existing apps\n\nFresh create-app scaffolds are already wired. Older apps can run:\n\n```bash\nyarn mercato telemetry init\n```\n\nThe command is idempotent and supports `--dry-run`. The equivalent manual\nwiring is:\n\n```ts\n// src/instrumentation.ts\nimport { isTelemetryBackendEnabled } from '@open-mercato/shared/lib/telemetry/runtime'\n\nexport async function register(): Promise<void> {\n  if (process.env.NEXT_RUNTIME === 'nodejs' && isTelemetryBackendEnabled()) {\n    const { registerTelemetryForNextjs } =\n      await import('@open-mercato/telemetry/nextjs')\n    await registerTelemetryForNextjs()\n  }\n}\n```\n\n```ts\n// next.config.ts — config-only entrypoint, no telemetry runtime imports\nimport { telemetryServerExternalPackages } from '@open-mercato/telemetry/nextjs-config'\n```\n\n```ts\n// shared API dispatcher\nimport { ge",
   "modules": [],
+  "packageCode": {
+    "env": [
+      {
+        "name": "TELEMETRY_BACKEND",
+        "src": {
+          "file": "src/env.ts",
+          "line": 52
+        }
+      },
+      {
+        "name": "TELEMETRY_SAMPLING_RATIO",
+        "src": {
+          "file": "src/env.ts",
+          "line": 56
+        }
+      },
+      {
+        "name": "TELEMETRY_TRUST_INBOUND_TRACE",
+        "src": {
+          "file": "src/env.ts",
+          "line": 57
+        }
+      },
+      {
+        "name": "OTEL_SERVICE_NAME",
+        "src": {
+          "file": "src/env.ts",
+          "line": 58
+        }
+      },
+      {
+        "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+        "src": {
+          "file": "src/env.ts",
+          "line": 59
+        }
+      }
+    ],
+    "hosts": []
+  },
   "coverage": {
     "routesAuthResolved": 1,
     "integrationTs": "absent"

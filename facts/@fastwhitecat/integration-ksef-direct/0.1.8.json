@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 193
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 40
   },
   "package": {
     "locator": "npm:@fastwhitecat/integration-ksef-direct",

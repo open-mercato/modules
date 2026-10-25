@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 990
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 212
   },
   "package": {
     "locator": "npm:@dainamite/cpq",
@@ -241,6 +241,38 @@
             "src": {
               "file": "src/modules/cpq/data/entities.ts",
               "line": 1398
+            }
+          },
+          {
+            "id": "cpq:cpq_data_centres",
+            "table": "cpq_data_centres",
+            "src": {
+              "file": "src/modules/cpq/migrations/Migration20260220220000_cpq.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "cpq:cpq_inventory_items",
+            "table": "cpq_inventory_items",
+            "src": {
+              "file": "src/modules/cpq/migrations/Migration20260220220000_cpq.ts",
+              "line": 31
+            }
+          },
+          {
+            "id": "cpq:cpq_workflow_definitions",
+            "table": "cpq_workflow_definitions",
+            "src": {
+              "file": "src/modules/cpq/migrations/Migration20260402000000_cpq_workflows.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "cpq:cpq_workflow_instances",
+            "table": "cpq_workflow_instances",
+            "src": {
+              "file": "src/modules/cpq/migrations/Migration20260402000000_cpq_workflows.ts",
+              "line": 30
             }
           }
         ],
@@ -1850,7 +1882,11 @@
           "cpq_order_configurations",
           "cpq_order_line_configurations",
           "cpq_quote_target_subscriptions",
-          "cpq_subscription_change_logs"
+          "cpq_subscription_change_logs",
+          "cpq_data_centres",
+          "cpq_inventory_items",
+          "cpq_workflow_definitions",
+          "cpq_workflow_instances"
         ],
         "aclFeatures": [
           "cpq.quotes.view",

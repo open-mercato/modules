@@ -1,6 +1,6 @@
 {
   "locator": "npm:@freighttech/ui",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@freighttech/ui",
@@ -66,7 +66,7 @@
     "repo": "FreightTech/open-mercato-modules",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-23T08:36:07Z",
+    "pushedAt": "2026-10-23T18:17:30Z",
     "defaultBranch": "main",
     "stars": 2,
     "license": "MIT",
@@ -108,6 +108,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
-  "downloads30d": 708,
+  "downloads30d": 691,
   "errors": []
 }

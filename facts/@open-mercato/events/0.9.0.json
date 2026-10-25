@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 56
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 11
   },
   "package": {
     "locator": "npm:@open-mercato/events",
@@ -161,7 +161,8 @@
             "src": {
               "file": "src/bus.ts",
               "line": 241
-            }
+            },
+            "ifSet": true
           },
           {
             "name": "QUEUE_STRATEGY",

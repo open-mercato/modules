@@ -1,7 +1,7 @@
 {
   "locator": "github:Chmarusso/open-mercato-enrichment-treg",
   "version": null,
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner Chmarusso is not a public member of open-mercato and not in policy/community.yml.",
@@ -47,7 +47,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-08",
+      "lastRelease": null,
       "catchUpDays": null
     },
     "declaredVsObserved": {

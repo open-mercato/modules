@@ -1,6 +1,6 @@
 {
   "locator": "npm:@piotrkarwatka/visits",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@piotrkarwatka/visits",
@@ -48,8 +48,8 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository pkarw/visits-example returns 404; npm scope @piotrkarwatka is listed in policy/community.yml.",
-  "downloads30d": null,
+  "downloads30d": 218,
   "errors": [
-    "github: pkarw/visits-example returns 404 (2026-10-23)"
+    "github: pkarw/visits-example returns 404 (2026-10-25)"
   ]
 }

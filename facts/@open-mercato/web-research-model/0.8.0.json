@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 7
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 2
   },
   "package": {
     "locator": "npm:@open-mercato/web-research-model",
@@ -41,6 +41,10 @@
   "agentsMd": false,
   "readmeExcerpt": null,
   "modules": [],
+  "packageCode": {
+    "env": [],
+    "hosts": []
+  },
   "coverage": {
     "routesAuthResolved": 1,
     "integrationTs": "absent"

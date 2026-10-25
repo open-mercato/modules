@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 800
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 265
   },
   "package": {
     "locator": "npm:@freighttech/ui",
@@ -63,6 +63,53 @@
   "agentsMd": false,
   "readmeExcerpt": "# @freighttech/ui 🎨\n\nComposable UI toolkit for Open Mercato backoffice and business apps, maintained\nby [FreightTech.org](https://freighttech.org).\n\n`@freighttech/ui` includes backend UI patterns (DynamicTable, forms, dialogs,\ndetail sections, injections, notifications) and reusable primitives, built on\ntop of the Open Mercato framework.\n\n## Why this package ✨\n\n- 🧭 Consistent backoffice UX patterns out of the box\n- 🧩 Rich primitives + higher-level business components\n- ⚙️ Works with the Open Mercato injection architecture\n- 🚀 Speeds up delivery without sacrificing flexibility\n\n## Install\n\n```bash\nyarn add @freighttech/ui\n```\n\n## Learn more\n\n- GitHub (repo): https://github.com/FreightTech/open-mercato-modules\n- Open Mercato framework: https://github.com/open-mercato/open-mercato\n- FreightTech.org: https://freighttech.org\n\n## License\n\nMIT. See [LICENSE](LICENSE) for details.\n",
   "modules": [],
+  "packageCode": {
+    "env": [
+      {
+        "name": "NEXT_PUBLIC_OM_CRUDFORM_EXTENDED_EVENTS_ENABLED",
+        "src": {
+          "file": "src/backend/CrudForm.tsx",
+          "line": 86
+        }
+      },
+      {
+        "name": "NEXT_PUBLIC_DATE_FORMAT",
+        "src": {
+          "file": "src/backend/DataTable.tsx",
+          "line": 1164
+        }
+      },
+      {
+        "name": "NEXT_PUBLIC_APP_URL",
+        "src": {
+          "file": "src/backend/detail/AttachmentMetadataDialog.tsx",
+          "line": 109
+        }
+      },
+      {
+        "name": "NEXT_PUBLIC_UMES_DEVTOOLS",
+        "src": {
+          "file": "src/backend/devtools/UmesDevToolsPanel.tsx",
+          "line": 13
+        }
+      },
+      {
+        "name": "NEXT_PUBLIC_UPGRADE_ACTIONS_ENABLED",
+        "src": {
+          "file": "src/backend/upgrades/UpgradeActionBanner.tsx",
+          "line": 10
+        }
+      },
+      {
+        "name": "UPGRADE_ACTIONS_ENABLED",
+        "src": {
+          "file": "src/backend/upgrades/UpgradeActionBanner.tsx",
+          "line": 11
+        }
+      }
+    ],
+    "hosts": []
+  },
   "coverage": {
     "routesAuthResolved": 1,
     "integrationTs": "absent"

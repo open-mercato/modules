@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 36
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 22
   },
   "package": {
     "locator": "npm:@open-mercato/enterprise",

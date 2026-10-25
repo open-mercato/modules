@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 92
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 9
   },
   "package": {
     "locator": "npm:@open-mercato/gateway-tpay",
@@ -236,7 +236,7 @@
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.1-develop.7442.1.4c1dbf1f0e). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.1-develop.7442.1.4c1dbf1f0e), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

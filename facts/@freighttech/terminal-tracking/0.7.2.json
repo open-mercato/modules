@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 233
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 61
   },
   "package": {
     "locator": "npm:@freighttech/terminal-tracking",
@@ -407,7 +407,8 @@
             "src": {
               "file": "src/modules/terminal_tracking/lib/logger.ts",
               "line": 10
-            }
+            },
+            "ifSet": true
           }
         ]
       },
@@ -558,7 +559,7 @@
         {
           "code": "peer-exact-pin",
           "severity": "warn",
-          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more). Use a range.",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
           "anchor": "i2 §1.4",
           "src": null
         },

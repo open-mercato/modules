@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 10
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 4
   },
   "package": {
     "locator": "npm:@open-mercato/web-research-browser",
@@ -43,6 +43,25 @@
   "agentsMd": false,
   "readmeExcerpt": null,
   "modules": [],
+  "packageCode": {
+    "env": [
+      {
+        "name": "OM_WEB_RESEARCH_BROWSER_FILTER_SUBRESOURCES",
+        "src": {
+          "file": "src/dispatch.ts",
+          "line": 45
+        }
+      },
+      {
+        "name": "OM_WEB_RESEARCH_SIDECAR_TEST",
+        "src": {
+          "file": "src/sidecar.ts",
+          "line": 108
+        }
+      }
+    ],
+    "hosts": []
+  },
   "coverage": {
     "routesAuthResolved": 1,
     "integrationTs": "absent"

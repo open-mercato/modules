@@ -3,8 +3,8 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
-    "durationMs": 5
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 1
   },
   "package": {
     "locator": "npm:@open-mercato/web-research-serp",
@@ -41,6 +41,27 @@
   "agentsMd": false,
   "readmeExcerpt": null,
   "modules": [],
+  "packageCode": {
+    "env": [],
+    "hosts": [
+      {
+        "host": "html.duckduckgo.com",
+        "src": {
+          "file": "src/profiles.ts",
+          "line": 55
+        },
+        "confidence": "high"
+      },
+      {
+        "host": "lite.duckduckgo.com",
+        "src": {
+          "file": "src/profiles.ts",
+          "line": 62
+        },
+        "confidence": "high"
+      }
+    ]
+  },
   "coverage": {
     "routesAuthResolved": 1,
     "integrationTs": "absent"

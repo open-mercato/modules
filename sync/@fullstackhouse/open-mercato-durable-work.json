@@ -1,6 +1,6 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-durable-work",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-10-25T20:25:27Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@fullstackhouse/open-mercato-durable-work",
@@ -59,8 +59,8 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository fullstackhouse/open-mercato-durable returns 404; npm scope @fullstackhouse is listed in policy/community.yml.",
-  "downloads30d": 204,
+  "downloads30d": 80,
   "errors": [
-    "github: fullstackhouse/open-mercato-durable returns 404 (2026-10-23)"
+    "github: fullstackhouse/open-mercato-durable returns 404 (2026-10-25)"
   ]
 }

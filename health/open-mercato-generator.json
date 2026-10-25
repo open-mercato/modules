@@ -1,7 +1,7 @@
 {
   "locator": "npm:open-mercato-generator",
   "version": "0.3.13",
-  "computedAt": "2026-10-25T08:04:23Z",
+  "computedAt": "2026-10-25T20:28:53Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner mkadziolka is a contributor of certified partner FilaNovum.",
@@ -51,10 +51,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for 0.8, 0.9, next; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -126,7 +124,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install open-mercato-generator@0.3.13"
@@ -140,7 +138,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install open-mercato-generator@0.3.13"
@@ -154,7 +152,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         }
       ],
       "consentText": "Install open-mercato-generator@0.3.13"
