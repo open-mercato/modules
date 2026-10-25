@@ -7,6 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { join } from 'node:path'
 import type { Facts } from '../schema/data/facts.ts'
+import { parseSpdx, spdxKind } from '../core/spdx.ts'
 
 type LicenseFacts = Facts['license']
 type SpdxNode = { license?: string; left?: SpdxNode; right?: SpdxNode; conjunction?: 'and' | 'or' }
@@ -14,19 +15,6 @@ type SpdxNode = { license?: string; left?: SpdxNode; right?: SpdxNode; conjuncti
 const req = createRequire(import.meta.url)
 const spdxParse = req('spdx-expression-parse') as (s: string) => SpdxNode
 const spdxCorrect = req('spdx-correct') as (s: string, opts?: { upgrade?: boolean }) => string | null
-
-/** SPDX ids that are not open source; a valid expression made only of these is proprietary. */
-const NON_OSI = new Set([
-  'BUSL-1.1',
-  'SSPL-1.0',
-  'Elastic-2.0',
-  'CC-BY-NC-4.0',
-  'CC-BY-NC-SA-4.0',
-  'CC-BY-NC-ND-4.0',
-  'PolyForm-Noncommercial-1.0.0',
-  'PolyForm-Small-Business-1.0.0',
-  'Commons-Clause',
-])
 
 const SEE_RE = /^SEE LICEN[CS]E IN\s+\S+/i
 
@@ -51,11 +39,6 @@ export function normalizeLicense(raw: unknown): string | null {
   }
 }
 
-function leaves(n: SpdxNode): string[] {
-  if (n.license) return [n.license]
-  return [...(n.left ? leaves(n.left) : []), ...(n.right ? leaves(n.right) : [])]
-}
-
 /** License kind of a canonical value (spec 4.1 `LicenseKind`). */
 export function licenseKind(
   value: string | null,
@@ -69,12 +52,15 @@ export function licenseKind(
     if (licenseFile && licenseFile !== 'custom') return licenseKind(licenseFile, packageName, null)
     return 'proprietary'
   }
+  // spdx-expression-parse checks the ids against the SPDX list; the kind is the tree's (lib/core/spdx.ts, finding of
+  // 25 Oct: flattening the leaves made `MIT AND BUSL-1.1` and `LicenseRef-Private` osi)
   try {
-    const ids = leaves(spdxParse(value))
-    return ids.length > 0 && ids.every((id) => NON_OSI.has(id.replace(/\+$/, ''))) ? 'proprietary' : 'osi'
+    spdxParse(value)
   } catch {
     return 'unknown'
   }
+  const tree = parseSpdx(value)
+  return tree ? spdxKind(tree) : 'unknown'
 }
 
 const FILE_RULES: readonly [RegExp, string][] = [

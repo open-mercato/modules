@@ -147,6 +147,21 @@ describe('license (spec 6.1)', () => {
     expect(licenseKind(null, '@x/a', null)).toBe('unknown')
   })
 
+  it('reads the expression as a tree: AND takes the worse side, OR the better (finding of 25 Oct)', () => {
+    const kind = (v: string) => licenseKind(v, '@x/a', null)
+    expect(kind('MIT AND BUSL-1.1')).toBe('proprietary')
+    expect(kind('MIT OR BUSL-1.1')).toBe('osi')
+    expect(kind('LicenseRef-Private')).toBe('unknown')
+    expect(kind('MIT AND LicenseRef-Private')).toBe('unknown')
+    expect(kind('CC-BY-NC-3.0')).toBe('unknown')
+    expect(kind('PolyForm-Shield-1.0.0')).toBe('unknown')
+    expect(kind('Apache-2.0 WITH LLVM-exception')).toBe('osi')
+    expect(kind('GPL-3.0-or-later')).toBe('osi')
+    expect(kind('GPL-2.0+')).toBe('osi')
+    expect(kind('(MIT OR Apache-2.0) AND ISC')).toBe('osi')
+    expect(kind('MIT')).toBe('osi')
+  })
+
   it('flags mismatch between sources', () => {
     const base = { packageName: '@x/a', licenseFile: null, moduleInfo: null, integrationTs: null }
     expect(resolveLicense({ ...base, packageJson: 'MIT', integrationTs: 'MIT' }).mismatch).toBe(false)

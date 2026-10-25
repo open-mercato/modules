@@ -28,6 +28,14 @@ describe('licenseKind without facts', () => {
     expect(licenseKind('UNLICENSED', false)).toBe('proprietary')
   })
 
+  it('the kind is the tree of the expression, as in Rentgen (F06)', () => {
+    expect(licenseKind('MIT AND BUSL-1.1', false)).toBe('proprietary')
+    expect(licenseKind('MIT OR BUSL-1.1', false)).toBe('osi')
+    expect(licenseKind('LicenseRef-Private', false)).toBe('unknown')
+    expect(licenseKind('Apache-2.0 WITH Commons-Clause', false)).toBe('proprietary')
+    expect(licenseKind('FOO-1.0', false)).toBe('unknown')
+  })
+
   it('parseSpdx reads ids, plus, LicenseRef, WITH and the AND-before-OR order', () => {
     expect(parseSpdx('GPL-2.0+')).toEqual({ license: 'GPL-2.0', plus: true, exception: null })
     expect(parseSpdx('LicenseRef-Private')).toEqual({ license: 'LicenseRef-Private', plus: false, exception: null })

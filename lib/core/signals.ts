@@ -7,7 +7,7 @@ import type { Signals } from '../schema/data/health.ts'
 import type { SyncRecord } from '../schema/data/sync.ts'
 import { daysBetween, type LineInfo } from './lines.ts'
 import { fixedInText } from './policy.ts'
-import { parseSpdx } from './spdx.ts'
+import { parseSpdx, spdxKind } from './spdx.ts'
 
 const DAY_MS = 86_400_000
 
@@ -26,8 +26,10 @@ export function licenseKind(value: string | null | undefined, enterprise: boolea
   const v = value.trim()
   if (/^(UNLICENSED|PROPRIETARY)$/i.test(v)) return 'proprietary'
   if (/^SEE LICEN[CS]E IN/i.test(v)) return enterprise ? 'enterprise' : 'proprietary'
-  // only a value that parses as an SPDX expression is one (finding of 25 Oct: any `(...)` passed, `</script>` too)
-  return parseSpdx(v) ? 'osi' : 'unknown'
+  // only a value that parses as an SPDX expression is one (finding of 25 Oct: any `(...)` passed, `</script>` too);
+  // its kind comes from the tree, so `MIT AND BUSL-1.1` is proprietary and a LicenseRef unknown
+  const tree = parseSpdx(v)
+  return tree ? spdxKind(tree) : 'unknown'
 }
 
 /** Identity license of an entry: facts (four sources) first, then the packument, then the GitHub repo. */
