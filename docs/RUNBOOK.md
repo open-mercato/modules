@@ -347,7 +347,8 @@ Before the repository is public:
    a review from code owners, block force pushes. `data` stays unprotected (only the trusted jobs write it).
 2. Labels: `new-entry`, `update`, `name-reviewed`, `curator`, `automated`, `discovery` (spec 5.6 item 7). The issue
    forms apply `new-entry`; `sync.yml` adds `discovery` to its issue once the label exists; `validate` reads
-   `name-reviewed`, so after adding it a curator re-runs the `validate` check of the PR.
+   `name-reviewed` from the PR when it runs (not from the event), so after adding it a curator re-runs the
+   `validate` check of the PR.
 3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs).
 4. Settings > Actions > General: require approval for first-time contributors; workflow permissions: read.
 

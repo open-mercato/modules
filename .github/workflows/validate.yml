@@ -23,6 +23,11 @@ jobs:
     name: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      # the current labels of the PR (name-reviewed), read when the step runs
+      issues: read
+      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -56,11 +61,24 @@ jobs:
           fi
 
       - name: Validate descriptors
+        # The labels as they are when the step runs, not those of the event: a re-run after a curator adds
+        # `name-reviewed` reuses the payload of the original event, which does not have the label, so the
+        # typosquat error stayed (finding of 25 Oct). The event labels are the fallback.
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-        run: yarn om validate --changed=origin/main --summary "$GITHUB_STEP_SUMMARY"
+          EVENT_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          if labels="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels" --jq '[.[].name] | join(",")')"; then
+            export PR_LABELS="$labels"
+          else
+            export PR_LABELS="$EVENT_LABELS"
+            echo "The labels API did not answer: labels of the pull request event."
+          fi
+          echo "Labels: ${PR_LABELS:-none}"
+          yarn om validate --changed=origin/main --summary "$GITHUB_STEP_SUMMARY"
 
   checks:
     name: checks

@@ -148,6 +148,12 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(w.permissions).toEqual({ contents: 'read' })
     const job = w.jobs.validate as Job
     expect(job.name).toBe('validate') // the required check of branch protection (5.6)
+    // read only still: the job reads the PR's current labels (name-reviewed after a re-run), nothing is written
+    expect((job as { permissions?: unknown }).permissions).toEqual({
+      contents: 'read',
+      issues: 'read',
+      'pull-requests': 'read',
+    })
     expect(job['timeout-minutes']).toBe(15)
     expect(steps(w).find((s) => s.uses?.startsWith('actions/checkout@'))?.with?.['fetch-depth']).toBe(0)
     const run = runText(w)

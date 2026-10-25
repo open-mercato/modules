@@ -49,6 +49,7 @@ fi
 [ "$1" = om ] || exit 0
 cmd="$2"; shift 2
 case "$cmd" in
+  validate) echo "om validate labels=\${PR_LABELS:-}" >> "$CALLS" ;;
   watch) mkdir -p out; cp "$QUEUE" out/queue.json; echo '{"lines":1}' > .data/lines.json ;;
   scan) mkdir -p .data/builtin .data/facts; if [ "$1" = --builtin ]; then echo '{}' > ".data/builtin/$2.json"; else echo "$*" > .data/facts/queue.txt; fi ;;
   sync) mkdir -p .data/sync; echo '{"synced":true}' > .data/sync/x.json ;;
@@ -61,6 +62,10 @@ set -euo pipefail
 echo "gh $*" >> "$CALLS"
 if [ "$1 $2" = "issue list" ]; then printf '%s' "\${FAKE_ISSUE:-}"; fi
 if [ "$1 $2" = "label list" ]; then printf '%s' "\${FAKE_LABELS:-}"; fi
+if [ "$1" = api ] && [[ "$2" == */labels ]]; then
+  if [ -n "\${FAKE_API_FAIL:-}" ]; then echo "HTTP 403" >&2; exit 1; fi
+  printf '%s\\n' "\${FAKE_PR_LABELS:-}"
+fi
 `
 
 let tmp: string
@@ -318,6 +323,33 @@ describe('pages.yml steps', () => {
 })
 
 describe('validate.yml steps', () => {
+  const pr = { GITHUB_REPOSITORY: 'open-mercato/modules', PR_NUMBER: '7', GITHUB_STEP_SUMMARY: '/dev/null' }
+
+  it('passes the labels the PR has now, so a re-run after name-reviewed sees it', () => {
+    const r = runStep(stepRun('validate.yml', 'Validate descriptors'), {
+      ...pr,
+      EVENT_LABELS: '',
+      FAKE_PR_LABELS: 'new-entry,name-reviewed',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(callLog()).toEqual([
+      'gh api repos/open-mercato/modules/issues/7/labels --jq [.[].name] | join(",")',
+      'om validate --changed=origin/main --summary /dev/null',
+      'om validate labels=new-entry,name-reviewed',
+    ])
+  })
+
+  it('falls back to the labels of the event when the API does not answer', () => {
+    const r = runStep(stepRun('validate.yml', 'Validate descriptors'), {
+      ...pr,
+      EVENT_LABELS: 'new-entry',
+      FAKE_API_FAIL: '1',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('The labels API did not answer')
+    expect(callLog().at(-1)).toBe('om validate labels=new-entry')
+  })
+
   // the checkout (fetch-depth: 0) has every branch already; the step reads it without a second, unauthenticated
   // fetch, which failed in the private repository and skipped Fit with "No data branch yet" (finding of 25 Oct)
   const checkout = () => {
