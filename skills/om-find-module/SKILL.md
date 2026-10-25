@@ -30,7 +30,7 @@ At most 3 candidates. For each: why it matches (`matchedOn`), level, lines in `v
 
 ## 5. Install plan
 
-Call `plan_install({ refs: [<locator>], app: { omVersion, enabledModules } })`, or read the module card (`https://modules.openmercato.com/m/<package>.md`). Show the plan as it is: tables, public routes, permissions to grant, settings (names only), hosts, replaced core modules, commands.
+Call `plan_install({ refs: [<locator>], app: { omVersion, enabledModules } })`, or read the module card (`https://modules.openmercato.com/m/<package>.md`; when that domain does not answer with the file, `https://open-mercato.github.io/modules/m/<package>.md`). Show the plan as it is: tables, public routes, permissions to grant, settings (names only), hosts, replaced core modules, commands.
 
 ## 6. Consent
 

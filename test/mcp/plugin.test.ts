@@ -63,6 +63,8 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
     ])
       expect(text).toContain(h)
     expect(text).toContain('https://open-mercato.github.io/modules/raw/modules.md')
+    // the module card has the same fallback as the index (review of 25 Oct)
+    expect(text).toContain('`https://open-mercato.github.io/modules/m/<package>.md`')
     expect(text).toContain('yarn mercato module enable @open-mercato/core --module <id>')
     expect(text).toContain('Approved modules: <package>@<version>')
     expect(text).toContain("the user types the plan's `consentText`")
