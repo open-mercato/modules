@@ -11,6 +11,7 @@ import Banner from '../components/Banner.astro'
 import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
 import { absoluteUrl, BASE, href } from '../lib/url.ts'
 import { hereScript } from '../lib/here.ts'
+import { jsonLdText } from '../lib/json-ld.ts'
 import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
@@ -89,7 +90,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
         new page's first style pass could run without it; inline: 96 of 96 flights land in headless Chromium) */}
     <style is:inline set:html={`${fontFaceCss()}@view-transition{navigation:auto}`}></style>
     <script type="speculationrules" is:inline set:html={speculation} />
-    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLdText(jsonLd)} />}
     <slot name="head" />
   </head>
   <body class={bodyClass}>

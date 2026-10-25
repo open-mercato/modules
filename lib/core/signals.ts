@@ -7,6 +7,7 @@ import type { Signals } from '../schema/data/health.ts'
 import type { SyncRecord } from '../schema/data/sync.ts'
 import { daysBetween, type LineInfo } from './lines.ts'
 import { fixedInText } from './policy.ts'
+import { parseSpdx } from './spdx.ts'
 
 const DAY_MS = 86_400_000
 
@@ -25,8 +26,8 @@ export function licenseKind(value: string | null | undefined, enterprise: boolea
   const v = value.trim()
   if (/^(UNLICENSED|PROPRIETARY)$/i.test(v)) return 'proprietary'
   if (/^SEE LICEN[CS]E IN/i.test(v)) return enterprise ? 'enterprise' : 'proprietary'
-  if (/^[A-Za-z0-9.+-]+(?:\s+(?:OR|AND|WITH)\s+[A-Za-z0-9.+-]+)*$|^\(.*\)$/.test(v)) return 'osi'
-  return 'unknown'
+  // only a value that parses as an SPDX expression is one (finding of 25 Oct: any `(...)` passed, `</script>` too)
+  return parseSpdx(v) ? 'osi' : 'unknown'
 }
 
 /** Identity license of an entry: facts (four sources) first, then the packument, then the GitHub repo. */
