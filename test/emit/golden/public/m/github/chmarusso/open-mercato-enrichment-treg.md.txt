@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"refuse","0.8":"refuse","next":"refuse"}
 install: npx create-mercato-module install Chmarusso/open-mercato-enrichment-treg
 installable_from: null
-data_version: 1.0.0-202610230305.hc8b167
+data_version: 1.0.0-202610230305.h57bd9b
 ---
 # treg.to Enrichment
 Enriches companies with data from the Polish business register.
@@ -20,7 +20,7 @@ Use when CRM company records need registry data looked up by tax number.
 | 0.8 (0.8.0) | - | untested | - | - | - |
 | 0.9 (0.9.0) | - | untested | - | - | - |
 | next (0.10.1-develop.7583.1.0c886d0a14) | - | untested | - | - | - |
-Built for: no Open Mercato peer range. A declaration, not a test.
+Built for: peers not read, no tagged release yet. A declaration, not a test.
 
 ## What it adds (read statically from the published code)
 Not read yet. The anatomy appears after the next scan.

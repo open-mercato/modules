@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: yarn mercato module add @open-mercato/enterprise@0.9.0
 installable_from: 2026-10-09
-data_version: 1.0.0-202610230305.hc8b167
+data_version: 1.0.0-202610230305.h57bd9b
 ---
 # Enterprise
 Commercial Open Mercato modules for SSO, security, record locks and agent orchestration.

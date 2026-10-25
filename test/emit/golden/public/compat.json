@@ -1397,7 +1397,8 @@
       "builtFor": {
         "range": null,
         "kind": "missing",
-        "lines": []
+        "lines": [],
+        "ranges": {}
       },
       "cells": {
         "0.9": {

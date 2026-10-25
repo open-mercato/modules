@@ -52,7 +52,8 @@
       "builtFor": {
         "range": null,
         "kind": "missing",
-        "lines": []
+        "lines": [],
+        "ranges": {}
       },
       "lines": {},
       "verifiedOn": []
@@ -80,7 +81,7 @@
       },
       "maintenance": {
         "status": "current",
-        "lastRelease": "2026-10-08",
+        "lastRelease": null,
         "catchUpDays": null
       },
       "declaredVsObserved": {

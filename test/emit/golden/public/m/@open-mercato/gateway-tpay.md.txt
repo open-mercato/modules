@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: yarn mercato module add @open-mercato/gateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e
 installable_from: 2026-10-10
-data_version: 1.0.0-202610230305.hc8b167
+data_version: 1.0.0-202610230305.h57bd9b
 ---
 # Tpay Payment Gateway
 PLN payments and BLIK through Tpay for checkout and sales documents.
