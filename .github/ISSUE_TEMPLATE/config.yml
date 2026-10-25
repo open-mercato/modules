@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Submit a module with the form
+    url: https://open-mercato.github.io/modules/submit
+    about: Paste the npm name. The form checks the package, writes the YAML and opens the pull request.
   - name: Add a module yourself
     url: https://github.com/open-mercato/modules/blob/main/README.md#submit-a-module-in-3-steps
     about: One YAML file in modules/ and a pull request. CI checks it in a few minutes.

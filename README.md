@@ -1,23 +1,28 @@
 # Open Mercato Modules
 
-Extend everything. Start with 80% done. Every module here is read from its published code and installed in a fresh Open Mercato app, night after night.
+Extend everything. Start with 80% done. Every entry here is read from its published code, and every module and provider is installed in a fresh Open Mercato app on each release line by the nightly run. Libraries and tools are read, not installed.
 
 This repository holds the module descriptors, the code that measures them and the site at https://open-mercato.github.io/modules (later https://modules.openmercato.com). Descriptions come from authors. Everything else is measured.
 
 ## Submit a module in 3 steps
 
+Fastest: paste your npm name into the form at https://open-mercato.github.io/modules/submit. It runs the checks below in your browser, writes the YAML and opens the pull request for you.
+
+By hand:
+
 1. Publish your module to npm with a stable version (`1.2.3`, not a prerelease). It needs `src/modules/<id>/index.ts` and `dist/modules/<id>/` in the tarball. A GitHub-only module needs a tag that contains `dist/modules/<id>/`.
 2. Add one file to `modules/`: `modules/@scope/name.yml` for a scoped package, `modules/name.yml` for an unscoped one, `modules/github/owner/repo.yml` (lower case) for GitHub only. Minimum content:
 
+   <!-- prettier-ignore -->
    ```yaml
-   npm: '@your-scope/your-module'
+   npm: "@your-scope/your-module"
    github: your-org/your-repo
    category: integrations-sync
    summary: One sentence in English, 20 to 140 characters, plain text.
    whenToUse: Use when the app must do the thing this module does, in one sentence.
    ```
 
-3. Open a pull request. CI checks the descriptor, reads the tarball (without running it) and writes a short summary on the PR. A maintainer merges it; the first nightly install runs the night after.
+3. Open a pull request. CI checks the descriptor, reads the tarball (without running it) and writes a short summary in the job summary of the `validate` check (Checks tab of the PR; there are no bot comments). A maintainer merges it; the first nightly install runs the night after.
 
 Fields, categories and text rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
