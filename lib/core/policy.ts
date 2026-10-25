@@ -450,6 +450,8 @@ export function lineVersion(
  */
 export function builtForText(e: VersionSource & Pick<IndexEntry, 'compat'>): string {
   const b = e.compat.builtFor
+  if (b.ranges && Object.keys(b.ranges).length === 0 && !b.range)
+    return 'Built for: peers not read, no tagged release yet'
   if (b.kind === 'missing' || !b.range) return 'Built for: no Open Mercato peer range'
   if (b.kind === 'star') return `Built for any version (peers ${b.range})`
   const minor = /(\d+\.\d+)/.exec(b.range)?.[1] ?? b.range

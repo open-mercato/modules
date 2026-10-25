@@ -132,7 +132,11 @@ export function maintenanceSignal(
   const n = sync?.npm
   const current = n ? (n.latestStable ?? n.preview) : null
   const releasedAt = (current && n?.publishedAt[current]) || sync?.github?.pushedAt || null
-  const lastRelease = releasedAt ? releasedAt.slice(0, 10) : null
+  // a push is no release (finding of 25 Oct: treg had lastRelease 2026-10-08 with no tag and no release): a GitHub
+  // date counts once the repository has a tag; the age below still reads the last push
+  const released =
+    (current && n?.publishedAt[current]) || ((sync?.github?.tags.length ?? 0) > 0 ? sync?.github?.pushedAt : null)
+  const lastRelease = released ? released.slice(0, 10) : null
   const latest = lines.find((l) => l.source === 'latest')?.key
   const previous = lines.find((l) => l.source === 'previous')?.key
   const verifiedLatest = latest !== undefined && receipt[latest] === 'verified'

@@ -588,6 +588,9 @@ function builtForRanges(
     if (r) ranges[k] = r
   }
   const judged = new Set(lines.map((k) => versions[k]).filter((v): v is string => !!v))
+  // no version on any line (GitHub-only without a tag): the peers were never read, which `ranges: {}` says to
+  // declaredOn and builtForText (finding of 25 Oct: treg read `No peer range` while its package.json has peers)
+  if (judged.size === 0) return { ranges: {} }
   if (Object.keys(ranges).length === 0) return {}
   return judged.size > 1 || new Set(Object.values(ranges)).size > 1 ? { ranges } : {}
 }
