@@ -1,7 +1,8 @@
 ---
 // /submit (spec 7.7 H, 1.1 item 7): the SubmitForm island checks a package live in the browser (npm, jsDelivr,
-// GitHub), builds the descriptor with the Zod schema of CI and opens a pull request. The page passes it the
-// catalog (for "Already listed" and "Renamed"), the ignore list and the categories, read at build time.
+// GitHub), builds the descriptor with the Zod schema of CI and opens GitHub's new-file page with the descriptor
+// filled in; the author commits it there and creates the pull request. The page passes it the catalog (for
+// "Already listed" and "Renamed"), the ignore list and the categories, read at build time.
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
