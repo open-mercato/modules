@@ -263,6 +263,23 @@ function withPolicy(out: string[], e: IndexEntry, plan: InstallPlan | null, line
   if (p) {
     const why = reasonsText(p.reasons)
     out.push('', `Agent policy (${lineKey}): ${p.decision}.${why ? ` ${why}` : ''}`)
+    // a library the plan installs with the module brings its own trust reasons: the card names them (finding of 25
+    // Oct: terminal-tracking's plan adds @freighttech/ui, whose xlsx comes from outside the registry, and the card said
+    // nothing). Only when one extra package is installed, so the reasons are its own, and only reasons about the
+    // package itself (supply chain, license, advisories, quarantine), not the line verdicts of the module.
+    const name = (o: { locator: string; version: string }) => `${o.locator.replace(/^npm:/, '')}@${o.version}`
+    const extraPkgs = (plan?.order ?? []).filter(
+      (o) => o.reason === 'required' && plan!.commands.some((c) => c.includes(name(o))),
+    )
+    const extra =
+      plan && extraPkgs.length === 1
+        ? plan.agentPolicy.reasons.filter(
+            (r) =>
+              ['SUPPLY_CHAIN', 'LICENSE', 'ADVISORY', 'QUARANTINE'].includes(r.code) &&
+              !p.reasons.some((o) => o.code === r.code && o.text === r.text),
+          )
+        : []
+    if (extra.length > 0) out.push(`The plan also installs ${name(extraPkgs[0]!)}: ${reasonsText(extra)}`)
     if (p.decision === 'ask' && plan?.consentText) out.push(`Consent: the user types "${plan.consentText}".`)
   }
   return out
