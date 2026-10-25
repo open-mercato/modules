@@ -26,6 +26,7 @@ import {
   reasonsText,
   shortDate,
 } from '../core/policy.ts'
+import { sdkPhrase, talksToText } from '../core/sdks.ts'
 import { previewLines } from '../core/source.ts'
 import type { InstallPlan } from '../schema/tools.ts'
 import type { IndexEntry } from '../schema/published/modules.ts'
@@ -99,8 +100,12 @@ function addsSection(c: EntryContext, lines: readonly LineInfo[]): string[] {
   )
   // names the code only checks are set, or reads as an opt-in flag in `isXEnabled()` (rentgen 4): it runs without them
   if (l.envIfSet?.length) out.push(`- Optional settings, read if set (names only): ${listMore(l.envIfSet, 10)}`)
+  // the hosts of its URL literals, then the services of its SDKs (finding of 25 Oct: gateway-stripe talks to Stripe
+  // through the stripe SDK and read `no hosts found in the code`)
+  // (its dependencies are read even when its code is not)
+  const sdk = sdkPhrase(l.sdks ?? [])
   out.push(
-    `- Talks to: ${l.hosts.length ? listMore(l.hosts, 10) : unread ? NOT_MEASURED_TEXT : 'no hosts found in the code'}`,
+    `- Talks to: ${unread && !l.hosts.length ? `${NOT_MEASURED_TEXT}${sdk ? `; ${sdk}` : ''}` : talksToText(l.hosts, l.sdks ?? [], (h) => listMore(h, 10))}`,
   )
   const conflicts = [
     ...e.replaces.map((r) => `replaces core ${r.replace(/^core:/, '')}`),

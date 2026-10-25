@@ -4,6 +4,7 @@ import type { IndexEntry } from '../schema/published/modules.ts'
 import { byLineKey } from './lines.ts'
 import { installVersion, judgeLine, listAnd, type VersionSource } from './policy.ts'
 import { isEnterprisePackage, packageCommand } from './plan.ts'
+import { servicesOf } from './sdks.ts'
 
 const RE = {
   npm: /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/,
@@ -68,6 +69,11 @@ export interface PromptParts {
   acl: string[]
   settings: string[]
   hosts: string[]
+  /**
+   * Services it reaches through a known SDK (`anatomy.lists.sdks`, finding of 25 Oct: the consent step of gateway-stripe
+   * named no host); names from the catalog's own list (lib/core/sdks.ts), never from the package. Absent: none.
+   */
+  services?: string[]
   moduleId: string | null
 }
 
@@ -121,6 +127,7 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
       ...clean(lists?.env ?? [], RE.env),
     ],
     hosts: clean(lists?.hosts ?? [], RE.host),
+    services: servicesOf(lists?.sdks ?? []),
     moduleId: ids.length === 1 ? (ids[0] ?? null) : null,
   }
 }
@@ -154,7 +161,9 @@ export function renderPrompt(p: PromptParts, maxList = 10): string {
     steps.push(`It adds these permissions: ${shortList(p.acl, maxList)}. Ask me which roles get them.`)
   if (p.settings.length > 0)
     steps.push(`It needs these settings, do not invent values: ${shortList(p.settings, maxList)}.`)
-  if (p.hosts.length > 0) steps.push(`It talks to: ${shortList(p.hosts, maxList)}. Tell me if that is unexpected.`)
+  // the services of its SDKs too (finding of 25 Oct): a payment gateway with no URL in its code still talks to Stripe
+  const talks = [...p.hosts, ...(p.services ?? []).map((s) => `${s} (through its SDK)`)]
+  if (talks.length > 0) steps.push(`It talks to: ${shortList(talks, maxList)}. Tell me if that is unexpected.`)
   steps.forEach((s, i) => out.push(`${i + 1}. ${s}`))
   if (p.moduleId)
     out.push(`If .ai/guides/modules/${p.moduleId}/index.md exists, read it before writing code that uses the module.`)

@@ -6,6 +6,7 @@ import { ORGANS, PETAL_ANGLES, brandStop } from '../../../lib/sigil/sigil.ts'
 import type { Organ } from '../../../lib/sigil/sigil.ts'
 import Sigil from './Sigil.astro'
 import { anatomyNote } from '../../../lib/core/entry.ts'
+import { sdkService, serviceSdks } from '../../../lib/core/sdks.ts'
 import { sourceLink } from '../lib/url.ts'
 import { commonSegmentPrefix, middleEllipsis, wbrHtml } from '../lib/wrap.ts'
 import { rowSpans } from '../pages/c/_data.ts'
@@ -156,7 +157,7 @@ const sections: { id: string; title: string; items: Item[]; empty: string; absen
     absent: 'hosts',
     title: 'Network',
     items: ms
-      .flatMap((m) =>
+      .flatMap((m): Item[] =>
         m.network.hosts.map((h) => ({
           text: h.host,
           tag: m.network.undeclared.includes(h.host) ? 'undeclared' : h.confidence === 'low' ? 'low confidence' : undefined,
@@ -171,9 +172,16 @@ const sections: { id: string; title: string; items: Item[]; empty: string; absen
           tagTone: 'wait' as const,
           ...loc(h.src),
         })),
+      )
+      // a known service SDK among its dependencies reaches that service with no URL in the code (finding of 25 Oct:
+      // gateway-stripe read `No hosts found in the code`), tagged with the service
+      .concat(
+        serviceSdks(Object.keys(facts?.dependencies ?? {})).map(
+          (d): Item => ({ lead: 'sdk   ', text: d, tag: sdkService(d) ?? undefined, tagTone: 'ok' }),
+        ),
       ),
-    // the same words as the agent card (`Talks to: no hosts found in the code`)
-    empty: ms.length === 0 && !pkgCode ? 'Not measured: no module in the package.' : 'No hosts found in the code.',
+    // the same words as the agent card (`Talks to: no URL found in the code`)
+    empty: ms.length === 0 && !pkgCode ? 'Not measured: no module in the package.' : 'No URL found in the code.',
   },
 ]
 

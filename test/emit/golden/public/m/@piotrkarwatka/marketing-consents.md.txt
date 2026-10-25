@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"refuse","0.8":"ask","next":"ask"}
 install: yarn mercato module add @piotrkarwatka/marketing-consents@0.1.0 --allow-third-party
 installable_from: 2026-10-19
-data_version: 1.0.0-202610230305.hf4ac5f
+data_version: 1.0.0-202610230305.h34c6c1
 ---
 # Marketing Consents
 Records and withdraws marketing consents for customers, with encrypted fields.
@@ -30,7 +30,7 @@ Partly read: some contracts could not be resolved statically.
 - Permissions to grant (3): marketing_consents.record, marketing_consents.view, marketing_consents.withdraw
 - Events emitted (0): none
 - Settings needed (names only): none
-- Talks to: no hosts found in the code
+- Talks to: no URL found in the code
 - Replaces or conflicts: none
 
 ## Install plan (0.9)

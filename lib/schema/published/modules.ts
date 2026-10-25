@@ -99,6 +99,15 @@ export const AnatomySummary = z.object({
         'Env names the code only checks are set, or reads as an opt-in flag in an isXEnabled() function: optional, not needed to run. Absent: none, or facts older than rentgen 4.',
       ),
     hosts: z.array(Host).max(20),
+    // additive (25 Oct): the known service SDKs among the package's dependencies, which reach their service with no URL
+    // in the code (finding of 25 Oct: gateway-stripe read `Talks to: no hosts found in the code`)
+    sdks: z
+      .array(z.string().max(214))
+      .max(20)
+      .optional()
+      .describe(
+        'Dependencies that are SDKs of a known external service (stripe, @aws-sdk/client-s3, @ai-sdk/openai), first 20: the package talks to that service without a URL in its code. A curated, partial list. Absent: none known.',
+      ),
     tables: z.array(z.string()).max(20),
     publicRoutes: z.array(z.string()).max(10),
     credentials: z.array(z.object({ key: z.string(), type: z.string(), required: z.boolean() })).max(10),

@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.hf4ac5f",
+  "dataVersion": "1.0.0-202610230305.h34c6c1",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -2378,6 +2378,11 @@
               "type": "secret",
               "required": true
             }
+          ],
+          "sdks": [
+            "@stripe/react-stripe-js",
+            "@stripe/stripe-js",
+            "stripe"
           ]
         },
         "callout": "ADDS 2 PERMISSIONS",

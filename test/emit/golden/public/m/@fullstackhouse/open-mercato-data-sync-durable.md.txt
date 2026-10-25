@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: yarn mercato module add @fullstackhouse/open-mercato-data-sync-durable@0.6.0 --allow-third-party
 installable_from: 2026-09-22
-data_version: 1.0.0-202610230305.hf4ac5f
+data_version: 1.0.0-202610230305.h34c6c1
 ---
 # Durable Data Sync
 Drop-in replacement for the built-in data_sync module on leased durable jobs.
@@ -28,7 +28,7 @@ Built for 0.7 (peers >=0.7.0 <0.8.0). A declaration, not a test.
 - Permissions to grant (0): none
 - Events emitted (0): none
 - Settings needed (names only): none
-- Talks to: no hosts found in the code
+- Talks to: no URL found in the code
 - Replaces or conflicts: replaces core data_sync
 
 ## Install plan (0.9)

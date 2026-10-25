@@ -16,6 +16,7 @@ import { byLineKey, latestLine, presetModules, registeredIn, type PresetMap } fr
 import { builtInEnableCommand, installInfo } from './plan.ts'
 import { emptyPresetVersion, INSTALLABLE_META_KEY } from './policy.ts'
 import { anatomySignal, unionGlyph } from './signals.ts'
+import { serviceSdks } from './sdks.ts'
 import type { Rule } from './tier.ts'
 import { ALIASES_META_KEY } from './search.ts'
 
@@ -138,11 +139,17 @@ export function anatomySummary(
   }
   // the backend pages `plan_install` lists (round 15), on catalog entries only
   const backendPages = uniq(facts.modules.flatMap((m) => m.ui.backendPages.map((p) => p.path))).slice(0, 20)
+  // the services it reaches through an SDK, with no URL in the code (finding of 25 Oct: gateway-stripe)
+  const sdks = serviceSdks(Object.keys(facts.dependencies))
   return {
     version: facts.package.version,
     coverage: signal === 'full' ? 'full' : signal === 'partial' ? 'partial' : 'none',
     counts: c,
-    lists: { ...l, ...(backendPages.length > 0 ? { backendPages } : {}) },
+    lists: {
+      ...l,
+      ...(sdks.length > 0 ? { sdks } : {}),
+      ...(backendPages.length > 0 ? { backendPages } : {}),
+    },
     callout: anatomyCallout(c),
     diff,
   }

@@ -1249,6 +1249,11 @@
         "hosts": [
           "docs.stripe.com"
         ],
+        "sdks": [
+          "@stripe/react-stripe-js",
+          "@stripe/stripe-js",
+          "stripe"
+        ],
         "tables": [],
         "publicRoutes": [],
         "credentials": [
