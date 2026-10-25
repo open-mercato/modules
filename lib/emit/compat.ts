@@ -2,7 +2,7 @@
 // and static fit per line, and `peersRejectFitting`, the input of the D13 sentence. The cells are a new app (the classic
 // preset); `isolationBaseline` is the row of an app from the empty preset (24 Oct), the signal `in isolation` of each
 // cell stays in modules.json (`compat.isolation`), so the matrix keeps its budget. Pure.
-import { lineVersion } from '../core/policy.ts'
+import { lineVersion, otherVersionCells } from '../core/policy.ts'
 import { latestLine } from '../core/lines.ts'
 import { peersRejectFitting } from '../fit/static.ts'
 import type { FitCell } from '../schema/data/index.ts'
@@ -54,9 +54,13 @@ export function buildCompat(
     const e = c.entry
     if (!e.listed || e.kind !== 'module') continue
     const cells: CompatIndex['rows'][number]['cells'] = {}
+    // a receipt of another version than a fresh app installs (finding of 25 Oct: storage-s3 on 0.8 read `broken` here
+    // while the page and modules.json say untested): the cell names the version it is not about
+    const others = otherVersionCells(e)
     for (const l of lines) {
       const cell = e.compat.lines[l.key] ?? emptyCell(e.signals.receipt[l.key] ?? 'untested', l.version)
-      cells[l.key] = { ...cell, fit: e.signals.fit[l.key] ?? 'unknown' }
+      const other = others[l.key]
+      cells[l.key] = { ...cell, fit: e.signals.fit[l.key] ?? 'unknown', ...(other ? { installs: other.installs } : {}) }
       const f = c.fit[l.key]
       if (f) fitCells.push(f)
     }
