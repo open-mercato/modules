@@ -75,7 +75,23 @@ summary: Strapi plugin that reads Open Mercato data.
 whenToUse: Use when a Strapi site must show products from an Open Mercato app.
 `
     const r = run('modules/@sensinum/strapi-plugin-open-mercato.yml', text)
-    expect(messages(r)[0]).toMatch(/^npm:@sensinum\/strapi-plugin-open-mercato is in policy\/ignore\.yml: /)
+    // the field, the reason and how to dispute it (finding of 25 Oct)
+    expect(messages(r)[0]).toBe(
+      'npm: @sensinum/strapi-plugin-open-mercato is in policy/ignore.yml (Strapi plugin, not an Open Mercato module). This package is not listed; if the reason is wrong, say so in the pull request (a maintainer edits policy/ignore.yml).',
+    )
+  })
+
+  it('the old name of a listed entry points at the file to edit', () => {
+    const text = `npm: "@open-mercato/readiness-scanner"
+kind: tool
+category: devtools
+summary: Read-only scan of an app for weak credentials and deployment gaps.
+whenToUse: Use when you prepare an app for production and want a readiness scan.
+`
+    const r = run('modules/@open-mercato/readiness-scanner.yml', text)
+    expect(messages(r)).toContain(
+      'npm: @open-mercato/readiness-scanner is in policy/ignore.yml (Old name of mercato-readiness-scanner). Edit modules/mercato-readiness-scanner.yml instead.',
+    )
   })
 })
 

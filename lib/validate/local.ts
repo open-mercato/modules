@@ -234,6 +234,20 @@ const isIgnored = (catalog: Pick<Catalog, 'ignore'>, locator: string) => {
   })
 }
 
+/**
+ * The ignore error in the words of the descriptor (finding of 25 Oct): the field that names the package, the public
+ * reason, and the next step. A package an entry lists in `renamedFrom` points at that entry's file; any other one says
+ * how to dispute the reason, since only a maintainer edits policy/ignore.yml.
+ */
+function ignoredText(d: DescriptorT, locator: string, reason: string, catalog: Pick<Catalog, 'entries'>): string {
+  const lc = locator.toLowerCase()
+  const head = `${d.npm ? 'npm' : 'github'}: ${d.npm ?? d.github} is in policy/ignore.yml (${reason.replace(/\.$/, '')}).`
+  const next = [...catalog.entries.values()].find((e) => (e.d.renamedFrom ?? []).some((r) => r.toLowerCase() === lc))
+  return next
+    ? `${head} Edit ${next.file} instead.`
+    : `${head} This package is not listed; if the reason is wrong, say so in the pull request (a maintainer edits policy/ignore.yml).`
+}
+
 /** Steps 1, 5, 6 and the curator check of step 9, without network. */
 export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
   const schema = checkSchema(input, catalog)
@@ -244,7 +258,7 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
   const reviewed = (input.labels ?? []).includes('name-reviewed')
 
   const ignored = isIgnored(catalog, locator)
-  if (ignored) findings.push(f('schema', 'error', 'ignored', `${locator} is in policy/ignore.yml: ${ignored.reason}`))
+  if (ignored) findings.push(f('schema', 'error', 'ignored', ignoredText(d, locator, ignored.reason, catalog)))
   for (const r of d.renamedFrom ?? [])
     if (catalog.entries.has(r.toLowerCase()))
       findings.push(f('schema', 'error', 'renamed', `renamedFrom ${r} is still an entry of its own`))
