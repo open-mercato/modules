@@ -244,7 +244,9 @@ test('lines sentence follows the cadence of each line (D6: 0.8 weekly)', () => {
 })
 
 test('peer sentences', () => {
-  expect(peersCheck({ '@open-mercato/core': '0.9.0' }, '0.9.0').text).toBe('Peers pinned to 0.9.0. Consider ^0.9.0.')
+  expect(peersCheck({ '@open-mercato/core': '0.9.0' }, '0.9.0').text).toBe(
+    'Peers pinned to 0.9.0, so an app on any other release of Open Mercato gets a Yarn peer warning.',
+  )
   expect(peersCheck({ '@open-mercato/core': '>=0.7.0 <0.8.0' }, '0.9.0').level).toBe('warn')
   expect(peersCheck({ '@open-mercato/core': '^0.9.0' }, '0.9.0').level).toBe('ok')
   expect(peersCheck({ react: '^19' }, '0.9.0').text).toMatch(/^No @open-mercato peer dependencies/)
@@ -339,7 +341,9 @@ describe('acceptance cases', () => {
     const r = await runChecks(npm(CONSENTS), CTX, deps)
     expect(r.states).toEqual(['listed'])
     expect(r.license).toMatchObject({ kind: 'proprietary', text: TEXT.unlicensed })
-    expect(r.peers?.text).toBe('Peers pinned to 0.9.0. Consider ^0.9.0.')
+    expect(r.peers?.text).toBe(
+      'Peers pinned to 0.9.0, so an app on any other release of Open Mercato gets a Yarn peer warning.',
+    )
     expect(r.repo?.license).toBeNull() // NOASSERTION
   })
 
@@ -826,7 +830,9 @@ describe.runIf(process.env.OM_LIVE === '1')('live (OM_LIVE=1)', () => {
   test('consents', async () => {
     const r = await runChecks(npm(CONSENTS), CTX, live)
     expect(r.license?.text).toBe(TEXT.unlicensed)
-    expect(r.peers?.text).toBe('Peers pinned to 0.9.0. Consider ^0.9.0.')
+    expect(r.peers?.text).toBe(
+      'Peers pinned to 0.9.0, so an app on any other release of Open Mercato gets a Yarn peer warning.',
+    )
   }, 30000)
   test('new', async () => expect((await runChecks(npm(NEW), CTX, live)).states).toEqual(['not-found']), 30000)
   test('strapi', async () => expect((await runChecks(npm(STRAPI), CTX, live)).states).toContain('not-module'), 30000)

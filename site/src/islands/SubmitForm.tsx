@@ -372,7 +372,13 @@ export function peersCheck(
     const pin = pins[0]!.replace(/^=/, '')
     if (name?.startsWith('@open-mercato/') && pin === coreVersion)
       return { level: 'ok', text: `Peers pinned to ${pin}, in lockstep with Open Mercato.`, range: pin }
-    return { level: 'warn', text: `Peers pinned to ${pin}. Consider ^${pin}.`, range: pin }
+    // the fact and its effect, as lint peer-exact-pin says it: create-mercato-module writes exact peers on every
+    // publish, and ^0.x accepts no other minor anyway (^0.8.0 is <0.9.0), so range advice could not be followed
+    return {
+      level: 'warn',
+      text: `Peers pinned to ${pin}, so an app on any other release of Open Mercato gets a Yarn peer warning.`,
+      range: pin,
+    }
   }
   if (ranges.some((r) => r === '*' || r === ''))
     return { level: 'warn', text: 'Peers accept any version (*). Say which lines you support.', range: '*' }
