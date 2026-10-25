@@ -655,6 +655,10 @@ test('typosquat (LST-6): same scope is fine, a near name elsewhere is flagged', 
   expect(typosquatHits(npm('@open-mercato/gateway-tpay'), CTX.catalog)).toEqual([])
   expect(typosquatHits(npm('@open-mercato/gateway-payu'), CTX.catalog)).toEqual([])
   expect(typosquatHits(npm('@evil/integration-ksef-direkt'), CTX.catalog)[0]?.other).toBe(`npm:${KSEF}`)
+  // a near module name under a scope of its own is what CI warns about, as the same name (finding of 25 Oct)
+  expect(typosquatHits(npm('@evil/integration-ksef-direkt'), CTX.catalog)[0]?.nearNameOnly).toBe(true)
+  // a look-alike scope with a near name is not
+  expect(typosquatHits(npm('@fastwhitecaat/integration-ksef-direkt'), CTX.catalog)[0]?.nearNameOnly).toBeUndefined()
 })
 
 // ---------- descriptor, YAML, links ----------

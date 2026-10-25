@@ -151,6 +151,12 @@ export interface NameHit {
    */
   sameNameOnly?: boolean
   /**
+   * The same, for a module name 1 or 2 edits from the other one (finding of 25 Oct: `@acme/marketing-consent` failed as
+   * a typosquat of `@piotrkarwatka/marketing-consents`, while the same name under a scope of its own only warned). A
+   * look-alike scope, a reserved name and a name close to an `@open-mercato/*` package stay errors.
+   */
+  nearNameOnly?: boolean
+  /**
    * The bare names are equal and the full names differ by this many edits: the hit is the same name under another
    * scope or owner, not the same package name (finding of 25 Oct: `@open-mercat0/gateway-stripe` read `same package
    * name as npm:@open-mercato/gateway-stripe`). At most 2: a look-alike scope.
@@ -190,11 +196,13 @@ export function typosquatHits(
     const bareHit = Math.min(a.length, b.length) >= 5 ? bare <= 2 : bare === 0
     const dist = Math.min(full, bareHit ? bare : Number.POSITIVE_INFINITY)
     const sameNameOnly = full > 2 && bare === 0 && o.owner !== '@open-mercato'
+    const nearNameOnly = full > 2 && bareHit && bare > 0 && o.owner !== '@open-mercato'
     if (dist <= 2)
       hits.push({
         other: o.label,
         distance: dist,
         ...(sameNameOnly ? { sameNameOnly } : {}),
+        ...(nearNameOnly ? { nearNameOnly } : {}),
         ...(bare === 0 ? { scopeDistance: full } : {}),
       })
   }
@@ -267,13 +275,14 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
   const suffix = reviewed ? ' (name-reviewed)' : '. A curator can add the name-reviewed label'
   for (const h of typosquatHits(d, catalog).slice(0, 3))
     findings.push(
-      h.sameNameOnly
-        ? // the same module name under a scope of its own (`@acme/visits` and `@piotrkarwatka/visits`): a curator reads it
+      h.sameNameOnly || h.nearNameOnly
+        ? // the same or a near module name under a scope of its own (`@acme/visits` and `@piotrkarwatka/visits`,
+          // `@acme/marketing-consent` and `@piotrkarwatka/marketing-consents`): a curator reads it
           f(
             'name',
             reviewed ? 'info' : 'warning',
             'typosquat',
-            `same module name as ${h.other} under another scope; a curator checks that it is not posing as it${reviewed ? ' (name-reviewed)' : ''}`,
+            `${h.sameNameOnly ? 'same module name as' : `module name ${h.distance} edit${h.distance > 1 ? 's' : ''} away from`} ${h.other} under another scope; a curator checks that it is not posing as it${reviewed ? ' (name-reviewed)' : ''}`,
           )
         : f(
             'name',

@@ -121,6 +121,27 @@ whenToUse: Use when the app must take card payments through Stripe at checkout.
     ).toMatch(/^same name as npm:@open-mercato\/gateway-stripe under the look-alike scope @open-mercat0, another owner/)
   })
 
+  // finding of 25 Oct: `@acme/marketing-consent` failed as a typosquat while `@acme/visits` only warned
+  it('a module name 1 or 2 edits from a community entry under a scope of its own warns like the same name', () => {
+    const t = (npm: string) => `npm: "${npm}"
+category: marketing-loyalty
+summary: Records marketing consents of customers with the time and the channel.
+whenToUse: Use when the shop must keep proof of each marketing consent and its withdrawal.
+`
+    const near = run('modules/@acme/marketing-consent.yml', t('@acme/marketing-consent'))
+    expect(messages(near)).toEqual([])
+    expect(messages(near, 'warning')).toContain(
+      'module name 1 edit away from npm:@piotrkarwatka/marketing-consents under another scope; a curator checks that it is not posing as it',
+    )
+    // a look-alike scope with a near name, and a name close to an official package, stay errors
+    expect(
+      messages(run('modules/@piotrkarwatkaa/marketing-consent.yml', t('@piotrkarwatkaa/marketing-consent')))[0],
+    ).toMatch(/^name is 1 edit away from npm:@piotrkarwatka\/marketing-consents, another owner/)
+    expect(messages(run('modules/@acme/document.yml', t('@acme/document')))[0]).toMatch(
+      /^name is 1 edit away from npm:@open-mercato\/documents, another owner/,
+    )
+  })
+
   it('a look-alike of another owner is an error until a curator adds name-reviewed', () => {
     const text = `npm: "@fastwhite-cat/integration-ksef-direct"
 category: localization-compliance

@@ -616,6 +616,8 @@ export interface NameHit {
   distance: number
   /** Only the same bare name under a scope of its own, not of @open-mercato: CI warns, never fails (25 Oct). */
   sameNameOnly?: boolean
+  /** The same for a bare name 1 or 2 edits away (lib/validate/local.ts `nearNameOnly`). */
+  nearNameOnly?: boolean
 }
 const ownerOf = (name: string): string | null =>
   name.startsWith('@') ? name.slice(0, name.indexOf('/')) : name.includes('/') ? `gh:${name.split('/')[0]}` : null
@@ -635,7 +637,14 @@ export function typosquatHits(t: Target, catalog: readonly CatalogRef[]): NameHi
     const full = distance(name, other)
     const d = Math.min(full, bareHit ? distance(a, b) : Number.POSITIVE_INFINITY)
     const sameNameOnly = full > 2 && a === b && ownerOf(other) !== '@open-mercato'
-    if (d <= 2) hits.push({ other: e.locator, distance: d, ...(sameNameOnly ? { sameNameOnly } : {}) })
+    const nearNameOnly = full > 2 && bareHit && a !== b && ownerOf(other) !== '@open-mercato'
+    if (d <= 2)
+      hits.push({
+        other: e.locator,
+        distance: d,
+        ...(sameNameOnly ? { sameNameOnly } : {}),
+        ...(nearNameOnly ? { nearNameOnly } : {}),
+      })
   }
   return hits.sort((x, y) => x.distance - y.distance || x.other.localeCompare(y.other))
 }
@@ -938,12 +947,13 @@ export function liveRules(
   out.push(
     names.length === 0
       ? { id: 'LST-6', state: 'pass', text: 'The name is not close to a listed one.' }
-      : names.every((n) => n.sameNameOnly)
-        ? // the module name of someone else's listed module under your own scope: CI warns, a curator reads it (25 Oct)
+      : names.every((n) => n.sameNameOnly || n.nearNameOnly)
+        ? // the module name of someone else's listed module, or one close to it, under your own scope: CI warns, a
+          // curator reads it (25 Oct)
           {
             id: 'LST-6',
             state: 'unknown',
-            text: `Same module name as ${names[0]?.other} under another scope. A curator checks the name.`,
+            text: `${names[0]?.sameNameOnly ? 'Same module name as' : 'Module name close to'} ${names[0]?.other} under another scope. A curator checks the name.`,
           }
         : { id: 'LST-6', state: 'fail', text: `Close to ${names[0]?.other}. A curator reviews the name.` },
   )
