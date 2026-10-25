@@ -63,9 +63,19 @@ jobs:
         run: yarn install --immutable
 
       - name: Data checkout
+        # The checkout above (fetch-depth: 0) has the data branch already. A second fetch had no credentials, so in the
+        # private repository it failed and the step fell back to the tree of main, which has no receipts: gather saw an
+        # empty history, sent every red cell to a retry and did not know a night it had collected (finding of 25 Oct).
+        # Without the branch no night could have been planned, so the job stops instead of collecting into nothing.
         run: |
           set -euo pipefail
-          if git fetch origin data; then git worktree add --detach .data FETCH_HEAD; else git worktree add --detach .data HEAD; fi
+          if git rev-parse --verify -q refs/remotes/origin/data >/dev/null; then
+            git worktree add --detach .data origin/data
+            echo "Data branch at $(git rev-parse --short refs/remotes/origin/data)."
+          else
+            echo "::error::No data branch in the checkout (refs/remotes/origin/data): nothing to collect into."
+            exit 1
+          fi
 
       - name: Gather the night
         # Reads the run, its jobs and artifacts; dispatches and waits for the retry when needed (up to 40 min).

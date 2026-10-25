@@ -131,6 +131,19 @@ describe('nightly.yml', () => {
   it('cron at minute 17', () => {
     expect(read('nightly.yml')).toContain('cron: "17 2 * * *"')
   })
+
+  // A second `git fetch origin data` had no credentials, so in the private repository the plan ran on an empty .data
+  // and stopped on the missing lines.json (finding of 25 Oct). The checkout action has the token and fails by name.
+  it('the plan reads the data branch through the checkout action, with no fetch and no empty fallback', () => {
+    const plan = nightly.jobs.plan!
+    const data = plan.steps.find((s) => s.name === 'Data checkout (read only)')
+    expect(data?.uses).toMatch(/^actions\/checkout@[0-9a-f]{40}$/)
+    expect(data?.with).toEqual({ ref: 'data', path: '.data', 'persist-credentials': false })
+    expect(plan.steps.indexOf(data!)).toBeLessThan(plan.steps.findIndex((s) => s.id === 'plan'))
+    const runs = plan.steps.map((s) => s.run ?? '').join('\n')
+    expect(runs).not.toMatch(/git fetch/)
+    expect(runs).not.toMatch(/mkdir -p \.data/)
+  })
 })
 
 describe('collect.yml', () => {
@@ -145,6 +158,15 @@ describe('collect.yml', () => {
     expect(text).toContain('yarn om collect --run "$RUN_ID" --wait-retry --no-apply')
     expect(text).toContain('node lib/sources/data-branch.ts --dir .data')
     expect(text).toContain('yarn om collect --bundle out/night.json')
+  })
+
+  it('reads the data branch the checkout has, never a fetch without credentials or the tree of main', () => {
+    const job = collect.jobs.collect!
+    expect(job.steps.find((s) => s.uses?.startsWith('actions/checkout@'))?.with?.['fetch-depth']).toBe(0)
+    const data = job.steps.find((s) => s.name === 'Data checkout')?.run ?? ''
+    expect(data).toContain('git rev-parse --verify -q refs/remotes/origin/data')
+    expect(data).not.toMatch(/git fetch/)
+    expect(data).not.toMatch(/worktree add --detach \.data HEAD/)
   })
 })
 

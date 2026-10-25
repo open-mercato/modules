@@ -75,9 +75,15 @@ jobs:
         run: yarn install --immutable
 
       - name: Data checkout (read only)
-        run: |
-          set -euo pipefail
-          if git fetch --depth 1 origin data; then git worktree add --detach .data FETCH_HEAD; else mkdir -p .data; fi
+        # The data branch through the checkout action, which has the token. A second `git fetch` had no credentials
+        # (persist-credentials: false), so in the private repository it failed, the step left an empty .data and
+        # plan-matrix stopped on the missing lines.json (finding of 25 Oct). Without the branch the checkout fails
+        # here and names it: a night needs the lines that `yarn om watch` writes to data.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: data
+          path: .data
+          persist-credentials: false
 
       - name: Plan the matrix
         id: plan

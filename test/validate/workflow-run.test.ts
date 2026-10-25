@@ -384,3 +384,43 @@ describe('validate.yml steps', () => {
     expect(existsSync(join(work, '.data'))).toBe(true)
   })
 })
+
+// collect.yml reads receipts history from .data: the old step fetched without credentials and, in the private
+// repository, fell back to the tree of main with no receipts (finding of 25 Oct)
+describe('collect.yml steps', () => {
+  const seedData = () => {
+    const seed = join(tmp, 'seed')
+    execFileSync('git', ['clone', '--quiet', origin, seed])
+    git(seed, 'checkout', '--quiet', '--orphan', 'data')
+    git(seed, 'rm', '-rfq', '.')
+    mkdirSync(join(seed, 'receipts'), { recursive: true })
+    writeFileSync(join(seed, 'receipts', 'x.jsonl'), '{}\n')
+    git(seed, 'add', '-A')
+    git(seed, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', 'data')
+    git(seed, 'push', '--quiet', 'origin', 'data')
+  }
+  const checkout = () => {
+    const dir = join(tmp, 'collect')
+    execFileSync('git', ['clone', '--quiet', '--no-single-branch', origin, dir])
+    // nothing to fetch from: what the checkout (fetch-depth: 0) brought is all there is
+    git(dir, 'remote', 'set-url', 'origin', join(tmp, 'gone.git'))
+    return dir
+  }
+
+  it('reads origin/data from the checkout with no network, receipts included', () => {
+    seedData()
+    work = checkout()
+    const r = runStep(stepRun('collect.yml', 'Data checkout'))
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toMatch(/^Data branch at [0-9a-f]+\.$/m)
+    expect(readFileSync(join(work, '.data', 'receipts', 'x.jsonl'), 'utf8')).toBe('{}\n')
+  })
+
+  it('stops when the checkout has no data branch, instead of collecting on the tree of main', () => {
+    work = checkout()
+    const r = runStep(stepRun('collect.yml', 'Data checkout'))
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('No data branch in the checkout (refs/remotes/origin/data)')
+    expect(existsSync(join(work, '.data'))).toBe(false)
+  })
+})
