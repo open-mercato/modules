@@ -846,6 +846,8 @@ export default function Registry({
   const anyOther = exactRows.some((x) => lines.some((l) => x.e.others?.[l.key]))
   // the signal `in isolation` (24 Oct): the dot and its words
   const anyIso = exactRows.some((x) => lines.some((l) => x.e.compat.isolation?.[l.key]))
+  // the yellow sign before a license (finding of 25 Oct): its words were only a tooltip, which phones never show
+  const anyLicenseMismatch = exactRows.some((x) => !x.e.enterprise && x.e.license.mismatch)
 
   const rowList = (rows: { e: RegistryEntry; matched: string | null }[]) => (
     <div class="reg__list" role="list">
@@ -978,33 +980,42 @@ export default function Registry({
             {exactRows.length > 0 ? (
               <>
                 {searching && search.builtIn.length > 0 && <p class="t-tagline reg__mods-h">Modules</p>}
-                {signals && (preview || anyOther || anyIso || legend.some((st) => st.status !== 'verified')) && (
+                {((signals && (preview || anyOther || anyIso || legend.some((st) => st.status !== 'verified'))) ||
+                  anyLicenseMismatch) && (
                   <ul
                     class="reg__key"
                     role="list"
-                    aria-label="Squares: the last receipt in a new app on each line, for the version it has or installs there"
+                    aria-label="Key to the list. Squares: the last receipt in a new app on each line, for the version it has or installs there"
                   >
-                    {legend.map((st) => (
+                    {(signals ? legend : []).map((st) => (
                       <li title={st.title}>
                         <Square status={st.status} step={st.step ?? null} />
                         <span>{st.text}</span>
                         {st.title && <span class="sr-only">. {st.title}</span>}
                       </li>
                     ))}
-                    {anyIso && (
+                    {signals && anyIso && (
                       <li>
                         <span class="sq-iso-key" aria-hidden="true" />
                         <span>{ISOLATION_MARK.legend}</span>
                       </li>
                     )}
-                    {anyOther && (
+                    {signals && anyOther && (
                       <li>
                         <Square status="untested" other />
                         <span>receipt for another version</span>
                       </li>
                     )}
+                    {anyLicenseMismatch && (
+                      <li>
+                        <span class="chip__neq" aria-hidden="true">
+                          ≠
+                        </span>
+                        <span>license sources disagree</span>
+                      </li>
+                    )}
                     {/* the squares and the seals rest on a preview run (review r10): the one chip, at the legend */}
-                    {preview && (
+                    {signals && preview && (
                       <li class="reg__key-preview">
                         <span class="chip chip--preview">{PREVIEW_CHIP}</span>
                       </li>
