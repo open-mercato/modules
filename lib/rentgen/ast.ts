@@ -141,6 +141,21 @@ function propName(name: ts.PropertyName, sf: ts.SourceFile): string | null {
 }
 
 /**
+ * Key of an object property: its name, or for `[expr]` the static string or number of `expr` (`['requireAuth']`,
+ * `[KEY]` with a top-level `const KEY = 'requireAuth'`); null when only running the code would tell.
+ */
+function propKey(
+  name: ts.PropertyName,
+  sf: ts.SourceFile,
+  c: Map<string, ts.Expression>,
+  depth: number,
+): string | null {
+  if (!ts.isComputedPropertyName(name)) return propName(name, sf)
+  const v = evalLiteral(name.expression, sf, c, depth + 1)
+  return typeof v === 'string' || typeof v === 'number' ? String(v) : null
+}
+
+/**
  * Static value of an expression: literals, arrays, objects, `as`/`satisfies`/parentheses, and up to
  * three hops through top-level consts of the same file (including `X.metadata` where
  * `const X = make({ metadata: {...} })`). Anything else is UNKNOWN.
@@ -203,8 +218,11 @@ export function evalLiteral(
     const o: LitObject = {}
     for (const p of node.properties) {
       if (ts.isPropertyAssignment(p)) {
-        const k = propName(p.name, sf)
+        const k = propKey(p.name, sf, c, depth)
+        // a key that cannot be read statically hides what it sets, as a spread does: never `absent`, so a
+        // `{ [KEY]: false }` requireAuth is unknown, not the default true (finding of 25 Oct)
         if (k !== null) o[k] = evalLiteral(p.initializer, sf, c, depth)
+        else o['...'] = UNKNOWN
       } else if (ts.isShorthandPropertyAssignment(p)) {
         o[p.name.text] = evalLiteral(p.name, sf, c, depth)
       } else if (ts.isSpreadAssignment(p)) {
@@ -212,8 +230,9 @@ export function evalLiteral(
         if (isLitObject(v)) Object.assign(o, v)
         else o['...'] = UNKNOWN
       } else if (ts.isMethodDeclaration(p) || ts.isGetAccessorDeclaration(p)) {
-        const k = propName(p.name, sf)
+        const k = propKey(p.name, sf, c, depth)
         if (k !== null) o[k] = UNKNOWN
+        else o['...'] = UNKNOWN
       }
     }
     return o

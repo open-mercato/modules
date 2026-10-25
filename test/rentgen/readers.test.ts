@@ -129,6 +129,30 @@ describe('routes: layouts and auth (generator module-registry.ts:2380-2520, runt
   })
 })
 
+describe('routes: computed metadata keys (finding of 25 Oct)', async () => {
+  const f = await scanFiles('comp', {
+    // the same object as { requireAuth: false } at runtime
+    'src/modules/comp/api/literal/route.ts': `export const metadata = { ['requireAuth']: false }\nexport function GET() {}\n`,
+    // a key read from a top-level const is still static
+    'src/modules/comp/api/const/route.ts': `const KEY = 'requireAuth'\nexport const metadata = { [KEY]: false }\nexport function GET() {}\n`,
+    // a key only running the code can tell: never the default `true`
+    'src/modules/comp/api/hidden/route.ts': `export const metadata = { [keyOf()]: false }\nexport function GET() {}\n`,
+    'src/modules/comp/api/method/route.ts': `export const metadata = { ['GET']: { requireAuth: false } }\nexport function GET() {}\n`,
+    'src/modules/comp/api/methodhidden/route.ts': `export const metadata = { [verb()]: { requireAuth: false } }\nexport function GET() {}\n`,
+  })
+  const m = f.modules[0] as Facts['modules'][number]
+  const auth = (p: string) => m.http.routes.find((r) => r.path === `/api/comp/${p}`)?.requireAuth
+
+  it('a literal or const key is read, any other key makes requireAuth unknown', () => {
+    expect(auth('literal')).toBe(false)
+    expect(auth('const')).toBe(false)
+    expect(auth('hidden')).toBeNull()
+    expect(auth('method')).toBe(false)
+    expect(auth('methodhidden')).toBeNull()
+    expect(m.publicRoutes).toBe(3)
+  })
+})
+
 describe('license (spec 6.1)', () => {
   it('normalizes declared values', () => {
     expect(normalizeLicense('UNLICENSED')).toBe('UNLICENSED')
