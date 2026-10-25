@@ -14,6 +14,7 @@ import {
   collisionText,
   installCommand,
   installableText,
+  listedRunText,
   noticeTag,
   stateBanners,
   cadenceText,
@@ -264,8 +265,37 @@ test('Installable: a future date is "From", a past one "Since"', () => {
   expect(installableText('2026-10-27', '2026-10-23')).toBe(
     'From 27 Oct 2026. New apps refuse it until then (Yarn 5-day age gate).',
   )
-  expect(installableText('2026-10-20', '2026-10-23')).toBe('Since 20 Oct 2026. A fresh app installs it today.')
+  // the age gate only, never a promise that it works (finding of 25 Oct)
+  expect(installableText('2026-10-20', '2026-10-23')).toBe(
+    'Past the Yarn 5-day age gate since 20 Oct 2026. The nightly run decides whether it installs.',
+  )
   expect(installableText(null, '2026-10-23')).toBe('Unknown.')
+})
+
+test("a listed package's Installable fact carries the catalog's last run on the line (finding of 25 Oct)", () => {
+  const row = {
+    tier: 'listed' as const,
+    verifiedOn: [],
+    lines: {
+      '0.9': { status: 'broken' as const, step: 'typecheck', at: '2026-10-24T03:12:00Z', moduleVersion: '0.2.0' },
+      next: { status: 'verified' as const, step: null, at: '2026-10-24T03:40:00Z', moduleVersion: '0.2.0' },
+      '0.8': { status: 'harness-red' as const, step: 'install', at: '2026-10-24T02:00:00Z', moduleVersion: '0.2.0' },
+    },
+    others: {},
+  }
+  expect(listedRunText(row, '0.9')).toBe('Broken at typecheck on 0.9 (24 Oct). See its page for the receipt.')
+  expect(listedRunText(row, 'next')).toBe('Verified on next (24 Oct).')
+  expect(listedRunText(row, '0.8')).toBe('Not judged on 0.8: our test app failed (24 Oct).')
+  expect(listedRunText(undefined, '0.9')).toBeNull()
+  expect(
+    listedRunText(
+      {
+        ...row,
+        others: { '0.9': { installs: '0.3.0', other: { status: 'broken', step: 'build', at: '2026-10-24' } } },
+      },
+      '0.9',
+    ),
+  ).toBe('On 0.9 a new app installs 0.3.0, which has no receipt yet.')
 })
 
 test('every notice banner has a mono tag', () => {

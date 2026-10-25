@@ -173,6 +173,17 @@ export interface CatalogRef {
   descriptor?: Record<string, unknown> | null
   /** Core module IDs the entry replaces (`replaces: core:<id>`), so a declared replacement is not a collision. */
   replaces?: string[]
+  /**
+   * The listed entry's state as the registry row shows it (finding of 25 Oct: the preview card of a listed package
+   * showed grey squares and LISTED while its page said `Broken on 0.8, 0.9 and next`): its level, the judged cell of each
+   * line (`withJudgedLines`) and the lines whose receipt is of another version (`otherVersionCells`).
+   */
+  row?: {
+    tier: 'listed' | 'verified' | null
+    verifiedOn: string[]
+    lines: Record<string, { status: CellState; step: string | null; at: string | null; moduleVersion: string | null }>
+    others: Record<string, { installs: string; other: { status: CellState; step: string | null; at: string | null } }>
+  }
   /** Author fields of the listed entry, so "Propose an edit" starts from the current file. */
   fields?: {
     category: string
@@ -182,6 +193,8 @@ export interface CatalogRef {
     providers: { name: string; label: string }[]
   }
 }
+type CellState = IndexEntry['compat']['lines'][string]['status']
+
 export interface CheckContext {
   catalog: readonly CatalogRef[]
   ignore: readonly { locator: string; reason: string }[]
@@ -1066,7 +1079,13 @@ export function previewEntry(t: Target, r: CheckResult | null, f: FormState, rul
       recommended: {},
     },
     identity: { builtFrom: 'none', claimed: false, source: t.kind },
-    compat: { builtFor: { range: null, kind: 'missing', lines: [] }, lines: {}, verifiedOn: [] },
+    compat: {
+      builtFor: { range: null, kind: 'missing', lines: [] },
+      lines: existing?.row?.lines ?? {},
+      verifiedOn: existing?.row?.verifiedOn ?? [],
+    },
+    // a listed entry shows its real squares (finding of 25 Oct), with a receipt of another version as such
+    others: existing?.row?.others ?? {},
     anatomy: null,
     signals: {
       receipt: {},
@@ -1077,7 +1096,7 @@ export function previewEntry(t: Target, r: CheckResult | null, f: FormState, rul
       maintenance: { status: 'current', lastRelease: null, catchUpDays: null },
       declaredVsObserved: { status: 'match', notes: [] },
     },
-    tier: rulesPass ? 'listed' : null,
+    tier: existing?.row ? existing.row.tier : rulesPass ? 'listed' : null,
     quality: null,
     agentPolicy: {},
     install: { cli, cmm: null, needsAllowThirdParty: !official, moduleFlag: null },
@@ -1157,13 +1176,44 @@ function Banner({ tone, tag, alert, children }: { tone: Tone; tag?: string; aler
 
 /**
  * The Installable fact: a future date is when new apps start accepting the release (Yarn 5-day age gate), a past
- * one is since when they do.
+ * one is since when they do. It speaks of the age gate only (finding of 25 Oct: `A fresh app installs it today` stood
+ * beside packages broken at typecheck on every line); whether it installs is the nightly run's verdict.
  */
 export function installableText(from: string | null, today: string): string {
   if (!from) return 'Unknown.'
   return from > today
     ? `From ${dayText(from)}. New apps refuse it until then (Yarn ${AGE_GATE_DAYS}-day age gate).`
-    : `Since ${dayText(from)}. A fresh app installs it today.`
+    : `Past the Yarn ${AGE_GATE_DAYS}-day age gate since ${dayText(from)}. The nightly run decides whether it installs.`
+}
+
+/**
+ * What the catalog's last run says of a listed package on a line, in the words of its page: `Broken at typecheck on
+ * 0.9 (24 Oct).`, `Verified on 0.9 (24 Oct).`, `Not judged on 0.9: our test app failed (24 Oct).` Null when the entry
+ * is not listed or the line has no receipt.
+ */
+export function listedRunText(row: CatalogRef['row'] | undefined, line: string | null): string | null {
+  if (!row || !line) return null
+  const o = row.others[line]
+  if (o) return `On ${line} a new app installs ${o.installs}, which has no receipt yet.`
+  const c = row.lines[line]
+  if (!c) return null
+  const on = c.at ? ` (${dayText(c.at.slice(0, 10)).replace(/ \d{4}$/, '')})` : ''
+  switch (c.status) {
+    case 'verified':
+      return `Verified on ${line}${on}.`
+    case 'broken':
+      return `Broken${c.step ? ` at ${c.step}` : ''} on ${line}${on}. See its page for the receipt.`
+    case 'harness-red':
+      return `Not judged on ${line}: our test app failed${on}.`
+    case 'infra-error':
+      return `Not judged on ${line}: the run did not finish${on}.`
+    case 'quarantine':
+      return `Not judged on ${line}: in the Yarn age gate${on}.`
+    case 'skipped':
+      return 'The catalog does not install it.'
+    default:
+      return null
+  }
 }
 
 /** A sentence in ink with one value (a range, a license) marked in mono; the mark carries the warning colour. */
@@ -1405,7 +1455,17 @@ export default function SubmitForm(props: SubmitFormProps) {
                   {result.pkg && !states.includes('not-module') && !result.pkg.deprecated && (
                     <div>
                       <dt>Installable</dt>
-                      <dd>{installableText(result.installableFrom, new Date().toISOString().slice(0, 10))}</dd>
+                      <dd>
+                        {installableText(result.installableFrom, new Date().toISOString().slice(0, 10))}
+                        {(() => {
+                          // a listed package: the verdict of the catalog's last run on the latest line (25 Oct)
+                          const run = listedRunText(
+                            result.existing?.row,
+                            props.lines.find((l) => l.source === 'latest')?.key ?? null,
+                          )
+                          return run ? ` ${run}` : ''
+                        })()}
+                      </dd>
                     </div>
                   )}
                   {result.license && (

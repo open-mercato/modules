@@ -13,6 +13,8 @@ import { CategoriesFile, IgnoreFile } from '../../../lib/schema/policy.ts'
 import { CURATOR_FIELDS } from '../../../lib/schema/descriptor.ts'
 import { sigilLabel } from '../../../lib/sigil/sigil.ts'
 import { orderLines } from '../lib/status.ts'
+import { otherVersionCells, withJudgedLines } from '../../../lib/core/policy.ts'
+import type { CellStatus, IndexEntry } from '../../../lib/schema/index.ts'
 
 const REPO = CATALOG_REPO_URL
 // npmPreapprovedPackages of the app template (spec 3.3, 4.5 Lines.preapproved); not in the published files yet
@@ -29,6 +31,17 @@ const descriptorOf = (path: string): Record<string, unknown> | null => {
   if (!existsSync(file)) return null
   const d = parseYaml(readFileSync(file, 'utf8')) as unknown
   return d && typeof d === 'object' && !Array.isArray(d) ? (d as Record<string, unknown>) : null
+}
+/** The listed entry's level and squares, as the registry row reads them (judged lines, other-version receipts). */
+function rowState(e: IndexEntry) {
+  const judged = withJudgedLines(e)
+  const lines: Record<string, { status: CellStatus; step: string | null; at: string | null; moduleVersion: string | null }> = {}
+  for (const [k, c] of Object.entries(judged.compat.lines))
+    lines[k] = { status: c.status, step: c.step, at: c.at, moduleVersion: c.moduleVersion }
+  const others: Record<string, { installs: string; other: { status: CellStatus; step: string | null; at: string | null } }> = {}
+  for (const [k, o] of Object.entries(otherVersionCells(e)))
+    others[k] = { installs: o.installs, other: { status: o.other.status, step: o.other.step, at: o.other.at } }
+  return { tier: e.tier, verifiedOn: e.compat.verifiedOn, lines, others }
 }
 const catalog = modules.entries.map((e) => ({
   locator: e.locator,
@@ -50,6 +63,8 @@ const catalog = modules.entries.map((e) => ({
   cli: e.install.cli,
   descriptor: descriptorOf(e.path),
   replaces: e.replaces.map((r) => r.replace(/^core:/, '')),
+  // the row's real state for the preview card and the Installable fact (finding of 25 Oct)
+  row: rowState(e),
 }))
 // module IDs of core on the latest line: a package that ships one collides (lint collision-core)
 const builtInIds = { coreVersion: builtIn.coreVersion, ids: builtIn.modules.map((m) => m.id) }
