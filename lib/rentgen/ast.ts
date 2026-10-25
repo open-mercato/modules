@@ -133,6 +133,34 @@ export function fileConsts(sf: ts.SourceFile): Map<string, ts.Expression> {
   return consts
 }
 
+/** Initializers `moduleConsts` brought in from another file, where the binding is a `const` there too. */
+const importedConsts = new WeakSet<ts.Expression>()
+
+/** The initializer of a `const` binding (top level of its file, or imported from one): it is never reassigned. */
+function isConstInit(init: ts.Expression): boolean {
+  if (importedConsts.has(init)) return true
+  const d = init.parent
+  return (
+    d !== undefined &&
+    ts.isVariableDeclaration(d) &&
+    ts.isVariableDeclarationList(d.parent) &&
+    (d.parent.flags & ts.NodeFlags.BlockScoped) === ts.NodeFlags.Const
+  )
+}
+
+const constsCache = new WeakMap<Map<string, ts.Expression>, Map<string, ts.Expression>>()
+
+/** The `const` bindings of a map from `fileConsts` or `moduleConsts`: `let` and `var` can be reassigned. */
+function constsOnly(c: Map<string, ts.Expression>): Map<string, ts.Expression> {
+  let out = constsCache.get(c)
+  if (!out) {
+    out = new Map([...c].filter(([, init]) => isConstInit(init)))
+    constsCache.set(c, out)
+    constsCache.set(out, out)
+  }
+  return out
+}
+
 function propName(name: ts.PropertyName, sf: ts.SourceFile): string | null {
   if (ts.isIdentifier(name) || ts.isStringLiteral(name) || ts.isNumericLiteral(name)) return name.text
   if (ts.isNoSubstitutionTemplateLiteral(name)) return name.text
@@ -142,7 +170,9 @@ function propName(name: ts.PropertyName, sf: ts.SourceFile): string | null {
 
 /**
  * Key of an object property: its name, or for `[expr]` the static string or number of `expr` (`['requireAuth']`,
- * `[KEY]` with a top-level `const KEY = 'requireAuth'`); null when only running the code would tell.
+ * `[KEY]` with a top-level `const KEY = 'requireAuth'`); null when only running the code would tell. Only `const`
+ * bindings are read for a computed key: `let KEY = 'requireAuth'` may hold another key by the time the object is
+ * built (review finding F05).
  */
 function propKey(
   name: ts.PropertyName,
@@ -151,7 +181,7 @@ function propKey(
   depth: number,
 ): string | null {
   if (!ts.isComputedPropertyName(name)) return propName(name, sf)
-  const v = evalLiteral(name.expression, sf, c, depth + 1)
+  const v = evalLiteral(name.expression, sf, constsOnly(c), depth + 1)
   return typeof v === 'string' || typeof v === 'number' ? String(v) : null
 }
 
@@ -368,13 +398,20 @@ function litNode(v: Lit): ts.Expression | null {
   )
 }
 
-/** Static value of a name another file of the package exports (`export const X = ...`, one `export { X } from`). */
-function exportedValue(file: string, name: string, depth: number): Lit | undefined {
+/**
+ * Static value of a name another file of the package exports (`export const X = ...`, one `export { X } from`), and
+ * whether that binding is a `const` (`export default <expr>` is fixed too), so a computed key may read it.
+ */
+function exportedValue(file: string, name: string, depth: number): { value: Lit; isConst: boolean } | undefined {
   const sf = parseSource(file)
   if (!sf) return undefined
   const info = exportsOf(sf)
   const init = info.initializers.get(name)
-  if (init) return evalLiteral(init, sf, moduleConsts(sf, file, depth))
+  if (init)
+    return {
+      value: evalLiteral(init, sf, moduleConsts(sf, file, depth)),
+      isConst: isConstInit(init) || (init.parent !== undefined && ts.isExportAssignment(init.parent)),
+    }
   const from = info.from.get(name)
   const next = from ? resolveRelative(file, from.spec) : null
   return from && next && depth < 3 ? exportedValue(next, from.name, depth + 1) : undefined
@@ -398,8 +435,10 @@ export function moduleConsts(sf: ts.SourceFile, file: string, depth = 0): Map<st
     for (const el of named.elements) {
       if (el.isTypeOnly || out.has(el.name.text)) continue
       const v = exportedValue(target, (el.propertyName ?? el.name).text, depth + 1)
-      const n = v === undefined ? null : litNode(v)
-      if (n) out.set(el.name.text, n)
+      const n = v === undefined ? null : litNode(v.value)
+      if (!n) continue
+      if (v?.isConst) importedConsts.add(n)
+      out.set(el.name.text, n)
     }
   }
   return out

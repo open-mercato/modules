@@ -1,6 +1,11 @@
 // Unit tests of the Rentgen readers on synthetic packages: routes (three layouts and the runtime auth
 // rule), license sources, env, hosts, lint rules, glyph and diff.
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { ts } from 'ts-morph'
 import { describe, expect, it } from 'vitest'
+import { evalLiteral, isUnknown, moduleConsts, type Lit, type LitObject } from '../../lib/rentgen/ast.ts'
 import { anatomyDiff, changesPermissions, glyphOf } from '../../lib/rentgen/diff.ts'
 import { scanTarballBuffer, type ScanContext } from '../../lib/rentgen/extract.ts'
 import { hostDeclared, hostOf } from '../../lib/rentgen/hosts.ts'
@@ -139,6 +144,10 @@ describe('routes: computed metadata keys (finding of 25 Oct)', async () => {
     'src/modules/comp/api/hidden/route.ts': `export const metadata = { [keyOf()]: false }\nexport function GET() {}\n`,
     'src/modules/comp/api/method/route.ts': `export const metadata = { ['GET']: { requireAuth: false } }\nexport function GET() {}\n`,
     'src/modules/comp/api/methodhidden/route.ts': `export const metadata = { [verb()]: { requireAuth: false } }\nexport function GET() {}\n`,
+    // `let` and `var` may be reassigned before the object is built: only a const key is static (finding F05)
+    'src/modules/comp/api/let/route.ts': `let KEY = 'requireAuth'\nexport const metadata = { [KEY]: false }\nexport function GET() {}\n`,
+    'src/modules/comp/api/var/route.ts': `var KEY = 'requireAuth'\nKEY = 'other'\nexport const metadata = { [KEY]: false }\nexport function GET() {}\n`,
+    'src/modules/comp/api/chain/route.ts': `let K = 'requireAuth'\nconst KEYS = { auth: K }\nexport const metadata = { [KEYS.auth]: false }\nexport function GET() {}\n`,
   })
   const m = f.modules[0] as Facts['modules'][number]
   const auth = (p: string) => m.http.routes.find((r) => r.path === `/api/comp/${p}`)?.requireAuth
@@ -150,6 +159,56 @@ describe('routes: computed metadata keys (finding of 25 Oct)', async () => {
     expect(auth('method')).toBe(false)
     expect(auth('methodhidden')).toBeNull()
     expect(m.publicRoutes).toBe(3)
+  })
+
+  it('a key read from a top-level let or var is unknown, also through a const that holds it (F05)', () => {
+    expect(auth('let')).toBeNull()
+    expect(auth('var')).toBeNull()
+    expect(auth('chain')).toBeNull()
+  })
+})
+
+describe('evalLiteral: computed keys read const bindings only (finding F05)', () => {
+  const read = (src: string): Lit => {
+    const sf = ts.createSourceFile('route.ts', src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
+    const st = sf.statements.find((s) => ts.isVariableStatement(s) && s.getText(sf).includes('metadata'))
+    return evalLiteral((st as ts.VariableStatement).declarationList.declarations[0]!.initializer, sf)
+  }
+
+  it('const gives the key, let and var give the unknown spread marker', () => {
+    expect(read(`const K = 'requireAuth'\nconst metadata = { [K]: false }`)).toEqual({ requireAuth: false })
+    for (const kw of ['let', 'var']) {
+      const v = read(`${kw} K = 'requireAuth'\nconst metadata = { [K]: false }`) as LitObject
+      expect(Object.keys(v)).toEqual(['...'])
+      expect(isUnknown(v['...'])).toBe(true)
+    }
+  })
+
+  it('a value (not a key) of a let is still read, as before', () => {
+    expect(read(`let V = false\nconst metadata = { requireAuth: V }`)).toEqual({ requireAuth: false })
+  })
+
+  it('an imported binding is a key only when it is a const where it is declared', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'om-f05-'))
+    try {
+      writeFileSync(join(dir, 'keys.ts'), `export const AUTH = 'requireAuth'\nexport let LOOSE = 'requireAuth'\n`)
+      const file = join(dir, 'route.ts')
+      const src = [
+        "import { AUTH, LOOSE } from './keys'",
+        'export const a = { [AUTH]: false }',
+        'export const b = { [LOOSE]: false }',
+      ].join('\n')
+      writeFileSync(file, src)
+      const sf = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
+      const consts = moduleConsts(sf, file)
+      const init = (name: string) => consts.get(name)
+      expect(evalLiteral(init('a'), sf, consts)).toEqual({ requireAuth: false })
+      const b = evalLiteral(init('b'), sf, consts) as LitObject
+      expect(Object.keys(b)).toEqual(['...'])
+      expect(isUnknown(b['...'])).toBe(true)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
 
