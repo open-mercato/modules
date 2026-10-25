@@ -2,7 +2,7 @@
 // and the command end to end on a temporary data checkout (spec 5.3 steps 1-6, 12.2 WP07).
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Receipt } from '../../lib/schema/data/index.ts'
 import collect from '../../lib/commands/collect.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
@@ -306,6 +306,30 @@ function previewRun(
 }
 
 describe('preview runs (cells-local shape) and the collect command', () => {
+  // collect refuses preview-docker nights on GitHub Actions (lib/commands/collect.ts), and the `checks` job runs this
+  // suite there, so every case states the variable it depends on (finding of 25 Oct: red `checks` on every PR).
+  beforeEach(() => {
+    vi.stubEnv('GITHUB_ACTIONS', '')
+  })
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('collect --local refuses a preview-docker night on GitHub Actions and writes nothing', async () => {
+    vi.stubEnv('GITHUB_ACTIONS', 'true')
+    const root = tmp('preview-ci')
+    const data = join(root, 'data')
+    cpSync(join(ROOT, 'test', 'fixtures', 'data', 'lines.json'), join(data, 'lines.json'))
+    const night = previewRun(root, 1000, 1, null, only([base09.key, consents.key]), {}, {})
+    const rc = await collect({
+      args: ['--local', night],
+      flags: { data, out: join(root, 'out'), offline: true, json: false },
+      root: ROOT,
+    })
+    expect(rc).toBe(2)
+    expect(existsSync(join(data, 'receipts'))).toBe(false)
+  })
+
   it('collect --local writes preview-docker receipts, a retry run confirms, a second collect changes nothing', async () => {
     const root = tmp('preview')
     const data = join(root, 'data')
