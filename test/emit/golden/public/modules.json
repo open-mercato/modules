@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.h2ab1fc",
+  "dataVersion": "1.0.0-202610230305.hae0671",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -2144,10 +2144,8 @@
           "catchUpDays": null
         },
         "declaredVsObserved": {
-          "status": "mismatch",
-          "notes": [
-            "Built for 0.9; verified on no line."
-          ]
+          "status": "match",
+          "notes": []
         }
       },
       "tier": null,

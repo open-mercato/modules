@@ -54,10 +54,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for 0.9; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [

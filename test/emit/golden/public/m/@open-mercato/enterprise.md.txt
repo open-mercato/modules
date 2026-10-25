@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate"
 installable_from: 2026-10-09
-data_version: 1.0.0-202610230305.h2ab1fc
+data_version: 1.0.0-202610230305.hae0671
 ---
 # Enterprise
 Commercial Open Mercato modules for SSO, security, record locks and agent orchestration.
