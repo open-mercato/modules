@@ -73,6 +73,36 @@ describe('checkCompat', () => {
     expect(r.notes).toContain('0.1.1 is quarantine on 0.9. This result is for 0.1.0.')
   })
 
+  it('an app a patch behind its line: Built for is judged on the app version, with a note (finding of 25 Oct)', () => {
+    // the line 0.9 moved to 0.9.1 and the module pins 0.9.1 exactly; the app is still on 0.9.0
+    const lines = fx.lines.lines.map((l) => (l.key === '0.9' ? { ...l, version: '0.9.1' } : l))
+    const e = fixtureEntries(fx).map((x) =>
+      x.locator === LOC.stripe
+        ? { ...x, compat: { ...x.compat, builtFor: { range: '0.9.1', kind: 'exact-pin' as const, lines: ['0.9'] } } }
+        : x,
+    )
+    const c = { ...ctx, entries: e, lines }
+    const at = (omVersion: string) =>
+      CheckCompatOutput.parse(checkCompat({ refs: [LOC.stripe], omVersion }, c)).results[0]!
+    const behind = at('0.9.0')
+    expect(behind.builtFor).toMatchObject({ range: '0.9.1', satisfied: false })
+    expect(behind.notes).toContain('Receipts are from Open Mercato 0.9.1; your app has 0.9.0.')
+    for (const v of ['0.9.1', '0.9', 'v0.9.1']) {
+      const r = at(v)
+      expect(r.builtFor.satisfied, v).toBe(true)
+      expect(r.notes.join(' '), v).not.toContain('your app has')
+    }
+    // a newer patch than the line's that the range accepts is satisfied, and still named
+    const range = { range: '^0.9.0', kind: 'caret-0x' as const, lines: ['0.9'] }
+    const c2 = {
+      ...c,
+      entries: e.map((x) => (x.locator === LOC.stripe ? { ...x, compat: { ...x.compat, builtFor: range } } : x)),
+    }
+    const ahead = CheckCompatOutput.parse(checkCompat({ refs: [LOC.stripe], omVersion: '0.9.2' }, c2)).results[0]!
+    expect(ahead.builtFor.satisfied).toBe(true)
+    expect(ahead.notes).toContain('Receipts are from Open Mercato 0.9.1; your app has 0.9.2.')
+  })
+
   it('next prerelease resolves to next; a line outside the catalog is null with a note', () => {
     expect(checkCompat({ refs: [LOC.ksef], omVersion: '0.10.1-develop.7583.1.0c886d0a14' }, ctx).line).toBe('next')
     const old = checkCompat({ refs: [LOC.ksef], omVersion: '0.7.2' }, ctx)

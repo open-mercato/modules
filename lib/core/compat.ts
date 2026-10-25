@@ -28,7 +28,7 @@ import {
   untestedText,
 } from './policy.ts'
 import { resolveRef, type BuiltInRef } from './refs.ts'
-import { satisfiesRange } from './semver.ts'
+import { isStable, isVersion, satisfiesRange } from './semver.ts'
 import { PREVIEW_LINE, type ReceiptSource } from './source.ts'
 import { clipText } from './text.ts'
 
@@ -79,6 +79,12 @@ export function checkCompat(input: CheckCompatInput, ctx: CompatContext): CheckC
   const resolved = resolveLine(input.omVersion, ctx.lines)
   const line = resolved.line
   const exact = resolved.version ?? input.omVersion.replace(/^[v=^~]/, '')
+  // the app's own version when it is a release other than the one the line tested (finding of 25 Oct: an app on 0.9.0
+  // read `satisfied` for a module pinned to 0.9.1 once the line moved to 0.9.1): Built for is judged on the app's
+  // version and a note says the receipts are of another one; the verdict and the policy stay the line's (D10)
+  const asked = input.omVersion.trim().replace(/^(?:v|=)\s*/, '')
+  const appVersion = line && resolved.version && isVersion(asked) && asked !== resolved.version ? asked : null
+  const appStable = appVersion !== null && isStable(appVersion)
   const lineKey = line ?? /^(\d+\.\d+)/.exec(exact)?.[1] ?? 'unknown'
   const latestKey = ctx.lines.find((l) => l.source === 'latest')?.key ?? null
   const coreLine = ctx.coreLine ?? latestKey ?? lineKey
@@ -137,7 +143,11 @@ export function checkCompat(input: CheckCompatInput, ctx: CompatContext): CheckC
     const declared = line ? declaredOn(bf, line) : null
     const unread = declared !== null && !declared.read
     const range = declared ? (declared.read ? declared.range : bf.range) : bf.range
-    const satisfied = !unread && range !== null && (declared?.accepts ? true : satisfiesRange(exact, range))
+    // `accepts` is the line's (its tested version); a stable app version of its own is checked against the range itself
+    const satisfied =
+      !unread &&
+      range !== null &&
+      (appStable ? satisfiesRange(appVersion, range) : declared?.accepts ? true : satisfiesRange(exact, range))
     const builtFor: Result['builtFor'] = {
       range,
       kind: range === null ? 'missing' : bf.kind,
@@ -149,6 +159,7 @@ export function checkCompat(input: CheckCompatInput, ctx: CompatContext): CheckC
     const status = line ? (recommended ? 'verified' : (e.signals.receipt[line] ?? cell?.status ?? 'untested')) : null
     // a status that rests on a preview run says so first, so the five-note cap never cuts it (review r6)
     if (ctx.receiptSource === 'preview' && line && (cell || status === 'verified')) notes.push(PREVIEW_LINE)
+    if (appVersion) notes.push(`Receipts are from Open Mercato ${resolved.version}; your app has ${appVersion}.`)
     // a package a new app of the line already registers (D10): nothing to install there, the command of an app from the
     // empty preset after it (decision of 24 Oct); the line's verdict is the receipt of the version a new app ships
     const preset = presetOn(e, line)
