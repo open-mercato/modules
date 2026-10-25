@@ -389,6 +389,37 @@ describe('agentPolicy (6.5)', () => {
     expect(strictestPolicy([builtInPolicy('0.9', '0.9')]).decision).toBe('allow')
   })
 
+  it('strictestPolicy names the packages of each reason when it merges several (finding of 25 Oct)', () => {
+    const broken = (since: string): Policy => ({
+      decision: 'refuse',
+      reasons: [{ code: 'BROKEN', text: `Broken at typecheck on 0.9 since ${since}.` }],
+    })
+    // three broken modules once read as two `Broken ... since` lines that named none of them
+    const s = strictestPolicy(
+      [broken('24 Oct'), broken('25 Oct'), broken('25 Oct'), builtInPolicy('0.9', 'next')],
+      ['@dainamite/cpq', '@dainamite/billing', '@dainamite/cpq-billing-connector', null],
+    )
+    expect(s.reasons).toEqual([
+      { code: 'BROKEN', text: '@dainamite/cpq: Broken at typecheck on 0.9 since 24 Oct.' },
+      {
+        code: 'BROKEN',
+        text: '@dainamite/billing, @dainamite/cpq-billing-connector: Broken at typecheck on 0.9 since 25 Oct.',
+      },
+    ])
+    // one package: its reasons as they are
+    expect(strictestPolicy([broken('24 Oct')], ['@dainamite/cpq']).reasons[0]?.text).toBe(
+      'Broken at typecheck on 0.9 since 24 Oct.',
+    )
+    // past 160 characters the line counts the packages
+    const long = Array.from({ length: 6 }, (_, i) => `@some-long-scope/package-number-${i}`)
+    const many = strictestPolicy(
+      long.map(() => broken('25 Oct')),
+      long,
+    )
+    expect(many.reasons).toEqual([{ code: 'BROKEN', text: '6 packages: Broken at typecheck on 0.9 since 25 Oct.' }])
+    expect(Policy.safeParse(many).success).toBe(true)
+  })
+
   it('BROKEN on the install version, not on the last receipt of the line (review round 2)', () => {
     const e = fixtureEntry(fx, LOC.consents, consentsBrokenThenGated(fx))
     // the last receipt of the line is the quarantine entry of 0.1.1; the install version is 0.1.0

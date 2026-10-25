@@ -992,14 +992,31 @@ export function builtInPolicy(coreLine: string, appLine: string | null): Policy 
 
 const RANK = { allow: 0, ask: 1, refuse: 2 } as const
 
-/** Strictest decision of several policies; reasons merged (deduplicated, max 10), consent texts joined. */
-export function strictestPolicy(policies: readonly Policy[]): Policy {
+/**
+ * Strictest decision of several policies; reasons merged (deduplicated, max 10), consent texts joined. With
+ * `subjects` (the package of each policy, null for one about core) naming more than one package, each reason starts
+ * with the packages it holds for, one line per reason (finding of 25 Oct: three broken modules of a plan read as two
+ * `Broken ... since` lines that named none of them).
+ */
+export function strictestPolicy(policies: readonly Policy[], subjects?: readonly (string | null)[]): Policy {
   if (policies.length === 0) return { decision: 'allow', reasons: [] }
   const decision = policies.reduce<Policy['decision']>((d, p) => (RANK[p.decision] > RANK[d] ? p.decision : d), 'allow')
-  const reasons: Reason[] = []
-  for (const p of policies)
-    if (p.decision === decision)
-      for (const r of p.reasons) if (!reasons.some((x) => x.code === r.code && x.text === r.text)) reasons.push(r)
+  const named = new Set((subjects ?? []).filter((x): x is string => !!x)).size > 1
+  const groups: { r: Reason; who: string[] }[] = []
+  policies.forEach((p, i) => {
+    if (p.decision !== decision) return
+    const subject = named ? (subjects?.[i] ?? null) : null
+    for (const r of p.reasons) {
+      const g = groups.find((x) => x.r.code === r.code && x.r.text === r.text)
+      if (!g) groups.push({ r, who: subject ? [subject] : [] })
+      else if (subject && !g.who.includes(subject)) g.who.push(subject)
+    }
+  })
+  const reasons: Reason[] = groups.map(({ r, who }) => {
+    if (who.length === 0) return r
+    const text = `${who.join(', ')}: ${r.text}`
+    return { code: r.code, text: text.length <= 160 ? text : clip(`${who.length} packages: ${r.text}`) }
+  })
   const out: Policy = { decision, reasons: ordered(reasons).slice(0, 10) }
   if (decision === 'ask') {
     const parts = policies.flatMap((p) => (p.decision === 'ask' && p.consentText ? [p.consentText] : []))

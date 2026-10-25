@@ -86,19 +86,19 @@
     "reasons": [
       {
         "code": "THIRD_PARTY",
-        "text": "Third-party code runs with access to all tenants' data."
+        "text": "@fullstackhouse/open-mercato-durable-work, @fullstackhouse/open-mercato-data-sync-durable: Third-party code runs with access to all tenants' data."
       },
       {
         "code": "NOT_VERIFIED",
-        "text": "Not yet tested in a new app on 0.9."
+        "text": "@fullstackhouse/open-mercato-data-sync-durable: Not yet tested in a new app on 0.9."
       },
       {
         "code": "REPLACES",
-        "text": "Replaces core data_sync. Remove the core registration first."
+        "text": "@fullstackhouse/open-mercato-data-sync-durable: Replaces core data_sync. Remove the core registration first."
       },
       {
         "code": "SLOT",
-        "text": "Competes for slot data_sync with @open-mercato/core."
+        "text": "@fullstackhouse/open-mercato-data-sync-durable: Competes for slot data_sync with @open-mercato/core."
       }
     ],
     "consentText": "Install @fullstackhouse/open-mercato-durable-work@0.6.0, @fullstackhouse/open-mercato-data-sync-durable@0.6.0"

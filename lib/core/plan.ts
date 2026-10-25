@@ -534,11 +534,13 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
   // policy, consent, next steps
   const judged = [...planned, ...unversioned.map((l) => ctx.entries.find((e) => e.locator === l) as IndexEntry)]
   const policies: Policy[] = judged.map((e) => agentPolicy(e, lineKey, app, { now: ctx.now }))
+  // each reason names its package when the plan has several (finding of 25 Oct)
+  const subjects: (string | null)[] = judged.map((e) => packageRef(e))
   // the built-in rule speaks of enabling (`Check that this app's core has the module before enabling it`), so it holds
   // only where the steps enable one (review of 24 Oct: the ksef plan asked it while a new app has integrations on)
   if (main.enabling > 0) policies.push(builtInPolicy(coreLine, line))
   else if (policies.length === 0 && builtInNeeded.size > 0) policies.push(builtInPolicy(coreLine, coreLine))
-  const policy = strictestPolicy(policies)
+  const policy = strictestPolicy(policies, subjects)
   const then: string[] = [...main.then]
   if (adding.some((e) => e.anatomy && e.anatomy.counts.routes === null)) then.push('API routes: not measured.')
   for (const loc of unversioned) then.push(`${loc} has no installable version (no stable release or pinned tag).`)
