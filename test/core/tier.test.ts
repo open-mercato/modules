@@ -69,10 +69,19 @@ describe('newestInstallable per line (E5)', () => {
   } as unknown as Parameters<typeof newestInstallable>[0]
   const line08 = { key: '0.8', version: '0.8.0', source: 'previous' as const, preapproved: ['@open-mercato/*'] }
   const now = '2026-10-23T00:00:00Z'
+  // a community package whose versions are not the line's Open Mercato version (no lockstep release)
+  const community = {
+    npm: {
+      name: '@x/module',
+      latestStable: '1.1.0',
+      previousStable: '1.0.0',
+      publishedAt: { '1.1.0': '2026-10-09T00:00:00Z', '1.0.0': '2026-09-01T00:00:00Z' },
+    },
+  } as unknown as Parameters<typeof newestInstallable>[0]
   it('picks the newest candidate that is not no-fit on the line', () => {
     expect(newestInstallable(sync, line08, now)).toBe('0.9.0')
     expect(newestInstallable(sync, line08, now, (v) => (v === '0.9.0' ? 'no-fit' : 'ok'))).toBe('0.8.0')
-    expect(newestInstallable(sync, line08, now, (v) => (v === '0.9.0' ? 'drift' : 'ok'))).toBe('0.9.0')
+    expect(newestInstallable(community, line08, now, (v) => (v === '1.1.0' ? 'drift' : 'ok'))).toBe('1.1.0')
   })
   it('evaluateEntry judges each line on its own version: lockstep official 0.8.0 on 0.8 (gateway-stripe)', () => {
     const base = evaluateInput(LOC.stripe)
@@ -91,8 +100,34 @@ describe('newestInstallable per line (E5)', () => {
     // without fitOf: one judged version for every line, as before E5
     expect(evaluateEntry(base).health.evaluated?.['0.8']).toBe('0.9.0')
   })
+  it('a fitting candidate whose peers accept the line wins over a newer one built for another line', () => {
+    const cell = (status: 'ok' | 'drift', satisfied: boolean) => ({ status, declared: { satisfied } })
+    expect(
+      newestInstallable(community, line08, now, (v) => (v === '1.1.0' ? cell('drift', false) : cell('ok', true))),
+    ).toBe('1.0.0')
+    // no candidate's peers accept the line: the newest that fits, as before
+    expect(newestInstallable(community, line08, now, () => cell('drift', false))).toBe('1.1.0')
+    // both accept it: the newest
+    expect(newestInstallable(community, line08, now, () => cell('ok', true))).toBe('1.1.0')
+    // a no-fit candidate never wins, its peers aside
+    expect(
+      newestInstallable(community, line08, now, (v) =>
+        v === '1.0.0' ? { status: 'no-fit' as const, declared: { satisfied: true } } : cell('drift', false),
+      ),
+    ).toBe('1.1.0')
+  })
+  it('the lockstep release of the line wins when it fits (storage-s3, telemetry, channel-discord 0.8.0 on 0.8)', () => {
+    // 0.9.0 only drifts on 0.8; telemetry has no Open Mercato peers, so its peers say nothing about the line
+    const missing = (status: 'ok' | 'drift') => ({ status, declared: { satisfied: true } })
+    expect(newestInstallable(sync, line08, now, (v) => (v === '0.9.0' ? missing('drift') : missing('ok')))).toBe(
+      '0.8.0',
+    )
+    expect(newestInstallable(sync, line08, now, (v) => (v === '0.9.0' ? 'drift' : 'ok'))).toBe('0.8.0')
+    // a lockstep release that does not fit stays out
+    expect(newestInstallable(sync, line08, now, (v) => (v === '0.8.0' ? 'no-fit' : 'drift'))).toBe('0.9.0')
+  })
   it('a candidate without Fit counts as fitting; when every candidate is no-fit the newest stays', () => {
-    expect(newestInstallable(sync, line08, now, (v) => (v === '0.9.0' ? null : 'ok'))).toBe('0.9.0')
+    expect(newestInstallable(community, line08, now, (v) => (v === '1.1.0' ? null : 'ok'))).toBe('1.1.0')
     expect(newestInstallable(sync, line08, now, () => 'no-fit')).toBe('0.9.0')
   })
 })

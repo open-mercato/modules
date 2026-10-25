@@ -187,7 +187,7 @@ function versionData(i: VersionInput): VersionData {
   const installableVersions: Record<string, string | null> = {}
   const fitOf = i.fitOf
   for (const l of i.lines)
-    installableVersions[l.key] = newestInstallable(i.sync, l, i.now, fitOf ? (v) => fitOf(v, l.key)?.status : undefined)
+    installableVersions[l.key] = newestInstallable(i.sync, l, i.now, fitOf ? (v) => fitOf(v, l.key) : undefined)
   return {
     npm,
     tag,

@@ -169,7 +169,7 @@ export default function planMatrixCommand(ctx: CommandContext): number {
       receipts: store.history(e.locator),
       fit: (version: string, lineKey: string) => {
         const l = lines.lines.find((x) => x.key === lineKey)
-        return l ? (fitOn(l.version)?.cells[`${e.locator}@${version}`]?.status ?? null) : null
+        return l ? (fitOn(l.version)?.cells[`${e.locator}@${version}`] ?? null) : null
       },
     }
   })

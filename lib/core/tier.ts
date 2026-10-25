@@ -146,15 +146,25 @@ export interface VerifiedInput {
   now: string
 }
 
-/** Static fit of one version on one line (FitCell.status), or null/undefined when not computed. */
-export type FitOn = (version: string) => 'ok' | 'drift' | 'no-fit' | 'unknown' | null | undefined
+type FitStatusOn = 'ok' | 'drift' | 'no-fit' | 'unknown'
+
+/**
+ * Static fit of one version on one line: its FitCell (status and whether its peers accept the line), its status
+ * alone, or null/undefined when not computed.
+ */
+export type FitOn = (
+  version: string,
+) => FitStatusOn | { status: FitStatusOn; declared?: { satisfied: boolean } | null } | null | undefined
 
 /**
  * Newest stable version a fresh app can install today on the line (age gate applied). With `fitOn` (the Fit of a
  * version on this line), the newest candidate that does not fail Fit on the line wins (orchestrator decision E5,
  * errata to spec 4.6 and D46): before any receipt, line 0.8 judges the lockstep official 0.8.0, not 0.9.0, which
- * imports paths 0.8.0 does not have. A candidate whose Fit is not computed yet counts as fitting; when every
- * candidate is `no-fit`, the newest one stays.
+ * imports paths 0.8.0 does not have. Among the candidates that fit, one whose peers accept the line wins over a newer
+ * one built for another line (finding of 25 Oct: storage-s3, telemetry and channel-discord 0.9.0 only `drift` on 0.8,
+ * so the 0.8 cells tested 0.9.0 although 0.8.0 exists), and the lockstep release of the line (`X.Y.0` of a line on
+ * Open Mercato X.Y.0) wins over both. A candidate whose Fit is not computed yet counts as fitting;
+ * when every candidate is `no-fit`, the newest one stays.
  */
 export function newestInstallable(
   sync: SyncRecord | null,
@@ -170,8 +180,16 @@ export function newestInstallable(
   )
   const newest = maxVersion(candidates)
   if (!fitOn || newest === null) return newest
-  const fitting = candidates.filter((v) => fitOn(v) !== 'no-fit')
-  return maxVersion(fitting) ?? newest
+  const cell = (v: string) => {
+    const f = fitOn(v)
+    return f && typeof f === 'object' ? f : { status: f ?? null, declared: null }
+  }
+  const fitting = candidates.filter((v) => cell(v).status !== 'no-fit')
+  // a lockstep release of the line (telemetry 0.8.0 on 0.8, no Open Mercato peers to read) is the one built for it,
+  // once its Fit on the line is known
+  if (line && fitting.includes(line.version) && cell(line.version).status) return line.version
+  const accepted = fitting.filter((v) => cell(v).declared?.satisfied === true)
+  return maxVersion(accepted) ?? maxVersion(fitting) ?? newest
 }
 
 /**

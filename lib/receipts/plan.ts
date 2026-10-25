@@ -24,7 +24,7 @@ import {
   type PresetId,
 } from '../core/lines.ts'
 import { compareVersions, isVersion, satisfiesRange } from '../core/semver.ts'
-import { newestInstallable } from '../core/tier.ts'
+import { newestInstallable, type FitOn } from '../core/tier.ts'
 import { cellKey, harnessVersion, key12 } from './cell-key.ts'
 import { Matrix, type CellMode, type MatrixCell, type NotRunCell, type Runner } from './matrix.ts'
 
@@ -61,7 +61,7 @@ export interface PlanEntry {
    * Static Fit status of one version on a line key (data/fit). With it, a line installs the newest stable version
    * that fits it before any receipt (E5): the 0.8 night installs the lockstep official 0.8.0, not 0.9.0.
    */
-  fit?: (version: string, line: string) => 'ok' | 'drift' | 'no-fit' | 'unknown' | null
+  fit?: (version: string, line: string) => ReturnType<FitOn>
 }
 
 /** Newest installable stable version of an entry on a line, Fit-aware when the entry has Fit (E5). */

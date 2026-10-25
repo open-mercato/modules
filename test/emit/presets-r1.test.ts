@@ -5,7 +5,12 @@
 // next to `allow` and `Nothing to install` in search_modules. (3) The empty preset's command says when that very
 // version broke in isolation.
 import { describe, expect, test } from 'vitest'
-import { emptyCommandCaution, emptyPresetVersion, presetInstallText } from '../../lib/core/policy.ts'
+import {
+  INSTALLABLE_META_KEY,
+  emptyCommandCaution,
+  emptyPresetVersion,
+  presetInstallText,
+} from '../../lib/core/policy.ts'
 import { buildEmit } from '../../lib/emit/index.ts'
 import type { EmitData } from '../../lib/emit/types.ts'
 import type { CompatIndex } from '../../lib/schema/published/compat.ts'
@@ -183,7 +188,13 @@ describe('the empty preset command says when that version broke in isolation (pr
     expect(plan.then).not.toContain(caution)
     expect(entry.compat.lines['0.8']).toBeUndefined()
     // with no other version (a new app ships the broken one) the command stays and the sentence follows it
-    const same = { ...entry, compat: { ...entry.compat, ships: { ...entry.compat.ships, '0.8': '0.9.0' } } }
+    // (and a fresh 0.8 app installs it too: the lockstep 0.8.0 is out of the picture)
+    const installable = { ...(entry._meta?.[INSTALLABLE_META_KEY] as Record<string, string | null>), '0.8': '0.9.0' }
+    const same = {
+      ...entry,
+      _meta: { ...entry._meta, [INSTALLABLE_META_KEY]: installable },
+      compat: { ...entry.compat, ships: { ...entry.compat.ships, '0.8': '0.9.0' } },
+    }
     expect(emptyPresetVersion(same, '0.8')).toBe('0.9.0')
     expect(emptyCommandCaution(same, '0.8', emptyPresetVersion(same, '0.8'))).toBe(
       'In isolation (empty preset): broken at typecheck on 23 Oct.',
