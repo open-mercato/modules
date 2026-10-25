@@ -16,6 +16,7 @@ import { builtInPage, categoryPage, href, modulePage } from '../../lib/url.ts'
 import { byLineKey } from '../../../../lib/core/lines.ts'
 import { EMPTY_PRESET_LEAD, listAnd } from '../../../../lib/core/policy.ts'
 import { idWrapHtml, rowSpans } from '../c/_data.ts'
+import { builtInAbsence } from '../../lib/builtin-absence.ts'
 
 export function getStaticPaths() {
   return loadSiteData().builtIn.modules.map((m) => ({ params: { id: m.id } }))
@@ -133,22 +134,10 @@ const sections: Sec[] = [
   { id: 'network', title: 'Network', items: L.hosts.map((h) => ({ text: h })), prefix: null, extra: null, empty: 'No URL found in the code.' },
 ]
 // the same rule as the module film (review r1): only sections with facts get a cell, the rest are named once under
-// the grid; API stays, it says why routes are missing
-const ABSENT: Record<string, string> = {
-  data: 'tables',
-  security: 'permissions',
-  events: 'events',
-  ui: 'UI',
-  background: 'background jobs',
-  ai: 'AI tools',
-  config: 'credentials',
-  network: 'hosts',
-}
+// the grid; API stays, it says why routes are missing. Config and Network are never in the facts file: `Not read`,
+// not `Not present` (finding of 25 Oct)
 const shown = sections.filter((x) => x.items.length > 0 || x.id === 'api')
-const absentText = sections
-  .filter((x) => x.items.length === 0 && x.id !== 'api')
-  .map((x) => ABSENT[x.id] ?? x.title.toLowerCase())
-  .join(', ')
+const { absent: absentText, unread: unreadText } = builtInAbsence(sections)
 // a section whose identifiers do not fit a third of the film takes two thirds; every row ends at the edge
 const leadW = (x: Sec): number => x.items.reduce((n, i) => Math.max(n, i.lead?.length ?? 0), 0)
 const want = Object.fromEntries(
@@ -252,6 +241,7 @@ const sameCat = builtIn.modules.filter((x) => x.category === m.category && x.id 
             }
           </div>
           {absentText && <p class="bfilm__absent">Not present: {absentText}.</p>}
+          {unreadText && <p class="bfilm__absent">Not read: {unreadText} (not in <code>module-facts.v2.json</code>).</p>}
           <p class="bfilm__src">From <code>module-facts.v2.json</code> in <code>@open-mercato/cli</code> {builtIn.coreVersion}. Read statically, not executed.</p>
         </section>
 
