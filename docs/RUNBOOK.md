@@ -286,6 +286,20 @@ leftover firewall chains (`docker run --rm -i --net host --cap-add NET_ADMIN om-
 <harness/local/cell-firewall.sh`, then `run-cell.sh --unfence <chain> <subnet>`), `docker volume rm
 om-preview-yarn-cache`, `docker image rm om-modules-cell:node24.21.0 om-modules-cell-fw:1`, `rm -rf ~/om-cells`.
 
+### Serving a preview build
+
+A build is for one address. Without `SITE_URL` and `BASE_PATH` it links to the default
+`https://open-mercato.github.io/modules`, which serves nothing while the repository is private and Pages is off, so
+`llms.txt`, `modules.json`, the `.md` cards and the canonical tags of a preview point at dead pages (finding of 25 Oct).
+`yarn om emit` warns when `SITE_URL` is not set. For a preview, build for the address that serves it:
+
+```sh
+SITE_URL=https://<preview host> BASE_PATH=/modules node lib/cli.ts emit --data <data> && \
+  SITE_URL=https://<preview host> BASE_PATH=/modules npx astro build
+```
+
+The pages rewrite their copy commands, links and Claude Code prompts to the host they are served from either way.
+
 ## Classification
 
 `lib/receipts/classify.ts`, first match wins, and every rule that blames the module comes before infra:

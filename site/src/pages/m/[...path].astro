@@ -863,6 +863,9 @@ const note = levelNote(entry, detail?.rules, latest.key)
 const repoUrl = CATALOG_REPO_URL
 const issueUrl = (template: string): string =>
   `${repoUrl}/issues/new?template=${template}&title=${encodeURIComponent(`${template === 'om-quality-request.yml' ? 'OM Quality review' : 'Report'}: ${name}`)}`
+/** A link of the data under the site root as a site path, so it stays on the host that serves the page. */
+const siteRoot = meta.site.replace(/\/+$/, '')
+const sitePath = (u: string): string => (u.startsWith(`${siteRoot}/`) ? href(u.slice(siteRoot.length)) : u)
 const badge = `[![Open Mercato Modules](${meta.site}/badge/${entry.path}.svg)](${meta.site}/m/${entry.path})`
 
 // ---------- related ----------
@@ -1435,7 +1438,8 @@ const tabs = [
               {entry.links.docs && <li><a href={entry.links.docs} rel="noopener noreferrer">Docs <Icon name="external" size={14} /></a></li>}
               <li><a href={href(moduleMd(entry.path))}><span>Agent card <code>.md</code></span></a></li>
               <li><a href={href(`/m/${entry.path}.json`)}>JSON</a></li>
-              {entry.links.facts && <li><a href={entry.links.facts}><span>Anatomy facts <code>facts.json</code></span></a></li>}
+              {/* a site path like the two above (finding of 25 Oct: the absolute link left a preview for a host that 404s) */}
+              {entry.links.facts && <li><a href={sitePath(entry.links.facts)}><span>Anatomy facts <code>facts.json</code></span></a></li>}
             </ul>
           </section>
 

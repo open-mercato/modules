@@ -62,6 +62,12 @@ export default function emit(ctx: CommandContext): number {
     console.error('om emit: --site / SITE_URL must be an absolute URL')
     return EXIT_ENV
   }
+  // a build served anywhere else (a preview, a sandbox) keeps absolute links to the default address in llms.txt,
+  // modules.json and the cards (finding of 25 Oct): say so, the pages fix their copy commands at run time only
+  if (!args['--site'] && !process.env.SITE_URL)
+    console.error(
+      `om emit: warning: SITE_URL is not set; llms.txt, modules.json and the .md cards link to ${site.site}. For a preview, set SITE_URL and BASE_PATH to the address that serves it.`,
+    )
   const nowRaw = args['--now'] ?? process.env.OM_NOW
   const now = new Date(nowRaw ?? Date.now())
   if (Number.isNaN(now.getTime())) {
