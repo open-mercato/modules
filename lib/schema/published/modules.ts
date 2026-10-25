@@ -348,6 +348,22 @@ export const ModuleDetail = IndexEntry.extend({
   rules: z
     .array(z.object({ id: z.string().regex(/^(LST|VER)-\d$/), pass: z.boolean(), detail: z.string().max(200) }))
     .optional(),
+  // additive (25 Oct, D34): host packages the module bundles in a version a new app does not resolve to (lint
+  // host-dependency-duplication), with the lines and the sentence the page and the card print
+  hostDuplicates: z
+    .array(
+      z.object({
+        name: z.string(),
+        moduleRange: z.string(),
+        appVersion: z.string(),
+        lines: z.array(LineKey).max(5),
+        om: z.array(z.string()).max(5),
+        message: z.string().max(300),
+      }),
+    )
+    .max(30)
+    .optional()
+    .describe('Bundled host packages (lint host-dependency-duplication): two copies break types.'),
 })
 
 /** /m/<locpath>/receipts.json: last receipt per line, each with its `transition`. */

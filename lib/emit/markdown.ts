@@ -1,8 +1,8 @@
 // Agent card `/m/<path>.md` (spec 8.5): fixed sections, at most 20 KB, cut with `[truncated, see <url>]`.
 // Built only from validated fields; the author's README goes into a fenced UNTRUSTED block. Pure.
 import { anatomyNote } from '../core/entry.ts'
-import { ascendingKeys, latestLine, type LineInfo } from '../core/lines.ts'
-import { collisionConflictItems } from '../core/finding.ts'
+import { ascendingKeys, ascendingLines, latestLine, type LineInfo } from '../core/lines.ts'
+import { collisionConflictItems, hostDuplicateFindings, hostDuplicateText } from '../core/finding.ts'
 import { numberedSteps, planStepsText } from '../core/plan.ts'
 import {
   builtForText,
@@ -338,6 +338,8 @@ export function moduleCard(i: CardInput): string {
       : []),
     '## Trust',
     trustLine(e),
+    // the cause the receipts show only inside a log path (D34): the bundled host packages, with the fix
+    ...hostDuplicateFindings(i.ctx.fit, ascendingLines(i.lines)).map((f) => `- ${hostDuplicateText(f)}`),
     '',
     `Card: ${e.links.page} · JSON: ${e.links.json}`,
     '',

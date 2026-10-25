@@ -315,3 +315,75 @@ export function findingText(r: FailedStepOf | null | undefined, ctx: ExplainCont
   const out = `${r.result.failedStep} failed${text ? `: ${text}` : '.'}`
   return out.length > max ? `${out.slice(0, max - 1)}…` : out
 }
+
+// ---- host-dependency-duplication (spec 6.6, D34)
+
+export const HOST_DEPENDENCY_DUPLICATION = { code: 'host-dependency-duplication', severity: 'warn' } as const
+
+/** A host package the module bundles in `dependencies` in a version a new app does not resolve to (FitCell). */
+export interface HostDuplicate {
+  name: string
+  moduleRange: string
+  appVersion: string
+}
+
+/** One bundled host package with the lines a new app resolves another version on, in reading order. */
+export interface HostDuplicateFinding extends HostDuplicate {
+  lines: string[]
+  /** Open Mercato version of each line in `lines`, same order. */
+  om: string[]
+}
+
+/**
+ * The bundled host packages of an entry across the lines (`EntryContext.fit`), one item per package and versions, so
+ * the module page, the card and the detail file can name the cause the receipts only show inside a log path
+ * (D34: `the cause of the consents failure is visible`). `lines` gives the reading order and the versions.
+ */
+export function hostDuplicateFindings(
+  fit: Readonly<Record<string, { hostDuplicates: readonly HostDuplicate[] } | null | undefined>>,
+  lines: readonly { key: string; version: string }[],
+): HostDuplicateFinding[] {
+  const out: HostDuplicateFinding[] = []
+  for (const l of lines)
+    for (const d of fit[l.key]?.hostDuplicates ?? []) {
+      const hit = out.find((x) => x.name === d.name && x.moduleRange === d.moduleRange && x.appVersion === d.appVersion)
+      if (hit) {
+        hit.lines.push(l.key)
+        hit.om.push(l.version)
+      } else out.push({ ...d, lines: [l.key], om: [l.version] })
+    }
+  return out.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+const listText = (xs: readonly string[]): string =>
+  xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
+
+/**
+ * The lint text of spec 6.6 for one bundled package: `Bundles @tanstack/react-table 9.2.6 while Open Mercato 0.9.0
+ * ships 9.3.1. Two copies break types. Move it to peerDependencies.` Over several lines it names the lines.
+ */
+export function hostDuplicateText(f: HostDuplicateFinding): string {
+  const where = f.om.length === 1 ? `Open Mercato ${f.om[0]}` : `a new app on ${listText(f.lines)}`
+  return `Bundles ${f.name} ${f.moduleRange} while ${where} ships ${f.appVersion}. Two copies break types. Move it to peerDependencies.`
+}
+
+/**
+ * The likely cause of a failed typecheck when the module bundles host packages (D-OPEN-4: help, not blame): `The
+ * package bundles its own @tanstack/react-table and @tanstack/react-query; two copies break types. Move them to
+ * peerDependencies`. Null without findings.
+ */
+export function hostDuplicateFix(fs: readonly HostDuplicateFinding[]): string | null {
+  const names = [...new Set(fs.map((f) => f.name))]
+  if (names.length === 0) return null
+  return `The package bundles its own ${listText(names)}, and two copies break types. Move ${names.length === 1 ? 'it' : 'them'} to peerDependencies`
+}
+
+/**
+ * Whether a failed typecheck reads like two copies of a bundled package: the excerpt names one of them, or has the
+ * errors two copies of one type give (TS2321 excessive stack depth, TS2719 two types with one name, TS2322 and TS2345
+ * not assignable). The page then names the bundled packages as the likely cause.
+ */
+export function duplicateTypeError(excerpt: string | null | undefined, names: readonly string[]): boolean {
+  if (!excerpt || names.length === 0) return false
+  return names.some((n) => excerpt.includes(n)) || /\bTS(2321|2719|2322|2345)\b/.test(excerpt)
+}

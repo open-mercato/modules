@@ -9,6 +9,7 @@ import type { BuiltForKind, FitCell, FitStatus } from '../schema/index.ts'
 import { driftBetween, sigOf, symbolKey } from './drift.ts'
 import type { PackageProgram } from './drift.ts'
 import { satisfies, valid, validRange } from './semver.ts'
+import { hostDuplicateText } from '../core/finding.ts'
 
 /** `{ pkg: { subpath: [symbols] } }`, the shape of `ModuleFacts.omImports` (subpath `.` = package root). */
 export type ImportMap = Readonly<Record<string, Readonly<Record<string, readonly string[]>>>>
@@ -452,7 +453,7 @@ export function hostDuplicates(
   return out
 }
 
-/** Lint text of spec 6.6 for one duplicate. */
+/** Lint text of spec 6.6 for one duplicate (lib/core/finding.ts hostDuplicateText, one line). */
 export function hostDuplicateMessage(d: FitCell['hostDuplicates'][number], omVersion: string): string {
-  return `Bundles ${d.name} ${d.moduleRange} while Open Mercato ${omVersion} ships ${d.appVersion}. Two copies break types. Move it to peerDependencies.`
+  return hostDuplicateText({ ...d, lines: [], om: [omVersion] })
 }

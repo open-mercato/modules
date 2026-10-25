@@ -5,7 +5,17 @@
 import { buildIndexEntryWithRules, anatomySummary, withSlotConflicts, type CatalogRef } from '../core/entry.ts'
 import { judgedFacts, presetBackendRoutes } from '../core/health.ts'
 import { lineVersion } from '../core/policy.ts'
-import { cellSummary, lastReceipt, latestLine, receiptPreset, sortReceipts, type PresetId } from '../core/lines.ts'
+import {
+  ascendingLines,
+  cellSummary,
+  lastReceipt,
+  latestLine,
+  receiptPreset,
+  sortReceipts,
+  type LineInfo,
+  type PresetId,
+} from '../core/lines.ts'
+import { hostDuplicateFindings, hostDuplicateText } from '../core/finding.ts'
 import { compareVersions } from '../core/semver.ts'
 import { receiptSource } from '../core/source.ts'
 import { sha256Hex } from '../sigil/sha256.ts'
@@ -264,12 +274,14 @@ export function transitions(receipts: readonly Receipt[], max = 10): Receipt[] {
 /** Enterprise anatomy is not published (spec 11.1, i1 §5): no facts in the detail and no facts files. */
 export const factsPublished = (c: EntryContext): boolean => !c.entry.enterprise
 
-export function moduleDetail(c: EntryContext): ModuleDetail {
+export function moduleDetail(c: EntryContext, lines: readonly LineInfo[] = []): ModuleDetail {
+  const dups = hostDuplicateFindings(c.fit, ascendingLines(lines)).map((f) => ({ ...f, message: hostDuplicateText(f) }))
   return {
     ...c.entry,
     facts: factsPublished(c) ? c.facts : null,
     receipts: transitions(c.receipts),
     ...(c.rules ? { rules: c.rules } : {}),
+    ...(dups.length > 0 ? { hostDuplicates: dups.slice(0, 30) } : {}),
   }
 }
 

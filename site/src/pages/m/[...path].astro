@@ -72,7 +72,13 @@ import {
   EMPTY_PRESET_LEAD,
 } from '../../../../lib/core/policy.ts'
 import { isolationReceipts, mainReceipts } from '../../../../lib/core/lines.ts'
-import { BACKEND_ROUTE_COLLISION, collisionLintText } from '../../../../lib/core/finding.ts'
+import {
+  BACKEND_ROUTE_COLLISION,
+  HOST_DEPENDENCY_DUPLICATION,
+  collisionLintText,
+  duplicateTypeError,
+  hostDuplicateFix,
+} from '../../../../lib/core/finding.ts'
 import { isolationDot } from '../../lib/status.ts'
 import { PREVIEW_QUEUED, PREVIEW_SENTENCE } from '../../../../lib/core/source.ts'
 import { isPreviewData } from '../../lib/freshness.ts'
@@ -332,6 +338,22 @@ for (const l of lines) {
   const c = entry.compat.lines[l.key]
   const w = (c?.status === 'broken' ? c.finding : null) ?? explainReceipt(lastByLine[l.key] ?? null, appModules(data), routes)
   if (w) whyByText.set(w, [...(whyByText.get(w) ?? []), l.key])
+}
+// the likely cause of a typecheck break when the package bundles host packages a new app has in another version (D34,
+// D-OPEN-4: the page helps the author, round 17: TS2321 stood alone while the data knew the duplicate @tanstack)
+const dupFindings = detail?.hostDuplicates ?? []
+const dupFixOn = (key: string): string | null => {
+  const fs = dupFindings.filter((f) => f.lines.includes(key))
+  const c = entry.compat.lines[key]
+  const failed = lastByLine[key]?.steps.find((s) => s.status === 'fail')
+  if (others[key] || c?.status !== 'broken' || c.step !== 'typecheck') return null
+  return duplicateTypeError(failed?.excerpt, fs.map((f) => f.name)) ? hostDuplicateFix(fs) : null
+}
+for (const l of lines) {
+  const fix = dupFixOn(l.key)
+  if (!fix) continue
+  const w = `Likely cause: ${fix.charAt(0).toLowerCase()}${fix.slice(1)}.`
+  whyByText.set(w, [...(whyByText.get(w) ?? []), l.key])
 }
 const stripWhy = [...whyByText].map(([w, keys]) => `${listAnd(keys)}: ${w}`)
 // a backend route a new app already has, on a line without a verdict (round 14, lint `backend-route-collision`): the
@@ -676,7 +698,15 @@ const nwPackages = (t: string): string =>
   t
     .replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`)
     .replace(/(?<=\()@[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9._-]*[a-z0-9](?=\))/g, (m) => `<span class="nw">${m}</span>`)
-const lintSorted = [...lint, ...collideLint].sort(
+// lint `host-dependency-duplication` (D34): read by Fit against a new app of each line, not stored in the facts
+const dupLint = dupFindings.map((f) => ({
+  code: HOST_DEPENDENCY_DUPLICATION.code,
+  severity: HOST_DEPENDENCY_DUPLICATION.severity,
+  message: f.message,
+  anchor: null,
+  src: null,
+}))
+const lintSorted = [...lint, ...collideLint, ...dupLint].sort(
   (a, b) => sevOrder[a.severity] - sevOrder[b.severity] || a.code.localeCompare(b.code),
 )
 function anchorUrl(anchor: string | null): string | null {
@@ -755,7 +785,10 @@ const verSignals = [
       : skipText
         ? 'Nothing to fix. Verified applies to the modules the nightly run installs.'
         : rcpL === 'broken'
-          ? `Fix the failing step (${entry.compat.lines[latest.key]?.step ?? 'see the receipt'}) and publish a new version; ${previewData ? 'the first nightly CI run' : "tonight's run"} picks it up.`
+          ? `${
+              dupFixOn(latest.key) ??
+              `Fix the failing step (${entry.compat.lines[latest.key]?.step ?? 'see the receipt'})`
+            }, then publish a new version; ${previewData ? 'the first nightly CI run' : "tonight's run"} picks it up.`
           : rcpL === 'untested'
             ? 'Nothing to do.'
             : 'See the receipt.',
