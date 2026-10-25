@@ -88,6 +88,11 @@ export function anatomySummary(
   const signal = anatomySignal(facts, enterprise)
   const c = counts(facts.modules, true)
   const l = lists(facts.modules)
+  // a package without a module: the env names and hosts its own src/ uses (rentgen 3, `packageCode`)
+  if (facts.packageCode) {
+    l.env = uniq([...l.env, ...facts.packageCode.env.map((e) => e.name)]).slice(0, 20)
+    l.hosts = uniq([...l.hosts, ...facts.packageCode.hosts.map((h) => h.host)]).slice(0, 20)
+  }
   let diff: AnatomySummary['diff'] = null
   if (previous) {
     const pc = counts(previous.modules, true)
@@ -127,6 +132,8 @@ export function anatomySummary(
 
 /** The anatomy of a package without a module: its code is not read, so settings and hosts are not measured. */
 export const NO_MODULE_TEXT = 'No module in the package, so its code is not read: settings and hosts are not measured.'
+/** The anatomy of a package without a module whose src/ was read for settings and hosts (rentgen 3). */
+export const NO_MODULE_READ_TEXT = 'No module in the package. Settings and hosts are read from its src/.'
 /** The value of a settings or hosts row of such a package (the card, the film). */
 export const NOT_MEASURED_TEXT = 'not measured (no module in the package)'
 
@@ -139,17 +146,22 @@ export const NOT_MEASURED_TEXT = 'not measured (no module in the package)'
  * contracts could not be resolved statically.` when there are three organs or more. `plugs` keeps the warning tone for
  * the first only. Null for a full anatomy.
  */
-export function anatomyNote(e: {
-  anatomy: AnatomySummary | null
-  requires: readonly unknown[]
-  moduleIds?: readonly string[]
-}): { text: string; plugs: boolean } | null {
+export function anatomyNote(
+  e: {
+    anatomy: AnatomySummary | null
+    requires: readonly unknown[]
+    moduleIds?: readonly string[]
+  },
+  /** The facts read the package's own src/ (rentgen 3 `packageCode`): its settings and hosts are measured. */
+  codeRead = false,
+): { text: string; plugs: boolean } | null {
   const a = e.anatomy
   if (!a || a.coverage === 'full') return null
-  // a package with no module (a provider, library or tool): Rentgen reads module folders only, so nothing below is a
-  // finding about its code (finding of 25 Oct: the web-research adapters read `Talks to: no hosts found in the code`
+  // a package with no module (a provider, library or tool): before rentgen 3 its code was not read, so nothing below
+  // is a finding about it (finding of 25 Oct: the web-research adapters read `Talks to: no hosts found in the code`
   // while their code calls api.exa.ai and the like)
-  if (e.moduleIds && e.moduleIds.length === 0) return { text: NO_MODULE_TEXT, plugs: false }
+  if (e.moduleIds && e.moduleIds.length === 0)
+    return { text: codeRead ? NO_MODULE_READ_TEXT : NO_MODULE_TEXT, plugs: false }
   const c = a.counts
   const organs = [
     c.entities + c.tables + c.migrations,

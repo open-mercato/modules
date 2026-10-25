@@ -183,6 +183,16 @@ export const Facts = z
     agentsMd: z.boolean(),
     readmeExcerpt: z.string().max(4000).nullable(), // author text, always UNTRUSTED
     modules: z.array(ModuleFacts).max(60),
+    // additive (25 Oct, rentgen 3): a package without a module (a provider, library or tool) has its src/ read for the
+    // env names and hosts its code uses, the config and network sections a module holds itself (finding of 25 Oct: the
+    // web-research adapters read `no hosts found in the code` while they call api.exa.ai). Absent in older facts.
+    packageCode: z
+      .object({
+        env: z.array(z.object({ name: EnvName, src: Src }).strict()).max(100),
+        hosts: z.array(z.object({ host: Host, src: Src, confidence: z.enum(['high', 'low']) }).strict()).max(100),
+      })
+      .strict()
+      .optional(),
     coverage: z
       .object({ routesAuthResolved: z.number(), integrationTs: z.enum(['expanded', 'absent', 'unparsed']) })
       .strict(),

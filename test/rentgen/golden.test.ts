@@ -151,5 +151,7 @@ describe('Rentgen golden: real tarballs', () => {
     expect(f.modules).toEqual([])
     expect(f.gate).toMatchObject({ installable: false, reason: 'Package has no src/modules and dist/modules pair.' })
     expect(anatomyStatus(f)).toBe('none')
+    // rentgen 3: the src/ of a package without a module is read for hosts and env (finding of 25 Oct)
+    expect(f.packageCode?.hosts).toContainEqual(expect.objectContaining({ host: 'api.exa.ai', confidence: 'high' }))
   })
 })

@@ -76,7 +76,7 @@ function addsSection(c: EntryContext, lines: readonly LineInfo[]): string[] {
   const l = a.lists
   const k = a.counts
   const out: string[] = []
-  const note = anatomyNote(e)
+  const note = anatomyNote(e, !!c.facts?.packageCode)
   if (note) out.push(note.text)
   out.push(`- Tables (${k.tables}): ${k.tables ? listMore(l.tables, 10) : 'none'}`)
   out.push(
@@ -93,7 +93,7 @@ function addsSection(c: EntryContext, lines: readonly LineInfo[]): string[] {
   if (q.length) out.push(`- Background queues: ${listMore(q, 10)}`)
   const settings = [...l.credentials.map((x) => `${x.key} (${x.type}${x.required ? '' : ', optional'})`), ...l.env]
   // a package without a module: its code is not read, so `none` would be a claim about code nobody read (25 Oct)
-  const unread = e.moduleIds.length === 0
+  const unread = e.moduleIds.length === 0 && !c.facts?.packageCode
   out.push(
     `- Settings needed (names only): ${settings.length ? listMore(settings, 10) : unread ? NOT_MEASURED_TEXT : 'none'}`,
   )

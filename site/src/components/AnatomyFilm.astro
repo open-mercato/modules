@@ -18,6 +18,8 @@ interface Props {
 }
 const { entry, facts, limit = 5 } = Astro.props
 const ms: ModuleFacts[] = facts?.modules ?? []
+/** The src/ of a package without a module, read for env names and hosts (rentgen 3). */
+const pkgCode = facts?.packageCode ?? null
 const version = facts?.package.version ?? entry.version.latest
 const src = { npm: entry.npm, github: entry.github, version, gitRef: facts?.package.gitRef ?? entry.version.gitRef }
 
@@ -144,24 +146,33 @@ const sections: { id: string; title: string; items: Item[]; empty: string; absen
         tagTone: 'wait' as const,
       })),
       ...m.config.env.map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src) })),
-    ]),
+    ]).concat((pkgCode?.env ?? []).map((e) => ({ lead: 'env   ', text: e.name, ...loc(e.src) }))),
     // a package without a module is not read (25 Oct): `none` would be a claim about code nobody read
-    empty: ms.length === 0 ? 'Not measured: no module in the package.' : 'No credentials or env.',
+    empty: ms.length === 0 && !pkgCode ? 'Not measured: no module in the package.' : 'No credentials or env.',
   },
   {
     id: 'network',
     absent: 'hosts',
     title: 'Network',
-    items: ms.flatMap((m) =>
-      m.network.hosts.map((h) => ({
-        text: h.host,
-        tag: m.network.undeclared.includes(h.host) ? 'undeclared' : h.confidence === 'low' ? 'low confidence' : undefined,
-        tagTone: 'wait' as const,
-        ...loc(h.src),
-      })),
-    ),
+    items: ms
+      .flatMap((m) =>
+        m.network.hosts.map((h) => ({
+          text: h.host,
+          tag: m.network.undeclared.includes(h.host) ? 'undeclared' : h.confidence === 'low' ? 'low confidence' : undefined,
+          tagTone: 'wait' as const,
+          ...loc(h.src),
+        })),
+      )
+      .concat(
+        (pkgCode?.hosts ?? []).map((h) => ({
+          text: h.host,
+          tag: h.confidence === 'low' ? 'low confidence' : undefined,
+          tagTone: 'wait' as const,
+          ...loc(h.src),
+        })),
+      ),
     // the same words as the agent card (`Talks to: no hosts found in the code`)
-    empty: ms.length === 0 ? 'Not measured: no module in the package.' : 'No hosts found in the code.',
+    empty: ms.length === 0 && !pkgCode ? 'Not measured: no module in the package.' : 'No hosts found in the code.',
   },
 ]
 
@@ -278,10 +289,10 @@ const ids = present.map((s) => s.id)
 const span3 = rowSpans(ids, want, 3)
 const span2 = rowSpans(ids, want, 2)
 // nothing was read of a package without a module (25 Oct): no `Not present` list, the note says why
-const absentText = absent.length && ms.length > 0 ? `Not present: ${absent.map((s) => s.absent).join(', ')}.` : ''
+const absentText = absent.length && (ms.length > 0 || pkgCode) ? `Not present: ${absent.map((s) => s.absent).join(', ')}.` : ''
 // the agent card's sentence (lib/core/entry.ts anatomyNote, review r9): the yellow `plugs into a host` only when the
 // facts show it, else a neutral line in the film's secondary ink
-const partial = anatomyNote(entry)
+const partial = anatomyNote(entry, !!facts?.packageCode)
 const hidden = entry.enterprise || !facts
 /** The callout is the emitter's string (spec 7.7 B.6), the one the agent gets; zero counts are already left out. */
 const calloutItems = (entry.anatomy?.callout ?? '').split(' · ').filter(Boolean)

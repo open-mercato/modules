@@ -22,8 +22,8 @@ import {
   parseSource,
 } from './ast.ts'
 import { anatomyStatus, glyphOf } from './diff.ts'
-import { scanEnv } from './env.ts'
-import { hostDeclared, scanHosts } from './hosts.ts'
+import { scanEnv, type EnvRead } from './env.ts'
+import { hostDeclared, scanHosts, type HostRead } from './hosts.ts'
 import { ImportCollector } from './imports.ts'
 import { scanEntityTables, scanMigrationTables, type TableRead } from './entities.ts'
 import { injectionWidgets, readIntegration, type IntegrationRead } from './integration.ts'
@@ -47,9 +47,11 @@ import {
 
 /**
  * Bump when Rentgen's own readers change what they write (cache key with the engine version). 2 (25 Oct): tables, the
- * bundle's credentials and injection widgets read through consts of the package, env names in key lists.
+ * bundle's credentials and injection widgets read through consts of the package, env names in key lists. 3 (25 Oct):
+ * the src/ of a package without a module is read for env names and hosts (`packageCode`), and a `DEFAULT_` base URL
+ * const counts as a high-confidence host.
  */
-export const RENTGEN_VERSION = 2
+export const RENTGEN_VERSION = 3
 
 /** Official module package by name (spec 6.1: `npm:@open-mercato/*`). */
 export function isOfficialName(name: string): boolean {
@@ -642,6 +644,22 @@ export async function scanPackageDir(pkgRoot: string, ctx: ScanContext): Promise
     return { ...m.facts, glyph: glyphOf(m.facts), lint: sortLint([...m.sanitizer.findings(), ...lint, ...pkgLint]) }
   })
 
+  // a package without a module (a provider, library or tool): its own src/ is the code that talks to hosts and reads
+  // env (finding of 25 Oct: the web-research adapters call api.exa.ai, api.tavily.com and the like)
+  let packageCode: { env: EnvRead[]; hosts: HostRead[] } | undefined
+  if (!withheld && gate.sourceModules.length === 0 && isDir(srcRoot)) {
+    const san = new Sanitizer()
+    const files = codeFiles(srcRoot)
+    packageCode = {
+      env: scanEnv(pkgRoot, files)
+        .filter((e) => san.ok('env name', e.name, e.src))
+        .slice(0, 100),
+      hosts: scanHosts(pkgRoot, files)
+        .filter((h) => san.ok('host', h.host, h.src))
+        .slice(0, 100),
+    }
+  }
+
   const allRoutes = modules.flatMap((m) => m.http.routes)
   const integrationStates = mapped.map((x) => x.integration.status)
   const readme = rootFile(pkgRoot, /^README(\.md|\.markdown|\.txt)?$/i)
@@ -667,6 +685,7 @@ export async function scanPackageDir(pkgRoot: string, ctx: ScanContext): Promise
     agentsMd,
     readmeExcerpt: readme ? stripControl(readFileSync(readme, 'utf8')).slice(0, 4000) : null,
     modules,
+    ...(packageCode ? { packageCode } : {}),
     coverage: {
       routesAuthResolved:
         allRoutes.length === 0

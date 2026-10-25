@@ -16,8 +16,9 @@ export interface HostRead {
 const CLIENT_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'head', 'request', 'fetch', 'options'])
 const CALLS = new Set(['fetch', 'request', 'got', 'ky', 'axios', 'ofetch', '$fetch', 'undici'])
 const CTORS = new Set(['URL', 'WebSocket', 'EventSource', 'Request'])
+// `DEFAULT_BASE_URL = 'https://api.exa.ai'` (rentgen 3): a default_ prefix is still the base URL
 const BASE_KEYS =
-  /^(base_?url|baseURI|api_?url|api_?base(_?url)?|endpoint|server_?url|host_?url|origin|url|uri|webhook_?url)$/i
+  /^(default_?)?(base_?url|baseURI|api_?url|api_?base(_?url)?|endpoint|server_?url|host_?url|origin|url|uri|webhook_?url)$/i
 const DOC_KEYS =
   /(docs?|documentation|homepage|website|help|guide|learn|support|link|href|reference|schema|image|icon|logo|avatar|tos|terms|privacy|placeholder|example)/i
 const EXCLUDED =
