@@ -172,7 +172,11 @@ const previewData = isPreviewData(meta.dataAsOf)
       </div>
       <div class="ab-body">
         <ul class="ab-list" role="list">
-          <li><strong>0 USD.</strong> Public CI, GitHub Pages and the Cloudflare Workers free tier.</li>
+          {/* true while the repository is private too (finding of 25 Oct: `0 USD. Public CI` read as the state today) */}
+          <li>
+            <strong>0 USD once the repository is public.</strong> GitHub Actions is free for public repositories, plus
+            GitHub Pages and the Cloudflare Workers free tier.
+          </li>
           <li><strong>No analytics and no cookies.</strong> Pages load nothing from third parties.</li>
           <li>
             <strong>Two exceptions, on your action only:</strong> <a href={href('/submit')}>Submit a module</a> asks npm,

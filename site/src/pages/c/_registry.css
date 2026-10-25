@@ -265,8 +265,12 @@
     padding: 12px 24px 14px var(--pad);
     border-top: 1px solid var(--line-strong);
     background: var(--bg);
-    /* round 13: the row cut under the cue (`Unknown 0` at 1440 x 900) fades into the page above the hairline */
-    box-shadow: 0 -28px 20px -4px var(--bg);
+    /* round 13: the row cut under the cue (`Unknown 0` at 1440 x 900) fades into the page above the hairline; finding
+       of 25 Oct: the soft shadow still let half a row show, so a solid band of 48 px covers it first */
+    box-shadow:
+      0 -24px 0 0 var(--bg),
+      0 -48px 0 0 var(--bg),
+      0 -72px 32px 0 var(--bg);
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.06em;

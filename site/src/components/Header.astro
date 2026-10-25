@@ -51,6 +51,8 @@ const isCurrent = (p: string): boolean =>
         </summary>
         <div class="hdr__sheet">
           <nav aria-label="Main, mobile">
+            {/* the main call to action first (finding of 25 Oct: on a phone it was the last of six links) */}
+            <a class="hdr__mlink hdr__mlink--cta" href={href('/submit')}>Submit a module</a>
             {
               nav.map((n) => (
                 <a class="hdr__mlink" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
@@ -58,7 +60,6 @@ const isCurrent = (p: string): boolean =>
                 </a>
               ))
             }
-            <a class="hdr__mlink" href={href('/submit')}>Submit a module</a>
           </nav>
           <DataStamp dataAsOf={dataAsOf} variant="inline" />
         </div>
@@ -197,6 +198,11 @@ const isCurrent = (p: string): boolean =>
   .hdr__mlink:hover,
   .hdr__mlink[aria-current='page'] {
     background: var(--bg-3);
+  }
+  /* the call to action of the header button, first in the sheet: the lime of the button as a left edge */
+  .hdr__mlink--cta {
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 #b4f372;
   }
   .hdr__sheet > :global(.stamp) {
     padding: 12px;
