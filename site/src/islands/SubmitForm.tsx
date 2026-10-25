@@ -1061,6 +1061,10 @@ export function cadenceGroups(lines: readonly { key: string; cadence: Cadence }[
   }
   return out
 }
+const PLURAL: Record<string, string> = { provider: 'providers', library: 'libraries', tool: 'tools' }
+/** Line keys in reading order, `0.8, 0.9, next`. */
+const orderedKeys = (keys: readonly string[]): string[] =>
+  [...keys].sort((a, b) => (a === 'next' ? 1 : b === 'next' ? -1 : a.localeCompare(b, 'en', { numeric: true })))
 const andList = (xs: readonly string[]): string =>
   xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`
 /** `Lines tested: 0.9 and next every night, 0.8 once a week.` */
@@ -2018,7 +2022,13 @@ function Header({ t, r, f, lines }: { t: Target; r: CheckResult; f: FormState; l
   })
   const name = t.kind === 'npm' ? t.name : t.repo
   const official = name.startsWith('@open-mercato/')
-  const command = showsCommand(r) && (listed || t.kind === 'npm') ? installCommand(t, r) : null
+  // a listed module broken on every line: the module page hides its command behind a warning, so the preview does not
+  // offer it as a plain copy either (finding of 25 Oct)
+  const brokenOn = listed?.row ? Object.entries(listed.row.lines).filter(([, c]) => c.status === 'broken') : []
+  const brokenEverywhere =
+    !!listed?.row && brokenOn.length > 0 && brokenOn.length === Object.keys(listed.row.lines).length
+  const command = showsCommand(r) && (listed || t.kind === 'npm') && !brokenEverywhere ? installCommand(t, r) : null
+  const kindNow = listed?.kind ?? r.kind ?? 'module'
   return (
     <div class="sf__hdr">
       <span class={`sf__hsig${listed?.sigil ? ' sf__hsig--real' : ''}`} dangerouslySetInnerHTML={{ __html: sigil }} />
@@ -2052,22 +2062,35 @@ function Header({ t, r, f, lines }: { t: Target; r: CheckResult; f: FormState; l
             <CommandChipView command={command} prompt="$" label="Copy command" />
           </div>
         )}
-        <p class="sf__hlines">
-          Lines tested:{' '}
-          {cadenceGroups(lines).map((g, i) => (
-            <>
-              {i > 0 ? ', ' : ''}
-              {g.keys.map((k, j) => (
-                <>
-                  {j > 0 ? (j === g.keys.length - 1 ? ' and ' : ', ') : ''}
-                  <code>{k}</code>
-                </>
-              ))}{' '}
-              {g.when}
-            </>
-          ))}
-          .
-        </p>
+        {brokenEverywhere && (
+          <p class="sf__hnote">
+            Broken on {andList(orderedKeys(brokenOn.map(([k]) => k)))}. The module page shows the command behind a
+            warning.
+          </p>
+        )}
+        {kindNow !== 'module' ? (
+          // the nightly run installs modules only (lib/receipts/plan.ts); a tool, library or provider is read, not run
+          <p class="sf__hlines">
+            Not installed by the catalog: the nightly run installs modules, not {PLURAL[kindNow]}.
+          </p>
+        ) : (
+          <p class="sf__hlines">
+            Lines tested:{' '}
+            {cadenceGroups(lines).map((g, i) => (
+              <>
+                {i > 0 ? ', ' : ''}
+                {g.keys.map((k, j) => (
+                  <>
+                    {j > 0 ? (j === g.keys.length - 1 ? ' and ' : ', ') : ''}
+                    <code>{k}</code>
+                  </>
+                ))}{' '}
+                {g.when}
+              </>
+            ))}
+            .
+          </p>
+        )}
       </div>
     </div>
   )
