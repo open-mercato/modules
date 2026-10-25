@@ -128,6 +128,22 @@ whenToUse: Use when the app must issue or receive structured invoices in KSeF (P
 })
 
 describe('steps 5 and 9: text flags and curator fields', () => {
+  it('the draft of create-mercato-module describe is refused until its TODO values are written (25 Oct)', () => {
+    const draft = `npm: "@acme-labs/fleet-checks"
+category: operations # TODO
+summary: Fleet Checks module for Open Mercato apps. # TODO
+whenToUse: Use when an Open Mercato app needs the Fleet Checks module. # TODO
+`
+    expect(messages(run('modules/@acme-labs/fleet-checks.yml', draft))).toEqual([
+      'the file still has # TODO marks: write those values and remove the marks',
+      'whenToUse is the describe template: say when the module is the right choice',
+      'summary is the describe template: say what the module does',
+    ])
+    // the marks removed, the template texts still refused; a written entry passes
+    expect(messages(run('modules/@acme-labs/fleet-checks.yml', draft.replace(/ # TODO/g, '')))).toHaveLength(2)
+    expect(messages(run('modules/@acme-labs/om-loyalty.yml', ok))).toEqual([])
+  })
+
   it('phrase flags are warnings, not errors', () => {
     const text = ok.replace(
       'whenToUse: Use when the shop rewards repeat customers with points they can spend.',

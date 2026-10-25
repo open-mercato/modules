@@ -231,6 +231,17 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
     const flags = injectionFlags(v)
     if (flags.length > 0) findings.push(f('texts', 'warning', 'text-flag', `${k}: phrase flag ${flags.join(', ')}`))
   }
+  // the draft `create-mercato-module describe` prints is no description yet (finding of 25 Oct: it passed unchanged)
+  if (/#\s*TODO\b/.test(input.text))
+    findings.push(
+      f('texts', 'error', 'todo', 'the file still has # TODO marks: write those values and remove the marks'),
+    )
+  if (/^Use when an Open Mercato app needs the .+ module\.$/.test(d.whenToUse))
+    findings.push(
+      f('texts', 'error', 'template', 'whenToUse is the describe template: say when the module is the right choice'),
+    )
+  if (/^.+ module for Open Mercato apps\.$/.test(d.summary))
+    findings.push(f('texts', 'error', 'template', 'summary is the describe template: say what the module does'))
 
   // 6. names: typosquat and reserved names (errors unless a curator adds `name-reviewed`)
   const nameSeverity = reviewed ? 'info' : 'error'
