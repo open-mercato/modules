@@ -283,7 +283,13 @@ export async function runSync(o: SyncOptions): Promise<SyncResult> {
     if (npm) {
       const c = dl.counts.get(npm.name)
       if (c !== undefined && c !== null) downloads30d = c
-      else if (dl.errors.length) errors.push(dl.errors[0] as string)
+      else {
+        // the failure of this package's own call, else of the bulk call of unscoped names
+        const own =
+          dl.errors.find((x) => x.startsWith(`downloads ${npm.name}:`)) ??
+          dl.errors.find((x) => x.startsWith('downloads:'))
+        if (own) errors.push(own)
+      }
     } else downloads30d = null
     errors.push(...(await checkLinks(o.http, e)))
     // type

@@ -1,4 +1,5 @@
 // npm registry (read only): packuments, dist-tags, search, org packages, downloads (spec 5.2, 4.5 SyncRecord.npm).
+import pLimit from 'p-limit'
 import type { SyncRecord } from '../schema/index.ts'
 import { getJson, type Http, HttpError } from './http.ts'
 import { compareVersions, isoSeconds, isSemVer, isStable } from './semver.ts'
@@ -317,6 +318,8 @@ export async function downloadsLastMonth(
     try {
       const res = await http.request(url)
       const body = res.json as Record<string, unknown> | null
+      if (res.status !== 200 && res.status !== 404)
+        errors.push(`downloads: HTTP ${res.status} for ${chunk.length} names`)
       if (chunk.length === 1) {
         const d = (body as { downloads?: number } | null)?.downloads
         counts.set(chunk[0] as string, res.status === 200 && typeof d === 'number' ? d : null)
@@ -330,17 +333,25 @@ export async function downloadsLastMonth(
       for (const n of chunk) counts.set(n, null)
     }
   }
+  // scoped names one by one (the bulk endpoint takes no scoped names), a few at a time: a burst of every name at once
+  // ran into the rate limit of api.npmjs.org, and the nulls it left were silent (finding of 25 Oct: visits and
+  // marketing-consents had no downloads although npm counts 218 and 29)
+  const limit = pLimit(3)
   await Promise.all(
-    scoped.map(async (n) => {
-      try {
-        const res = await http.request(`${DOWNLOADS_API}/point/last-month/${encodeName(n)}`)
-        const d = (res.json as { downloads?: number } | null)?.downloads
-        counts.set(n, res.status === 200 && typeof d === 'number' ? d : null)
-      } catch (err) {
-        errors.push(`downloads ${n}: ${(err as Error).message}`)
-        counts.set(n, null)
-      }
-    }),
+    scoped.map((n) =>
+      limit(async () => {
+        try {
+          const res = await http.request(`${DOWNLOADS_API}/point/last-month/${encodeName(n)}`)
+          const d = (res.json as { downloads?: number } | null)?.downloads
+          counts.set(n, res.status === 200 && typeof d === 'number' ? d : null)
+          // 404: npm has no download data for the package yet; anything else is a failure to say
+          if (res.status !== 200 && res.status !== 404) errors.push(`downloads ${n}: HTTP ${res.status}`)
+        } catch (err) {
+          errors.push(`downloads ${n}: ${(err as Error).message}`)
+          counts.set(n, null)
+        }
+      }),
+    ),
   )
   return { counts, errors }
 }
