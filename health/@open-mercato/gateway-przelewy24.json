@@ -1,0 +1,174 @@
+{
+  "locator": "npm:@open-mercato/gateway-przelewy24",
+  "version": "0.4.6-canary-5eb138494e",
+  "computedAt": "2026-10-25T08:18:49Z",
+  "identity": {
+    "type": "official",
+    "typeReason": "Scope @open-mercato.",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": true
+    },
+    "builtFrom": {
+      "status": "none",
+      "repo": null,
+      "commit": null,
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "skipped",
+      "0.8": "skipped",
+      "next": "untested"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "ok",
+      "next": "ok"
+    },
+    "anatomy": "partial",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "warn",
+      "failing": [
+        "license-mismatch"
+      ]
+    },
+    "maintenance": {
+      "status": "behind",
+      "lastRelease": "2026-03-05",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.8, 0.9, next; verified on no line."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Official package with a preview only."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT (sources differ)."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Receipt on 0.9: skipped."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
+    }
+  ],
+  "tier": null,
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Orphaned canary from March 2026. No source in any repository."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No stable release for this line yet. Only preview builds are published."
+        }
+      ]
+    },
+    "0.8": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Orphaned canary from March 2026. No source in any repository."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No stable release for this line yet. Only preview builds are published."
+        }
+      ]
+    },
+    "next": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Orphaned canary from March 2026. No source in any repository."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on next."
+        }
+      ]
+    }
+  },
+  "state": "hold",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.4.6-canary-5eb138494e",
+    "0.8": "0.4.6-canary-5eb138494e",
+    "next": "0.4.6-canary-5eb138494e"
+  },
+  "verdictPreset": "classic"
+}

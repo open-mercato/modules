@@ -1,0 +1,165 @@
+{
+  "locator": "npm:@open-mercato/channel-gmail",
+  "version": "0.9.0",
+  "computedAt": "2026-10-25T08:18:49Z",
+  "identity": {
+    "type": "official",
+    "typeReason": "Scope @open-mercato.",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": false
+    },
+    "builtFrom": {
+      "status": "verified",
+      "repo": "open-mercato/open-mercato",
+      "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "untested",
+      "0.8": "untested",
+      "next": "untested"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "drift",
+      "next": "ok"
+    },
+    "anatomy": "partial",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "warn",
+      "failing": [
+        "peer-exact-pin"
+      ]
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-10-09",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.8, 0.9; verified on no line."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Not yet tested in a new app on 0.9."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
+    }
+  ],
+  "tier": "listed",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.9."
+        }
+      ],
+      "consentText": "Install @open-mercato/channel-gmail@0.9.0"
+    },
+    "0.8": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.8."
+        }
+      ],
+      "consentText": "Install @open-mercato/channel-gmail@0.8.0"
+    },
+    "next": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on next."
+        }
+      ],
+      "consentText": "Install @open-mercato/channel-gmail@0.9.0"
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.9.0",
+    "0.8": "0.8.0",
+    "next": "0.9.0"
+  },
+  "verdictPreset": "classic"
+}

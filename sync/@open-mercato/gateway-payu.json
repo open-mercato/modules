@@ -1,0 +1,46 @@
+{
+  "locator": "npm:@open-mercato/gateway-payu",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/gateway-payu",
+    "distTags": {
+      "latest": "0.4.6-canary-5eb138494e"
+    },
+    "latestStable": null,
+    "previousStable": null,
+    "preview": "0.4.6-canary-5eb138494e",
+    "publishedAt": {
+      "0.4.6-canary-5eb138494e": "2026-03-05T14:46:54Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": null,
+    "gitHead": "5eb138494e7a71e5708a5d8257daa462478e526c",
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {
+      "@open-mercato/shared": "0.4.6-canary-5eb138494e"
+    },
+    "installScripts": [],
+    "integrity": "sha512-n07twf2mbTYmUHQIlo8QsThhwVQh0ZuaQ4qTaq7MdsFQNW3OjThd0sAsNAh83BNa12yi91+jj2RpPSIsSMZ7rA==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-payu/-/gateway-payu-0.4.6-canary-5eb138494e.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 9,
+  "errors": []
+}

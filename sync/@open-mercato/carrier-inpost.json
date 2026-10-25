@@ -1,0 +1,49 @@
+{
+  "locator": "npm:@open-mercato/carrier-inpost",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/carrier-inpost",
+    "distTags": {
+      "latest": "0.4.6-canary-5eb138494e",
+      "develop": "1.0.0-develop.11.d694a75880",
+      "canary": "1.0.0-canary.30085482738.1.198ca40"
+    },
+    "latestStable": null,
+    "previousStable": null,
+    "preview": "0.4.6-canary-5eb138494e",
+    "publishedAt": {
+      "0.4.6-canary-5eb138494e": "2026-03-05T14:46:53Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": null,
+    "gitHead": "5eb138494e7a71e5708a5d8257daa462478e526c",
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {
+      "@open-mercato/core": "0.4.6-canary-5eb138494e",
+      "@open-mercato/shared": "0.4.6-canary-5eb138494e"
+    },
+    "installScripts": [],
+    "integrity": "sha512-sRDbwMZz6k/nwVbzSl+vu98yGnJa5/cuiM0dxGoE8SuELtAIo00XLIPfUjdiV4UG5Bv7FmxIzyg8Ft9HpeMnrQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/carrier-inpost/-/carrier-inpost-0.4.6-canary-5eb138494e.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 58,
+  "errors": []
+}

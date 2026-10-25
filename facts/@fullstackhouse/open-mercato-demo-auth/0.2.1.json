@@ -1,0 +1,165 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 13
+  },
+  "package": {
+    "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
+    "name": "@fullstackhouse/open-mercato-demo-auth",
+    "version": "0.2.1",
+    "integrity": "sha512-u+A+D/5WgKkpTBxa0fIhJQHGM6aIjC1YXch01NWgasOt+f74+tPC9MWJv10cBYBvGKNkzdlPw1tzrlMCCK4HRw==",
+    "source": "npm-tarball",
+    "gitRef": "563636562bf43ffb770b13e63b24bbf8848741ef"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "demo_auth",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "*"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-demo-auth\n\nDev-only login form prefill + auto-submit widget for [Open Mercato](https://github.com/open-mercato/open-mercato) applications. Skips the \"type email, type password, click submit\" ritual on every hot-reload.\n\n> **⚠️ Dev only.** Configured via server-side env vars and injected into the client as an inline `<script>` — the values never get baked into the production bundle. **Keep `DEMO_AUTH_LOGIN_EMAIL` / `DEMO_AUTH_LOGIN_PASSWORD` unset on any environment you don't want this to run on.** That is the only gate: the `<DemoAuthScript />` server component emits nothing when both vars are empty.\n\n## What it does\n\nWhen both `DEMO_AUTH_LOGIN_EMAIL` and `DEMO_AUTH_LOGIN_PASSWORD` are set, the widget:\n\n1. Wraps the core `section:auth.login.form` component.\n2. Reads the credentials from `window.__DEMO_AUTH__`, which the `<DemoAuthScript />` server component injects into the root layout at request time.\n3. Waits for the login form to render (`MutationObserver` on `form[data-auth-ready=\"1\"]`).\n4. Writes values into `input[name=\"email\"]` and `input[name=\"password\"]` via the native `HTMLInputElement` value setter so React's synthetic `onChange` handlers fire.\n5. Calls `form.requestSubmit()` after 50 ms.\n\nWith only one env var set, it prefills that field and skips auto-submit. With neither set, nothing renders and nothing runs.\n\n## Why server env, not `NEXT_PUBLIC_*`\n\n`NEXT_PUBLIC_*` values are inlined into the client bundle at build time. If you run a single Docker image across dev/preview/prod (the common pattern), you can't enable the widget on dev without shipping its credentials to prod too. This package reads ordinary server-side env vars (`DEMO_AUTH_LOGIN_*`) at request time and writes them into the HTML the browser receives — so a single image + per-environment ConfigMaps Just Works.\n\n## Installation\n\n```bash\nyarn add -D @fullstackhouse/open-mercato-demo-auth\n# or\nnpm install --save-dev @fullstackhouse/open-mercato-demo-auth\n```\n\n## Usage\n\n### 1. Register the module\n\nIn your app's `src/modules.ts`:\n\n```ts\nexport const enabledModules: ModuleEntry[] = [\n  // ...existing modules\n  { id: 'demo_auth', from: '@fullstackhouse/open-mercato-demo-auth' },\n]\n```\n\nIf your mercato CLI rejects third-party scoped packages (it whitelists `@app` and `@open-mercato/*` in newer versions), use a thin re-export in `src/modules/demo_auth/`:\n\n```ts\n// src/modules/demo_auth/index.ts\nexport { metadata } from '@fullstackhouse/open-mercato-demo-auth'\n\n// src/modules/demo_auth/widgets/components.ts\nexport { componentOverrides } from '@fullstackhouse/open-mercato-demo-auth'\n```\n\nThen register as `{ id: 'demo_auth', from: '@app' }`.\n\n### 2. Render `<DemoAuthScript />` in your root layout\n\n`src/app/layout.tsx`:\n\n```tsx\nimport { DemoAuthScript } from '@fullstackhouse/open-mercato-demo-auth'\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html>\n      <head>\n        <DemoAuthScript />\n      </head>\n      <body>{children}</body>\n    </html>\n  )\n}\n```\n\nThe component renders an inline `<script>` when its env vars are set, and `null` otherwise (including always in production builds).\n\n### 3. Set env vars on the environments where you want prefill\n\n```bash\n# .env (local dev)\nDEMO_AUTH_LOGIN_EMAIL=superadmin@example.com\nDEMO_AUTH_LOGIN_PASSWORD=your-dev-password\n```\n\nOn Kubernetes, add them to the dev/preview ConfigMap only — leave them unset in production.\n\n## Security notes\n\n- Values are rendered into HTML as JSON inside an inline `<script>`, with `<`, `>`, `&`, U+2028, U+2029 escaped to prevent HTML/JS injection. Never pass untrusted input as the env values.\n- Production builds are a strict no-op regardless of env vars (double safety: the server component returns `null`, and `componentOverrides` is an empty array).\n- The package has no runtime dependencies.\n\n## Peer dependencies\n\n- `react >= 18`, `react-dom >= 18`\n- `@open-mercato/shared` (for the `ComponentOverride` type)\n\n## De",
+  "modules": [
+    {
+      "id": "demo_auth",
+      "title": "Demo Auth",
+      "description": "Prefills login form with default credentials on non-production environments.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "component-override",
+          "target": "section:auth.login.form"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/shared": {
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/widgets/component-registry": [
+            "ComponentOverride"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "demo_auth",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000001",
+      "lint": [
+        {
+          "code": "likely-example",
+          "severity": "info",
+          "message": "Module has no api/ and no data/ folder. Consider the example tag if this is an exercise.",
+          "anchor": "spec 4.3",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.2.1.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/demo_auth/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "Proposed kind tool, but the tarball has src/modules/demo_auth."
+  ]
+}

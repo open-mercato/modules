@@ -1,0 +1,197 @@
+{
+  "locator": "npm:@open-mercato/forms",
+  "version": "0.0.0-canary.20260603190311.74d2590",
+  "computedAt": "2026-10-25T08:18:49Z",
+  "identity": {
+    "type": "official",
+    "typeReason": "Scope @open-mercato.",
+    "enterprise": false,
+    "license": {
+      "spdx": null,
+      "kind": "proprietary",
+      "mismatch": true
+    },
+    "builtFrom": {
+      "status": "none",
+      "repo": null,
+      "commit": null,
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "skipped",
+      "0.8": "skipped",
+      "next": "untested"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "drift",
+      "next": "drift"
+    },
+    "anatomy": "full",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "fail",
+      "failing": [
+        "collision-core",
+        "license-mismatch"
+      ]
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-06-03",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "match",
+      "notes": []
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Official package with a preview only."
+    },
+    {
+      "id": "LST-3",
+      "pass": false,
+      "detail": "No src/modules and dist/modules pair: No dist/modules/forms/ in the tarball (not built)."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: PROPRIETARY (sources differ)."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Receipt on 0.9: skipped."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": false,
+      "detail": "Lint errors: collision-core, license-mismatch."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
+    }
+  ],
+  "tier": null,
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Moved into Open Mercato core (open-mercato#6770)."
+        },
+        {
+          "code": "NOT_INSTALLABLE",
+          "text": "Package has no src/modules and dist/modules pair."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No stable release for this line yet. Only preview builds are published."
+        },
+        {
+          "code": "LICENSE",
+          "text": "License: proprietary (PROPRIETARY)."
+        }
+      ]
+    },
+    "0.8": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Moved into Open Mercato core (open-mercato#6770)."
+        },
+        {
+          "code": "NOT_INSTALLABLE",
+          "text": "Package has no src/modules and dist/modules pair."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No stable release for this line yet. Only preview builds are published."
+        },
+        {
+          "code": "LICENSE",
+          "text": "License: proprietary (PROPRIETARY)."
+        }
+      ]
+    },
+    "next": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "HOLD",
+          "text": "On hold: Moved into Open Mercato core (open-mercato#6770)."
+        },
+        {
+          "code": "NOT_INSTALLABLE",
+          "text": "Package has no src/modules and dist/modules pair."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on next."
+        },
+        {
+          "code": "LICENSE",
+          "text": "License: proprietary (PROPRIETARY)."
+        }
+      ]
+    }
+  },
+  "state": "hold",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.0.0-canary.20260603190311.74d2590",
+    "0.8": "0.0.0-canary.20260603190311.74d2590",
+    "next": "0.0.0-canary.20260603190311.74d2590"
+  },
+  "verdictPreset": "classic"
+}

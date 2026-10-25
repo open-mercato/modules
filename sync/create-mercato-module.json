@@ -1,0 +1,93 @@
+{
+  "locator": "npm:create-mercato-module",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "create-mercato-module",
+    "distTags": {
+      "latest": "0.5.1"
+    },
+    "latestStable": "0.5.1",
+    "previousStable": "0.5.0",
+    "preview": null,
+    "publishedAt": {
+      "0.5.1": "2026-10-14T13:58:52Z",
+      "0.5.0": "2026-10-14T13:25:54Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/open-mercato/create-mercato-module.git",
+    "gitHead": null,
+    "keywords": [
+      "open-mercato",
+      "mercato",
+      "module",
+      "cli",
+      "scaffold",
+      "npm",
+      "sandbox"
+    ],
+    "maintainers": [
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {
+      "typescript": "6.0.3"
+    },
+    "installScripts": [
+      "prepare"
+    ],
+    "integrity": "sha512-GxfzZdbYoMaW/tsdRg9GUIqxjLRur2R40cqTc3SioKdZAZFZb6rdqpTt5GUl7VC0O0VLxXFCJ+vws+rzVTATZQ==",
+    "tarball": "https://registry.npmjs.org/create-mercato-module/-/create-mercato-module-0.5.1.tgz"
+  },
+  "github": {
+    "repo": "open-mercato/create-mercato-module",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-22T23:55:47Z",
+    "defaultBranch": "main",
+    "stars": 1,
+    "license": "MIT",
+    "topics": [
+      "cli",
+      "npm",
+      "open-mercato",
+      "scaffolding",
+      "typescript"
+    ],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.5.1",
+        "sha": "e8c7b263849121528d40ecffdfdc10e14a58121d"
+      },
+      {
+        "name": "v0.5.0",
+        "sha": "e26897bc5d429a54d11d8b09990bb660a75aab09"
+      },
+      {
+        "name": "v0.4.0",
+        "sha": "c4eaf6b4692a8600ebbb9041a4589931e321942b"
+      },
+      {
+        "name": "v0.2.0",
+        "sha": "ce149d3698864a77b32656061f9516845bd9d50f"
+      },
+      {
+        "name": "v0.1.0",
+        "sha": "fc3ca5d73a7336b2a159df41484856e1138a6ed6"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
+  "downloads30d": 646,
+  "errors": []
+}

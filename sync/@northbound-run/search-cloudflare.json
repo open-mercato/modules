@@ -1,0 +1,72 @@
+{
+  "locator": "npm:@northbound-run/search-cloudflare",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@northbound-run/search-cloudflare",
+    "distTags": {
+      "latest": "0.1.1"
+    },
+    "latestStable": "0.1.1",
+    "previousStable": "0.1.0",
+    "preview": null,
+    "publishedAt": {
+      "0.1.1": "2026-08-08T18:43:20Z",
+      "0.1.0": "2026-08-08T18:12:03Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-ai-search.git",
+    "gitHead": "1d17054f40e339cdd089bce97f4c803dd07471d1",
+    "keywords": [
+      "open-mercato",
+      "open-mercato-module",
+      "cloudflare",
+      "ai-search",
+      "autorag",
+      "search",
+      "fulltext",
+      "hybrid-search",
+      "rag"
+    ],
+    "maintainers": [
+      "northboundrun"
+    ],
+    "peerDependencies": {
+      "@open-mercato/search": ">=0.6.6 <0.7.0",
+      "@open-mercato/shared": ">=0.6.0 <0.7.0"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-AyNqom+FSOVbc04lPrdWIEiJ8/QDm4l/61Gbh3GnOTNPSHwyEw/pqAAB6aoNyVudE/uG5JaFgfA/sF2p5zPWcw==",
+    "tarball": "https://registry.npmjs.org/@northbound-run/search-cloudflare/-/search-cloudflare-0.1.1.tgz"
+  },
+  "github": {
+    "repo": "Northbound-Run/open-mercato-cloudflare-ai-search",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-08-08T18:43:21Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.1.1",
+        "sha": "1d17054f40e339cdd089bce97f4c803dd07471d1"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "Northbound-Run/open-mercato-cloudflare-ai-search",
+    "commit": "1d17054f40e339cdd089bce97f4c803dd07471d1",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": 23,
+  "errors": []
+}

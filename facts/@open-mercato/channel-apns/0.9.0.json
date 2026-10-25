@@ -1,0 +1,287 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 120
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-apns",
+    "name": "@open-mercato/channel-apns",
+    "version": "0.9.0",
+    "integrity": "sha512-Pch/FFEgElpMV/XXK5zXXuvXqatkBbOavl4n4MbKPzGsUdYpad6D0Vsjl9OKTk5YQfmyat6BSgs0LBVHHs5YwA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_apns",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/ui": "0.9.0",
+    "@parse/node-apn": "^6.0.1"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_apns",
+      "title": "Apple Push Notification Channel",
+      "description": "Deliver mobile push to iOS devices via the Apple Push Notification service (HTTP/2, token-based .p8 auth). Registers a push ChannelAdapter (providerKey apns) into the Communications Hub.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_apns.view",
+          "channel_apns.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "p8Key",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "keyId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "teamId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "bundleId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "production",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "data-table",
+          "target": "data-table:communication_channels.channels:toolbar"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_apns"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "SendMessageInput",
+            "SendMessageResult"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/push-adapter": [
+            "BasePushChannelAdapter",
+            "MISSING_PUSH_TOKEN_RESULT",
+            "deviceUnregisteredResult",
+            "readPushToken"
+          ],
+          "modules/communication_channels/lib/push-connect-error": [
+            "resolvePushConnectErrorMessage",
+            "resolvePushConnectFieldErrors"
+          ],
+          "modules/communication_channels/lib/push-credential-errors": [
+            "PUSH_CREDENTIAL_ERROR_INVALID_BUNDLE_ID",
+            "PUSH_CREDENTIAL_ERROR_INVALID_KEY_ID",
+            "PUSH_CREDENTIAL_ERROR_INVALID_P8",
+            "PUSH_CREDENTIAL_ERROR_INVALID_TEAM_ID",
+            "PUSH_CREDENTIAL_ERROR_REQUIRED"
+          ],
+          "modules/communication_channels/lib/push-envelope": [
+            "PushEnvelope",
+            "readPushEnvelope",
+            "resolvePushBody"
+          ],
+          "modules/communication_channels/lib/refcounted-client-cache": [
+            "createRefCountedClientCache"
+          ],
+          "modules/push_notifications/lib/fake-provider-recorder": [
+            "isPushFakeProvidersEnabled",
+            "recordFakePush",
+            "warnPushFakeProvidersActive"
+          ],
+          "modules/push_notifications/lib/push-health": [
+            "makePushClientConfigHealthCheck"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_apns",
+        "tables": [],
+        "aclFeatures": [
+          "channel_apns.view",
+          "channel_apns.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000002",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_apns/integration.ts",
+            "line": 6
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

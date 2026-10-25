@@ -1,0 +1,398 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 118
+  },
+  "package": {
+    "locator": "npm:@northbound-run/channel-cloudflare-email",
+    "name": "@northbound-run/channel-cloudflare-email",
+    "version": "0.1.2",
+    "integrity": "sha512-SXTBx9bB+AfPnHrsopuszzzUpPiGTPmKHMuZiHJbSLLPSsRTpsh1IPuHusTA4kUZVAamyZBXad+4ypj4gT1UCg==",
+    "source": "npm-tarball",
+    "gitRef": "0f88f79894124ee89afcdf6b746d94518c3783d7"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_cloudflare_email",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": ">=0.6.6 <0.7.0",
+    "@open-mercato/shared": ">=0.6.0 <0.7.0",
+    "@open-mercato/ui": ">=0.6.0 <0.7.0"
+  },
+  "dependencies": {
+    "awilix": "^12.1.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @northbound-run/channel-cloudflare-email\n\nCloudflare Email Service channel for [Open Mercato](https://docs.openmercato.com) — inbound mail via Email Routing and a thin Email Worker, outbound via the Email Sending REST API, with real delivery status from Queues event subscriptions.\n\nA peer of `@open-mercato/channel-imap` and `@open-mercato/channel-gmail`, implementing the same `ChannelAdapter` contract against `communication_channels`.\n\n---\n\n## Read this first\n\nThree properties of this channel differ from the IMAP and Gmail adapters, and all three are easier to learn here than in production.\n\n### There is no backfill\n\nThe channel sees mail from the moment its Email Routing rule goes live, **forward**. There is no history import, and `fetchHistory` / `importHistory` are deliberately not implemented — Cloudflare delivers on receipt and there is no mailbox to page backwards through. `POST /channels/{id}/import-history` returns a clean \"feature not supported\".\n\n**Consequence:** if you intend to accumulate a corpus, create the routing rule as early as possible. Every week of delay is a week of mail that cannot be recovered later.\n\n### Inbound is 25 MiB; outbound is 5 MiB\n\nThese are different limits and conflating them is easy. Cloudflare rejects **inbound** messages over 25 MiB at the edge, before the Worker runs — unrecoverable, no retry. **Outbound** total message size (body plus encoded attachments) is 5 MiB; the 25 MiB figure applies to outbound only when sending to verified destination addresses.\n\nThe adapter enforces the outbound ceiling before calling the API, so an oversize send fails with a message naming the file rather than a bare 400.\n\n### It is the first email channel here with working outbound attachments\n\n`channel_imap` returns a failed result when handed attachments; `channel_gmail` does not stitch attachment URLs into its MIME body. This adapter fetches, validates and base64-encodes them, so `capabilities.fileSharing` is `true`.\n\nThat flag is a **persisted snapshot** — it is written into the channel row at connect time — so it ships `true` from 0.1.0 rather than being flipped later, which would strand already-connected channels with a stale value.\n\n---\n\n## Architecture\n\n```\nsender ─→ your-address@your-domain.com\n            │\n       Cloudflare Email Routing\n            ↓\n      Email Worker  (worker/)\n        ├─ buffers message.raw ONCE, parses with postal-mime\n        ├─ raw MIME + attachment blobs ──→ R2\n        └─ HMAC-signed envelope ──→ POST\n                 ↓\n   /api/communication_channels/webhook/cloudflare_email     (Open Mercato core)\n                 ↓\n        adapter.verifyWebhook()   ← HMAC, fail-closed\n        adapter.normalizeInbound()\n                 ↓\n        core: dedup → thread match → contact resolution → Message\n        MessageChannelLink.channelPayload = the full envelope\n                 ↓\n        event: communication_channels.message.received\n```\n\nOutbound is the mirror: `convertOutbound` fetches and encodes attachments, `sendMessage` posts to the Email Sending REST API, and a Queues event subscription feeds delivery status back through the Worker to this module's own endpoint.\n\n---\n\n## Installation\n\n```bash\nyarn mercato module add @northbound-run/channel-cloudflare-email --allow-third-party\nyarn generate\n```\n\n`--allow-third-party` is required because the package is outside the `@open-mercato/*` scope. The module ships **no entities and no migrations**, so there is nothing to migrate.\n\nRequires `communication_channels` and `integrations` to be enabled — both are declared in `requires`, so `yarn generate` fails with a clear message naming the missing module rather than dying at runtime.\n\nTo take local ownership of the source:\n\n```bash\nyarn mercato module add @northbound-run/channel-cloudflare-email --allow-third-party --eject\n```\n\n---\n\n## Cloudflare setup\n\nDeploy the Worker before connecting the channel — the connect form asks for values the Worker deployment produces.\n\n```bash\n# 1. Scaffold ",
+  "modules": [
+    {
+      "id": "channel_cloudflare_email",
+      "title": "Cloudflare Email Channel",
+      "description": "Inbound email via Cloudflare Email Routing and a thin Email Worker; outbound via the Email Sending REST API, with real delivery status from Queues event subscriptions.",
+      "requires": [
+        {
+          "raw": "communication_channels",
+          "resolvesTo": "core:communication_channels"
+        },
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        }
+      ],
+      "ejectable": true,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "POST",
+            "path": "/api/channel_cloudflare_email/delivery-events",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/channel_cloudflare_email/api/post/delivery-events/route.ts",
+              "line": 46
+            }
+          }
+        ],
+        "legacyRouteFiles": 1,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_cloudflare_email.view",
+          "channel_cloudflare_email.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "accountId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "apiToken",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "sendingDomain",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "fromAddress",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "fromName",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "inboundAddress",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "ingestSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "r2Bucket",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "r2AccessKeyId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "r2SecretAccessKey",
+            "type": "secret",
+            "required": true
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api.cloudflare.com",
+            "src": {
+              "file": "src/modules/channel_cloudflare_email/lib/validate-credentials.ts",
+              "line": 8
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_cloudflare_email"
+        },
+        {
+          "kind": "widget",
+          "target": "profile:communication-channels:connect"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/attachments/data/entities": [
+            "Attachment",
+            "AttachmentPartition"
+          ],
+          "modules/attachments/lib/access": [
+            "assertAttachmentScopeInvariant"
+          ],
+          "modules/attachments/lib/drivers": [
+            "StorageDriver",
+            "StorageDriverFactory"
+          ],
+          "modules/attachments/lib/imageUrls": [
+            "buildAttachmentFileUrl"
+          ],
+          "modules/attachments/lib/partitions": [
+            "ensureDefaultPartitions",
+            "resolveDefaultPartitionCode"
+          ],
+          "modules/attachments/lib/security": [
+            "sanitizeUploadedFileName"
+          ],
+          "modules/attachments/lib/textExtraction": [
+            "extractAttachmentContent"
+          ],
+          "modules/auth/data/entities": [
+            "User"
+          ],
+          "modules/communication_channels/data/entities": [
+            "CommunicationChannel",
+            "MessageChannelLink"
+          ],
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedAttachment",
+            "NormalizedInboundMessage",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": [
+            "baseEmailCapabilities"
+          ],
+          "modules/communication_channels/lib/email-contact": [
+            "emailResolveContact"
+          ],
+          "modules/communication_channels/lib/pg-errors": [
+            "isUniqueViolation"
+          ],
+          "modules/inbox_ops/data/entities": [
+            "InboxEmail"
+          ],
+          "modules/inbox_ops/events": [
+            "emitInboxOpsEvent"
+          ],
+          "modules/inbox_ops/lib/htmlToPlainText": [
+            "htmlToPlainText"
+          ],
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findWithDecryption"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/password-input": [
+            "PasswordInput"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_cloudflare_email",
+        "tables": [],
+        "aclFeatures": [
+          "channel_cloudflare_email.view",
+          "channel_cloudflare_email.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 1,
+      "glyph": "0110002",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for >=0.6.6 <0.7.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "1 of 1 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_cloudflare_email/api/post/delivery-events/route.ts",
+            "line": 46
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.1.2.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_cloudflare_email/integration.ts",
+            "line": 25
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

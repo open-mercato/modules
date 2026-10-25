@@ -1,0 +1,369 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 70
+  },
+  "package": {
+    "locator": "npm:@piotrkarwatka/marketing-consents",
+    "name": "@piotrkarwatka/marketing-consents",
+    "version": "0.1.0",
+    "integrity": "sha512-ByUXs82VmoFMQa6c7kgE1yhKDBH9MNhZoMvTnkpU0ORD4KxHyv4/fQGUXOzmiUnfU6+Zsc4H1hncG7GbnaE2ig==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "marketing_consents",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "UNLICENSED",
+    "kind": "proprietary",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "UNLICENSED",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/shared": "0.9.0",
+    "@open-mercato/ui": "0.9.0"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.104.1",
+    "@tanstack/react-table": "9.2.6",
+    "zod": "4.4.3"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @piotrkarwatka/marketing-consents\n\nInstall in an Open Mercato app:\n\n```sh\nyarn mercato module add @piotrkarwatka/marketing-consents --allow-third-party\n```\n\nDevelop in your existing app and publish another version with create-mercato-module. To make this repository the source of your module while keeping the same app for development:\n\n```sh\nnpx create-mercato-module link pkarw/marketing-consents\n```\n\nThe tool checks out this repo in the app's .mercato/module-repos/marketing_consents directory, backs up the original module, and links src/modules/marketing_consents to the checkout. Edits in the app are edits in this repository.\n\n## Trusted Publishing\n\nConfigure this package's trusted publisher on npmjs.com for the GitHub owner, repository, and workflow filename publish.yml. Then dispatch the included GitHub Actions workflow or push a v<version> tag matching package.json. For private dependencies, set a read-only NPM_READ_TOKEN repository secret.\n\nSee [create-mercato-module](https://github.com/open-mercato/create-mercato-module) for authentication, release tests, and development details.\n",
+  "modules": [
+    {
+      "id": "marketing_consents",
+      "title": "Marketing Consents",
+      "description": null,
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [
+          {
+            "id": "marketing_consents:consent_record",
+            "table": "marketing_consent_records",
+            "src": {
+              "file": "src/modules/marketing_consents/data/entities.ts",
+              "line": 21
+            }
+          },
+          {
+            "id": "marketing_consents:withdrawal_evidence",
+            "table": "marketing_consent_withdrawal_evidence",
+            "src": {
+              "file": "src/modules/marketing_consents/data/entities.ts",
+              "line": 79
+            }
+          }
+        ],
+        "migrations": {
+          "count": 1,
+          "first": "2026-10-12",
+          "last": "2026-10-12"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/marketing_consents/consents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "marketing_consents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/marketing_consents/api/consents/route.ts",
+              "line": 151
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/marketing_consents/consents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "marketing_consents.record"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/marketing_consents/api/consents/route.ts",
+              "line": 158
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/marketing_consents/consents/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "marketing_consents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/marketing_consents/api/consents/[id]/route.ts",
+              "line": 45
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/marketing_consents/consents/[id]/withdraw",
+            "requireAuth": true,
+            "requireFeatures": [
+              "marketing_consents.view",
+              "marketing_consents.withdraw"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/marketing_consents/api/consents/[id]/withdraw/route.ts",
+              "line": 27
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "marketing_consents.record",
+          "marketing_consents.view",
+          "marketing_consents.withdraw"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/marketing_consents",
+            "requireFeatures": [
+              "marketing_consents.view"
+            ]
+          },
+          {
+            "path": "/backend/marketing_consents/[id]",
+            "requireFeatures": [
+              "marketing_consents.view"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 2
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError"
+          ],
+          "lib/crud/factory": [
+            "CrudCtx",
+            "makeCrudRoute"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "enforceCommandOptimisticLock"
+          ],
+          "lib/crud/route-mutation-guard": [
+            "runRouteMutationGuards"
+          ],
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/encryption/migration-backfill": [
+            "buildEncryptionMapBackfillSql"
+          ],
+          "lib/encryption/tenantDataEncryptionService": [
+            "TenantDataEncryptionService"
+          ],
+          "lib/frontend/useOrganizationScope": [
+            "useOrganizationScopeVersion"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/openapi": [
+            "OpenApiMethodDoc",
+            "OpenApiRouteDoc"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/registry": [
+            "ModuleInfo",
+            "PageMetadata"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudField",
+            "CrudForm"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/detail": [
+            "AccessDeniedMessage",
+            "DetailFieldConfig",
+            "DetailFieldsSection",
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/forms/FormHeader": [
+            "FormHeader"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "readApiResultOrThrow"
+          ],
+          "backend/utils/crud": [
+            "fetchCrudList"
+          ],
+          "hooks/useDialogKeyHandler": [
+            "useDialogKeyHandler"
+          ],
+          "primitives/alert": [
+            "Alert"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "marketing_consents",
+        "tables": [
+          "marketing_consent_records",
+          "marketing_consent_withdrawal_evidence"
+        ],
+        "aclFeatures": [
+          "marketing_consents.record",
+          "marketing_consents.view",
+          "marketing_consents.withdraw"
+        ],
+        "eventIds": [],
+        "backendRoutes": [
+          "/backend/marketing_consents",
+          "/backend/marketing_consents/[id]"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "2220000",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.9.0 and 2 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

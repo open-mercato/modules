@@ -1,0 +1,1167 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1033
+  },
+  "package": {
+    "locator": "npm:@open-mercato/checkout",
+    "name": "@open-mercato/checkout",
+    "version": "0.9.0",
+    "integrity": "sha512-asOpDIHncXPOUMR4PSsqPpQHUtaAXeJtY3TVxfTCMWjtyC28RxpCmxCGUrVQ3bHHvVG0omWDCePLq9dadm7TJg==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "checkout",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/ui": "0.9.0",
+    "bcryptjs": "^3.0.3"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": "# `@open-mercato/checkout`\n\n`@open-mercato/checkout` provides the `checkout` module for standalone pay links and the Phase A public payment flow.\n\n## What the package contains\n\n- Link templates for reusable payment-page defaults\n- Pay links with fixed, custom-amount, and price-list pricing modes\n- Public `/pay/[slug]` pages with password protection, usage limits, and legal-consent capture\n- Checkout transactions correlated to `payment_gateways` sessions through `paymentId = checkoutTransaction.id`\n- Checkout-owned UMES extension points for pay-page composition and gateway-transaction linking\n\n## Install and enable\n\n1. Add the workspace package to the app: `yarn workspace apps/mercato add @open-mercato/checkout@workspace:*`\n2. Enable the module in [`apps/mercato/src/modules.ts`](/Users/piotrkarwatka/Projects/mercato-development-two/apps/mercato/src/modules.ts):\n\n```ts\n{ id: 'checkout', from: '@open-mercato/checkout' }\n```\n\n3. Run `yarn generate` if you changed auto-discovered module files.\n4. Run database migrations before using the module in a real environment.\n\n## Scripts\n\n- `yarn workspace @open-mercato/checkout build`\n- `yarn workspace @open-mercato/checkout watch`\n- `yarn workspace @open-mercato/checkout test`\n- `yarn workspace @open-mercato/checkout typecheck`\n\n## Admin flow\n\n- Create a template when you want reusable branding, pricing, customer-field, and email defaults.\n- Create a pay link directly or start from a template.\n- Publish the link when the page is ready to accept payments.\n- Track attempts in Transactions, where customer PII is gated behind `checkout.viewPii`.\n\n## Public flow\n\n- `GET /api/checkout/pay/:slug` returns the public link payload or a password gate.\n- `POST /api/checkout/pay/:slug/verify-password` creates the slug-bound password session.\n- `POST /api/checkout/pay/:slug/submit` validates server-authoritative pricing, legal consents, and idempotency before creating the gateway session.\n- `GET /api/checkout/pay/:slug/status/:transactionId` polls the linked checkout transaction without exposing cross-link data.\n\nPassword-protected links need a signing secret. Configure `AUTH_SECRET` or `NEXTAUTH_SECRET` in the app env when possible. If they are unset, checkout falls back to `JWT_SECRET`, then `TENANT_DATA_ENCRYPTION_FALLBACK_KEY`.\n\n## Extensibility\n\nCheckout exposes stable UMES surfaces for customization:\n\n- Injection spots:\n  - `data-table:payment_gateways.transactions.list:toolbar`\n  - `admin.page:payment-gateways/transactions:after`\n- Replacement handles:\n  - `page:checkout.pay-page`\n  - `page:checkout.success-page`\n  - `page:checkout.error-page`\n  - `section:checkout.pay-page.header`\n  - `section:checkout.pay-page.description`\n  - `section:checkout.pay-page.summary`\n  - `section:checkout.pay-page.pricing`\n  - `section:checkout.pay-page.payment`\n  - `section:checkout.pay-page.customer-form`\n  - `section:checkout.pay-page.legal-consent`\n  - `section:checkout.pay-page.gateway-form`\n  - `section:checkout.pay-page.help`\n  - `section:checkout.pay-page.footer`\n  - `section:checkout.success-page.content`\n  - `section:checkout.error-page.content`\n  - `crud-form:checkout:link`\n  - `crud-form:checkout:template`\n  - `data-table:checkout-links`\n  - `data-table:checkout-templates`\n  - `data-table:checkout-transactions`\n\nCustomization must not bypass payment-critical server checks. Amount calculation, password verification, legal-consent enforcement, transaction status reconciliation, and usage-limit accounting remain server-authoritative.\n\n## Gateway-provider contract\n\nCheckout depends on the additive descriptor surface in `payment_gateways`:\n\n- `paymentGatewayDescriptorService.list(scope)`\n- `paymentGatewayDescriptorService.get(providerKey, scope)`\n- `GET /api/payment_gateways/providers`\n- `GET /api/payment_gateways/providers/:providerKey`\n\nDescriptors must provide safe session metadata only:\n\n- `sessionConfig.fields`\n- `sessionConfig.supportedCurrencies`\n- `sessionConfig.supportedPaymentTypes`\n- `sessionConfig",
+  "modules": [
+    {
+      "id": "checkout",
+      "title": "Checkout",
+      "description": "Pay links, checkout templates, public payment pages, and checkout transaction tracking.",
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [
+          {
+            "id": "checkout:checkout_link_template",
+            "table": "checkout_link_templates",
+            "src": {
+              "file": "src/modules/checkout/data/entities.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "checkout:checkout_link",
+            "table": "checkout_links",
+            "src": {
+              "file": "src/modules/checkout/data/entities.ts",
+              "line": 212
+            }
+          },
+          {
+            "id": "checkout:checkout_transaction",
+            "table": "checkout_transactions",
+            "src": {
+              "file": "src/modules/checkout/data/entities.ts",
+              "line": 237
+            }
+          }
+        ],
+        "migrations": {
+          "count": 4,
+          "first": "2026-03-19",
+          "last": "2026-03-19"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/checkout/links",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/links/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/checkout/links",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/links/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/links/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/links/[id]/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/checkout/links/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/links/[id]/route.ts",
+              "line": 52
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/checkout/links/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.delete"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/links/[id]/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/pay/[slug]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/pay/[slug]/status/[transactionId]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/status/[transactionId]/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/checkout/pay/[slug]/submit",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/submit/route.ts",
+              "line": 273
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/checkout/pay/[slug]/verify-password",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/verify-password/route.ts",
+              "line": 22
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/checkout/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/route.ts",
+              "line": 66
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/templates/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/[id]/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/checkout/templates/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/[id]/route.ts",
+              "line": 52
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/checkout/templates/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.delete"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/[id]/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/templates/[id]/preview",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/templates/[id]/preview/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/transactions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/transactions/route.ts",
+              "line": 18
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/transactions/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/transactions/[id]/route.ts",
+              "line": 13
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/checkout/transactions/by-gateway/[gatewayTransactionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "checkout.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/checkout/api/transactions/by-gateway/[gatewayTransactionId]/route.ts",
+              "line": 12
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "checkout.view",
+          "checkout.create",
+          "checkout.edit",
+          "checkout.delete",
+          "checkout.viewPii",
+          "checkout.export"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "checkout.template.created",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "id": "checkout.template.updated",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "checkout.template.deleted",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "checkout.link.created",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "checkout.link.updated",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 8
+            }
+          },
+          {
+            "id": "checkout.link.deleted",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 9
+            }
+          },
+          {
+            "id": "checkout.link.published",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 10
+            }
+          },
+          {
+            "id": "checkout.link.locked",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "checkout.transaction.created",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "checkout.transaction.customerDataCaptured",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 13
+            }
+          },
+          {
+            "id": "checkout.transaction.sessionStarted",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "checkout.transaction.completed",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 15
+            }
+          },
+          {
+            "id": "checkout.transaction.failed",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "checkout.transaction.cancelled",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 17
+            }
+          },
+          {
+            "id": "checkout.transaction.expired",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 18
+            }
+          },
+          {
+            "id": "checkout.link.usageLimitReached",
+            "src": {
+              "file": "src/modules/checkout/events.ts",
+              "line": 19
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "payment_gateways.payment.authorized",
+            "src": {
+              "file": "src/modules/checkout/subscribers/gateway-payment-authorized.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "payment_gateways.payment.cancelled",
+            "src": {
+              "file": "src/modules/checkout/subscribers/gateway-payment-cancelled.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "payment_gateways.payment.captured",
+            "src": {
+              "file": "src/modules/checkout/subscribers/gateway-payment-captured.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "payment_gateways.payment.failed",
+            "src": {
+              "file": "src/modules/checkout/subscribers/gateway-payment-failed.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "checkout.transaction.created",
+            "src": {
+              "file": "src/modules/checkout/subscribers/search-reindex-transaction-created.ts",
+              "line": 2
+            }
+          },
+          {
+            "event": "checkout.transaction.sessionStarted",
+            "src": {
+              "file": "src/modules/checkout/subscribers/session-started-email.ts",
+              "line": 7
+            }
+          },
+          {
+            "event": "checkout.transaction.completed",
+            "src": {
+              "file": "src/modules/checkout/subscribers/transaction-completed-notify.ts",
+              "line": 11
+            }
+          },
+          {
+            "event": "checkout.transaction.failed",
+            "src": {
+              "file": "src/modules/checkout/subscribers/transaction-failed-notify.ts",
+              "line": 11
+            }
+          },
+          {
+            "event": "checkout.link.usageLimitReached",
+            "src": {
+              "file": "src/modules/checkout/subscribers/usage-limit-reached-notify.ts",
+              "line": 10
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/checkout",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          },
+          {
+            "path": "/backend/checkout/pay-links",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          },
+          {
+            "path": "/backend/checkout/pay-links/[id]",
+            "requireFeatures": [
+              "checkout.edit"
+            ]
+          },
+          {
+            "path": "/backend/checkout/pay-links/create",
+            "requireFeatures": [
+              "checkout.create"
+            ]
+          },
+          {
+            "path": "/backend/checkout/templates",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          },
+          {
+            "path": "/backend/checkout/templates/[id]",
+            "requireFeatures": [
+              "checkout.edit"
+            ]
+          },
+          {
+            "path": "/backend/checkout/templates/[id]/preview",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          },
+          {
+            "path": "/backend/checkout/templates/create",
+            "requireFeatures": [
+              "checkout.create"
+            ]
+          },
+          {
+            "path": "/backend/checkout/transactions",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          },
+          {
+            "path": "/backend/checkout/transactions/[id]",
+            "requireFeatures": [
+              "checkout.view"
+            ]
+          }
+        ],
+        "frontendPages": [
+          {
+            "path": "/pay/[slug]"
+          },
+          {
+            "path": "/pay/[slug]/cancel/[transactionId]"
+          },
+          {
+            "path": "/pay/[slug]/success/[transactionId]"
+          }
+        ],
+        "widgets": 1,
+        "extensionHosts": 85
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "checkout-email"
+          },
+          {
+            "queue": "checkout-transaction-expiry"
+          }
+        ],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "CHECKOUT_ALLOWED_ORIGINS",
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/submit/route.ts",
+              "line": 87
+            }
+          },
+          {
+            "name": "APP_URL",
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/submit/route.ts",
+              "line": 114
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_APP_URL",
+            "src": {
+              "file": "src/modules/checkout/api/pay/[slug]/submit/route.ts",
+              "line": 114
+            }
+          },
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/checkout/lib/emailQueue.ts",
+              "line": 14
+            }
+          },
+          {
+            "name": "AUTH_SECRET",
+            "src": {
+              "file": "src/modules/checkout/lib/utils.ts",
+              "line": 265
+            }
+          },
+          {
+            "name": "NEXTAUTH_SECRET",
+            "src": {
+              "file": "src/modules/checkout/lib/utils.ts",
+              "line": 266
+            }
+          },
+          {
+            "name": "JWT_SECRET",
+            "src": {
+              "file": "src/modules/checkout/lib/utils.ts",
+              "line": 267
+            }
+          },
+          {
+            "name": "TENANT_DATA_ENCRYPTION_FALLBACK_KEY",
+            "src": {
+              "file": "src/modules/checkout/lib/utils.ts",
+              "line": 268
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "data-table",
+          "target": "data-table:payment_gateways.transactions.list:toolbar"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:checkout.link.usageLimitReached"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:checkout.transaction.completed"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:checkout.transaction.failed"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.authorized"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.cancelled"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.captured"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.failed"
+        },
+        {
+          "kind": "widget",
+          "target": "admin.page:payment-gateways/transactions:after"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/checkout": {
+          "modules/checkout/extension-points": [
+            "extensionPoints"
+          ]
+        },
+        "@open-mercato/core": {
+          "modules/auth/services/rbacService": [
+            "RbacService"
+          ],
+          "modules/entities/data/entities": [
+            "CustomFieldEntityConfig"
+          ],
+          "modules/entities/lib/field-definitions": [
+            "ensureCustomFieldDefinitions"
+          ],
+          "modules/entities/lib/fieldsets": [
+            "loadEntityFieldsetConfigs"
+          ],
+          "modules/notifications/lib/deliveryConfig": [
+            "DEFAULT_NOTIFICATION_DELIVERY_CONFIG",
+            "resolveNotificationDeliveryConfig"
+          ],
+          "modules/notifications/lib/notificationBuilder": [
+            "buildFeatureNotificationFromType"
+          ],
+          "modules/notifications/lib/notificationService": [
+            "resolveNotificationService"
+          ],
+          "modules/payment_gateways/data/entities": [
+            "GatewayTransaction"
+          ],
+          "modules/payment_gateways/lib/gateway-service": [
+            "PaymentGatewayService"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta",
+            "createQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "AuthContext",
+            "getAuthFromRequest"
+          ],
+          "lib/commands": [
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/commands/command-bus": [
+            "CommandBus"
+          ],
+          "lib/commands/customFieldSnapshots": [
+            "CustomFieldSnapshot",
+            "buildCustomFieldResetMap",
+            "loadCustomFieldSnapshot"
+          ],
+          "lib/commands/errors": [
+            "getCommandInterceptorHttpRejection"
+          ],
+          "lib/commands/helpers": [
+            "setCustomFieldsIfAny"
+          ],
+          "lib/commands/operationMetadata": [
+            "serializeOperationMetadata"
+          ],
+          "lib/commands/redo": [
+            "resolveRedoSnapshot"
+          ],
+          "lib/commands/scope": [
+            "ensureOrganizationScope",
+            "ensureTenantScope"
+          ],
+          "lib/commands/types": [
+            "CommandRuntimeContext"
+          ],
+          "lib/commands/undo": [
+            "extractUndoPayload"
+          ],
+          "lib/crud/custom-fields": [
+            "CustomFieldDisplayEntry",
+            "decorateRecordWithCustomFields",
+            "loadCustomFieldDefinitionIndex",
+            "loadCustomFieldValues"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError",
+            "isCrudHttpError"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "enforceCommandOptimisticLockWithGuards",
+            "enforceRecordGoneIsConflict"
+          ],
+          "lib/custom-fields/normalize": [
+            "normalizeCustomFieldResponse"
+          ],
+          "lib/data/engine": [
+            "DataEngine"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/email/send": [
+            "sendEmail"
+          ],
+          "lib/encryption/find": [
+            "findAndCountWithDecryption",
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/encryption/tenantDataEncryptionService": [
+            "parseDecryptedFieldValue"
+          ],
+          "lib/i18n/config": [
+            "Locale"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useLocale",
+            "useSupportedLocales",
+            "useT"
+          ],
+          "lib/i18n/locale": [
+            "resolveLocaleFromCandidates"
+          ],
+          "lib/i18n/locale-label": [
+            "resolveLocaleLabel"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/number": [
+            "parseLocaleNumber"
+          ],
+          "lib/ratelimit/config": [
+            "readEndpointRateLimitConfig"
+          ],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_FALLBACK_KEY",
+            "RATE_LIMIT_UNAVAILABLE_FALLBACK",
+            "checkRateLimit",
+            "getClientIp",
+            "rateLimitErrorSchema"
+          ],
+          "lib/ratelimit/service": [
+            "RateLimiterService"
+          ],
+          "lib/ratelimit/types": [
+            "RateLimitConfig"
+          ],
+          "lib/search/tokenLookup": [
+            "SearchTokenDatabase",
+            "findEntityIdsBySearchTokens"
+          ],
+          "lib/slugify": [
+            "slugify"
+          ],
+          "lib/time": [
+            "formatRelativeTime"
+          ],
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec",
+            "CustomFieldDefinition"
+          ],
+          "modules/entities/validators": [
+            "fieldsetCodeRegex"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/notifications/types": [
+            "NotificationRendererProps",
+            "NotificationTypeDefinition"
+          ],
+          "modules/payment_gateways/client": [
+            "PaymentGatewayRendererProps",
+            "getPaymentGatewayRenderer"
+          ],
+          "modules/payment_gateways/types": [
+            "PaymentGatewayClientSession",
+            "getPaymentGatewayDescriptor"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/search": [
+            "SearchModuleConfig"
+          ],
+          "modules/setup": [
+            "InitSetupContext",
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/component-registry": [
+            "ComponentOverride"
+          ],
+          "modules/widgets/extension-points": [
+            "componentExtensionHost",
+            "dataTableExtensionHost",
+            "defineModuleExtensionPoints",
+            "injectionExtensionHost"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudField",
+            "CrudForm",
+            "CrudFormGroup",
+            "CrudFormGroupComponentProps"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/conflicts": [
+            "surfaceRecordConflict"
+          ],
+          "backend/detail": [
+            "RecordNotFoundState"
+          ],
+          "backend/filters/ListEmptyState": [
+            "ListEmptyState"
+          ],
+          "backend/forms": [
+            "FormHeader"
+          ],
+          "backend/injection/InjectionSpot": [
+            "InjectionSpot",
+            "useInjectionSpotEvents",
+            "useInjectionWidgets"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/injection/useRegisteredComponent": [
+            "useRegisteredComponent"
+          ],
+          "backend/inputs": [
+            "ComboboxInput",
+            "ComboboxOption",
+            "SwitchableMarkdownInput"
+          ],
+          "backend/markdown/MarkdownContent": [
+            "MarkdownContent"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow",
+            "readApiResultOrThrow",
+            "withScopedApiRequestHeaders"
+          ],
+          "backend/utils/customFieldValues": [
+            "collectCustomFieldValues"
+          ],
+          "backend/utils/optimisticLock": [
+            "buildOptimisticLockHeader"
+          ],
+          "backend/utils/serverErrors": [
+            "createCrudFormError",
+            "mapCrudServerErrorToFormErrors",
+            "normalizeCrudServerError"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/card": [
+            "Card",
+            "CardContent",
+            "CardHeader",
+            "CardTitle"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/color-picker": [
+            "ColorPicker"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/password-input": [
+            "PasswordInput"
+          ],
+          "primitives/radio": [
+            "Radio",
+            "RadioGroup"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/tabs": [
+            "Tabs",
+            "TabsContent",
+            "TabsList",
+            "TabsTrigger"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "checkout",
+        "tables": [
+          "checkout_link_templates",
+          "checkout_links",
+          "checkout_transactions"
+        ],
+        "aclFeatures": [
+          "checkout.view",
+          "checkout.create",
+          "checkout.edit",
+          "checkout.delete",
+          "checkout.viewPii",
+          "checkout.export"
+        ],
+        "eventIds": [
+          "checkout.template.created",
+          "checkout.template.updated",
+          "checkout.template.deleted",
+          "checkout.link.created",
+          "checkout.link.updated",
+          "checkout.link.deleted",
+          "checkout.link.published",
+          "checkout.link.locked",
+          "checkout.transaction.created",
+          "checkout.transaction.customerDataCaptured",
+          "checkout.transaction.sessionStarted",
+          "checkout.transaction.completed",
+          "checkout.transaction.failed",
+          "checkout.transaction.cancelled",
+          "checkout.transaction.expired",
+          "checkout.link.usageLimitReached"
+        ],
+        "backendRoutes": [
+          "/backend/checkout",
+          "/backend/checkout/pay-links",
+          "/backend/checkout/pay-links/[id]",
+          "/backend/checkout/pay-links/create",
+          "/backend/checkout/templates",
+          "/backend/checkout/templates/[id]",
+          "/backend/checkout/templates/[id]/preview",
+          "/backend/checkout/templates/create",
+          "/backend/checkout/transactions",
+          "/backend/checkout/transactions/[id]"
+        ]
+      },
+      "publicRoutes": 4,
+      "glyph": "2333202",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "4 of 18 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/checkout/api/pay/[slug]/route.ts",
+            "line": 23
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/checkout/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "checkout: [module-facts] searchConfig entityId is not statically resolvable: src/modules/checkout/search.ts:11",
+    "checkout: [module-facts] searchConfig entityId is not statically resolvable: src/modules/checkout/search.ts:31",
+    "checkout: [module-facts] searchConfig entityId is not statically resolvable: src/modules/checkout/search.ts:58"
+  ]
+}

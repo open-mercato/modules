@@ -1,0 +1,53 @@
+{
+  "locator": "npm:@open-mercato/pay-by-links",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/pay-by-links",
+    "distTags": {
+      "latest": "0.4.9-canary-fcabd45887",
+      "canary": "0.4.9-canary-891068e07c"
+    },
+    "latestStable": null,
+    "previousStable": null,
+    "preview": "0.4.9-canary-fcabd45887",
+    "publishedAt": {
+      "0.4.9-canary-fcabd45887": "2026-03-18T09:12:59Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": null,
+    "gitHead": null,
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
+      "@open-mercato/shared": "0.4.9-canary-fcabd45887",
+      "@mikro-orm/postgresql": "^6.6.2"
+    },
+    "dependencies": {
+      "@open-mercato/ui": "0.4.9-canary-fcabd45887",
+      "@open-mercato/core": "0.4.9-canary-fcabd45887"
+    },
+    "installScripts": [],
+    "integrity": "sha512-AqK1X7LoZhQKjoyOhE+B07U8UIOJRPd123q9ZOiwlrpXqS14sxdAKH/1pksRGETAchQa8oCG1dTfPuRKUutQng==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/pay-by-links/-/pay-by-links-0.4.9-canary-fcabd45887.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 10,
+  "errors": []
+}

@@ -1,0 +1,440 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 90
+  },
+  "package": {
+    "locator": "npm:@open-mercato/onboarding",
+    "name": "@open-mercato/onboarding",
+    "version": "0.9.0",
+    "integrity": "sha512-wztY7ot5QCOftdoTUgXHsDlfbiOj+zfFYfB2zzpPHHk6NoTfLz6NMgvZqZ1z0MWh7+BSi+NH3bBTwc1aHJsGYg==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "onboarding",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {},
+  "agentsMd": true,
+  "readmeExcerpt": "# @open-mercato/onboarding 🚀\n\nTenant onboarding and first-run experience for Open Mercato.\n\n`@open-mercato/onboarding` helps orchestrate setup flows, initial configuration, defaults, and guided adoption steps.\n\n## Why this package ✨\n\n- 🪄 Guided tenant bootstrap experience\n- 🧩 Hooks for setup defaults and example data\n- 📬 Supports welcome and invitation-style flows\n- ⚡ Reduces time-to-value for new installations\n\n## Install\n\n```bash\nyarn add @open-mercato/onboarding\n```\n\n## Learn more\n\n- GitHub (package): https://github.com/open-mercato/open-mercato/tree/main/packages/onboarding\n- GitHub (project): https://github.com/open-mercato/open-mercato\n- Docs: https://docs.openmercato.com\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "onboarding",
+      "title": "Onboarding",
+      "description": "Self-service tenant and organization onboarding flow.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "onboarding:onboarding_request",
+            "table": "onboarding_requests",
+            "src": {
+              "file": "src/modules/onboarding/data/entities.ts",
+              "line": 9
+            }
+          }
+        ],
+        "migrations": {
+          "count": 7,
+          "first": "2026-01-12",
+          "last": "2026-08-17"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "POST",
+            "path": "/api/onboarding/demo-feedback",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/onboarding/api/demo-feedback/route.ts",
+              "line": 31
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/onboarding/onboarding",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/onboarding/api/post/onboarding.ts",
+              "line": 274
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/onboarding/onboarding/status",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/onboarding/api/get/onboarding/status.ts",
+              "line": 179
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/onboarding/onboarding/verify",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/onboarding/api/get/onboarding/verify.ts",
+              "line": 329
+            }
+          }
+        ],
+        "legacyRouteFiles": 3,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "onboarding.access",
+          "onboarding.submit",
+          "onboarding.verify"
+        ],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [
+          {
+            "path": "/onboarding"
+          },
+          {
+            "path": "/onboarding/preparing"
+          }
+        ],
+        "widgets": 0,
+        "extensionHosts": 1
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "ADMIN_EMAIL",
+            "src": {
+              "file": "src/modules/onboarding/api/demo-feedback/route.ts",
+              "line": 51
+            }
+          },
+          {
+            "name": "SELF_SERVICE_ONBOARDING_ENABLED",
+            "src": {
+              "file": "src/modules/onboarding/api/get/onboarding/status.ts",
+              "line": 51
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "bootstrap": [
+            "getCachedRateLimiterService"
+          ],
+          "modules/auth/data/entities": [
+            "User",
+            "UserConsent"
+          ],
+          "modules/auth/lib/consentIntegrity": [
+            "computeConsentIntegrityHash"
+          ],
+          "modules/auth/lib/rateLimitCheck": [
+            "checkAuthRateLimit"
+          ],
+          "modules/auth/lib/setup-app": [
+            "setupInitialTenant"
+          ]
+        },
+        "@open-mercato/onboarding": {
+          "modules/onboarding/data/entities": [
+            "OnboardingRequest"
+          ],
+          "modules/onboarding/data/validators": [
+            "onboardingStartSchema",
+            "onboardingVerifySchema"
+          ],
+          "modules/onboarding/emails/AdminNotificationEmail": [
+            "default"
+          ],
+          "modules/onboarding/emails/FeedbackEmail": [
+            "default"
+          ],
+          "modules/onboarding/emails/VerificationEmail": [
+            "default"
+          ],
+          "modules/onboarding/emails/WorkspaceReadyEmail": [
+            "default"
+          ],
+          "modules/onboarding/lib/consentClientIp": [
+            "resolveConsentClientIp"
+          ],
+          "modules/onboarding/lib/deferred-provisioning": [
+            "resolveProvisioningIds",
+            "runDeferredProvisioning"
+          ],
+          "modules/onboarding/lib/existing-account-notice": [
+            "sendExistingAccountNotice"
+          ],
+          "modules/onboarding/lib/preparation-claim": [
+            "PREPARATION_CLAIM_STALE_MS",
+            "isPreparationClaimActive"
+          ],
+          "modules/onboarding/lib/provisioning": [
+            "runBestEffortProvisioningStep"
+          ],
+          "modules/onboarding/lib/ready-email": [
+            "sendWorkspaceReadyEmail"
+          ],
+          "modules/onboarding/lib/service": [
+            "OnboardingService"
+          ],
+          "modules/onboarding/lib/verify-base-url": [
+            "resolveVerifyRedirectBaseUrl"
+          ],
+          "modules/onboarding/lib/verify-redirects": [
+            "redirectToLogin",
+            "redirectToPreparing",
+            "redirectWithStatus"
+          ]
+        },
+        "@open-mercato/search": {
+          ".": [
+            "SearchIndexer"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/passwordPolicy": [
+            "buildPasswordSchema",
+            "formatPasswordRequirements",
+            "getPasswordPolicy"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/crud/errors": [
+            "isUniqueViolation"
+          ],
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/email/send": [
+            "sendEmail"
+          ],
+          "lib/encryption/aes": [
+            "hashForLookup",
+            "lookupHashCandidates"
+          ],
+          "lib/encryption/entityIds": [
+            "getEntityIds"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/entities/system-entities": [
+            "flattenSystemEntityIds"
+          ],
+          "lib/i18n/config": [
+            "Locale",
+            "defaultLocale",
+            "locales"
+          ],
+          "lib/i18n/context": [
+            "useLocale",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "loadDictionary"
+          ],
+          "lib/i18n/translate": [
+            "createFallbackTranslator",
+            "translateWithFallback"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/modules/registry": [
+            "getModules"
+          ],
+          "lib/openapi": [
+            "OpenApiMethodDoc",
+            "OpenApiRouteDoc"
+          ],
+          "lib/ratelimit/config": [
+            "readEndpointRateLimitConfig"
+          ],
+          "lib/ratelimit/helpers": [
+            "getClientIp",
+            "rateLimitErrorSchema"
+          ],
+          "lib/ratelimit/types": [
+            "RateLimitConfig"
+          ],
+          "lib/url": [
+            "AppOriginConfigurationError",
+            "AppOriginRejectedError",
+            "assertAllowedAppOrigin",
+            "getSecurityEmailBaseUrl",
+            "mapSecurityEmailUrlError",
+            "resolveRequestOrigin"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/card": [
+            "Card",
+            "CardContent",
+            "CardDescription",
+            "CardHeader",
+            "CardTitle"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/email-input": [
+            "EmailInput"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/password-input": [
+            "PasswordInput"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "onboarding",
+        "tables": [
+          "onboarding_requests"
+        ],
+        "aclFeatures": [
+          "onboarding.access",
+          "onboarding.submit",
+          "onboarding.verify"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 4,
+      "glyph": "2220000",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "setup-default-role-features",
+          "severity": "warn",
+          "message": "acl.ts declares features but setup.ts has no defaultRoleFeatures.",
+          "anchor": "module-development.md:48",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "4 of 4 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/onboarding/api/demo-feedback/route.ts",
+            "line": 31
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/onboarding/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

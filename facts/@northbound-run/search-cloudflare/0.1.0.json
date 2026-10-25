@@ -1,0 +1,263 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 41
+  },
+  "package": {
+    "locator": "npm:@northbound-run/search-cloudflare",
+    "name": "@northbound-run/search-cloudflare",
+    "version": "0.1.0",
+    "integrity": "sha512-5R1scOWOWyipeE9vMWEk9ptj0/bvdOLxt9+XSOgglE7zk4aLsNcVQ2Av43qdDG3g7JaukFjTmdXjJTGDN4BEZg==",
+    "source": "npm-tarball",
+    "gitRef": "3992f9fe39516546f1befa5f66c38dd46970689c"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "search_cloudflare",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/search": ">=0.6.6 <0.7.0",
+    "@open-mercato/shared": ">=0.6.0 <0.7.0"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @northbound-run/search-cloudflare\n\nCloudflare AI Search as a pluggable **fulltext driver** for [Open Mercato](https://docs.openmercato.com) — hybrid BM25 + vector retrieval behind the stock `FullTextSearchDriver` contract, with no search service to operate.\n\nA peer of the built-in Meilisearch driver in `@open-mercato/search`, implementing the same interface. Drop it in and `SearchService` fuses it with the `vector` and `tokens` strategies exactly as before.\n\n---\n\n## Read this first\n\n### It replaces the search *service*, not the search *architecture*\n\nOpen Mercato's search is three strategies fused with Reciprocal Rank Fusion: `fulltext` (Meilisearch), `vector` (pgvector/Chroma/Qdrant + an embedding provider), and `tokens` (a Postgres hash index that always works). This package supplies a second `fulltext` driver. Everything else is untouched, and `tokens` remains the fallback when Cloudflare is unreachable.\n\nThe practical trade: you stop operating a Meilisearch container, and you accept ~250ms search latency instead of single-digit milliseconds.\n\n### Backend list views are NOT affected\n\nDespite what you might assume, list-view `q` filtering does not go through `SearchService` — it joins `search_tokens` directly inside `QueryEngine`. Installing this changes **Cmd+K global search, `/api/search`, and the AI assistant's MCP search tool**. Nothing else. That is what makes it low-risk and trivially reversible.\n\n### Your data goes to a managed service\n\nMeilisearch was a container you controlled. Cloudflare AI Search is managed and must hold readable text in order to embed it. This driver honours `fieldPolicy.excluded` / `fieldPolicy.hashOnly` and, with `SEARCH_EXCLUDE_ENCRYPTED_FIELDS=true`, the tenant encryption map — so encrypted fields stay searchable only via the `tokens` strategy, which hashes rather than storing plaintext.\n\n**Decide this before indexing production data.** It is a deployment decision the package cannot make for you.\n\n### Cloudflare AI Search is in open beta, and we found a data leak in it\n\nSee [Cross-tenant safety](#cross-tenant-safety). It is handled, but you should understand it before trusting the product with multi-tenant data.\n\n---\n\n## Install\n\n```bash\nyarn add @northbound-run/search-cloudflare\n```\n\nPeer dependencies: `@open-mercato/search` and `@open-mercato/shared` (0.6.x).\n\n### 1. Provision the instance\n\nCustom metadata fields must exist **before** any upload — Cloudflare silently drops undeclared fields, which would produce hits that cannot be mapped back to an Open Mercato entity.\n\n```bash\nnpx wrangler ai-search create my-instance \\\n  --type builtin \\\n  --hybrid-search \\\n  --custom-metadata entity:text \\\n  --custom-metadata org:text\n```\n\n`--hybrid-search` sets `index_method` to `{vector: true, keyword: true}`. Vector-only is the default and misses exact identifiers like `PO-10432`.\n\n### 2. API token\n\nNeeds **Account → AI Search:Edit** and **AI Search:Run**. A `wrangler login` OAuth token already carries both.\n\n### 3. Environment\n\n```bash\nCF_AI_SEARCH_ACCOUNT_ID=<account id>      # npx wrangler whoami\nCF_AI_SEARCH_API_TOKEN=<token>\nCF_AI_SEARCH_INSTANCE=my-instance\n# Optional\nCF_AI_SEARCH_NAMESPACE=                   # default namespace when unset\nCF_AI_SEARCH_RETRIEVAL_TYPE=hybrid        # vector | keyword | hybrid\nCF_AI_SEARCH_MATCH_THRESHOLD=0.3          # Cloudflare default is 0.4\n```\n\n### 4. Enable the module\n\n```ts\n// src/modules.ts\n{ id: 'search_cloudflare', from: '@northbound-run/search-cloudflare' },\n```\n\nThen `yarn generate`. That is the whole integration — no app `src/di.ts` wiring.\nThe module ships no entities, migrations, routes or UI: a `di.ts` that registers\nthe driver, and the `doctor` CLI. It declares `requires: ['search']`.\n\n**Registration has to live in a module `di.ts`, not the app's.** Open Mercato\nreaches app-level DI through `await import('@/di')` — a bundler-only path alias\nthat throws `ERR_MODULE_NOT_FOUND` under raw Node into a bare `catch {}`. So app\nDI silently never runs i",
+  "modules": [
+    {
+      "id": "search_cloudflare",
+      "title": "Cloudflare AI Search",
+      "description": "Cloudflare AI Search as a fulltext search driver: hybrid BM25 + vector retrieval behind the stock FullTextSearchDriver contract, with diagnostics for the instance configuration it depends on.",
+      "requires": [
+        {
+          "raw": "search",
+          "resolvesTo": null
+        }
+      ],
+      "ejectable": true,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "doctor",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "CF_AI_SEARCH_ACCOUNT_ID",
+            "src": {
+              "file": "src/modules/search_cloudflare/cli.ts",
+              "line": 72
+            }
+          },
+          {
+            "name": "CF_AI_SEARCH_API_TOKEN",
+            "src": {
+              "file": "src/modules/search_cloudflare/cli.ts",
+              "line": 73
+            }
+          },
+          {
+            "name": "CF_AI_SEARCH_INSTANCE",
+            "src": {
+              "file": "src/modules/search_cloudflare/cli.ts",
+              "line": 74
+            }
+          },
+          {
+            "name": "CF_AI_SEARCH_NAMESPACE",
+            "src": {
+              "file": "src/modules/search_cloudflare/cli.ts",
+              "line": 91
+            }
+          },
+          {
+            "name": "SEARCH_DISABLE_SINGLETON_CACHE",
+            "src": {
+              "file": "src/modules/search_cloudflare/di.ts",
+              "line": 95
+            }
+          },
+          {
+            "name": "SEARCH_EXCLUDE_ENCRYPTED_FIELDS",
+            "src": {
+              "file": "src/modules/search_cloudflare/di.ts",
+              "line": 96
+            }
+          },
+          {
+            "name": "CF_AI_SEARCH_MATCH_THRESHOLD",
+            "src": {
+              "file": "src/lib/driver.ts",
+              "line": 479
+            }
+          },
+          {
+            "name": "CF_AI_SEARCH_RETRIEVAL_TYPE",
+            "src": {
+              "file": "src/lib/driver.ts",
+              "line": 489
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api.cloudflare.com",
+            "src": {
+              "file": "src/lib/client.ts",
+              "line": 13
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/search": {
+          "di": [
+            "addSearchStrategy"
+          ],
+          "fulltext": [
+            "DocumentLookupKey",
+            "FullTextSearchDocument",
+            "FullTextSearchDriver",
+            "FullTextSearchHit",
+            "FullTextSearchQuery",
+            "IndexStats"
+          ],
+          "lib/field-policy": [
+            "extractSearchableFields"
+          ],
+          "strategies/fulltext.strategy": [
+            "FullTextSearchStrategy"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "fetchWithTimeout",
+            "resolveTimeoutMs"
+          ],
+          "modules/entities": [
+            "EntityId"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/search": [
+            "SearchFieldPolicy",
+            "SearchModuleConfig",
+            "getSearchModuleConfigs"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "search_cloudflare",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000200",
+      "lint": [
+        {
+          "code": "likely-example",
+          "severity": "info",
+          "message": "Module has no api/ and no data/ folder. Consider the example tag if this is an exercise.",
+          "anchor": "spec 4.3",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for >=0.6.6 <0.7.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

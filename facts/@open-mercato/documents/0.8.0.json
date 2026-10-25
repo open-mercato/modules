@@ -1,0 +1,1491 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 964
+  },
+  "package": {
+    "locator": "npm:@open-mercato/documents",
+    "name": "@open-mercato/documents",
+    "version": "0.8.0",
+    "integrity": "sha512-1fw7CgYgokKGxqiOkDhFBICefKhzqoChX+DibxXmlheUu/mMg0es57bXGtocDYIvtPwtL4Smw7VFOWavq5ZehQ==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "documents",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.7.5",
+    "@hocuspocus/extension-redis": "^4.3.0",
+    "@hocuspocus/provider": "^4.3.0",
+    "@hocuspocus/server": "^4.4.0",
+    "@hocuspocus/transformer": "^4.3.0",
+    "@mikro-orm/core": "^7.1.14",
+    "@open-mercato/events": "0.8.0",
+    "@open-mercato/ui": "0.8.0",
+    "@tiptap/core": "^3",
+    "@tiptap/extension-bubble-menu": "^3",
+    "@tiptap/extension-collaboration": "^3.27.3",
+    "@tiptap/extension-collaboration-caret": "^3.27.3",
+    "@tiptap/extension-highlight": "^3",
+    "@tiptap/extension-image": "^3",
+    "@tiptap/extension-link": "^3",
+    "@tiptap/extension-list": "^3.27.3",
+    "@tiptap/extension-placeholder": "^3",
+    "@tiptap/extension-table": "^3",
+    "@tiptap/extension-table-cell": "^3",
+    "@tiptap/extension-table-header": "^3",
+    "@tiptap/extension-table-row": "^3",
+    "@tiptap/extension-task-item": "^3",
+    "@tiptap/extension-task-list": "^3",
+    "@tiptap/extension-text-align": "^3",
+    "@tiptap/extension-text-style": "^3",
+    "@tiptap/extensions": "^3",
+    "@tiptap/html": "^3.27.3",
+    "@tiptap/pm": "^3",
+    "@tiptap/react": "^3",
+    "@tiptap/starter-kit": "^3",
+    "@tiptap/suggestion": "^3",
+    "@tiptap/y-tiptap": "^3.0.6",
+    "happy-dom": "^20.10.6",
+    "jszip": "^3.10.1",
+    "prosemirror-model": "^1.25.9",
+    "prosemirror-state": "^1.4.4",
+    "prosemirror-view": "^1.41.9",
+    "puppeteer-core": "^25.3.0",
+    "y-prosemirror": "^1.3.7",
+    "y-protocols": "^1.0.7",
+    "yjs": "^13.6.31"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @open-mercato/documents\n\nCollaborative internal documents for Open Mercato: a tenant/organization-scoped backoffice module where staff co-author rich-text documents in real time (TipTap + Yjs), organized in folders, shared per-document (owner / editor / commenter / viewer), annotated with inline comments + @mentions, versioned, and exported to `.docx`/PDF.\n\nSpec: [Documents collaborative editor](../../.ai/specs/2026-07-08-documents-collaborative-editor.md).\n\n## Realtime collaboration sidecar (M2)\n\nReal-time editing is served by a **Hocuspocus WebSocket sidecar** — a separate long-lived Node process, **not** a Next.js route (App Router route handlers can't hold long-lived sockets). Entry: [`server/documents-collab-server.ts`](server/documents-collab-server.ts).\n\n### Run it\n\n```bash\n# Dev (from the repo root, alongside `yarn dev`):\nyarn workspace @open-mercato/documents collab        # tsx server/documents-collab-server.ts\n\n# Production package entry:\nyarn workspace @open-mercato/documents build\nyarn workspace @open-mercato/documents collab:prod\n\n# Scaffolded standalone app (run as a second workload from the same image):\nyarn documents:collab\n```\n\nThe sidecar bootstraps the app's module registry + ORM via `bootstrapFromAppRoot()` (the same path the `mercato queue worker` fleet uses), then opens a fresh request-scoped container per document load/store so every query is tenant/org-scoped.\n\nThe create-app Docker Compose templates include a `documents-collab` service on port 4101. In other schedulers, run `yarn documents:collab` as a separate service and set `NEXT_PUBLIC_DOCUMENTS_COLLAB_URL` before building the app to its browser-reachable `ws://` or `wss://` endpoint.\n\n### Environment\n\n| Var | Where | Default | Purpose |\n|---|---|---|---|\n| `DOCUMENTS_COLLAB_PORT` | sidecar | `4101` | WebSocket listen port |\n| `DOCUMENTS_COLLAB_REDIS_URL` | sidecar | unset (or `REDIS_URL`) | Redis used to synchronize Yjs updates and awareness across sidecar replicas. When neither is set the sidecar runs single-node mode and logs a startup warning; multi-instance deployments require Redis |\n| `DOCUMENTS_COLLAB_REDIS_PREFIX` | sidecar | development-only local namespace | Deployment-scoped Redis key prefix. Required whenever Redis is configured in production. All replicas in one deployment must share it; deployments using the same Redis database must use different values |\n| `NEXT_PUBLIC_DOCUMENTS_COLLAB_URL` | app (client) | — | `ws(s)://…` the browser connects to; when unset, users with edit capability get optimistic-locked single-user autosave while read-only users keep the last-saved view |\n| `DOCUMENTS_COLLAB_ALLOWED_ORIGINS` | sidecar | local/test: all | comma-separated exact browser origins allowed during the WebSocket handshake. In production the sidecar requires an allowed origin, sourced from this var **or** `APP_URL`/`NEXT_PUBLIC_APP_URL` |\n| `DOCUMENTS_COLLAB_JWT_SECRET_V2` | app + sidecar | unset (fails closed) | shared secret for v2 capability tokens; must contain at least 32 UTF-8 bytes. When unset the app mints no token and clients fall back to non-collaborative editing |\n| `DOCUMENTS_COLLAB_JWT_SECRET` | app + sidecar | — | optional v1 rollout secret; the sidecar accepts legacy v1 tokens **only** while this is set to a ≥32-byte value that differs from the v2 secret |\n| `DOCUMENTS_COLLAB_APP_ROOT` | sidecar | auto-resolved | app root for `bootstrapFromAppRoot` (defaults to the resolved mercato app) |\n| `DOCUMENTS_COLLAB_START` | sidecar | on | set `off` to import the module without auto-starting the server (used by tests) |\n| `DATABASE_URL` | sidecar | — | required for the cross-process event bridge (force-close on unshare/delete/restore) |\n| `DOCUMENTS_PDF_CHROMIUM_PATH` | app (M4) | auto-probe | Chromium/Chrome executable for PDF export (falls back to `PUPPETEER_EXECUTABLE_PATH` then common system paths) |\n\n### Security model (the sidecar is the chokepoint)\n\n1. The browser never holds the raw httpOnly session token. It calls `GET ",
+  "modules": [
+    {
+      "id": "documents",
+      "title": "Documents",
+      "description": "Collaborative internal documents",
+      "requires": [
+        {
+          "raw": "auth",
+          "resolvesTo": "core:auth"
+        },
+        {
+          "raw": "directory",
+          "resolvesTo": "core:directory"
+        },
+        {
+          "raw": "attachments",
+          "resolvesTo": "core:attachments"
+        }
+      ],
+      "ejectable": false,
+      "data": {
+        "entities": [
+          {
+            "id": "documents:document",
+            "table": "documents",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 19
+            }
+          },
+          {
+            "id": "documents:document_content",
+            "table": "document_contents",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 67
+            }
+          },
+          {
+            "id": "documents:document_folder",
+            "table": "document_folders",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 120
+            }
+          },
+          {
+            "id": "documents:document_share",
+            "table": "document_shares",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 164
+            }
+          },
+          {
+            "id": "documents:document_favorite",
+            "table": "document_favorites",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 211
+            }
+          },
+          {
+            "id": "documents:document_watcher",
+            "table": "document_watchers",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 246
+            }
+          },
+          {
+            "id": "documents:document_comment",
+            "table": "document_comments",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 275
+            }
+          },
+          {
+            "id": "documents:document_version",
+            "table": "document_versions",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 337
+            }
+          },
+          {
+            "id": "documents:document_attachment",
+            "table": "document_attachments",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 372
+            }
+          },
+          {
+            "id": "documents:document_template",
+            "table": "document_templates",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 410
+            }
+          },
+          {
+            "id": "documents:document_entity_link",
+            "table": "document_entity_links",
+            "src": {
+              "file": "src/modules/documents/data/entities.ts",
+              "line": 542
+            }
+          }
+        ],
+        "migrations": {
+          "count": 8,
+          "first": "2026-07-08",
+          "last": "2026-07-17"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/documents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/route.ts",
+              "line": 153
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/route.ts",
+              "line": 289
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/route.ts",
+              "line": 90
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/documents/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/route.ts",
+              "line": 138
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.delete"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/route.ts",
+              "line": 185
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/archive",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/archive/route.ts",
+              "line": 110
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/attachments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/attachments/route.ts",
+              "line": 77
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/attachments/[attachmentId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/attachments/[attachmentId]/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]/attachments/[attachmentId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/attachments/[attachmentId]/route.ts",
+              "line": 99
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/collab-token",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/collab-token/route.ts",
+              "line": 77
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/comments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/comments/route.ts",
+              "line": 242
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/comments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/comments/route.ts",
+              "line": 292
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/documents/[id]/comments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/comments/route.ts",
+              "line": 340
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/comments/access-check",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/comments/access-check/route.ts",
+              "line": 43
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/content",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/content/route.ts",
+              "line": 57
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/documents/[id]/content",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/content/route.ts",
+              "line": 77
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/duplicate",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.create",
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/duplicate/route.ts",
+              "line": 120
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/export",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/export/route.ts",
+              "line": 480
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/export",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/export/route.ts",
+              "line": 484
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/favorite",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/favorite/route.ts",
+              "line": 77
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]/favorite",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/favorite/route.ts",
+              "line": 81
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/links",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/links/route.ts",
+              "line": 149
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/links",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/links/route.ts",
+              "line": 212
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]/links/[linkId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/links/[linkId]/route.ts",
+              "line": 36
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/principals",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/principals/route.ts",
+              "line": 247
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/shares",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.share"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/shares/route.ts",
+              "line": 141
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/shares",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.share"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/shares/route.ts",
+              "line": 179
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/documents/[id]/shares",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.share"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/shares/route.ts",
+              "line": 236
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]/shares",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.share"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/shares/route.ts",
+              "line": 285
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/unarchive",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/unarchive/route.ts",
+              "line": 20
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/versions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/versions/route.ts",
+              "line": 86
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/versions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/versions/route.ts",
+              "line": 130
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/[id]/versions/[versionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/versions/[versionId]/route.ts",
+              "line": 35
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/versions/[versionId]/restore",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/versions/[versionId]/restore/route.ts",
+              "line": 53
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/[id]/watch",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/watch/route.ts",
+              "line": 77
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/[id]/watch",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/[id]/watch/route.ts",
+              "line": 81
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/folders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/folders/route.ts",
+              "line": 107
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/folders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/folders/route.ts",
+              "line": 128
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/documents/folders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/folders/route.ts",
+              "line": 168
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/folders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/folders/route.ts",
+              "line": 207
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/instantiate",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.create",
+              "documents.edit"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/instantiate/route.ts",
+              "line": 43
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/route.ts",
+              "line": 138
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/route.ts",
+              "line": 192
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/documents/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/route.ts",
+              "line": 234
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/documents/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/route.ts",
+              "line": 283
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/documents/templates/[templateId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/[templateId]/route.ts",
+              "line": 41
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/documents/templates/[templateId]/preview",
+            "requireAuth": true,
+            "requireFeatures": [
+              "documents.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/documents/api/templates/[templateId]/preview/route.ts",
+              "line": 33
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "documents.view",
+          "documents.create",
+          "documents.edit",
+          "documents.delete",
+          "documents.share",
+          "documents.templates.manage",
+          "documents.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "documents.document.created",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "id": "documents.document.updated",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "documents.document.deleted",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "documents.document.archived",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "documents.document.unarchived",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 8
+            }
+          },
+          {
+            "id": "documents.document.duplicated",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 9
+            }
+          },
+          {
+            "id": "documents.document.shared",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 10
+            }
+          },
+          {
+            "id": "documents.document.unshared",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "documents.comment.created",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "documents.comment.mentioned",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 13
+            }
+          },
+          {
+            "id": "documents.comment.resolved",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "documents.version.created",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 15
+            }
+          },
+          {
+            "id": "documents.version.restored",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "documents.link.created",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 17
+            }
+          },
+          {
+            "id": "documents.link.deleted",
+            "src": {
+              "file": "src/modules/documents/events.ts",
+              "line": 18
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/documents",
+            "requireFeatures": [
+              "documents.view"
+            ]
+          },
+          {
+            "path": "/backend/documents/[id]",
+            "requireFeatures": [
+              "documents.view"
+            ]
+          },
+          {
+            "path": "/backend/documents/templates",
+            "requireFeatures": [
+              "documents.templates.manage"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 7,
+        "extensionHosts": 26
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "NEXT_PUBLIC_DOCUMENTS_COLLAB_URL",
+            "src": {
+              "file": "src/modules/documents/api/[id]/collab-token/route.ts",
+              "line": 144
+            }
+          },
+          {
+            "name": "DOCUMENTS_PDF_CHROMIUM_PATH",
+            "src": {
+              "file": "src/modules/documents/api/[id]/export/route.ts",
+              "line": 349
+            }
+          },
+          {
+            "name": "PUPPETEER_EXECUTABLE_PATH",
+            "src": {
+              "file": "src/modules/documents/api/[id]/export/route.ts",
+              "line": 350
+            }
+          },
+          {
+            "name": "OM_DOCUMENTS_COLLAB_INTEGRATION",
+            "src": {
+              "file": "src/modules/documents/lib/collabEndpoint.ts",
+              "line": 38
+            }
+          },
+          {
+            "name": "DOCUMENTS_COLLAB_JWT_SECRET_V2",
+            "src": {
+              "file": "src/modules/documents/lib/collabToken.ts",
+              "line": 36
+            }
+          },
+          {
+            "name": "DOCUMENTS_COLLAB_JWT_SECRET",
+            "src": {
+              "file": "src/modules/documents/lib/collabToken.ts",
+              "line": 40
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "crud-form",
+          "target": "crud-form:catalog.product"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "customers:customer_entity"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "customers:customer_deal"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "catalog:catalog_product"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "catalog:catalog_offer"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "sales:sales_quote"
+        },
+        {
+          "kind": "entity-extension",
+          "target": "sales:sales_order"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:documents.comment.mentioned"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:documents.watch.changed"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:documents.watch.commented"
+        },
+        {
+          "kind": "widget",
+          "target": "customers.company.detail:details"
+        },
+        {
+          "kind": "widget",
+          "target": "customers.person.detail:details"
+        },
+        {
+          "kind": "widget",
+          "target": "detail:customers.company:footer"
+        },
+        {
+          "kind": "widget",
+          "target": "detail:customers.deal:footer"
+        },
+        {
+          "kind": "widget",
+          "target": "detail:customers.person:footer"
+        },
+        {
+          "kind": "widget",
+          "target": "sales.document.detail.order:details"
+        },
+        {
+          "kind": "widget",
+          "target": "sales.document.detail.quote:details"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/auth/featureMatch": [
+            "hasAllFeatures"
+          ],
+          "lib/auth/jwt": [
+            "signJwt",
+            "verifyJwt"
+          ],
+          "lib/auth/organizationScope": [
+            "ORGANIZATION_SCOPE_REQUIRED_ERROR_CODE",
+            "resolveActiveOrganizationId"
+          ],
+          "lib/auth/principal-service": [
+            "ApiKeyPrincipalService",
+            "AuthPrincipalService",
+            "OrganizationScopeService"
+          ],
+          "lib/auth/server": [
+            "AuthContext",
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/commands/command-interceptor": [
+            "CommandInterceptor",
+            "CommandInterceptorContext",
+            "CommandInterceptorUndoContext"
+          ],
+          "lib/commands/errors": [
+            "getCommandInterceptorHttpRejection"
+          ],
+          "lib/commands/flush": [
+            "withAtomicFlush"
+          ],
+          "lib/commands/helpers": [
+            "emitCrudSideEffects",
+            "emitCrudUndoSideEffects"
+          ],
+          "lib/commands/operationMetadata": [
+            "serializeOperationMetadata"
+          ],
+          "lib/commands/undo": [
+            "extractUndoPayload"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError",
+            "forbidden",
+            "isCrudHttpError"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "assertOptimisticLock",
+            "buildOptimisticLockConflictBody",
+            "enforceCommandOptimisticLockWithGuards",
+            "enforceRecordGoneIsConflict"
+          ],
+          "lib/crud/optimistic-lock-headers": [
+            "OPTIMISTIC_LOCK_CONFLICT_CODE"
+          ],
+          "lib/crud/route-mutation-guard": [
+            "RouteMutationGuardPassed",
+            "runRouteMutationGuards"
+          ],
+          "lib/data/engine": [
+            "DataEngine"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findAndCountWithDecryption",
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/html/htmlToPlainText": [
+            "htmlToPlainText"
+          ],
+          "lib/html/sanitizeRichText": [
+            "sanitizeRichTextHtml"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "FetchWithTimeoutInit",
+            "fetchWithTimeout",
+            "resolveTimeoutMs",
+            "withTimeout"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useLocale",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/openapi": [
+            "OpenApiHttpMethod",
+            "OpenApiRouteDoc"
+          ],
+          "lib/query/encrypted-sort": [
+            "sortRowsInMemory"
+          ],
+          "lib/query/types": [
+            "QueryEngine",
+            "QueryOptions",
+            "QueryResult",
+            "SortDir"
+          ],
+          "lib/search/config": [
+            "resolveSearchMinTokenLength"
+          ],
+          "lib/url": [
+            "getSecurityEmailBaseUrl"
+          ],
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec",
+            "EntityExtension"
+          ],
+          "modules/events": [
+            "EventPayload",
+            "createModuleEvents"
+          ],
+          "modules/notifications/types": [
+            "NotificationTypeDefinition"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/search": [
+            "SearchBuildContext",
+            "SearchIndexSource",
+            "SearchModuleConfig",
+            "SearchResultPresenter"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "modules/widgets/injection-loader": [
+            "getEnabledModuleIds",
+            "getInjectionRegistryVersion",
+            "subscribeToInjectionRegistryChanges"
+          ],
+          "security/enabledModulesRegistry": [
+            "getEnabledModuleIds"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody",
+            "PageHeader"
+          ],
+          "backend/RowActions": [
+            "RowActionItem",
+            "RowActions"
+          ],
+          "backend/SectionHeader": [
+            "SectionHeader"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/conflicts": [
+            "surfaceRecordConflict"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow",
+            "withScopedApiRequestHeaders"
+          ],
+          "backend/utils/optimisticLock": [
+            "buildOptimisticLockHeader"
+          ],
+          "hooks/useDialogKeyHandler": [
+            "useDialogKeyHandler"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/avatar": [
+            "Avatar"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox-field": [
+            "CheckboxField"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/empty-state": [
+            "EmptyState"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/link-button": [
+            "LinkButton"
+          ],
+          "primitives/popover": [
+            "Popover",
+            "PopoverClose",
+            "PopoverContent",
+            "PopoverTrigger"
+          ],
+          "primitives/progress": [
+            "Progress"
+          ],
+          "primitives/radio": [
+            "Radio",
+            "RadioGroup"
+          ],
+          "primitives/segmented-control": [
+            "SegmentedControl",
+            "SegmentedControlItem"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ],
+          "primitives/tag": [
+            "Tag"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ],
+          "primitives/tooltip": [
+            "SimpleTooltip"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "documents",
+        "tables": [
+          "documents",
+          "document_contents",
+          "document_folders",
+          "document_shares",
+          "document_favorites",
+          "document_watchers",
+          "document_comments",
+          "document_versions",
+          "document_attachments",
+          "document_templates",
+          "document_entity_links"
+        ],
+        "aclFeatures": [
+          "documents.view",
+          "documents.create",
+          "documents.edit",
+          "documents.delete",
+          "documents.share",
+          "documents.templates.manage",
+          "documents.manage"
+        ],
+        "eventIds": [
+          "documents.document.created",
+          "documents.document.updated",
+          "documents.document.deleted",
+          "documents.document.archived",
+          "documents.document.unarchived",
+          "documents.document.duplicated",
+          "documents.document.shared",
+          "documents.document.unshared",
+          "documents.comment.created",
+          "documents.comment.mentioned",
+          "documents.comment.resolved",
+          "documents.version.created",
+          "documents.version.restored",
+          "documents.link.created",
+          "documents.link.deleted"
+        ],
+        "backendRoutes": [
+          "/backend/documents",
+          "/backend/documents/[id]",
+          "/backend/documents/templates"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "3333003",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/documents/index.ts",
+            "line": 4
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "documents: [module-facts] searchConfig entityId is not statically resolvable: src/modules/documents/search.ts:92"
+  ]
+}

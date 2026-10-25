@@ -1,0 +1,617 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 120
+  },
+  "package": {
+    "locator": "npm:@open-mercato/pay-by-links",
+    "name": "@open-mercato/pay-by-links",
+    "version": "0.4.9-canary-fcabd45887",
+    "integrity": "sha512-AqK1X7LoZhQKjoyOhE+B07U8UIOJRPd123q9ZOiwlrpXqS14sxdAKH/1pksRGETAchQa8oCG1dTfPuRKUutQng==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "payment_link_pages",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": null,
+    "kind": "unknown",
+    "mismatch": false,
+    "sources": {
+      "packageJson": null,
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.4.9-canary-fcabd45887"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.4.9-canary-fcabd45887",
+    "@open-mercato/ui": "0.4.9-canary-fcabd45887"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "payment_link_pages",
+      "title": "Payment Link Pages",
+      "description": "Public pay-by-link page host with UMES-friendly customization, events, and enrichers.",
+      "requires": [
+        {
+          "raw": "payment_gateways",
+          "resolvesTo": "core:payment_gateways"
+        },
+        {
+          "raw": "customers",
+          "resolvesTo": "core:customers"
+        },
+        {
+          "raw": "entities",
+          "resolvesTo": "core:entities"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "payment_link_pages:payment_link_template",
+            "table": "payment_link_templates",
+            "src": {
+              "file": "src/modules/payment_link_pages/data/entities.ts",
+              "line": 11
+            }
+          }
+        ],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/payment_gateways/pay/[token]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/get/payment_gateways/pay/[token]/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_gateways/pay/[token]/unlock",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/post/payment_gateways/pay/[token]/unlock/route.ts",
+              "line": 19
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/payment_gateways/payment-links",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_gateways.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/get/payment_gateways/payment-links/route.ts",
+              "line": 41
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/payment_link_pages/pay/[token]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/pay/[token]/route.ts",
+              "line": 18
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_link_pages/pay/[token]/customer",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/pay/[token]/customer/route.ts",
+              "line": 44
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_link_pages/pay/[token]/session",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/pay/[token]/session/route.ts",
+              "line": 41
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_link_pages/pay/[token]/unlock",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/pay/[token]/unlock/route.ts",
+              "line": 19
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/payment_link_pages/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_link_pages.templates.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/templates/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_link_pages/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/templates/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/payment_link_pages/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/templates/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/payment_link_pages/templates",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/templates/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/payment_link_pages/templates/[id]/set-default",
+            "requireAuth": true,
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/payment_link_pages/api/templates/[id]/set-default/route.ts",
+              "line": 13
+            }
+          }
+        ],
+        "legacyRouteFiles": 3,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "payment_link_pages.templates.view",
+          "payment_link_pages.templates.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "payment_link_pages.page.viewed",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "id": "payment_link_pages.page.unlocked",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "payment_link_pages.customer.captured",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "payment_link_pages.template.created",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "payment_link_pages.template.updated",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 8
+            }
+          },
+          {
+            "id": "payment_link_pages.template.deleted",
+            "src": {
+              "file": "src/modules/payment_link_pages/events.ts",
+              "line": 9
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/payment-link-templates",
+            "requireFeatures": [
+              "payment_link_pages.templates.view"
+            ]
+          },
+          {
+            "path": "/backend/payment-link-templates/[id]",
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ]
+          },
+          {
+            "path": "/backend/payment-link-templates/new",
+            "requireFeatures": [
+              "payment_link_pages.templates.manage"
+            ]
+          },
+          {
+            "path": "/backend/payment-links",
+            "requireFeatures": [
+              "payment_gateways.view"
+            ]
+          }
+        ],
+        "frontendPages": [
+          {
+            "path": "/pay/[token]"
+          }
+        ],
+        "widgets": 0,
+        "extensionHosts": 7
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "crud-form",
+          "target": "crud-form:payment_gateways.transaction-create"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/customers/data/entities": [
+            "CustomerEntity",
+            "CustomerPersonProfile"
+          ],
+          "modules/entities/lib/field-definitions": [
+            "ensureCustomFieldDefinitions"
+          ],
+          "modules/payment_gateways/api/openapi": [
+            "paymentGatewaysTag"
+          ],
+          "modules/payment_gateways/components/CreatePaymentTransactionDialog": [
+            "CreatePaymentTransactionDialog"
+          ],
+          "modules/payment_gateways/data/entities": [
+            "GatewayPaymentLink",
+            "GatewayPaymentLinkTransaction"
+          ],
+          "modules/payment_gateways/data/validators": [
+            "listPaymentLinksQuerySchema",
+            "paymentLinkUnlockSchema"
+          ],
+          "modules/payment_gateways/events": [
+            "emitPaymentGatewayEvent"
+          ],
+          "modules/payment_gateways/lib/gateway-service": [
+            "PaymentGatewayService"
+          ],
+          "modules/payment_gateways/lib/payment-link-page-metadata": [
+            "buildPaymentLinkStoredMetadata",
+            "readPaymentLinkStoredMetadata"
+          ],
+          "modules/payment_gateways/lib/payment-links": [
+            "buildPaymentLinkUrl",
+            "createPaymentLinkAccessToken",
+            "isValidCustomPaymentLinkToken",
+            "verifyPaymentLinkPassword"
+          ],
+          "modules/payment_gateways/lib/public-payment-links": [
+            "loadPublicPaymentLinkState"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/commands/command-bus": [
+            "CommandBus"
+          ],
+          "lib/crud/enricher-runner": [
+            "applyResponseEnricherToRecord"
+          ],
+          "lib/crud/factory": [
+            "makeCrudRoute"
+          ],
+          "lib/crud/ids": [
+            "mergeIdFilter",
+            "parseIdsParam"
+          ],
+          "lib/crud/response-enricher": [
+            "ResponseEnricher"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/http/readJsonSafe": [
+            "readJsonSafe"
+          ],
+          "lib/i18n/context": [
+            "useLocale",
+            "useT"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "modules/dsl": [
+            "cf"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/payment_gateways/types": [
+            "buildPaymentGatewayPaymentLinkWidgetSpotId"
+          ],
+          "modules/payment_link_pages/runtime": [
+            "registerPayByLinksRuntime",
+            "registerPayByLinksTemplateResolver"
+          ],
+          "modules/payment_link_pages/types": [
+            "PAYMENT_LINK_PAGE_COMPONENT_HANDLE",
+            "PAYMENT_LINK_PAGE_CUSTOM_FIELD_ENTITY_ID",
+            "PAYMENT_LINK_PAGE_ENRICHER_ENTITY",
+            "buildPaymentLinkPageInjectionSpotId",
+            "buildPaymentLinkPageSectionHandle"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudField",
+            "CrudForm",
+            "CrudFormGroup"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/JsonBuilder": [
+            "JsonBuilder"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage"
+          ],
+          "backend/injection/InjectionSpot": [
+            "InjectionSpot"
+          ],
+          "backend/injection/useRegisteredComponent": [
+            "useRegisteredComponent"
+          ],
+          "backend/inputs/SwitchableMarkdownInput": [
+            "SwitchableMarkdownInput"
+          ],
+          "backend/markdown/MarkdownContent": [
+            "MarkdownContent"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow",
+            "readApiResultOrThrow"
+          ],
+          "backend/utils/crud": [
+            "createCrud",
+            "updateCrud"
+          ],
+          "frontend/LanguageSwitcher": [
+            "LanguageSwitcher"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "payment_link_pages",
+        "tables": [
+          "payment_link_templates"
+        ],
+        "aclFeatures": [
+          "payment_link_pages.templates.view",
+          "payment_link_pages.templates.manage"
+        ],
+        "eventIds": [
+          "payment_link_pages.page.viewed",
+          "payment_link_pages.page.unlocked",
+          "payment_link_pages.customer.captured",
+          "payment_link_pages.template.created",
+          "payment_link_pages.template.updated",
+          "payment_link_pages.template.deleted"
+        ],
+        "backendRoutes": [
+          "/backend/payment-link-templates",
+          "/backend/payment-link-templates/[id]",
+          "/backend/payment-link-templates/new",
+          "/backend/payment-links"
+        ]
+      },
+      "publicRoutes": 6,
+      "glyph": "1322001",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.4.9-canary-fcabd45887). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.4.9-canary-fcabd45887 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "6 of 12 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/payment_link_pages/api/get/payment_gateways/pay/[token]/route.ts",
+            "line": 15
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

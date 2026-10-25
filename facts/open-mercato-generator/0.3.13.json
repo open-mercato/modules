@@ -1,0 +1,47 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1
+  },
+  "package": {
+    "locator": "npm:open-mercato-generator",
+    "name": "open-mercato-generator",
+    "version": "0.3.13",
+    "integrity": "sha512-tgQJFqBxKYxt3anxmPkbP3udPRaeKixJqp6cRkwYZ80KOI3XQxT53szXZCb3WD5xhFlNS/gifknEMOYu/ogC3A==",
+    "source": "npm-tarball",
+    "gitRef": "3fbc5bee39f7bef3afe73e79717a322e0bf36dcb"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/ in the tarball.",
+    "modules": []
+  },
+  "kind": "tool",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# open-mercato-generator\n\nNode-based tooling for generating Rust types for Open Mercato from OpenAPI.\n\n## Install\n\n```bash\ncd generator\nyarn install\n```\n\n## Generate\n\n```bash\n# Full client and models (recommended)\nyarn generate:rust-types:full /path/to/openapi.json\n\n# Simplified structures\nyarn generate:rust-types:openapi /path/to/openapi.json\n\n# From TypeScript openapi.types.ts\nyarn generate:rust-types:typescript /path/to/openapi.types.ts\n```\n\nGenerated output is written into `../rust-client/src/generated` and\n`../rust-client/src/generated-full`.\n\n## Version syncing\n\nTo keep versions aligned with the Rust crate:\n\n```bash\nyarn sync:versions 0.3.13\n```\n\n## Publish\n\n```bash\nnpm publish\n```\n",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "No src/ in the tarball: anatomy is not available."
+  ]
+}

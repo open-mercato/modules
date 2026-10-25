@@ -1,0 +1,79 @@
+{
+  "locator": "npm:@northbound-run/sync-google-sheets",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@northbound-run/sync-google-sheets",
+    "distTags": {
+      "latest": "0.2.0"
+    },
+    "latestStable": "0.2.0",
+    "previousStable": "0.1.1",
+    "preview": null,
+    "publishedAt": {
+      "0.2.0": "2026-07-23T23:23:28Z",
+      "0.1.1": "2026-07-22T18:41:10Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/Northbound-Run/open-mercato-google-sheets.git",
+    "gitHead": "0690676ecfd9342fced8f4d1fc88d9b34981a043",
+    "keywords": [
+      "open-mercato",
+      "google-sheets",
+      "data-sync",
+      "oauth",
+      "integration",
+      "bidirectional-sync",
+      "etl"
+    ],
+    "maintainers": [
+      "northboundrun"
+    ],
+    "peerDependencies": {
+      "@mikro-orm/postgresql": "^7.0.14",
+      "@open-mercato/core": "^0.6.5",
+      "@open-mercato/shared": "^0.6.5",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "dependencies": {
+      "awilix": "^12.1.1"
+    },
+    "installScripts": [],
+    "integrity": "sha512-MCBv6n8PMpEGtJGATra5v+u+b5pWKRgoxVzO1BQonLgdg3iEcmxx4xwHF/1Y/qXHbnxO/JRG9eC+gKKds6Ym3A==",
+    "tarball": "https://registry.npmjs.org/@northbound-run/sync-google-sheets/-/sync-google-sheets-0.2.0.tgz"
+  },
+  "github": {
+    "repo": "Northbound-Run/open-mercato-google-sheets",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-07-23T23:22:57Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.2.0",
+        "sha": "0690676ecfd9342fced8f4d1fc88d9b34981a043"
+      },
+      {
+        "name": "v0.1.1",
+        "sha": "c41d0066fd30a01f6273f35a8b7dd619baeda628"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "Northbound-Run/open-mercato-google-sheets",
+    "commit": "0690676ecfd9342fced8f4d1fc88d9b34981a043",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": 75,
+  "errors": []
+}

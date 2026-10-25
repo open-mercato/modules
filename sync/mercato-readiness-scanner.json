@@ -1,0 +1,57 @@
+{
+  "locator": "npm:mercato-readiness-scanner",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "mercato-readiness-scanner",
+    "distTags": {
+      "latest": "0.2.2"
+    },
+    "latestStable": "0.2.2",
+    "previousStable": "0.2.1",
+    "preview": null,
+    "publishedAt": {
+      "0.2.2": "2026-10-22T15:21:00Z",
+      "0.2.1": "2026-10-22T15:17:30Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": "git+https://github.com/open-mercato/mercato-readiness-scanner.git",
+    "gitHead": "3fc6a9954069117ae5ab404a23f5f8af009966f3",
+    "keywords": [],
+    "maintainers": [
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {
+      "yaml": "^2.9.1",
+      "semver": "^7.8.5"
+    },
+    "installScripts": [],
+    "integrity": "sha512-ee0dPquU8MPzwoFPf1RGK419ddeKwLT9ZEH6uAKZ/8euDOpzGxGmfCAit68fhfQPcVblgqPB8Df9mYbYMZ0cjA==",
+    "tarball": "https://registry.npmjs.org/mercato-readiness-scanner/-/mercato-readiness-scanner-0.2.2.tgz"
+  },
+  "github": {
+    "repo": "open-mercato/mercato-readiness-scanner",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-22T15:18:51Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": null,
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": []
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
+  "downloads30d": null,
+  "errors": []
+}

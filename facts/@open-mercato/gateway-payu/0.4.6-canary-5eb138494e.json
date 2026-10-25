@@ -1,0 +1,178 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 95
+  },
+  "package": {
+    "locator": "npm:@open-mercato/gateway-payu",
+    "name": "@open-mercato/gateway-payu",
+    "version": "0.4.6-canary-5eb138494e",
+    "integrity": "sha512-n07twf2mbTYmUHQIlo8QsThhwVQh0ZuaQ4qTaq7MdsFQNW3OjThd0sAsNAh83BNa12yi91+jj2RpPSIsSMZ7rA==",
+    "source": "npm-tarball",
+    "gitRef": "5eb138494e7a71e5708a5d8257daa462478e526c"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "gateway_payu",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": true,
+    "sources": {
+      "packageJson": null,
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {},
+  "dependencies": {
+    "@open-mercato/shared": "0.4.6-canary-5eb138494e"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "gateway_payu",
+      "title": "PayU Gateway",
+      "description": "PayU payment gateway provider module.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "merchantPosId",
+            "type": "text",
+            "required": true
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:gateway_payu"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "payment:payu"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/shared": {
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "registerIntegration"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "gateway_payu",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000002",
+      "lint": [
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: none, licenseFile: none, moduleInfo: none, integrationTs: MIT).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.4.6-canary-5eb138494e.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/gateway_payu/integration.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

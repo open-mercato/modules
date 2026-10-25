@@ -1,0 +1,101 @@
+{
+  "locator": "npm:@freighttech/shipment-tracking",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@freighttech/shipment-tracking",
+    "distTags": {
+      "latest": "0.7.2"
+    },
+    "latestStable": "0.7.2",
+    "previousStable": "0.7.1",
+    "preview": null,
+    "publishedAt": {
+      "0.7.2": "2026-09-24T19:26:05Z",
+      "0.7.1": "2026-09-16T12:39:24Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": null,
+    "gitHead": "912da3ad35c09ec0a18461f4ed4ca2eb801a995f",
+    "keywords": [],
+    "maintainers": [
+      "fto-admin"
+    ],
+    "peerDependencies": {
+      "zod": "^4.0.0",
+      "nats": "^2.28.2",
+      "next": "^16.2.3",
+      "react": "^19.0.0",
+      "awilix": "^12.0.5",
+      "react-dom": "^19.0.0",
+      "lucide-react": "^0.556.0",
+      "@freighttech/ui": "^0.13.0 || ^0.14.0",
+      "@mikro-orm/core": "^7.0.17",
+      "@open-mercato/core": "0.6.2",
+      "@opentelemetry/api": "^1.9.0",
+      "@open-mercato/cache": "0.6.2",
+      "@open-mercato/queue": "0.6.2",
+      "@open-mercato/events": "0.6.2",
+      "@open-mercato/shared": "0.6.2",
+      "@mikro-orm/decorators": "^7.0.17",
+      "@mikro-orm/migrations": "^7.0.17",
+      "@mikro-orm/postgresql": "^7.0.17",
+      "@tanstack/react-query": "^5.90.12",
+      "@react-google-maps/api": "^2.20.6",
+      "@open-mercato/scheduler": "0.6.2"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-ZI4UVhg4bdBp2DSUhgdvv5D51m7OGPA3qtQKWStmFxbxWJAKpGgv/UzSWc8RN5ZnCQst31TMWzsAgmZjCfmysw==",
+    "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.7.2.tgz"
+  },
+  "github": {
+    "repo": "FreightTech/open-mercato-modules",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-23T08:36:07Z",
+    "defaultBranch": "main",
+    "stars": 2,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "terminal-tracking-v0.7.1",
+        "sha": "7489abb5da337ff6b33cc966080c65372b715083"
+      },
+      {
+        "name": "ui-v0.13.18",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      },
+      {
+        "name": "terminal-tracking-v0.7.0",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      },
+      {
+        "name": "shipment-tracking-v0.7.1",
+        "sha": "27a9c1b826ffc42c5c33873dd128fa0ee8930211"
+      },
+      {
+        "name": "shipment-tracking-v0.7.0",
+        "sha": "78eac19f57dd23379a4eb6646af66bbd067805c2"
+      },
+      {
+        "name": "shipment-tracking-v0.6.0",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
+  "downloads30d": 355,
+  "errors": []
+}

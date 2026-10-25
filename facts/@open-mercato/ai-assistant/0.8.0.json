@@ -1,0 +1,1566 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1074
+  },
+  "package": {
+    "locator": "npm:@open-mercato/ai-assistant",
+    "name": "@open-mercato/ai-assistant",
+    "version": "0.8.0",
+    "integrity": "sha512-OrMrJNLAJldQKrAy6jF7CCzLR22qKJAO8uvQ9nz8R9owD5oXZawB4vH6xXzrZfoSur8KA2P1NmJ39dOaJhNpzA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "ai_assistant",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.0",
+    "@open-mercato/ui": "0.8.0"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.44",
+    "@ai-sdk/azure": "^4.0.0",
+    "@ai-sdk/google": "^4.0.56",
+    "@ai-sdk/openai": "^4.0.50",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "ai": "^7.0.83",
+    "cmdk": "^1.0.0",
+    "framer-motion": "^13.1.1",
+    "isolated-vm": "^7.0.1",
+    "react-json-view-lite": "^2.5.0",
+    "react-markdown": "^10.1.0",
+    "zod-to-json-schema": "^3.25.2"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": "# AI Assistant Module\n\nAI-powered chat and tool execution for Open Mercato, using MCP (Model Context Protocol) for tool discovery and execution.\n\n## What This Module Does\n\n- **AI Chat Interface**: Dockable chat panel (`Cmd+J`) for natural language interaction\n- **MCP Server**: Exposes platform tools to AI agents via Model Context Protocol\n- **API Discovery**: Meta-tools (`api_discover`, `api_execute`, `api_schema`) for dynamic API access\n- **OpenCode Integration**: Go-based AI backend for processing requests and executing tools\n- **Typed Agent Framework** *(new — 2026-04-18)*: `AiAgentDefinition` + `defineAiTool()`, generated `ai-agents.generated.ts` discovery, dispatcher route `POST /api/ai_assistant/ai/chat?agent=<module>.<agent>`, AI SDK helpers (`createAiAgentTransport`, `runAiAgentText`, `runAiAgentObject`), attachment bridge, and tool packs for customers + catalog — see the spec at [`.ai/specs/implemented/2026-04-11-unified-ai-tooling-and-subagents.md`](../../.ai/specs/implemented/2026-04-11-unified-ai-tooling-and-subagents.md)\n- **Mutation Approval Gate (D16)** *(new — 2026-04-18)*: additive `ai_pending_actions` table, `prepareMutation` runtime wrapper, three pending-action routes (`GET` / `confirm` / `cancel`), four new UI parts (`mutation-preview-card`, `field-diff-card`, `confirmation-card`, `mutation-result-card`), typed `ai.action.{confirmed,cancelled,expired}` events, and a cleanup worker for expired approvals — see the **Upgrading / Operator rollout notes** section in [`AGENTS.md`](./AGENTS.md)\n- **Playground + Settings**: `/backend/config/ai-assistant/playground` (agent picker + debug + object-mode) and `/backend/config/ai-assistant/agents` (versioned prompt overrides + feature-gated `mutationPolicy`)\n\nBoth stacks coexist: OpenCode Code Mode keeps powering the Command Palette and `/api/chat` unchanged; the new typed framework adds focused, mutation-capable agents alongside it.\n\n## Quick Start\n\n### Prerequisites\n\n- Node.js 24+\n- Docker (for OpenCode)\n- An LLM API key (Anthropic, OpenAI, or Google)\n- An Open Mercato API key (created via Backend > Settings > API Keys)\n\n### Step 1: Configure LLM Provider\n\nAdd your LLM provider configuration to `.env`. You need both the provider selection and its API key:\n\n```bash\n# Choose ONE provider and set BOTH values\n\n# Option A: Anthropic\nOPENCODE_PROVIDER=anthropic\nANTHROPIC_API_KEY=sk-ant-api03-...\n\n# Option B: OpenAI\n# OPENCODE_PROVIDER=openai\n# OPENAI_API_KEY=sk-...\n\n# Option C: Google\n# OPENCODE_PROVIDER=google\n# GOOGLE_GENERATIVE_AI_API_KEY=AIza...\n```\n\n### Step 2: Configure MCP Server\n\nThe MCP server authenticates requests using an Open Mercato API key:\n\n1. Log into Open Mercato backend\n2. Go to **Settings > API Keys**\n3. Create a new API key with appropriate permissions\n4. Copy the key (starts with `omk_`) and add it to `.env`:\n\n```bash\n# .env\nMCP_SERVER_API_KEY=omk_your_api_key_here\n```\n\n### Step 3: Create .mcp.json for Claude Code Integration (Optional)\n\nIf you want to use Claude Code with your MCP server, create `.mcp.json` in the project root:\n\n```json\n{\n  \"mcpServers\": {\n    \"open-mercato\": {\n      \"type\": \"http\",\n      \"url\": \"http://localhost:3001/mcp\",\n      \"headers\": {\n        \"x-api-key\": \"omk_your_api_key_here\"\n      }\n    }\n  }\n}\n```\n\nThe `x-api-key` should be an Open Mercato API key created in the backend admin (Settings > API Keys).\n\n### Step 4: Start Services\n\nThe default hybrid dev mode needs just two commands — `yarn infra:up` starts OpenCode plus the infrastructure containers, and `yarn dev` runs the app **and** the MCP server on the host (provisioning the MCP API key into `.mercato/mcp-shared/mcp-api-key` automatically):\n\n```bash\nyarn infra:up\nyarn dev\n```\n\nTo run the pieces individually instead:\n\n```bash\n# Terminal 1: Start MCP development server\nyarn mcp:dev\n\n# Terminal 2: Start OpenCode container\ndocker compose --project-directory . -f starters/docker/compose.infra.yml up -d opencode\n\n# Terminal 3: Start Next.js app\nyarn dev\n```\n\n### Step 5: Verif",
+  "modules": [
+    {
+      "id": "ai_assistant",
+      "title": "AI Assistant",
+      "description": "MCP server for AI assistant integration with multi-tenant support.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "ai_assistant:ai_agent_prompt_override",
+            "table": "ai_agent_prompt_overrides",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 50
+            }
+          },
+          {
+            "id": "ai_assistant:ai_pending_action",
+            "table": "ai_pending_actions",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 122
+            }
+          },
+          {
+            "id": "ai_assistant:ai_agent_runtime_override",
+            "table": "ai_agent_runtime_overrides",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 254
+            }
+          },
+          {
+            "id": "ai_assistant:ai_token_usage_event",
+            "table": "ai_token_usage_events",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 406
+            }
+          },
+          {
+            "id": "ai_assistant:ai_token_usage_daily",
+            "table": "ai_token_usage_daily",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 504
+            }
+          },
+          {
+            "id": "ai_assistant:ai_tenant_model_allowlist",
+            "table": "ai_tenant_model_allowlists",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 600
+            }
+          },
+          {
+            "id": "ai_assistant:ai_agent_mutation_policy_override",
+            "table": "ai_agent_mutation_policy_overrides",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 653
+            }
+          },
+          {
+            "id": "ai_assistant:ai_chat_conversation",
+            "table": "ai_chat_conversations",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 722
+            }
+          },
+          {
+            "id": "ai_assistant:ai_chat_conversation_participant",
+            "table": "ai_chat_conversation_participants",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 812
+            }
+          },
+          {
+            "id": "ai_assistant:ai_chat_message",
+            "table": "ai_chat_messages",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 885
+            }
+          },
+          {
+            "id": "ai_assistant:ai_moderation_flag",
+            "table": "ai_moderation_flags",
+            "src": {
+              "file": "src/modules/ai_assistant/data/entities.ts",
+              "line": 962
+            }
+          }
+        ],
+        "migrations": {
+          "count": 11,
+          "first": "2026-04-19",
+          "last": "2026-06-10"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/actions/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/actions/[id]/route.ts",
+              "line": 85
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/actions/[id]/cancel",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/actions/[id]/cancel/route.ts",
+              "line": 113
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/actions/[id]/confirm",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/actions/[id]/confirm/route.ts",
+              "line": 108
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/agents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/route.ts",
+              "line": 46
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/loop-override",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/loop-override/route.ts",
+              "line": 193
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/loop-override",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/loop-override/route.ts",
+              "line": 248
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/loop-override",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/loop-override/route.ts",
+              "line": 328
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/models",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/models/route.ts",
+              "line": 89
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/mutation-policy",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/mutation-policy/route.ts",
+              "line": 197
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/mutation-policy",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/mutation-policy/route.ts",
+              "line": 247
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/mutation-policy",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/mutation-policy/route.ts",
+              "line": 331
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/prompt-override",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/prompt-override/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/agents/[agentId]/prompt-override",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/agents/[agentId]/prompt-override/route.ts",
+              "line": 229
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/chat",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/chat/route.ts",
+              "line": 411
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/conversations",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/route.ts",
+              "line": 132
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/conversations",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/route.ts",
+              "line": 186
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/route.ts",
+              "line": 172
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/route.ts",
+              "line": 240
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/route.ts",
+              "line": 295
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]/participants",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/participants/route.ts",
+              "line": 153
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]/participants",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/participants/route.ts",
+              "line": 199
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/ai/conversations/[conversationId]/participants/[userId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/[conversationId]/participants/[userId]/route.ts",
+              "line": 72
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/conversations/import",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/conversations/import/route.ts",
+              "line": 60
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/ai/run-object",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/ai/run-object/route.ts",
+              "line": 123
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/chat",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/chat/route.ts",
+              "line": 155
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/health",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/health/route.ts",
+              "line": 26
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/mcp-key",
+            "requireAuth": true,
+            "requireFeatures": [
+              "api_keys.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/mcp-key/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/moderation-flags",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/moderation-flags/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/route",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/route/route.ts",
+              "line": 79
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/session-key",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/session-key/route.ts",
+              "line": 28
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/settings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/route.ts",
+              "line": 136
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/ai_assistant/settings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/route.ts",
+              "line": 516
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/settings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/route.ts",
+              "line": 779
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/ai_assistant/settings/allowlist",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/allowlist/route.ts",
+              "line": 74
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/ai_assistant/settings/allowlist",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/allowlist/route.ts",
+              "line": 190
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/tools",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/tools/route.ts",
+              "line": 26
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/ai_assistant/tools/execute",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/tools/execute/route.ts",
+              "line": 25
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/usage/daily",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/usage/daily/route.ts",
+              "line": 62
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/usage/sessions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/usage/sessions/route.ts",
+              "line": 74
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/ai_assistant/usage/sessions/[sessionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/ai_assistant/api/usage/sessions/[sessionId]/route.ts",
+              "line": 66
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "ai_assistant.view",
+          "ai_assistant.settings.manage",
+          "ai_assistant.conversations.manage",
+          "ai_assistant.conversations.share",
+          "ai_assistant.mcp.serve",
+          "ai_assistant.tools.list",
+          "ai_assistant.mcp_servers.view",
+          "ai_assistant.mcp_servers.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "ai.action.confirmed",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "ai.action.cancelled",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "ai.action.expired",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 18
+            }
+          },
+          {
+            "id": "ai.token_usage.recorded",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 43
+            }
+          },
+          {
+            "id": "ai_assistant.conversation.shared",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 51
+            }
+          },
+          {
+            "id": "ai_assistant.conversation.unshared",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 58
+            }
+          },
+          {
+            "id": "ai_assistant.moderation_flag.created",
+            "src": {
+              "file": "src/modules/ai_assistant/events.ts",
+              "line": 65
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "ai_assistant.conversation.shared",
+            "src": {
+              "file": "src/modules/ai_assistant/subscribers/conversation-shared-notify.ts",
+              "line": 13
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/config/ai-assistant",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/agents",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/allowlist",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/legacy",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/moderation-flags",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/playground",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/settings",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/ai-assistant/usage",
+            "requireFeatures": [
+              "ai_assistant.settings.manage"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 18
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "ai-pending-action-cleanup"
+          },
+          {
+            "queue": "ai-token-usage-prune"
+          }
+        ],
+        "cli": [
+          "mcp:serve",
+          "mcp:serve-http",
+          "mcp:dev",
+          "mcp:ensure-api-key",
+          "mcp:list-tools",
+          "entity-graph",
+          "run-pending-action-cleanup",
+          "run-token-usage-prune",
+          "test-tools"
+        ]
+      },
+      "ai": {
+        "tools": [
+          "attachments.list_record_attachments",
+          "attachments.read_attachment",
+          "attachments.transfer_record_attachments",
+          "meta.describe_agent",
+          "meta.list_agents",
+          "meta.update_task_plan",
+          "search.get_record_context",
+          "search.hybrid_search"
+        ],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "MCP_SERVER_API_KEY_FILE",
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/route.ts",
+              "line": 185
+            }
+          },
+          {
+            "name": "MCP_SERVER_API_KEY",
+            "src": {
+              "file": "src/modules/ai_assistant/api/settings/route.ts",
+              "line": 186
+            }
+          },
+          {
+            "name": "OM_LOG_DESTINATION",
+            "src": {
+              "file": "src/modules/ai_assistant/cli.ts",
+              "line": 52
+            }
+          },
+          {
+            "name": "OPEN_MERCATO_API_KEY",
+            "src": {
+              "file": "src/modules/ai_assistant/cli.ts",
+              "line": 58
+            }
+          },
+          {
+            "name": "MCP_API_KEY_FILE",
+            "src": {
+              "file": "src/modules/ai_assistant/cli.ts",
+              "line": 172
+            }
+          },
+          {
+            "name": "OM_AI_MODERATION_MODEL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/agent-runtime.ts",
+              "line": 1737
+            }
+          },
+          {
+            "name": "AI_OPENAPI_FETCH_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/api-endpoint-index.ts",
+              "line": 22
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_APP_URL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/api-endpoint-index.ts",
+              "line": 129
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_API_BASE_URL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/api-endpoint-index.ts",
+              "line": 206
+            }
+          },
+          {
+            "name": "APP_URL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/api-endpoint-index.ts",
+              "line": 208
+            }
+          },
+          {
+            "name": "AI_API_REQUEST_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/codemode-tools.ts",
+              "line": 41
+            }
+          },
+          {
+            "name": "JEST_WORKER_ID",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/generated-registry-loader.ts",
+              "line": 175
+            }
+          },
+          {
+            "name": "MCP_DEV_PORT",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/mcp-dev-server.ts",
+              "line": 173
+            }
+          },
+          {
+            "name": "MCP_DEBUG",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/mcp-dev-server.ts",
+              "line": 174
+            }
+          },
+          {
+            "name": "OM_INIT_SUPERADMIN_EMAIL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/mcp-ensure-api-key.ts",
+              "line": 77
+            }
+          },
+          {
+            "name": "OPENCODE_URL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/opencode-client.ts",
+              "line": 518
+            }
+          },
+          {
+            "name": "OPENCODE_PASSWORD",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/opencode-client.ts",
+              "line": 519
+            }
+          },
+          {
+            "name": "MCP_HEALTH_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/opencode-handlers.ts",
+              "line": 195
+            }
+          },
+          {
+            "name": "MCP_URL",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/opencode-handlers.ts",
+              "line": 219
+            }
+          },
+          {
+            "name": "MEILISEARCH_HOST",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/opencode-handlers.ts",
+              "line": 220
+            }
+          },
+          {
+            "name": "OM_AI_INCLUDE_HANDLER_STACK",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/pending-action-executor.ts",
+              "line": 238
+            }
+          },
+          {
+            "name": "OM_TEST_MODE",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/rate-limit.ts",
+              "line": 58
+            }
+          },
+          {
+            "name": "OM_TEST_AI_CHAT_RATE_LIMIT_MODE",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/rate-limit.ts",
+              "line": 58
+            }
+          },
+          {
+            "name": "SANDBOX_MEMORY_MB",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/sandbox.ts",
+              "line": 29
+            }
+          },
+          {
+            "name": "OM_TOOL_TEST_DEBUG",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/tool-test-runner.ts",
+              "line": 134
+            }
+          },
+          {
+            "name": "AI_TOKEN_USAGE_EVENTS_RETENTION_DAYS",
+            "src": {
+              "file": "src/modules/ai_assistant/workers/ai-token-usage-prune.ts",
+              "line": 39
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api.deepinfra.com",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 67
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.fireworks.ai",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 170
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.groq.com",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 117
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.openai.com",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/moderation.ts",
+              "line": 20
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.together.xyz",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 146
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "openrouter.ai",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 241
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "router.requesty.ai",
+            "src": {
+              "file": "src/modules/ai_assistant/lib/openai-compatible-presets.ts",
+              "line": 265
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "ai:attachments.list_record_attachments"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:attachments.read_attachment"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:attachments.transfer_record_attachments"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:meta.describe_agent"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:meta.list_agents"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:meta.update_task_plan"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search.get_record_context"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search.hybrid_search"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:ai_assistant.conversation_shared"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/api_keys/data/entities": [
+            "ApiKey"
+          ],
+          "modules/api_keys/services/apiKeyService": [
+            "(dynamic)",
+            "bindOpencodeSessionToApiKey",
+            "createApiKey",
+            "createSessionApiKey",
+            "deleteApiKey",
+            "findApiKeyByOpencodeSessionId",
+            "findApiKeyBySecret",
+            "findSessionApiKeyWithSecret",
+            "generateSessionToken"
+          ],
+          "modules/attachments/data/entities": [
+            "(dynamic)",
+            "Attachment"
+          ],
+          "modules/attachments/lib/metadata": [
+            "(dynamic)"
+          ],
+          "modules/attachments/lib/storage": [
+            "(dynamic)"
+          ],
+          "modules/auth/data/entities": [
+            "User",
+            "UserRole"
+          ],
+          "modules/auth/lib/emailHash": [
+            "emailHashLookupValues"
+          ],
+          "modules/auth/services/rbacService": [
+            "RbacService"
+          ],
+          "modules/configs/lib/module-config-service": [
+            "ModuleConfigService"
+          ],
+          "modules/directory/data/entities": [
+            "Organization"
+          ],
+          "modules/notifications/lib/notificationBuilder": [
+            "buildNotificationFromType"
+          ],
+          "modules/notifications/lib/notificationService": [
+            "resolveNotificationService"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta"
+          ]
+        },
+        "@open-mercato/search": {
+          "service": [
+            "SearchService"
+          ],
+          "types": [
+            "IndexableRecord",
+            "SearchEntityConfig",
+            "SearchResultPresenter",
+            "SearchStrategyId"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/ai/llm-provider": [
+            "EnvLookup",
+            "LlmCreateModelOptions",
+            "LlmModelInfo",
+            "LlmProvider"
+          ],
+          "lib/ai/llm-provider-registry": [
+            "LlmProviderRegistry",
+            "ResolveFirstConfiguredOptions",
+            "llmProviderRegistry"
+          ],
+          "lib/ai/model-id": [
+            "joinProviderModel"
+          ],
+          "lib/ai/opencode-provider": [
+            "OPEN_CODE_PROVIDERS",
+            "OPEN_CODE_PROVIDER_IDS",
+            "getOpenCodeProviderConfiguredEnvKey",
+            "isOpenCodeProviderConfigured",
+            "resolveOpenCodeModel"
+          ],
+          "lib/ai/opencode-tool-parts": [
+            "normalizeOpenCodeToolPart"
+          ],
+          "lib/ai/safety-identifier": [
+            "computeEndUserIdentifier"
+          ],
+          "lib/auth/server": [
+            "AuthContext",
+            "TrustedAuthContextEnvelope",
+            "attachTrustedAuthContext",
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/bootstrap/appResolver": [
+            "(dynamic)"
+          ],
+          "lib/bootstrap/dynamicLoader": [
+            "(dynamic)"
+          ],
+          "lib/db/entityMetadata": [
+            "listEntityMetadata"
+          ],
+          "lib/db/mikro": [
+            "(dynamic)"
+          ],
+          "lib/di/container": [
+            "(dynamic)",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "fetchWithTimeout",
+            "resolveTimeoutMs"
+          ],
+          "lib/http/readJsonSafe": [
+            "readJsonSafe"
+          ],
+          "lib/i18n/config": [
+            "defaultLocale"
+          ],
+          "lib/i18n/context": [
+            "useLocale",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "loadDictionary",
+            "resolveTranslations"
+          ],
+          "lib/i18n/translate": [
+            "createTranslator"
+          ],
+          "lib/logger": [
+            "createLogger",
+            "resetServerLoggerCache"
+          ],
+          "lib/modules/registry": [
+            "(dynamic)"
+          ],
+          "lib/openapi": [
+            "OpenApiDocument",
+            "OpenApiRouteDoc",
+            "buildOpenApiDocument"
+          ],
+          "lib/ratelimit/config": [
+            "readEndpointRateLimitConfig"
+          ],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_ERROR_FALLBACK",
+            "RATE_LIMIT_ERROR_KEY",
+            "checkRateLimit"
+          ],
+          "lib/ratelimit/service": [
+            "RateLimiterService"
+          ],
+          "lib/search/entityAccess": [
+            "SearchEntityAccessSubject",
+            "SearchEntityConfigLookup",
+            "SearchEntityDenyReason",
+            "canReadSearchEntity",
+            "filterSearchResultsByEntityAccess",
+            "resolveReadableEntityTypes"
+          ],
+          "lib/time": [
+            "formatRelativeTime"
+          ],
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/notifications/types": [
+            "NotificationRendererProps",
+            "NotificationTypeDefinition"
+          ],
+          "modules/overrides": [
+            "ModuleOverrideEntry",
+            "registerModuleOverrideApplier"
+          ],
+          "modules/registry": [
+            "(dynamic)",
+            "ApiRouteManifestEntry",
+            "Module",
+            "ModuleCli",
+            "ModuleInfo",
+            "RouteMatchParams",
+            "findApiRouteManifestMatch",
+            "getApiRouteManifests"
+          ],
+          "modules/search": [
+            "SearchOptions",
+            "SearchResult",
+            "SearchStrategyId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "security/featurePolicy": [
+            "authorizeFeatures"
+          ],
+          "security/features": [
+            "hasAllFeatures"
+          ]
+        },
+        "@open-mercato/ui": {
+          "ai": [
+            "AiChat",
+            "AiChatDebugPromptSection",
+            "AiChatDebugTool",
+            "ConversationShareButton",
+            "ConversationShareDialog",
+            "LoopDisabledBanner",
+            "createAiUiPartRegistry",
+            "useAiShortcuts"
+          ],
+          "ai/AiAssistantLauncher": [
+            "AI_ASSISTANT_LAUNCHER_OPEN_EVENT"
+          ],
+          "ai/AiIcon": [
+            "AiIcon"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/EmptyState": [
+            "EmptyState"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/api": [
+            "apiFetch"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow"
+          ],
+          "hooks/useDialogKeyHandler": [
+            "useDialogKeyHandler"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/radio": [
+            "Radio",
+            "RadioGroup"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge",
+            "StatusMap"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ],
+          "primitives/tabs": [
+            "Tabs",
+            "TabsContent",
+            "TabsList",
+            "TabsTrigger"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ],
+          "primitives/tooltip": [
+            "Tooltip",
+            "TooltipContent",
+            "TooltipProvider",
+            "TooltipTrigger"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "ai_assistant",
+        "tables": [
+          "ai_agent_prompt_overrides",
+          "ai_pending_actions",
+          "ai_agent_runtime_overrides",
+          "ai_token_usage_events",
+          "ai_token_usage_daily",
+          "ai_tenant_model_allowlists",
+          "ai_agent_mutation_policy_overrides",
+          "ai_chat_conversations",
+          "ai_chat_conversation_participants",
+          "ai_chat_messages",
+          "ai_moderation_flags"
+        ],
+        "aclFeatures": [
+          "ai_assistant.view",
+          "ai_assistant.settings.manage",
+          "ai_assistant.conversations.manage",
+          "ai_assistant.conversations.share",
+          "ai_assistant.mcp.serve",
+          "ai_assistant.tools.list",
+          "ai_assistant.mcp_servers.view",
+          "ai_assistant.mcp_servers.manage"
+        ],
+        "eventIds": [
+          "ai.action.confirmed",
+          "ai.action.cancelled",
+          "ai.action.expired",
+          "ai.token_usage.recorded",
+          "ai_assistant.conversation.shared",
+          "ai_assistant.conversation.unshared",
+          "ai_assistant.moderation_flag.created"
+        ],
+        "backendRoutes": [
+          "/backend/config/ai-assistant",
+          "/backend/config/ai-assistant/agents",
+          "/backend/config/ai-assistant/allowlist",
+          "/backend/config/ai-assistant/legacy",
+          "/backend/config/ai-assistant/moderation-flags",
+          "/backend/config/ai-assistant/playground",
+          "/backend/config/ai-assistant/settings",
+          "/backend/config/ai-assistant/usage"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "3322322",
+      "lint": [
+        {
+          "code": "event-prefix",
+          "severity": "warn",
+          "message": "4 of 7 event IDs do not start with ai_assistant. (for example ai.action.confirmed).",
+          "anchor": "AGENTS.md:206",
+          "src": {
+            "file": "src/modules/ai_assistant/events.ts",
+            "line": 11
+          }
+        },
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0 and 1 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/ai_assistant/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

@@ -1,0 +1,316 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 19
+  },
+  "package": {
+    "locator": "npm:@fullstackhouse/open-mercato-health",
+    "name": "@fullstackhouse/open-mercato-health",
+    "version": "0.3.0",
+    "integrity": "sha512-ShX1+ajgxf4huku+RkCclf6ieI5fMrliABr6C4bXs46GoHRqZylTvaE/9Bovu74PhINl9GlxHwWVX1VCZx2gxQ==",
+    "source": "npm-tarball",
+    "gitRef": "9e37b05f23dba3882d814a1a3df7cc9ec0c42a91"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "health",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/cache": "*",
+    "@open-mercato/shared": "*"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-health\n\nHealth check endpoints for Open Mercato applications. Provides Kubernetes-style liveness and readiness probes with configurable service checks.\n\n## Installation\n\n```bash\nnpm install @fullstackhouse/open-mercato-health\n```\n\n## Quick Start\n\n### Next.js App Router\n\n```typescript\n// app/api/health/live/route.ts\nimport { createNextHealthHandlers } from '@fullstackhouse/open-mercato-health/integrations/nextjs'\n\nconst handlers = createNextHealthHandlers(async () => {\n  const { createRequestContainer } = await import('@open-mercato/shared/lib/di/container')\n  return createRequestContainer()\n})\nexport const GET = handlers.live\n\n// app/api/health/ready/route.ts\nexport const GET = handlers.ready\nexport const dynamic = 'force-dynamic'\n```\n\n> **Why the lazy loader?** Under Turbopack production builds, a static top-level\n> `import { createRequestContainer }` can be captured as `undefined` inside the\n> handler closure, causing `getContainer is not a function` at runtime. Passing\n> a `() => import(...)` loader defers module resolution until request time and\n> sidesteps the bug. The same pattern applies to `createNextReadyHandler`.\n\n## Endpoints\n\n### Liveness (`GET /api/health/live`)\n\nReturns `ok` with HTTP 200. No dependencies are checked - this indicates the process is running.\n\n```\nHTTP/1.1 200 OK\nContent-Type: text/plain\n\nok\n```\n\n### Readiness (`GET /api/health/ready`)\n\nReturns JSON with check results. HTTP 200 when all required checks pass, 503 when any required check fails.\n\n```json\n{\n  \"status\": \"ok\",\n  \"timestamp\": \"2026-02-23T12:00:00.000Z\",\n  \"durationMs\": 18,\n  \"checks\": [\n    { \"name\": \"Database\", \"required\": true, \"status\": \"ok\", \"latencyMs\": 7, \"message\": null },\n    { \"name\": \"Cache\", \"required\": true, \"status\": \"ok\", \"latencyMs\": 2, \"message\": null },\n    { \"name\": \"Search (Fulltext)\", \"required\": false, \"status\": \"skip\", \"latencyMs\": 0, \"message\": \"Check disabled or not configured\" }\n  ]\n}\n```\n\n## Status Values\n\n| Overall Status | Description | HTTP Code |\n|----------------|-------------|-----------|\n| `ok` | All required checks pass, optional checks pass or skip | 200 |\n| `degraded` | All required checks pass, at least one optional check fails | 200 |\n| `fail` | Any required check fails | 503 |\n\n| Check Status | Description |\n|--------------|-------------|\n| `ok` | Check passed |\n| `fail` | Check failed |\n| `skip` | Check disabled or not configured |\n\n## Built-in Checks\n\n| Check | Required | Description |\n|-------|----------|-------------|\n| Database | Yes | Executes `SELECT 1` via EntityManager |\n| Cache | Yes | Performs set/get/delete cycle |\n| Queue (Redis) | No | Verifies BullMQ queue connectivity |\n| Search (Fulltext) | No | Checks Meilisearch availability |\n| Search (Vector) | No | Checks vector search provider |\n| KMS (Vault) | No | Verifies encryption service health |\n| Email Delivery | No | Checks email provider configuration |\n| AI Providers | No | Verifies AI service connectivity |\n\n## Configuration\n\nControl which checks run via environment variables:\n\n```bash\n# Enable/disable individual checks (true, false, or auto)\nHEALTH_READY_CHECK_DATABASE_ENABLED=true\nHEALTH_READY_CHECK_CACHE_ENABLED=true\nHEALTH_READY_CHECK_QUEUE_REDIS_ENABLED=auto\nHEALTH_READY_CHECK_SEARCH_FULLTEXT_ENABLED=auto\nHEALTH_READY_CHECK_SEARCH_VECTOR_ENABLED=auto\nHEALTH_READY_CHECK_KMS_ENABLED=auto\nHEALTH_READY_CHECK_EMAIL_DELIVERY_ENABLED=auto\nHEALTH_READY_CHECK_EXTERNAL_AI_PROVIDERS_ENABLED=auto\n```\n\n- `true`: Always run the check\n- `false`: Never run the check\n- `auto` (default): Run if the service is configured\n\n## Custom Checks\n\nCreate custom health check strategies by extending `BaseReadyCheckStrategy`:\n\n```typescript\nimport { BaseReadyCheckStrategy } from '@fullstackhouse/open-mercato-health'\nimport type { CheckKey, HealthContainer } from '@fullstackhouse/open-mercato-health'\n\nclass StripeReadyCheckStrategy extends BaseReadyCheckStrategy {\n  readonly id = 'STRIPE' as CheckKey\n  readonly name = 'Stripe A",
+  "modules": [
+    {
+      "id": "health",
+      "title": "Health",
+      "description": "Health check endpoints for liveness and readiness probes.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/health/live",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/health/api/get/live.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/health/ready",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/health/api/get/ready.ts",
+              "line": 24
+            }
+          }
+        ],
+        "legacyRouteFiles": 2,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "SMTP_HOST",
+            "src": {
+              "file": "src/strategies/email-delivery.ts",
+              "line": 19
+            }
+          },
+          {
+            "name": "SENDGRID_API_KEY",
+            "src": {
+              "file": "src/strategies/email-delivery.ts",
+              "line": 20
+            }
+          },
+          {
+            "name": "POSTMARK_API_TOKEN",
+            "src": {
+              "file": "src/strategies/email-delivery.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "RESEND_API_KEY",
+            "src": {
+              "file": "src/strategies/email-delivery.ts",
+              "line": 22
+            }
+          },
+          {
+            "name": "OPENAI_API_KEY",
+            "src": {
+              "file": "src/strategies/external-ai.ts",
+              "line": 19
+            }
+          },
+          {
+            "name": "ANTHROPIC_API_KEY",
+            "src": {
+              "file": "src/strategies/external-ai.ts",
+              "line": 20
+            }
+          },
+          {
+            "name": "AZURE_OPENAI_API_KEY",
+            "src": {
+              "file": "src/strategies/external-ai.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "TENANT_DATA_ENCRYPTION_ENABLED",
+            "src": {
+              "file": "src/strategies/kms.ts",
+              "line": 18
+            }
+          },
+          {
+            "name": "VAULT_ADDR",
+            "src": {
+              "file": "src/strategies/kms.ts",
+              "line": 20
+            }
+          },
+          {
+            "name": "VAULT_TOKEN",
+            "src": {
+              "file": "src/strategies/kms.ts",
+              "line": 20
+            }
+          },
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/strategies/queue-redis.ts",
+              "line": 18
+            }
+          },
+          {
+            "name": "REDIS_URL",
+            "src": {
+              "file": "src/strategies/queue-redis.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "QUEUE_REDIS_URL",
+            "src": {
+              "file": "src/strategies/queue-redis.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "MEILISEARCH_HOST",
+            "src": {
+              "file": "src/strategies/search-fulltext.ts",
+              "line": 18
+            }
+          },
+          {
+            "name": "SEARCH_FULLTEXT_URL",
+            "src": {
+              "file": "src/strategies/search-fulltext.ts",
+              "line": 18
+            }
+          },
+          {
+            "name": "SEARCH_VECTOR_URL",
+            "src": {
+              "file": "src/strategies/search-vector.ts",
+              "line": 19
+            }
+          },
+          {
+            "name": "QDRANT_URL",
+            "src": {
+              "file": "src/strategies/search-vector.ts",
+              "line": 20
+            }
+          },
+          {
+            "name": "PINECONE_API_KEY",
+            "src": {
+              "file": "src/strategies/search-vector.ts",
+              "line": 21
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/openapi": [
+            "OpenApiMethodDoc",
+            "OpenApiRouteDoc"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "health",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 2,
+      "glyph": "0200000",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "2 of 2 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/health/api/get/live.ts",
+            "line": 17
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.3.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/health/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

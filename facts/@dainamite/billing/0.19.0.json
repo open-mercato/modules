@@ -1,0 +1,1162 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 622
+  },
+  "package": {
+    "locator": "npm:@dainamite/billing",
+    "name": "@dainamite/billing",
+    "version": "0.19.0",
+    "integrity": "sha512-bm1RB5Nuy2ZSPLxLXVNkwya/jzrV+MAhzCVL5zuQ8CDjK4R4HI8hUCyl+SdRHPkrnE9XNrU8OM5cVcSrukW3dA==",
+    "source": "npm-tarball",
+    "gitRef": "bf641f89e1493ae88a88234140f0cf43daaa0849"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "billing",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "^0.6.7",
+    "@open-mercato/events": "^0.6.7",
+    "@open-mercato/queue": "^0.6.7",
+    "@open-mercato/shared": "^0.6.7",
+    "@open-mercato/ui": "^0.6.7"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @dainamite/billing\n\nLightweight recurring-billing engine for Open Mercato applications.\n\nCollects items to charge (`one_time`, `recurring`, `usage`), runs a scheduled\n**Bill Run** that calculates totals and produces **draft invoices** in\n`@open-mercato/core/sales`, and waits for human approval before posting. It\ndoes **not** replace your accounting system — it prepares billing data and\nhands drafts to a human.\n\n## Status\n\n**Built — publishing soon.** Schema, ACL, tenant setup, the Bill Run engine,\nusage rating, the full admin UI, and the `@dainamite/cpq-billing-connector`\ncompanion are all in place. The package is not yet on npm; until it publishes\nit is available inside the `dainamite-core` monorepo.\n\nSee [`specs/implementation/xd-249-billing-spec.md`](../../specs/implementation/xd-249-billing-spec.md)\nfor the full implementation plan.\n\n## What's inside\n\n- **Billing Items** — the charge backlog (`one_time`, `recurring`, `usage`),\n  each scoped to a Billing Account with a bill start/end window.\n- **Bill Runs** — a background worker (`@open-mercato/queue`) that, on a\n  schedule or on demand, rates usage, sums the due items for the period, and\n  writes **draft invoices into `@open-mercato/core/sales`**. Runs are\n  idempotent and tenant-locked; stale runs are reaped by a worker.\n- **Draft invoice approval** — invoices land in `draft`; a human reviews and\n  **posts** them (a guarded ACL action) before they leave draft.\n- **Usage rating** — metered items are rated at run time from ingested usage.\n- **Admin UI** under `/backend/billing/*` — Accounts, Items, Bill Runs,\n  Invoices (list + detail pages).\n- **Commands** for every write (accounts / items / runs / invoices / usage),\n  validated with Zod.\n\n## Installation\n\n`@dainamite/billing` is an Open Mercato module. Install it and register it in\nyour host app's `src/modules.ts`:\n\n```bash\nyarn mercato module add @dainamite/billing   # installs + registers (once published to npm)\n# …or: yarn add @dainamite/billing  then add { id: 'billing', from: '@dainamite/billing' }\n```\n\n```bash\nyarn generate\nyarn mercato db migrate\n```\n\n### Required Open Mercato modules\n\n`sales` (draft invoices are written there), `@open-mercato/queue` (Bill Run\nworker), and `@open-mercato/events` (lifecycle events consumed by the\nconnector). Engines: **Node ≥ 24**.\n\n## CPQ integration\n\nTo bill subscriptions sold through CPQ, add\n[`@dainamite/cpq-billing-connector`](../cpq-billing-connector) — it subscribes\nto CPQ subscription lifecycle events and creates/updates Billing Accounts and\nItems automatically. Register it **after** both `cpq` and `billing`.\n\n## Distribution rules (per SPEC-001)\n\n- **`peerDependencies`, never `dependencies`** for `@open-mercato/*` and\n  sibling `@dainamite/*` — one shared instance in `node_modules`.\n- **No ORM relations across packages** — cross-module references are FK\n  strings; draft invoices are created through the sales service / events, not\n  a direct relation.\n- **Ships its own migrations** under `src/modules/billing/migrations/`.\n- Ships `src/` (types) + `dist/` (runtime JS); no `.d.ts` emitted.\n\n## License\n\nMIT.\n",
+  "modules": [
+    {
+      "id": "billing",
+      "title": "Billing",
+      "description": "Lightweight recurring-billing engine - collects one-time / recurring / usage items, runs Bill Runs, produces draft invoices in core/sales.",
+      "requires": [
+        {
+          "raw": "auth",
+          "resolvesTo": "core:auth"
+        },
+        {
+          "raw": "directory",
+          "resolvesTo": "core:directory"
+        },
+        {
+          "raw": "dictionaries",
+          "resolvesTo": "core:dictionaries"
+        },
+        {
+          "raw": "configs",
+          "resolvesTo": "core:configs"
+        },
+        {
+          "raw": "sales",
+          "resolvesTo": "core:sales"
+        },
+        {
+          "raw": "payment_gateways",
+          "resolvesTo": "core:payment_gateways"
+        }
+      ],
+      "ejectable": false,
+      "data": {
+        "entities": [
+          {
+            "id": "billing:billing_account",
+            "table": "billing_accounts",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 31
+            }
+          },
+          {
+            "id": "billing:billing_item",
+            "table": "billing_items",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 154
+            }
+          },
+          {
+            "id": "billing:billing_account_usage",
+            "table": "billing_account_usage",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 258
+            }
+          },
+          {
+            "id": "billing:bill_run",
+            "table": "billing_runs",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 338
+            }
+          },
+          {
+            "id": "billing:bill_run_outcome",
+            "table": "billing_run_outcomes",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 435
+            }
+          },
+          {
+            "id": "billing:draft_invoice_edit",
+            "table": "billing_draft_invoice_edits",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 512
+            }
+          },
+          {
+            "id": "billing:billing_account_balance",
+            "table": "billing_account_balances",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 578
+            }
+          },
+          {
+            "id": "billing:billing_account_transaction",
+            "table": "billing_account_transactions",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 654
+            }
+          },
+          {
+            "id": "billing:billing_topup",
+            "table": "billing_topups",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 756
+            }
+          },
+          {
+            "id": "billing:billing_statement",
+            "table": "billing_statements",
+            "src": {
+              "file": "src/modules/billing/data/entities.ts",
+              "line": 844
+            }
+          }
+        ],
+        "migrations": {
+          "count": 2,
+          "first": "2026-05-19",
+          "last": "2026-06-19"
+        },
+        "customEntities": 6
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/billing/accounts",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.account.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/route.ts",
+              "line": 183
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/accounts",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.account.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/billing/accounts",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.account.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/billing/accounts",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.account.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/accounts/[id]/balance",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.balance.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/[id]/balance/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/accounts/[id]/credit-status",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.credit.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/[id]/credit-status/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/accounts/[id]/topups",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.topup.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/accounts/[id]/topups/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/export/account/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.account.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/export/account/[id]/route.ts",
+              "line": 42
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/invoices",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/invoices/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/[id]/route.ts",
+              "line": 57
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/invoices/add-line",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.edit_draft"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/add-line/route.ts",
+              "line": 58
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/invoices/edit-line",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.edit_draft"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/edit-line/route.ts",
+              "line": 72
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/invoices/post",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.post"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/post/route.ts",
+              "line": 79
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/invoices/remove-line",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.invoice.edit_draft"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/invoices/remove-line/route.ts",
+              "line": 58
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.item.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/items/route.ts",
+              "line": 227
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.item.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/items/route.ts",
+              "line": 226
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/billing/items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.item.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/items/route.ts",
+              "line": 226
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/billing/items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.item.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/items/route.ts",
+              "line": 226
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/items/bulk",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.item.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/items/bulk/route.ts",
+              "line": 75
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/run-outcomes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.run.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/run-outcomes/route.ts",
+              "line": 142
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/runs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.run.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/runs/route.ts",
+              "line": 153
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/runs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.run.trigger"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/runs/route.ts",
+              "line": 152
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/runs/retry-failed",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.run.trigger"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/runs/retry-failed/route.ts",
+              "line": 72
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/statements",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.statement.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/statements/route.ts",
+              "line": 110
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/statements/generate",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.statement.generate"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/statements/generate/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/test-invoices/wipe",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.run.trigger"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/test-invoices/wipe/route.ts",
+              "line": 70
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/topups",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.topup.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/topups/route.ts",
+              "line": 137
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/topups",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.topup.create"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/topups/route.ts",
+              "line": 136
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/transactions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.balance.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/transactions/route.ts",
+              "line": 109
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/transactions/adjust",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.balance.adjust"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/transactions/adjust/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/billing/usage",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.usage.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/usage/route.ts",
+              "line": 159
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/billing/usage",
+            "requireAuth": true,
+            "requireFeatures": [
+              "billing.usage.ingest"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/billing/api/usage/route.ts",
+              "line": 158
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "billing.account.manage",
+          "billing.account.view",
+          "billing.item.manage",
+          "billing.item.view",
+          "billing.usage.ingest",
+          "billing.usage.view",
+          "billing.run.trigger",
+          "billing.run.dry_run",
+          "billing.run.view",
+          "billing.invoice.post",
+          "billing.invoice.edit_draft",
+          "billing.invoice.view",
+          "billing.balance.view",
+          "billing.balance.adjust",
+          "billing.topup.create",
+          "billing.topup.view",
+          "billing.statement.view",
+          "billing.statement.generate",
+          "billing.credit.view"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "billing.invoice.posted",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "billing.invoice.line_posted",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 10
+            }
+          },
+          {
+            "id": "billing.run.completed",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "billing.balance.topped_up",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 39
+            }
+          },
+          {
+            "id": "billing.balance.low",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 46
+            }
+          },
+          {
+            "id": "billing.balance.exhausted",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 53
+            }
+          },
+          {
+            "id": "billing.usage.rated",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 62
+            }
+          },
+          {
+            "id": "billing.statement.generated",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 69
+            }
+          },
+          {
+            "id": "billing.credit.over_limit",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 76
+            }
+          },
+          {
+            "id": "billing.credit.near_limit",
+            "src": {
+              "file": "src/modules/billing/events.ts",
+              "line": 83
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "payment_gateways.payment.captured",
+            "src": {
+              "file": "src/modules/billing/subscribers/payment-captured-to-paid.ts",
+              "line": 10
+            }
+          },
+          {
+            "event": "payment_gateways.payment.cancelled",
+            "src": {
+              "file": "src/modules/billing/subscribers/prepaid-topup-cancelled.ts",
+              "line": 6
+            }
+          },
+          {
+            "event": "payment_gateways.session.expired",
+            "src": {
+              "file": "src/modules/billing/subscribers/prepaid-topup-expired.ts",
+              "line": 6
+            }
+          },
+          {
+            "event": "payment_gateways.payment.failed",
+            "src": {
+              "file": "src/modules/billing/subscribers/prepaid-topup-failed.ts",
+              "line": 6
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/billing/accounts",
+            "requireFeatures": [
+              "billing.account.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/accounts/[id]",
+            "requireFeatures": [
+              "billing.account.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/accounts/create",
+            "requireFeatures": [
+              "billing.account.manage"
+            ]
+          },
+          {
+            "path": "/backend/billing/invoices",
+            "requireFeatures": [
+              "billing.invoice.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/invoices/[id]",
+            "requireFeatures": [
+              "billing.invoice.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/items",
+            "requireFeatures": [
+              "billing.item.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/items/[id]",
+            "requireFeatures": [
+              "billing.item.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/items/create",
+            "requireFeatures": [
+              "billing.item.manage"
+            ]
+          },
+          {
+            "path": "/backend/billing/runs",
+            "requireFeatures": [
+              "billing.run.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/runs/[id]",
+            "requireFeatures": [
+              "billing.run.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/statements",
+            "requireFeatures": [
+              "billing.statement.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/statements/[id]",
+            "requireFeatures": [
+              "billing.statement.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/topups",
+            "requireFeatures": [
+              "billing.topup.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/topups/[id]",
+            "requireFeatures": [
+              "billing.topup.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/transactions",
+            "requireFeatures": [
+              "billing.balance.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/transactions/[id]",
+            "requireFeatures": [
+              "billing.balance.view"
+            ]
+          },
+          {
+            "path": "/backend/billing/usage/create",
+            "requireFeatures": [
+              "billing.usage.ingest"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 20
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "billing-reap-stale-runs"
+          },
+          {
+            "queue": "billing-reconcile-prepaid-balances"
+          }
+        ],
+        "cli": [
+          "seed"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.captured"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.cancelled"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.session.expired"
+        },
+        {
+          "kind": "subscriber",
+          "target": "payment_gateways.payment.failed"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/configs/data/entities": [
+            "ModuleConfig"
+          ],
+          "modules/dictionaries/data/entities": [
+            "Dictionary",
+            "DictionaryEntry"
+          ],
+          "modules/directory/data/entities": [
+            "(dynamic)"
+          ],
+          "modules/payment_gateways/lib/gateway-service": [
+            "PaymentGatewayService"
+          ],
+          "modules/sales/data/entities": [
+            "SalesInvoice",
+            "SalesInvoiceLine"
+          ],
+          "modules/sales/services/salesDocumentNumberGenerator": [
+            "SalesDocumentNumberGenerator"
+          ],
+          "modules/sales/services/taxCalculationService": [
+            "TaxCalculationService"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": [
+            "withScopedPayload"
+          ],
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/commands": [
+            "registerCommand"
+          ],
+          "lib/commands/flush": [
+            "withAtomicFlush"
+          ],
+          "lib/commands/helpers": [
+            "emitCrudSideEffects",
+            "requireId"
+          ],
+          "lib/commands/scope": [
+            "ensureOrganizationScope",
+            "ensureTenantScope"
+          ],
+          "lib/commands/types": [
+            "CommandHandler",
+            "CommandRuntimeContext"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError"
+          ],
+          "lib/crud/factory": [
+            "makeCrudRoute"
+          ],
+          "lib/data/engine": [
+            "DataEngine"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "lib/openapi/types": [
+            "OpenApiRouteDoc"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody",
+            "PageHeader"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage"
+          ],
+          "backend/forms": [
+            "FormHeader"
+          ],
+          "backend/inputs": [
+            "ComboboxInput",
+            "ComboboxOption"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow",
+            "readApiResultOrThrow"
+          ],
+          "backend/utils/serverErrors": [
+            "normalizeCrudServerError"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/kbd": [
+            "Kbd",
+            "KbdShortcut"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ],
+          "primitives/tag": [
+            "Tag"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "billing",
+        "tables": [
+          "billing_accounts",
+          "billing_items",
+          "billing_account_usage",
+          "billing_runs",
+          "billing_run_outcomes",
+          "billing_draft_invoice_edits",
+          "billing_account_balances",
+          "billing_account_transactions",
+          "billing_topups",
+          "billing_statements"
+        ],
+        "aclFeatures": [
+          "billing.account.manage",
+          "billing.account.view",
+          "billing.item.manage",
+          "billing.item.view",
+          "billing.usage.ingest",
+          "billing.usage.view",
+          "billing.run.trigger",
+          "billing.run.dry_run",
+          "billing.run.view",
+          "billing.invoice.post",
+          "billing.invoice.edit_draft",
+          "billing.invoice.view",
+          "billing.balance.view",
+          "billing.balance.adjust",
+          "billing.topup.create",
+          "billing.topup.view",
+          "billing.statement.view",
+          "billing.statement.generate",
+          "billing.credit.view"
+        ],
+        "eventIds": [
+          "billing.invoice.posted",
+          "billing.invoice.line_posted",
+          "billing.run.completed",
+          "billing.balance.topped_up",
+          "billing.balance.low",
+          "billing.balance.exhausted",
+          "billing.usage.rated",
+          "billing.statement.generated",
+          "billing.credit.over_limit",
+          "billing.credit.near_limit"
+        ],
+        "backendRoutes": [
+          "/backend/billing/accounts",
+          "/backend/billing/accounts/[id]",
+          "/backend/billing/accounts/create",
+          "/backend/billing/invoices",
+          "/backend/billing/invoices/[id]",
+          "/backend/billing/items",
+          "/backend/billing/items/[id]",
+          "/backend/billing/items/create",
+          "/backend/billing/runs",
+          "/backend/billing/runs/[id]",
+          "/backend/billing/statements",
+          "/backend/billing/statements/[id]",
+          "/backend/billing/topups",
+          "/backend/billing/topups/[id]",
+          "/backend/billing/transactions",
+          "/backend/billing/transactions/[id]",
+          "/backend/billing/usage/create"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "3333202",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for ^0.6.7 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.19.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/billing/index.ts",
+            "line": 10
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

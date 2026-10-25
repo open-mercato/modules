@@ -1,0 +1,63 @@
+{
+  "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@fullstackhouse/open-mercato-demo-auth",
+    "distTags": {
+      "latest": "0.3.0"
+    },
+    "latestStable": "0.3.0",
+    "previousStable": "0.2.1",
+    "preview": null,
+    "publishedAt": {
+      "0.3.0": "2026-04-24T13:00:14Z",
+      "0.2.1": "2026-04-24T09:54:41Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/fullstackhouse/open-mercato-demo-auth.git",
+    "gitHead": "263ef0bed81d1c62ce3d0dfd6160228c855df543",
+    "keywords": [
+      "open-mercato",
+      "auth",
+      "login",
+      "dev-tools",
+      "widget"
+    ],
+    "maintainers": [
+      "jtomaszewski"
+    ],
+    "peerDependencies": {
+      "react": ">=18",
+      "react-dom": ">=18"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-zd/Vpku6s92nLkxXwCpHHGQ0oY5LS0r+LQZTDKPYiW2f8PaAqNvaEqpDP1RI+RyrKtcN30TjNUCfHYUZ752RJw==",
+    "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-demo-auth/-/open-mercato-demo-auth-0.3.0.tgz"
+  },
+  "github": {
+    "repo": "fullstackhouse/open-mercato-demo-auth",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-04-24T13:05:09Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": []
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "fullstackhouse/open-mercato-demo-auth",
+    "commit": "263ef0bed81d1c62ce3d0dfd6160228c855df543",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
+  "downloads30d": 817,
+  "errors": []
+}

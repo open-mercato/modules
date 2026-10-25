@@ -1,0 +1,567 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 183
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-discord",
+    "name": "@open-mercato/channel-discord",
+    "version": "0.8.0",
+    "integrity": "sha512-hF4SyTvwt2MrIrloJ3yh5nnbh50FYigxeLzl30wqPzk5lkIGfjVaMZj6H7Nhowdp16qNZfp9N6mkGQuh7GFIag==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_discord",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.8.0",
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/ui": "0.8.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_discord",
+      "title": "Discord Communication Channel",
+      "description": "Connect a Discord bot as a two-way communication channel. Outbound via the Discord REST API; inbound in real time via a Gateway worker; signed (Ed25519) Interactions endpoint that acknowledges slash commands / buttons. Optional per-channel AI auto-reply answers straightforward messages and proposes",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/channel_discord/ai-auto-reply/channels",
+            "requireAuth": true,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/channel_discord/api/ai-auto-reply/channels/route.ts",
+              "line": 47
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/channel_discord/channels/[id]/ai-auto-reply",
+            "requireAuth": true,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/channel_discord/api/channels/[id]/ai-auto-reply/route.ts",
+              "line": 76
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/channel_discord/channels/[id]/ai-auto-reply",
+            "requireAuth": true,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/channel_discord/api/channels/[id]/ai-auto-reply/route.ts",
+              "line": 141
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/channel_discord/interactions",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/channel_discord/api/interactions/route.ts",
+              "line": 67
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_discord.view",
+          "channel_discord.configure",
+          "channel_discord.ai_auto_reply.run"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": [
+          {
+            "event": "communication_channels.message.received",
+            "src": {
+              "file": "src/modules/channel_discord/subscribers/ai-auto-reply.ts",
+              "line": 32
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/channel_discord/channels/[id]/ai-auto-reply",
+            "requireFeatures": []
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "channel_discord_gateway"
+          },
+          {
+            "queue": "channel_discord_interactions"
+          }
+        ],
+        "cli": [
+          "start-gateway",
+          "configure-from-env",
+          "register-slash-commands"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": [
+          "channel_discord.auto_reply"
+        ]
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "botToken",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "applicationId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "publicKey",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "guildId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "defaultChannelId",
+            "type": "text",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/channel_discord/cli.ts",
+              "line": 70
+            }
+          },
+          {
+            "name": "OM_CHANNEL_DISCORD_REQUEST_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/channel_discord/lib/discord-rest.ts",
+              "line": 155
+            }
+          },
+          {
+            "name": "OM_CHANNEL_DISCORD_GATEWAY_DISABLED",
+            "src": {
+              "file": "src/modules/channel_discord/workers/discord-gateway.ts",
+              "line": 196
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "discord.com",
+            "src": {
+              "file": "src/modules/channel_discord/lib/discord-rest.ts",
+              "line": 22
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "gateway.discord.gg",
+            "src": {
+              "file": "src/modules/channel_discord/lib/discord-gateway-client.ts",
+              "line": 38
+            },
+            "confidence": "low"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "ai:channel_discord.auto_reply"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_discord"
+        },
+        {
+          "kind": "subscriber",
+          "target": "communication_channels.message.received"
+        },
+        {
+          "kind": "widget",
+          "target": "profile:communication-channels:connect"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/ai-assistant": {
+          ".": [
+            "(dynamic)"
+          ],
+          "modules/ai_assistant/lib/ai-agent-definition": [
+            "AiAgentDefinition"
+          ]
+        },
+        "@open-mercato/core": {
+          "modules/communication_channels/data/entities": [
+            "ChannelThreadMapping",
+            "CommunicationChannel",
+            "ExternalConversation"
+          ],
+          "modules/communication_channels/events": [
+            "emitCommunicationChannelsEvent"
+          ],
+          "modules/communication_channels/lib/access-control": [
+            "ChannelAccessDeniedError",
+            "assertCanAccessChannel",
+            "assertCanManageChannel",
+            "channelOrgScopeWhereFromFilter",
+            "channelOwnerScopeWhere"
+          ],
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "DeleteChannelMessageInput",
+            "EditChannelMessageInput",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "InboundMessage",
+            "InboundReactionEvent",
+            "MessageStatus",
+            "NormalizedAttachment",
+            "NormalizedInboundMessage",
+            "RemoveReactionInput",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "SendReactionInput",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/queue": [
+            "COMMUNICATION_CHANNELS_QUEUES",
+            "getCommunicationChannelsQueue"
+          ],
+          "modules/communication_channels/lib/reaction-processor-types": [
+            "ReactionInboundJob"
+          ],
+          "modules/communication_channels/lib/route-mutation-guard": [
+            "validateRouteMutationGuard"
+          ],
+          "modules/communication_channels/lib/system-user": [
+            "COMMUNICATION_CHANNELS_SYSTEM_USER_ID",
+            "resolveCommunicationChannelsSystemUserId"
+          ],
+          "modules/communication_channels/workers/inbound-processor": [
+            "InboundProcessorPayload"
+          ],
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ],
+          "modules/directory/utils/organizationScopeFilter": [
+            "resolveOrganizationScopeFilter"
+          ],
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService",
+            "createCredentialsService"
+          ],
+          "modules/integrations/lib/log-service": [
+            "IntegrationLogService",
+            "createIntegrationLogService"
+          ],
+          "modules/messages/data/entities": [
+            "Message"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "(dynamic)",
+            "Queue",
+            "QueuedJob",
+            "WorkerMeta",
+            "createModuleQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken",
+            "parseBooleanWithDefault"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "registerCommand"
+          ],
+          "lib/commands/errors": [
+            "getCommandInterceptorHttpRejection"
+          ],
+          "lib/commands/flush": [
+            "withAtomicFlush"
+          ],
+          "lib/crud/errors": [
+            "isCrudHttpError"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "enforceCommandOptimisticLockWithGuards"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/html/htmlToPlainText": [
+            "htmlToPlainText"
+          ],
+          "lib/html/sanitizeRichText": [
+            "sanitizeRichTextHtml"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "FetchTimeoutError",
+            "fetchWithTimeout"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "(dynamic)",
+            "resolveTranslations"
+          ],
+          "lib/i18n/translate": [
+            "createTranslator"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/messages/types": [
+            "MessageAction",
+            "MessageTypeDefinition"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "PageMetadata"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "security/featurePolicy": [
+            "authorizeFeatures"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudField",
+            "CrudForm"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "backend/utils/crud": [
+            "updateCrud"
+          ],
+          "backend/utils/serverErrors": [
+            "createCrudFormError"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/password-input": [
+            "PasswordInput"
+          ],
+          "primitives/tag": [
+            "Tag"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_discord",
+        "tables": [],
+        "aclFeatures": [
+          "channel_discord.view",
+          "channel_discord.configure",
+          "channel_discord.ai_auto_reply.run"
+        ],
+        "eventIds": [],
+        "backendRoutes": [
+          "/backend/channel_discord/channels/[id]/ai-auto-reply"
+        ]
+      },
+      "publicRoutes": 1,
+      "glyph": "0221212",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.8.0 and 1 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "1 of 4 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_discord/api/interactions/route.ts",
+            "line": 67
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_discord/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

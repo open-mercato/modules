@@ -1,0 +1,274 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 39
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-ses",
+    "name": "@open-mercato/channel-ses",
+    "version": "0.9.0",
+    "integrity": "sha512-dKKYCJqX1mHGckVJWwilCxewa16xUOYz9RLyHzM+mTAX+fIa1HNPl/L0bUWSCSkOkjiUADavuUbvyJvTkifXwQ==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_ses",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.9.0",
+    "@open-mercato/shared": "0.9.0",
+    "@open-mercato/ui": "0.9.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.946.0",
+    "@open-mercato/core": "0.9.0",
+    "@types/nodemailer": "^8.0.1",
+    "nodemailer": "^10.0.10"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_ses",
+      "title": null,
+      "description": "Outbound Amazon SES email channel provider for the Communications Hub.",
+      "requires": [
+        {
+          "raw": "communication_channels",
+          "resolvesTo": "core:communication_channels"
+        },
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_ses.view",
+          "channel_ses.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "region",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "fromAddress",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "configurationSetName",
+            "type": "text",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "AWS_SES_REGION",
+            "src": {
+              "file": "src/modules/channel_ses/lib/preset.ts",
+              "line": 36
+            }
+          },
+          {
+            "name": "AWS_REGION",
+            "src": {
+              "file": "src/modules/channel_ses/lib/preset.ts",
+              "line": 36
+            }
+          },
+          {
+            "name": "AWS_SES_CONFIGURATION_SET",
+            "src": {
+              "file": "src/modules/channel_ses/lib/preset.ts",
+              "line": 38
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_ses"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "SendMessageInput",
+            "SendMessageResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": [
+            "baseEmailCapabilities"
+          ],
+          "modules/communication_channels/lib/email-mime": [
+            "htmlToText",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/ensure-system-email-channel": [
+            "ensureSystemEmailChannel"
+          ],
+          "modules/communication_channels/lib/system-email-provider-config": [
+            "isSelectedSystemEmailProvider",
+            "registerSystemEmailProviderConfigResolver"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/email/config": [
+            "normalizeEnvString",
+            "resolveDefaultEmailFromAddress"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "withTimeout"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_ses",
+        "tables": [],
+        "aclFeatures": [
+          "channel_ses.view",
+          "channel_ses.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000001",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.9.0 and 2 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_ses/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

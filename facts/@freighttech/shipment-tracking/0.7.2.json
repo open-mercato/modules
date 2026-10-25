@@ -1,0 +1,1475 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 609
+  },
+  "package": {
+    "locator": "npm:@freighttech/shipment-tracking",
+    "name": "@freighttech/shipment-tracking",
+    "version": "0.7.2",
+    "integrity": "sha512-ZI4UVhg4bdBp2DSUhgdvv5D51m7OGPA3qtQKWStmFxbxWJAKpGgv/UzSWc8RN5ZnCQst31TMWzsAgmZjCfmysw==",
+    "source": "npm-tarball",
+    "gitRef": "912da3ad35c09ec0a18461f4ed4ca2eb801a995f"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "shipment_tracking",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": true,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "PROPRIETARY",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/cache": "0.6.2",
+    "@open-mercato/core": "0.6.2",
+    "@open-mercato/events": "0.6.2",
+    "@open-mercato/queue": "0.6.2",
+    "@open-mercato/scheduler": "0.6.2",
+    "@open-mercato/shared": "0.6.2"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @freighttech/shipment-tracking\n\nCarrier shipment tracking for the Open Mercato platform — DCSA carrier adapters\n(Maersk, MSC, CMA CGM, Hapag-Lloyd, ZIM, COSCO, Evergreen), a ShipsGo\naggregator fallback, a Journey Timeline, and an optional live vessel/POI map.\n\nMost integration credentials are configured **in the UI** (Backend → Śledzenie\nprzesyłek → Autoryzacja śledzenia): per-carrier auth, the ShipsGo token, and the\nBIC facility API. The settings below are **deployment/environment** config,\nsupplied as environment variables.\n\n## Environment variables\n\n### Vessel map (ships map / vessel trace / POI overlay)\n\n| Variable | Required | Default | Description |\n|----------|----------|---------|-------------|\n| `NEXT_PUBLIC_VESSEL_API_URL` | For the vessel map only | _none_ | Base URL of the vessel-tracking API that powers `fetchVessel` / `fetchVesselTrace` / `fetchPois` (the ships-map widget, vessel trace, and POI overlay). It is a `NEXT_PUBLIC_*` value inlined into the client bundle at build time. When unset, those map features throw \"Vessel API is not configured\" and are effectively disabled; the rest of the module works normally. |\n\n### POI proximity events (optional AIS → Journey Timeline crossings)\n\nConsumed by the separate long-running worker\n`mercato shipment_tracking poi:worker`, which subscribes to an AIS proximity\nevent stream over NATS JetStream. If you don't run that worker, none of these\nare needed. Changes take effect when the worker (re)starts.\n\n| Variable | Required | Default | Description |\n|----------|----------|---------|-------------|\n| `POI_NATS_URL` | To enable POI ingestion | _none_ | NATS server URL (e.g. `nats://localhost:4222`). **POI ingestion is enabled only when this is set** — unset means the worker skips POI subscription. |\n| `POI_NATS_STREAM` | No | `AIS_STREAM` | JetStream stream name to consume from. |\n| `POI_NATS_SUBJECT` | No | `ais.ship.proximity.events` | Subject filter for POI proximity events. |\n| `POI_NATS_INSTANCE_ID` | No | derived from `JWT_SECRET` (else random) | Unique per-installation id. The durable consumer is `shipment-tracking-poi-{instanceId}`, so multiple self-hosted instances each receive all messages independently. |\n| `JWT_SECRET` | No (platform var) | _none_ | Reused only to derive a stable `POI_NATS_INSTANCE_ID` when that isn't set explicitly. Without either, a random (non-stable) instance id is used and a warning is logged. |\n\nRun the worker with:\n\n```bash\nPOI_NATS_URL=nats://localhost:4222 yarn mercato shipment_tracking poi:worker\n```\n\n### ShipsGo (aggregator fallback)\n\nThe ShipsGo token and base URL are normally configured **in the UI**. As a\nfallback, `SHIPSGO_API_TOKEN` and `SHIPSGO_BASE_URL` (default\n`https://api.shipsgo.com/v2`) are read from the environment when no UI config\nis present.\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "modules": [
+    {
+      "id": "shipment_tracking",
+      "title": "Shipment Tracking",
+      "description": "Ocean container shipment tracking with pluggable carrier adapters and webhooks.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "shipment_tracking:tracking_job",
+            "table": "shipment_tracking_jobs",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 67
+            }
+          },
+          {
+            "id": "shipment_tracking:shipment",
+            "table": "shipment_tracking_shipments",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 155
+            }
+          },
+          {
+            "id": "shipment_tracking:tracking_event",
+            "table": "shipment_tracking_events",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 292
+            }
+          },
+          {
+            "id": "shipment_tracking:carrier_config",
+            "table": "shipment_tracking_carrier_configs",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 472
+            }
+          },
+          {
+            "id": "shipment_tracking:bic_config",
+            "table": "shipment_tracking_bic_configs",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 518
+            }
+          },
+          {
+            "id": "shipment_tracking:ships_go_config",
+            "table": "shipment_tracking_shipsgo_configs",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 558
+            }
+          },
+          {
+            "id": "shipment_tracking:webhook",
+            "table": "shipment_tracking_webhooks",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 608
+            }
+          },
+          {
+            "id": "shipment_tracking:location_override",
+            "table": "shipment_tracking_location_overrides",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 655
+            }
+          },
+          {
+            "id": "shipment_tracking:webhook_delivery",
+            "table": "shipment_tracking_webhook_deliveries",
+            "src": {
+              "file": "src/modules/shipment_tracking/data/entities.ts",
+              "line": 713
+            }
+          }
+        ],
+        "migrations": {
+          "count": 3,
+          "first": "2026-04-22",
+          "last": "2026-08-21"
+        },
+        "customEntities": 5
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/bic-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/bic-configs/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/bic-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/bic-configs/route.ts",
+              "line": 107
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/bic-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/bic-configs/route.ts",
+              "line": 165
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/bic-configs/test",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/bic-configs/test/route.ts",
+              "line": 57
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/cargo-events",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipments.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/cargo-events/route.ts",
+              "line": 101
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/carrier-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/carrier-configs/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/carrier-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/carrier-configs/route.ts",
+              "line": 140
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/carrier-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/carrier-configs/route.ts",
+              "line": 141
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/carrier-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/carrier-configs/route.ts",
+              "line": 142
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/dashboard/ships-map",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.dashboard.ships_map.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/dashboard/ships-map/route.ts",
+              "line": 93
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/location-overrides",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.location_overrides.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/location-overrides/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/location-overrides",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.location_overrides.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/location-overrides/route.ts",
+              "line": 183
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/location-overrides",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.location_overrides.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/location-overrides/route.ts",
+              "line": 184
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/location-overrides",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.location_overrides.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/location-overrides/route.ts",
+              "line": 185
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/shipments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipments.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipments/route.ts",
+              "line": 194
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/shipments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipments.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipments/route.ts",
+              "line": 195
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/shipments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipments.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipments/route.ts",
+              "line": 196
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/shipments",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipments.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipments/route.ts",
+              "line": 197
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/shipsgo-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipsgo_config.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipsgo-configs/route.ts",
+              "line": 69
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/shipsgo-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipsgo_config.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipsgo-configs/route.ts",
+              "line": 116
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/shipsgo-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.shipsgo_config.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/shipsgo-configs/route.ts",
+              "line": 174
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/tracking-jobs/route.ts",
+              "line": 163
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/tracking-jobs/route.ts",
+              "line": 164
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/tracking-jobs/route.ts",
+              "line": 165
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/tracking-jobs/route.ts",
+              "line": 166
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/tracking-jobs/sync",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/tracking-jobs/sync/route.ts",
+              "line": 55
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/route.ts",
+              "line": 135
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/route.ts",
+              "line": 136
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/shipment_tracking/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/route.ts",
+              "line": 137
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/shipment_tracking/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/route.ts",
+              "line": 138
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/shipment_tracking/webhooks/deliveries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/deliveries/route.ts",
+              "line": 82
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/shipment_tracking/webhooks/test",
+            "requireAuth": true,
+            "requireFeatures": [
+              "shipment_tracking.webhooks.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/shipment_tracking/api/webhooks/test/route.ts",
+              "line": 19
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "shipment_tracking.shipments.view",
+          "shipment_tracking.shipments.manage",
+          "shipment_tracking.tracking_jobs.view",
+          "shipment_tracking.tracking_jobs.manage",
+          "shipment_tracking.carrier_configs.view",
+          "shipment_tracking.carrier_configs.manage",
+          "shipment_tracking.shipsgo_config.view",
+          "shipment_tracking.shipsgo_config.manage",
+          "shipment_tracking.webhooks.view",
+          "shipment_tracking.webhooks.manage",
+          "shipment_tracking.location_overrides.view",
+          "shipment_tracking.location_overrides.manage",
+          "shipment_tracking.settings.manage",
+          "shipment_tracking.dashboard.ships_map.view"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "shipment_tracking.shipment.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 31
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.updated",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 32
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.deleted",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 33
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.status_changed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 37
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.booked",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 38
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.pre_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 39
+            }
+          },
+          {
+            "id": "shipment_tracking.shipment.delivered",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 40
+            }
+          },
+          {
+            "id": "shipment_tracking.transport.departed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 45
+            }
+          },
+          {
+            "id": "shipment_tracking.transport.arrived",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 46
+            }
+          },
+          {
+            "id": "shipment_tracking.transport.eta_updated",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 47
+            }
+          },
+          {
+            "id": "shipment_tracking.transport.etd_updated",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 48
+            }
+          },
+          {
+            "id": "shipment_tracking.transport.omitted",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 49
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.loaded",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 54
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.discharged",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 55
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.gate_in",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 56
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.gate_out",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 57
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.available_pickup",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 58
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.customs_released",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 59
+            }
+          },
+          {
+            "id": "shipment_tracking.equipment.inspected",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 60
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_event.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 71
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 76
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.updated",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 77
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.failed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 78
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.completed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 79
+            }
+          },
+          {
+            "id": "shipment_tracking.webhook.delivery_success",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 82
+            }
+          },
+          {
+            "id": "shipment_tracking.webhook.delivery_failed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 83
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poll_failed",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 87
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.port_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 92
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.port_proximity_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 93
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.port_departure",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 94
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.terminal_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 95
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.terminal_proximity_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 96
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.terminal_departure",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 97
+            }
+          },
+          {
+            "id": "shipment_tracking.tracking_job.poi.waypoint_reached",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 98
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.port_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 104
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.port_proximity_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 105
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.port_departure",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 106
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.terminal_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 107
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.terminal_proximity_arrival",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 108
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.terminal_departure",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 109
+            }
+          },
+          {
+            "id": "shipment_tracking.poi.waypoint_reached",
+            "src": {
+              "file": "src/modules/shipment_tracking/events.ts",
+              "line": 110
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "shipment_tracking.poi.*",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/poi-event-webhook-dispatch.ts",
+              "line": 10
+            }
+          },
+          {
+            "event": "shipment_tracking.shipment.status_changed",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/shipment-status-changed.ts",
+              "line": 4
+            }
+          },
+          {
+            "event": "terminal_tracking.terminal_event.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/terminal-event-ingest.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "shipment_tracking.tracking_event.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/cargo-event-created.ts",
+              "line": 4
+            }
+          },
+          {
+            "event": "shipment_tracking.tracking_job.created",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/tracking-job-initial-poll.ts",
+              "line": 12
+            }
+          },
+          {
+            "event": "shipment_tracking.tracking_job.poi.*",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/poi-event-notification.ts",
+              "line": 19
+            }
+          },
+          {
+            "event": "shipment_tracking.tracking_job.*",
+            "src": {
+              "file": "src/modules/shipment_tracking/subscribers/tracking-job-webhook-dispatch.ts",
+              "line": 17
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/carrier-configs",
+            "requireFeatures": [
+              "shipment_tracking.carrier_configs.view"
+            ]
+          },
+          {
+            "path": "/backend/location-overrides",
+            "requireFeatures": [
+              "shipment_tracking.location_overrides.view"
+            ]
+          },
+          {
+            "path": "/backend/shipment-tracking",
+            "requireFeatures": [
+              "shipment_tracking.shipments.view"
+            ]
+          },
+          {
+            "path": "/backend/tracking-jobs",
+            "requireFeatures": [
+              "shipment_tracking.tracking_jobs.view"
+            ]
+          },
+          {
+            "path": "/backend/webhooks",
+            "requireFeatures": [
+              "shipment_tracking.webhooks.view"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 50
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "setup-schedules",
+          "poi:worker",
+          "poi:status",
+          "poi:help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/VesselTrackingMap.tsx",
+              "line": 398
+            }
+          },
+          {
+            "name": "POI_NATS_INSTANCE_ID",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/poi-nats-config.ts",
+              "line": 54
+            }
+          },
+          {
+            "name": "JWT_SECRET",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/poi-nats-config.ts",
+              "line": 59
+            }
+          },
+          {
+            "name": "POI_NATS_URL",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/poi-nats-config.ts",
+              "line": 97
+            }
+          },
+          {
+            "name": "POI_NATS_STREAM",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/poi-nats-config.ts",
+              "line": 98
+            }
+          },
+          {
+            "name": "POI_NATS_SUBJECT",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/poi-nats-config.ts",
+              "line": 99
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_VESSEL_API_URL",
+            "src": {
+              "file": "src/modules/shipment_tracking/lib/vessel-api.ts",
+              "line": 135
+            }
+          },
+          {
+            "name": "SHIPSGO_API_TOKEN",
+            "src": {
+              "file": "src/modules/shipment_tracking/services/shipsGoProvider.ts",
+              "line": 89
+            }
+          },
+          {
+            "name": "SHIPSGO_BASE_URL",
+            "src": {
+              "file": "src/modules/shipment_tracking/services/shipsGoProvider.ts",
+              "line": 91
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api.bic-code.org",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 220
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.hlag.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 85
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "api.maersk.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 58
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "api.shipsgo.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipsGoConfigSection.tsx",
+              "line": 15
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.tech.msc.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 64
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "apigw.zim.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 91
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "apis.cargosmart.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 97
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "apis.cma-cgm.net",
+            "src": {
+              "file": "src/modules/shipment_tracking/backend/carrier-configs/page.tsx",
+              "line": 79
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "ecomm.one-line.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 261
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "elines.coscoshipping.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 255
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.cma-cgm.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 251
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.evergreen-line.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 257
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.hapag-lloyd.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 253
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.maersk.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 242
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.msc.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 249
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.oocl.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 259
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.yangming.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 263
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.zim.com",
+            "src": {
+              "file": "src/modules/shipment_tracking/components/ShipmentDetailsDrawer.tsx",
+              "line": 265
+            },
+            "confidence": "low"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.port_arrival"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.port_departure"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.port_proximity_arrival"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.terminal_arrival"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.terminal_departure"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.terminal_proximity_arrival"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:shipment_tracking.tracking_job.poi.waypoint_reached"
+        },
+        {
+          "kind": "subscriber",
+          "target": "terminal_tracking.terminal_event.created"
+        },
+        {
+          "kind": "widget",
+          "target": "dashboard:shipment_tracking.dashboard.ships_map"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/audit_logs/data/entities": [
+            "ActionLog"
+          ],
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ],
+          "modules/notifications/lib/notificationBuilder": [
+            "buildNotificationFromType"
+          ],
+          "modules/notifications/lib/notificationService": [
+            "resolveNotificationService"
+          ]
+        },
+        "@open-mercato/events": {
+          ".": [
+            "EventBus"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": [
+            "createScopedApiHelpers"
+          ],
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/crud/factory": [
+            "makeCrudRoute"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/i18n/context": [
+            "useLocale",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "modules/dashboard/widgets": [
+            "DashboardWidgetComponentProps",
+            "DashboardWidgetModule",
+            "lazyDashboardWidget"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/notifications/types": [
+            "NotificationTypeDefinition"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "shipment_tracking",
+        "tables": [
+          "shipment_tracking_jobs",
+          "shipment_tracking_shipments",
+          "shipment_tracking_events",
+          "shipment_tracking_carrier_configs",
+          "shipment_tracking_bic_configs",
+          "shipment_tracking_shipsgo_configs",
+          "shipment_tracking_webhooks",
+          "shipment_tracking_location_overrides",
+          "shipment_tracking_webhook_deliveries"
+        ],
+        "aclFeatures": [
+          "shipment_tracking.shipments.view",
+          "shipment_tracking.shipments.manage",
+          "shipment_tracking.tracking_jobs.view",
+          "shipment_tracking.tracking_jobs.manage",
+          "shipment_tracking.carrier_configs.view",
+          "shipment_tracking.carrier_configs.manage",
+          "shipment_tracking.shipsgo_config.view",
+          "shipment_tracking.shipsgo_config.manage",
+          "shipment_tracking.webhooks.view",
+          "shipment_tracking.webhooks.manage",
+          "shipment_tracking.location_overrides.view",
+          "shipment_tracking.location_overrides.manage",
+          "shipment_tracking.settings.manage",
+          "shipment_tracking.dashboard.ships_map.view"
+        ],
+        "eventIds": [
+          "shipment_tracking.shipment.created",
+          "shipment_tracking.shipment.updated",
+          "shipment_tracking.shipment.deleted",
+          "shipment_tracking.shipment.status_changed",
+          "shipment_tracking.shipment.booked",
+          "shipment_tracking.shipment.pre_arrival",
+          "shipment_tracking.shipment.delivered",
+          "shipment_tracking.transport.departed",
+          "shipment_tracking.transport.arrived",
+          "shipment_tracking.transport.eta_updated",
+          "shipment_tracking.transport.etd_updated",
+          "shipment_tracking.transport.omitted",
+          "shipment_tracking.equipment.loaded",
+          "shipment_tracking.equipment.discharged",
+          "shipment_tracking.equipment.gate_in",
+          "shipment_tracking.equipment.gate_out",
+          "shipment_tracking.equipment.available_pickup",
+          "shipment_tracking.equipment.customs_released",
+          "shipment_tracking.equipment.inspected",
+          "shipment_tracking.tracking_event.created",
+          "shipment_tracking.tracking_job.created",
+          "shipment_tracking.tracking_job.updated",
+          "shipment_tracking.tracking_job.failed",
+          "shipment_tracking.tracking_job.completed",
+          "shipment_tracking.webhook.delivery_success",
+          "shipment_tracking.webhook.delivery_failed",
+          "shipment_tracking.tracking_job.poll_failed",
+          "shipment_tracking.tracking_job.poi.port_arrival",
+          "shipment_tracking.tracking_job.poi.port_proximity_arrival",
+          "shipment_tracking.tracking_job.poi.port_departure",
+          "shipment_tracking.tracking_job.poi.terminal_arrival",
+          "shipment_tracking.tracking_job.poi.terminal_proximity_arrival",
+          "shipment_tracking.tracking_job.poi.terminal_departure",
+          "shipment_tracking.tracking_job.poi.waypoint_reached",
+          "shipment_tracking.poi.port_arrival",
+          "shipment_tracking.poi.port_proximity_arrival",
+          "shipment_tracking.poi.port_departure",
+          "shipment_tracking.poi.terminal_arrival",
+          "shipment_tracking.poi.terminal_proximity_arrival",
+          "shipment_tracking.poi.terminal_departure",
+          "shipment_tracking.poi.waypoint_reached"
+        ],
+        "backendRoutes": [
+          "/backend/carrier-configs",
+          "/backend/location-overrides",
+          "/backend/shipment-tracking",
+          "/backend/tracking-jobs",
+          "/backend/webhooks"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "3323202",
+      "lint": [
+        {
+          "code": "invalid-identifier",
+          "severity": "warn",
+          "message": "Rejected 1 subscribed event ID that failed the catalog pattern.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/shipment_tracking/subscribers/dcsa-event-webhook-dispatch.ts",
+            "line": 8
+          }
+        },
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: MIT, licenseFile: MIT, moduleInfo: PROPRIETARY, integrationTs: none).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.6.2 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "route-openapi",
+          "severity": "info",
+          "message": "1 of 32 routes have no openApi.",
+          "anchor": "module-development.md:44",
+          "src": {
+            "file": "src/modules/shipment_tracking/api/webhooks/test/route.ts",
+            "line": 19
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.7.2.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/shipment_tracking/index.ts",
+            "line": 4
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

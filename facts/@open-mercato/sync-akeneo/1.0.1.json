@@ -1,0 +1,508 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 301
+  },
+  "package": {
+    "locator": "npm:@open-mercato/sync-akeneo",
+    "name": "@open-mercato/sync-akeneo",
+    "version": "1.0.1",
+    "integrity": "sha512-c+j+n0VPfxx3gf5Rgkt6F4eYfayJZ88btkvh45I0D3bdD6p/gVU2L66Ma0cN3JooOlwJuyvexoAbv8+X7hT1Rw==",
+    "source": "npm-tarball",
+    "gitRef": "ae9109fb7f61735c1adcac38e772c44d00cddf36"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "sync_akeneo",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": true,
+    "sources": {
+      "packageJson": null,
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.4.7"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.4.7",
+    "@open-mercato/ui": "0.4.7",
+    "node-html-markdown": "^2.0.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "sync_akeneo",
+      "title": "Akeneo Product Sync",
+      "description": "Import Akeneo PIM categories, product attributes, and products into the Open Mercato catalog.",
+      "requires": [
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        },
+        {
+          "raw": "data_sync",
+          "resolvesTo": "core:data_sync"
+        },
+        {
+          "raw": "catalog",
+          "resolvesTo": "core:catalog"
+        },
+        {
+          "raw": "sales",
+          "resolvesTo": "core:sales"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/sync_akeneo/custom-fields",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/custom-fields/route.ts",
+              "line": 68
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_akeneo/custom-fields",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/custom-fields/route.ts",
+              "line": 83
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_akeneo/delete-products",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/delete-products/route.ts",
+              "line": 33
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/sync_akeneo/discovery",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/discovery/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/sync_akeneo/first-import",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/first-import/route.ts",
+              "line": 31
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_akeneo/first-import",
+            "requireAuth": true,
+            "requireFeatures": [
+              "data_sync.run"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_akeneo/api/first-import/route.ts",
+              "line": 68
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "sync-akeneo-delete-products"
+          },
+          {
+            "queue": "sync-akeneo-first-import"
+          }
+        ],
+        "cli": [
+          "configure-from-env",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "apiUrl",
+            "type": "url",
+            "required": true
+          },
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "username",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "password",
+            "type": "secret",
+            "required": true
+          }
+        ],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:sync_akeneo"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/attachments/data/entities": [
+            "Attachment"
+          ],
+          "modules/attachments/lib/crud": [
+            "attachmentCrudEvents",
+            "attachmentCrudIndexer"
+          ],
+          "modules/attachments/lib/imageUrls": [
+            "buildAttachmentFileUrl",
+            "buildAttachmentImageUrl",
+            "slugifyAttachmentFileName"
+          ],
+          "modules/attachments/lib/metadata": [
+            "mergeAttachmentMetadata"
+          ],
+          "modules/attachments/lib/partitions": [
+            "ensureDefaultPartitions",
+            "resolveDefaultPartitionCode"
+          ],
+          "modules/attachments/lib/storage": [
+            "deletePartitionFile",
+            "storePartitionFile"
+          ],
+          "modules/catalog/commands/shared": [
+            "emitCatalogQueryIndexEvent"
+          ],
+          "modules/catalog/data/entities": [
+            "CatalogOffer",
+            "CatalogOptionSchemaTemplate",
+            "CatalogPriceKind",
+            "CatalogProduct",
+            "CatalogProductCategory",
+            "CatalogProductPrice",
+            "CatalogProductVariant",
+            "CatalogProductVariantRelation"
+          ],
+          "modules/data_sync/data/entities": [
+            "SyncCursor",
+            "SyncMapping"
+          ],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "FieldMapping",
+            "ImportBatch",
+            "ImportItem",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": [
+            "registerDataSyncAdapter"
+          ],
+          "modules/data_sync/lib/id-mapping": [
+            "ExternalIdMappingService"
+          ],
+          "modules/data_sync/lib/queue": [
+            "getSyncQueue"
+          ],
+          "modules/data_sync/lib/start-run": [
+            "startDataSyncRun"
+          ],
+          "modules/data_sync/lib/sync-run-service": [
+            "SyncRunService"
+          ],
+          "modules/entities/api/definitions.cache": [
+            "invalidateDefinitionsCache"
+          ],
+          "modules/entities/data/entities": [
+            "CustomFieldDef",
+            "CustomFieldEntityConfig"
+          ],
+          "modules/entities/lib/field-definitions": [
+            "ensureCustomFieldDefinitions"
+          ],
+          "modules/entities/lib/fieldsets": [
+            "CustomFieldsetDefinition",
+            "normalizeEntityFieldsetConfig"
+          ],
+          "modules/integrations/data/entities": [
+            "SyncExternalIdMapping"
+          ],
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService"
+          ],
+          "modules/integrations/lib/log-service": [
+            "IntegrationLogService"
+          ],
+          "modules/integrations/lib/state-service": [
+            "IntegrationStateService"
+          ],
+          "modules/progress/data/entities": [
+            "ProgressJob"
+          ],
+          "modules/progress/lib/progressService": [
+            "ProgressService",
+            "ProgressServiceContext"
+          ],
+          "modules/sales/data/entities": [
+            "SalesChannel"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandRuntimeContext"
+          ],
+          "lib/commands/helpers": [
+            "emitCrudSideEffects",
+            "setCustomFieldsIfAny"
+          ],
+          "lib/data/engine": [
+            "DataEngine"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/http/readJsonSafe": [
+            "readJsonSafe"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "modules/entities": [
+            "CustomFieldDefinition"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/registry": [
+            "ModuleCli"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/NextStepCallout": [
+            "NextStepCallout"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/injection/useAppEvent": [
+            "useAppEvent"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/Notice": [
+            "Notice"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/progress": [
+            "Progress"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "sync_akeneo",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0200201",
+      "lint": [
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: none, licenseFile: none, moduleInfo: none, integrationTs: MIT).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.4.7). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.4.7 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 1.0.1.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/sync_akeneo/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}
