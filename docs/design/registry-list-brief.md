@@ -56,11 +56,11 @@ Before: three lime squares with a lime isolation dot each, a solid lime `VERIFIE
 
 - **One source of color: the squares.** The level is an outline: `Verified` is text and a 1 px border in green (`#2F520B` light, lime dark), `Listed` is plain grey text with no frame, `OM Quality` keeps its two lines with the brand gradient as a thin edge instead of a plate. The module page keeps its solid seals.
 - **Type chip neutral.** In the row the type has the same grey outline as the license; the number and name tell the types apart. The colored plates stay on the module page.
-- **Isolation dots secondary.** A 5 px grey dot where the module alone agrees with the square, a 5 px hollow ring where it was not judged or the square is another version's, and an 8 px mark in color only where it disagrees: a red ring for broken alone (never a solid red dot on a green square), lime with a dark edge for verified alone. The legends on `/`, `/compat` and the module page say this.
-- **Actions on demand.** On devices with a mouse the copy and external-link icons show on row hover or keyboard focus; on touch they always show. Buttons keep their accessible names and stay in the tab order.
+- **Isolation dots secondary.** A 5 px grey dot where the module alone agrees with the square, a 5 px hollow ring where it was not judged or the square is another version's, and an 8 px mark in color only where it disagrees: a red ring for broken alone (never a solid red dot on a green square), lime with a dark edge for verified alone. The legends on `/`, `/compat` and the module page key exactly the marks they show, and a receipt from the empty preset shows the mark it draws.
+- **Actions on demand.** On devices with a mouse the copy and external-link icons show on row hover or keyboard focus; on touch they always show. Buttons keep their accessible names and stay in the tab order. The grey check of "nothing to install" is information, not an action, so it always shows.
 - **Broken stays loud.** The red square is unchanged.
 
-Before and after screenshots (light and dark, 1440, 1024 and 390 px, row hover, a disagreement row, broken rows) are attached to this brief.
+See [Screenshots](#screenshots) below.
 
 ## Open questions
 
@@ -70,3 +70,21 @@ Before and after screenshots (light and dark, 1440, 1024 and 390 px, row hover, 
 4. Rows that the catalog cannot install (three dashes) take the same space as tested ones. Should they collapse to a one-line row or move under a separate heading?
 5. Should the actions move to the module page entirely, or stay in the row on hover?
 6. How should the row look when OM Quality ships (none today) so it reads as above Verified without becoming the loudest thing on the page again?
+
+## Screenshots
+
+Built from `preview-data` at 3c5b526, Playwright Chromium. The same file name in [`registry-list/before/`](registry-list/before/) and [`registry-list/after/`](registry-list/after/).
+
+| View                                                  | Before                                                                | After                                                               |
+| ----------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 1440 px, light                                        | [before](registry-list/before/home-1440-light.png)                    | [after](registry-list/after/home-1440-light.png)                    |
+| 1440 px, dark                                         | [before](registry-list/before/home-1440-dark.png)                     | [after](registry-list/after/home-1440-dark.png)                     |
+| 1024 px, light                                        | [before](registry-list/before/home-1024-light.png)                    | [after](registry-list/after/home-1024-light.png)                    |
+| 390 px, light (touch: actions always shown)           | [before](registry-list/before/home-390-light.png)                     | [after](registry-list/after/home-390-light.png)                     |
+| 390 px, dark                                          | [before](registry-list/before/home-390-dark.png)                      | [after](registry-list/after/home-390-dark.png)                      |
+| 1440 px, light, the second row hovered                | [before](registry-list/before/home-1440-light-hover.png)              | [after](registry-list/after/home-1440-light-hover.png)              |
+| 1440 px, light, Search: nothing to install            | [before](registry-list/before/home-1440-light-nothing-to-install.png) | [after](registry-list/after/home-1440-light-nothing-to-install.png) |
+| 1440 px, light, rows where the module alone disagrees | [before](registry-list/before/home-1440-light-differs.png)            | [after](registry-list/after/home-1440-light-differs.png)            |
+| 1440 px, dark, broken rows                            | [before](registry-list/before/home-1440-dark-broken.png)              | [after](registry-list/after/home-1440-dark-broken.png)              |
+| `/compat`, light, the count of isolation receipts     | [before](registry-list/before/compat-1440-light-count.png)            | [after](registry-list/after/compat-1440-light-count.png)            |
+| module page (Akeneo), dark, the dot legend            | [before](registry-list/before/module-akeneo-1440-dark-legend.png)     | [after](registry-list/after/module-akeneo-1440-dark-legend.png)     |
