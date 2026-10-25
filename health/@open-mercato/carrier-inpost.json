@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-10-25T11:51:24Z",
+  "computedAt": "2026-10-25T17:33:15Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.8, 0.9, next; verified on no line."
+        "No Open Mercato peer range; verified on no line."
       ]
     }
   },

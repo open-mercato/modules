@@ -1,7 +1,7 @@
 {
   "locator": "npm:mercato-readiness-scanner",
   "version": "0.2.2",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-25T17:33:15Z",
   "identity": {
     "type": "official",
     "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
@@ -51,10 +51,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for 0.8, 0.9, next; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -118,58 +116,46 @@
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "QUARANTINE",
-          "text": "Installs from 27 Oct (Yarn 5-day age gate)."
-        },
-        {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         },
         {
           "code": "LICENSE",
           "text": "License: unknown."
         }
       ],
-      "until": "2026-10-27"
+      "consentText": "Install mercato-readiness-scanner@0.2.2"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "QUARANTINE",
-          "text": "Installs from 27 Oct (Yarn 5-day age gate)."
-        },
-        {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         },
         {
           "code": "LICENSE",
           "text": "License: unknown."
         }
       ],
-      "until": "2026-10-27"
+      "consentText": "Install mercato-readiness-scanner@0.2.2"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "QUARANTINE",
-          "text": "Installs from 27 Oct (Yarn 5-day age gate)."
-        },
-        {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not installed by the catalog: the nightly run installs modules, not tools."
         },
         {
           "code": "LICENSE",
           "text": "License: unknown."
         }
       ],
-      "until": "2026-10-27"
+      "consentText": "Install mercato-readiness-scanner@0.2.2"
     }
   },
   "state": "active",
