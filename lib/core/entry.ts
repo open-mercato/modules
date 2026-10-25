@@ -125,6 +125,11 @@ export function anatomySummary(
   }
 }
 
+/** The anatomy of a package without a module: its code is not read, so settings and hosts are not measured. */
+export const NO_MODULE_TEXT = 'No module in the package, so its code is not read: settings and hosts are not measured.'
+/** The value of a settings or hosts row of such a package (the card, the film). */
+export const NOT_MEASURED_TEXT = 'not measured (no module in the package)'
+
 /**
  * The sentence under a `partial` anatomy (spec 7.8 `ubogie fakty`), on the page and in the agent card (review r9). A
  * partial anatomy has fewer than 3 organs, no src/, or route auth that did not resolve (signals.ts anatomySignal), so
@@ -137,9 +142,14 @@ export function anatomySummary(
 export function anatomyNote(e: {
   anatomy: AnatomySummary | null
   requires: readonly unknown[]
+  moduleIds?: readonly string[]
 }): { text: string; plugs: boolean } | null {
   const a = e.anatomy
   if (!a || a.coverage === 'full') return null
+  // a package with no module (a provider, library or tool): Rentgen reads module folders only, so nothing below is a
+  // finding about its code (finding of 25 Oct: the web-research adapters read `Talks to: no hosts found in the code`
+  // while their code calls api.exa.ai and the like)
+  if (e.moduleIds && e.moduleIds.length === 0) return { text: NO_MODULE_TEXT, plugs: false }
   const c = a.counts
   const organs = [
     c.entities + c.tables + c.migrations,

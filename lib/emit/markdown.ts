@@ -1,6 +1,6 @@
 // Agent card `/m/<path>.md` (spec 8.5): fixed sections, at most 20 KB, cut with `[truncated, see <url>]`.
 // Built only from validated fields; the author's README goes into a fenced UNTRUSTED block. Pure.
-import { anatomyNote } from '../core/entry.ts'
+import { anatomyNote, NOT_MEASURED_TEXT } from '../core/entry.ts'
 import { ascendingKeys, ascendingLines, latestLine, type LineInfo } from '../core/lines.ts'
 import { collisionConflictItems, hostDuplicateFindings, hostDuplicateText } from '../core/finding.ts'
 import { numberedSteps, planStepsText } from '../core/plan.ts'
@@ -92,8 +92,14 @@ function addsSection(c: EntryContext, lines: readonly LineInfo[]): string[] {
   const q = queues(c.facts)
   if (q.length) out.push(`- Background queues: ${listMore(q, 10)}`)
   const settings = [...l.credentials.map((x) => `${x.key} (${x.type}${x.required ? '' : ', optional'})`), ...l.env]
-  out.push(`- Settings needed (names only): ${settings.length ? listMore(settings, 10) : 'none'}`)
-  out.push(`- Talks to: ${l.hosts.length ? listMore(l.hosts, 10) : 'no hosts found in the code'}`)
+  // a package without a module: its code is not read, so `none` would be a claim about code nobody read (25 Oct)
+  const unread = e.moduleIds.length === 0
+  out.push(
+    `- Settings needed (names only): ${settings.length ? listMore(settings, 10) : unread ? NOT_MEASURED_TEXT : 'none'}`,
+  )
+  out.push(
+    `- Talks to: ${l.hosts.length ? listMore(l.hosts, 10) : unread ? NOT_MEASURED_TEXT : 'no hosts found in the code'}`,
+  )
   const conflicts = [
     ...e.replaces.map((r) => `replaces core ${r.replace(/^core:/, '')}`),
     ...e.slotConflicts.map((s) => `competes for a module slot with ${s.replace(/^(npm|github):/, '')}`),
