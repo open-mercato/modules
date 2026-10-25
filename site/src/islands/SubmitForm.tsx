@@ -1777,20 +1777,18 @@ export default function SubmitForm(props: SubmitFormProps) {
               ) : (
                 <>
                   <code>{typed.kind === 'npm' ? typed.name : typed.repo}</code> is on the ignore list, so the catalog
-                  does not list it. If the reason is wrong, ask a curator.
+                  does not list it. If the reason is wrong, use Request listing.
                 </>
               )}
             </p>
-            <div class="sf__actions">
-              <span class="btn btn--primary sf__btn--off" aria-disabled="true">
-                Open pull request
-              </span>
-              {!states.includes('core') && (
-                <a class="btn btn--secondary" href={listingRequestUrl(props.repo, t, form)} rel="noopener noreferrer">
+            {/* no greyed `Open pull request` (finding of 25 Oct): there is no form, so the one way on is a request */}
+            {!states.includes('core') && (
+              <div class="sf__actions">
+                <a class="btn btn--primary" href={listingRequestUrl(props.repo, t, form)} rel="noopener noreferrer">
                   Request listing
                 </a>
-              )}
-            </div>
+              </div>
+            )}
           </>
         ) : t && !stopped && result ? (
           <>
