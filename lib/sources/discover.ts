@@ -371,9 +371,18 @@ function renderIssue(r: {
     )
   for (const e of r.errors.slice(0, 20)) lines.push(`- source error: ${md(e)}`)
   out.push(...(lines.length ? lines : ['Nothing.']), '')
-  if (r.skipped.length) {
+  // only what points at Open Mercato itself (a keyword, the topic, the ignore list): a maintainer's other npm work
+  // stays out of a public issue (finding of 25 Oct: 33 of 40 lines were unrelated personal packages); the full list
+  // is in out/discover.json
+  const shown = r.skipped.filter(
+    (s) => s.reason === 'policy/ignore.yml' || s.via.some((v) => !v.startsWith('maintainer ')),
+  )
+  if (shown.length) {
     out.push('<details><summary>Checked and skipped</summary>', '')
-    for (const s of r.skipped) out.push(`- \`${s.locator}\` (${s.via.join(', ')}): ${s.reason}`)
+    for (const s of shown) out.push(`- \`${s.locator}\` (${s.via.join(', ')}): ${s.reason}`)
+    const rest = r.skipped.length - shown.length
+    if (rest > 0)
+      out.push('', `${rest} more packages of the same maintainers, not about Open Mercato: out/discover.json.`)
     out.push('', '</details>', '')
   }
   let text = out.join('\n')

@@ -72,6 +72,13 @@ describe('yarn om discover --offline', () => {
     )
     expect(r.markdown).toContain('## Needs attention')
     expect(r.markdown).not.toMatch(/[–—]/)
+    // the issue lists only skipped packages that point at Open Mercato (finding of 25 Oct): one found only through a
+    // maintainer's other npm work stays in out/discover.json
+    const details = r.markdown.slice(r.markdown.indexOf('Checked and skipped'))
+    for (const sk of r.skipped) {
+      const own = sk.reason === 'policy/ignore.yml' || sk.via.some((v) => !v.startsWith('maintainer '))
+      expect(details.includes(`\`${sk.locator}\``), sk.locator).toBe(own)
+    }
     // proposals parse as descriptors once a person replaces the TODO texts
     for (const p of r.proposals) {
       const d = parse(p.yaml) as Record<string, unknown>
