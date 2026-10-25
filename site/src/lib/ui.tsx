@@ -134,7 +134,9 @@ export function Square({
   const s = STATUS[status]
   // a red dot on a green square read as an error of a verified module (finding of 25 Oct): there it is a quiet grey
   // dot, the labels and titles still say `broken in isolation`; the dot stays (D10)
-  const dot = iso === 'broken' && status === 'verified' && !other ? 'quiet' : iso
+  // beside a square of another version the dot is hollow too (finding of 25 Oct: telemetry on 0.8 drew a dashed square
+  // with the red dot of the 0.9.0 receipt in isolation); the labels and titles name the version
+  const dot = other && iso ? 'other' : iso === 'broken' && status === 'verified' ? 'quiet' : iso
   const mark = dot ? <span class={`sq-iso sq-iso--${dot}`} aria-hidden="true" /> : null
   // the line's receipt judged another version (review r6): a dashed outline, the mark of the preview chip, never the
   // other version's colour; the letter stays U (no verdict for the version a fresh app installs)
