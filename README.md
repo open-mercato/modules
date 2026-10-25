@@ -1,6 +1,6 @@
 # Open Mercato Modules
 
-Extend everything. Start with 80% done. Every entry here is read from its published code, and every module and provider is installed in a fresh Open Mercato app on each release line by the nightly run. Libraries and tools are read, not installed.
+Extend everything. Start with 80% done. Every entry here is read from its published code, and every module is installed in a fresh Open Mercato app on each release line by the nightly run. Providers, libraries and tools are read, not installed.
 
 This repository holds the module descriptors, the code that measures them and the site at https://open-mercato.github.io/modules (later https://modules.openmercato.com). Descriptions come from authors. Everything else is measured.
 
@@ -37,7 +37,7 @@ Verified is a compatibility signal, not a security review. A module's own code r
 
 ## For agents
 
-Every page has a `.md` and a `.json` twin, `/llms.txt` lists them, and the read-only MCP server exposes `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes`.
+Every module page has a `.md` and a `.json` twin, `/llms.txt` lists them, and the read-only MCP server exposes `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes`.
 
 ## Development
 
