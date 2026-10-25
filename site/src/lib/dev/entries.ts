@@ -3,6 +3,7 @@
 // design gallery shows real fixture numbers; it is not the emitter and nothing here is published.
 import { glyphFromCounts, sigilPhase } from '../../../../lib/sigil/sigil.ts'
 import { descriptorLocator, locatorToPath } from '../../../../lib/schema/locator.ts'
+import { cmmInstallCommand } from '../../../../lib/core/plan.ts'
 import type {
   AnatomySummary,
   BuiltinData,
@@ -283,7 +284,7 @@ export function buildEntries(s: FixtureSnapshot): IndexEntry[] {
       agentPolicy: health?.agentPolicy ?? {},
       install: {
         cli,
-        cmm: npm ? `npx create-mercato-module install ${npm}@${rec}` : null,
+        cmm: npm ? cmmInstallCommand(`${npm}@${rec}`) : null,
         needsAllowThirdParty: allow,
         moduleFlag: null,
       },

@@ -1,7 +1,13 @@
 // Install commands (4.6, D10, D46) and plan_install (8.2) on fixture entries and the corpus.
 import { describe, expect, it } from 'vitest'
 import { withSlotConflicts } from '../../lib/core/entry.ts'
-import { builtInEnableCommand, installInfo, planInstall, type PlanContext } from '../../lib/core/plan.ts'
+import {
+  builtInEnableCommand,
+  cmmInstallCommand,
+  installInfo,
+  planInstall,
+  type PlanContext,
+} from '../../lib/core/plan.ts'
 import { INSTALLABLE_META_KEY } from '../../lib/core/policy.ts'
 import { RefError } from '../../lib/core/refs.ts'
 import { BuiltInIndex } from '../../lib/schema/published/builtin.ts'
@@ -201,6 +207,33 @@ describe('install commands', () => {
         expect(e.moduleIds.length, e.locator).toBeGreaterThan(0)
         if (e.moduleIds.length > 1) expect(cmd, e.locator).toMatch(/ --module [a-z][a-z0-9_]*$/)
       }
+    }
+  })
+
+  it('an unscoped npm package gets npm: in the create-mercato-module command, module add keeps the bare name', () => {
+    // create-mercato-module reads a bare name as a GitHub shorthand (review finding of 25 Oct)
+    const version = {
+      latest: '0.1.1',
+      preview: null,
+      publishedAt: null,
+      integrity: null,
+      installableFrom: null,
+      gitRef: null,
+      recommended: { '0.9': '0.1.1' },
+    }
+    const visits = { npm: 'mercato-visits', locator: 'npm:mercato-visits', moduleIds: ['visits'], moduleFlag: null }
+    expect(installInfo({ ...visits, version }, '0.9')).toEqual({
+      cli: 'yarn mercato module add mercato-visits@0.1.1 --allow-third-party',
+      cmm: 'npx create-mercato-module install npm:mercato-visits@0.1.1',
+      needsAllowThirdParty: true,
+      moduleFlag: null,
+    })
+    expect(cmmInstallCommand('mercato-visits')).toBe('npx create-mercato-module install npm:mercato-visits')
+    expect(cmmInstallCommand('@x/visits@0.1.1')).toBe('npx create-mercato-module install @x/visits@0.1.1')
+    // every npm entry of the fixture and the corpus: a create-mercato-module command never names a bare package
+    for (const e of [...fixture.entries, ...corpus.entries]) {
+      const cmm = e.npm ? installInfo({ ...e, moduleFlag: e.install.moduleFlag }, '0.9').cmm : null
+      if (cmm) expect(cmm, e.locator).toMatch(/^npx create-mercato-module install (?:@[^/ ]+\/|npm:)[^ ]+$/)
     }
   })
 

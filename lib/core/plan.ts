@@ -100,6 +100,15 @@ export function packageCommand(
   return e.kind === 'library' ? `yarn add ${spec}` : null
 }
 
+/**
+ * `npx create-mercato-module install <spec>` for an npm package. create-mercato-module reads a bare name as a GitHub
+ * shorthand (`visits` resolves like a repository), so an unscoped package carries `npm:` (`npm:visits@0.1.1`); a
+ * scoped one reads as npm already (review finding of 25 Oct). `yarn mercato module add` takes the name as it is.
+ */
+export function cmmInstallCommand(spec: string): string {
+  return `npx create-mercato-module install ${spec.startsWith('@') ? spec : `npm:${spec}`}`
+}
+
 export const ENTERPRISE_PACKAGE = '@open-mercato/enterprise'
 
 /**
@@ -172,7 +181,7 @@ export function installInfo(
   const own = packageCommand(e, spec)
   if (own) return { cli: own, cmm: null, needsAllowThirdParty: false, moduleFlag: null }
   const thirdParty = !e.npm.startsWith('@open-mercato/')
-  const cmm = `npx create-mercato-module install ${spec}`
+  const cmm = cmmInstallCommand(spec)
   if (inPreset(e, preset)) return { cli: `yarn add ${spec}`, cmm, needsAllowThirdParty: false, moduleFlag: null }
   // a new app has the enterprise package and turns its modules on in .env (finding of 25 Oct); one module of it (the
   // picker's row) keeps its own `--module` command
