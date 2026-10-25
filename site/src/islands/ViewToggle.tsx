@@ -1,5 +1,5 @@
-// Human | Agent (spec 1.1 item 4, 7.6): Agent shows exactly what a coding agent receives for this module: the
-// Markdown card `/m/<path>.md` and the `get_module` JSON `/m/<path>.json`, fetched from the site on first use.
+// Human | Agent (spec 1.1 item 4, 7.6): Agent shows what a coding agent reads for this module: the Markdown card
+// `/m/<path>.md` and the static detail document `/m/<path>.json`, fetched from the site on first use.
 // The choice is remembered in localStorage (try/catch); Human is the default and the page works without it.
 import { useEffect, useState } from 'preact/hooks'
 import { createPortal } from 'preact/compat'
@@ -17,6 +17,30 @@ export interface ViewToggleProps {
 type View = 'human' | 'agent'
 type Tab = 'md' | 'json'
 const KEY = 'om-view'
+
+/**
+ * The two formats in their own words (finding of 25 Oct): the JSON tab is the static detail document, not the
+ * `get_module` response, and its author text (the README excerpt) is not marked untrusted, so it is neither named nor
+ * copied as what an agent gets. Only the card says its author text is marked.
+ */
+export const AGENT_FORMATS = {
+  md: {
+    label: 'Card',
+    ext: '.md',
+    aria: 'Agent card',
+    copy: 'Copy for agent',
+    copied: 'Copied for agent',
+    note: 'This is the card an agent reads for this module; the MCP tool get_module and WebMCP return the same data. Author text inside it is marked untrusted.',
+  },
+  json: {
+    label: 'Detail',
+    ext: 'JSON',
+    aria: 'Detail JSON',
+    copy: 'Copy JSON',
+    copied: 'Copied',
+    note: "This is the static detail document of the module, with the author's text as published. The MCP tool get_module and WebMCP wrap author text with an untrusted notice.",
+  },
+} as const
 
 interface Loaded {
   md: string | null
@@ -72,12 +96,11 @@ export default function ViewToggle({ md, json, target }: ViewToggleProps) {
       <div class="agentv__bar">
         {/* a format switch, not a tab set: two toggle buttons (aria-pressed), like Human | Agent */}
         <div class="agentv__tabs" role="group" aria-label="Agent format">
-          <button type="button" aria-pressed={tab === 'md'} aria-controls="agentv-pre" onClick={() => setTab('md')}>
-            Card <code>.md</code>
-          </button>
-          <button type="button" aria-pressed={tab === 'json'} aria-controls="agentv-pre" onClick={() => setTab('json')}>
-            get_module <code>JSON</code>
-          </button>
+          {(['md', 'json'] as const).map((k) => (
+            <button type="button" aria-pressed={tab === k} aria-controls="agentv-pre" onClick={() => setTab(k)}>
+              {AGENT_FORMATS[k].label} <code>{AGENT_FORMATS[k].ext}</code>
+            </button>
+          ))}
         </div>
         <span class="agentv__tokens">{text ? `≈ ${tokens.toLocaleString('en-US')} tokens` : ''}</span>
         <a class="agentv__raw" href={tab === 'md' ? md : json}>
@@ -87,27 +110,19 @@ export default function ViewToggle({ md, json, target }: ViewToggleProps) {
           type="button"
           class="btn btn--primary btn--sm"
           data-copy={text ?? ''}
-          data-copied="Copied for agent"
+          data-copied={AGENT_FORMATS[tab].copied}
           disabled={!text}
         >
-          <Icon name="copy" size={14} /> Copy for agent
+          <Icon name="copy" size={14} /> {AGENT_FORMATS[tab].copy}
         </button>
       </div>
-      <p class="agentv__note">
-        This is the exact text an agent gets from the catalog: the card, the MCP tool <code>get_module</code> and WebMCP
-        return the same data. Author text inside it is marked untrusted.
-      </p>
+      <p class="agentv__note">{AGENT_FORMATS[tab].note}</p>
       {data.error ? (
         <p class="agentv__err">
           {data.error} <a href={md}>Card</a>
         </p>
       ) : (
-        <pre
-          class="agentv__pre"
-          id="agentv-pre"
-          tabIndex={0}
-          aria-label={tab === 'md' ? 'Agent card' : 'get_module JSON'}
-        >
+        <pre class="agentv__pre" id="agentv-pre" tabIndex={0} aria-label={AGENT_FORMATS[tab].aria}>
           {text ?? 'Loading.'}
         </pre>
       )}
