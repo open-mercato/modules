@@ -326,6 +326,13 @@ function packageInfo(name: string, p: Packument): PackageInfo {
 /** License sentence (spec 7.7 H). */
 export function licenseCheck(value: string | null, enterprise = false): NonNullable<CheckResult['license']> {
   const kind = licenseKind(value, enterprise)
+  // `SEE LICENSE IN <file>` is a custom license, not UNLICENSED (finding of 25 Oct): the card shows it as proprietary
+  if (kind === 'proprietary' && value && /^SEE LICENSE IN\b/i.test(value))
+    return {
+      value,
+      kind,
+      text: `Custom license (${value.slice(0, 80)}). The card shows it as proprietary unless package.json names an SPDX license.`,
+    }
   if (kind === 'proprietary') return { value, kind, text: TEXT.unlicensed }
   if (kind === 'unknown')
     return { value, kind, text: 'No license in package.json. The card shows LICENSE UNKNOWN until you add one.' }
@@ -449,7 +456,9 @@ export async function runChecks(t: Target, ctx: CheckContext, deps: Deps): Promi
       r.peers = peersCheck(r.pkg.peers, ctx.coreVersion, t.name)
       r.installableFrom = installableFrom(r.pkg.publishedAt, isPreapproved(t.name, ctx.preapproved))
       if (r.pkg.deprecated) note('error', `Deprecated on npm: ${r.pkg.deprecated.slice(0, 160)}`)
-      if (r.pkg.version && !r.pkg.stable && !t.name.startsWith('@open-mercato/'))
+      // a stable version whose every release is deprecated is no prerelease (finding of 25 Oct: `No stable release yet
+      // (2.0.9)`): the deprecation note above says it
+      if (r.pkg.version && !r.pkg.stable && !isStable(r.pkg.version) && !t.name.startsWith('@open-mercato/'))
         note('error', `No stable release yet (${r.pkg.version}). Publish a version like 1.0.0 or 0.1.0.`)
       if (r.pkg.installScripts.length > 0)
         note(
@@ -857,6 +866,17 @@ export function liveRules(
           }
         : { id: 'LST-3', state: 'fail', text: r.gate.reason ?? 'No src/dist pair.' },
     )
+  else if (
+    r.pkg &&
+    ![...Object.keys(r.pkg.peers), ...Object.keys(r.pkg.dependencies)].some((d) => d.startsWith('@open-mercato/'))
+  )
+    // a package with no Open Mercato dependency or peer is no library or tool of Open Mercato by itself (finding of
+    // 25 Oct: a Strapi plugin passed as `Kind library`); a curator decides
+    out.push({
+      id: 'LST-3',
+      state: 'unknown',
+      text: `Kind ${r.kind}: no module in the package and no @open-mercato dependency or peer. A curator checks that it is built for Open Mercato.`,
+    })
   else
     out.push({ id: 'LST-3', state: 'pass', text: `Kind ${r.kind}: no module in the package, package.json is enough.` })
   out.push({
@@ -1365,7 +1385,8 @@ export default function SubmitForm(props: SubmitFormProps) {
                       </dd>
                     </div>
                   )}
-                  {result.pkg && (
+                  {/* when a new app accepts the release: said of an Open Mercato package only (finding of 25 Oct) */}
+                  {result.pkg && !states.includes('not-module') && !result.pkg.deprecated && (
                     <div>
                       <dt>Installable</dt>
                       <dd>{installableText(result.installableFrom, new Date().toISOString().slice(0, 10))}</dd>

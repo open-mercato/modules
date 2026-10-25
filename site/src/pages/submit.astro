@@ -10,6 +10,7 @@ import SubmitForm from '../islands/SubmitForm.tsx'
 import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { CategoriesFile, IgnoreFile } from '../../../lib/schema/policy.ts'
+import { CURATOR_FIELDS } from '../../../lib/schema/descriptor.ts'
 import { sigilLabel } from '../../../lib/sigil/sigil.ts'
 import { orderLines } from '../lib/status.ts'
 
@@ -53,10 +54,20 @@ const catalog = modules.entries.map((e) => ({
 // module IDs of core on the latest line: a package that ships one collides (lint collision-core)
 const builtInIds = { coreVersion: builtIn.coreVersion, ids: builtIn.modules.map((m) => m.id) }
 const lines = orderLines(modules.lines).map((l) => ({ key: l.key, version: l.version, source: l.source, cadence: l.cadence }))
-// the header shows a real descriptor of the catalog as the shape of what the form builds (spec 4.3 house style)
-const sampleEntry = modules.entries.find((e) => e.listed && e.type !== 'official' && e.npm && e.providers.length > 0) ?? null
-const sampleFile = sampleEntry ? resolve('modules', `${sampleEntry.path}.yml`) : null
-const sample = sampleFile && existsSync(sampleFile) ? readFileSync(sampleFile, 'utf8').trim() : null
+// the header shows a real descriptor of the catalog as the shape of what the form builds (spec 4.3 house style), one
+// with author fields only (finding of 25 Oct: the KSeF sample showed the curator field renamedFrom to authors)
+const authorOnly = (path: string): string | null => {
+  const file = resolve('modules', `${path}.yml`)
+  if (!existsSync(file)) return null
+  const text = readFileSync(file, 'utf8').trim()
+  const d = parseYaml(text) as Record<string, unknown> | null
+  return d && !text.startsWith('#') && !CURATOR_FIELDS.some((k) => k in d) ? text : null
+}
+const sampleEntry =
+  modules.entries.find((e) => e.listed && e.type !== 'official' && e.npm && e.providers.length > 0 && authorOnly(e.path)) ??
+  modules.entries.find((e) => e.listed && e.type !== 'official' && e.npm && authorOnly(e.path)) ??
+  null
+const sample = sampleEntry ? authorOnly(sampleEntry.path) : null
 ---
 
 <Base
@@ -124,7 +135,7 @@ const sample = sampleFile && existsSync(sampleFile) ? readFileSync(sampleFile, '
       <div>
         <h2 class="t-h3">What happens next</h2>
         <p>
-          CI checks the file and writes a short summary on the pull request. After merge the module is read from
+          CI checks the file and writes a short summary in the validate check of the pull request. After merge the module is read from
           source within minutes and installed in the next run of each line.
         </p>
       </div>
