@@ -126,6 +126,18 @@ export default function ModuleRow({
           </div>
         )}
         <div class="mrow__act">
+          {/* nothing to copy: a new app and an app from the empty preset both have it (Search, Events); the slot says
+              so instead of standing empty (finding of 25 Oct) */}
+          {!copy && inNewApp && (
+            <span
+              class="btn btn--ghost btn--icon btn--sm mrow__has"
+              role="img"
+              aria-label={`${name}: nothing to install, a new app already has it`}
+              title="Nothing to install: a new app already has it"
+            >
+              <Icon name="check" size={16} />
+            </span>
+          )}
           {copy && (
             <button
               type="button"

@@ -625,6 +625,14 @@
   display: flex;
   justify-content: flex-start;
 }
+/* `nothing to install` in the place of the copy button: quiet, not a control */
+.mrow__has {
+  color: var(--ink-3);
+  cursor: default;
+}
+.mrow__has:hover {
+  background: none;
+}
 .mrow__act {
   grid-area: act;
   display: flex;
