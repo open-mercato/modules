@@ -700,8 +700,9 @@ export default function Registry({
       {signals && useful(tierOpts, f.tier.length > 0) && (
         <fieldset class="reg__group">
           <legend class="reg__legend">Level</legend>
+          {/* OM Quality with 0 stays off the facet (R17, spec 6.3: its zero is said on /quality only, finding of 25 Oct) */}
           {tierOpts.map((t) =>
-            (t.id === 'none' || searching) && t.n === 0 && !f.tier.includes(t.id) ? null : (
+            (t.id === 'none' || t.id === 'quality' || searching) && t.n === 0 && !f.tier.includes(t.id) ? null : (
               <Check
                 label={t.label}
                 checked={f.tier.includes(t.id)}
