@@ -410,14 +410,31 @@ describe('agentPolicy (6.5)', () => {
     expect(strictestPolicy([broken('24 Oct')], ['@dainamite/cpq']).reasons[0]?.text).toBe(
       'Broken at typecheck on 0.9 since 24 Oct.',
     )
-    // past 160 characters the line counts the packages
+    // past 160 characters the names go on more lines, each still naming its packages (review of 25 Oct)
     const long = Array.from({ length: 6 }, (_, i) => `@some-long-scope/package-number-${i}`)
     const many = strictestPolicy(
       long.map(() => broken('25 Oct')),
       long,
     )
-    expect(many.reasons).toEqual([{ code: 'BROKEN', text: '6 packages: Broken at typecheck on 0.9 since 25 Oct.' }])
+    expect(many.reasons).toEqual([
+      { code: 'BROKEN', text: `${long.slice(0, 3).join(', ')}: Broken at typecheck on 0.9 since 25 Oct.` },
+      { code: 'BROKEN', text: `${long.slice(3).join(', ')}: Broken at typecheck on 0.9 since 25 Oct.` },
+    ])
     expect(Policy.safeParse(many).success).toBe(true)
+    // no room for more lines within the 10 reasons: the line names what fits and counts the rest
+    const others = Array.from({ length: 9 }, (_, i) => `@acme/other-${i}`)
+    const full = strictestPolicy(
+      [...long.map(() => broken('25 Oct')), ...others.map((_, i) => broken(`${i + 1} Oct`))],
+      [...long, ...others],
+    )
+    expect(full.reasons).toHaveLength(10)
+    expect(full.reasons[0]?.text).toBe(
+      `${long.slice(0, 3).join(', ')} and 3 more: Broken at typecheck on 0.9 since 25 Oct.`,
+    )
+    expect(full.reasons.slice(1).map((r) => r.text)).toEqual(
+      others.map((p, i) => `${p}: Broken at typecheck on 0.9 since ${i + 1} Oct.`),
+    )
+    expect(Policy.safeParse(full).success).toBe(true)
   })
 
   it('BROKEN on the install version, not on the last receipt of the line (review round 2)', () => {

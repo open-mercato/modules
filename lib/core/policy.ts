@@ -993,10 +993,37 @@ export function builtInPolicy(coreLine: string, appLine: string | null): Policy 
 const RANK = { allow: 0, ask: 1, refuse: 2 } as const
 
 /**
+ * `pkgA, pkgB: text` lines of one reason, each within 160 characters, at most `max`: past that the last line names
+ * what fits and counts the rest (`pkgE and 3 more: text`). A line keeps at least one name; a name too long for a line
+ * is clipped with its text, so every line names a package (review of 25 Oct: `6 packages: ...` named none).
+ */
+function namedLines(who: readonly string[], text: string, max: number): string[] {
+  const line = (names: readonly string[], more = 0) =>
+    `${names.join(', ')}${more > 0 ? ` and ${more} more` : ''}: ${text}`
+  const groups: string[][] = []
+  for (const p of who) {
+    const cur = groups.at(-1)
+    if (cur && line([...cur, p]).length <= 160) cur.push(p)
+    else groups.push([p])
+  }
+  if (groups.length > max) {
+    const kept = groups.slice(0, Math.max(0, max - 1))
+    const rest = who.slice(kept.flat().length)
+    const last = [rest[0] as string]
+    for (const p of rest.slice(1)) {
+      if (line([...last, p], rest.length - last.length - 1).length > 160) break
+      last.push(p)
+    }
+    return [...kept.map((names) => line(names)), line(last, rest.length - last.length)].map((t) => clip(t))
+  }
+  return groups.map((names) => clip(line(names)))
+}
+
+/**
  * Strictest decision of several policies; reasons merged (deduplicated, max 10), consent texts joined. With
  * `subjects` (the package of each policy, null for one about core) naming more than one package, each reason starts
- * with the packages it holds for, one line per reason (finding of 25 Oct: three broken modules of a plan read as two
- * `Broken ... since` lines that named none of them).
+ * with the packages it holds for, one line per reason, more where the names do not fit 160 characters (finding of 25
+ * Oct: three broken modules of a plan read as two `Broken ... since` lines that named none of them).
  */
 export function strictestPolicy(policies: readonly Policy[], subjects?: readonly (string | null)[]): Policy {
   if (policies.length === 0) return { decision: 'allow', reasons: [] }
@@ -1012,10 +1039,13 @@ export function strictestPolicy(policies: readonly Policy[], subjects?: readonly
       else if (subject && !g.who.includes(subject)) g.who.push(subject)
     }
   })
-  const reasons: Reason[] = groups.map(({ r, who }) => {
-    if (who.length === 0) return r
-    const text = `${who.join(', ')}: ${r.text}`
-    return { code: r.code, text: text.length <= 160 ? text : clip(`${who.length} packages: ${r.text}`) }
+  // a reason whose packages do not fit one line takes more lines while the 10 allow it
+  let spare = Math.max(0, 10 - groups.length)
+  const reasons: Reason[] = groups.flatMap(({ r, who }) => {
+    if (who.length === 0) return [r]
+    const extra = Math.min(namedLines(who, r.text, Infinity).length - 1, spare)
+    spare -= extra
+    return namedLines(who, r.text, 1 + extra).map((text) => ({ code: r.code, text }))
   })
   const out: Policy = { decision, reasons: ordered(reasons).slice(0, 10) }
   if (decision === 'ask') {
