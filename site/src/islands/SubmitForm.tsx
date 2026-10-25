@@ -1006,11 +1006,23 @@ export function formFromPackage(
       .filter((k) => !GENERIC_KEYWORDS.has(k) && /^[a-z0-9-]{2,24}$/.test(k))
       .slice(0, 8)
       .join(', ')
-  const desc = r.pkg?.description?.trim() ?? ''
-  if (!f.summary.trim() && desc.length >= 20 && desc.length <= 140 && plainTextViolation(desc) === null)
-    f.summary = desc
+  const fromNpm = summaryFromDescription(r.pkg?.description ?? '')
+  if (!f.summary.trim() && fromNpm) f.summary = fromNpm
   if (r.kind && r.kind !== 'module') f.kind = r.kind
   return f
+}
+
+/**
+ * The Summary an npm description gives: the description when it fits 20 to 140 characters of plain text, else its
+ * first sentence when that fits (finding of 25 Oct: most community descriptions are longer than 140 characters and
+ * left Summary empty, so the author started on a failing LST-1). Null otherwise; the author checks it like any field.
+ */
+export function summaryFromDescription(description: string): string | null {
+  const fits = (s: string): boolean => s.length >= 20 && s.length <= 140 && plainTextViolation(s) === null
+  const d = description.trim()
+  if (fits(d)) return d
+  const first = /^(.+?[.!?])\s/.exec(d)?.[1]
+  return first && fits(first) ? first : null
 }
 
 /** Title from a package name: `@x/open-mercato-data-sync` -> `Data Sync` (lib/core/entry.ts entryTitle without facts). */

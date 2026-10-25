@@ -26,6 +26,7 @@ import {
   emptyForm,
   formForCheck,
   formFromPackage,
+  summaryFromDescription,
   gateFromFiles,
   liveRules,
   listingRequestUrl,
@@ -647,6 +648,27 @@ describe('core module IDs', () => {
     expect(r.collisions).toEqual([])
     expect(r.states).toEqual(['listed'])
   })
+})
+
+// ---------- summary from npm ----------
+
+test('Summary takes the npm description, or its first sentence when the whole is over 140 characters (25 Oct)', () => {
+  expect(summaryFromDescription('Sends and receives Polish structured e-invoices through the KSeF API v2.')).toBe(
+    'Sends and receives Polish structured e-invoices through the KSeF API v2.',
+  )
+  expect(
+    summaryFromDescription(
+      'Sends and receives Polish structured e-invoices through the KSeF API v2. Works with the test and production endpoints and keeps every UPO receipt with the invoice.',
+    ),
+  ).toBe('Sends and receives Polish structured e-invoices through the KSeF API v2.')
+  // one long sentence (sync-shopify, 195 characters) stays empty for the author to write
+  expect(
+    summaryFromDescription(
+      "Shopify to Open Mercato Data Sync adapter: syncs products, variants, prices, collections, customers and orders from a Shopify store into Open Mercato's native catalog, customer and sales entities.",
+    ),
+  ).toBeNull()
+  expect(summaryFromDescription('Too short.')).toBeNull()
+  expect(summaryFromDescription('')).toBeNull()
 })
 
 // ---------- names ----------
