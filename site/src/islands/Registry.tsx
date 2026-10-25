@@ -16,7 +16,7 @@ import type { Others } from '../lib/status.ts'
 import { unpackEntry, type PackedEntry } from '../lib/registry-pack.ts'
 import { builtInPage, href } from '../lib/url.ts'
 import { HELD_STATES, cannotInstall, catalogSkip, withSkipped } from '../pages/c/_data.ts'
-import { QUERY_EVENT, RESULTS_EVENT, askQuery, loadSearcher, readQueryParam } from './AskBar.tsx'
+import { QUERY_EVENT, RESULTS_EVENT, askQuery, heldMatchText, loadSearcher, readQueryParam } from './AskBar.tsx'
 import type { QueryDetail, ResultsDetail } from './AskBar.tsx'
 
 /** The fields of an IndexEntry that a row, the filters and the sort read. */
@@ -576,6 +576,8 @@ export default function Registry({
           matches: exactRows.length,
           core: searching ? search.builtIn.length : 0,
           coreTitles: searching ? search.builtIn.map((b) => b.title) : [],
+          // computed further down in this render; the effect runs after it
+          held: heldHits.length,
         },
       }),
     )
@@ -828,7 +830,10 @@ export default function Registry({
               .slice(0, 2)
               .map((b) => b.title)
               .join(', ')}${loose}`
-          : `No exact match for ${asked}`
+          : heldHits.length > 0
+            ? // the body names the held entries and offers to show them (finding of 25 Oct): not `No exact match`
+              `${heldMatchText(heldHits.length)} ${asked}`
+            : `No exact match for ${asked}`
     : `${shown.length} ${shown.length === 1 ? unit[0] : unit[1]}${heldHidden > 0 ? ` · ${heldHidden} held, not shown` : ''}`
   // the squares of the list in words, once above it (review r4: four glyphs and no legend on / and on phones); only
   // the states the list shows, the same words as /compat
@@ -1035,7 +1040,7 @@ export default function Registry({
                 ) : q && heldHits.length > 0 ? (
                   <>
                     <p class="t-h3">
-                      {heldHits.length === 1 ? 'One held entry matches' : `${heldHits.length} held entries match`}:{' '}
+                      {heldMatchText(heldHits.length)}:{' '}
                       {heldHits
                         .slice(0, 3)
                         .map((e) => e.title)

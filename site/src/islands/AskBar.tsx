@@ -24,6 +24,13 @@ export interface ResultsDetail {
   core?: number
   /** Titles of those built-in modules, best first. */
   coreTitles?: string[]
+  /** Held entries the query matches while no module does (the list offers `Show held entries`). */
+  held?: number
+}
+
+/** `One held entry matches`, `2 held entries match`: the Ask bar and the list header (finding of 25 Oct). */
+export function heldMatchText(n: number): string {
+  return n === 1 ? 'One held entry matches' : `${n} held entries match`
 }
 
 let pending: Promise<Searcher> | null = null
@@ -121,14 +128,18 @@ export default function AskBar({ indexUrl, cliSearch, examples, resultsId, tone 
   const live = q.trim() !== '' && found !== null && found.q === q.trim() && found.keys !== null
   // the answer above the fold. When no module matches but core has it, the answer is the core module itself
   // ("In core: Currencies"), never "No exact match" next to a hit (review r1, demo C1)
+  // A query that finds only held entries names them as the list does (finding of 25 Oct: `No exact match` stood
+  // above `One held entry matches: Przelewy24 Gateway`)
   const answer = !live
     ? ''
     : !found.matches && found.core
       ? `In core: ${(found.coreTitles ?? []).slice(0, 2).join(', ') || `${found.core} modules`}`
-      : [
-          found.matches ? `${found.matches} ${found.matches === 1 ? 'match' : 'matches'}` : 'No exact match',
-          ...(found.core ? [`${found.core} in core`] : []),
-        ].join(' · ')
+      : !found.matches && found.held
+        ? heldMatchText(found.held)
+        : [
+            found.matches ? `${found.matches} ${found.matches === 1 ? 'match' : 'matches'}` : 'No exact match',
+            ...(found.core ? [`${found.core} in core`] : []),
+          ].join(' · ')
   return (
     <div class={`ask ask--${tone}${q.trim() ? ' ask--q' : ''}`}>
       <form
