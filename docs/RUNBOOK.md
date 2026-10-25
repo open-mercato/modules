@@ -321,3 +321,37 @@ passed; the inner `timeout 600 yarn build` writes `[harness] step timed out: yar
 as `cancelled`.
 The signature is `sha1(step + ':' + first error line)` with paths reduced to file names, hex runs to `h` and numbers to
 `#`; the same signature in 3 or more modules on one line is a `sameFailure` on `/radar`.
+
+## Repository setup (owner clicks)
+
+Spec 5.6 was written for a public `wojciechszyjka/modules`; the catalog lives in the private `open-mercato/modules`.
+These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
+never change them. State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
+answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty).
+
+Before the repository is public:
+
+1. Settings > Branches: protect `main`. Require the `validate` check (the job of that name in `validate.yml`), require
+   a review from code owners, block force pushes. `data` stays unprotected (only the trusted jobs write it).
+2. Labels: `new-entry`, `update`, `name-reviewed`, `curator`, `automated`, `discovery` (spec 5.6 item 7). The issue
+   forms apply `new-entry`; `sync.yml` adds `discovery` to its issue once the label exists; `validate` reads
+   `name-reviewed`, so after adding it a curator re-runs the `validate` check of the PR.
+3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs).
+4. Settings > Actions > General: require approval for first-time contributors; workflow permissions: read.
+
+At the switch to the public address:
+
+5. Repository variables `SITE_URL` and `BASE_PATH` (`https://modules.openmercato.com` and `/` once the domain answers;
+   until then `https://open-mercato.github.io` and `/modules`), `MCP_URL` after the Worker deploy (D-OPEN-1).
+6. Settings > Pages > Source: GitHub Actions. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on
+   their own once the repository is public; while it is private they run only by hand (Actions minutes).
+7. Environments `github-pages` and `mcp` (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`), and the WebMCP origin
+   trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 items 6 and 8).
+8. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
+
+## Triage of submissions
+
+`yarn om triage` lists every open PR that is labelled `new-entry` or changes `modules/**` (a fork and the `/submit`
+form cannot set labels), one line each with a verdict (`ready`, `hold`, `blocked`), the `validate` check and flags.
+`yarn om triage --merge` squash-merges the ready ones after a confirmation, each pinned to the head commit it judged,
+with the curator's own `gh` login.

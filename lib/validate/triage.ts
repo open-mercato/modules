@@ -173,14 +173,16 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
   }
 }
 
+/**
+ * Open PRs that add or change an entry: labelled `new-entry`, or touching `modules/**` (finding of 25 Oct: nothing
+ * puts the label on a PR, a fork or the /submit flow cannot set it, so a label-only list was always empty).
+ */
 export async function listNewEntryPrs(gh: Gh, repo: string, label = 'new-entry'): Promise<GhPr[]> {
-  return ghJson<GhPr[]>(gh, [
+  const prs = await ghJson<GhPr[]>(gh, [
     'pr',
     'list',
     '--repo',
     repo,
-    '--label',
-    label,
     '--state',
     'open',
     '--limit',
@@ -188,6 +190,9 @@ export async function listNewEntryPrs(gh: Gh, repo: string, label = 'new-entry')
     '--json',
     PR_FIELDS.join(','),
   ])
+  return prs.filter(
+    (pr) => pr.labels.some((l) => l.name === label) || pr.files.some((f) => f.path.startsWith('modules/')),
+  )
 }
 
 export async function triage(gh: Gh, repo: string, catalog: Catalog): Promise<TriageLine[]> {
@@ -199,7 +204,7 @@ export async function triage(gh: Gh, repo: string, catalog: Catalog): Promise<Tr
 
 /** One line per PR: number, verdict, CI, locator(s), flags; reasons on the following indented lines. */
 export function renderLines(lines: readonly TriageLine[], withReasons = true): string {
-  if (lines.length === 0) return 'No open new-entry pull requests.'
+  if (lines.length === 0) return 'No open pull requests that add or change an entry.'
   const w = Math.max(...lines.map((l) => String(l.number).length))
   const out: string[] = []
   for (const l of lines) {
