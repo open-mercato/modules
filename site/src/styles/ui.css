@@ -1022,13 +1022,14 @@
   color: var(--ink-2);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
+/* only the buttons wait for hover or focus; the check of `nothing to install` is information and always shows */
 @media (hover: hover) and (pointer: fine) {
-  .mrow:not(.mrow--head) .mrow__act {
+  .mrow:not(.mrow--head) .mrow__act > :not(.mrow__has) {
     opacity: 0;
     transition: opacity var(--dur-1) var(--ease);
   }
-  .mrow:hover .mrow__act,
-  .mrow:focus-within .mrow__act {
+  .mrow:hover .mrow__act > :not(.mrow__has),
+  .mrow:focus-within .mrow__act > :not(.mrow__has) {
     opacity: 1;
   }
 }

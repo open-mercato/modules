@@ -19,6 +19,7 @@ import {
   whyHtml,
 } from '../../lib/receipts.ts'
 import { receiptPreset } from '../../../../lib/core/lines.ts'
+import { isoMark } from '../../lib/status.ts'
 import { day, dayYear, timeUtc } from '../../lib/format.ts'
 import { href, modulePage, receiptPage } from '../../lib/url.ts'
 import { wbrHtml } from '../../lib/wrap.ts'
@@ -83,6 +84,16 @@ const cellReceipt = outside && lineCell ? (receipts.find((x) => x.id === lineCel
 const mainReceipt = iso && mainCell?.receipt ? (receipts.find((x) => x.id === mainCell.receipt) ?? null) : null
 const isoNote = iso
   ? `An app from the empty preset: the signal in isolation, not the verdict on ${r.om.line}, which a new app (the classic preset) gives.`
+  : null
+// the key beside that sentence is the dot this receipt draws beside the line's square (decision Ia of 25 Oct): grey
+// when it says what the verdict says, in color when it differs, hollow beside no verdict or when it is not the
+// version the line's dot judges
+const isoKey = iso
+  ? isoMark(
+      mainCell?.status ?? 'untested',
+      r.result.status === 'verified' ? 'verified' : r.result.status === 'broken' ? 'broken' : 'other',
+      !mainCell?.receipt || outside,
+    )
   : null
 const presetNote = !iso && entry?.compat.inPresets?.includes(r.om.line) ? presetText(r.om.line) : null
 const own = receiptWord(r)
@@ -169,7 +180,7 @@ const runAt = `${day(r.run.at)} ${timeUtc(r.run.at)}`
           {
             isoNote && (
               <p class="rpage__why rpage__why--calm">
-                <span class="sq-iso-key" aria-hidden="true" />
+                {isoKey && <span class={`sq-iso-key sq-iso-key--${isoKey}`} aria-hidden="true" />}
                 {isoNote}{' '}
                 {mainReceipt ? (
                   <a href={href(receiptPage(mainReceipt.id))}>See the verdict.</a>

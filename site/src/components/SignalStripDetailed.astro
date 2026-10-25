@@ -4,7 +4,7 @@
 // (>= 44 px) that the page wires to the receipt drawer (data-receipts-open). With `href` it is a link to the
 // Receipts panel that the drawer takes over once scripts run (review r4: without JavaScript a button did nothing).
 import type { IndexEntry, Line, Receipt } from '../../../lib/schema/index.ts'
-import { orderLines, stateSentence, stripCells } from '../lib/status.ts'
+import { ISO_DIFFERS, isoMark, orderLines, stateSentence, stripCells } from '../lib/status.ts'
 import type { SentenceOptions } from '../lib/status.ts'
 import { lastReceipt, nightMarks, stepMarks, STEPS, whyHtml } from '../lib/receipts.ts'
 import { day, nbspDates, shortVersion } from '../lib/format.ts'
@@ -72,6 +72,9 @@ const ticks = { from: day(first), to: day(`${end}T00:00:00Z`) }
 const Tag = href ? 'a' : as
 const aria = [`Receipts. ${cells.map((c) => c.label).join('. ')}.`, sentence, ...why, ...warn, ...isolation, ...versions, ...(note ? [`${note}.`] : [])].join(' ')
 const anyIso = cells.some((c) => c.isolation)
+// the legend keys the dots the strip draws, grey first, then the ones that differ (as the legends of / and /compat)
+const isoMarks = new Set(cells.map((c) => isoMark(c.status, c.isolation?.dot ?? null, !!c.other)))
+const isoKeys = (['agree', ...ISO_DIFFERS] as const).filter((m) => isoMarks.has(m))
 ---
 
 <Tag class="ssd" href={href} type={!href && as === 'button' ? 'button' : undefined} data-receipts-open aria-label={aria}>
@@ -110,7 +113,7 @@ const anyIso = cells.some((c) => c.isolation)
       {why.map((w) => <span class="ssd__why" set:html={nbspDates(whyHtml(w))} />)}
       {warn.map((w) => <span class="ssd__why ssd__why--warn" set:html={nbspDates(whyHtml(w))} />)}
       {isolation.map((w) => <span class="ssd__why ssd__why--iso" set:html={nbspDates(whyHtml(w))} />)}
-      {anyIso && <span class="ssd__legend"><span class="sq-iso-key" aria-hidden="true" />Dot: in isolation, an app from the empty preset; grey when it agrees with the square, in color when it differs. The square is a new app.</span>}
+      {anyIso && <span class="ssd__legend">{isoKeys.map((m) => <span class={`sq-iso-key sq-iso-key--${m}`} aria-hidden="true" />)}Dot: in isolation, an app from the empty preset; grey when it agrees with the square, in color when it differs. The square is a new app.</span>}
       {versions.map((v) => <span class="ssd__why ssd__why--version">{nbspDates(v)}</span>)}
     </span>
     {note && <span class="chip chip--preview ssd__note" title={noteTitle ?? undefined}>{note}</span>}
