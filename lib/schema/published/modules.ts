@@ -373,6 +373,12 @@ export const ModuleDetail = IndexEntry.extend({
     .max(30)
     .optional()
     .describe('Bundled host packages (lint host-dependency-duplication): two copies break types.'),
+  // additive (25 Oct, SPEC 7.x item 5 "Maintainers (npm)"): who can publish the package, from the npm sync
+  maintainers: z
+    .array(z.string().max(214))
+    .max(20)
+    .optional()
+    .describe('npm logins that can publish the package, from the sync. Absent: not on npm, or not synced yet.'),
 })
 
 /** /m/<locpath>/receipts.json: last receipt per line, each with its `transition`. */

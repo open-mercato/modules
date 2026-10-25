@@ -282,6 +282,7 @@ export function moduleDetail(c: EntryContext, lines: readonly LineInfo[] = []): 
     receipts: transitions(c.receipts),
     ...(c.rules ? { rules: c.rules } : {}),
     ...(dups.length > 0 ? { hostDuplicates: dups.slice(0, 30) } : {}),
+    ...(c.sync?.npm?.maintainers.length ? { maintainers: c.sync.npm.maintainers.slice(0, 20) } : {}),
   }
 }
 

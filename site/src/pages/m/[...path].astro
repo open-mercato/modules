@@ -1485,6 +1485,20 @@ const tabs = readmeFirst
           </section>
 
           {
+            // SPEC 7.x item 5 (finding of 25 Oct): who can publish the package, from the npm sync
+            (detail?.maintainers?.length ?? 0) > 0 && (
+              <section class="side__sec" aria-labelledby="maint-h">
+                <h2 class="side__h" id="maint-h">Maintainers <span class="side__sub">npm, can publish.</span></h2>
+                <ul class="side__links" role="list">
+                  {detail!.maintainers!.map((m) => (
+                    <li><a href={`https://www.npmjs.com/~${encodeURIComponent(m)}`} rel="noopener noreferrer">{m} <Icon name="external" size={14} /></a></li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          {
             entry.stats && entry.type !== 'official' && (
               <section class="side__sec" aria-labelledby="stats-h">
                 <h2 class="side__h" id="stats-h">Stats <span class="side__sub">Shown, not scored.</span></h2>

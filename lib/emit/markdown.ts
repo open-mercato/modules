@@ -364,6 +364,8 @@ export function moduleCard(i: CardInput): string {
       : []),
     '## Trust',
     trustLine(e),
+    // who can publish it (SPEC 7.x item 5, finding of 25 Oct: the sync had the logins, no page showed them)
+    ...(i.ctx.sync?.npm?.maintainers.length ? [`Maintainers (npm): ${listMore(i.ctx.sync.npm.maintainers, 10)}`] : []),
     // the cause the receipts show only inside a log path (D34): the bundled host packages, with the fix
     ...hostDuplicateFindings(i.ctx.fit, ascendingLines(i.lines)).map((f) => `- ${hostDuplicateText(f)}`),
     '',
