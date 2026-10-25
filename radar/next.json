@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-23T09:42:18.667Z",
-  "next": "0.10.1-develop.7583.1.0c886d0a14",
+  "generatedAt": "2026-10-25T11:51:23.944Z",
+  "next": "0.10.1-develop.7623.1.b7e6aaf96d",
   "base": "0.9.0",
-  "summary": "9 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
+  "summary": "10 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
@@ -33,6 +33,13 @@
         "npm:@freighttech/shipment-tracking",
         "npm:@freighttech/terminal-tracking",
         "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/attachments/data/entities#Attachment",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
       ]
     },
     {

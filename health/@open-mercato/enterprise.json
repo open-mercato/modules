@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/enterprise",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-25T11:51:24Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.9; verified on no line."
+        "Built for 0.8, 0.9; verified on no line."
       ]
     }
   },
@@ -143,7 +143,7 @@
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
         }
       ],
-      "consentText": "Install @open-mercato/enterprise@0.9.0"
+      "consentText": "Install @open-mercato/enterprise@0.8.0"
     },
     "next": {
       "decision": "ask",
@@ -168,7 +168,7 @@
   },
   "evaluated": {
     "0.9": "0.9.0",
-    "0.8": "0.9.0",
+    "0.8": "0.8.0",
     "next": "0.9.0"
   },
   "verdictPreset": "classic"

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-25T11:51:24Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "ok",
-      "next": "ok"
+      "next": "drift"
     },
     "anatomy": "partial",
     "supplyChain": {
@@ -124,7 +124,7 @@
       "reasons": [
         {
           "code": "HOLD",
-          "text": "On hold: Returning to the monorepo (open-mercato#7081). Only a canary is published."
+          "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
           "code": "NOT_VERIFIED",
@@ -137,7 +137,7 @@
       "reasons": [
         {
           "code": "HOLD",
-          "text": "On hold: Returning to the monorepo (open-mercato#7081). Only a canary is published."
+          "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
           "code": "NOT_VERIFIED",
@@ -150,7 +150,7 @@
       "reasons": [
         {
           "code": "HOLD",
-          "text": "On hold: Returning to the monorepo (open-mercato#7081). Only a canary is published."
+          "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
           "code": "NOT_VERIFIED",

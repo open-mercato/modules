@@ -1,0 +1,1534 @@
+{
+  "om": "0.10.1-develop.7623.1.b7e6aaf96d",
+  "computedAt": "2026-10-25T11:51:23.109Z",
+  "cells": {
+    "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
+      "status": "ok",
+      "checked": 20,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.6.0",
+        "kind": "open",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@0.18.0": {
+      "status": "drift",
+      "checked": 75,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@0.19.0": {
+      "status": "drift",
+      "checked": 75,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "^0.6.7",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@0.1.1": {
+      "status": "ok",
+      "checked": 6,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@1.0.0": {
+      "status": "ok",
+      "checked": 6,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.7",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@0.3.0": {
+      "status": "drift",
+      "checked": 58,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@0.4.0": {
+      "status": "drift",
+      "checked": 58,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "^0.6.7",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fastwhitecat/integration-ksef-direct@0.1.7": {
+      "status": "ok",
+      "checked": 38,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
+      "status": "ok",
+      "checked": 38,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@freighttech/shipment-tracking@0.7.1": {
+      "status": "drift",
+      "checked": 36,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@freighttech/shipment-tracking@0.7.2": {
+      "status": "drift",
+      "checked": 36,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@freighttech/terminal-tracking@0.7.2": {
+      "status": "drift",
+      "checked": 25,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@freighttech/terminal-tracking@0.7.3": {
+      "status": "drift",
+      "checked": 25,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@freighttech/ui@0.14.1": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "@tanstack/react-table",
+          "moduleRange": "^8.20.5",
+          "appVersion": "9.3.1"
+        }
+      ]
+    },
+    "npm:@freighttech/ui@0.14.9": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.6.2",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "@tanstack/react-table",
+          "moduleRange": "^8.20.5",
+          "appVersion": "9.3.1"
+        }
+      ]
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable@0.5.0": {
+      "status": "ok",
+      "checked": 105,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable@0.6.0": {
+      "status": "ok",
+      "checked": 105,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-demo-auth@0.2.1": {
+      "status": "ok",
+      "checked": 2,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "*",
+        "kind": "star",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-demo-auth@0.3.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work@0.5.0": {
+      "status": "drift",
+      "checked": 7,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
+      "status": "drift",
+      "checked": 7,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": ">=0.7.0 <0.8.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-health@0.2.3": {
+      "status": "ok",
+      "checked": 4,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "*",
+        "kind": "star",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@fullstackhouse/open-mercato-health@0.3.0": {
+      "status": "ok",
+      "checked": 4,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "*",
+        "kind": "star",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/channel-cloudflare-email@0.1.2": {
+      "status": "drift",
+      "checked": 64,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment"
+      ],
+      "declared": {
+        "range": ">=0.6.6 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
+      "status": "drift",
+      "checked": 66,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment"
+      ],
+      "declared": {
+        "range": ">=0.6.6 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/search-cloudflare@0.1.0": {
+      "status": "drift",
+      "checked": 19,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": ">=0.6.0 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/search-cloudflare@0.1.1": {
+      "status": "drift",
+      "checked": 19,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": ">=0.6.0 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/sync-google-sheets@0.1.1": {
+      "status": "drift",
+      "checked": 34,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "^0.6.5",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/sync-google-sheets@0.2.0": {
+      "status": "drift",
+      "checked": 34,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "^0.6.5",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/sync-shopify@0.4.9": {
+      "status": "drift",
+      "checked": 32,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice"
+      ],
+      "declared": {
+        "range": ">=0.6.6 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@northbound-run/sync-shopify@0.5.0": {
+      "status": "drift",
+      "checked": 32,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice"
+      ],
+      "declared": {
+        "range": ">=0.6.6 <0.7.0",
+        "kind": "bounded",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/ai-assistant@0.8.0": {
+      "status": "drift",
+      "checked": 149,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/search#SearchOptions"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/ai-assistant@0.9.0": {
+      "status": "drift",
+      "checked": 150,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/search#SearchOptions"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/carrier-inpost@0.4.6-canary-5eb138494e": {
+      "status": "drift",
+      "checked": 8,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/shipping_carriers/lib/adapter#ShippingAdapter"
+      ],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-apns@0.8.0": {
+      "status": "ok",
+      "checked": 45,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-apns@0.9.0": {
+      "status": "ok",
+      "checked": 45,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-discord@0.8.0": {
+      "status": "drift",
+      "checked": 111,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-discord@0.9.0": {
+      "status": "drift",
+      "checked": 111,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-expo@0.8.0": {
+      "status": "ok",
+      "checked": 39,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-expo@0.9.0": {
+      "status": "ok",
+      "checked": 39,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-fcm@0.8.0": {
+      "status": "ok",
+      "checked": 41,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-fcm@0.9.0": {
+      "status": "ok",
+      "checked": 41,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-gmail@0.8.0": {
+      "status": "ok",
+      "checked": 58,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-gmail@0.9.0": {
+      "status": "ok",
+      "checked": 65,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-imap@0.8.0": {
+      "status": "ok",
+      "checked": 61,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-imap@0.9.0": {
+      "status": "ok",
+      "checked": 63,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-resend@0.8.0": {
+      "status": "ok",
+      "checked": 31,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-resend@0.9.0": {
+      "status": "ok",
+      "checked": 31,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-ses@0.8.0": {
+      "status": "ok",
+      "checked": 31,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-ses@0.9.0": {
+      "status": "ok",
+      "checked": 31,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/checkout@0.8.0": {
+      "status": "drift",
+      "checked": 156,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/checkout@0.9.0": {
+      "status": "drift",
+      "checked": 159,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/content@0.8.0": {
+      "status": "ok",
+      "checked": 3,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/content@0.9.0": {
+      "status": "ok",
+      "checked": 3,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/documents@0.8.0": {
+      "status": "drift",
+      "checked": 138,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/documents@0.9.0": {
+      "status": "drift",
+      "checked": 138,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/enterprise@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/enterprise@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/events@0.8.0": {
+      "status": "ok",
+      "checked": 19,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/events@0.9.0": {
+      "status": "ok",
+      "checked": 22,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/forms@0.0.0-canary.20260603190311.74d2590": {
+      "status": "drift",
+      "checked": 124,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-payu@0.4.6-canary-5eb138494e": {
+      "status": "ok",
+      "checked": 4,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-przelewy24@0.4.6-canary-5eb138494e": {
+      "status": "ok",
+      "checked": 4,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-stripe@0.8.0": {
+      "status": "drift",
+      "checked": 50,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-stripe@0.9.0": {
+      "status": "drift",
+      "checked": 50,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e": {
+      "status": "drift",
+      "checked": 31,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.1-develop.7442.1.4c1dbf1f0e",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/onboarding@0.8.0": {
+      "status": "ok",
+      "checked": 78,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/onboarding@0.9.0": {
+      "status": "ok",
+      "checked": 78,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/pay-by-links@0.4.9-canary-fcabd45887": {
+      "status": "no-fit",
+      "checked": 66,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/components/CreatePaymentTransactionDialog",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/data/entities",
+          "symbol": "GatewayPaymentLink",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/data/entities",
+          "symbol": "GatewayPaymentLinkTransaction",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/data/validators",
+          "symbol": "listPaymentLinksQuerySchema",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/data/validators",
+          "symbol": "paymentLinkUnlockSchema",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/lib/payment-link-page-metadata",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/lib/payment-links",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/payment_gateways/lib/public-payment-links",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "buildPaymentGatewayPaymentLinkWidgetSpotId",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_link_pages/runtime",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_link_pages/types",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [],
+      "declared": {
+        "range": "0.4.9-canary-fcabd45887",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/scheduler@0.8.0": {
+      "status": "drift",
+      "checked": 89,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/scheduler@0.9.0": {
+      "status": "drift",
+      "checked": 94,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/search@0.8.0": {
+      "status": "drift",
+      "checked": 115,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/search#SearchStrategy"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/search@0.9.0": {
+      "status": "drift",
+      "checked": 118,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/search#SearchStrategy"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/storage-s3@0.8.0": {
+      "status": "drift",
+      "checked": 49,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/storage-s3@0.9.0": {
+      "status": "drift",
+      "checked": 49,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/sync-akeneo@0.8.0": {
+      "status": "drift",
+      "checked": 101,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/sync-akeneo@0.9.0": {
+      "status": "drift",
+      "checked": 101,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/sync-akeneo@1.0.1": {
+      "status": "drift",
+      "checked": 89,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.4.7",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/telemetry@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/telemetry@0.9.0": {
+      "status": "ok",
+      "checked": 13,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/tillio@0.8.0": {
+      "status": "drift",
+      "checked": 72,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/tillio@0.9.0": {
+      "status": "drift",
+      "checked": 72,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-browser@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-browser@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-exa@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-exa@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-firecrawl@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-firecrawl@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-model@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-model@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-searxng@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-searxng@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-serp@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-serp@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-tavily@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-tavily@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research@0.8.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research@0.9.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/webhooks@0.8.0": {
+      "status": "ok",
+      "checked": 109,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/webhooks@0.9.0": {
+      "status": "ok",
+      "checked": 112,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@piotrkarwatka/marketing-consents@0.1.0": {
+      "status": "drift",
+      "checked": 54,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext"
+      ],
+      "declared": {
+        "range": "0.9.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "@tanstack/react-query",
+          "moduleRange": "5.104.1",
+          "appVersion": "5.104.5"
+        },
+        {
+          "name": "@tanstack/react-table",
+          "moduleRange": "9.2.6",
+          "appVersion": "9.3.1"
+        }
+      ]
+    },
+    "npm:@piotrkarwatka/visits@0.1.0": {
+      "status": "ok",
+      "checked": 18,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.8.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "@tanstack/react-query",
+          "moduleRange": "5.104.1",
+          "appVersion": "5.104.5"
+        },
+        {
+          "name": "@tanstack/react-table",
+          "moduleRange": "9.2.5",
+          "appVersion": "9.3.1"
+        }
+      ]
+    },
+    "npm:create-mercato-module@0.5.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:create-mercato-module@0.5.1": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:mercato-readiness-scanner@0.2.1": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:mercato-readiness-scanner@0.2.2": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:open-mercato-generator@0.3.13": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    }
+  }
+}

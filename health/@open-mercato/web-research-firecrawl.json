@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/web-research-firecrawl",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-25T11:51:24Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -133,7 +133,7 @@
           "text": "Not yet tested in a new app on 0.8."
         }
       ],
-      "consentText": "Install @open-mercato/web-research-firecrawl@0.9.0"
+      "consentText": "Install @open-mercato/web-research-firecrawl@0.8.0"
     },
     "next": {
       "decision": "ask",
@@ -154,7 +154,7 @@
   },
   "evaluated": {
     "0.9": "0.9.0",
-    "0.8": "0.9.0",
+    "0.8": "0.8.0",
     "next": "0.9.0"
   },
   "verdictPreset": "classic"
