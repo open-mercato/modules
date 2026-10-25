@@ -2,7 +2,8 @@
 // second run changes nothing, and formatting never changes a value, adds or drops a key, or touches a curator
 // field. The only value rewrite is a category alias to its ID (spec 4.3, policy/categories.yml). Scrambled
 // copies of the 59 seed files (keys shuffled, block and flow styles swapped, other quotes) format back to the
-// exact seed text.
+// exact seed text. The seed files come from lib/commands/seed.ts (helpers.ts seedTree), not from the live
+// modules/**, which grows by pull requests; every live file only has to be in canonical form.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -13,12 +14,17 @@ import { Document, isMap, isScalar, isSeq, parseDocument, Scalar } from 'yaml'
 import { main } from '../../lib/cli.ts'
 import { CURATOR_FIELDS } from '../../lib/schema/index.ts'
 import { formatDescriptorText, FormatError, readCategoryAliases, yamlFiles } from '../../lib/validate/format.ts'
-import { ROOT } from './helpers.ts'
+import { ROOT, seedTree } from './helpers.ts'
 
 const aliases = readCategoryAliases(ROOT)
-const seeds = yamlFiles([join(ROOT, 'modules')])
+const SEED_ROOT = await seedTree()
+const seeds = yamlFiles([join(SEED_ROOT, 'modules')])
+const live = yamlFiles([join(ROOT, 'modules')])
 const tmp = mkdtempSync(join(tmpdir(), 'om-format-'))
-afterAll(() => rmSync(tmp, { recursive: true, force: true }))
+afterAll(() => {
+  rmSync(tmp, { recursive: true, force: true })
+  rmSync(SEED_ROOT, { recursive: true, force: true })
+})
 
 const fmt = (text: string, file = join(ROOT, 'modules', '@x', 'y.yml')) =>
   formatDescriptorText(text, file, { categoryAliases: aliases })
@@ -68,6 +74,15 @@ describe('om format on the 59 seed descriptors', () => {
   it('changes nothing (the seeds are in canonical form)', async () => {
     expect(seeds).toHaveLength(59)
     for (const f of seeds) {
+      const text = readFileSync(f, 'utf8')
+      const r = await formatDescriptorText(text, f, { categoryAliases: aliases })
+      expect(r.changed, f).toBe(false)
+    }
+  })
+
+  it('changes nothing in any file of modules/ today (autofix or `yarn om format modules` keeps them so)', async () => {
+    expect(live.length).toBeGreaterThan(0)
+    for (const f of live) {
       const text = readFileSync(f, 'utf8')
       const r = await formatDescriptorText(text, f, { categoryAliases: aliases })
       expect(r.changed, f).toBe(false)

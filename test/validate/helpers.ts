@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { renderAll } from '../../lib/commands/seed.ts'
 import { createHttp, type Http } from '../../lib/sources/http.ts'
 import { makeTarball, modulePackage, type TarEntry } from '../rentgen/helpers.ts'
 
@@ -172,4 +173,20 @@ export function catalogRepo(): string {
 export function write(root: string, rel: string, text: string): void {
   mkdirSync(dirname(join(root, rel)), { recursive: true })
   writeFileSync(join(root, rel), text)
+}
+
+/**
+ * A throwaway copy of the catalog repository whose modules/** holds exactly the 59 starting descriptors as
+ * `yarn om seed` writes them (lib/commands/seed.ts), next to the live policy/, quality/ and Prettier config. The golden
+ * tests of seed, format and validate run on it instead of the live modules/**, so a new or edited entry, which is
+ * what every submission is, never turns `yarn test` red (finding of 25 Oct). The caller removes the directory.
+ */
+export async function seedTree(): Promise<string> {
+  const dir = mkdtempSync(join(tmpdir(), 'om-seed-'))
+  for (const p of ['policy', 'quality', '.prettierrc.json', '.prettierignore'])
+    cpSync(join(ROOT, p), join(dir, p), { recursive: true })
+  mkdirSync(join(dir, '.github'), { recursive: true })
+  cpSync(join(ROOT, '.github', 'CODEOWNERS'), join(dir, '.github', 'CODEOWNERS'))
+  for (const [rel, text] of await renderAll(ROOT)) write(dir, rel, text)
+  return dir
 }

@@ -1,16 +1,20 @@
 // The 59 starting descriptors (WP03), policy/ignore.yml and policy/builtin-categories.yml against copies of the
 // spec tables 11.1, 11.3 and 4.4, plus the offline steps of `yarn om validate` (WP10 took this file over from
 // WP03): schema, path = locator, Prettier, texts, typosquat (same scope skipped), reserved names.
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+// The seed tests read the files `yarn om seed` writes, in a throwaway tree (helpers.ts seedTree), not the live
+// modules/**: the catalog grows by pull requests, and a new or edited entry must not fail them (finding of 25 Oct).
+// The live modules/** gets the rules every merged pull request keeps (last describe).
+import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { distance } from 'fastest-levenshtein'
 import * as prettier from 'prettier'
-import { describe, expect, it } from 'vitest'
+import { afterAll, describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { checkFiles, checkSeedTable, SEED } from '../../lib/commands/seed.ts'
 import { loadCatalog } from '../../lib/validate/catalog.ts'
 import { checkLocal, typosquatHits } from '../../lib/validate/local.ts'
+import { errorsOf } from '../../lib/validate/types.ts'
 import { findBannedChars, injectionFlags } from '../../lib/core/text.ts'
 import type { Descriptor as DescriptorType } from '../../lib/schema/index.ts'
 import {
@@ -21,8 +25,11 @@ import {
   assertPathMatches,
   descriptorLocator,
 } from '../../lib/schema/index.ts'
+import { seedTree } from './helpers.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
+const SEED_ROOT = await seedTree()
+afterAll(() => rmSync(SEED_ROOT, { recursive: true, force: true }))
 
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -31,12 +38,14 @@ function walk(dir: string): string[] {
   })
 }
 
-const files = walk(join(ROOT, 'modules'))
-  .map((p) => relative(ROOT, p).split(sep).join('/'))
-  .sort()
+const filesIn = (root: string) =>
+  walk(join(root, 'modules'))
+    .map((p) => relative(root, p).split(sep).join('/'))
+    .sort()
+const files = filesIn(SEED_ROOT)
 const descriptors = new Map<string, { rel: string; text: string; d: DescriptorType }>()
 for (const rel of files) {
-  const text = readFileSync(join(ROOT, rel), 'utf8')
+  const text = readFileSync(join(SEED_ROOT, rel), 'utf8')
   const d = Descriptor.parse(parse(text))
   descriptors.set(descriptorLocator(d), { rel, text, d })
 }
@@ -181,7 +190,7 @@ const SPEC_11_3 = [
   'github:FreightTech/open-mercato-modules',
 ]
 
-describe('modules/** (spec 11.1)', () => {
+describe('the seed descriptors (spec 11.1)', () => {
   it('has exactly the 59 entries of table 11.1, one file each', () => {
     expect(files).toHaveLength(59)
     expect(TABLE_11_1).toHaveLength(59)
@@ -201,8 +210,8 @@ describe('modules/** (spec 11.1)', () => {
 
   it('every file is Prettier formatted', async () => {
     for (const { rel, text } of descriptors.values()) {
-      const options = (await prettier.resolveConfig(join(ROOT, rel))) ?? {}
-      expect(await prettier.check(text, { ...options, filepath: join(ROOT, rel), parser: 'yaml' }), rel).toBe(true)
+      const options = (await prettier.resolveConfig(join(SEED_ROOT, rel))) ?? {}
+      expect(await prettier.check(text, { ...options, filepath: join(SEED_ROOT, rel), parser: 'yaml' }), rel).toBe(true)
     }
   })
 
@@ -255,7 +264,7 @@ describe('modules/** (spec 11.1)', () => {
   })
 
   it('typosquat (validate step 6): no alarm among the entries; same-scope pairs are skipped', async () => {
-    const catalog = await loadCatalog(ROOT, null)
+    const catalog = await loadCatalog(SEED_ROOT, null)
     for (const e of catalog.entries.values()) expect(typosquatHits(e.d, catalog), e.locator).toEqual([])
     // gateway-payu ~ gateway-tpay and the channel-* family are close but share the @open-mercato scope
     expect(distance('gateway-payu', 'gateway-tpay')).toBe(2)
@@ -267,7 +276,7 @@ describe('modules/** (spec 11.1)', () => {
       const name = (d.npm ?? d.github ?? '').split('/').pop()!
       expect(reserved, name).not.toContain(name)
     }
-    const catalog = await loadCatalog(ROOT, null)
+    const catalog = await loadCatalog(SEED_ROOT, null)
     for (const { rel, text } of descriptors.values()) {
       const r = checkLocal({ file: rel, text }, catalog)
       expect(r.findings, rel).toEqual([])
@@ -318,9 +327,41 @@ describe('policy/builtin-categories.yml (spec 4.4, 11.2)', () => {
 })
 
 describe('lib/commands/seed.ts', () => {
-  it('has a sound table (59 rows, valid, unique) and the files on disk match it', async () => {
+  it('has a sound table (59 rows, valid, unique) and writes files that pass schema, path and Prettier', async () => {
     expect(SEED).toHaveLength(59)
     expect(checkSeedTable()).toEqual([])
-    expect(await checkFiles(ROOT)).toEqual([])
+    expect(await checkFiles(SEED_ROOT)).toEqual([])
+  })
+
+  it('names a file that is not in the table, which is every entry added after the seed', async () => {
+    const dir = await seedTree()
+    try {
+      writeFileSync(join(dir, 'modules', '@open-mercato', 'extra.yml'), readFileSync(join(dir, files[0]!), 'utf8'))
+      expect((await checkFiles(dir)).some((p) => p.startsWith('modules/@open-mercato/extra.yml: '))).toBe(true)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
+
+// The live catalog: rules every merged pull request keeps, whatever it adds or edits. They are the error steps of
+// the `validate` check (offline part), so `checks` and `validate` agree on a submission.
+describe('modules/** as it is now', () => {
+  const live = filesIn(ROOT)
+
+  it('has one file per locator', () => {
+    expect(live.length).toBeGreaterThan(0)
+    const locators = live.map((rel) =>
+      descriptorLocator(Descriptor.parse(parse(readFileSync(join(ROOT, rel), 'utf8')))),
+    )
+    expect(new Set(locators.map((l) => l.toLowerCase())).size).toBe(locators.length)
+  })
+
+  it('every file passes the offline steps of validate (schema, path, texts, names) without an error', async () => {
+    const catalog = await loadCatalog(ROOT, null)
+    for (const rel of live) {
+      const r = checkLocal({ file: rel, text: readFileSync(join(ROOT, rel), 'utf8') }, catalog)
+      expect(errorsOf(r.findings), rel).toEqual([])
+    }
   })
 })

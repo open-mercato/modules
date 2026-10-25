@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { main } from '../../lib/cli.ts'
+import validate from '../../lib/commands/validate.ts'
 import { loadCatalog } from '../../lib/validate/catalog.ts'
 import {
   changedFiles,
@@ -15,7 +16,7 @@ import {
   runValidate,
 } from '../../lib/validate/run.ts'
 import { renderSummary } from '../../lib/validate/summary.ts'
-import { catalogRepo, fakeHttp, git, moduleTarball, ROOT, write } from './helpers.ts'
+import { catalogRepo, fakeHttp, git, moduleTarball, ROOT, seedTree, write } from './helpers.ts'
 
 const NOW = new Date('2026-10-23T12:00:00Z')
 const quiet = async <T>(fn: () => Promise<T>): Promise<T> => {
@@ -33,9 +34,17 @@ const quiet = async <T>(fn: () => Promise<T>): Promise<T> => {
 
 describe('validate --offline on the seed descriptors', () => {
   it('passes all 59 entries through the offline steps (schema, path, texts, names, built-in map)', async () => {
-    const out = join(ROOT, 'out', 'test-validate-offline')
+    // the files `yarn om seed` writes, not the live modules/** that grows by pull requests (finding of 25 Oct)
+    const seedRoot = await seedTree()
+    const out = join(seedRoot, 'out')
     const summary = join(out, 'summary.md')
-    const code = await quiet(() => main(['validate', '--offline', '--out', out, '--summary', summary]))
+    const code = await quiet(() =>
+      validate({
+        args: ['--summary', summary],
+        flags: { data: join(seedRoot, '.data'), out, offline: true, json: false },
+        root: seedRoot,
+      }),
+    )
     expect(code).toBe(0)
     const report = JSON.parse(readFileSync(join(out, 'validate.json'), 'utf8')) as {
       entries: { status: string; findings: { severity: string }[] }[]
@@ -47,6 +56,16 @@ describe('validate --offline on the seed descriptors', () => {
     // the 46 core modules of 0.9.0 are all mapped; ecommerce (0.10) is listed ahead of time in builtin-upcoming.yml,
     // so it is no `builtin-extra` (finding of 25 Oct)
     expect(report.global.map((g) => `${g.severity}:${g.code}`)).toEqual([])
+    rmSync(seedRoot, { recursive: true, force: true })
+  })
+
+  it('passes every file of modules/ as it is now (any merged pull request keeps this)', async () => {
+    const out = join(ROOT, 'out', 'test-validate-offline')
+    const code = await quiet(() => main(['validate', '--offline', '--out', out]))
+    expect(code).toBe(0)
+    const report = JSON.parse(readFileSync(join(out, 'validate.json'), 'utf8')) as { entries: { status: string }[] }
+    expect(report.entries.length).toBeGreaterThan(0)
+    expect(report.entries.filter((e) => e.status === 'fail')).toEqual([])
     rmSync(out, { recursive: true, force: true })
   })
 
