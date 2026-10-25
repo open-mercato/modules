@@ -14,7 +14,7 @@ const H = 20
 const FONT = `'Geist Mono', ui-monospace, Menlo, monospace`
 
 export interface BadgeState {
-  kind: 'quality' | 'failing' | 'verified' | 'preview' | 'listed' | 'unlisted'
+  kind: 'quality' | 'failing' | 'verified' | 'preview' | 'enterprise' | 'listed' | 'unlisted'
   /** Right part, upper case (`VERIFIED · 0.9`). */
   text: string
   /** shields.io message, lower case. */
@@ -46,6 +46,15 @@ export function badgeState(e: IndexEntry, lines: readonly LineInfo[], source: Re
     const t = `VERIFIED · ${latest}`
     return { kind: 'verified', text: t, message: t.toLowerCase(), fill: '#B4F372', ink: '#2F520B' }
   }
+  // enterprise has no level (tier null, spec 7): its chip, never `LISTED` read as a level (finding of 25 Oct)
+  if (e.enterprise && e.tier === null)
+    return {
+      kind: 'enterprise',
+      text: 'ENTERPRISE LICENSE',
+      message: 'enterprise license',
+      fill: '#ECECEC',
+      ink: '#0C0C0C',
+    }
   if (e.listed) return { kind: 'listed', text: 'LISTED', message: 'listed', fill: '#ECECEC', ink: '#0C0C0C' }
   return { kind: 'unlisted', text: 'NOT LISTED', message: 'not listed', fill: '#ECECEC', ink: '#0C0C0C' }
 }

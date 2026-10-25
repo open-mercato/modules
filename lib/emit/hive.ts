@@ -85,7 +85,9 @@ export function hiveCells(
           ? `verified on ${e.compat.verifiedOn.join(', ')}`
           : latestKey && e.compat.inPresets?.includes(latestKey)
             ? 'in a new app'
-            : 'listed'
+            : e.enterprise && e.tier === null
+              ? 'enterprise license'
+              : 'listed'
     cells.push({
       key: c.key,
       q: slot.q,
