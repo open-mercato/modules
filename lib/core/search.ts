@@ -564,6 +564,26 @@ export function installFields(
   }
 }
 
+/**
+ * The query with one swap of two adjacent letters undone in one word (`stirpe` -> `stripe`, `ksfe` -> `ksef`):
+ * MiniSearch counts a swap as two edits, more than `fuzzy: 0.2` allows a word under ten letters (finding of 25 Oct:
+ * a one-letter slip read `No module does that yet` with Stripe and KSeF in the catalog). At most 60 variants.
+ */
+export function swapVariants(query: string): string[] {
+  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  if (words.length > 6) return []
+  const out: string[] = []
+  words.forEach((w, i) => {
+    if (w.length < 3 || w.length > 24 || !/^[a-z0-9]+$/.test(w)) return
+    for (let j = 0; j < w.length - 1; j++) {
+      if (w[j] === w[j + 1]) continue
+      const swapped = `${w.slice(0, j)}${w[j + 1]}${w[j]}${w.slice(j + 2)}`
+      out.push([...words.slice(0, i), swapped, ...words.slice(i + 1)].join(' '))
+    }
+  })
+  return [...new Set(out)].slice(0, 60)
+}
+
 /** Defaults of SearchModulesInput (lib/schema/tools.ts), applied without Zod so the browser search stays small. */
 export const SEARCH_DEFAULTS = { verifiedOnly: false, includeBuiltIn: true, includeExamples: false, limit: 10 } as const
 
@@ -613,8 +633,8 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
     (!input.emits || b.ids.emits.includes(input.emits)) &&
     (!input.consumes || b.ids.consumes.includes(input.consumes))
 
-  const run = (combineWith: 'AND' | 'OR') => {
-    const hits = searcher.ms.search(input.query, {
+  const run = (combineWith: 'AND' | 'OR', query: string = input.query) => {
+    const hits = searcher.ms.search(query, {
       combineWith,
       prefix: true,
       fuzzy: 0.2,
@@ -637,16 +657,32 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
   }
   // AND first; nothing at all: OR (spec 8.2). Fewer than MIN_AND_RESULTS modules: OR-only modules are appended
   // after the AND ones, so a two-word query still shows close matches.
+  const none = (x: ReturnType<typeof run>): boolean => x.mods.length === 0 && x.bis.length === 0
   let found = run('AND')
-  if (found.mods.length === 0 && found.bis.length === 0) found = run('OR')
-  else if (found.mods.length < MIN_AND_RESULTS && tokenize(input.query).filter((t) => processTerm(t)).length > 1) {
+  let didYouMean: string | null = null
+  if (none(found)) {
+    found = run('OR')
+    // still nothing: one swapped pair of letters (`stirpe`), the variant with the best hit wins
+    if (none(found)) {
+      let best: { v: string; f: typeof found; top: number } | null = null
+      for (const v of swapVariants(input.query)) {
+        const f = run('AND', v)
+        const top = Math.max(f.mods[0]?.r.score ?? 0, f.bis[0]?.r.score ?? 0)
+        if (!none(f) && (!best || top > best.top)) best = { v, f, top }
+      }
+      if (best) {
+        found = best.f
+        didYouMean = best.v
+      }
+    }
+  } else if (found.mods.length < MIN_AND_RESULTS && tokenize(input.query).filter((t) => processTerm(t)).length > 1) {
     const or = run('OR')
     const seen = new Set(found.mods.map((x) => x.m.locator))
     found = { mods: [...found.mods, ...or.mods.filter((x) => !seen.has(x.m.locator))], bis: found.bis }
   }
 
   const best = found.mods[0]?.r.score ?? 0
-  const q = input.query.trim().toLowerCase()
+  const q = (didYouMean ?? input.query).trim().toLowerCase()
   const builtIn: BuiltInCard[] = found.bis
     .filter(
       ({ b, r }) =>
@@ -695,5 +731,6 @@ export function searchModules(searcher: Searcher, rawInput: SearchModulesInput):
     dataVersion: data.dataVersion,
     generatedAt: data.generatedAt,
     ...(data.receiptSource !== undefined ? { receiptSource: data.receiptSource } : {}),
+    ...(didYouMean ? { didYouMean } : {}),
   }
 }

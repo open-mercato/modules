@@ -113,6 +113,12 @@ export const SearchModulesOutput = z.object({
   // where the statuses come from (review r6, additive): 'preview' = a preview run in Docker on the maintainer's
   // machine, not CI; absent in data from before the field
   receiptSource: z.enum(['ci', 'preview']).nullable().optional(),
+  // additive (25 Oct): nothing matched the query, these results are for it with one swap of two letters undone
+  didYouMean: z
+    .string()
+    .max(300)
+    .optional()
+    .describe('Set when nothing matched the query and the results are for this spelling of it (`stirpe` -> `stripe`).'),
 })
 
 export const GetModuleInput = z.object({

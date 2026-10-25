@@ -313,15 +313,18 @@ interface SearchState {
   /**
    * Locators in rank order with the matched chip. `exact`: every word of the query is in the entry (title, package,
    * summary, use, tags, providers or an anatomy identifier); the rest are fuzzy or partial hits, shown as
-   * `Closest matches` without a count.
+   * `Closest matches` without a count. `pinned`: a tool or library among the top 3 of every kind, shown in the
+   * Modules view too.
    */
-  hits: { locator: string; matched: string | null; exact: boolean }[]
+  hits: { locator: string; matched: string | null; exact: boolean; pinned?: boolean }[]
   /** Locators that match the query with no category, type or kind filter: the facet counts follow the query. */
   pool: string[]
   /** The pool's entries with every word of the query (`exact`): what a cleared filter set would show. */
   poolExact: string[]
   builtIn: BuiltInCard[]
   total: number
+  /** Nothing matched the query; the results are for this spelling of it (`stirpe` -> `stripe`). */
+  didYouMean?: string
 }
 
 /** Words of a text as the search tokenizes them. */
@@ -474,7 +477,8 @@ export default function Registry({
           kind: ['module', 'provider', 'tool', 'library'],
         })
         if (!live) return
-        const terms = queryTerms(q, tokenize, processTerm)
+        // a query nothing matched is judged by the spelling the results are for (`stirpe` -> `stripe`)
+        const terms = queryTerms(out.didYouMean ?? q, tokenize, processTerm)
         const exact = (locator: string): boolean => {
           const m = searcher.data.modules[locator]
           if (!m || terms.length === 0) return true
@@ -493,18 +497,34 @@ export default function Registry({
         const poolAll = [
           ...new Set([...pool.results.map((r: ModuleCard) => r.locator), ...out.results.map((r) => r.locator)]),
         ]
+        // a library or a tool among the top 3 of every kind is shown in the Modules view too, at its rank (golden
+        // query `web search for agents`: the engine web-research, a library, sat behind `Tools & libraries 1` while
+        // its adapters filled the list)
+        const hits: SearchState['hits'] = out.results.map((r: ModuleCard) => ({
+          locator: r.locator,
+          matched: pickMatch(r.matchedOn),
+          exact: exact(r.locator),
+        }))
+        if (f.kind === 'modules')
+          pool.results.slice(0, 3).forEach((r: ModuleCard, rank: number) => {
+            if ((r.kind !== 'library' && r.kind !== 'tool') || !exact(r.locator)) return
+            if (hits.some((h) => h.locator === r.locator)) return
+            hits.splice(Math.min(rank, hits.length), 0, {
+              locator: r.locator,
+              matched: pickMatch(r.matchedOn),
+              exact: true,
+              pinned: true,
+            })
+          })
         setSearch({
           q,
           status: 'ready',
-          hits: out.results.map((r: ModuleCard) => ({
-            locator: r.locator,
-            matched: pickMatch(r.matchedOn),
-            exact: exact(r.locator),
-          })),
+          hits,
           pool: poolAll,
           poolExact: poolAll.filter(exact),
           builtIn: out.builtIn,
           total: out.total,
+          ...(out.didYouMean ? { didYouMean: out.didYouMean } : {}),
         })
       })
       .catch(() => {
@@ -520,8 +540,11 @@ export default function Registry({
   const shown = useMemo(() => {
     if (searching)
       return search.hits
-        .map((h) => ({ e: byLocator.get(h.locator), matched: h.matched, exact: h.exact }))
-        .filter((x): x is { e: RegistryEntry; matched: string | null; exact: boolean } => !!x.e && passes(x.e, f))
+        .map((h) => ({ e: byLocator.get(h.locator), matched: h.matched, exact: h.exact, pinned: !!h.pinned }))
+        .filter(
+          (x): x is { e: RegistryEntry; matched: string | null; exact: boolean; pinned: boolean } =>
+            !!x.e && passes(x.e, f, x.pinned ? 'kind' : undefined),
+        )
     const base = entries.filter((e) => passes(e, f))
     const sorted =
       f.sort === 'name'
@@ -771,12 +794,23 @@ export default function Registry({
         }).length
       : 0
   const matches = (n: number): string => `${n} ${n === 1 ? 'match' : 'matches'}`
+  // the words the results answer: the query, or the spelling of it the search fell back to (`stirpe` -> `stripe`)
+  const asked = search.didYouMean ? `"${search.didYouMean}" (no match for "${search.q}")` : `"${search.q}"`
+  const loose = closeRows.length
+    ? ` · ${closeRows.length} loosely related ${closeRows.length === 1 ? 'module' : 'modules'}`
+    : ''
   const summary = searching
     ? exactRows.length
-      ? `${matches(exactRows.length)} for "${search.q}"${closeRows.length === 0 && search.total > search.hits.length ? `, top ${search.hits.length} shown` : ''}`
+      ? `${matches(exactRows.length)} for ${asked}${closeRows.length === 0 && search.total > search.hits.length ? `, top ${search.hits.length} shown` : ''}`
       : hidden > 0
-        ? `${matches(hidden)} for "${search.q}" hidden by filters`
-        : `No exact match for "${search.q}"`
+        ? `${matches(hidden)} for ${asked} hidden by filters`
+        : coreAnswer
+          ? // the core module is the answer, as the Ask bar says (review r1, demo C1): never `No exact match` above it
+            `In core: ${search.builtIn
+              .slice(0, 2)
+              .map((b) => b.title)
+              .join(', ')}${loose}`
+          : `No exact match for ${asked}`
     : `${shown.length} ${shown.length === 1 ? unit[0] : unit[1]}`
   // the squares of the list in words, once above it (review r4: four glyphs and no legend on / and on phones); only
   // the states the list shows, the same words as /compat

@@ -6,6 +6,7 @@ import {
   relevanceCompare,
   SEARCH_DEFAULTS,
   searchModules,
+  swapVariants,
   tokenize,
   type SearchIndexData,
 } from '../../lib/core/search.ts'
@@ -51,6 +52,35 @@ const GOLDEN: [string, string[], string[]][] = [
 const top3 = (r: ReturnType<typeof searchModules>) => ({
   modules: r.results.slice(0, 3).map((c) => c.locator.replace(/^npm:/, '')),
   builtIn: r.builtIn.slice(0, 3).map((b) => b.id),
+})
+
+describe('a swap of two letters (finding of 25 Oct)', () => {
+  it('nothing matched: the results are for the spelling with the swap undone', () => {
+    for (const [q, fixed, top] of [
+      ['stirpe', 'stripe', '@open-mercato/gateway-stripe'],
+      ['ksfe', 'ksef', '@fastwhitecat/integration-ksef-direct'],
+      ['invocie', 'invoice', null],
+    ] as const) {
+      const r = searchModules(corpusIdx, { query: q })
+      expect(SearchModulesOutput.safeParse(r).success).toBe(true)
+      expect(r.didYouMean).toBe(fixed)
+      if (top) expect(top3(r).modules).toContain(top)
+      else expect(r.results.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('a query that matches keeps its own results, and noise finds nothing', () => {
+    expect(searchModules(corpusIdx, { query: 'stripe' }).didYouMean).toBeUndefined()
+    const none = searchModules(corpusIdx, { query: 'zzqqx' })
+    expect([none.results.length, none.builtIn.length, none.didYouMean]).toEqual([0, 0, undefined])
+  })
+
+  it('variants swap one adjacent pair in one word, at most 60', () => {
+    expect(swapVariants('ksfe')).toEqual(['skfe', 'kfse', 'ksef'])
+    expect(swapVariants('web serach')).toContain('web search')
+    expect(swapVariants('a b c d e f g')).toEqual([])
+    expect(swapVariants('aa')).toEqual([])
+  })
 })
 
 describe('golden queries (Appendix B) on the 59 entries and 46 built-ins', () => {
