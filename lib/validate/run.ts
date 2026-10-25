@@ -3,7 +3,7 @@
 // category map, and the report for $GITHUB_STEP_SUMMARY and out/validate.json.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative, sep } from 'node:path'
 import { parse } from 'yaml'
 import type { z } from 'zod'
 import {
@@ -16,6 +16,8 @@ import {
   ReservedFile,
   SiteFile,
 } from '../schema/index.ts'
+import { BuiltinUpcomingFile, QualityReview } from '../schema/policy.ts'
+import { yamlFiles } from './format.ts'
 import type { Catalog } from './catalog.ts'
 import { checkLocal } from './local.ts'
 import { checkRemote, type RemoteDeps } from './remote.ts'
@@ -27,6 +29,8 @@ export interface ChangedFiles {
   removed: string[]
   /** Changed files under policy/ (and harness/lines.yml). */
   policy: string[]
+  /** Added or changed OM Quality reviews (`quality/reviews/**`). */
+  quality: string[]
 }
 
 function git(root: string, args: string[]): string {
@@ -37,12 +41,13 @@ function git(root: string, args: string[]): string {
 export function changedFiles(root: string, ref: string): ChangedFiles {
   const out = git(root, ['diff', '--name-status', '--no-renames', '-z', `${ref}...HEAD`])
   const parts = out.split('\0').filter((p) => p !== '')
-  const res: ChangedFiles = { descriptors: [], removed: [], policy: [] }
+  const res: ChangedFiles = { descriptors: [], removed: [], policy: [], quality: [] }
   for (let i = 0; i + 1 < parts.length; i += 2) {
     const status = parts[i] as string
     const file = parts[i + 1] as string
     if (file.startsWith('modules/')) (status === 'D' ? res.removed : res.descriptors).push(file)
     else if ((file.startsWith('policy/') || file === 'harness/lines.yml') && status !== 'D') res.policy.push(file)
+    else if (file.startsWith('quality/reviews/') && file.endsWith('.yml') && status !== 'D') res.quality.push(file)
   }
   return res
 }
@@ -100,8 +105,52 @@ export function checkPolicyFiles(root: string, files: readonly string[] | null):
   return out
 }
 
+/**
+ * OM Quality reviews (spec 6.3): the schema (OMQ-01 to OMQ-12 once each, two different reviewers) and the path
+ * `quality/reviews/<locpath>/<version>.yml` of the reviewed version. All reviews when `files` is null (finding of 25
+ * Oct: validate never read quality/).
+ */
+export function checkQualityReviews(root: string, files: readonly string[] | null): Finding[] {
+  const out: Finding[] = []
+  const dir = join(root, 'quality', 'reviews')
+  const list = files ?? (existsSync(dir) ? yamlFiles([dir]).map((f) => relative(root, f).split(sep).join('/')) : [])
+  for (const file of list) {
+    let data: unknown
+    try {
+      data = parse(readFileSync(join(root, file), 'utf8'))
+    } catch (err) {
+      out.push(g('schema', 'error', 'quality-yaml', `${file}: ${(err as Error).message.split('\n')[0]}`))
+      continue
+    }
+    const r = QualityReview.safeParse(data)
+    if (!r.success) {
+      for (const i of r.error.issues.slice(0, 5))
+        out.push(g('schema', 'error', 'quality', `${file}: ${i.path.join('.') || '(root)'}: ${i.message}`))
+      continue
+    }
+    if (!file.endsWith(`/${r.data.version}.yml`))
+      out.push(
+        g(
+          'schema',
+          'error',
+          'quality-path',
+          `${file}: the file name must be the reviewed version, ${r.data.version}.yml`,
+        ),
+      )
+  }
+  return out
+}
+
+/** IDs of policy/builtin-upcoming.yml, core modules only the develop line has ([] without the file or on a bad file). */
+function builtinUpcoming(root: string): string[] {
+  const file = join(root, 'policy', 'builtin-upcoming.yml')
+  if (!existsSync(file)) return []
+  const r = BuiltinUpcomingFile.safeParse(parse(readFileSync(file, 'utf8')) ?? {})
+  return r.success ? Object.keys(r.data) : []
+}
+
 /** Step 10: policy/builtin-categories.yml covers every core module of the latest line (error only here, spec 4.4). */
-export function checkBuiltinCoverage(catalog: Catalog): Finding[] {
+export function checkBuiltinCoverage(catalog: Catalog, upcoming: readonly string[] = []): Finding[] {
   const out: Finding[] = []
   if (!catalog.builtin) {
     out.push(
@@ -121,7 +170,8 @@ export function checkBuiltinCoverage(catalog: Catalog): Finding[] {
         `policy/builtin-categories.yml misses core ${catalog.builtin.coreVersion} module${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}`,
       ),
     )
-  const extra = Object.keys(map).filter((id) => !ids.includes(id))
+  // policy/builtin-upcoming.yml names the develop-only core modules (ecommerce): not extra (RUNBOOK, finding of 25 Oct)
+  const extra = Object.keys(map).filter((id) => !ids.includes(id) && !upcoming.includes(id))
   if (extra.length > 0)
     out.push(
       g(
@@ -144,6 +194,8 @@ export interface ValidateOptions {
   removed?: readonly string[]
   /** Policy files to check (null: all). */
   policyFiles?: readonly string[] | null
+  /** OM Quality reviews to check (null: all). */
+  qualityFiles?: readonly string[] | null
   /** Run step 10 (coverage of the built-in category map). */
   builtinCheck: boolean
   labels: readonly string[]
@@ -210,8 +262,11 @@ export async function validateEntry(file: string, opts: ValidateOptions): Promis
 export async function runValidate(opts: ValidateOptions): Promise<ValidateReport> {
   const entries: EntryResult[] = []
   for (const file of opts.files) entries.push(await validateEntry(file, opts))
-  const global: Finding[] = [...checkPolicyFiles(opts.root, opts.policyFiles ?? null)]
-  if (opts.builtinCheck) global.push(...checkBuiltinCoverage(opts.catalog))
+  const global: Finding[] = [
+    ...checkPolicyFiles(opts.root, opts.policyFiles ?? null),
+    ...checkQualityReviews(opts.root, opts.qualityFiles ?? null),
+  ]
+  if (opts.builtinCheck) global.push(...checkBuiltinCoverage(opts.catalog, builtinUpcoming(opts.root)))
   return {
     generatedAt: opts.now.toISOString(),
     offline: opts.remote === null,

@@ -83,6 +83,7 @@ export default async function validate(ctx: CommandContext): Promise<number> {
   let files: string[]
   let removed: string[] = []
   let policyFiles: string[] | null = null
+  let qualityFiles: string[] | null = null
   let builtinCheck = true
   if (flags.changed) {
     try {
@@ -90,6 +91,7 @@ export default async function validate(ctx: CommandContext): Promise<number> {
       files = ch.descriptors
       removed = ch.removed
       policyFiles = ch.policy
+      qualityFiles = ch.quality
       builtinCheck = ch.policy.includes('policy/builtin-categories.yml')
     } catch (err) {
       console.error(`validate: cannot diff against ${flags.changed}: ${(err as Error).message.split('\n')[0]}`)
@@ -100,6 +102,7 @@ export default async function validate(ctx: CommandContext): Promise<number> {
     files = yamlFiles(flags.files.map((f) => resolve(f))).map((f) => rel(root, f))
     if (files.length === 0) files = flags.files.map((f) => rel(root, resolve(f)))
     policyFiles = []
+    qualityFiles = []
     builtinCheck = false
   } else {
     files = yamlFiles([join(root, 'modules')]).map((f) => rel(root, f))
@@ -127,6 +130,7 @@ export default async function validate(ctx: CommandContext): Promise<number> {
     baseRef: flags.changed,
     removed,
     policyFiles,
+    qualityFiles,
     builtinCheck,
     labels: flags.labels,
     remote,

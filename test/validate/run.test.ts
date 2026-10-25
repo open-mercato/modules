@@ -1,12 +1,19 @@
 // validate end to end: `--offline` over the 59 seed descriptors (spec 12.2 WP03/WP10), and a pull request in a
 // throwaway git repository (`--changed=main`) with a valid new entry, a broken one, a removed one and a policy
 // change, through the network steps against a fake registry. The summary keeps 10 lines per entry.
-import { readFileSync, rmSync, unlinkSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { main } from '../../lib/cli.ts'
 import { loadCatalog } from '../../lib/validate/catalog.ts'
-import { changedFiles, checkBuiltinCoverage, reportFailed, runValidate } from '../../lib/validate/run.ts'
+import {
+  changedFiles,
+  checkBuiltinCoverage,
+  checkQualityReviews,
+  reportFailed,
+  runValidate,
+} from '../../lib/validate/run.ts'
 import { renderSummary } from '../../lib/validate/summary.ts'
 import { catalogRepo, fakeHttp, git, moduleTarball, ROOT, write } from './helpers.ts'
 
@@ -37,9 +44,57 @@ describe('validate --offline on the seed descriptors', () => {
     expect(report.entries).toHaveLength(59)
     expect(report.entries.filter((e) => e.status !== 'pass')).toEqual([])
     expect(report.entries.flatMap((e) => e.findings.filter((f) => f.severity !== 'info'))).toEqual([])
-    // the 46 core modules of 0.9.0 are all mapped; ecommerce (0.10) is listed ahead of time
-    expect(report.global.map((g) => `${g.severity}:${g.code}`)).toEqual(['info:builtin-extra'])
+    // the 46 core modules of 0.9.0 are all mapped; ecommerce (0.10) is listed ahead of time in builtin-upcoming.yml,
+    // so it is no `builtin-extra` (finding of 25 Oct)
+    expect(report.global.map((g) => `${g.severity}:${g.code}`)).toEqual([])
     rmSync(out, { recursive: true, force: true })
+  })
+
+  it('a category for a core module neither core nor builtin-upcoming.yml knows is info builtin-extra', async () => {
+    const catalog = await loadCatalog(ROOT, null)
+    const map = { ...catalog.builtinCategories, teleport: 'operations' }
+    expect(checkBuiltinCoverage({ ...catalog, builtinCategories: map }, ['ecommerce']).map((x) => x.message)).toEqual([
+      'policy/builtin-categories.yml lists teleport, not in core 0.9.0 (@open-mercato/cli@0.9.0 (pinned; no data/builtin))',
+    ])
+  })
+
+  it('OM Quality reviews: OMQ-01 to OMQ-12 once each, two different people, the file named after the version', () => {
+    const root = mkdtempSync(join(tmpdir(), 'om-quality-'))
+    const dir = join(root, 'quality', 'reviews', '@x', 'mod')
+    mkdirSync(dir, { recursive: true })
+    const items = Array.from({ length: 12 }, (_, i) => ({ id: `OMQ-${String(i + 1).padStart(2, '0')}`, pass: true }))
+    const yaml = (it: { id: string; pass: boolean }[], reviewers: string[]) =>
+      [
+        'version: 1.0.0',
+        'integrity: sha512-x',
+        'checklistVersion: 1',
+        'items:',
+        ...it.map((x) => `  - { id: ${x.id}, pass: ${x.pass}, note: ok, file: null, line: null }`),
+        `reviewers: [${reviewers.join(', ')}]`,
+        'reviewedAt: 2026-10-23',
+        'until: 2027-10-23',
+        'reportUrl: https://github.com/open-mercato/modules/issues/1',
+      ].join('\n')
+    writeFileSync(join(dir, '1.0.0.yml'), yaml(items, ['a', 'b']))
+    writeFileSync(
+      join(dir, '2.0.0.yml'),
+      yaml(
+        items.map((x) => ({ ...x, id: 'OMQ-01' })),
+        ['a', 'a'],
+      ),
+    )
+    writeFileSync(join(dir, '3.0.0.yml'), yaml(items, ['a', 'b']))
+    try {
+      const f = checkQualityReviews(root, null)
+      expect(f.map((x) => `${x.code}: ${x.message}`)).toEqual([
+        'quality: quality/reviews/@x/mod/2.0.0.yml: items: items must be OMQ-01 to OMQ-12, each once (missing OMQ-02, OMQ-03, OMQ-04, OMQ-05, OMQ-06, OMQ-07, OMQ-08, OMQ-09, OMQ-10, OMQ-11, OMQ-12)',
+        'quality: quality/reviews/@x/mod/2.0.0.yml: reviewers: reviewers must be different people',
+        'quality-path: quality/reviews/@x/mod/3.0.0.yml: the file name must be the reviewed version, 1.0.0.yml',
+      ])
+      expect(checkQualityReviews(root, ['quality/reviews/@x/mod/1.0.0.yml'])).toEqual([])
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
   })
 
   it('built-in coverage is an error when a core module has no category (only in validate)', async () => {
@@ -83,6 +138,7 @@ whenToUse: Use when the shop rewards repeat customers with points they can spend
       descriptors: ['modules/@acme-labs/om-crm-notes.yml', 'modules/@acme-labs/om-loyalty.yml'],
       removed: ['modules/@open-mercato/pay-by-links.yml'],
       policy: ['policy/reserved.yml'],
+      quality: [],
     })
 
     const tarball = moduleTarball({

@@ -9,7 +9,7 @@ import { evaluateEntry, judgedFacts, presetBackendRoutes, type HealthInput } fro
 import { linkNightBaselines } from '../core/lines.ts'
 import { Descriptor } from '../schema/descriptor.ts'
 import { assertPathMatches, descriptorLocator, locatorToPath } from '../schema/locator.ts'
-import { QualityReview, RevocationsFile } from '../schema/policy.ts'
+import { QualityReview, qualityGranted, RevocationsFile } from '../schema/policy.ts'
 import {
   BuiltinData,
   Change,
@@ -175,12 +175,24 @@ export default function health(ctx: CommandContext): number {
 
     let quality: Health['quality'] = null
     const reviewFile = version ? join(opts.quality, 'reviews', path, `${version}.yml`) : null
-    if (reviewFile && existsSync(reviewFile)) {
-      const r = QualityReview.parse(parseYaml(readFileSync(reviewFile, 'utf8')))
+    const review =
+      reviewFile && existsSync(reviewFile) ? QualityReview.safeParse(parseYaml(readFileSync(reviewFile, 'utf8'))) : null
+    if (review && !review.success)
+      console.error(`health: ${relative(ctx.root, reviewFile as string)} is not a valid review; no OM Quality`)
+    if (review?.success) {
+      const r = review.data
       const revoked = revocations.some((x) => x.locator === locator && x.version === r.version)
-      // integrity of the judged version: its facts, or the packument when it is the latest stable
+      // integrity of the judged version: its facts, or the packument when it is the latest stable; a review of a
+      // version whose integrity the catalog does not know grants nothing (finding of 25 Oct: any integrity passed)
       const integrity = facts?.package.integrity ?? (version === n?.latestStable ? n.integrity : null)
-      if (!revoked && r.integrity === (integrity ?? r.integrity) && r.until >= opts.now.slice(0, 10))
+      // a review that records a failed item grants nothing (spec 6.3: two people, all 12 checks)
+      if (
+        !revoked &&
+        integrity !== null &&
+        r.integrity === integrity &&
+        qualityGranted(r) &&
+        r.until >= opts.now.slice(0, 10)
+      )
         quality = {
           version: r.version,
           integrity: r.integrity,

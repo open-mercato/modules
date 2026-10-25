@@ -124,6 +124,26 @@ export const QualityReview = z
     reportUrl: HttpsUrl,
   })
   .strict()
+  // finding of 25 Oct: twelve copies of OMQ-01 or the same reviewer twice passed the schema
+  .superRefine((r, ctx) => {
+    const ids = r.items.map((i) => i.id)
+    const want = Array.from({ length: 12 }, (_, i) => `OMQ-${String(i + 1).padStart(2, '0')}`)
+    const missing = want.filter((id) => !ids.includes(id))
+    if (missing.length > 0 || new Set(ids).size !== ids.length)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['items'],
+        message: `items must be OMQ-01 to OMQ-12, each once${missing.length ? ` (missing ${missing.join(', ')})` : ''}`,
+      })
+    const people = r.reviewers.map((x) => x.trim().toLowerCase().replace(/^@/, ''))
+    if (new Set(people).size !== people.length)
+      ctx.addIssue({ code: 'custom', path: ['reviewers'], message: 'reviewers must be different people' })
+    if (r.until <= r.reviewedAt)
+      ctx.addIssue({ code: 'custom', path: ['until'], message: 'until must be after reviewedAt' })
+  })
+
+/** A review that grants OM Quality: every item of the checklist passed (spec 6.3, quality/checklist/v1.md). */
+export const qualityGranted = (r: Pick<z.infer<typeof QualityReview>, 'items'>): boolean => r.items.every((i) => i.pass)
 
 /** quality/revocations.yml: manual OM Quality revocations, public. */
 export const RevocationsFile = z.array(

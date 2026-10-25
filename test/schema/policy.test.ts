@@ -8,6 +8,7 @@ import {
   IgnoreFile,
   OfficialMaintainersFile,
   QualityReview,
+  qualityGranted,
   ReservedFile,
   RevocationsFile,
   SiteFile,
@@ -115,5 +116,15 @@ describe('policy files (spec 4.4)', () => {
     }
     expect(QualityReview.safeParse(review).success).toBe(true)
     expect(QualityReview.safeParse({ ...review, reviewers: ['a'] }).success).toBe(false)
+    // finding of 25 Oct: twelve copies of one item, the same reviewer twice, an end before the review
+    const same = items.map((x) => ({ ...x, id: 'OMQ-01' }))
+    expect(QualityReview.safeParse({ ...review, items: same }).success).toBe(false)
+    expect(QualityReview.safeParse({ ...review, reviewers: ['pkarw', '@PKARW'] }).success).toBe(false)
+    expect(QualityReview.safeParse({ ...review, until: '2026-10-01' }).success).toBe(false)
+    // a review that records a failed item parses (it is a record) but grants nothing
+    const failed = { ...review, items: items.map((x, i) => (i === 3 ? { ...x, pass: false } : x)) }
+    expect(QualityReview.safeParse(failed).success).toBe(true)
+    expect(qualityGranted(failed)).toBe(false)
+    expect(qualityGranted(review)).toBe(true)
   })
 })
