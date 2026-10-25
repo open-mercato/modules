@@ -6,7 +6,7 @@ This repository holds the module descriptors, the code that measures them and th
 
 ## Submit a module in 3 steps
 
-Fastest: paste your npm name into the form at https://open-mercato.github.io/modules/submit. It runs the checks below in your browser, writes the YAML and opens the pull request for you.
+Fastest: paste your npm name into the form at https://open-mercato.github.io/modules/submit. It runs the checks below in your browser, writes the YAML and opens GitHub with the file filled in. Commit it there (GitHub makes the fork for you), then create the pull request.
 
 By hand:
 
