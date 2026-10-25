@@ -1462,5 +1462,9 @@
       "pass": true,
       "detail": "Tarball repository.url matches the descriptor."
     }
+  ],
+  "maintainers": [
+    "bernard-fwc",
+    "lbajsarowicz"
   ]
 }

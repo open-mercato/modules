@@ -43,6 +43,7 @@ Agent policy (0.9): refuse. Broken at typecheck on 0.9 since 23 Oct. Third-party
 
 ## Trust
 community (piotrkarwatka) · Unclaimed · Built from: no provenance · Supply chain: ok · Hygiene: warn (host-dependency-duplication, peer-exact-pin) · License: proprietary
+Maintainers (npm): piotrkarwatka
 - Bundles @tanstack/react-table 9.2.6 while Open Mercato 0.9.0 ships 9.3.1. Two copies break types. Move it to peerDependencies.
 
 Card: https://wojciechszyjka.github.io/modules/m/@piotrkarwatka/marketing-consents · JSON: https://wojciechszyjka.github.io/modules/m/@piotrkarwatka/marketing-consents.json
