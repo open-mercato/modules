@@ -47,7 +47,7 @@ export const TIER_RULES: readonly { id: string; level: 'listed' | 'verified'; te
   {
     id: 'VER-5',
     level: 'verified',
-    text: 'Source integrity: the tarball repository is the listed repository; GitHub-only entries are tested on a pinned tag.',
+    text: 'Source integrity: the tarball repository is the listed repository, and a package that names no repository does not pass; GitHub-only entries are tested on a pinned tag.',
   },
 ]
 
@@ -346,7 +346,10 @@ export function verifiedRules(i: VerifiedInput): Rule[] {
         ok ? 'Tarball repository.url matches the descriptor.' : `Tarball repository.url is ${got ?? 'missing'}.`,
       ),
     )
-  } else out.push(rule('VER-5', true, 'No repository in the descriptor to compare.'))
+  } else if (repoOf(i.sync?.npm?.repositoryUrl) === null)
+    // nothing names a source, so nothing is checked: not a pass (finding of 25 Oct, a repo-less package had it free)
+    out.push(rule('VER-5', false, 'Not checked: neither the descriptor nor the tarball names a repository.'))
+  else out.push(rule('VER-5', true, 'No repository in the descriptor to compare.'))
   return out
 }
 

@@ -405,6 +405,45 @@ describe('Verified and the quarantine (5.3, 6.3, D46)', () => {
       detail: 'Tarball repository.url is someone/else.',
     })
   })
+
+  it('VER-5: no repository in the descriptor nor in the tarball is not checked, not a pass (finding of 25 Oct)', () => {
+    const base = structuredClone(fx.sync(LOC.ksef) as SyncRecord)
+    const ver5 = (repositoryUrl: string | null) => {
+      const s = structuredClone(base)
+      s.npm!.repositoryUrl = repositoryUrl
+      const rules = verifiedRules({
+        source: 'npm',
+        npm: s.npm!.name,
+        descriptorGithub: null,
+        sync: s,
+        receipts: fx.receipts(LOC.ksef),
+        lines,
+        recommended: { '0.9': '0.1.8' },
+        githubVersion: null,
+        signals: {
+          receipt: { '0.9': 'verified' },
+          fit: { '0.9': 'ok' },
+          supplyChain: { status: 'ok', reasons: [] },
+          hygiene: { status: 'ok', failing: [] },
+        },
+        now: NOW,
+      })
+      return { rule: rules.find((r) => r.id === 'VER-5'), tier: tierFrom(rules, 'active', false) }
+    }
+    const none = ver5(null)
+    expect(none.rule).toEqual({
+      id: 'VER-5',
+      pass: false,
+      detail: 'Not checked: neither the descriptor nor the tarball names a repository.',
+    })
+    expect(none.tier).toBe('listed')
+    // a tarball that names its repository, with no descriptor repository to compare it to, keeps the pass
+    expect(ver5('git+https://github.com/open-mercato/open-mercato.git').rule).toEqual({
+      id: 'VER-5',
+      pass: true,
+      detail: 'No repository in the descriptor to compare.',
+    })
+  })
 })
 
 describe('lines', () => {

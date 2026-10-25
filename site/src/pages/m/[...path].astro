@@ -843,7 +843,11 @@ const verSignals = [
       : entry.identity.builtFrom === 'verified'
         ? 'Built from the listed repository.'
         : 'Checked by the sync against repository.url; details are in the agent card.',
-    fix: github ? 'Push a tag for the release you want tested.' : 'Keep repository.url in package.json pointing at the listed repository.',
+    fix: github
+      ? 'Push a tag for the release you want tested.'
+      : ruleOf('VER-5')?.detail.startsWith('Not checked')
+        ? 'Set repository.url in package.json to the source repository.'
+        : 'Keep repository.url in package.json pointing at the listed repository.',
   },
 ]
 const ver = verSignals.map((v) => {
