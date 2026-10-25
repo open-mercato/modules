@@ -2,6 +2,8 @@
 // copy commands, its Markdown twin links and its Claude Code prompts at the pages a visitor can open there (finding
 // of 25 Oct: the preview told visitors to `curl open-mercato.github.io/modules/llms.txt`, which does not exist yet).
 // The canonical and Open Graph tags keep the configured site. On the configured host the script does nothing.
+// It also shows the `[data-preview-note]` paragraphs (rendered `hidden`): a preview that a share link opens lets in only
+// the browser that holds its cookie, so a command run elsewhere answers 401 (finding of 25 Oct, OM Cloud sandbox).
 
 /** `text` with every form of the site root `from` (as is, URL-encoded, without the scheme) replaced by `to`. */
 export function rewriteSite(text: string, from: string, to: string): string {
@@ -27,6 +29,8 @@ export function hereScript(site: string, base: string): string {
   if (!/^https?:$/.test(location.protocol)) return
   var to = location.origin + ${JSON.stringify(base.replace(/\/+$/, ''))}
   if (to === from) return
+  var notes = document.querySelectorAll('[data-preview-note]')
+  for (var n = 0; n < notes.length; n++) notes[n].hidden = false
   var rewrite = ${fn}
   var SEL = '[data-copy],a[href],.cmd__text,[data-site-text]'
   var ATTRS = ['data-copy', 'href', 'title', 'aria-label']

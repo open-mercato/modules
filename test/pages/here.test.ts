@@ -26,4 +26,20 @@ describe('rewriteSite', () => {
     expect(() => new Function(js)).not.toThrow()
     expect(js).toContain(JSON.stringify(FROM))
   })
+
+  // finding of 25 Oct: a share-link preview lets in only the browser with its cookie; the note says so there only
+  test('shows the preview notes off the configured site, and only there', () => {
+    const js = hereScript(`${FROM}/`, '/modules')
+    const run = (origin: string) => {
+      const notes = [{ hidden: true }, { hidden: true }]
+      const document = {
+        querySelectorAll: (sel: string) => (sel === '[data-preview-note]' ? notes : []),
+        body: {},
+      }
+      new Function('location', 'document', 'MutationObserver', js)({ protocol: 'https:', origin }, document, undefined)
+      return notes.map((n) => n.hidden)
+    }
+    expect(run('https://3000-abc.apps.example.com')).toEqual([false, false])
+    expect(run('https://open-mercato.github.io')).toEqual([true, true])
+  })
 })

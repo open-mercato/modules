@@ -206,6 +206,8 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
       </div>
       <div class="fa-body">
         <p>Every module page has a Markdown twin at the same address with <code>.md</code>. An agent never needs the HTML.</p>
+        {/* shown only off the configured site (lib/here.ts): a share-link preview lets in this browser only (25 Oct) */}
+        <p class="fa-small" data-preview-note hidden>This is a preview address. If it opened from a share link, only this browser has access: a command run elsewhere gets 401, and a page address copied from here needs that link.</p>
         <ul class="fa-files" role="list">
           {
             readFiles.map((f) => (

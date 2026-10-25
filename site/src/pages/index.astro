@@ -401,6 +401,8 @@ const jsonLd = {
         <p class="t-tagline">// For agents</p>
         <h2 class="t-h2" id="agents-h">Your coding agent asks the catalog first.</h2>
         <a class="agents__more" href={href('/for-agents')}>Tool contract, deeplinks and policy <Icon name="external" size={14} /></a>
+        {/* shown only off the configured site (lib/here.ts): a share-link preview lets in this browser only (25 Oct) */}
+        <p class="agents__note" data-preview-note hidden>This is a preview address. If it opened from a share link, only this browser has access: a command run elsewhere gets 401, and a page address copied from here needs that link.</p>
       </div>
       <ol class="agents__cols" role="list">
         {
@@ -781,6 +783,11 @@ const jsonLd = {
     display: grid;
     gap: 10px;
     justify-items: start;
+  }
+  .agents__note {
+    max-width: 72ch;
+    font-size: 14px;
+    color: var(--ink-2);
   }
   .agents__head .t-tagline {
     color: var(--film-ink-2);
