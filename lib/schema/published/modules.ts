@@ -47,6 +47,13 @@ export const CellSummary = z.object({
     .describe(
       'Why the failed step of a broken cell failed, one sentence, when its excerpt says it plainly. The sentence the module page prints under its strip. Absent: no explanation (the receipt has the error).',
     ),
+  // additive (finding of 25 Oct): the cell's receipt is of another version than the one a fresh app installs on the
+  // line, so it is no verdict there; the page draws `receipt for another version`, signals.receipt says untested. In
+  // compat.json since 6a47286, in modules.json and /m/*.json too since then (a client reading compat.lines.status
+  // alone read storage-s3 as broken on 0.8)
+  installs: SemVer.optional().describe(
+    "Set when the cell's receipt judged another version (moduleVersion) than the one a fresh app installs on the line: that version. The cell is then no verdict on the line; status is the other version's, and modules.json signals.receipt[line] says untested.",
+  ),
 })
 
 /**

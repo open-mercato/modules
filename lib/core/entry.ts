@@ -14,7 +14,7 @@ import type { RouteFact } from './finding.ts'
 import { evaluateEntry, type Evaluation, type HealthInput } from './health.ts'
 import { byLineKey, latestLine, presetModules, registeredIn, type PresetMap } from './lines.ts'
 import { builtInEnableCommand, installInfo } from './plan.ts'
-import { emptyPresetVersion, INSTALLABLE_META_KEY } from './policy.ts'
+import { emptyPresetVersion, INSTALLABLE_META_KEY, otherVersionCells } from './policy.ts'
 import { anatomySignal, unionGlyph } from './signals.ts'
 import { serviceSdks } from './sdks.ts'
 import type { Rule } from './tier.ts'
@@ -359,7 +359,22 @@ export function buildIndexEntryWithRules(i: EntryInput): { entry: IndexEntry; ru
   const routesOf = (v: string) =>
     routesOfFacts([i.facts, i.previousFacts].find((f) => f && f.package.version === v) ?? i.facts)
   const ev = evaluateEntry({ ...i, routesOf: i.routesOf ?? routesOf })
-  return { entry: indexEntryOf(i, ev), rules: ev.health.rules }
+  return { entry: withInstalls(indexEntryOf(i, ev)), rules: ev.health.rules }
+}
+
+/**
+ * A cell whose receipt is of another version names the version a fresh app installs there (`installs`, finding of 25
+ * Oct: compat.json said so, while modules.json gave storage-s3 on 0.8 a bare `broken` of its 0.9.0 receipt).
+ */
+function withInstalls(e: IndexEntry): IndexEntry {
+  const others = otherVersionCells(e)
+  if (Object.keys(others).length === 0) return e
+  const lines = { ...e.compat.lines }
+  for (const [k, o] of Object.entries(others)) {
+    const cell = lines[k]
+    if (cell) lines[k] = { ...cell, installs: o.installs }
+  }
+  return { ...e, compat: { ...e.compat, lines } }
 }
 
 function indexEntryOf(i: EntryInput, ev: Evaluation): IndexEntry {
