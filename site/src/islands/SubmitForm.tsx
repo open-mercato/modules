@@ -28,6 +28,11 @@ export const TEXT = {
   unlicensed: 'UNLICENSED means proprietary. Add "license": "MIT" if you want an open-source badge.',
   afterMerge: 'After merge the module is read from source within minutes and installed in the next run of each line.',
   afterEdit: 'After merge the change shows within minutes.',
+  // GitHub's editor opens the file as it is on main and takes no text in its URL (finding of 25 Oct: the edits of the
+  // form were lost on "Propose an edit")
+  editHint:
+    'GitHub opens the file as it is on main. The button copies your YAML first: in the editor, select everything and paste.',
+  editCopied: 'YAML copied. In the GitHub editor, select everything in the file and paste, then propose the change.',
   anatomyLater: 'Anatomy appears after merge.',
 } as const
 
@@ -1310,6 +1315,7 @@ export default function SubmitForm(props: SubmitFormProps) {
   const [result, setResult] = useState<CheckResult | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm())
   const [copied, setCopied] = useState(false)
+  const [editCopied, setEditCopied] = useState(false)
   const run = useRef(0)
   const formKey = useRef<string | null>(null)
 
@@ -1387,6 +1393,12 @@ export default function SubmitForm(props: SubmitFormProps) {
   const fieldIssue = (p: string) => issues.find((i) => i.path === p || i.path.startsWith(`${p}.`))?.message ?? null
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }))
 
+  // the YAML the form writes for a listed entry before anyone types: its file as the form reads it
+  const baseYaml =
+    t && result?.existing
+      ? descriptorYaml(buildDescriptor(t, result, formFromPackage(result, props.categories, emptyForm())))
+      : null
+  const edited = baseYaml !== null && yaml !== baseYaml
   const copyYaml = async () => {
     try {
       await navigator.clipboard.writeText(yaml)
@@ -1804,8 +1816,21 @@ export default function SubmitForm(props: SubmitFormProps) {
             )}
             <div class="sf__actions">
               {result.existing ? (
-                <a class="btn btn--primary" href={editUrl(props.repo, result.existing.path)} rel="noopener noreferrer">
-                  Propose an edit
+                <a
+                  class="btn btn--primary"
+                  href={editUrl(props.repo, result.existing.path)}
+                  rel="noopener noreferrer"
+                  // with edits, a new tab keeps the form, and the YAML goes to the clipboard on the way
+                  target={edited ? '_blank' : undefined}
+                  onClick={() => {
+                    if (!edited) return
+                    void navigator.clipboard
+                      ?.writeText(yaml)
+                      .then(() => setEditCopied(true))
+                      .catch(() => setEditCopied(false))
+                  }}
+                >
+                  {edited ? 'Copy YAML and propose an edit' : 'Propose an edit'}
                 </a>
               ) : (
                 <a
@@ -1829,6 +1854,7 @@ export default function SubmitForm(props: SubmitFormProps) {
                 </a>
               )}
             </div>
+            {result.existing && edited && <p class="sf__after">{editCopied ? TEXT.editCopied : TEXT.editHint}</p>}
             <p class="sf__after">{result.existing ? TEXT.afterEdit : TEXT.afterMerge}</p>
           </>
         ) : (
