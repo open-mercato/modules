@@ -58,8 +58,8 @@ describe('when a cell of a new app runs: one predicate for the plan and the site
     // the header of /compat names the packages a new app already has (lines in the order of the page)
     const ordered = ['0.8', '0.9', 'next'].map(line)
     expect(cadenceSentence(ordered, sched, true, ['next'])).toBe(
-      'Planned: nightly on 0.9 and next, weekly on 0.8 (Sundays); packages a new app already has: weekly on next.',
+      'Planned runs: 0.9 and next every night, 0.8 every Sunday. A package a new app already has runs on next every Sunday only.',
     )
-    expect(cadenceSentence(ordered, sched, false, [])).toBe('Nightly on 0.9 and next, weekly on 0.8 (Sundays).')
+    expect(cadenceSentence(ordered, sched, false, [])).toBe('Runs: 0.9 and next every night, 0.8 every Sunday.')
   })
 })

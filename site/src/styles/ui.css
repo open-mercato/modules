@@ -1065,6 +1065,11 @@
   background: var(--bg);
   border: 1.5px solid var(--ink-3);
 }
+/* broken in isolation beside a verified square: grey, so the verdict reads first (finding of 25 Oct) */
+.sq-iso--quiet {
+  background: var(--ink-3);
+  border: 1.5px solid var(--ink-3);
+}
 /* the key of the dot in legends: the hollow ring, followed by its words; with a state, the dot of that state */
 .sq-iso-key {
   display: inline-block;

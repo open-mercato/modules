@@ -59,7 +59,8 @@ export const STATUS: Record<CellStatus, StatusMeta> = {
  */
 export const ISOLATION_MARK = {
   word: 'in isolation (empty preset)',
-  legend: 'dot: in isolation, an app from the empty preset (a second signal, never the verdict)',
+  // plain words (finding of 25 Oct: `a second signal, never the verdict` read as jargon next to a red dot)
+  legend: 'dot: the module alone, in an app from the empty preset. The square is the verdict.',
 } as const
 
 /**

@@ -56,10 +56,10 @@ export function queuedSentence(cadence: 'nightly' | 'weekly' | string, s: Schedu
 }
 
 /**
- * `Nightly on 0.9 and next, weekly on 0.8 (Sundays).` from the lines' cadence. `planned`: while the receipts come from
- * a preview run no nightly CI run exists yet, so the sentence says `Planned: nightly on ...` (review r9). `presetWeekly`:
- * the nightly lines whose cells of the packages a new app already has run on the weekly night only (`cellCadence`),
- * added as `; packages a new app already has: weekly on next` (review of 24 Oct).
+ * `Runs: 0.9 and next every night, 0.8 every Sunday.` from the lines' cadence. `planned`: while the receipts come from
+ * a preview run no nightly CI run exists yet, so the sentence says `Planned runs: ...` (review r9). `presetWeekly`: the
+ * nightly lines whose cells of the packages a new app already has run on the weekly night only (`cellCadence`), added
+ * as `A package a new app already has runs on next every Sunday only.` (review of 24 Oct).
  */
 export function cadenceSentence(
   lines: readonly { key: string; cadence: string }[],
@@ -69,18 +69,17 @@ export function cadenceSentence(
 ): string {
   const nightly = lines.filter((l) => l.cadence !== 'weekly').map((l) => l.key)
   const weekly = lines.filter((l) => l.cadence === 'weekly').map((l) => l.key)
-  const day = s.weeklyDay ? ` (${s.weeklyDay}s)` : ''
+  // two short sentences (finding of 25 Oct: `Planned: nightly on 0.9 and next, weekly on 0.8 (Sundays); packages a new
+  // app already has: weekly on next.` read as one fragment)
+  const when = s.weeklyDay ? `every ${s.weeklyDay}` : 'once a week'
   const parts = [
-    ...(nightly.length ? [`nightly on ${and(nightly)}`] : []),
-    ...(weekly.length ? [`weekly on ${and(weekly)}${day}`] : []),
+    ...(nightly.length ? [`${and(nightly)} every night`] : []),
+    ...(weekly.length ? [`${and(weekly)} ${when}`] : []),
   ]
-  const text = parts.join(', ')
-  if (!text) return ''
+  if (parts.length === 0) return ''
   const preset = presetWeekly.filter((k) => nightly.includes(k))
-  const tail = preset.length
-    ? `; packages a new app already has: weekly on ${and(preset)}${weekly.length ? '' : day}`
-    : ''
-  return planned ? `Planned: ${text}${tail}.` : `${text.charAt(0).toUpperCase()}${text.slice(1)}${tail}.`
+  const tail = preset.length ? ` A package a new app already has runs on ${and(preset)} ${when} only.` : ''
+  return `${planned ? 'Planned runs' : 'Runs'}: ${parts.join(', ')}.${tail}`
 }
 
 const and = (xs: readonly string[]): string =>
