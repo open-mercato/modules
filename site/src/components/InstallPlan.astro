@@ -172,13 +172,11 @@ const rows: { k: string; items: Item[]; tone?: 'warn' }[] = [
       : [{ kind: '', v: txt('none') }],
     tone: plan.conflicts.length ? 'warn' : undefined,
   },
-  {
-    // one value per license (review r8: `OSI` in the kind column and `MIT` next to it read as three values); round 15:
-    // three packages of one license said `MIT, open source` three times, so one line counts them, and different
-    // licenses name their packages
-    k: 'License',
-    items: licenseItems(plan.license),
-  },
+  // one value per license (review r8: `OSI` in the kind column and `MIT` next to it read as three values); round 15:
+  // three packages of one license said `MIT, open source` three times, so one line counts them, and different
+  // licenses name their packages. A plan that installs no package has no row (finding of 25 Oct: `License none` stood
+  // on a MIT repository with no tag to install)
+  ...(plan.license.length > 0 ? [{ k: 'License', items: licenseItems(plan.license) }] : []),
   { k: 'Then', items: plan.then.map((v) => thenItem(v, plan.adds.aclFeatures)) },
   // the same plan for an app from the empty preset, named as such: its commands, then its next steps
   ...(iso
@@ -201,7 +199,7 @@ const rows: { k: string; items: Item[]; tone?: 'warn' }[] = [
 <article class="iplan" aria-label="Install plan">
   <header class="iplan__head">
     <p class="iplan__tag">
-      {`// Install plan · `}<code translate="no" set:html={wbrHtml(title ?? (first ? `${first.locator.replace(/^npm:|^github:/, '')}@${first.version}` : 'empty'))} />{' '}<span class="nw">→ OM <code>{omVersion}</code></span>
+      {`// Install plan · `}<code translate="no" set:html={wbrHtml(title ?? (first ? `${first.locator.replace(/^npm:|^github:/, '')}@${first.version}` : 'nothing to install'))} />{' '}<span class="nw">→ OM <code>{omVersion}</code></span>
     </p>
     <p class:list={['iplan__policy', `iplan__policy--${decision}`]}>
       Agent policy: <strong>{decisionText}</strong>

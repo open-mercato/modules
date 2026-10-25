@@ -1376,7 +1376,14 @@ const tabs = readmeFirst
                     <div class="readme__text" tabindex="0" role="region" aria-label="Author's README">{readme}</div>
                   </figure>
                 ) : (
-                  <p class="mod__empty">No README text in the published package.</p>
+                  <p class="mod__empty">
+                    {/* nothing was read from a repository without a tag (finding of 25 Oct: treg has a README) */}
+                    {!facts && github && !entry.version.gitRef
+                      ? 'Not read yet: the repository has no tag to read the README from.'
+                      : !facts
+                        ? 'Not read yet. The catalog reads the published package within minutes of a release.'
+                        : 'No README text in the published package.'}
+                  </p>
                 )
               }
               <p class="readme__links">
@@ -1454,8 +1461,10 @@ const tabs = readmeFirst
                         title={(() => {
                           // the module of the page, not the first item of the order (round 14: `events@0.9.0`
                           // headed the plan of shipment-tracking, whose requires come first)
+                          // a plan with nothing of this module to install (a GitHub repository with no tag) is still
+                          // its plan: its name, never the `empty` that read like the empty preset (finding of 25 Oct)
                           const own = plans[l.key]!.order.find((o) => o.locator === entry.locator)
-                          return own ? `${name}@${own.version}` : undefined
+                          return own ? `${name}@${own.version}` : name
                         })()}
                       />
                     </div>

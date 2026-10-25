@@ -334,7 +334,9 @@ export function moduleCard(i: CardInput): string {
     `agent_policy: ${JSON.stringify(policies)}`,
     // nothing to install where a new app registers it (review r10): the page and raw/modules.md say the same; the
     // command of an app from the empty preset in its own key (additive, 24 Oct)
-    `install: ${yamlScalar(presetOn(e, lk) ? null : e.install.cli)}`,
+    // and nothing to install without a version (a GitHub repository with no tag, finding of 25 Oct: the front matter
+    // gave a command while the plan below said there is no installable version; the page hides it behind a toggle)
+    `install: ${yamlScalar(presetOn(e, lk) || version === null ? null : e.install.cli)}`,
     ...(presetOn(e, lk) && !emptyPresetOn(e, lk) ? [`install_empty_preset: ${yamlScalar(e.install.cli)}`] : []),
     `installable_from: ${yamlScalar(e.version.installableFrom)}`,
     `data_version: ${yamlScalar(i.dataVersion)}`,
