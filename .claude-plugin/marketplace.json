@@ -1,6 +1,7 @@
 {
   "name": "open-mercato",
   "owner": { "name": "Open Mercato Modules" },
+  "description": "The Open Mercato Modules registry for Claude Code: find a module before you build one.",
   "plugins": [
     {
       "name": "om-modules",

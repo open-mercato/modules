@@ -39,6 +39,13 @@ Verified is a compatibility signal, not a security review. A module's own code r
 
 Every module page has a `.md` and a `.json` twin, `/llms.txt` lists them, and the read-only MCP server exposes `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes`.
 
+The Claude Code plugin brings the `om-find-module` skill. While this repository is private, only people with access to it can add the marketplace.
+
+```sh
+claude plugin marketplace add open-mercato/modules
+claude plugin install om-modules@open-mercato
+```
+
 ## Development
 
 Node 24.21.0 (`.nvmrc`) and Yarn 4.18.1 through Corepack.

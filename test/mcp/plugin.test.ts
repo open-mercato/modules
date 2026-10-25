@@ -92,6 +92,8 @@ describe('plugin and marketplace', () => {
     }
     expect(m.name).toBe('open-mercato')
     expect(m.owner).toEqual({ name: 'Open Mercato Modules' })
+    // additive to spec 8.8 (finding of 25 Oct): `claude plugin validate` warns without a marketplace description
+    expect((m as { description?: string }).description).toMatch(/^The Open Mercato Modules registry for Claude Code/)
     expect(m.plugins).toEqual([
       {
         name: 'om-modules',
@@ -110,6 +112,8 @@ describe('plugin and marketplace', () => {
       name: 'om-modules',
       version: '0.1.0',
       description: DESCRIPTION,
+      // additive to spec 8.8: the author `claude plugin validate` asks for, the marketplace owner
+      author: { name: 'Open Mercato Modules' },
       license: 'MIT',
     })
   })
