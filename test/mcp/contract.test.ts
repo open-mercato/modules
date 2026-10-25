@@ -266,6 +266,25 @@ describe('tools/call on the fixture', () => {
     expect(none['changes']).toEqual([])
     await client.close()
   })
+
+  it('get_changes takes a date alone, from 00:00 UTC, and an offset (finding of 25 Oct: "Invalid ISO datetime")', async () => {
+    const client = await connect()
+    const at = async (since: string) => {
+      const r = await client.callTool({ name: 'get_changes', arguments: { since } })
+      expect(r.isError, since).toBeFalsy()
+      return TOOLS.get_changes.output.parse(structured(r)).changes
+    }
+    const all = await at('2026-01-01T00:00:00Z')
+    expect(await at('2026-01-01')).toEqual(all)
+    expect(await at('2026-01-01T01:00:00+01:00')).toEqual(all)
+    const day = all.at(-1)!.at.slice(0, 10)
+    expect((await at(day)).every((c) => c.at >= `${day}T00:00:00`)).toBe(true)
+    for (const bad of ['2026-13-45', '23.10.2026', 'yesterday']) {
+      const r = await client.callTool({ name: 'get_changes', arguments: { since: bad } })
+      expect(r.isError, bad).toBe(true)
+    }
+    await client.close()
+  })
 })
 
 describe('errors', () => {

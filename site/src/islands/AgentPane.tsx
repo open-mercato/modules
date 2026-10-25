@@ -419,7 +419,8 @@ function typeText(p: JsonSchema): string {
     const r = range(p.minItems, p.maxItems)
     if (r) parts.push(r)
   } else if (p.type === 'object') parts.push(`object with ${Object.keys(p.properties ?? {}).join(', ') || 'fields'}`)
-  else if (p.anyOf) parts.push(p.anyOf.map(typeText).join(' or '))
+  // a date or a date-time (get_changes `since`) reads `string`, not `string or string`
+  else if (p.anyOf) parts.push([...new Set(p.anyOf.map(typeText))].join(' or '))
   else {
     parts.push(Array.isArray(p.type) ? p.type.join(' or ') : (p.type ?? 'any'))
     const r =

@@ -140,6 +140,8 @@ describe('/for-agents metadata', () => {
     expect(search.find((p) => p.name === 'type')?.type).toBe(
       'array of one of official | community | 3rd-party, at most 3',
     )
+    const changes = describeSchema(tools.$defs.GetChangesInput!)
+    expect(changes.find((p) => p.name === 'since')).toEqual({ name: 'since', required: true, type: 'string' })
     const get = describeSchema(tools.$defs.GetModuleInput!)
     expect(get.find((p) => p.name === 'sections')?.type).toBe(
       'array of one of anatomy | compat | trust | install | versions | readme, at most 6',
