@@ -291,7 +291,7 @@ export const SEED: readonly SeedEntry[] = [
         'Card, Apple Pay, Google Pay and bank transfer payments through Stripe for checkout and sales documents.',
       whenToUse:
         'Use when the app takes card or wallet payments in any currency and you already have a Stripe account.',
-      whenNotToUse: 'For PLN bank transfers and BLIK use gateway-tpay.',
+      whenNotToUse: 'For PLN bank transfers and BLIK see gateway-tpay (develop builds only, no stable release yet).',
       providers: [{ name: 'stripe', label: 'Stripe' }],
       links: { docs: `${DOCS}/user-guide/stripe-payments` },
     },
