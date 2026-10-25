@@ -430,8 +430,13 @@ export function evaluateEntry(i: HealthInput): Evaluation {
   // the lint `backend-route-collision` counts for Hygiene like the lint of the facts (round 15: the page listed it under
   // Hygiene, the card, llms-full.txt and signals.hygiene.failing did not); a warning, never an error
   if (Object.keys(collisions).length > 0) findings.push({ ...BACKEND_ROUTE_COLLISION })
+  // a line is "built for" only by a peer range that accepts it: a version with no Open Mercato peers declares nothing
+  // (it was every line, as nothing rejects it, so tools read `Built for 0.8, 0.9, next` beside `no Open Mercato peer
+  // range` on their card, finding of 25 Oct)
   const builtForLines = ascendingKeys(
-    i.lines.filter((l) => lineFit[l.key]?.declared.satisfied).map((l) => l.key),
+    i.lines
+      .filter((l) => lineFit[l.key]?.declared.satisfied && lineFit[l.key]?.declared.range != null)
+      .map((l) => l.key),
     i.lines,
   )
   // reading order, as the strip and the sentences (review r8): `0.8, 0.9, next`
@@ -447,7 +452,10 @@ export function evaluateEntry(i: HealthInput): Evaluation {
     supplyChain: supplyChainSignal(i.sync, d, i.now),
     hygiene: hygieneSignal(findings),
     maintenance: maintenanceSignal(i.sync, receipt, i.lines, i.now),
-    declaredVsObserved: declaredVsObservedSignal(builtForLines, verifiedOn, i.facts, d),
+    declaredVsObserved: declaredVsObservedSignal(builtForLines, verifiedOn, i.facts, d, {
+      peers: !declared ? 'unread' : declared.kind === 'missing' ? 'none' : 'range',
+      installed: moduleKind,
+    }),
   }
 
   // state (people first, then automation; spec 6.4)

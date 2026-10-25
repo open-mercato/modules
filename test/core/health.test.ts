@@ -95,9 +95,17 @@ describe('yarn om health on the fixture', () => {
       const ref = Health.parse(readJson(join(DATA, 'health', `${locatorToPath(loc)}.json`)))
       expect(mine.tier, loc).toBe(ref.tier)
       expect(mine.state, loc).toBe(ref.state)
-      // E5: line 0.8 of enterprise is judged on 0.8.0 (0.9.0 is no-fit there); the fixture has no Fit for 0.8.0
+      // E5: line 0.8 of enterprise is judged on 0.8.0 (0.9.0 is no-fit there); the fixture has no Fit for 0.8.0.
+      // The catalog never installs an enterprise module, so it has no receipt to set against its peers (finding of
+      // 25 Oct: `Built for 0.9; verified on no line.` on every entry the night skips).
       const want =
-        loc === LOC.enterprise ? { ...ref.signals, fit: { ...ref.signals.fit, '0.8': 'unknown' } } : ref.signals
+        loc === LOC.enterprise
+          ? {
+              ...ref.signals,
+              fit: { ...ref.signals.fit, '0.8': 'unknown' },
+              declaredVsObserved: { status: 'match', notes: [] },
+            }
+          : ref.signals
       expect(mine.signals, loc).toEqual(want)
       expect(mine.identity, loc).toEqual(ref.identity)
       for (const [line, p] of Object.entries(ref.agentPolicy)) {

@@ -151,18 +151,27 @@ export function maintenanceSignal(
   return { status: 'behind', ...base }
 }
 
-/** SIG-DEC: Built for (peer ranges) against Verified on (receipts), and declared hosts/env against Anatomy. */
+/**
+ * SIG-DEC: Built for (peer ranges) against Verified on (receipts), and declared hosts/env against Anatomy.
+ * `peers: 'none'`: the version declares no Open Mercato peer range, so nothing is "built for" a line (no peers reject
+ * any line, which made every line look declared: `Built for 0.8, 0.9, next` beside a card saying `no Open Mercato
+ * peer range`, finding of 25 Oct). `installed: false`: the catalog never installs the entry (a provider, library or
+ * tool), so there is no receipt to compare a declaration with.
+ */
 export function declaredVsObservedSignal(
   builtFor: readonly string[],
   verifiedOn: readonly string[],
   facts: Facts | null,
   descriptor: Pick<Descriptor, 'declares'> | null,
+  opts: { peers?: 'range' | 'none' | 'unread'; installed?: boolean } = {},
 ): Signals['declaredVsObserved'] {
   const notes: string[] = []
-  const same = builtFor.length === verifiedOn.length && builtFor.every((l) => verifiedOn.includes(l))
-  if (!same) {
+  const v = verifiedOn.length > 0 ? verifiedOn.join(', ') : 'no line'
+  if (opts.installed === false) {
+    // nothing to compare: no receipts by design
+  } else if (opts.peers === 'none') notes.push(`No Open Mercato peer range; verified on ${v}.`)
+  else if (!(builtFor.length === verifiedOn.length && builtFor.every((l) => verifiedOn.includes(l)))) {
     const b = builtFor.length > 0 ? builtFor.join(', ') : 'no tested line'
-    const v = verifiedOn.length > 0 ? verifiedOn.join(', ') : 'no line'
     notes.push(`Built for ${b}; verified on ${v}.`)
   }
   if (descriptor?.declares && facts) {
