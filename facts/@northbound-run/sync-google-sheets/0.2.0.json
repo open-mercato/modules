@@ -1,0 +1,447 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 145
+  },
+  "package": {
+    "locator": "npm:@northbound-run/sync-google-sheets",
+    "name": "@northbound-run/sync-google-sheets",
+    "version": "0.2.0",
+    "integrity": "sha512-MCBv6n8PMpEGtJGATra5v+u+b5pWKRgoxVzO1BQonLgdg3iEcmxx4xwHF/1Y/qXHbnxO/JRG9eC+gKKds6Ym3A==",
+    "source": "npm-tarball",
+    "gitRef": "0690676ecfd9342fced8f4d1fc88d9b34981a043"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "sync_google_sheets",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "^0.6.5",
+    "@open-mercato/shared": "^0.6.5"
+  },
+  "dependencies": {
+    "awilix": "^12.1.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @northbound-run/sync-google-sheets\n\nA standalone Open Mercato Data Sync adapter that connects Google Sheets to any entity in your Open Mercato app. Import rows on demand, run them on a schedule, or keep a sheet and your entity store in sync bidirectionally — all without touching this package's source. The adapter is entity-agnostic: it delegates writes to a pluggable `EntityWriter` registry, so teams can support their own entity types from their own module's `di.ts` without forking the package.\n\nThe adapter ships in three increments: **Increment 1** (import + OAuth) is production-ready today. **Increment 2** adds scheduled sync by reusing the core `SyncSchedule` primitive. **Increment 3** completes the export and bidirectional path with per-row conflict policies — the export engine design is first-of-kind within the Data Sync framework.\n\n---\n\n## Requirements\n\n- An Open Mercato app on `@open-mercato/core` **0.6.x** or later (the `data_sync` and `integrations` modules must be enabled)\n- Node.js **24** or later (the package builds for the `node24` target and uses native `fetch` and other modern Node APIs)\n- A Google Cloud project with an **OAuth 2.0 Client ID** (Web application type), the **Google Sheets API** enabled, and the **Google Drive API** enabled\n\n---\n\n## Install\n\n### 1. Add the package\n\n```bash\nyarn add @northbound-run/sync-google-sheets\n```\n\nThe package declares `@open-mercato/core` / `@open-mercato/shared` as **peer dependencies** — your app provides them. This matters: the Data Sync adapter registry is process-global, so a second, nested copy of core installed under this package would leave the adapter invisible to queue workers.\n\n### 2. Register the module\n\nAdd one line to `src/modules.ts` in your Open Mercato app:\n\n```ts\n// src/modules.ts\nimport { enabledModules } from './modules-base'\n\nexport default [\n  ...enabledModules,\n  { id: 'sync_google_sheets', from: '@northbound-run/sync-google-sheets' },\n]\n```\n\n### 3. Generate and migrate\n\nRun these commands in a fresh container or terminal (not while the dev server is running the first time):\n\n```bash\nyarn generate\nyarn db:migrate\n```\n\n`yarn generate` picks up the new module's entities, routes, and navigation entries. `yarn db:migrate` applies the migration the module ships, which creates two metadata tables — `sync_google_sheets_bindings` (one row per sheet↔entity binding) and `sync_google_sheets_content_hashes` (the echo-prevention sidecar for bidirectional sync). OAuth tokens are **not** stored in a module-owned table; they live in the framework's integration credential store (see [How It Works](#how-it-works)).\n\n---\n\n## Google OAuth Setup\n\n### Create an OAuth 2.0 Client\n\n1. Open [Google Cloud Console](https://console.cloud.google.com/) and select your project (or create one).\n2. Go to **APIs & Services → Credentials → Create Credentials → OAuth 2.0 Client ID**.\n3. Choose **Web application**.\n4. Under **Authorized redirect URIs** add:\n   ```\n   https://<your-app-origin>/api/sync_google_sheets/oauth/callback\n   ```\n   For local development also add:\n   ```\n   http://localhost:3000/api/sync_google_sheets/oauth/callback\n   ```\n5. Copy the **Client ID** and **Client Secret** — you will need them for the environment variables below.\n\n### Enable APIs\n\nIn **APIs & Services → Library**, enable:\n- **Google Sheets API**\n- **Google Drive API** (used to resolve spreadsheet metadata and list available sheets)\n\n---\n\n## Environment Variables\n\n| Variable | Required | Description |\n|---|---|---|\n| `GOOGLE_SHEETS_OAUTH_CLIENT_ID` | Yes | OAuth 2.0 Client ID from Google Cloud Console |\n| `GOOGLE_SHEETS_OAUTH_CLIENT_SECRET` | Yes | OAuth 2.0 Client Secret |\n| `GOOGLE_SHEETS_OAUTH_REDIRECT_URI` | Yes | Must match the redirect URI registered in Google Cloud Console (e.g. `https://app.example.com/api/sync_google_sheets/oauth/callback`) |\n| `GOOGLE_SHEETS_OAUTH_SCOPES` | No | Space-separated OAuth scopes. Defaults to `https://www.googleapis.com/auth/spreadsheets.readonly https://www.googl",
+  "modules": [
+    {
+      "id": "sync_google_sheets",
+      "title": "Google Sheets Sync",
+      "description": "Import, schedule, and bidirectionally sync Google Sheets with Open Mercato entities via the Data Sync engine. Entity-agnostic through a pluggable writer registry.",
+      "requires": [
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        },
+        {
+          "raw": "data_sync",
+          "resolvesTo": "core:data_sync"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "sync_google_sheets:google_sheets_binding",
+            "table": "sync_google_sheets_bindings",
+            "src": {
+              "file": "src/modules/sync_google_sheets/data/entities.ts",
+              "line": 18
+            }
+          },
+          {
+            "id": "sync_google_sheets:google_sheets_content_hash",
+            "table": "sync_google_sheets_content_hashes",
+            "src": {
+              "file": "src/modules/sync_google_sheets/data/entities.ts",
+              "line": 104
+            }
+          }
+        ],
+        "migrations": {
+          "count": 1,
+          "first": "2026-07-16",
+          "last": "2026-07-16"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/sync_google_sheets/config",
+            "requireAuth": true,
+            "requireFeatures": [
+              "sync_google_sheets.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/config/route.ts",
+              "line": 38
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_google_sheets/config",
+            "requireAuth": true,
+            "requireFeatures": [
+              "sync_google_sheets.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/config/route.ts",
+              "line": 49
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/sync_google_sheets/oauth/authorize",
+            "requireAuth": true,
+            "requireFeatures": [
+              "sync_google_sheets.connect"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/oauth/authorize/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/sync_google_sheets/oauth/callback",
+            "requireAuth": true,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/oauth/callback/route.ts",
+              "line": 62
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_google_sheets/preview",
+            "requireAuth": true,
+            "requireFeatures": [
+              "sync_google_sheets.configure"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/preview/route.ts",
+              "line": 18
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/sync_google_sheets/run",
+            "requireAuth": true,
+            "requireFeatures": [
+              "sync_google_sheets.run"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/run/route.ts",
+              "line": 20
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "sync_google_sheets.view",
+          "sync_google_sheets.connect",
+          "sync_google_sheets.configure",
+          "sync_google_sheets.run"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "sync_google_sheets.run.completed",
+            "src": {
+              "file": "src/modules/sync_google_sheets/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "sync_google_sheets.run.failed",
+            "src": {
+              "file": "src/modules/sync_google_sheets/events.ts",
+              "line": 10
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "data_sync.run.completed",
+            "src": {
+              "file": "src/modules/sync_google_sheets/subscribers/bidirectional-chain.ts",
+              "line": 14
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 4
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": false
+          },
+          {
+            "key": "scopes",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "clientEmail",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "privateKey",
+            "type": "secret",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "GOOGLE_SHEETS_OAUTH_REDIRECT_URI",
+            "src": {
+              "file": "src/modules/sync_google_sheets/api/oauth/authorize/route.ts",
+              "line": 46
+            }
+          },
+          {
+            "name": "OM_OAUTH_TOKEN_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/sync_google_sheets/lib/oauth-token.ts",
+              "line": 33
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "accounts.google.com",
+            "src": {
+              "file": "src/modules/sync_google_sheets/lib/oauth.ts",
+              "line": 167
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "oauth2.googleapis.com",
+            "src": {
+              "file": "src/modules/sync_google_sheets/lib/oauth.ts",
+              "line": 15
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "sheets.googleapis.com",
+            "src": {
+              "file": "src/modules/sync_google_sheets/lib/sheets-client.ts",
+              "line": 8
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "www.googleapis.com",
+            "src": {
+              "file": "src/modules/sync_google_sheets/lib/oauth.ts",
+              "line": 208
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:sync_google_sheets"
+        },
+        {
+          "kind": "subscriber",
+          "target": "data_sync.run.completed"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/data_sync/data/entities": [
+            "SyncMapping"
+          ],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "ExportBatch",
+            "ExportItemResult",
+            "FieldMapping",
+            "ImportBatch",
+            "ImportItem",
+            "StreamExportInput",
+            "StreamImportInput",
+            "TenantScope",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": [
+            "registerDataSyncAdapter"
+          ],
+          "modules/data_sync/lib/start-run": [
+            "startDataSyncRun"
+          ],
+          "modules/data_sync/lib/sync-run-service": [
+            "SyncRunService"
+          ],
+          "modules/integrations/data/entities": [
+            "SyncExternalIdMapping"
+          ],
+          "modules/integrations/lib/state-service": [
+            "IntegrationStateService"
+          ],
+          "modules/progress/lib/progressService": [
+            "ProgressService"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandRuntimeContext"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/http/readJsonSafe": [
+            "readJsonSafe"
+          ],
+          "lib/query/types": [
+            "QueryEngine"
+          ],
+          "lib/url": [
+            "toAbsoluteUrl"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "sync_google_sheets",
+        "tables": [
+          "sync_google_sheets_bindings",
+          "sync_google_sheets_content_hashes"
+        ],
+        "aclFeatures": [
+          "sync_google_sheets.view",
+          "sync_google_sheets.connect",
+          "sync_google_sheets.configure",
+          "sync_google_sheets.run"
+        ],
+        "eventIds": [
+          "sync_google_sheets.run.completed",
+          "sync_google_sheets.run.failed"
+        ],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "2202002",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for ^0.6.5 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.2.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/sync_google_sheets/integration.ts",
+            "line": 9
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

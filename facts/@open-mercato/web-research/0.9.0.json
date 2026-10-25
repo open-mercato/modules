@@ -1,0 +1,47 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 32
+  },
+  "package": {
+    "locator": "npm:@open-mercato/web-research",
+    "name": "@open-mercato/web-research",
+    "version": "0.9.0",
+    "integrity": "sha512-AxH1xP8V98/FQ1M0kxUnQ/OxXzp3K1CozimKfG7ruOgVeGdX0s7xZcqqrJxCm5bRpJGOU2WfeCsWtZ137f4Fpw==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "library",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

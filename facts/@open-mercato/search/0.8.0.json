@@ -1,0 +1,932 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 404
+  },
+  "package": {
+    "locator": "npm:@open-mercato/search",
+    "name": "@open-mercato/search",
+    "version": "0.8.0",
+    "integrity": "sha512-STRadqPeLehJV7PJRtvXlBmeYMUU0FIz2O9dDFUisVV4dfbOxkOYg5/MlLZjRXLdu9x/OGuegqolQdwM0BJcdA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "search",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "^5.0.2",
+    "@ai-sdk/cohere": "^4.0.14",
+    "@ai-sdk/google": "^4.0.56",
+    "@ai-sdk/mistral": "^4.0.16",
+    "@ai-sdk/openai": "^4.0.50",
+    "ai": "^7.0.83",
+    "ai-sdk-ollama": "4.1.0",
+    "meilisearch": "^0.60.0",
+    "pg": "8.23.0",
+    "zod": "^4.4.3"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": "# @open-mercato/search 🔎\n\nHybrid search for Open Mercato: fulltext, vector, and token-based search in one module.\n\n`@open-mercato/search` delivers indexing pipelines, strategy orchestration, global search UI integration, and reindex tooling.\n\n## Why this package ✨\n\n- 🧠 Semantic + keyword search strategies\n- ⚡ Strategy fusion with configurable fallbacks\n- 🧩 Module-level search config (`search.ts`) support\n- 🛠 Reindex commands, diagnostics, and operational APIs\n\n## Install\n\n```bash\nyarn add @open-mercato/search\n```\n\n## Learn more\n\n- GitHub (package): https://github.com/open-mercato/open-mercato/tree/main/packages/search\n- GitHub (project): https://github.com/open-mercato/open-mercato\n- Docs: https://docs.openmercato.com\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "search",
+      "title": "Search",
+      "description": "Unified search module with pluggable strategies (Meilisearch, Vector, Tokens).",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/search/embeddings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.embeddings.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/embeddings/route.ts",
+              "line": 126
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/embeddings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.embeddings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/embeddings/route.ts",
+              "line": 187
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/embeddings/reindex",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.embeddings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/embeddings/reindex/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/embeddings/reindex/cancel",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.embeddings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/embeddings/reindex/cancel/route.ts",
+              "line": 30
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/index",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/index/route.ts",
+              "line": 34
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/search/index",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.embeddings.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/index/route.ts",
+              "line": 115
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/reindex",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.reindex"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/reindex/route.ts",
+              "line": 67
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/reindex/cancel",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.reindex"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/reindex/cancel/route.ts",
+              "line": 30
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/search",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/search/route.ts",
+              "line": 54
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/search/global",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.global"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/search/global/route.ts",
+              "line": 55
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/settings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/settings/fulltext",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/settings/fulltext/route.ts",
+              "line": 40
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/settings/global-search",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/settings/global-search/route.ts",
+              "line": 36
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/search/settings/global-search",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/settings/global-search/route.ts",
+              "line": 56
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/search/settings/vector-store",
+            "requireAuth": true,
+            "requireFeatures": [
+              "search.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/search/api/settings/vector-store/route.ts",
+              "line": 57
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "search.view",
+          "search.manage",
+          "search.reindex",
+          "search.embeddings.view",
+          "search.embeddings.manage",
+          "search.global"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "search.index_record",
+            "src": {
+              "file": "src/modules/search/events.ts",
+              "line": 4
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "search.index_record",
+            "src": {
+              "file": "src/modules/search/subscribers/fulltext_upsert.ts",
+              "line": 7
+            }
+          },
+          {
+            "event": "query_index.delete_one",
+            "src": {
+              "file": "src/modules/search/subscribers/vector_delete.ts",
+              "line": 7
+            }
+          },
+          {
+            "event": "query_index.vectorize_purge",
+            "src": {
+              "file": "src/modules/search/subscribers/vector_purge.ts",
+              "line": 10
+            }
+          },
+          {
+            "event": "query_index.vectorize_one",
+            "src": {
+              "file": "src/modules/search/subscribers/vector_upsert.ts",
+              "line": 7
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/config/search",
+            "requireFeatures": [
+              "search.view"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 1
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "fulltext-indexing"
+          },
+          {
+            "queue": "vector-indexing"
+          }
+        ],
+        "cli": [
+          "query",
+          "status",
+          "index",
+          "reindex",
+          "reindex-help",
+          "test-meilisearch",
+          "worker",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [
+          "search_aggregate",
+          "search_get",
+          "search_query",
+          "search_reindex",
+          "search_schema",
+          "search_status"
+        ],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "OPENAI_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/embeddings/route.ts",
+              "line": 62
+            }
+          },
+          {
+            "name": "MEILISEARCH_HOST",
+            "src": {
+              "file": "src/modules/search/api/settings/fulltext/route.ts",
+              "line": 44
+            }
+          },
+          {
+            "name": "MEILISEARCH_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/settings/fulltext/route.ts",
+              "line": 45
+            }
+          },
+          {
+            "name": "MEILISEARCH_INDEX_PREFIX",
+            "src": {
+              "file": "src/modules/search/api/settings/fulltext/route.ts",
+              "line": 48
+            }
+          },
+          {
+            "name": "SEARCH_EXCLUDE_ENCRYPTED_FIELDS",
+            "src": {
+              "file": "src/modules/search/api/settings/fulltext/route.ts",
+              "line": 50
+            }
+          },
+          {
+            "name": "GOOGLE_GENERATIVE_AI_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 121
+            }
+          },
+          {
+            "name": "MISTRAL_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 122
+            }
+          },
+          {
+            "name": "COHERE_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 123
+            }
+          },
+          {
+            "name": "AWS_ACCESS_KEY_ID",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 124
+            }
+          },
+          {
+            "name": "OLLAMA_BASE_URL",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 125
+            }
+          },
+          {
+            "name": "OM_SEARCH_ENABLED",
+            "src": {
+              "file": "src/modules/search/api/settings/route.ts",
+              "line": 128
+            }
+          },
+          {
+            "name": "DATABASE_URL",
+            "src": {
+              "file": "src/modules/search/api/settings/vector-store/route.ts",
+              "line": 62
+            }
+          },
+          {
+            "name": "QDRANT_URL",
+            "src": {
+              "file": "src/modules/search/api/settings/vector-store/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "name": "QDRANT_API_KEY",
+            "src": {
+              "file": "src/modules/search/api/settings/vector-store/route.ts",
+              "line": 66
+            }
+          },
+          {
+            "name": "CHROMA_URL",
+            "src": {
+              "file": "src/modules/search/api/settings/vector-store/route.ts",
+              "line": 69
+            }
+          },
+          {
+            "name": "OM_INDEXER_VERBOSE",
+            "src": {
+              "file": "src/modules/search/cli.ts",
+              "line": 28
+            }
+          },
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/search/cli.ts",
+              "line": 800
+            }
+          },
+          {
+            "name": "SEARCH_DISABLE_SINGLETON_CACHE",
+            "src": {
+              "file": "src/modules/search/di.ts",
+              "line": 36
+            }
+          },
+          {
+            "name": "AWS_SECRET_ACCESS_KEY",
+            "src": {
+              "file": "src/modules/search/lib/embedding-config.ts",
+              "line": 97
+            }
+          },
+          {
+            "name": "WORKERS_FULLTEXT_INDEXING_CONCURRENCY",
+            "src": {
+              "file": "src/modules/search/workers/fulltext-index.worker.ts",
+              "line": 18
+            }
+          },
+          {
+            "name": "WORKERS_VECTOR_INDEXING_CONCURRENCY",
+            "src": {
+              "file": "src/modules/search/workers/vector-index.worker.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "MEILISEARCH_REQUEST_TIMEOUT_MS",
+            "src": {
+              "file": "src/fulltext/drivers/meilisearch/index.ts",
+              "line": 30
+            }
+          },
+          {
+            "name": "OM_SEARCH_DEBUG",
+            "src": {
+              "file": "src/lib/debug.ts",
+              "line": 26
+            }
+          },
+          {
+            "name": "OM_SEARCH_OLLAMA_BASE_URL_ALLOWLIST",
+            "src": {
+              "file": "src/vector/lib/ollama-url-safety.ts",
+              "line": 27
+            }
+          },
+          {
+            "name": "OM_SEARCH_OLLAMA_ALLOW_PRIVATE",
+            "src": {
+              "file": "src/vector/lib/ollama-url-safety.ts",
+              "line": 37
+            }
+          },
+          {
+            "name": "VECTOR_EMBEDDING_TIMEOUT_MS",
+            "src": {
+              "file": "src/vector/services/embedding.ts",
+              "line": 41
+            }
+          },
+          {
+            "name": "AWS_REGION",
+            "src": {
+              "file": "src/vector/services/embedding.ts",
+              "line": 168
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_aggregate"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_get"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_query"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_reindex"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_schema"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "ai:search_status"
+        },
+        {
+          "kind": "subscriber",
+          "target": "query_index.delete_one"
+        },
+        {
+          "kind": "subscriber",
+          "target": "query_index.vectorize_purge"
+        },
+        {
+          "kind": "subscriber",
+          "target": "query_index.vectorize_one"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/cache": {
+          ".": [
+            "CacheStrategy"
+          ]
+        },
+        "@open-mercato/core": {
+          "modules/configs/lib/module-config-service": [
+            "ConfigScope",
+            "ModuleConfigService"
+          ],
+          "modules/directory/constants": [
+            "isAllOrganizationsSelection"
+          ],
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ],
+          "modules/directory/utils/organizationScopeFilter": [
+            "resolveOrganizationScopeFilter"
+          ],
+          "modules/directory/utils/scopeCookies": [
+            "parseSelectedOrganizationCookie"
+          ],
+          "modules/progress/data/entities": [
+            "ProgressJob"
+          ],
+          "modules/progress/lib/progressService": [
+            "ProgressService"
+          ],
+          "modules/query_index/lib/coverage": [
+            "refreshCoverageSnapshot",
+            "writeCoverageCounts"
+          ],
+          "modules/query_index/lib/jobs": [
+            "JobScope",
+            "finalizeJob",
+            "prepareJob"
+          ],
+          "modules/query_index/lib/reindexer": [
+            "DEFAULT_REINDEX_PARTITIONS",
+            "reindexEntity"
+          ],
+          "modules/query_index/lib/search-entity-policy": [
+            "(dynamic)"
+          ],
+          "modules/query_index/lib/search-tokens": [
+            "(dynamic)"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "Queue",
+            "QueuedJob",
+            "WorkerMeta",
+            "createQueue"
+          ],
+          "worker": [
+            "(dynamic)"
+          ]
+        },
+        "@open-mercato/search": {
+          ".": [
+            "SearchService"
+          ],
+          "indexer": [
+            "SearchIndexer"
+          ],
+          "strategies": [
+            "FullTextSearchStrategy"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken",
+            "parseBooleanWithDefault"
+          ],
+          "lib/cli/progress": [
+            "createProgressBar"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/indexDoc": [
+            "decryptIndexDocForSearch"
+          ],
+          "lib/encryption/tenantDataEncryptionService": [
+            "TenantDataEncryptionService",
+            "parseDecryptedFieldValue"
+          ],
+          "lib/frontend/organizationEvents": [
+            "getCurrentOrganizationScope",
+            "subscribeOrganizationScopeChanged"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "resolveTimeoutMs"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/indexers/error-log": [
+            "recordIndexerError"
+          ],
+          "lib/indexers/status-log": [
+            "recordIndexerLog"
+          ],
+          "lib/logger": [
+            "Logger",
+            "createLogger"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/query/engine": [
+            "resolveEntityTableName"
+          ],
+          "lib/query/types": [
+            "QueryEngine"
+          ],
+          "lib/redis/connection": [
+            "getRedisUrlOrThrow"
+          ],
+          "lib/search/auto-indexing": [
+            "SEARCH_AUTO_INDEX_CONFIG_KEY",
+            "SEARCH_AUTO_INDEX_CONFIG_MODULE",
+            "envDisablesAutoIndexing"
+          ],
+          "lib/search/config": [
+            "(dynamic)",
+            "resolveSearchMinTokenLength"
+          ],
+          "lib/search/entityAccess": [
+            "*"
+          ],
+          "lib/search/tokenize": [
+            "(dynamic)"
+          ],
+          "lib/url-safety": [
+            "HostLookup",
+            "SafeOutboundFetchOptions",
+            "UrlSafetyReason",
+            "assertStaticallySafeOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/entities": [
+            "EntityId"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/search": [
+            "IndexableRecord",
+            "PresenterEnricherFn",
+            "ResultMergeConfig",
+            "SearchBuildContext",
+            "SearchDeletePayload",
+            "SearchEntityConfig",
+            "SearchFieldPolicy",
+            "SearchIndexPayload",
+            "SearchIndexSource",
+            "SearchModuleConfig",
+            "SearchOptions",
+            "SearchResult",
+            "SearchResultLink",
+            "SearchResultPresenter",
+            "SearchServiceOptions",
+            "SearchStrategy",
+            "SearchStrategyId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/vector": [
+            "VectorDriverId",
+            "VectorEntityConfig",
+            "VectorIndexEntry",
+            "VectorIndexSource",
+            "VectorLinkDescriptor",
+            "VectorModuleConfig",
+            "VectorQueryRequest",
+            "VectorResultPresenter",
+            "VectorSearchHit"
+          ],
+          "security/featurePolicy": [
+            "authorizeFeatures"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/injection/useAppEvent": [
+            "useAppEvent"
+          ],
+          "backend/utils/api": [
+            "ForbiddenError"
+          ],
+          "backend/utils/apiCall": [
+            "readApiResultOrThrow"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogTitle"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/tabs": [
+            "Tabs",
+            "TabsContent",
+            "TabsList",
+            "TabsTrigger"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "search",
+        "tables": [],
+        "aclFeatures": [
+          "search.view",
+          "search.manage",
+          "search.reindex",
+          "search.embeddings.view",
+          "search.embeddings.manage",
+          "search.global"
+        ],
+        "eventIds": [
+          "search.index_record"
+        ],
+        "backendRoutes": [
+          "/backend/config/search"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "0312322",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0 and 2 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/search/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

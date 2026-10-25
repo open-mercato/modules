@@ -1,0 +1,126 @@
+{
+  "locator": "npm:@northbound-run/sync-shopify",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@northbound-run/sync-shopify",
+    "distTags": {
+      "latest": "0.5.0"
+    },
+    "latestStable": "0.5.0",
+    "previousStable": "0.4.9",
+    "preview": null,
+    "publishedAt": {
+      "0.5.0": "2026-08-19T15:40:40Z",
+      "0.4.9": "2026-08-18T23:40:25Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/Northbound-Run/open-mercato-shopify.git",
+    "gitHead": "e1c17659c70365921d2193892c850543c156254c",
+    "keywords": [
+      "open-mercato",
+      "open-mercato-module",
+      "shopify",
+      "data-sync",
+      "ecommerce"
+    ],
+    "maintainers": [
+      "northboundrun"
+    ],
+    "peerDependencies": {
+      "@mikro-orm/postgresql": "^7.0.14",
+      "@open-mercato/core": ">=0.6.6 <0.7.0",
+      "@open-mercato/shared": ">=0.6.0 <0.7.0",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "dependencies": {
+      "@shopify/admin-api-client": "^1.1.2",
+      "awilix": "^12.1.1"
+    },
+    "installScripts": [],
+    "integrity": "sha512-zRDFHwkpPgadT6qPciKmMig/fDYOXf469dklTZksrTfnmB1GNXXfm3nl+ZF6qNeiwlU0YxS2ZTcbfOtgRAdrgA==",
+    "tarball": "https://registry.npmjs.org/@northbound-run/sync-shopify/-/sync-shopify-0.5.0.tgz"
+  },
+  "github": {
+    "repo": "Northbound-Run/open-mercato-shopify",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-08-19T15:40:04Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.5.0",
+        "sha": "e1c17659c70365921d2193892c850543c156254c"
+      },
+      {
+        "name": "v0.4.9",
+        "sha": "cd3861d524c874c93394c663b32d6ae586a4a87a"
+      },
+      {
+        "name": "v0.4.8",
+        "sha": "d1efa4700ba65106134caa0b23ab21792f01a187"
+      },
+      {
+        "name": "v0.4.7",
+        "sha": "e5da74a7c12d66e1d1b980033a093cce286c0833"
+      },
+      {
+        "name": "v0.4.6",
+        "sha": "c689bfa13d8c270b83a6a3132546d90d7eb94503"
+      },
+      {
+        "name": "v0.4.5",
+        "sha": "11791f145f72eb499239461a3e889bd77970f3fe"
+      },
+      {
+        "name": "v0.4.4",
+        "sha": "9e2c8eebb4e6bd8e820cd427ba52a44e17cf8195"
+      },
+      {
+        "name": "v0.4.3",
+        "sha": "8e887c6d58cf7d18f1e3315f5c315ddd515abd2f"
+      },
+      {
+        "name": "v0.4.2",
+        "sha": "44fa2cb38ac575137db58630b0f075239f6ef687"
+      },
+      {
+        "name": "v0.4.1",
+        "sha": "7f4fe89fce9e729068a23a092cd9fbd11a7a4e6f"
+      },
+      {
+        "name": "v0.4.0",
+        "sha": "5a3964fe8bee654b9722d9be2af5cb6081c4fbd3"
+      },
+      {
+        "name": "v0.3.0",
+        "sha": "2317284c58bda74607ab51088008ce31c3af73ce"
+      },
+      {
+        "name": "v0.2.0",
+        "sha": "fe4e1c8f108d7dd0576cc6542f3d2caf30edd7ce"
+      },
+      {
+        "name": "v0.1.2",
+        "sha": "434bd4196f00b603495ab10464102cf8fe071ef9"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "Northbound-Run/open-mercato-shopify",
+    "commit": "e1c17659c70365921d2193892c850543c156254c",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": 92,
+  "errors": []
+}

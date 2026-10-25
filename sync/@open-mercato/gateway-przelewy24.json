@@ -1,0 +1,46 @@
+{
+  "locator": "npm:@open-mercato/gateway-przelewy24",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/gateway-przelewy24",
+    "distTags": {
+      "latest": "0.4.6-canary-5eb138494e"
+    },
+    "latestStable": null,
+    "previousStable": null,
+    "preview": "0.4.6-canary-5eb138494e",
+    "publishedAt": {
+      "0.4.6-canary-5eb138494e": "2026-03-05T14:46:56Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": null,
+    "gitHead": "5eb138494e7a71e5708a5d8257daa462478e526c",
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {
+      "@open-mercato/shared": "0.4.6-canary-5eb138494e"
+    },
+    "installScripts": [],
+    "integrity": "sha512-fhrLxp8IUA9XNqYQL/f12rURTSDq3M/pmf1wGUvfn4k2y7IZ+X2DlpBRFmKautC7D34bzM2HO2BXcsiqacpauQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-przelewy24/-/gateway-przelewy24-0.4.6-canary-5eb138494e.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 14,
+  "errors": []
+}

@@ -1,0 +1,76 @@
+{
+  "locator": "npm:@fullstackhouse/open-mercato-health",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@fullstackhouse/open-mercato-health",
+    "distTags": {
+      "pr-2": "0.2.2-pr.2.3b88a24",
+      "pr-3": "0.2.2-pr.3.fd52af9",
+      "pr-4": "0.2.3-pr.4.22aaea1",
+      "latest": "0.3.0",
+      "pr-6": "0.3.0-pr.6.13d7d41",
+      "pr-7": "0.3.0-pr.7.71a4a55",
+      "pr-8": "0.3.0-pr.8.6049822"
+    },
+    "latestStable": "0.3.0",
+    "previousStable": "0.2.3",
+    "preview": null,
+    "publishedAt": {
+      "0.3.0": "2026-05-19T12:19:37Z",
+      "0.2.3": "2026-04-20T18:23:56Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/fullstackhouse/open-mercato-health.git",
+    "gitHead": "9e37b05f23dba3882d814a1a3df7cc9ec0c42a91",
+    "keywords": [
+      "health-check",
+      "kubernetes",
+      "open-mercato",
+      "readiness",
+      "liveness"
+    ],
+    "maintainers": [
+      "jtomaszewski"
+    ],
+    "peerDependencies": {
+      "next": ">=14.0.0",
+      "@open-mercato/cache": "*",
+      "@open-mercato/shared": "*",
+      "@mikro-orm/postgresql": ">=6.0.0"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-ShX1+ajgxf4huku+RkCclf6ieI5fMrliABr6C4bXs46GoHRqZylTvaE/9Bovu74PhINl9GlxHwWVX1VCZx2gxQ==",
+    "tarball": "https://registry.npmjs.org/@fullstackhouse/open-mercato-health/-/open-mercato-health-0.3.0.tgz"
+  },
+  "github": {
+    "repo": "fullstackhouse/open-mercato-health",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-20T22:03:43Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": null,
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.3.0",
+        "sha": "9e37b05f23dba3882d814a1a3df7cc9ec0c42a91"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "fullstackhouse/open-mercato-health",
+    "commit": "9e37b05f23dba3882d814a1a3df7cc9ec0c42a91",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
+  "downloads30d": 4958,
+  "errors": []
+}

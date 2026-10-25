@@ -1,0 +1,50 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 2
+  },
+  "package": {
+    "locator": "npm:mercato-readiness-scanner",
+    "name": "mercato-readiness-scanner",
+    "version": "0.2.2",
+    "integrity": "sha512-ee0dPquU8MPzwoFPf1RGK419ddeKwLT9ZEH6uAKZ/8euDOpzGxGmfCAit68fhfQPcVblgqPB8Df9mYbYMZ0cjA==",
+    "source": "npm-tarball",
+    "gitRef": "3fc6a9954069117ae5ab404a23f5f8af009966f3"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/ in the tarball.",
+    "modules": []
+  },
+  "kind": "tool",
+  "license": {
+    "value": null,
+    "kind": "unknown",
+    "mismatch": false,
+    "sources": {
+      "packageJson": null,
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {
+    "semver": "^7.8.5",
+    "yaml": "^2.9.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "<p align=\"center\"><img src=\"https://raw.githubusercontent.com/open-mercato/mercato-readiness-scanner/main/.github/readme/open-mercato.svg\" alt=\"Open Mercato logo\" width=\"72\" /></p>\n\n<h1 align=\"center\">Open Mercato Readiness Scanner</h1>\n\n<p align=\"center\"><strong>Find production-readiness gaps before you deploy.</strong></p>\n\n<p align=\"center\">Read-only readiness scans for applications built with create-mercato-app.<br />Check local configuration, get actionable findings, and export reports for your release process.</p>\n\n<p align=\"center\">\n  <a href=\"https://www.npmjs.com/package/mercato-readiness-scanner\"><img src=\"https://img.shields.io/npm/v/mercato-readiness-scanner?color=b4f372&amp;label=npm\" alt=\"npm version\" /></a>\n  <a href=\"https://nodejs.org/\"><img src=\"https://img.shields.io/badge/node-%E2%89%A524-1b1b1b\" alt=\"Node.js 24 or newer\" /></a>\n  <a href=\"https://github.com/open-mercato/mercato-readiness-scanner/actions/workflows/test.yml\"><img src=\"https://github.com/open-mercato/mercato-readiness-scanner/actions/workflows/test.yml/badge.svg\" alt=\"Tests\" /></a>\n  <img src=\"https://img.shields.io/badge/scans-read--only-bc9aff\" alt=\"Read-only scans\" />\n</p>\n\n```bash\nnpx mercato-readiness-scanner scan .\n```\n\n<p align=\"center\"><a href=\"#quick-start\">Quick start</a> · <a href=\"#save-a-report\">Reports</a> · <a href=\"#use-in-ci\">CI</a> · <a href=\"#rule-catalog\">Rules</a> · <a href=\"https://docs.openmercato.com/\">Framework docs</a> · <a href=\"https://discord.gg/f4qwPtJ3qA\">Discord</a></p>\n\n```mermaid\nflowchart LR\n    A[\"📁 Your Open Mercato app\"] --> B[\"🔎 Static readiness scan\"]\n    B --> C[\"🛡️ Configuration & security\"]\n    B --> D[\"🚀 Deployment & operations\"]\n    C --> E[\"📋 Findings & remediation\"]\n    D --> E\n    E --> F[\"💻 Terminal\"]\n    E --> G[\"📝 Markdown\"]\n    E --> H[\"🔧 JSON / CI\"]\n    style B fill:#b4f372,color:#1b1b1b,stroke:#1b1b1b\n    style E fill:#bc9aff,color:#1b1b1b,stroke:#1b1b1b\n```\n\n`scan` is read-only. The explicit [`apply`](#apply-the-remediations) command can add safe fixes to a git working tree.\n\n## Quick start\n\nYou need **Node.js 24 or newer** and an application created with\n[`create-mercato-app`](https://www.npmjs.com/package/create-mercato-app).\nRun from your application directory:\n\n```bash\ncd my-open-mercato-app\nnpx mercato-readiness-scanner scan .\n```\n\nOr pass the application path from another directory:\n\n```bash\nnpx mercato-readiness-scanner scan /path/to/open-mercato-app\n```\n\nNo global install is required. To see all options:\n\n```bash\nnpx mercato-readiness-scanner --help\n```\n\nThe default terminal report groups failed, review-only, skipped, and passing\nchecks with `❌`, `⚠️`, `⏭️`, and `✅` markers. Every actionable result includes\nremediation text and a permanent rule-documentation URL.\n\n## Check credentials and encryption keys\n\nCredential inspection runs automatically in every scan:\n\n```bash\nnpx mercato-readiness-scanner@0.2.2 scan . --fail-on high\n```\n\n`scan` inspects root `.env`, `.env.production`, `.env.local`, and\n`.env.production.local` files, visible runtime settings, and supported Compose\nservice environments. It checks every detected credential-like setting, including\nJWT/signing secrets, database and Redis passwords, other service passwords,\nAPI tokens/keys, and tenant encryption fallback/master keys. Database URL\npasswords, copied template credentials, and `${NAME:-default}` fallbacks are\nincluded. File contents remain in memory; findings contain variable names and\nfixed reasons, never credential values. Application code and shell expressions\nare never executed. `apply` does not read or change these values.\n\n| Finding | Behavior |\n|---|---|\n| ❌ Default, placeholder, or copied template credential | Critical failure |\n| ❌ Short, repeated, or predictable credential | Critical failure |\n| ❌ Weak tenant encryption fallback/master key | Critical failure |\n| ❌ Development fallback enabled without an explicit tenant key | Critical failure |\n| ⚠️ No complete KMS configuration | Configure Vault;",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "No src/ in the tarball: anatomy is not available."
+  ]
+}

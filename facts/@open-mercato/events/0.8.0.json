@@ -1,0 +1,231 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 46
+  },
+  "package": {
+    "locator": "npm:@open-mercato/events",
+    "name": "@open-mercato/events",
+    "version": "0.8.0",
+    "integrity": "sha512-judrHvKA7I3Nuv6b4A508KWjyYmXqGDCucy7VhR86O6lerb9SJ8wN4G94Hh+chastrkJu5GizG8OtdGSc3julg==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "events",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/shared": "0.8.0",
+    "pg": "8.23.0"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": "# @open-mercato/events 📡\n\nEvent-driven backbone for Open Mercato modules.\n\n`@open-mercato/events` enables typed event publication/subscription with support for ephemeral and persistent delivery patterns.\n\n## Why this package ✨\n\n- 🧩 Decouple modules with clean event contracts\n- 🔁 Persistent subscribers for reliable side effects\n- ⚡ Ephemeral events for real-time UX flows\n- 🧠 Works with queue workers for scalable processing\n\n## Install\n\n```bash\nyarn add @open-mercato/events\n```\n\n## Learn more\n\n- GitHub (package): https://github.com/open-mercato/open-mercato/tree/main/packages/events\n- GitHub (project): https://github.com/open-mercato/open-mercato\n- Docs: https://docs.openmercato.com\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "events",
+      "title": "Events",
+      "description": "Event bus and subscriber dispatch",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/events",
+            "requireAuth": true,
+            "requireFeatures": [
+              "workflows.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/events/api/route.ts",
+              "line": 51
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/events/stream",
+            "requireAuth": true,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/events/api/stream/route.ts",
+              "line": 228
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "events"
+          }
+        ],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "WORKERS_EVENTS_CONCURRENCY",
+            "src": {
+              "file": "src/modules/events/workers/events.worker.ts",
+              "line": 13
+            }
+          },
+          {
+            "name": "DATABASE_URL",
+            "src": {
+              "file": "src/bridge.ts",
+              "line": 52
+            }
+          },
+          {
+            "name": "OM_EVENTS_SHARED_PRODUCER",
+            "src": {
+              "file": "src/bus.ts",
+              "line": 144
+            }
+          },
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/bus.ts",
+              "line": 210
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "Queue",
+            "QueuedJob",
+            "WorkerMeta",
+            "createQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/context": [
+            "resolveRequestContext"
+          ],
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/db/ssl": [
+            "getSslConfig"
+          ],
+          "lib/events/patterns": [
+            "matchEventPattern"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/modules/resource-usage": [
+            "inferModuleIdFromResourceId",
+            "withModuleResourceUsage"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/redis/connection": [
+            "getRedisUrlOrThrow"
+          ],
+          "modules/events": [
+            "getDeclaredEvents",
+            "isBroadcastEvent",
+            "isCrossProcessBroadcastEvent",
+            "isPrivateCrossProcessEventEmitter"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "events",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0200100",
+      "lint": [
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

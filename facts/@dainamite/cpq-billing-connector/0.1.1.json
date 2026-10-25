@@ -1,0 +1,262 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 30
+  },
+  "package": {
+    "locator": "npm:@dainamite/cpq-billing-connector",
+    "name": "@dainamite/cpq-billing-connector",
+    "version": "0.1.1",
+    "integrity": "sha512-VIEDlRTbDBCRjQ+gbo39SRDf34+eiYngux/KAUTH0vf1/R47Hq5OPEXDc8BLMrNMKKhPVfc0SxuqYuW9nKyN1A==",
+    "source": "npm-tarball",
+    "gitRef": "1fd9281937f30e75c62df9acf45cf3a2dbdaabe4"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "cpq_billing_connector",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "^0.6.0",
+    "@open-mercato/events": "^0.6.0",
+    "@open-mercato/shared": "^0.6.0"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @dainamite/cpq-billing-connector\n\nPre-built integration that wires `@dainamite/cpq` subscription lifecycle\nevents to `@dainamite/billing` API calls.\n\nIt depends on both `@dainamite/cpq` and `@dainamite/billing` (as peers) and\n**must be registered after both** so their services are resolvable when its\nsubscribers fire:\n\n```typescript\n// src/modules.ts — order matters\n{ id: 'cpq', from: '@dainamite/cpq' }\n{ id: 'billing', from: '@dainamite/billing' }\n{ id: 'cpq_billing_connector', from: '@dainamite/cpq-billing-connector' }\n```\n\n```bash\nyarn generate\nyarn mercato db migrate\n```\n\nThere is no UI or schema of its own to configure — it is pure event glue.\nEngines: **Node ≥ 24**.\n\nThe connector subscribes to six CPQ lifecycle events and translates each\nto the billing API contract:\n\n| CPQ event | Connector action |\n|---|---|\n| `cpq.subscription.activated` | Create Billing Account if missing; create Billing Items per charge (one-time + recurring split) |\n| `cpq.subscription.amended` | Create new Billing Items for added subscription items; compute proration value for the partial cycle and post as `one_time` Billing Item; set `bill_end_date` on removed items |\n| `cpq.subscription.renewed` | Extend `bill_end_date` on existing Billing Items; create new Items for any added subscription items |\n| `cpq.subscription.cancelled` | Set `bill_end_date` on all Billing Items for the subscription |\n| `cpq.subscription.merged` | Move Billing Items from source subscriptions to the merged subscription (update `subscription_id`) |\n| `cpq.subscription.superseded` | Set `bill_end_date` on all Billing Items for the superseded subscription |\n\n## Status\n\n**Built — publishing soon** (alongside `@dainamite/billing`; not yet on npm).\nAll six subscribers are wired end-to-end — `@dainamite/cpq` emits the\nmatching events (`cpq.subscription.activated` on new-sale activation,\nthe ARC events on amend / renew / cancel / merge). Proration math lives\nin this package: the `amended` subscriber derives the bill cycle from\nthe billing account via billing's `cycleContaining` (CPQ stays neutral\non billing-calendar semantics).\n\nSee [`specs/implementation/xd-249-billing-spec.md`](../../specs/implementation/xd-249-billing-spec.md)\n§ CPQ Integration for the full design.\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "cpq_billing_connector",
+      "title": "CPQ → Billing Connector",
+      "description": null,
+      "requires": [
+        {
+          "raw": "cpq",
+          "resolvesTo": null
+        },
+        {
+          "raw": "billing",
+          "resolvesTo": null
+        },
+        {
+          "raw": "auth",
+          "resolvesTo": "core:auth"
+        },
+        {
+          "raw": "directory",
+          "resolvesTo": "core:directory"
+        }
+      ],
+      "ejectable": false,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": [
+          {
+            "event": "cpq.subscription.activated",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-activated.ts",
+              "line": 7
+            }
+          },
+          {
+            "event": "cpq.subscription.amended",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-amended.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "cpq.subscription.cancelled",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-cancelled.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "cpq.subscription.merged",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-merged.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "cpq.subscription.renewed",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-renewed.ts",
+              "line": 9
+            }
+          },
+          {
+            "event": "cpq.subscription.superseded",
+            "src": {
+              "file": "src/modules/cpq_billing_connector/subscribers/cpq-subscription-superseded.ts",
+              "line": 5
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.activated"
+        },
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.amended"
+        },
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.cancelled"
+        },
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.merged"
+        },
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.renewed"
+        },
+        {
+          "kind": "subscriber",
+          "target": "cpq.subscription.superseded"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/commands/command-bus": [
+            "CommandBus"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "cpq_billing_connector",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0002002",
+      "lint": [
+        {
+          "code": "likely-example",
+          "severity": "info",
+          "message": "Module has no api/ and no data/ folder. Consider the example tag if this is an exercise.",
+          "anchor": "spec 4.3",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for ^0.6.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.1.1.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/cpq_billing_connector/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

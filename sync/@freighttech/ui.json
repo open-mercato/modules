@@ -1,0 +1,113 @@
+{
+  "locator": "npm:@freighttech/ui",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@freighttech/ui",
+    "distTags": {
+      "latest": "0.14.9"
+    },
+    "latestStable": "0.14.9",
+    "previousStable": "0.14.1",
+    "preview": null,
+    "publishedAt": {
+      "0.14.9": "2026-10-07T17:00:24Z",
+      "0.14.1": "2026-09-25T12:05:23Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": null,
+    "gitHead": "ca3a93d65e4dc90a736b5c163b906392b05e1630",
+    "keywords": [],
+    "maintainers": [
+      "fto-admin"
+    ],
+    "peerDependencies": {
+      "zod": "^4.0.0",
+      "next": "^16.2.3",
+      "react": ">=18.0.0",
+      "react-dom": ">=18.0.0",
+      "lucide-react": "^0.556.0",
+      "@mikro-orm/core": "^7.1.4",
+      "@open-mercato/core": "0.6.2",
+      "@open-mercato/shared": "0.6.2",
+      "@mikro-orm/postgresql": "^7.0.17",
+      "@tanstack/react-query": "^5.90.12"
+    },
+    "dependencies": {
+      "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+      "unified": "^11.0.5",
+      "date-fns": "^4.1.0",
+      "recharts": "^2.15.0",
+      "remark-gfm": "^4.0.1",
+      "@dnd-kit/core": "^6.3.1",
+      "react-markdown": "^10.1.0",
+      "react-day-picker": "^9.6.4",
+      "@dnd-kit/sortable": "^10.0.0",
+      "@dnd-kit/utilities": "^3.2.2",
+      "react-big-calendar": "^1.19.4",
+      "@radix-ui/react-slot": "^1.2.4",
+      "@uiw/react-md-editor": "^4.0.11",
+      "@radix-ui/react-label": "^2.1.8",
+      "@tanstack/react-table": "^8.20.5",
+      "@radix-ui/react-dialog": "^1.0.5",
+      "@radix-ui/react-popover": "^1.1.6",
+      "@radix-ui/react-tooltip": "^1.2.8",
+      "@tanstack/react-virtual": "^3.13.23",
+      "@radix-ui/react-checkbox": "^1.3.3",
+      "class-variance-authority": "^0.7.1",
+      "@radix-ui/react-visually-hidden": "^1.2.6"
+    },
+    "installScripts": [],
+    "integrity": "sha512-6nN72k9JYGg6RBRxSntfDiK6RY7jSDzGiXq0HI4Oal0UkfLiwhRePSqNBmlBxkmksjR22t8eq4ZmJVUV1dmr7A==",
+    "tarball": "https://registry.npmjs.org/@freighttech/ui/-/ui-0.14.9.tgz"
+  },
+  "github": {
+    "repo": "FreightTech/open-mercato-modules",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-23T08:36:07Z",
+    "defaultBranch": "main",
+    "stars": 2,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "terminal-tracking-v0.7.1",
+        "sha": "7489abb5da337ff6b33cc966080c65372b715083"
+      },
+      {
+        "name": "ui-v0.13.18",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      },
+      {
+        "name": "terminal-tracking-v0.7.0",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      },
+      {
+        "name": "shipment-tracking-v0.7.1",
+        "sha": "27a9c1b826ffc42c5c33873dd128fa0ee8930211"
+      },
+      {
+        "name": "shipment-tracking-v0.7.0",
+        "sha": "78eac19f57dd23379a4eb6646af66bbd067805c2"
+      },
+      {
+        "name": "shipment-tracking-v0.6.0",
+        "sha": "9fcf54fb3ecef672d4dd1de643f7b8e4ff8384cf"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
+  "downloads30d": 708,
+  "errors": []
+}

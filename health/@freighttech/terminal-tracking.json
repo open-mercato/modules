@@ -1,0 +1,173 @@
+{
+  "locator": "npm:@freighttech/terminal-tracking",
+  "version": "0.7.3",
+  "computedAt": "2026-10-25T08:04:23Z",
+  "identity": {
+    "type": "community",
+    "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": true
+    },
+    "builtFrom": {
+      "status": "none",
+      "repo": null,
+      "commit": null,
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "broken",
+      "0.8": "broken",
+      "next": "broken"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "drift",
+      "next": "drift"
+    },
+    "anatomy": "full",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "warn",
+      "failing": [
+        "license-mismatch",
+        "peer-exact-pin"
+      ]
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-10-08",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "match",
+      "notes": []
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT (sources differ)."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Broken at typecheck on 0.9 since 24 Oct."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
+    }
+  ],
+  "tier": "listed",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.9 since 24 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    },
+    "0.8": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.8 since 24 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    },
+    "next": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 24 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.7.3",
+    "0.8": "0.7.3",
+    "next": "0.7.3"
+  },
+  "verdictPreset": "classic"
+}

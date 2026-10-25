@@ -1,0 +1,980 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 211
+  },
+  "package": {
+    "locator": "npm:@open-mercato/webhooks",
+    "name": "@open-mercato/webhooks",
+    "version": "0.8.0",
+    "integrity": "sha512-tdealAcyTVQLq4KrMSQbFzh/zi7o2UW6BXQ5Ky685cyzObIown273pdH7SKSTacPyiwpDdnwESSY5g1N9w8r/Q==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "webhooks",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/ui": "0.8.0",
+    "svix": "^1.99.1"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "webhooks",
+      "title": "Webhooks",
+      "description": "Standard Webhooks compliant outbound webhook delivery for platform events.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "webhooks:webhook_entity",
+            "table": "webhooks",
+            "src": {
+              "file": "src/modules/webhooks/data/entities.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "webhooks:webhook_delivery_entity",
+            "table": "webhook_deliveries",
+            "src": {
+              "file": "src/modules/webhooks/data/entities.ts",
+              "line": 92
+            }
+          },
+          {
+            "id": "webhooks:webhook_inbound_receipt_entity",
+            "table": "webhook_inbound_receipts",
+            "src": {
+              "file": "src/modules/webhooks/data/entities.ts",
+              "line": 163
+            }
+          },
+          {
+            "id": "webhooks:webhook_ingestion_entity",
+            "table": "webhook_ingestions",
+            "src": {
+              "file": "src/modules/webhooks/data/entities.ts",
+              "line": 193
+            }
+          },
+          {
+            "id": "webhooks:inbound_endpoint_config_entity",
+            "table": "webhook_inbound_configs",
+            "src": {
+              "file": "src/modules/webhooks/data/entities.ts",
+              "line": 246
+            }
+          }
+        ],
+        "migrations": {
+          "count": 3,
+          "first": "2026-03-18",
+          "last": "2026-06-17"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/route.ts",
+              "line": 9
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/route.ts",
+              "line": 9
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/[id]/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/[id]/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/[id]/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/[id]/rotate-secret",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.secrets"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/[id]/rotate-secret/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/[id]/test",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.test"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/[id]/test/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/deliveries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/deliveries/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/deliveries/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/deliveries/[id]/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/deliveries/[id]/retry",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/deliveries/[id]/retry/route.ts",
+              "line": 1
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/events",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/events/route.ts",
+              "line": 25
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/inbound/[endpointId]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/inbound/[endpointId]/route.ts",
+              "line": 59
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/webhook-deliveries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhook-deliveries/route.ts",
+              "line": 121
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/webhook-deliveries/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhook-deliveries/[id]/route.ts",
+              "line": 38
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/webhook-deliveries/[id]/retry",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhook-deliveries/[id]/retry/route.ts",
+              "line": 43
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/route.ts",
+              "line": 244
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/route.ts",
+              "line": 245
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/webhooks/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/route.ts",
+              "line": 246
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/webhooks/webhooks",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/route.ts",
+              "line": 247
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/webhooks/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/[id]/route.ts",
+              "line": 48
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/webhooks/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/[id]/route.ts",
+              "line": 62
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/webhooks/webhooks/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/[id]/route.ts",
+              "line": 118
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/webhooks/[id]/rotate-secret",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.secrets"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/[id]/rotate-secret/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/webhooks/webhooks/[id]/test",
+            "requireAuth": true,
+            "requireFeatures": [
+              "webhooks.test"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/webhooks/api/webhooks/[id]/test/route.ts",
+              "line": 48
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "webhooks.view",
+          "webhooks.manage",
+          "webhooks.secrets",
+          "webhooks.test"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "webhooks.webhook.created",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "id": "webhooks.webhook.updated",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "webhooks.webhook.deleted",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "webhooks.delivery.enqueued",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "webhooks.delivery.succeeded",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 8
+            }
+          },
+          {
+            "id": "webhooks.delivery.failed",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 9
+            }
+          },
+          {
+            "id": "webhooks.delivery.exhausted",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 10
+            }
+          },
+          {
+            "id": "webhooks.webhook.disabled",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "webhooks.inbound.received",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "webhooks.inbound.processed",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 13
+            }
+          },
+          {
+            "id": "webhooks.inbound.handler_failed",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "webhooks.secret.rotated",
+            "src": {
+              "file": "src/modules/webhooks/events.ts",
+              "line": 15
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "webhooks.delivery.exhausted",
+            "src": {
+              "file": "src/modules/webhooks/subscribers/failed-delivery-notification.ts",
+              "line": 13
+            }
+          },
+          {
+            "event": "webhooks.inbound.received",
+            "src": {
+              "file": "src/modules/webhooks/subscribers/inbound-process.ts",
+              "line": 7
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/webhooks",
+            "requireFeatures": [
+              "webhooks.view"
+            ]
+          },
+          {
+            "path": "/backend/webhooks/[id]",
+            "requireFeatures": [
+              "webhooks.view"
+            ]
+          },
+          {
+            "path": "/backend/webhooks/create",
+            "requireFeatures": [
+              "webhooks.manage"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 47
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "webhook-deliveries"
+          },
+          {
+            "queue": "webhook-inbound-dispatch"
+          }
+        ],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "notifyOnFailedDelivery",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "WEBHOOK_QUEUE_CONCURRENCY",
+            "src": {
+              "file": "src/modules/webhooks/lib/queue.ts",
+              "line": 21
+            }
+          },
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/webhooks/lib/queue.ts",
+              "line": 29
+            }
+          },
+          {
+            "name": "WEBHOOK_INBOUND_QUEUE_CONCURRENCY",
+            "src": {
+              "file": "src/modules/webhooks/lib/queue.ts",
+              "line": 75
+            }
+          },
+          {
+            "name": "OM_WEBHOOKS_ALLOW_PRIVATE_URLS",
+            "src": {
+              "file": "src/modules/webhooks/lib/url-safety.ts",
+              "line": 56
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:webhook_custom"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "notification:webhooks.delivery.failed"
+        },
+        {
+          "kind": "subscriber",
+          "target": "*"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ],
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService"
+          ],
+          "modules/integrations/lib/state-service": [
+            "createIntegrationStateService"
+          ],
+          "modules/notifications/lib/notificationBuilder": [
+            "buildFeatureNotificationFromType"
+          ],
+          "modules/notifications/lib/notificationService": [
+            "resolveNotificationService"
+          ]
+        },
+        "@open-mercato/events": {
+          "types": [
+            "SubscriberContext"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "Queue",
+            "createModuleQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken",
+            "parseBooleanWithDefault"
+          ],
+          "lib/crud/errors": [
+            "isCrudHttpError"
+          ],
+          "lib/crud/factory": [
+            "CrudCtx",
+            "makeCrudRoute"
+          ],
+          "lib/crud/optimistic-lock-command": [
+            "enforceCommandOptimisticLockWithGuards"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "(dynamic)",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/events/patterns": [
+            "matchAnyWebhookEventPattern",
+            "matchWebhookEventPattern"
+          ],
+          "lib/frontend/useOrganizationScope": [
+            "useOrganizationScopeVersion"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/network": [
+            "isPrivateIpAddress"
+          ],
+          "lib/number": [
+            "parseNumberWithDefault"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/openapi/crud": [
+            "createCrudOpenApiFactory"
+          ],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_ERROR_FALLBACK",
+            "RATE_LIMIT_ERROR_KEY",
+            "checkRateLimit",
+            "getClientIp"
+          ],
+          "lib/ratelimit/service": [
+            "RateLimiterService"
+          ],
+          "lib/url-safety": [
+            "HostLookup",
+            "SafeOutboundFetchOptions",
+            "UrlSafetyReason",
+            "assertSafeOutboundUrl",
+            "assertStaticallySafeOutboundUrl",
+            "parseOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "lib/webhooks": [
+            "InboundWebhookRequest",
+            "WEBHOOK_SIGNATURE_TOLERANCE_SECONDS",
+            "WebhookBodyTooLargeError",
+            "WebhookHandlerContext",
+            "WebhookHandlerPayload",
+            "WebhookHandlerRegistryEntry",
+            "WebhookHandlerResult",
+            "WebhookIngestionStatus",
+            "WebhookSourceConfig",
+            "buildWebhookHeaders",
+            "generateMessageId",
+            "generateWebhookSecret",
+            "isWebhookTimestampWithinTolerance",
+            "readBoundedRequestBody"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/events": [
+            "createModuleEvents",
+            "getDeclaredEvents"
+          ],
+          "modules/generators": [
+            "GeneratorPlugin"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/notifications/types": [
+            "NotificationTypeDefinition"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/extension-points": [
+            "dataTableExtensionHost",
+            "defineModuleExtensionPoints"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ],
+          "security/features": [
+            "hasFeature"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudCustomFieldRenderProps",
+            "CrudField",
+            "CrudFieldOption",
+            "CrudForm",
+            "CrudFormGroup"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/JsonBuilder": [
+            "JsonBuilder"
+          ],
+          "backend/JsonDisplay": [
+            "JsonDisplay"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/conflicts": [
+            "surfaceRecordConflict"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/filters/ListEmptyState": [
+            "ListEmptyState"
+          ],
+          "backend/forms": [
+            "FormHeader"
+          ],
+          "backend/injection/useAppEvent": [
+            "useAppEvent"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "backend/utils/crud": [
+            "createCrud",
+            "deleteCrud",
+            "updateCrud"
+          ],
+          "backend/utils/optimisticLock": [
+            "buildOptimisticLockHeader"
+          ],
+          "backend/utils/serverErrors": [
+            "createCrudFormError"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ]
+        },
+        "@open-mercato/webhooks": {
+          "modules/webhooks/extension-points": [
+            "extensionPoints"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "webhooks",
+        "tables": [
+          "webhooks",
+          "webhook_deliveries",
+          "webhook_inbound_receipts",
+          "webhook_ingestions",
+          "webhook_inbound_configs"
+        ],
+        "aclFeatures": [
+          "webhooks.view",
+          "webhooks.manage",
+          "webhooks.secrets",
+          "webhooks.test"
+        ],
+        "eventIds": [
+          "webhooks.webhook.created",
+          "webhooks.webhook.updated",
+          "webhooks.webhook.deleted",
+          "webhooks.delivery.enqueued",
+          "webhooks.delivery.succeeded",
+          "webhooks.delivery.failed",
+          "webhooks.delivery.exhausted",
+          "webhooks.webhook.disabled",
+          "webhooks.inbound.received",
+          "webhooks.inbound.processed",
+          "webhooks.inbound.handler_failed",
+          "webhooks.secret.rotated"
+        ],
+        "backendRoutes": [
+          "/backend/webhooks",
+          "/backend/webhooks/[id]",
+          "/backend/webhooks/create"
+        ]
+      },
+      "publicRoutes": 1,
+      "glyph": "2323202",
+      "lint": [
+        {
+          "code": "invalid-identifier",
+          "severity": "warn",
+          "message": "Rejected 1 subscribed event ID that failed the catalog pattern.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/webhooks/subscribers/outbound-dispatch.ts",
+            "line": 15
+          }
+        },
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "1 of 24 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/webhooks/api/inbound/[endpointId]/route.ts",
+            "line": 59
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/webhooks/integration.ts",
+            "line": 6
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

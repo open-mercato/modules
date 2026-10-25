@@ -1,0 +1,163 @@
+{
+  "locator": "npm:@northbound-run/channel-cloudflare-email",
+  "version": "0.2.0",
+  "computedAt": "2026-10-25T08:04:23Z",
+  "identity": {
+    "type": "3rd-party",
+    "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": false
+    },
+    "builtFrom": {
+      "status": "verified",
+      "repo": "Northbound-Run/open-mercato-cloudflare-email",
+      "commit": "ceb01b278cef873a58e00d97c781d82ead5ac8ef",
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "verified",
+      "0.8": "verified",
+      "next": "verified"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "drift",
+      "next": "ok"
+    },
+    "anatomy": "full",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "ok",
+      "failing": []
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-08-07",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for no tested line; verified on 0.8, 0.9, next."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.2.0)."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "Tarball repository.url matches the descriptor."
+    }
+  ],
+  "tier": "verified",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ],
+      "consentText": "Install @northbound-run/channel-cloudflare-email@0.2.0"
+    },
+    "0.8": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ],
+      "consentText": "Install @northbound-run/channel-cloudflare-email@0.2.0"
+    },
+    "next": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ],
+      "consentText": "Install @northbound-run/channel-cloudflare-email@0.2.0"
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": "0.2.0",
+    "0.8": "0.2.0",
+    "next": "0.2.0"
+  },
+  "evaluated": {
+    "0.9": "0.2.0",
+    "0.8": "0.2.0",
+    "next": "0.2.0"
+  },
+  "verdictPreset": "classic"
+}

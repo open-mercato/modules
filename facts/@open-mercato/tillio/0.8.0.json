@@ -1,0 +1,446 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 104
+  },
+  "package": {
+    "locator": "npm:@open-mercato/tillio",
+    "name": "@open-mercato/tillio",
+    "version": "0.8.0",
+    "integrity": "sha512-RO4EH3vbrxl8ujebONxUG3gwdGnhwWcO7h4anQrSVYFENN/cuUE+Miuv2zc87ZqcP7mFxa9mM3Ts839RkpEj9A==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "tillio",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.8.0",
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/ui": "0.8.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "tillio",
+      "title": "Tillio Telephony",
+      "description": "Tillio VoIP provider for the phone_calls hub (Ringostat operator).",
+      "requires": [
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        },
+        {
+          "raw": "phone_calls",
+          "resolvesTo": "core:phone_calls"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/tillio/operators",
+            "requireAuth": true,
+            "requireFeatures": [
+              "tillio.manage",
+              "integrations.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/tillio/api/operators/route.ts",
+              "line": 56
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/tillio/operators",
+            "requireAuth": true,
+            "requireFeatures": [
+              "tillio.manage",
+              "integrations.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/tillio/api/operators/route.ts",
+              "line": 96
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/tillio/operators/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "tillio.manage",
+              "integrations.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/tillio/api/operators/[id]/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/tillio/pull",
+            "requireAuth": true,
+            "requireFeatures": [
+              "phone_calls.manage",
+              "integrations.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/tillio/api/pull/route.ts",
+              "line": 59
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/tillio/pull",
+            "requireAuth": true,
+            "requireFeatures": [
+              "phone_calls.manage",
+              "integrations.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/tillio/api/pull/route.ts",
+              "line": 83
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "tillio.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "tillio-pull"
+          }
+        ],
+        "cli": [
+          "configure-from-env"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "apiUrl",
+            "type": "url",
+            "required": true
+          },
+          {
+            "key": "apiKey",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "timeZone",
+            "type": "text",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "APP_URL",
+            "src": {
+              "file": "src/modules/tillio/api/operators/route.ts",
+              "line": 129
+            }
+          },
+          {
+            "name": "TILLIO_QUEUE_CONCURRENCY",
+            "src": {
+              "file": "src/modules/tillio/lib/queue.ts",
+              "line": 21
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "data-table",
+          "target": "data-table:phone_calls.calls:toolbar"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "integration:tillio"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/integrations/data/entities": [
+            "IntegrationState"
+          ],
+          "modules/phone_calls/commands/calls": [
+            "IngestPhoneCallResult",
+            "PHONE_CALLS_CALL_INGEST_COMMAND_ID"
+          ],
+          "modules/phone_calls/events": [
+            "emitPhoneCallsEvent"
+          ],
+          "modules/progress/lib/progressService": [
+            "ProgressService",
+            "ProgressServiceContext"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "Queue",
+            "QueuedJob",
+            "WorkerMeta",
+            "createModuleQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken",
+            "parseBooleanWithDefault"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandRuntimeContext"
+          ],
+          "lib/crud/route-mutation-guard": [
+            "runRouteMutationGuards"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "FetchTimeoutError"
+          ],
+          "lib/http/readJsonSafe": [
+            "readJsonSafe"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/number": [
+            "parseNumberWithDefault"
+          ],
+          "lib/url-safety": [
+            "HostLookup",
+            "UnsafeOutboundUrlError",
+            "assertStaticallySafeOutboundUrl",
+            "safeOutboundFetch"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/phone_calls/provider": [
+            "PhoneCallProviderAdapter",
+            "registerPhoneCallProvider"
+          ],
+          "modules/phone_calls/types": [
+            "FetchPhoneCallsInput",
+            "NormalizedPhoneCall",
+            "NormalizedPhoneCallBatch",
+            "NormalizedPhoneCallParticipant",
+            "NormalizedPhoneCallRecording",
+            "PHONE_CALL_RESOURCE_KIND",
+            "PhoneCallBatchAnomaly",
+            "PhoneCallDirection",
+            "PhoneCallStatus",
+            "ProviderValidationResult",
+            "ValidatePhoneCallProviderInput"
+          ],
+          "modules/registry": [
+            "ModuleCli"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/date-range/dateRanges": [
+            "DateRange"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/date-range-picker": [
+            "DateRangePicker"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/form-field": [
+            "FormField"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "tillio",
+        "tables": [],
+        "aclFeatures": [
+          "tillio.manage"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0200202",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.8.0 and 1 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/tillio/integration.ts",
+            "line": 10
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

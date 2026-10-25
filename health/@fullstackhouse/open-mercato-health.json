@@ -1,0 +1,172 @@
+{
+  "locator": "npm:@fullstackhouse/open-mercato-health",
+  "version": "0.3.0",
+  "computedAt": "2026-10-25T08:04:23Z",
+  "identity": {
+    "type": "community",
+    "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": false
+    },
+    "builtFrom": {
+      "status": "verified",
+      "repo": "fullstackhouse/open-mercato-health",
+      "commit": "9e37b05f23dba3882d814a1a3df7cc9ec0c42a91",
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "broken",
+      "0.8": "broken",
+      "next": "broken"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "ok",
+      "next": "ok"
+    },
+    "anatomy": "partial",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "ok",
+      "failing": []
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-05-19",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.8, 0.9, next; verified on no line."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Broken at typecheck on 0.9 since 25 Oct."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "Tarball repository.url matches the descriptor."
+    }
+  ],
+  "tier": "listed",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.9 since 25 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    },
+    "0.8": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.8 since 24 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    },
+    "next": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 24 Oct."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        }
+      ]
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.3.0",
+    "0.8": "0.3.0",
+    "next": "0.3.0"
+  },
+  "verdictPreset": "classic"
+}

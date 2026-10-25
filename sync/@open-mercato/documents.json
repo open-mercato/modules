@@ -1,0 +1,277 @@
+{
+  "locator": "npm:@open-mercato/documents",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/documents",
+    "distTags": {
+      "latest": "0.9.0",
+      "develop": "0.10.1-develop.7583.1.0c886d0a14"
+    },
+    "latestStable": "0.9.0",
+    "previousStable": "0.8.0",
+    "preview": null,
+    "publishedAt": {
+      "0.9.0": "2026-10-09T19:26:24Z",
+      "0.8.0": "2026-09-18T11:36:40Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/open-mercato/open-mercato.git",
+    "gitHead": null,
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
+      "@open-mercato/shared": "0.9.0",
+      "@mikro-orm/postgresql": "^7.0.14"
+    },
+    "dependencies": {
+      "yjs": "^13.6.31",
+      "jszip": "^3.10.1",
+      "happy-dom": "^20.10.6",
+      "@tiptap/pm": "^3",
+      "y-protocols": "^1.0.7",
+      "@tiptap/core": "^3",
+      "@tiptap/html": "^3.27.3",
+      "@tiptap/react": "^3",
+      "y-prosemirror": "^1.3.7",
+      "puppeteer-core": "^25.3.0",
+      "@mikro-orm/core": "^7.1.14",
+      "@floating-ui/dom": "^1.7.5",
+      "@open-mercato/ui": "0.9.0",
+      "@tiptap/y-tiptap": "^3.0.6",
+      "prosemirror-view": "^1.41.9",
+      "prosemirror-model": "^1.25.9",
+      "prosemirror-state": "^1.4.4",
+      "@hocuspocus/server": "^4.4.0",
+      "@tiptap/extensions": "^3",
+      "@tiptap/suggestion": "^3",
+      "@tiptap/starter-kit": "^3",
+      "@hocuspocus/provider": "^4.3.0",
+      "@open-mercato/events": "0.9.0",
+      "@tiptap/extension-link": "^3",
+      "@tiptap/extension-list": "^3.27.3",
+      "@hocuspocus/transformer": "^4.3.0",
+      "@tiptap/extension-image": "^3",
+      "@tiptap/extension-table": "^3",
+      "@hocuspocus/extension-redis": "^4.3.0",
+      "@tiptap/extension-highlight": "^3",
+      "@tiptap/extension-table-row": "^3",
+      "@tiptap/extension-task-item": "^3",
+      "@tiptap/extension-task-list": "^3",
+      "@tiptap/extension-table-cell": "^3",
+      "@tiptap/extension-text-align": "^3",
+      "@tiptap/extension-text-style": "^3",
+      "@tiptap/extension-bubble-menu": "^3",
+      "@tiptap/extension-placeholder": "^3",
+      "@tiptap/extension-table-header": "^3",
+      "@tiptap/extension-collaboration": "^3.27.3",
+      "@tiptap/extension-collaboration-caret": "^3.27.3"
+    },
+    "installScripts": [],
+    "integrity": "sha512-KCjVEzXzSry3t+/5TV1MAkaqtDl9Tc2pLuA8SE+r+EsWymd5Gv8YNfX9kxCbJudBS1VOaRf2ZhgmlPF+oZa27A==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/documents/-/documents-0.9.0.tgz"
+  },
+  "github": {
+    "repo": "open-mercato/open-mercato",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-23T09:39:49Z",
+    "defaultBranch": "main",
+    "stars": 1880,
+    "license": "MIT",
+    "topics": [
+      "crm",
+      "typescript",
+      "admin-panel",
+      "ai-agents",
+      "ai-coding",
+      "framework",
+      "agentic",
+      "erp",
+      "nextjs",
+      "open-source",
+      "self-hosted"
+    ],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.9.0",
+        "sha": "f451ce4c390087f90d5314e002e9d009d5339e08"
+      },
+      {
+        "name": "v0.8.0",
+        "sha": "ab23d45ffc3aeca5e7d994eb57d5526c5b0a4712"
+      },
+      {
+        "name": "v0.7.0",
+        "sha": "8b492325d3db29c431cca43674dcc93f894110be"
+      },
+      {
+        "name": "v0.6.7",
+        "sha": "f0fb2aa46a831e5ed61ec5fe80e56ec5a6c8a44b"
+      },
+      {
+        "name": "v0.6.6",
+        "sha": "bb1eaf5a60cae9cd04d848a8f440e72f36108065"
+      },
+      {
+        "name": "v0.6.5",
+        "sha": "9e5cd898e46d600b2b731b8da2ce53214e08a738"
+      },
+      {
+        "name": "v0.6.4",
+        "sha": "2ddfb40794d0b968622c42a82edb94e45b642ea7"
+      },
+      {
+        "name": "v0.6.3",
+        "sha": "344ae76b44291aa21ba4b840eaf1801ae26e86f0"
+      },
+      {
+        "name": "v0.6.2",
+        "sha": "4ca2a67949b21bf49e9930665c8e0d332f0ffb8d"
+      },
+      {
+        "name": "v0.6.1",
+        "sha": "955c3cb882df02645e8f923375e70831ef0a324e"
+      },
+      {
+        "name": "v0.6.0",
+        "sha": "87ca1bcfdd1d95399f29f440d8f17b7d5e8c8914"
+      },
+      {
+        "name": "v0.5.0",
+        "sha": "fcfeee49f0dea48553e421163e07b72a20224795"
+      },
+      {
+        "name": "v0.4.10",
+        "sha": "f9064f3a2f30ad63c0e79d4ef68e3abd68af173c"
+      },
+      {
+        "name": "v0.4.9",
+        "sha": "58e7eb5e8813fe70f1773b1a69cd95aece69620d"
+      },
+      {
+        "name": "v0.4.8",
+        "sha": "0f72cbf16c832cf526313c264ac868cfdc5701e5"
+      },
+      {
+        "name": "v0.4.7",
+        "sha": "848cd3c22cb32f5ba7be2221faed294274c60411"
+      },
+      {
+        "name": "v0.4.6",
+        "sha": "1768da2e43b4b5e6b007e80633cc70108f223986"
+      },
+      {
+        "name": "v0.4.5",
+        "sha": "86b72874a89b7bfbb0266bca095525828c087442"
+      },
+      {
+        "name": "v0.4.5-hfx",
+        "sha": "9fd63cd9b67722a706ae31d4875f333bcc1129c5"
+      },
+      {
+        "name": "v0.4.4",
+        "sha": "c96da0a7524e71e76d97cd6e1c5c10f6d639e47f"
+      },
+      {
+        "name": "v0.4.3",
+        "sha": "fb8f7f8250d32e1b597fbc9b34be9534f75bbbf7"
+      },
+      {
+        "name": "v0.4.2",
+        "sha": "de8025658356eb79a76964c5e7f9b00bf36db6f1"
+      },
+      {
+        "name": "v0.4.2-vbmp",
+        "sha": "a30b06a1b9cf90f6bbf49913abb59e9bf3b62a8a"
+      },
+      {
+        "name": "v0.4.1",
+        "sha": "21cdb71c9bf0eaee223b76d2830fde7976813899"
+      },
+      {
+        "name": "v0.4.1-docker-compose",
+        "sha": "f3827eac2b82af358046cfe7bec95c08a07a6d41"
+      },
+      {
+        "name": "v0.4.0",
+        "sha": "dd2b43a3a82e34e7b1193575ca3bf8533ddebcae"
+      },
+      {
+        "name": "v0.3.13",
+        "sha": "526aa237417786b621fb9fe8cae515ffc2611c78"
+      },
+      {
+        "name": "v0.3.12",
+        "sha": "792f951c3efcf32f5a2e915d51e385b530eaa352"
+      },
+      {
+        "name": "v0.3.11",
+        "sha": "97914ff4c0605c84e6b11228b619f049815f0043"
+      },
+      {
+        "name": "v0.3.10",
+        "sha": "9e633f8e0c2aab108ff16cf4a9b3548efaff2c05"
+      },
+      {
+        "name": "v0.3.9",
+        "sha": "83b9313b6858f7d063ebdffb17fcaa076f548e8a"
+      },
+      {
+        "name": "v0.3.8",
+        "sha": "14b564462a48cde3c48bff151f6a626bdd3b8938"
+      },
+      {
+        "name": "v0.3.7",
+        "sha": "1ee86ff53cd374bfd6172b135ccad9db390d5a31"
+      },
+      {
+        "name": "v0.3.6",
+        "sha": "36dcf0eb8d6bde38e5596044d614eb81b6748c9a"
+      },
+      {
+        "name": "v0.3.5",
+        "sha": "2d37758000e9bd0364805b2d6ff13e7b0de4f8e0"
+      },
+      {
+        "name": "v0.3.4",
+        "sha": "0de042695dd2a6df3cb03350122b834df524bc83"
+      },
+      {
+        "name": "v0.3.3",
+        "sha": "94f50287676b24a6d0bcd747983ceb9596bf8cd5"
+      },
+      {
+        "name": "v0.3.2",
+        "sha": "4c8c922b966f9e134e399bef134497ab02354f9e"
+      },
+      {
+        "name": "v0.3.1",
+        "sha": "86930997fd212d44956121818232b5059573d43b"
+      },
+      {
+        "name": "v0.3.0",
+        "sha": "ae3c82ea231df41084d7e14866fe80a5a6d6ecc6"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "open-mercato/open-mercato",
+    "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 18727,
+  "errors": []
+}

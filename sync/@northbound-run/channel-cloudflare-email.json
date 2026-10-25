@@ -1,0 +1,90 @@
+{
+  "locator": "npm:@northbound-run/channel-cloudflare-email",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@northbound-run/channel-cloudflare-email",
+    "distTags": {
+      "latest": "0.2.0"
+    },
+    "latestStable": "0.2.0",
+    "previousStable": "0.1.2",
+    "preview": null,
+    "publishedAt": {
+      "0.2.0": "2026-08-07T00:08:18Z",
+      "0.1.2": "2026-07-31T23:45:37Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/Northbound-Run/open-mercato-cloudflare-email.git",
+    "gitHead": "ceb01b278cef873a58e00d97c781d82ead5ac8ef",
+    "keywords": [
+      "open-mercato",
+      "open-mercato-module",
+      "cloudflare",
+      "email",
+      "email-routing",
+      "email-sending",
+      "communication-channels"
+    ],
+    "maintainers": [
+      "northboundrun"
+    ],
+    "peerDependencies": {
+      "@mikro-orm/postgresql": "^7.0.14",
+      "@open-mercato/core": ">=0.6.6 <0.7.0",
+      "@open-mercato/shared": ">=0.6.0 <0.7.0",
+      "@open-mercato/ui": ">=0.6.0 <0.7.0",
+      "lucide-react": ">=0.400.0",
+      "next": "^15.0.0",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "dependencies": {
+      "awilix": "^12.1.1"
+    },
+    "installScripts": [],
+    "integrity": "sha512-wu2QIhNqx+t/mXY0ZX+pmt6ImqzUvt57udRkGivM+UU2jHCntm+BRM8YzmYiN6ovSnScLmq3FN3s1ZYTa9zZlQ==",
+    "tarball": "https://registry.npmjs.org/@northbound-run/channel-cloudflare-email/-/channel-cloudflare-email-0.2.0.tgz"
+  },
+  "github": {
+    "repo": "Northbound-Run/open-mercato-cloudflare-email",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-08-06T22:17:07Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.2.0",
+        "sha": "ceb01b278cef873a58e00d97c781d82ead5ac8ef"
+      },
+      {
+        "name": "v0.1.2",
+        "sha": "0f88f79894124ee89afcdf6b746d94518c3783d7"
+      },
+      {
+        "name": "v0.1.1",
+        "sha": "df3bfe47321f4740ee371a28e6bdbf769a252324"
+      },
+      {
+        "name": "v0.1.0",
+        "sha": "e3397223672e32eabbbe8db6f34b4fc77e5d4957"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "verified",
+    "sourceRepo": "Northbound-Run/open-mercato-cloudflare-email",
+    "commit": "ceb01b278cef873a58e00d97c781d82ead5ac8ef",
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": 37,
+  "errors": []
+}

@@ -1,0 +1,175 @@
+{
+  "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
+  "version": "0.3.0",
+  "computedAt": "2026-10-25T08:04:23Z",
+  "identity": {
+    "type": "community",
+    "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": false
+    },
+    "builtFrom": {
+      "status": "verified",
+      "repo": "fullstackhouse/open-mercato-demo-auth",
+      "commit": "263ef0bed81d1c62ce3d0dfd6160228c855df543",
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "skipped",
+      "0.8": "skipped",
+      "next": "skipped"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "ok",
+      "next": "ok"
+    },
+    "anatomy": "partial",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "ok",
+      "failing": []
+    },
+    "maintenance": {
+      "status": "behind",
+      "lastRelease": "2026-04-24",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.8, 0.9, next; verified on no line."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "Kind tool read from package.json."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": false,
+      "detail": "Receipt on 0.9: skipped."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "Tarball repository.url matches the descriptor."
+    }
+  ],
+  "tier": "listed",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.9."
+        }
+      ],
+      "consentText": "Install @fullstackhouse/open-mercato-demo-auth@0.3.0"
+    },
+    "0.8": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.8."
+        }
+      ],
+      "consentText": "Install @fullstackhouse/open-mercato-demo-auth@0.3.0"
+    },
+    "next": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on next."
+        }
+      ],
+      "consentText": "Install @fullstackhouse/open-mercato-demo-auth@0.3.0"
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": null,
+    "0.8": null,
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.3.0",
+    "0.8": "0.3.0",
+    "next": "0.3.0"
+  },
+  "verdictPreset": "classic"
+}

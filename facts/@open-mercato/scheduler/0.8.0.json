@@ -1,0 +1,577 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 247
+  },
+  "package": {
+    "locator": "npm:@open-mercato/scheduler",
+    "name": "@open-mercato/scheduler",
+    "version": "0.8.0",
+    "integrity": "sha512-/bNh3/zQCUcwjzi2uHhXfZOH9jUnRvcI9hx5Z3MC2uMXDHCWQYJBjZ1lzpy0wFXaM2TB72HQedTxlrVeCRIihA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "scheduler",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@open-mercato/events": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "cron-parser": "^5.6.2"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @open-mercato/scheduler ⏰\n\nDatabase-backed scheduling for recurring and delayed jobs in Open Mercato.\n\n`@open-mercato/scheduler` manages scheduled tasks with robust runtime control, queue integration, and visibility for ops teams.\n\n## Why this package ✨\n\n- 📅 Cron and delayed job orchestration\n- 🧩 Native integration with Open Mercato queue/events\n- 🔎 Operational visibility and safer automation flows\n- ⚡ Reliable scheduling for business-critical tasks\n\n## Install\n\n```bash\nyarn add @open-mercato/scheduler\n```\n\n## Learn more\n\n- GitHub (package): https://github.com/open-mercato/open-mercato/tree/main/packages/scheduler\n- GitHub (project): https://github.com/open-mercato/open-mercato\n- Docs: https://docs.openmercato.com\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "scheduler",
+      "title": "Scheduler",
+      "description": "Database-managed scheduled jobs with admin UI",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "scheduler:scheduled_job",
+            "table": "scheduled_jobs",
+            "src": {
+              "file": "src/modules/scheduler/data/entities.ts",
+              "line": 7
+            }
+          }
+        ],
+        "migrations": {
+          "count": 3,
+          "first": "2026-01-23",
+          "last": "2026-01-26"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/scheduler/jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/scheduler/jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/scheduler/jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/scheduler/jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/scheduler/jobs/[id]/executions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/[id]/executions/route.ts",
+              "line": 28
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/scheduler/queue-jobs/[jobId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/queue-jobs/[jobId]/route.ts",
+              "line": 28
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/scheduler/targets",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/targets/route.ts",
+              "line": 20
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/scheduler/trigger",
+            "requireAuth": true,
+            "requireFeatures": [
+              "scheduler.jobs.trigger"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/scheduler/api/trigger/route.ts",
+              "line": 34
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "scheduler.jobs.view",
+          "scheduler.jobs.manage",
+          "scheduler.jobs.trigger"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "scheduler.job.started",
+            "src": {
+              "file": "src/modules/scheduler/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "scheduler.job.completed",
+            "src": {
+              "file": "src/modules/scheduler/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "scheduler.job.failed",
+            "src": {
+              "file": "src/modules/scheduler/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "scheduler.job.skipped",
+            "src": {
+              "file": "src/modules/scheduler/events.ts",
+              "line": 8
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/config/scheduled-jobs",
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ]
+          },
+          {
+            "path": "/backend/config/scheduled-jobs/[id]",
+            "requireFeatures": [
+              "scheduler.jobs.view"
+            ]
+          },
+          {
+            "path": "/backend/config/scheduled-jobs/[id]/edit",
+            "requireFeatures": [
+              "scheduler.jobs.manage"
+            ]
+          },
+          {
+            "path": "/backend/config/scheduled-jobs/new",
+            "requireFeatures": [
+              "scheduler.jobs.manage"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 5
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "scheduler-test"
+          },
+          {
+            "queue": "scheduler-execution"
+          }
+        ],
+        "cli": [
+          "list",
+          "status",
+          "run",
+          "start",
+          "audit-queue-targets"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/scheduler/api/jobs/[id]/executions/route.ts",
+              "line": 61
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_QUEUE_STRATEGY",
+            "src": {
+              "file": "src/modules/scheduler/backend/config/scheduled-jobs/[id]/page.tsx",
+              "line": 72
+            }
+          },
+          {
+            "name": "SCHEDULER_POLL_INTERVAL_MS",
+            "src": {
+              "file": "src/modules/scheduler/cli.ts",
+              "line": 100
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "Queue",
+            "QueuedJob",
+            "WorkerMeta",
+            "createQueue"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": [
+            "resolveCrudRecordId"
+          ],
+          "lib/auth/server": [
+            "AuthContext",
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/commands/errors": [
+            "getCommandInterceptorHttpRejection"
+          ],
+          "lib/commands/redo": [
+            "makeCreateRedo"
+          ],
+          "lib/commands/registry": [
+            "commandRegistry"
+          ],
+          "lib/commands/scope": [
+            "ensureOrganizationScope"
+          ],
+          "lib/commands/undo": [
+            "UndoPayload",
+            "extractUndoPayload"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError"
+          ],
+          "lib/crud/factory": [
+            "makeCrudRoute"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/frontend/useOrganizationScope": [
+            "useOrganizationScopeVersion"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/i18n/translate": [
+            "TranslateWithFallbackFn",
+            "createFallbackTranslator"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/modules/registry": [
+            "getModules"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "lib/redis/connection": [
+            "getRedisUrlOrThrow",
+            "parseRedisUrl"
+          ],
+          "lib/time": [
+            "formatDateTime"
+          ],
+          "modules/events": [
+            "createModuleEvents",
+            "getGlobalEventBus"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo",
+            "ModuleWorker"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudCustomFieldRenderProps",
+            "CrudField",
+            "CrudForm",
+            "CrudFormGroup"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/JsonBuilder": [
+            "JsonBuilder"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody",
+            "PageHeader"
+          ],
+          "backend/RowActions": [
+            "RowActionItem",
+            "RowActions"
+          ],
+          "backend/ValueIcons": [
+            "BooleanIcon"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage",
+            "RecordNotFoundState"
+          ],
+          "backend/filters/ListEmptyState": [
+            "ListEmptyState"
+          ],
+          "backend/inputs/ComboboxInput": [
+            "ComboboxInput",
+            "ComboboxOption"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow"
+          ],
+          "backend/utils/crud": [
+            "createCrud",
+            "updateCrud"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription"
+          ],
+          "primitives/badge": [
+            "Badge"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/card": [
+            "Card",
+            "CardContent",
+            "CardHeader",
+            "CardTitle"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ],
+          "primitives/tabs": [
+            "Tabs",
+            "TabsContent",
+            "TabsList",
+            "TabsTrigger"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "scheduler",
+        "tables": [
+          "scheduled_jobs"
+        ],
+        "aclFeatures": [
+          "scheduler.jobs.view",
+          "scheduler.jobs.manage",
+          "scheduler.jobs.trigger"
+        ],
+        "eventIds": [
+          "scheduler.job.started",
+          "scheduler.job.completed",
+          "scheduler.job.failed",
+          "scheduler.job.skipped"
+        ],
+        "backendRoutes": [
+          "/backend/config/scheduled-jobs",
+          "/backend/config/scheduled-jobs/[id]",
+          "/backend/config/scheduled-jobs/[id]/edit",
+          "/backend/config/scheduled-jobs/new"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "2222200",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.8.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.8.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/scheduler/index.ts",
+            "line": 13
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

@@ -1,0 +1,367 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 77
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-imap",
+    "name": "@open-mercato/channel-imap",
+    "version": "0.9.0",
+    "integrity": "sha512-FTXV5mFXiP5WXzcEFMCStmFwZz9IKLNgJEd5pBNrWFplBgShKTTIVxk2M66uFxsWAzLoCthmykwsITIbObfQ+A==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_imap",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/queue": "0.9.0",
+    "@open-mercato/ui": "0.9.0",
+    "@types/mailparser": "^3.4.5",
+    "@types/nodemailer": "^8.0.1",
+    "imapflow": "^1.7.6",
+    "mailparser": "^3.9.17",
+    "nodemailer": "^10.0.10"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_imap",
+      "title": "IMAP + SMTP Email Channel",
+      "description": "Connect personal mailboxes via IMAP for inbound polling and SMTP for outbound delivery. Pairs with the Communications Hub (SPEC-045d).",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_imap.view",
+          "channel_imap.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "imapHost",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "imapPort",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "imapTls",
+            "type": "select",
+            "required": true
+          },
+          {
+            "key": "imapUser",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "imapPassword",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "smtpHost",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "smtpPort",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "smtpTls",
+            "type": "select",
+            "required": true
+          },
+          {
+            "key": "smtpUser",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "smtpPassword",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "fromAddress",
+            "type": "text",
+            "required": true
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_CHANNEL_IMAP_HARD_CAP_PER_POLL",
+            "src": {
+              "file": "src/modules/channel_imap/lib/adapter.ts",
+              "line": 417
+            }
+          },
+          {
+            "name": "OM_CHANNEL_IMAP_ALLOW_INTERNAL_HOSTS",
+            "src": {
+              "file": "src/modules/channel_imap/lib/credentials.ts",
+              "line": 101
+            }
+          },
+          {
+            "name": "OM_CHANNEL_IMAP_SOCKET_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/channel_imap/lib/imap-client.ts",
+              "line": 380
+            }
+          },
+          {
+            "name": "OM_CHANNEL_IMAP_ALLOW_INSECURE_TRANSPORT",
+            "src": {
+              "file": "src/modules/channel_imap/lib/transport.ts",
+              "line": 22
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_imap"
+        },
+        {
+          "kind": "widget",
+          "target": "profile:communication-channels:connect"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "ImportHistoryInput",
+            "ImportHistoryPage",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": [
+            "baseEmailCapabilities"
+          ],
+          "modules/communication_channels/lib/email-contact": [
+            "emailResolveContact"
+          ],
+          "modules/communication_channels/lib/email-mime": [
+            "ParsedMail",
+            "decodeCursor",
+            "encodeCursor",
+            "htmlToText",
+            "normalizeMimeInbound",
+            "referencesFromMeta",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/import-history-limits": [
+            "getImportHistoryLimits"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/network": [
+            "isPrivateIPv6"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/label": [
+            "Label"
+          ],
+          "primitives/password-input": [
+            "PasswordInput"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_imap",
+        "tables": [],
+        "aclFeatures": [
+          "channel_imap.view",
+          "channel_imap.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0010002",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_imap/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

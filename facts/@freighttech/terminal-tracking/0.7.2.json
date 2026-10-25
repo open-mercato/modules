@@ -1,0 +1,614 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 233
+  },
+  "package": {
+    "locator": "npm:@freighttech/terminal-tracking",
+    "name": "@freighttech/terminal-tracking",
+    "version": "0.7.2",
+    "integrity": "sha512-aPJa1TqsjW4TyeD7ZXc6lIYeFZiLB66/HJ1ZlZE7I0sC3mP2IFlaZDrIoKll7BExJq/LozNHOXk08Lu2spzbvg==",
+    "source": "npm-tarball",
+    "gitRef": "912da3ad35c09ec0a18461f4ed4ca2eb801a995f"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "terminal_tracking",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": true,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "PROPRIETARY",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/cache": "0.6.2",
+    "@open-mercato/core": "0.6.2",
+    "@open-mercato/events": "0.6.2",
+    "@open-mercato/queue": "0.6.2",
+    "@open-mercato/scheduler": "0.6.2",
+    "@open-mercato/shared": "0.6.2"
+  },
+  "dependencies": {
+    "fuse.js": "^7.1.0",
+    "undici": "^7.25.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @freighttech/terminal-tracking\n\nContainer-terminal tracking for the FreightTech FMS. Polls container terminal\nAPIs (Navis **N4** family; Baltic Hub / BCT Gdańsk first), normalizes the\nresults into events, and emits them — with per-terminal runtime configuration,\nperiodic polling, and terminal matching.\n\n## Features\n\n- **Per-terminal config** (`TerminalConfig`) — base URL, OAuth, encrypted\n  credentials, rate limits, and matching identifiers (UN/LOCODE, BIC, SMDG,\n  name aliases). One row per tenant per terminal. Optional `proxyUrl` routes\n  that terminal's API calls through an HTTP forward proxy (to egress from a\n  whitelisted IP); empty = direct.\n- **Config-driven N4 adapter** — a single `N4TerminalAdapter` serves all N4\n  terminals; endpoint paths default from the adapter. Auth via Azure B2C ROPC\n  (password grant) or client-credentials.\n- **GCT adapter** (`adapterType: 'gct'`) — Gdynia Container Terminal's bespoke\n  FastAPI. Path-minted token replayed in the `Authorization` header; a container\n  *snapshot* mapped to arrival + departure milestones. GCT has no per-movement\n  mode field, so the mode/milestone is inferred from the cargo direction\n  (`CntrStatus`) and a land-transport sentinel: a purely land (\"TLO\") move is a\n  truck gate-in (`GTIN` / TRUCK); a vessel import arrival is a discharge (`DISC` /\n  VESSEL); a vessel export arrival is a truck gate-in (`GTIN` / TRUCK). Departures\n  are `DEPA` with the mode set by direction (export = VESSEL load, import = TRUCK\n  gate-out). `testConnection` mints a token **and** probes `GetContainerDetails`\n  so a wrong base URL / rejected token is caught, and batch polling runs with a\n  small bounded concurrency (the service rate-limits the batch, not each call).\n  Gross/net weight and dangerous-goods (`DGs`) / damage codes are preserved in\n  `rawData` and surfaced in the container-details drawer when present.\n- **BCT adapter** (`adapterType: 'bct'`) — Bałtycki Terminal Kontenerowy (Gdynia)\n  via the **INCOS** platform (`https://incos.pl`). Plain HTTP **Basic** auth\n  (`authType: 'basic'`, `auth_config: { username, password }`). Read-only Phase 1:\n  the `GET /rest-container/container/{nbr}` snapshot is mapped to the container's\n  **current** milestone (mirroring N4's `/unit` current-state row). The arrival is\n  refined by `in_yard_type` to match N4's vocabulary: a vessel arrival is a\n  discharge (`in_yard_date` → `DISC` / `equipment.discharged`), a truck/rail\n  arrival is a gate-in (→ `GTIN` / `equipment.gate_in`); once the box leaves,\n  `out_yard_date` → `DEPA`. Emitting only the current milestone (not both arrival\n  and departure every poll) lets a departed job reach `completed` and drop from\n  the poll set — otherwise `isFullyDeparted` never trips and the box is polled\n  forever, burning the daily budget. Each event carries an explicit import/export\n  direction (`category`) and a real mode of transport (`in/out_yard_type`: T/V/R →\n  TRUCK/VESSEL/RAIL). **Holds:** INCOS flags customs status binarily, so a\n  customs `HOLD` is mapped by direction to the shared `lib/holds` catalogue code\n  (`CUSTOMS IMPORT HOLD` / `CUSTOMS EXPORT HOLD` — both `critical`) instead of an\n  unclassified raw string; the `;`-separated `constraint` codes (e.g. `STOPUC`)\n  pass through and stay unclassified until INCOS documents them. This is coarser\n  than N4 (which distinguishes ~20 impediment codes incl. permission-vs-hold),\n  but flows through the same `impediments[]` field, availability logic, and hold\n  badges.\n  **Data parity with N4:** TimeIn (`in_yard_date`), TimeOut (`out_yard_date`),\n  seals (`seal1..4`), holds (`customs_status`+`constraint`), and VGM are all\n  present. The one gap is a separate **Loaded** timestamp — the INCOS container\n  lookup has no dedicated load-onto-transport time (N4's \"Loaded\" column), so no\n  `LOAD` event / `loadedAt` is emitted (it lives only in the rail endpoint).\n  **Vessel ETA/ATA (Phase 2, done):** INCOS keys a visit by (vessel, voyage), so\n  the mapping packs both in",
+  "modules": [
+    {
+      "id": "terminal_tracking",
+      "title": "Terminal Tracking",
+      "description": "Container terminal (Navis N4) tracking with per-terminal config, periodic polling, and events.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "terminal_tracking:terminal_config",
+            "table": "terminal_tracking_terminal_configs",
+            "src": {
+              "file": "src/modules/terminal_tracking/data/entities.ts",
+              "line": 38
+            }
+          },
+          {
+            "id": "terminal_tracking:terminal_tracking_job",
+            "table": "terminal_tracking_jobs",
+            "src": {
+              "file": "src/modules/terminal_tracking/data/entities.ts",
+              "line": 143
+            }
+          },
+          {
+            "id": "terminal_tracking:terminal_event",
+            "table": "terminal_tracking_events",
+            "src": {
+              "file": "src/modules/terminal_tracking/data/entities.ts",
+              "line": 221
+            }
+          },
+          {
+            "id": "terminal_tracking:terminal_vessel_visit",
+            "table": "terminal_tracking_vessel_visits",
+            "src": {
+              "file": "src/modules/terminal_tracking/data/entities.ts",
+              "line": 326
+            }
+          }
+        ],
+        "migrations": {
+          "count": 5,
+          "first": "2026-06-09",
+          "last": "2026-08-05"
+        },
+        "customEntities": 3
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/terminal_tracking/terminal-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/terminal-configs/route.ts",
+              "line": 137
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/terminal_tracking/terminal-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/terminal-configs/route.ts",
+              "line": 138
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/terminal_tracking/terminal-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/terminal-configs/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/terminal_tracking/terminal-configs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/terminal-configs/route.ts",
+              "line": 140
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/terminal_tracking/terminal-configs/test",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/terminal-configs/test/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/terminal_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/tracking-jobs/route.ts",
+              "line": 241
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/terminal_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/tracking-jobs/route.ts",
+              "line": 242
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/terminal_tracking/tracking-jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/tracking-jobs/route.ts",
+              "line": 243
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/terminal_tracking/tracking-jobs/details",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/tracking-jobs/details/route.ts",
+              "line": 12
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/terminal_tracking/tracking-jobs/poll",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/tracking-jobs/poll/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/terminal_tracking/vessel-visits",
+            "requireAuth": true,
+            "requireFeatures": [
+              "terminal_tracking.events.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/terminal_tracking/api/vessel-visits/route.ts",
+              "line": 38
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "terminal_tracking.terminal_configs.view",
+          "terminal_tracking.terminal_configs.manage",
+          "terminal_tracking.tracking_jobs.view",
+          "terminal_tracking.tracking_jobs.manage",
+          "terminal_tracking.events.view",
+          "terminal_tracking.settings.manage"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "terminal_tracking.tracking_job.created",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "terminal_tracking.tracking_job.updated",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 6
+            }
+          },
+          {
+            "id": "terminal_tracking.tracking_job.failed",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "terminal_tracking.tracking_job.poll_failed",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 8
+            }
+          },
+          {
+            "id": "terminal_tracking.terminal_event.created",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "terminal_tracking.terminal_event.updated",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.gate_in",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 15
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.discharged",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.loaded",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 17
+            }
+          },
+          {
+            "id": "terminal_tracking.transport.departed",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 18
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.empty_ready",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 23
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.holds_cleared",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 26
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.holds_updated",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 31
+            }
+          },
+          {
+            "id": "terminal_tracking.equipment.stops_updated",
+            "src": {
+              "file": "src/modules/terminal_tracking/events.ts",
+              "line": 36
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "terminal_tracking.tracking_job.created",
+            "src": {
+              "file": "src/modules/terminal_tracking/subscribers/terminal-tracking-job-initial-poll.ts",
+              "line": 5
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/terminal-configs",
+            "requireFeatures": [
+              "terminal_tracking.terminal_configs.view"
+            ]
+          },
+          {
+            "path": "/backend/terminal-containers",
+            "requireFeatures": [
+              "terminal_tracking.tracking_jobs.view"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 18
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "TERMINAL_TRACKING_DEBUG",
+            "src": {
+              "file": "src/modules/terminal_tracking/lib/logger.ts",
+              "line": 10
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api2.baltichub.com",
+            "src": {
+              "file": "src/modules/terminal_tracking/backend/terminal-configs/page.tsx",
+              "line": 104
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "bhctapicustomers.b2clogin.com",
+            "src": {
+              "file": "src/modules/terminal_tracking/backend/terminal-configs/page.tsx",
+              "line": 106
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "incos.pl",
+            "src": {
+              "file": "src/modules/terminal_tracking/backend/terminal-configs/page.tsx",
+              "line": 126
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ]
+        },
+        "@open-mercato/events": {
+          ".": [
+            "EventBus"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": [
+            "createScopedApiHelpers"
+          ],
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/crud/factory": [
+            "makeCrudRoute"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/openapi": [
+            "OpenApiRouteDoc"
+          ],
+          "lib/openapi/crud": [
+            "CrudOpenApiOptions",
+            "createCrudOpenApiFactory",
+            "createPagedListResponseSchema",
+            "defaultCreateResponseSchema",
+            "defaultOkResponseSchema"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "terminal_tracking",
+        "tables": [
+          "terminal_tracking_terminal_configs",
+          "terminal_tracking_jobs",
+          "terminal_tracking_events",
+          "terminal_tracking_vessel_visits"
+        ],
+        "aclFeatures": [
+          "terminal_tracking.terminal_configs.view",
+          "terminal_tracking.terminal_configs.manage",
+          "terminal_tracking.tracking_jobs.view",
+          "terminal_tracking.tracking_jobs.manage",
+          "terminal_tracking.events.view",
+          "terminal_tracking.settings.manage"
+        ],
+        "eventIds": [
+          "terminal_tracking.tracking_job.created",
+          "terminal_tracking.tracking_job.updated",
+          "terminal_tracking.tracking_job.failed",
+          "terminal_tracking.tracking_job.poll_failed",
+          "terminal_tracking.terminal_event.created",
+          "terminal_tracking.terminal_event.updated",
+          "terminal_tracking.equipment.gate_in",
+          "terminal_tracking.equipment.discharged",
+          "terminal_tracking.equipment.loaded",
+          "terminal_tracking.transport.departed",
+          "terminal_tracking.equipment.empty_ready",
+          "terminal_tracking.equipment.holds_cleared",
+          "terminal_tracking.equipment.holds_updated",
+          "terminal_tracking.equipment.stops_updated"
+        ],
+        "backendRoutes": [
+          "/backend/terminal-configs",
+          "/backend/terminal-containers"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "2323000",
+      "lint": [
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: MIT, licenseFile: MIT, moduleInfo: PROPRIETARY, integrationTs: none).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/cache 0.6.2 and 5 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.6.2 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "route-openapi",
+          "severity": "info",
+          "message": "4 of 11 routes have no openApi.",
+          "anchor": "module-development.md:44",
+          "src": {
+            "file": "src/modules/terminal_tracking/api/terminal-configs/test/route.ts",
+            "line": 14
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.7.2.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/terminal_tracking/index.ts",
+            "line": 4
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

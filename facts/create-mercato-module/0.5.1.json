@@ -1,0 +1,49 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1
+  },
+  "package": {
+    "locator": "npm:create-mercato-module",
+    "name": "create-mercato-module",
+    "version": "0.5.1",
+    "integrity": "sha512-GxfzZdbYoMaW/tsdRg9GUIqxjLRur2R40cqTc3SioKdZAZFZb6rdqpTt5GUl7VC0O0VLxXFCJ+vws+rzVTATZQ==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/ in the tarball.",
+    "modules": []
+  },
+  "kind": "tool",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {
+    "typescript": "6.0.3"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "<p align=\"center\"><img src=\"https://raw.githubusercontent.com/open-mercato/create-mercato-module/main/.github/readme/open-mercato.svg\" alt=\"Open Mercato logo\" width=\"72\" /></p>\n\n<h1 align=\"center\">Create Mercato Module</h1>\n\n<p align=\"center\"><strong>Build in your app. Publish or install one module.</strong></p>\n\n<p align=\"center\">Turn a custom Open Mercato module into an npm package and a dedicated GitHub repository.<br />One CLI for creating, publishing, installing, and linking modules.</p>\n\n<p align=\"center\">\n  <a href=\"https://www.npmjs.com/package/create-mercato-module\"><img src=\"https://img.shields.io/npm/v/create-mercato-module?color=b4f372&amp;label=npm\" alt=\"npm version\" /></a>\n  <a href=\"https://nodejs.org/\"><img src=\"https://img.shields.io/badge/node-%E2%89%A524-1b1b1b\" alt=\"Node.js 24 or newer\" /></a>\n  <a href=\"https://github.com/open-mercato/create-mercato-module/actions/workflows/test.yml\"><img src=\"https://github.com/open-mercato/create-mercato-module/actions/workflows/test.yml/badge.svg\" alt=\"Tests\" /></a>\n  <a href=\"https://github.com/open-mercato/create-mercato-module/blob/main/LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-bc9aff\" alt=\"MIT license\" /></a>\n</p>\n\n```bash\nnpx create-mercato-module init visits\n# Build your feature in src/modules/visits.\nnpx create-mercato-module publish visits\n```\n\nYour application is the development workspace. This tool creates a portable package from **one selected module**, including its sources, compiled code, translations, and migrations. Publish it to npm, optionally give it a dedicated GitHub repository, and install it in another Open Mercato app.\n\n**Already built the module?** Skip `init` and go straight to [`publish`](#publish-an-existing-module).\n\n<p align=\"center\"><a href=\"#quick-start\">Quick start</a> · <a href=\"#publish-an-existing-module\">Existing modules</a> · <a href=\"#in-an-open-mercato-cloud-sandbox\">Cloud sandboxes</a> · <a href=\"#preview-before-you-publish\">Dry run</a> · <a href=\"docs/guide.md#command-reference\">Commands</a> · <a href=\"https://docs.openmercato.com/\">Docs</a> · <a href=\"https://discord.gg/f4qwPtJ3qA\">Discord</a></p>\n\n<p align=\"center\"><img src=\"https://raw.githubusercontent.com/open-mercato/create-mercato-module/main/.github/readme/module-flow.svg\" alt=\"Develop visits in your Open Mercato app, package only that module, then publish to npm and an optional dedicated GitHub repository.\" width=\"100%\" /></p>\n\n## Quick start\n\nYou need **Node.js 24+, Yarn 4, and Docker**. On Windows, use WSL2. Already inside an installed app or Cloud sandbox? Skip step 1.\n\n### 1. Create an Open Mercato app\n\n```bash\nnpx create-mercato-app@develop my-app --preset empty\ncd my-app\ncp .env.example .env\ndocker compose up -d\nyarn install\n```\n\nFollow the scaffold prompts to choose your AI coding tools. The `develop` channel provides the framework version used for this tool's standalone installation checks. See the [Open Mercato installation guide](https://docs.openmercato.com/installation) for setup details.\n\n### 2. Create and build your module\n\n```bash\nnpx create-mercato-module init visits\nyarn setup\n```\n\n`init` creates `src/modules/visits`, registers it as `@app`, and runs generation. `yarn setup` initializes your new app and starts its development server; leave it running. Open `/backend/visits` using the app credentials printed in the terminal, then build your feature in `src/modules/visits`.\n\nThe scaffold is a starting point: one page and its translations. From here you will probably want a coding agent to build the module out. The app already carries agent instructions (`AGENTS.md`) for the tools you chose in step 1, so open the app in your agent once `yarn setup` is running and describe the feature, for example: \"In `src/modules/visits`, add a Visit entity with a list page and a create form.\" Keep the dev server running so you can check each change at `/backend/visits`.\n\nIf your app is already initialized and running, use only `init` and continue with it",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "No src/ in the tarball: anatomy is not available."
+  ]
+}

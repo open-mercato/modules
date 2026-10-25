@@ -1,0 +1,466 @@
+{
+  "version": 1,
+  "layout": "disc",
+  "slots": {
+    "core:catalog": {
+      "q": 1,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:customer_groups": {
+      "q": 1,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:customers": {
+      "q": 2,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "core:sales": {
+      "q": 1,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "core:availability": {
+      "q": 1,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:planner": {
+      "q": 2,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:resources": {
+      "q": 2,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:shipping_carriers": {
+      "q": 3,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:staff": {
+      "q": 3,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "core:warranty_claims": {
+      "q": 4,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:wms": {
+      "q": 4,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "core:currencies": {
+      "q": 2,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:eudr": {
+      "q": 3,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:payment_gateways": {
+      "q": 3,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:translations": {
+      "q": 4,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:communication_channels": {
+      "q": 1,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:data_sync": {
+      "q": 0,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:devices": {
+      "q": 2,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:integrations": {
+      "q": 1,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:messages": {
+      "q": 0,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "core:notifications": {
+      "q": 2,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:phone_calls": {
+      "q": 3,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:push_notifications": {
+      "q": 1,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "core:sync_excel": {
+      "q": 0,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "core:business_rules": {
+      "q": 0,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:dashboards": {
+      "q": -1,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:inbox_ops": {
+      "q": -1,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "core:perspectives": {
+      "q": -2,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "core:query_index": {
+      "q": -1,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "core:workflows": {
+      "q": -2,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "core:api_docs": {
+      "q": 0,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:api_keys": {
+      "q": -1,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:attachments": {
+      "q": -1,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:audit_logs": {
+      "q": 0,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:auth": {
+      "q": -2,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:configs": {
+      "q": -2,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:customer_accounts": {
+      "q": -1,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:design_system": {
+      "q": -2,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "core:dictionaries": {
+      "q": 0,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:directory": {
+      "q": -3,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "core:entities": {
+      "q": -3,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "core:feature_toggles": {
+      "q": -3,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "core:forms": {
+      "q": -1,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "core:portal": {
+      "q": -2,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "core:progress": {
+      "q": -3,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "core:seeds": {
+      "q": 0,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/checkout": {
+      "q": 3,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/gateway-stripe": {
+      "q": 4,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/gateway-tpay": {
+      "q": 5,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-apns": {
+      "q": 4,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-discord": {
+      "q": 3,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-expo": {
+      "q": 2,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-fcm": {
+      "q": 5,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-gmail": {
+      "q": 4,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-imap": {
+      "q": 1,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-resend": {
+      "q": 5,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-ses": {
+      "q": 5,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/sync-akeneo": {
+      "q": 5,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/tillio": {
+      "q": 0,
+      "r": 4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/webhooks": {
+      "q": 3,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/ai-assistant": {
+      "q": -4,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/search": {
+      "q": -4,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-browser": {
+      "q": -2,
+      "r": 4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-exa": {
+      "q": -4,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-firecrawl": {
+      "q": -4,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-model": {
+      "q": -1,
+      "r": 4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-searxng": {
+      "q": -3,
+      "r": 4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-serp": {
+      "q": -4,
+      "r": 4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/web-research-tavily": {
+      "q": -5,
+      "r": 2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/content": {
+      "q": -3,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/documents": {
+      "q": 2,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/enterprise": {
+      "q": -2,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/events": {
+      "q": 1,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/onboarding": {
+      "q": -3,
+      "r": -2,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/scheduler": {
+      "q": -1,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/storage-s3": {
+      "q": -4,
+      "r": -1,
+      "at": "2026-10-23"
+    },
+    "npm:@open-mercato/telemetry": {
+      "q": 0,
+      "r": -5,
+      "at": "2026-10-23"
+    },
+    "github:Chmarusso/open-mercato-enrichment-treg": {
+      "q": -3,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "npm:@dainamite/cpq": {
+      "q": -2,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "npm:@piotrkarwatka/marketing-consents": {
+      "q": 2,
+      "r": -6,
+      "at": "2026-10-23"
+    },
+    "npm:@freighttech/shipment-tracking": {
+      "q": 3,
+      "r": -6,
+      "at": "2026-10-23"
+    },
+    "npm:@freighttech/terminal-tracking": {
+      "q": 4,
+      "r": -6,
+      "at": "2026-10-23"
+    },
+    "npm:@fastwhitecat/integration-ksef-direct": {
+      "q": 6,
+      "r": -4,
+      "at": "2026-10-23"
+    },
+    "npm:@dainamite/billing": {
+      "q": 6,
+      "r": -3,
+      "at": "2026-10-23"
+    },
+    "npm:@dainamite/cpq-billing-connector": {
+      "q": 5,
+      "r": 0,
+      "at": "2026-10-23"
+    },
+    "npm:@fullstackhouse/open-mercato-data-sync-durable": {
+      "q": 4,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "npm:@northbound-run/channel-cloudflare-email": {
+      "q": 2,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "npm:@northbound-run/sync-google-sheets": {
+      "q": -2,
+      "r": 5,
+      "at": "2026-10-23"
+    },
+    "npm:@northbound-run/sync-shopify": {
+      "q": -3,
+      "r": 5,
+      "at": "2026-10-23"
+    },
+    "npm:@northbound-run/search-cloudflare": {
+      "q": -5,
+      "r": 3,
+      "at": "2026-10-23"
+    },
+    "npm:@fullstackhouse/open-mercato-durable-work": {
+      "q": -5,
+      "r": 1,
+      "at": "2026-10-23"
+    },
+    "npm:@fullstackhouse/open-mercato-health": {
+      "q": -5,
+      "r": 0,
+      "at": "2026-10-23"
+    }
+  }
+}

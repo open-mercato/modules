@@ -1,0 +1,559 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 237
+  },
+  "package": {
+    "locator": "github:fullstackhouse/open-mercato-client-auth",
+    "name": "@fullstackhouse/open-mercato-client-auth",
+    "version": "0.4.0",
+    "integrity": null,
+    "source": "github-archive",
+    "gitRef": "afb5217b11ce8cd2fe9828f117e03ca287b3a03a"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "No dist/modules/client_auth/ in the tarball (not built).",
+    "modules": [
+      {
+        "id": "client_auth",
+        "src": true,
+        "dist": false
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": ">=0.6.0",
+    "@open-mercato/shared": ">=0.6.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.0.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-client-auth\n\nAuthentication for *external clients* of an [Open Mercato](https://github.com/open-mercato/open-mercato)\napplication — SPAs, mobile apps, and other first-party clients that are not\nthe `/backend` staff console. It provides JSON session endpoints, Google and\nApple OAuth, and a pluggable verifier/store architecture, all issuing regular\ncore-auth platform sessions (the same JWT + refresh-token pair as core login),\nso signed-in clients look identical to the rest of the system regardless of\nhow they signed in.\n\n## Status\n\n**v0.2 — JSON session endpoints.** The full SPEC-055 §D contract — `login`,\n`session` (whoami), `refresh`, `logout`, `signup`,\n`password-reset/{request,confirm}` — is implemented under `/api/client_auth/*`\nover core `AuthService`, alongside the v0.1 Google/Apple OAuth port, the\n`issueSession()` seam, cookie/body transports, and the core-auth user store.\n\n**Next:** the `better-auth` verifier engine (feature-gated; drawn from real\nproduct need — OTP / passkeys / device flow) and an integration-test harness\n(ephemeral host app in CI) are planned but not yet part of this repo — unit\ntests cover the verifier/store/transport logic.\n\n## Install\n\n```bash\nnpm install @fullstackhouse/open-mercato-client-auth\n# peer deps: @open-mercato/core, @open-mercato/shared, @mikro-orm/* (v7), next, zod\n```\n\nRegister the module in your app's `src/modules.ts`:\n\n```ts\nconst modules = [\n  // ...core modules...\n  { id: 'client_auth', from: '@fullstackhouse/open-mercato-client-auth' },\n]\n```\n\nThe package ships the compiled module tree at `dist/modules/client_auth/`,\nwhich is where the Open Mercato CLI resolves package-backed modules from.\nThen run `yarn generate` (or `mercato generate`) and apply migrations.\n\n## Endpoints\n\n### Session (email/password)\n\n| Endpoint | Purpose |\n|----------|---------|\n| `POST /api/client_auth/login` | `{ email, password }` → verifies credentials, issues a session. Responds `{ ok, token, refreshToken, expiresAt, user }` **and** sets cookies. |\n| `GET /api/client_auth/session` | Whoami. Reads the cookie or bearer token → `{ user, expiresAt }`; `401` when unauthenticated. |\n| `POST /api/client_auth/refresh` | `session_token` cookie or `{ refreshToken }` → a fresh access JWT (`{ ok, token, expiresAt, user }` + cookie), reusing the same refresh token. `401` (+ cleared cookies) when the refresh token is invalid/expired. |\n| `POST /api/client_auth/logout` | Revokes the session row (from the `session_token` cookie or `{ refreshToken }`) and clears cookies. |\n| `POST /api/client_auth/signup` | `{ email, password, name? }` → creates a confirmed user in the default tenant with the base role, then issues a session (`201`). `409` when the email is taken; `403` when signup is disabled. |\n| `POST /api/client_auth/password-reset/request` | `{ email, redirectTo? }` → **always** `{ ok: true }` (anti-enumeration). When the email exists, emits `client_auth.password_reset.requested` carrying the reset token so the host sends the email. |\n| `POST /api/client_auth/password-reset/confirm` | `{ token, newPassword }` → resets the password (core revokes all of the user's sessions). `400` on an invalid/expired token. |\n\n`expiresAt` is the **access-token** (8h) expiry — what clients use to schedule\na preemptive refresh; the refresh token lives `REFRESH_TOKEN_DAYS` (30d).\n\n> **Password-reset email is the host's job.** The package creates the core\n> `PasswordReset` token and emits `client_auth.password_reset.requested`\n> (`{ userId, email, token, redirectTo, tenantId }`). Subscribe to it and send\n> the email via your notifications stack with a link to your frontend's\n> reset-password screen. The package intentionally owns no email templates.\n\n### OAuth (Google / Apple)\n\n| Endpoint | Purpose |\n|----------|---------|\n| `POST /api/client_auth/oauth/google/init` | Start Google sign-in (returns the authorization URL). Body: `{ platform: 'web'\\|'mobile', redirect? }` |\n| `GET /api/client_auth/oauth/google",
+  "modules": [
+    {
+      "id": "client_auth",
+      "title": "Client Auth",
+      "description": "Authentication for external clients (SPAs, mobile apps) on top of core auth: Google and Apple sign-in today, JSON session endpoints next. OAuth accounts are an extension entity linked to core users; sessions are issued by core auth.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "client_auth:oauth_account",
+            "table": "client_auth_oauth_accounts",
+            "src": {
+              "file": "src/modules/client_auth/data/entities.ts",
+              "line": 12
+            }
+          }
+        ],
+        "migrations": {
+          "count": 1,
+          "first": "2026-07-04",
+          "last": "2026-07-04"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "POST",
+            "path": "/api/client_auth/login",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/login/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/logout",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/logout/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/client_auth/oauth/apple/callback",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/apple/callback/route.ts",
+              "line": 8
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/oauth/apple/callback",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/apple/callback/route.ts",
+              "line": 12
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/oauth/apple/init",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/apple/init/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/oauth/apple/token",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/apple/token/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/client_auth/oauth/google/callback",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/google/callback/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/oauth/google/init",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/google/init/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/oauth/google/token",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/oauth/google/token/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/password-reset/confirm",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/password-reset/confirm/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/password-reset/request",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/password-reset/request/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/refresh",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/refresh/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/client_auth/session",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/session/route.ts",
+              "line": 7
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/client_auth/signup",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/client_auth/api/signup/route.ts",
+              "line": 7
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "client_auth.user.signed_up",
+            "src": {
+              "file": "src/modules/client_auth/events.ts",
+              "line": 4
+            }
+          },
+          {
+            "id": "client_auth.oauth_account.linked",
+            "src": {
+              "file": "src/modules/client_auth/events.ts",
+              "line": 5
+            }
+          },
+          {
+            "id": "client_auth.password_reset.requested",
+            "src": {
+              "file": "src/modules/client_auth/events.ts",
+              "line": 6
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 4
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "OAUTH_MOBILE_REDIRECT_URI",
+            "src": {
+              "file": "src/config.ts",
+              "line": 27
+            }
+          },
+          {
+            "name": "OAUTH_WEB_REDIRECT_ORIGINS",
+            "src": {
+              "file": "src/config.ts",
+              "line": 36
+            }
+          },
+          {
+            "name": "REFRESH_TOKEN_DAYS",
+            "src": {
+              "file": "src/config.ts",
+              "line": 45
+            }
+          },
+          {
+            "name": "CLIENT_AUTH_PASSWORD_MIN_LENGTH",
+            "src": {
+              "file": "src/config.ts",
+              "line": 57
+            }
+          },
+          {
+            "name": "CLIENT_AUTH_SIGNUP_ENABLED",
+            "src": {
+              "file": "src/config.ts",
+              "line": 67
+            }
+          },
+          {
+            "name": "CLIENT_AUTH_DEFAULT_ROLE",
+            "src": {
+              "file": "src/config.ts",
+              "line": 78
+            }
+          },
+          {
+            "name": "GOOGLE_CLIENT_ID",
+            "src": {
+              "file": "src/config.ts",
+              "line": 84
+            }
+          },
+          {
+            "name": "GOOGLE_CLIENT_SECRET",
+            "src": {
+              "file": "src/config.ts",
+              "line": 85
+            }
+          },
+          {
+            "name": "APPLE_CLIENT_ID",
+            "src": {
+              "file": "src/config.ts",
+              "line": 99
+            }
+          },
+          {
+            "name": "APPLE_CLIENT_SECRET",
+            "src": {
+              "file": "src/verifiers/oauth/apple-client-secret.ts",
+              "line": 13
+            }
+          },
+          {
+            "name": "APPLE_TEAM_ID",
+            "src": {
+              "file": "src/verifiers/oauth/apple-client-secret.ts",
+              "line": 16
+            }
+          },
+          {
+            "name": "APPLE_KEY_ID",
+            "src": {
+              "file": "src/verifiers/oauth/apple-client-secret.ts",
+              "line": 17
+            }
+          },
+          {
+            "name": "APPLE_PRIVATE_KEY",
+            "src": {
+              "file": "src/verifiers/oauth/apple-client-secret.ts",
+              "line": 19
+            }
+          },
+          {
+            "name": "JWT_SECRET",
+            "src": {
+              "file": "src/verifiers/oauth/oauth-state.ts",
+              "line": 16
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "accounts.google.com",
+            "src": {
+              "file": "src/config.ts",
+              "line": 17
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "appleid.apple.com",
+            "src": {
+              "file": "src/config.ts",
+              "line": 20
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "oauth2.googleapis.com",
+            "src": {
+              "file": "src/config.ts",
+              "line": 18
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "www.googleapis.com",
+            "src": {
+              "file": "src/config.ts",
+              "line": 19
+            },
+            "confidence": "low"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/auth/data/entities": [
+            "Role",
+            "User",
+            "UserRole"
+          ],
+          "modules/auth/lib/emailHash": [
+            "computeEmailHash"
+          ],
+          "modules/auth/lib/safeRedirect": [
+            "sanitizeRedirectPath"
+          ],
+          "modules/auth/services/authService": [
+            "AuthService"
+          ],
+          "modules/directory/data/entities": [
+            "Tenant"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/jwt": [
+            "signJwt"
+          ],
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/di/container": [
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/encryption/kms": [
+            "createKmsService"
+          ],
+          "lib/encryption/tenantDataEncryptionService": [
+            "TenantDataEncryptionService"
+          ],
+          "lib/encryption/toggles": [
+            "isTenantDataEncryptionEnabled"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/url": [
+            "getAppBaseUrl"
+          ],
+          "modules/dsl": [
+            "defineLink",
+            "entityId"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "client_auth",
+        "tables": [
+          "client_auth_oauth_accounts"
+        ],
+        "aclFeatures": [],
+        "eventIds": [
+          "client_auth.user.signed_up",
+          "client_auth.oauth_account.linked",
+          "client_auth.password_reset.requested"
+        ],
+        "backendRoutes": []
+      },
+      "publicRoutes": 14,
+      "glyph": "2302000",
+      "lint": [
+        {
+          "code": "install-scripts",
+          "severity": "error",
+          "message": "Declares install scripts (prepare) without scriptsRequired in the descriptor.",
+          "anchor": "w2 §3",
+          "src": {
+            "file": "package.json",
+            "line": 1
+          }
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "14 of 14 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/client_auth/api/login/route.ts",
+            "line": 7
+          }
+        },
+        {
+          "code": "route-openapi",
+          "severity": "info",
+          "message": "14 of 14 routes have no openApi.",
+          "anchor": "module-development.md:44",
+          "src": {
+            "file": "src/modules/client_auth/api/login/route.ts",
+            "line": 7
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.4.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/client_auth/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

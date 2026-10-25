@@ -1,0 +1,1973 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1613
+  },
+  "package": {
+    "locator": "npm:@dainamite/cpq",
+    "name": "@dainamite/cpq",
+    "version": "0.4.0",
+    "integrity": "sha512-ZLQRTwele2z6yJ0ZuhqFd5c3QJLgFfBZeL/A4hfRMpYODctCT8PBLQHPId+r72fUaKBsCrHsOXyqmRUMCEuJ1A==",
+    "source": "npm-tarball",
+    "gitRef": "bf641f89e1493ae88a88234140f0cf43daaa0849"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "cpq",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": true,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": "PROPRIETARY",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "^0.6.7",
+    "@open-mercato/events": "^0.6.7",
+    "@open-mercato/shared": "^0.6.7",
+    "@open-mercato/ui": "^0.6.7"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @dainamite/cpq\n\nDainamite **CPQ** (Configure, Price, Quote) module for Open Mercato —\nconfigurable product attributes, multi-charge pricing tables, guided\nquoting wizards, customer inventory & subscription tracking, ARC\n(Amend / Renew / Cancel) flows, quote → order → activation pipeline.\n\n## Install\n\nPublished to the **public npm registry** — no scope auth or `.npmrc`\nchanges needed:\n\n```sh\nyarn add @dainamite/cpq\n```\n\nRegister the module in your host app's `src/modules.ts` (after its\nrequired core modules — see below):\n\n```ts\n{ id: 'cpq', from: '@dainamite/cpq' }\n```\n\nRegenerate the module graph, then run framework migrations to install\nCPQ's schema:\n\n```sh\nyarn generate\nyarn mercato db migrate\n```\n\nCPQ admin pages appear under `/backend/cpq/*`.\n\n## What's inside\n\n```\npackages/cpq/src/modules/cpq/\n├── index.ts        module metadata + requires\n├── acl.ts          ACL feature definitions\n├── ce.ts           custom entity / field set declarations\n├── di.ts           Awilix DI registrations\n├── setup.ts        tenant init, role features, seed data\n├── data/           entities, validators, enrichers\n├── api/            REST routes (resource-style: api/<resource>/route.ts)\n├── backend/        admin UI pages (auto-discovered)\n├── services/       pricing, quoting, validation, product, wizard, inventory, order, bundle\n├── widgets/        injection: customer-inventory, order-cpq-tab, quote-configurator\n├── workflows/      quote → order step components\n├── lib/seeds/      use-case registry API\n└── migrations/     own MikroORM migrations (never hand-write — `yarn mercato db generate`)\n```\n\nThe package ships `src/` (for TypeScript consumers' types) and\n`dist/` (esbuild-built JS for runtime). Following the\n[`@open-mercato/core`](https://www.npmjs.com/package/@open-mercato/core)\nbuild convention, no `.d.ts` is emitted — `exports.types` resolves\ndirectly to source.\n\n## Distribution model (per SPEC-001)\n\n- **L1** — Open Mercato core consumed from `@open-mercato/*` (npm).\n- **L2** — Dainamite product modules (this package + sibling\n  `@dainamite/*`), published to **public npm** under the `@dainamite`\n  scope.\n- **L3** — `dainamite-core` is the first L3 customer app; other customer\n  repos consume `@dainamite/cpq` via `yarn add` and register it the same\n  way.\n\n## Hard rules (carried over from SPEC-001)\n\n- **No ORM relations across packages.** Cross-module references are FK\n  strings only (`productId: string`), never `@ManyToOne`.\n- **`peerDependencies`, never `dependencies`** for sibling\n  `@dainamite/*` and `@open-mercato/*` — guarantees a single shared\n  instance in `node_modules`.\n- **Each major bump ships its own migrations** under\n  `src/modules/cpq/migrations/`; document upgrade path in\n  `CHANGELOG.md`.\n- **No customer-specific logic here.** Tenant-specific overrides live\n  in the consuming app under `src/modules/@app/<feature>/`.\n\n## Required Open Mercato modules\n\nCPQ declares the following in `metadata.requires` and will fail to\nbootstrap if any are missing from the host app's `src/modules.ts`:\n\n`auth`, `directory`, `catalog`, `sales`, `customers`, `dictionaries`.\n\n## Package isolation guard\n\nStatic lint test at\n[`src/modules/cpq/__tests__/package-isolation.test.ts`](src/modules/cpq/__tests__/package-isolation.test.ts)\nasserts the package never imports from sibling app modules, never\ndeep-imports `@open-mercato/core/modules/<x>` for an undeclared\ndependency, and contains zero cross-entity ORM relations. Runs on\nevery CI build — protects future contributors from accidentally\nbreaking the package boundary.\n\n## Versioning\n\nVersioned via [changesets](https://github.com/changesets/changesets).\nAdd a changeset alongside any change in `packages/cpq/`:\n\n```sh\nyarn changeset\n```\n\nBumps and the public-npm publish are handled by the release workflow on\npush to `main`.\n\n## License\n\nMIT.\n",
+  "modules": [
+    {
+      "id": "cpq",
+      "title": "Configure, Price, Quote",
+      "description": "Generic CPQ engine - configurable product attributes, multi-charge pricing tables, and guided quoting flows.",
+      "requires": [
+        {
+          "raw": "auth",
+          "resolvesTo": "core:auth"
+        },
+        {
+          "raw": "directory",
+          "resolvesTo": "core:directory"
+        },
+        {
+          "raw": "catalog",
+          "resolvesTo": "core:catalog"
+        },
+        {
+          "raw": "sales",
+          "resolvesTo": "core:sales"
+        },
+        {
+          "raw": "customers",
+          "resolvesTo": "core:customers"
+        },
+        {
+          "raw": "dictionaries",
+          "resolvesTo": "core:dictionaries"
+        }
+      ],
+      "ejectable": false,
+      "data": {
+        "entities": [
+          {
+            "id": "cpq:cpq_product_specification",
+            "table": "cpq_product_specifications",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "cpq:cpq_product_offering",
+            "table": "cpq_product_offerings",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 82
+            }
+          },
+          {
+            "id": "cpq:cpq_product_relationship",
+            "table": "cpq_product_relationships",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 149
+            }
+          },
+          {
+            "id": "cpq:cpq_bundle_slot",
+            "table": "cpq_bundle_slots",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 201
+            }
+          },
+          {
+            "id": "cpq:cpq_offering_component",
+            "table": "cpq_offering_components",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 260
+            }
+          },
+          {
+            "id": "cpq:cpq_product_attribute",
+            "table": "cpq_product_attributes",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 313
+            }
+          },
+          {
+            "id": "cpq:cpq_pricing_table",
+            "table": "cpq_pricing_tables",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 388
+            }
+          },
+          {
+            "id": "cpq:cpq_pricing_table_entry",
+            "table": "cpq_pricing_table_entries",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 433
+            }
+          },
+          {
+            "id": "cpq:cpq_product_charge",
+            "table": "cpq_product_charges",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 488
+            }
+          },
+          {
+            "id": "cpq:cpq_price_rule",
+            "table": "cpq_price_rules",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 571
+            }
+          },
+          {
+            "id": "cpq:cpq_quote_configuration",
+            "table": "cpq_quote_configurations",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 631
+            }
+          },
+          {
+            "id": "cpq:cpq_wizard_definition",
+            "table": "cpq_wizard_definitions",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 726
+            }
+          },
+          {
+            "id": "cpq:cpq_quote_line_configuration",
+            "table": "cpq_quote_line_configurations",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 785
+            }
+          },
+          {
+            "id": "cpq:cpq_inventory_subscription",
+            "table": "cpq_inventory_subscriptions",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 886
+            }
+          },
+          {
+            "id": "cpq:cpq_inventory_subscription_item",
+            "table": "cpq_inventory_subscription_items",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1002
+            }
+          },
+          {
+            "id": "cpq:cpq_inventory_asset",
+            "table": "cpq_inventory_assets",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1093
+            }
+          },
+          {
+            "id": "cpq:cpq_order_configuration",
+            "table": "cpq_order_configurations",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1189
+            }
+          },
+          {
+            "id": "cpq:cpq_order_line_configuration",
+            "table": "cpq_order_line_configurations",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1241
+            }
+          },
+          {
+            "id": "cpq:cpq_quote_target_subscription",
+            "table": "cpq_quote_target_subscriptions",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1326
+            }
+          },
+          {
+            "id": "cpq:cpq_subscription_change_log",
+            "table": "cpq_subscription_change_logs",
+            "src": {
+              "file": "src/modules/cpq/data/entities.ts",
+              "line": 1398
+            }
+          }
+        ],
+        "migrations": {
+          "count": 19,
+          "first": "2026-02-20",
+          "last": "2026-06-02"
+        },
+        "customEntities": 18
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/cpq/attribute-options",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/attribute-options/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/bundle-slots",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/bundle-slots/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/bundle-slots",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/bundle-slots/route.ts",
+              "line": 41
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/bundle-slots",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/bundle-slots/route.ts",
+              "line": 64
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/bundle-slots",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/bundle-slots/route.ts",
+              "line": 90
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/bundle-tree",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/bundle-tree/route.ts",
+              "line": 9
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/assets",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/assets/route.ts",
+              "line": 16
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/inventory/assets",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/assets/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/inventory/assets",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/assets/route.ts",
+              "line": 85
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/inventory/assets",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/assets/route.ts",
+              "line": 106
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/inventory/assets/status",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/assets/status/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/customer/[customerId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/customer/[customerId]/route.ts",
+              "line": 8
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/customer/[customerId]/parent-items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/customer/[customerId]/parent-items/route.ts",
+              "line": 8
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/subscription-items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscription-items/route.ts",
+              "line": 16
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/inventory/subscription-items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscription-items/route.ts",
+              "line": 48
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/inventory/subscription-items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscription-items/route.ts",
+              "line": 69
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/inventory/subscription-items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscription-items/route.ts",
+              "line": 90
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/route.ts",
+              "line": 16
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/inventory/subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/route.ts",
+              "line": 68
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/inventory/subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/route.ts",
+              "line": 88
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/inventory/subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/route.ts",
+              "line": 109
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/subscriptions/[subscriptionId]/change-log",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.arc.changelog.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/[subscriptionId]/change-log/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/inventory/subscriptions/expiring",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.expiring.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/expiring/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/inventory/subscriptions/status",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.inventory.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/inventory/subscriptions/status/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/offering-components",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/offering-components/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/offering-components",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/offering-components/route.ts",
+              "line": 38
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/offering-components",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/offering-components/route.ts",
+              "line": 61
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/offering-components",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/offering-components/route.ts",
+              "line": 84
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/orders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.orders.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/orders/route.ts",
+              "line": 29
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/orders",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.orders.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/orders/route.ts",
+              "line": 13
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/orders/[orderId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.orders.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/orders/[orderId]/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/orders/[orderId]/activate",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.orders.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/orders/[orderId]/activate/route.ts",
+              "line": 11
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/orders/[orderId]/status",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.orders.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/orders/[orderId]/status/route.ts",
+              "line": 12
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/price-rules",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/price-rules/route.ts",
+              "line": 33
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/price-rules",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/price-rules/route.ts",
+              "line": 128
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/price-rules",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/price-rules/route.ts",
+              "line": 162
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/price-rules",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/price-rules/route.ts",
+              "line": 190
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/pricing-table-entries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-table-entries/route.ts",
+              "line": 30
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/pricing-table-entries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-table-entries/route.ts",
+              "line": 67
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/pricing-table-entries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-table-entries/route.ts",
+              "line": 111
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/pricing-table-entries",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-table-entries/route.ts",
+              "line": 139
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/pricing-tables",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-tables/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/pricing-tables",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-tables/route.ts",
+              "line": 113
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/pricing-tables",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-tables/route.ts",
+              "line": 147
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/pricing-tables",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.pricing.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/pricing-tables/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/product-attributes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-attributes/route.ts",
+              "line": 45
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/product-attributes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-attributes/route.ts",
+              "line": 81
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/product-attributes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-attributes/route.ts",
+              "line": 112
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/product-attributes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-attributes/route.ts",
+              "line": 137
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/product-charges",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-charges/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/product-charges",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-charges/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/product-charges",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-charges/route.ts",
+              "line": 127
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/product-charges",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.products.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-charges/route.ts",
+              "line": 182
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/product-offerings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-offerings/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/product-offerings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-offerings/route.ts",
+              "line": 213
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/product-offerings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-offerings/route.ts",
+              "line": 270
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/product-offerings",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.offerings.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-offerings/route.ts",
+              "line": 311
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/product-relationships",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-relationships/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/product-relationships",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-relationships/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/product-relationships",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-relationships/route.ts",
+              "line": 99
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/product-relationships",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-relationships/route.ts",
+              "line": 136
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/product-specifications",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-specifications/route.ts",
+              "line": 14
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/product-specifications",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-specifications/route.ts",
+              "line": 191
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/product-specifications",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-specifications/route.ts",
+              "line": 264
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/product-specifications",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.specifications.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/product-specifications/route.ts",
+              "line": 305
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/quotes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/route.ts",
+              "line": 31
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/route.ts",
+              "line": 15
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/quotes/[quoteId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/route.ts",
+              "line": 16
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/cpq/quotes/[quoteId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/route.ts",
+              "line": 36
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/quotes/[quoteId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/cancel-meta",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.arc.cancel.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/cancel-meta/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/clone",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/clone/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/items",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/items/route.ts",
+              "line": 11
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/quotes/[quoteId]/items/[lineId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/items/[lineId]/route.ts",
+              "line": 13
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/quotes/[quoteId]/items/[lineId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/items/[lineId]/route.ts",
+              "line": 37
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/merge-meta",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.arc.renew.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/merge-meta/route.ts",
+              "line": 17
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/recalculate",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/recalculate/route.ts",
+              "line": 12
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/status",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/status/route.ts",
+              "line": 11
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/quotes/[quoteId]/target-subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/target-subscriptions/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/[quoteId]/target-subscriptions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/target-subscriptions/route.ts",
+              "line": 38
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/cpq/quotes/[quoteId]/target-subscriptions/[targetId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/target-subscriptions/[targetId]/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/quotes/[quoteId]/target-subscriptions/[targetId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/[quoteId]/target-subscriptions/[targetId]/route.ts",
+              "line": 49
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/quotes/attributes",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/attributes/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/from-subscription",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/from-subscription/route.ts",
+              "line": 25
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/price",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/price/route.ts",
+              "line": 13
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/quotes/validate-relationships",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/quotes/validate-relationships/route.ts",
+              "line": 16
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/wizards",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.wizards.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/wizards/route.ts",
+              "line": 18
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/cpq/wizards",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.wizards.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/wizards/route.ts",
+              "line": 65
+            }
+          },
+          {
+            "method": "PUT",
+            "path": "/api/cpq/wizards",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.wizards.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/wizards/route.ts",
+              "line": 85
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/cpq/wizards",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.wizards.manage"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/wizards/route.ts",
+              "line": 108
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/cpq/wizards/resolve",
+            "requireAuth": true,
+            "requireFeatures": [
+              "cpq.wizards.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/cpq/api/wizards/resolve/route.ts",
+              "line": 9
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "cpq.quotes.view",
+          "cpq.quotes.manage",
+          "cpq.pricing.view",
+          "cpq.pricing.manage",
+          "cpq.products.view",
+          "cpq.products.manage",
+          "cpq.specifications.view",
+          "cpq.specifications.manage",
+          "cpq.offerings.view",
+          "cpq.offerings.manage",
+          "cpq.wizards.view",
+          "cpq.wizards.manage",
+          "cpq.orders.view",
+          "cpq.orders.manage",
+          "cpq.arc.amend.manage",
+          "cpq.arc.renew.manage",
+          "cpq.arc.cancel.manage",
+          "cpq.arc.changelog.view"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "cpq.subscription.activated",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "cpq.subscription.amended",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 23
+            }
+          },
+          {
+            "id": "cpq.subscription.renewed",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 30
+            }
+          },
+          {
+            "id": "cpq.subscription.merged",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 37
+            }
+          },
+          {
+            "id": "cpq.subscription.cancelled",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 44
+            }
+          },
+          {
+            "id": "cpq.subscription.superseded",
+            "src": {
+              "file": "src/modules/cpq/events.ts",
+              "line": 51
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "cpq.subscription.amended",
+            "src": {
+              "file": "src/modules/cpq/subscribers/subscription-amended-log.ts",
+              "line": 2
+            }
+          },
+          {
+            "event": "cpq.subscription.cancelled",
+            "src": {
+              "file": "src/modules/cpq/subscribers/subscription-cancelled-log.ts",
+              "line": 2
+            }
+          },
+          {
+            "event": "cpq.subscription.merged",
+            "src": {
+              "file": "src/modules/cpq/subscribers/subscription-merged-log.ts",
+              "line": 2
+            }
+          },
+          {
+            "event": "cpq.subscription.renewed",
+            "src": {
+              "file": "src/modules/cpq/subscribers/subscription-renewed-log.ts",
+              "line": 2
+            }
+          },
+          {
+            "event": "cpq.subscription.superseded",
+            "src": {
+              "file": "src/modules/cpq/subscribers/subscription-superseded-log.ts",
+              "line": 2
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/cpq/inventory",
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/inventory/assets/[id]",
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/inventory/subscriptions/[id]",
+            "requireFeatures": [
+              "cpq.inventory.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/offerings",
+            "requireFeatures": [
+              "cpq.offerings.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/offerings/[id]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/orders",
+            "requireFeatures": [
+              "cpq.orders.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/orders/[id]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/price-rules",
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/price-rules/[id]",
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/pricing",
+            "requireFeatures": [
+              "cpq.pricing.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/pricing/[id]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/quotes",
+            "requireFeatures": [
+              "cpq.quotes.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/quotes/[id]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/specifications",
+            "requireFeatures": [
+              "cpq.specifications.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/specifications/[id]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/wizards",
+            "requireFeatures": [
+              "cpq.wizards.view"
+            ]
+          },
+          {
+            "path": "/backend/cpq/wizards/[definitionCode]",
+            "requireFeatures": []
+          },
+          {
+            "path": "/backend/cpq/wizards/[definitionCode]/detail",
+            "requireFeatures": []
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 4,
+        "extensionHosts": 26
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "seed"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "widget",
+          "target": "detail:customers.company:tabs"
+        },
+        {
+          "kind": "widget",
+          "target": "detail:customers.person:tabs"
+        },
+        {
+          "kind": "widget",
+          "target": "sales.document.detail.order:tabs"
+        },
+        {
+          "kind": "widget",
+          "target": "sales.document.detail.quote:tabs"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/auth/data/entities": [
+            "Role",
+            "User",
+            "UserRole"
+          ],
+          "modules/auth/lib/emailHash": [
+            "computeEmailHash"
+          ],
+          "modules/auth/lib/setup-app": [
+            "setupInitialTenant"
+          ],
+          "modules/catalog/data/entities": [
+            "(dynamic)"
+          ],
+          "modules/currencies/data/entities": [
+            "(dynamic)"
+          ],
+          "modules/customers/data/entities": [
+            "CustomerEntity"
+          ],
+          "modules/directory/data/entities": [
+            "(dynamic)"
+          ],
+          "modules/directory/utils/organizationScope": [
+            "OrganizationScope",
+            "resolveFeatureCheckContext"
+          ],
+          "modules/sales/data/entities": [
+            "SalesOrder",
+            "SalesOrderLine",
+            "SalesQuote",
+            "SalesQuoteLine"
+          ],
+          "modules/sales/services/salesDocumentNumberGenerator": [
+            "SalesDocumentNumberGenerator"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption"
+          ],
+          "lib/encryption/kms": [
+            "createKmsService"
+          ],
+          "lib/encryption/tenantDataEncryptionService": [
+            "TenantDataEncryptionService"
+          ],
+          "lib/encryption/toggles": [
+            "isTenantDataEncryptionEnabled"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "Module",
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": [
+            "BulkAction",
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActionItem",
+            "RowActions"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/forms": [
+            "FormHeader"
+          ],
+          "backend/forms/ActionsDropdown": [
+            "ActionItem"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/input": [
+            "Input",
+            "InputProps"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/tag": [
+            "Tag",
+            "TagMap"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "cpq",
+        "tables": [
+          "cpq_product_specifications",
+          "cpq_product_offerings",
+          "cpq_product_relationships",
+          "cpq_bundle_slots",
+          "cpq_offering_components",
+          "cpq_product_attributes",
+          "cpq_pricing_tables",
+          "cpq_pricing_table_entries",
+          "cpq_product_charges",
+          "cpq_price_rules",
+          "cpq_quote_configurations",
+          "cpq_wizard_definitions",
+          "cpq_quote_line_configurations",
+          "cpq_inventory_subscriptions",
+          "cpq_inventory_subscription_items",
+          "cpq_inventory_assets",
+          "cpq_order_configurations",
+          "cpq_order_line_configurations",
+          "cpq_quote_target_subscriptions",
+          "cpq_subscription_change_logs"
+        ],
+        "aclFeatures": [
+          "cpq.quotes.view",
+          "cpq.quotes.manage",
+          "cpq.pricing.view",
+          "cpq.pricing.manage",
+          "cpq.products.view",
+          "cpq.products.manage",
+          "cpq.specifications.view",
+          "cpq.specifications.manage",
+          "cpq.offerings.view",
+          "cpq.offerings.manage",
+          "cpq.wizards.view",
+          "cpq.wizards.manage",
+          "cpq.orders.view",
+          "cpq.orders.manage",
+          "cpq.arc.amend.manage",
+          "cpq.arc.renew.manage",
+          "cpq.arc.cancel.manage",
+          "cpq.arc.changelog.view"
+        ],
+        "eventIds": [
+          "cpq.subscription.activated",
+          "cpq.subscription.amended",
+          "cpq.subscription.renewed",
+          "cpq.subscription.merged",
+          "cpq.subscription.cancelled",
+          "cpq.subscription.superseded"
+        ],
+        "backendRoutes": [
+          "/backend/cpq/inventory",
+          "/backend/cpq/inventory/assets/[id]",
+          "/backend/cpq/inventory/subscriptions/[id]",
+          "/backend/cpq/offerings",
+          "/backend/cpq/offerings/[id]",
+          "/backend/cpq/orders",
+          "/backend/cpq/orders/[id]",
+          "/backend/cpq/price-rules",
+          "/backend/cpq/price-rules/[id]",
+          "/backend/cpq/pricing",
+          "/backend/cpq/pricing/[id]",
+          "/backend/cpq/quotes",
+          "/backend/cpq/quotes/[id]",
+          "/backend/cpq/specifications",
+          "/backend/cpq/specifications/[id]",
+          "/backend/cpq/wizards",
+          "/backend/cpq/wizards/[definitionCode]",
+          "/backend/cpq/wizards/[definitionCode]/detail"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "3333102",
+      "lint": [
+        {
+          "code": "acl-guards",
+          "severity": "error",
+          "message": "requireFeatures uses cpq.inventory.view, which acl.ts does not declare (and 19 more).",
+          "anchor": "module-development.md:49",
+          "src": {
+            "file": "src/modules/cpq/api/inventory/assets/route.ts",
+            "line": 16
+          }
+        },
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: MIT, licenseFile: MIT, moduleInfo: PROPRIETARY, integrationTs: none).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for ^0.6.7 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "route-openapi",
+          "severity": "info",
+          "message": "82 of 91 routes have no openApi.",
+          "anchor": "module-development.md:44",
+          "src": {
+            "file": "src/modules/cpq/api/attribute-options/route.ts",
+            "line": 15
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.4.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/cpq/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

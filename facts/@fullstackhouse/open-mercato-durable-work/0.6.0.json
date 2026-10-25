@@ -1,0 +1,337 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 84
+  },
+  "package": {
+    "locator": "npm:@fullstackhouse/open-mercato-durable-work",
+    "name": "@fullstackhouse/open-mercato-durable-work",
+    "version": "0.6.0",
+    "integrity": "sha512-uA3NDDbBb2LLA9KG2ZtXm1LeY2RJtDoOFzQafJcWTa/VstxZ8/yJL1BQL9OOWMVBM3qKbTrw6HodEQ5A287o3A==",
+    "source": "npm-tarball",
+    "gitRef": "1bf9ada1b3e3bb9022b07684252b5aeaf23191b1"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "durable_work",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": "MIT",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": ">=0.7.0 <0.8.0",
+    "@open-mercato/shared": ">=0.7.0 <0.8.0"
+  },
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-durable-work\n\nDurable, at-least-once background work for [Open Mercato](https://github.com/open-mercato/open-mercato).\n\nA job is a row in your database with a lease on it. A worker claims the lease, does a slice of\nthe work, and hands the rest back; if that worker dies, the lease expires and a reconciler\nrepairs the job. Nothing depends on a process remembering anything, which is what makes a\ndeploy, a crash and a network partition the same event.\n\n## What it is for\n\nWork that is too long to redo:\n\n- a multi-day data import that a deploy would otherwise kill\n- a job that stays `running` forever because the worker that held it is gone\n- a transient error at hour nine throwing away the first eight\n- two workers driving one job over a single cursor\n\n## Install\n\n```bash\nyarn add @fullstackhouse/open-mercato-durable-work pg-boss\n```\n\nThe transport client is yours to choose and is an optional peer: `pg-boss` for the default\ntransport, or `bullmq` and `ioredis` for the Redis one. Nothing is installed for the transport\nyou do not run.\n\nStill 0.x — pin the exact version in production. If you also run\n[`@fullstackhouse/open-mercato-data-sync-durable`](https://www.npmjs.com/package/@fullstackhouse/open-mercato-data-sync-durable),\nit releases in lockstep with this package at the same version; upgrade the two together.\n\n**Exactly one copy of this package may end up in the tree.** It is a *peer* of everything that\nbuilds on it, and that is not tidiness: it exports a process-wide registry, so a second copy\nwould mean job kinds register into one while the worker reads the other — silently.\n\n`src/modules.ts`:\n\n```ts\n{ id: 'durable_work', from: '@fullstackhouse/open-mercato-durable-work' },\n```\n\nThen `yarn generate && yarn db:migrate`, and run the worker as its own process:\n\n```bash\nyarn mercato durable_work worker\n```\n\nIts own process on purpose: a slice can run for minutes, and hosting that inside the web\nprocess means a deploy either kills work mid-batch or waits out a slice.\n\n## Configuration\n\n| Variable | Default | What it does |\n|---|---|---|\n| `DURABLE_WORK_TRANSPORT` | `pgboss` | `pgboss`, `bullmq` or `memory` |\n| `DURABLE_WORK_REDIS_URL` | `QUEUE_REDIS_URL` | BullMQ only |\n| `DURABLE_WORK_PGBOSS_SCHEMA` | `durable_work_boss` | keeps pg-boss's tables out of `public` |\n| `DURABLE_WORK_TICK_MS` | `15000` | how often the reconciler runs |\n| `DURABLE_WORK_DRAIN_TIMEOUT_MS` | `30000` | how long a SIGTERM waits for slices to hand back |\n\n`pgboss` is the default because it needs nothing but the database you already have, and it is\nthe only transport that can enqueue a delivery inside your own transaction. Use `bullmq` if the\napp already runs Redis. `memory` is for development and is refused in production.\n\n## Declaring work\n\n```ts\nimport { registry } from '@fullstackhouse/open-mercato-durable-work'\n\nregistry.register({\n  kind: 'catalog.reindex',\n  queue: 'durable-work.catalog',\n  // A job nobody declares idempotent is parked for a human rather than re-run automatically.\n  orphanPolicy: 'redrive',\n\n  async step(ctx) {\n    let done = ctx.checkpoint?.done ?? 0\n    while (done < total) {\n      // Stop at a boundary when the budget is spent or the process is shutting down.\n      if (ctx.shouldYield()) return 'budget'\n\n      await ctx.fencedWrite(async (tx) => {\n        // Rolls back if the lease was lost, so this cannot outlive the right to write it.\n      })\n\n      done += 1\n      await ctx.checkpoint_({ done }) // resume point, and a committed unit of work\n    }\n    return 'drained'\n  },\n\n  // Mirrors the terminal state onto your own row, in the same transaction.\n  async onTransition(job, scope, tx) { /* … */ return { matched: 1 } },\n  async onRedrive(job, scope, tx) { /* … */ return { matched: 1 } },\n})\n```\n\nThrow `TransientError` (or anything unrecognised) to retry, `TerminalError` to stop, and\n`UnrecoverableError` to stop and require `{ force: true }` before it can run again.\n\n### Lease settings\n\n| `lease.` | Def",
+  "modules": [
+    {
+      "id": "durable_work",
+      "title": "Durable Work",
+      "description": "Durable at-least-once background work: a leased job record with epoch fencing, bounded resumable slices, a server-side reconciler, fenced cancel and an operator API. Other modules register job kinds; this module runs them.",
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [
+          {
+            "id": "durable_work:durable_work_job",
+            "table": "durable_work_jobs",
+            "src": {
+              "file": "src/modules/durable_work/data/entities.ts",
+              "line": 19
+            }
+          }
+        ],
+        "migrations": {
+          "count": 1,
+          "first": "2026-09-08",
+          "last": "2026-09-08"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/durable_work/jobs",
+            "requireAuth": true,
+            "requireFeatures": [
+              "durable_work.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/durable_work/api/jobs/route.ts",
+              "line": 12
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/durable_work/jobs/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "durable_work.view"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/durable_work/api/jobs/[id]/route.ts",
+              "line": 10
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/durable_work/jobs/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "durable_work.operate"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/durable_work/api/jobs/[id]/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/durable_work/jobs/[id]/redrive",
+            "requireAuth": true,
+            "requireFeatures": [
+              "durable_work.operate"
+            ],
+            "hasOpenApi": false,
+            "src": {
+              "file": "src/modules/durable_work/api/jobs/[id]/redrive.ts",
+              "line": 16
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "durable_work.view",
+          "durable_work.operate"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "durable_work.job.created",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 9
+            }
+          },
+          {
+            "id": "durable_work.job.started",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 10
+            }
+          },
+          {
+            "id": "durable_work.job.yielded",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 11
+            }
+          },
+          {
+            "id": "durable_work.job.completed",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "durable_work.job.failed",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 13
+            }
+          },
+          {
+            "id": "durable_work.job.parked",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "durable_work.job.cancelled",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 15
+            }
+          },
+          {
+            "id": "durable_work.job.redriven",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "durable_work.job.lease_lost",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 17
+            }
+          },
+          {
+            "id": "durable_work.job.mirror_stuck",
+            "src": {
+              "file": "src/modules/durable_work/events.ts",
+              "line": 18
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 11
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "worker",
+          "reconcile",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/di/container": [
+            "(dynamic)",
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleCli",
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "durable_work",
+        "tables": [
+          "durable_work_jobs"
+        ],
+        "aclFeatures": [
+          "durable_work.view",
+          "durable_work.operate"
+        ],
+        "eventIds": [
+          "durable_work.job.created",
+          "durable_work.job.started",
+          "durable_work.job.yielded",
+          "durable_work.job.completed",
+          "durable_work.job.failed",
+          "durable_work.job.parked",
+          "durable_work.job.cancelled",
+          "durable_work.job.redriven",
+          "durable_work.job.lease_lost",
+          "durable_work.job.mirror_stuck"
+        ],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "2203200",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for >=0.7.0 <0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "route-openapi",
+          "severity": "info",
+          "message": "4 of 4 routes have no openApi.",
+          "anchor": "module-development.md:44",
+          "src": {
+            "file": "src/modules/durable_work/api/jobs/route.ts",
+            "line": 12
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.0.1, package.json says 0.6.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/durable_work/index.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

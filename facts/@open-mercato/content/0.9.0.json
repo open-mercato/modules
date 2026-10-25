@@ -1,0 +1,153 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 168
+  },
+  "package": {
+    "locator": "npm:@open-mercato/content",
+    "name": "@open-mercato/content",
+    "version": "0.9.0",
+    "integrity": "sha512-EPswjQOYm7h1CJiJANwcOed1lw6LZYfiTDLdStgygubMoeSm1S5j5FV3sqirniRkI9Ha/pAxYujuFR87GK8S2g==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "content",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {},
+  "agentsMd": true,
+  "readmeExcerpt": "# @open-mercato/content 📄\n\nStatic content module for policy and legal pages in Open Mercato apps.\n\n`@open-mercato/content` provides a clean way to ship pages like Privacy Policy, Terms, and other managed static content.\n\n## Why this package ✨\n\n- 🧾 Legal and policy pages out of the box\n- 🧩 Fits directly into the module auto-discovery system\n- 🌍 Works with platform i18n workflows\n- ⚡ Keeps static content maintainable and versionable\n\n## Install\n\n```bash\nyarn add @open-mercato/content\n```\n\n## Learn more\n\n- GitHub (package): https://github.com/open-mercato/open-mercato/tree/main/packages/content\n- GitHub (project): https://github.com/open-mercato/open-mercato\n- Docs: https://docs.openmercato.com\n\n## License\n\nMIT\n",
+  "modules": [
+    {
+      "id": "content",
+      "title": "Content",
+      "description": "Static informational pages such as terms of service and privacy policy.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [
+          {
+            "path": "/privacy"
+          },
+          {
+            "path": "/terms"
+          }
+        ],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/button": [
+            "Button"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "content",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0020000",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

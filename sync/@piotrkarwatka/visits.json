@@ -1,0 +1,55 @@
+{
+  "locator": "npm:@piotrkarwatka/visits",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@piotrkarwatka/visits",
+    "distTags": {
+      "latest": "0.1.0"
+    },
+    "latestStable": "0.1.0",
+    "previousStable": null,
+    "preview": null,
+    "publishedAt": {
+      "0.1.0": "2026-10-09T12:24:57Z"
+    },
+    "deprecated": null,
+    "license": "UNLICENSED",
+    "repositoryUrl": "git+https://github.com/pkarw/visits-example.git",
+    "gitHead": null,
+    "keywords": [],
+    "maintainers": [
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {
+      "next": "16.3.3",
+      "react": "19.2.8",
+      "@open-mercato/ui": "0.8.0",
+      "@open-mercato/core": "0.8.0",
+      "@open-mercato/shared": "0.8.0"
+    },
+    "dependencies": {
+      "zod": "4.4.3",
+      "lucide-react": "1.52.0",
+      "@tanstack/react-query": "5.104.1",
+      "@tanstack/react-table": "9.2.5"
+    },
+    "installScripts": [],
+    "integrity": "sha512-TqJBZSugVSmqYNBvDJmEgk1WKgBIjqbvNR+MVhPj61aP6NSmRZs0RREekWzc02o8r29kMRzt2xG3YLux6qrsqg==",
+    "tarball": "https://registry.npmjs.org/@piotrkarwatka/visits/-/visits-0.1.0.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository pkarw/visits-example returns 404; npm scope @piotrkarwatka is listed in policy/community.yml.",
+  "downloads30d": null,
+  "errors": [
+    "github: pkarw/visits-example returns 404 (2026-10-23)"
+  ]
+}

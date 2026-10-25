@@ -1,0 +1,103 @@
+{
+  "locator": "npm:@dainamite/cpq-billing-connector",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@dainamite/cpq-billing-connector",
+    "distTags": {
+      "latest": "1.0.0"
+    },
+    "latestStable": "1.0.0",
+    "previousStable": "0.1.1",
+    "preview": null,
+    "publishedAt": {
+      "1.0.0": "2026-08-25T10:53:50Z",
+      "0.1.1": "2026-07-01T09:06:16Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/dainamite-technologies/dainamite-core.git",
+    "gitHead": "bf641f89e1493ae88a88234140f0cf43daaa0849",
+    "keywords": [],
+    "maintainers": [
+      "dainamite-acc",
+      "kamyyylo"
+    ],
+    "peerDependencies": {
+      "@dainamite/billing": "^0.19.0",
+      "@dainamite/cpq": "^0.4.0",
+      "@mikro-orm/core": "^7.1.5",
+      "@mikro-orm/decorators": "^7.1.5",
+      "@mikro-orm/postgresql": "^7.1.5",
+      "@open-mercato/core": "^0.6.7",
+      "@open-mercato/events": "^0.6.7",
+      "@open-mercato/shared": "^0.6.7",
+      "awilix": "^12.0.0",
+      "zod": "^4.0.0"
+    },
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-NtrNXs4IfPrYYBThH6my8q1Tlz4AIsJGG39Pqj6lAjwrAZ2i68f0jbE6Kvyki3PaNcmRIKD8a0m/PwsWCZtMwA==",
+    "tarball": "https://registry.npmjs.org/@dainamite/cpq-billing-connector/-/cpq-billing-connector-1.0.0.tgz"
+  },
+  "github": {
+    "repo": "dainamite-technologies/dainamite-core",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-09-17T12:27:33Z",
+    "defaultBranch": "main",
+    "stars": 1,
+    "license": null,
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "@dainamite/cpq-billing-connector@1.0.0",
+        "sha": "bf641f89e1493ae88a88234140f0cf43daaa0849"
+      },
+      {
+        "name": "@dainamite/cpq@0.4.0",
+        "sha": "bf641f89e1493ae88a88234140f0cf43daaa0849"
+      },
+      {
+        "name": "@dainamite/billing@0.19.0",
+        "sha": "bf641f89e1493ae88a88234140f0cf43daaa0849"
+      },
+      {
+        "name": "@dainamite/cpq-billing-connector@0.1.1",
+        "sha": "1fd9281937f30e75c62df9acf45cf3a2dbdaabe4"
+      },
+      {
+        "name": "@dainamite/billing@0.18.0",
+        "sha": "1fd9281937f30e75c62df9acf45cf3a2dbdaabe4"
+      },
+      {
+        "name": "@dainamite/cpq-billing-connector@0.1.0",
+        "sha": "ad015655f0396201e5fe861eb2869c3c87f9a5b4"
+      },
+      {
+        "name": "@dainamite/cpq@0.3.0",
+        "sha": "ad015655f0396201e5fe861eb2869c3c87f9a5b4"
+      },
+      {
+        "name": "@dainamite/billing@0.17.0",
+        "sha": "ad015655f0396201e5fe861eb2869c3c87f9a5b4"
+      },
+      {
+        "name": "@dainamite/cpq@0.2.2",
+        "sha": "9ec7ea2e2442a26e259765f2a5c923b5cef55389"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "3rd-party",
+  "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
+  "downloads30d": 26,
+  "errors": []
+}

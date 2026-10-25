@@ -1,0 +1,53 @@
+{
+  "locator": "npm:open-mercato-generator",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "open-mercato-generator",
+    "distTags": {
+      "latest": "0.3.13"
+    },
+    "latestStable": "0.3.13",
+    "previousStable": null,
+    "preview": null,
+    "publishedAt": {
+      "0.3.13": "2026-01-17T11:28:55Z"
+    },
+    "deprecated": null,
+    "license": "MIT",
+    "repositoryUrl": "git+https://github.com/mkadziolka/open-mercato-rust-client.git",
+    "gitHead": "3fbc5bee39f7bef3afe73e79717a322e0bf36dcb",
+    "keywords": [],
+    "maintainers": [
+      "mkadziolka"
+    ],
+    "peerDependencies": {},
+    "dependencies": {},
+    "installScripts": [],
+    "integrity": "sha512-tgQJFqBxKYxt3anxmPkbP3udPRaeKixJqp6cRkwYZ80KOI3XQxT53szXZCb3WD5xhFlNS/gifknEMOYu/ogC3A==",
+    "tarball": "https://registry.npmjs.org/open-mercato-generator/-/open-mercato-generator-0.3.13.tgz"
+  },
+  "github": {
+    "repo": "mkadziolka/open-mercato-rust-client",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-01-17T11:08:14Z",
+    "defaultBranch": "main",
+    "stars": 2,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "User",
+    "tags": []
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository owner mkadziolka is a contributor of certified partner FilaNovum.",
+  "downloads30d": 3,
+  "errors": []
+}

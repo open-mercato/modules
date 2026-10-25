@@ -1,0 +1,174 @@
+{
+  "locator": "npm:@open-mercato/content",
+  "version": "0.9.0",
+  "computedAt": "2026-10-25T08:04:23Z",
+  "identity": {
+    "type": "official",
+    "typeReason": "Scope @open-mercato.",
+    "enterprise": false,
+    "license": {
+      "spdx": "MIT",
+      "kind": "osi",
+      "mismatch": false
+    },
+    "builtFrom": {
+      "status": "verified",
+      "repo": "open-mercato/open-mercato",
+      "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+      "workflow": null
+    },
+    "claimed": {
+      "value": false,
+      "by": null,
+      "method": null,
+      "pr": null
+    },
+    "source": "npm"
+  },
+  "signals": {
+    "receipt": {
+      "0.9": "verified",
+      "0.8": "verified",
+      "next": "verified"
+    },
+    "fit": {
+      "0.9": "ok",
+      "0.8": "ok",
+      "next": "unknown"
+    },
+    "anatomy": "partial",
+    "supplyChain": {
+      "status": "ok",
+      "reasons": []
+    },
+    "hygiene": {
+      "status": "warn",
+      "failing": [
+        "peer-exact-pin"
+      ]
+    },
+    "maintenance": {
+      "status": "current",
+      "lastRelease": "2026-10-09",
+      "catchUpDays": null
+    },
+    "declaredVsObserved": {
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.8, 0.9; verified on 0.8, 0.9, next."
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LST-1",
+      "pass": true,
+      "detail": "Descriptor is valid."
+    },
+    {
+      "id": "LST-2",
+      "pass": true,
+      "detail": "Stable version exists and is not deprecated."
+    },
+    {
+      "id": "LST-3",
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
+    },
+    {
+      "id": "LST-4",
+      "pass": true,
+      "detail": "License: MIT."
+    },
+    {
+      "id": "LST-5",
+      "pass": true,
+      "detail": "No known malware or open critical advisory."
+    },
+    {
+      "id": "LST-6",
+      "pass": true,
+      "detail": "Name reviewed at merge."
+    },
+    {
+      "id": "VER-1",
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.9.0)."
+    },
+    {
+      "id": "VER-2",
+      "pass": true,
+      "detail": "Fits statically on 0.9: ok."
+    },
+    {
+      "id": "VER-3",
+      "pass": true,
+      "detail": "Supply chain: ok."
+    },
+    {
+      "id": "VER-4",
+      "pass": true,
+      "detail": "No lint errors."
+    },
+    {
+      "id": "VER-5",
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
+    }
+  ],
+  "tier": "verified",
+  "quality": null,
+  "agentPolicy": {
+    "0.9": {
+      "decision": "allow",
+      "reasons": [
+        {
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.9."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers content in src/modules.ts."
+        }
+      ]
+    },
+    "0.8": {
+      "decision": "allow",
+      "reasons": [
+        {
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.8."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers content in src/modules.ts."
+        }
+      ]
+    },
+    "next": {
+      "decision": "allow",
+      "reasons": [
+        {
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on next."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers content in src/modules.ts."
+        }
+      ]
+    }
+  },
+  "state": "active",
+  "recommended": {
+    "0.9": "0.9.0",
+    "0.8": "0.8.0",
+    "next": null
+  },
+  "evaluated": {
+    "0.9": "0.9.0",
+    "0.8": "0.8.0",
+    "next": "0.10.1-develop.7583.1.0c886d0a14"
+  },
+  "verdictPreset": "classic"
+}

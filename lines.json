@@ -1,0 +1,37 @@
+{
+  "resolvedAt": "2026-10-23T09:39:38Z",
+  "coreLatest": "0.9.0",
+  "keepaliveAt": null,
+  "lines": [
+    {
+      "key": "0.9",
+      "version": "0.9.0",
+      "source": "latest",
+      "createApp": "create-mercato-app@0.9.0",
+      "cadence": "nightly",
+      "preapproved": [
+        "@open-mercato/*"
+      ]
+    },
+    {
+      "key": "0.8",
+      "version": "0.8.0",
+      "source": "previous",
+      "createApp": "create-mercato-app@0.8.0",
+      "cadence": "weekly",
+      "preapproved": [
+        "@open-mercato/*"
+      ]
+    },
+    {
+      "key": "next",
+      "version": "0.10.1-develop.7583.1.0c886d0a14",
+      "source": "develop",
+      "createApp": "create-mercato-app@0.10.1-develop.7583.1.0c886d0a14",
+      "cadence": "nightly",
+      "preapproved": [
+        "@open-mercato/*"
+      ]
+    }
+  ]
+}

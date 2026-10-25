@@ -1,0 +1,45 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 2
+  },
+  "package": {
+    "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
+    "name": "@fullstackhouse/open-mercato-demo-auth",
+    "version": "0.3.0",
+    "integrity": "sha512-zd/Vpku6s92nLkxXwCpHHGQ0oY5LS0r+LQZTDKPYiW2f8PaAqNvaEqpDP1RI+RyrKtcN30TjNUCfHYUZ752RJw==",
+    "source": "npm-tarball",
+    "gitRef": "263ef0bed81d1c62ce3d0dfd6160228c855df543"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "tool",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {},
+  "dependencies": {},
+  "agentsMd": false,
+  "readmeExcerpt": "# @fullstackhouse/open-mercato-demo-auth\n\nAuto-fill and auto-submit the login form on your dev and preview deployments so you don't have to retype `admin / secret` a hundred times a day.\n\n> **Dev only.** The server reads `DEMO_AUTH_LOGIN_EMAIL` / `DEMO_AUTH_LOGIN_PASSWORD` at request time and inlines them into the HTML. **Leave both unset in production** — that's the only safety gate, and it's by design.\n\n## Install\n\n```bash\nnpm install --save-dev @fullstackhouse/open-mercato-demo-auth\n# or\nyarn add -D @fullstackhouse/open-mercato-demo-auth\n```\n\n## Usage\n\nDrop both components into your root layout. The server component injects the credentials into the HTML; the client component watches for the login form, fills it in, and submits it:\n\n```tsx\n// app/layout.tsx\nimport { DemoAuthScript, DemoAuthAutofill } from '@fullstackhouse/open-mercato-demo-auth'\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html>\n      <head>\n        <DemoAuthScript />\n      </head>\n      <body>\n        <DemoAuthAutofill />\n        {children}\n      </body>\n    </html>\n  )\n}\n```\n\nBoth components short-circuit to nothing when the env vars aren't set, so they're safe to always mount.\n\n## Env vars\n\n```bash\nDEMO_AUTH_LOGIN_EMAIL=admin@acme.com\nDEMO_AUTH_LOGIN_PASSWORD=secret\n```\n\n- With **both** set, the form auto-fills and auto-submits.\n- With **only the email** set, just the email field is prefilled — no submit.\n- With **neither** set, nothing runs. Use this on prod.\n\n## Kubernetes example\n\nPut the two keys in the dev/preview ConfigMap and leave them out of prod:\n\n```yaml\n# configmap-dev.yaml\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: my-app-config\ndata:\n  DEMO_AUTH_LOGIN_EMAIL: admin@acme.com\n  DEMO_AUTH_LOGIN_PASSWORD: secret\n  # ... other env vars\n```\n\n```yaml\n# configmap-prod.yaml — same ConfigMap, without the two demo keys\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: my-app-config\ndata:\n  # ... other env vars, no DEMO_AUTH_* here\n```\n\n## Why not `NEXT_PUBLIC_*`?\n\n`NEXT_PUBLIC_*` values are inlined into the client bundle at build time. If you ship a single Docker image across dev/preview/prod — the common pattern — any value you bake in for dev leaks to prod. This package reads ordinary server-side env vars at request time and writes them into the HTML that's served, so one image + per-environment ConfigMaps gives you per-environment behavior.\n\n## Form shape it targets\n\n`DemoAuthAutofill` looks for:\n\n```html\n<form data-auth-ready=\"1\">\n  <input name=\"email\" />\n  <input name=\"password\" />\n</form>\n```\n\nOpen Mercato's core login form already exposes `data-auth-ready=\"1\"` once hydrated; this package was designed against that, but any form following the same convention works.\n\n## Security\n\n- The JSON payload is HTML-escaped (`<`, `>`, `&`, U+2028, U+2029) before being inlined into the `<script>` tag. Injection-hardened against adversarial values, but **don't pipe untrusted input into these env vars** — they execute on every page load.\n- There is deliberately no `NODE_ENV === 'production'` kill-switch. Many setups (including Open Mercato) set `NODE_ENV=production` on every environment, which would defeat the purpose. **Keep prod safe by leaving the env vars unset there** — the server component emits nothing and the client component short-circuits.\n- Zero runtime dependencies.\n\n## Migrating from 0.2.x\n\n1. Delete any `src/modules/demo_auth/` re-export shim you created.\n2. Remove `{ id: 'demo_auth', from: '@app' | '@fullstackhouse/open-mercato-demo-auth' }` from `src/modules.ts`.\n3. Add `<DemoAuthAutofill />` to your root layout next to `<DemoAuthScript />`.\n\nThe env-var names (`DEMO_AUTH_LOGIN_EMAIL` / `DEMO_AUTH_LOGIN_PASSWORD`) are unchanged.\n\n## Peer dependencies\n\n- `react >= 18`\n- `react-dom >= 18`\n\n## License\n\nMIT — Full Stack House.\n",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

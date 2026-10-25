@@ -1,0 +1,207 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 15
+  },
+  "package": {
+    "locator": "npm:@piotrkarwatka/visits",
+    "name": "@piotrkarwatka/visits",
+    "version": "0.1.0",
+    "integrity": "sha512-TqJBZSugVSmqYNBvDJmEgk1WKgBIjqbvNR+MVhPj61aP6NSmRZs0RREekWzc02o8r29kMRzt2xG3YLux6qrsqg==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "visits",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "UNLICENSED",
+    "kind": "proprietary",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "UNLICENSED",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/shared": "0.8.0",
+    "@open-mercato/ui": "0.8.0"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.104.1",
+    "@tanstack/react-table": "9.2.5",
+    "lucide-react": "1.52.0",
+    "zod": "4.4.3"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @piotrkarwatka/visits\n\nInstall in an Open Mercato app:\n\n```sh\nyarn mercato module add @piotrkarwatka/visits --allow-third-party\n```\n\nDevelop in your existing app and publish another version with create-mercato-module. To make this repository the source of your module while keeping the same app for development:\n\n```sh\nnpx create-mercato-module link visits\n```\n\nThe tool checks out this repo in the app's .mercato/module-repos/visits directory, backs up the original module, and links src/modules/visits to the checkout. Edits in the app are edits in this repository.\n\n## Trusted Publishing\n\nConfigure this package's trusted publisher on npmjs.com for the GitHub owner, repository, and workflow filename publish.yml. Then dispatch the included GitHub Actions workflow or push a v<version> tag matching package.json. For private dependencies, set a read-only NPM_READ_TOKEN repository secret.\n\nSee [create-mercato-module](https://github.com/open-mercato/create-mercato-module) for authentication, release tests, and development details.\n",
+  "modules": [
+    {
+      "id": "visits",
+      "title": "Visits",
+      "description": null,
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [],
+        "setupDefaultRoleFeatures": false
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/visits",
+            "requireFeatures": [
+              "customers.interactions.view"
+            ]
+          }
+        ],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/shared": {
+          "lib/frontend/useOrganizationScope": [
+            "useOrganizationScopeVersion"
+          ],
+          "lib/i18n/context": [
+            "useLocale",
+            "useT"
+          ],
+          "lib/modules/registry": [
+            "getModules"
+          ],
+          "modules/registry": [
+            "ModuleInfo",
+            "PageMetadata"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActions"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "visits",
+        "tables": [],
+        "aclFeatures": [],
+        "eventIds": [],
+        "backendRoutes": [
+          "/backend/visits"
+        ]
+      },
+      "publicRoutes": 0,
+      "glyph": "0010000",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/core 0.8.0 and 2 more). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "likely-example",
+          "severity": "info",
+          "message": "Module has no api/ and no data/ folder. Consider the example tag if this is an exercise.",
+          "anchor": "spec 4.3",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.8.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

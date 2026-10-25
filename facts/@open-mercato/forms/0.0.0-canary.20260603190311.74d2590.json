@@ -1,0 +1,1590 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 1484
+  },
+  "package": {
+    "locator": "npm:@open-mercato/forms",
+    "name": "@open-mercato/forms",
+    "version": "0.0.0-canary.20260603190311.74d2590",
+    "integrity": "sha512-VABatiQT3XBwfFzh8CP2HWePcXmki+lhXikP1uBE9upuyN72BGwAAvmbhaBelltsYFN92OvlxLvDKL9KQW+CWw==",
+    "source": "npm-tarball",
+    "gitRef": "74d25905206224c81cd0ab246272e16018b8cdc0"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "No dist/modules/forms/ in the tarball (not built).",
+    "modules": [
+      {
+        "id": "forms",
+        "src": true,
+        "dist": false
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "PROPRIETARY",
+    "kind": "proprietary",
+    "mismatch": true,
+    "sources": {
+      "packageJson": null,
+      "licenseFile": null,
+      "moduleInfo": "PROPRIETARY",
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "^0.6.0",
+    "@open-mercato/queue": "^0.6.0",
+    "@open-mercato/shared": "^0.6.0",
+    "@open-mercato/ui": "^0.6.0"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "pdf-lib": "^1.17.1"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "forms",
+      "title": "Forms",
+      "description": "Audit-grade questionnaire and form primitive - versioned definitions, append-only submissions, role-sliced rendering.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [
+          {
+            "id": "forms:form",
+            "table": "forms_form",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "forms:form_version",
+            "table": "forms_form_version",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 75
+            }
+          },
+          {
+            "id": "forms:form_submission",
+            "table": "forms_form_submission",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 141
+            }
+          },
+          {
+            "id": "forms:form_submission_actor",
+            "table": "forms_form_submission_actor",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 206
+            }
+          },
+          {
+            "id": "forms:form_submission_revision",
+            "table": "forms_form_submission_revision",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 254
+            }
+          },
+          {
+            "id": "forms:forms_encryption_key",
+            "table": "forms_encryption_key",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 303
+            }
+          },
+          {
+            "id": "forms:form_access_audit",
+            "table": "forms_form_access_audit",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 337
+            }
+          },
+          {
+            "id": "forms:form_attachment",
+            "table": "forms_form_attachment",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 382
+            }
+          },
+          {
+            "id": "forms:form_distribution",
+            "table": "forms_distribution",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 447
+            }
+          },
+          {
+            "id": "forms:form_consent_record",
+            "table": "forms_consent_record",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 538
+            }
+          },
+          {
+            "id": "forms:form_invitation",
+            "table": "forms_invitation",
+            "src": {
+              "file": "src/modules/forms/data/entities.ts",
+              "line": 617
+            }
+          }
+        ],
+        "migrations": {
+          "count": 6,
+          "first": "2026-05-08",
+          "last": "2026-05-21"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/forms",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/route.ts",
+              "line": 70
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/route.ts",
+              "line": 170
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/route.ts",
+              "line": 72
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/forms/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/route.ts",
+              "line": 121
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/forms/[id]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/route.ts",
+              "line": 159
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/analytics",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/analytics/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/distributions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/distributions/route.ts",
+              "line": 90
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/[id]/distributions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/distributions/route.ts",
+              "line": 117
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/run/context",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/run/context/route.ts",
+              "line": 25
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/[id]/run/submissions",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/run/submissions/route.ts",
+              "line": 39
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/submissions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/submissions/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/[id]/theme-logo",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/theme-logo/route.ts",
+              "line": 54
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/versions/[versionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/versions/[versionId]/route.ts",
+              "line": 88
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/forms/[id]/versions/[versionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/versions/[versionId]/route.ts",
+              "line": 129
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/[id]/versions/[versionId]/diff",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/versions/[versionId]/diff/route.ts",
+              "line": 63
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/[id]/versions/[versionId]/publish",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/versions/[versionId]/publish/route.ts",
+              "line": 41
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/[id]/versions/fork",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.design"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/[id]/versions/fork/route.ts",
+              "line": 37
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/by-key/[key]/active",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/by-key/[key]/active/route.ts",
+              "line": 24
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/distributions/[distributionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/route.ts",
+              "line": 89
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/forms/distributions/[distributionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/route.ts",
+              "line": 115
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/distributions/[distributionId]/invitations",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/invitations/route.ts",
+              "line": 93
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/distributions/[distributionId]/invitations",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/invitations/route.ts",
+              "line": 137
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/forms/distributions/[distributionId]/invitations/[invitationId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/invitations/[invitationId]/route.ts",
+              "line": 33
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/distributions/[distributionId]/invitations/[invitationId]/send",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.distribute"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/distributions/[distributionId]/invitations/[invitationId]/send/route.ts",
+              "line": 33
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/form-submissions",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/form-submissions/[id]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/forms/form-submissions/[id]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/route.ts",
+              "line": 66
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/form-submissions/[id]/attachments",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/attachments/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/form-submissions/[id]/resume-token",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/resume-token/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/form-submissions/[id]/submit",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/submit/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/form-submissions/by-subject/[subject_type]/[subject_id]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/by-subject/[subject_type]/[subject_id]/route.ts",
+              "line": 24
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/forms/subjects/[subjectType]/[subjectId]/consents",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/forms/subjects/[subjectType]/[subjectId]/consents/route.ts",
+              "line": 55
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/forms/subjects/[subjectType]/[subjectId]/export",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.export"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/forms/subjects/[subjectType]/[subjectId]/export/route.ts",
+              "line": 40
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/distributions/[slug]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/distributions/[slug]/route.ts",
+              "line": 22
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/distributions/[slug]/embed-policy",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/distributions/[slug]/embed-policy/route.ts",
+              "line": 24
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/embed-loader",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/embed-loader/route.ts",
+              "line": 108
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/invitations/[token]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/invitations/[token]/route.ts",
+              "line": 24
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/public/start",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/start/route.ts",
+              "line": 71
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/submissions/[id]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/route.ts",
+              "line": 37
+            }
+          },
+          {
+            "method": "PATCH",
+            "path": "/api/forms/public/submissions/[id]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/route.ts",
+              "line": 70
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/public/submissions/[id]/attachments",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/attachments/route.ts",
+              "line": 31
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/submissions/[id]/attachments/[attachmentId]",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/attachments/[attachmentId]/route.ts",
+              "line": 24
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/public/submissions/[id]/pdf",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/pdf/route.ts",
+              "line": 29
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/public/submissions/[id]/submit",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/public/submissions/[id]/submit/route.ts",
+              "line": 36
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/route.ts",
+              "line": 21
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]/access-audit",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/access-audit/route.ts",
+              "line": 28
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/submissions/[submissionId]/actors",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/actors/route.ts",
+              "line": 22
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/forms/submissions/[submissionId]/actors/[actorId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/actors/[actorId]/route.ts",
+              "line": 20
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/submissions/[submissionId]/anonymize",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.anonymize"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/anonymize/route.ts",
+              "line": 46
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]/attachments/[attachmentId]",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/attachments/[attachmentId]/route.ts",
+              "line": 23
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]/export",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.export"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/export/route.ts",
+              "line": 31
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]/pdf",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/pdf/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/api/forms/submissions/[submissionId]/reopen",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.submissions.manage"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/reopen/route.ts",
+              "line": 20
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/forms/submissions/[submissionId]/revisions",
+            "requireAuth": true,
+            "requireFeatures": [
+              "forms.view"
+            ],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/forms/api/submissions/[submissionId]/revisions/route.ts",
+              "line": 20
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "forms.view",
+          "forms.design",
+          "forms.submissions.manage",
+          "forms.submissions.export",
+          "forms.submissions.anonymize",
+          "forms.distribute"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "forms.form.created",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "forms.form.archived",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 12
+            }
+          },
+          {
+            "id": "forms.form_version.published",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 13
+            }
+          },
+          {
+            "id": "forms.submission.started",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "forms.submission.revision_appended",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 25
+            }
+          },
+          {
+            "id": "forms.submission.submitted",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 15
+            }
+          },
+          {
+            "id": "forms.submission.reopened",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 27
+            }
+          },
+          {
+            "id": "forms.submission.actor_assigned",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 16
+            }
+          },
+          {
+            "id": "forms.submission.anonymized",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 17
+            }
+          },
+          {
+            "id": "forms.attachment.uploaded",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 18
+            }
+          },
+          {
+            "id": "forms.distribution.created",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 31
+            }
+          },
+          {
+            "id": "forms.distribution.closed",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 32
+            }
+          },
+          {
+            "id": "forms.invitation.created",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 33
+            }
+          },
+          {
+            "id": "forms.invitation.sent",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 34
+            }
+          },
+          {
+            "id": "forms.invitation.opened",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 35
+            }
+          },
+          {
+            "id": "forms.invitation.submitted",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 36
+            }
+          },
+          {
+            "id": "forms.invitation.revoked",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 37
+            }
+          },
+          {
+            "id": "forms.consent.recorded",
+            "src": {
+              "file": "src/modules/forms/events.ts",
+              "line": 38
+            }
+          }
+        ],
+        "subscribes": [
+          {
+            "event": "forms.submission.submitted",
+            "src": {
+              "file": "src/modules/forms/subscribers/forms-consent-projector.ts",
+              "line": 4
+            }
+          },
+          {
+            "event": "forms.invitation.sent",
+            "src": {
+              "file": "src/modules/forms/subscribers/invitation-email.ts",
+              "line": 5
+            }
+          },
+          {
+            "event": "forms.submission.anonymized",
+            "src": {
+              "file": "src/modules/forms/subscribers/forms-webhook-bridge-anonymized.ts",
+              "line": 7
+            }
+          }
+        ]
+      },
+      "ui": {
+        "backendPages": [
+          {
+            "path": "/backend/forms",
+            "requireFeatures": [
+              "forms.view"
+            ]
+          },
+          {
+            "path": "/backend/forms/[id]",
+            "requireFeatures": [
+              "forms.design"
+            ]
+          },
+          {
+            "path": "/backend/forms/[id]/analytics",
+            "requireFeatures": [
+              "forms.view"
+            ]
+          },
+          {
+            "path": "/backend/forms/[id]/distributions",
+            "requireFeatures": [
+              "forms.distribute"
+            ]
+          },
+          {
+            "path": "/backend/forms/[id]/history",
+            "requireFeatures": [
+              "forms.view"
+            ]
+          },
+          {
+            "path": "/backend/forms/[id]/submissions",
+            "requireFeatures": [
+              "forms.view"
+            ]
+          },
+          {
+            "path": "/backend/forms/create",
+            "requireFeatures": [
+              "forms.design"
+            ]
+          }
+        ],
+        "frontendPages": [
+          {
+            "path": "/[orgSlug]/portal/forms/[key]"
+          },
+          {
+            "path": "/[orgSlug]/portal/submissions/[id]/continue"
+          },
+          {
+            "path": "/embed/[slug]"
+          },
+          {
+            "path": "/f/[slug]"
+          },
+          {
+            "path": "/forms/[id]/run"
+          },
+          {
+            "path": "/i/[token]"
+          }
+        ],
+        "widgets": 5,
+        "extensionHosts": 29
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "forms-pdf-snapshot"
+          },
+          {
+            "queue": "forms-retention-purge"
+          }
+        ],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": [
+          {
+            "name": "FORMS_RESUME_TOKEN_TTL_S",
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/resume-token/route.ts",
+              "line": 25
+            }
+          },
+          {
+            "name": "FORMS_RESUME_TOKEN_SECRET",
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/resume-token/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "name": "JWT_SECRET",
+            "src": {
+              "file": "src/modules/forms/api/form-submissions/[id]/resume-token/route.ts",
+              "line": 32
+            }
+          },
+          {
+            "name": "FORMS_PUBLIC_RATE_LIMIT_PER_MIN",
+            "src": {
+              "file": "src/modules/forms/api/public/rate-limit.ts",
+              "line": 16
+            }
+          },
+          {
+            "name": "APP_URL",
+            "src": {
+              "file": "src/modules/forms/commands/invitation.ts",
+              "line": 67
+            }
+          },
+          {
+            "name": "FORMS_DISTRIBUTION_TOKEN_SECRET",
+            "src": {
+              "file": "src/modules/forms/services/distribution-token.ts",
+              "line": 53
+            }
+          },
+          {
+            "name": "FORMS_ACCESS_TOKEN_TTL_S",
+            "src": {
+              "file": "src/modules/forms/services/distribution-token.ts",
+              "line": 61
+            }
+          },
+          {
+            "name": "FORMS_INVITATION_TOKEN_TTL_S",
+            "src": {
+              "file": "src/modules/forms/services/distribution-token.ts",
+              "line": 68
+            }
+          },
+          {
+            "name": "FORMS_COMPILER_CACHE_MAX",
+            "src": {
+              "file": "src/modules/forms/services/form-version-compiler.ts",
+              "line": 165
+            }
+          },
+          {
+            "name": "FORMS_AUTOSAVE_INTERVAL_MS",
+            "src": {
+              "file": "src/modules/forms/services/submission-service.ts",
+              "line": 45
+            }
+          },
+          {
+            "name": "FORMS_REVISION_CAP",
+            "src": {
+              "file": "src/modules/forms/services/submission-service.ts",
+              "line": 52
+            }
+          },
+          {
+            "name": "NEXT_PUBLIC_FORMS_AUTOSAVE_INTERVAL_MS",
+            "src": {
+              "file": "src/modules/forms/ui/public/state/useFormRunner.ts",
+              "line": 25
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "challenges.cloudflare.com",
+            "src": {
+              "file": "src/modules/forms/services/captcha-verifier.ts",
+              "line": 42
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.google.com",
+            "src": {
+              "file": "src/modules/forms/services/captcha-verifier.ts",
+              "line": 43
+            },
+            "confidence": "low"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "widget",
+          "target": "submission-drawer:access-audit"
+        },
+        {
+          "kind": "widget",
+          "target": "submission-drawer:anonymize-action"
+        },
+        {
+          "kind": "widget",
+          "target": "submission-drawer:header-actions"
+        },
+        {
+          "kind": "widget",
+          "target": "submission-drawer:footer"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "bootstrap": [
+            "getCachedRateLimiterService"
+          ],
+          "modules/attachments/data/entities": [
+            "Attachment",
+            "AttachmentPartition"
+          ],
+          "modules/attachments/lib/imageSafety": [
+            "detectImageMimeType",
+            "validateImageDimensions",
+            "validateImageMagicBytes"
+          ],
+          "modules/attachments/lib/imageUrls": [
+            "buildAttachmentFileUrl"
+          ],
+          "modules/attachments/lib/storage": [
+            "storePartitionFile"
+          ],
+          "modules/customer_accounts/lib/customerAuth": [
+            "getCustomerAuthFromRequest"
+          ],
+          "modules/directory/utils/organizationScope": [
+            "resolveOrganizationScopeForRequest"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta",
+            "createQueue",
+            "resolveQueueStrategy"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/api/scoped": [
+            "createScopedApiHelpers"
+          ],
+          "lib/auth/server": [
+            "getAuthFromRequest"
+          ],
+          "lib/commands": [
+            "CommandBus",
+            "CommandHandler",
+            "CommandRuntimeContext",
+            "registerCommand"
+          ],
+          "lib/commands/operationMetadata": [
+            "serializeOperationMetadata"
+          ],
+          "lib/commands/scope": [
+            "ensureOrganizationScope",
+            "ensureSameScope",
+            "ensureTenantScope"
+          ],
+          "lib/commands/undo": [
+            "extractUndoPayload"
+          ],
+          "lib/crud/errors": [
+            "CrudHttpError",
+            "isCrudHttpError"
+          ],
+          "lib/crud/mutation-guard": [
+            "runCrudMutationGuardAfterSuccess",
+            "validateCrudMutationGuard"
+          ],
+          "lib/db/escapeLikePattern": [
+            "escapeLikePattern"
+          ],
+          "lib/db/mikro": [
+            "getOrm"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/email/send": [
+            "sendEmail"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "lib/frontend/useOrganizationScope": [
+            "useOrganizationScopeVersion"
+          ],
+          "lib/i18n/context": [
+            "TranslateFn",
+            "useT"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/openapi": [
+            "OpenApiMethodDoc",
+            "OpenApiRouteDoc"
+          ],
+          "lib/ratelimit/config": [
+            "readEndpointRateLimitConfig"
+          ],
+          "lib/utils": [
+            "cn"
+          ],
+          "modules/encryption": [
+            "ModuleEncryptionMap"
+          ],
+          "modules/events": [
+            "createModuleEvents"
+          ],
+          "modules/registry": [
+            "ModuleInfo",
+            "PageMetadata"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/CrudForm": [
+            "CrudField",
+            "CrudForm"
+          ],
+          "backend/DataTable": [
+            "DataTable"
+          ],
+          "backend/FilterBar": [
+            "FilterDef",
+            "FilterValues"
+          ],
+          "backend/FlashMessages": [
+            "flash"
+          ],
+          "backend/Page": [
+            "Page",
+            "PageBody"
+          ],
+          "backend/RowActions": [
+            "RowActionItem",
+            "RowActions"
+          ],
+          "backend/charts": [
+            "BarChart",
+            "BarChartDataItem",
+            "KpiCard",
+            "LineChart"
+          ],
+          "backend/confirm-dialog": [
+            "useConfirmDialog"
+          ],
+          "backend/detail": [
+            "ErrorMessage",
+            "LoadingMessage"
+          ],
+          "backend/injection/InjectionSpot": [
+            "InjectionSpot"
+          ],
+          "backend/injection/useGuardedMutation": [
+            "useGuardedMutation"
+          ],
+          "backend/inputs/DatePicker": [
+            "DatePicker"
+          ],
+          "backend/inputs/DateTimePicker": [
+            "DateTimePicker"
+          ],
+          "backend/utils/apiCall": [
+            "apiCall",
+            "apiCallOrThrow"
+          ],
+          "backend/utils/crud": [
+            "createCrud"
+          ],
+          "portal/PortalShell": [
+            "PortalShell"
+          ],
+          "portal/hooks/useCustomerAuth": [
+            "useCustomerAuth"
+          ],
+          "portal/hooks/usePortalAppEvent": [
+            "usePortalAppEvent"
+          ],
+          "primitives/alert": [
+            "Alert",
+            "AlertDescription",
+            "AlertTitle"
+          ],
+          "primitives/button": [
+            "Button",
+            "buttonVariants"
+          ],
+          "primitives/card": [
+            "Card",
+            "CardContent",
+            "CardHeader",
+            "CardTitle"
+          ],
+          "primitives/checkbox": [
+            "Checkbox"
+          ],
+          "primitives/checkbox-field": [
+            "CheckboxField"
+          ],
+          "primitives/dialog": [
+            "Dialog",
+            "DialogContent",
+            "DialogDescription",
+            "DialogFooter",
+            "DialogHeader",
+            "DialogTitle"
+          ],
+          "primitives/form-field": [
+            "FormField"
+          ],
+          "primitives/icon-button": [
+            "IconButton"
+          ],
+          "primitives/input": [
+            "Input"
+          ],
+          "primitives/kbd": [
+            "Kbd",
+            "KbdShortcut"
+          ],
+          "primitives/popover": [
+            "Popover",
+            "PopoverContent",
+            "PopoverTrigger"
+          ],
+          "primitives/radio": [
+            "Radio",
+            "RadioGroup"
+          ],
+          "primitives/select": [
+            "Select",
+            "SelectContent",
+            "SelectItem",
+            "SelectTrigger",
+            "SelectValue"
+          ],
+          "primitives/separator": [
+            "Separator"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ],
+          "primitives/status-badge": [
+            "StatusBadge",
+            "StatusBadgeVariant"
+          ],
+          "primitives/switch": [
+            "Switch"
+          ],
+          "primitives/switch-field": [
+            "SwitchField"
+          ],
+          "primitives/tabs": [
+            "Tabs",
+            "TabsContent",
+            "TabsList",
+            "TabsTrigger"
+          ],
+          "primitives/tag": [
+            "Tag"
+          ],
+          "primitives/textarea": [
+            "Textarea"
+          ],
+          "primitives/tooltip": [
+            "SimpleTooltip"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "forms",
+        "tables": [
+          "forms_form",
+          "forms_form_version",
+          "forms_form_submission",
+          "forms_form_submission_actor",
+          "forms_form_submission_revision",
+          "forms_encryption_key",
+          "forms_form_access_audit",
+          "forms_form_attachment",
+          "forms_distribution",
+          "forms_consent_record",
+          "forms_invitation"
+        ],
+        "aclFeatures": [
+          "forms.view",
+          "forms.design",
+          "forms.submissions.manage",
+          "forms.submissions.export",
+          "forms.submissions.anonymize",
+          "forms.distribute"
+        ],
+        "eventIds": [
+          "forms.form.created",
+          "forms.form.archived",
+          "forms.form_version.published",
+          "forms.submission.started",
+          "forms.submission.revision_appended",
+          "forms.submission.submitted",
+          "forms.submission.reopened",
+          "forms.submission.actor_assigned",
+          "forms.submission.anonymized",
+          "forms.attachment.uploaded",
+          "forms.distribution.created",
+          "forms.distribution.closed",
+          "forms.invitation.created",
+          "forms.invitation.sent",
+          "forms.invitation.opened",
+          "forms.invitation.submitted",
+          "forms.invitation.revoked",
+          "forms.consent.recorded"
+        ],
+        "backendRoutes": [
+          "/backend/forms",
+          "/backend/forms/[id]",
+          "/backend/forms/[id]/analytics",
+          "/backend/forms/[id]/distributions",
+          "/backend/forms/[id]/history",
+          "/backend/forms/[id]/submissions",
+          "/backend/forms/create"
+        ]
+      },
+      "publicRoutes": 21,
+      "glyph": "3333202",
+      "lint": [
+        {
+          "code": "collision-core",
+          "severity": "error",
+          "message": "Collides with core forms 0.9.0: module ID forms and 35 more. Declare replaces or rename.",
+          "anchor": "spec #7289",
+          "src": null
+        },
+        {
+          "code": "license-mismatch",
+          "severity": "warn",
+          "message": "License sources disagree (packageJson: none, licenseFile: none, moduleInfo: PROPRIETARY, integrationTs: none).",
+          "anchor": "i1 §7.4",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for ^0.6.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "21 of 54 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/forms/api/[id]/run/context/route.ts",
+            "line": 25
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "ModuleInfo says 0.1.0, package.json says 0.0.0-canary.20260603190311.74d2590.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/forms/index.ts",
+            "line": 4
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

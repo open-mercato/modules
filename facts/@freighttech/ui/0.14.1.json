@@ -1,0 +1,71 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 800
+  },
+  "package": {
+    "locator": "npm:@freighttech/ui",
+    "name": "@freighttech/ui",
+    "version": "0.14.1",
+    "integrity": "sha512-ARYhxeWGXhCbCjwSd+8145Mw02Mv1x4IupSpazNZ3sxdk4lEOjtaiRoZViGh1nmpYWcZRi/XLbynEAgodYEo/w==",
+    "source": "npm-tarball",
+    "gitRef": "b578031f8592b568e2d0cc3039591e93b78c8813"
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "library",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": "0.6.2",
+    "@open-mercato/shared": "0.6.2"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@radix-ui/react-visually-hidden": "^1.2.6",
+    "@tanstack/react-table": "^8.20.5",
+    "@tanstack/react-virtual": "^3.13.23",
+    "@uiw/react-md-editor": "^4.0.11",
+    "class-variance-authority": "^0.7.1",
+    "date-fns": "^4.1.0",
+    "react-big-calendar": "^1.19.4",
+    "react-day-picker": "^9.6.4",
+    "react-markdown": "^10.1.0",
+    "recharts": "^2.15.0",
+    "remark-gfm": "^4.0.1",
+    "unified": "^11.0.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @freighttech/ui 🎨\n\nComposable UI toolkit for Open Mercato backoffice and business apps, maintained\nby [FreightTech.org](https://freighttech.org).\n\n`@freighttech/ui` includes backend UI patterns (DynamicTable, forms, dialogs,\ndetail sections, injections, notifications) and reusable primitives, built on\ntop of the Open Mercato framework.\n\n## Why this package ✨\n\n- 🧭 Consistent backoffice UX patterns out of the box\n- 🧩 Rich primitives + higher-level business components\n- ⚙️ Works with the Open Mercato injection architecture\n- 🚀 Speeds up delivery without sacrificing flexibility\n\n## Install\n\n```bash\nyarn add @freighttech/ui\n```\n\n## Learn more\n\n- GitHub (repo): https://github.com/FreightTech/open-mercato-modules\n- Open Mercato framework: https://github.com/open-mercato/open-mercato\n- FreightTech.org: https://freighttech.org\n\n## License\n\nMIT. See [LICENSE](LICENSE) for details.\n",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

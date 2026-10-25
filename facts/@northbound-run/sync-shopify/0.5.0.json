@@ -1,0 +1,261 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 350
+  },
+  "package": {
+    "locator": "npm:@northbound-run/sync-shopify",
+    "name": "@northbound-run/sync-shopify",
+    "version": "0.5.0",
+    "integrity": "sha512-zRDFHwkpPgadT6qPciKmMig/fDYOXf469dklTZksrTfnmB1GNXXfm3nl+ZF6qNeiwlU0YxS2ZTcbfOtgRAdrgA==",
+    "source": "npm-tarball",
+    "gitRef": "e1c17659c70365921d2193892c850543c156254c"
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "sync_shopify",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": "MIT",
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/core": ">=0.6.6 <0.7.0",
+    "@open-mercato/shared": ">=0.6.0 <0.7.0"
+  },
+  "dependencies": {
+    "@shopify/admin-api-client": "^1.1.2",
+    "awilix": "^12.1.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": "# @northbound-run/sync-shopify\n\nSync a Shopify store into an [Open Mercato](https://openmercato.com) app — products, collections,\ncustomers, orders and inventory — mapped onto Open Mercato's native catalog, customer and sales\nentities. Import-only, read-only against Shopify, and safe to run on a schedule.\n\nThe package registers five independent Data Sync integrations under one shared Shopify connection.\nEach can be enabled, scheduled and run on its own.\n\n| Integration | Shopify → Open Mercato | Notes |\n|---|---|---|\n| **Products** | products, variants, prices | Per-product variant reconciliation; deletes handled on full sync |\n| **Collections** | collections → product categories | Membership synced; smart-collection rules are not preserved |\n| **Customers** | customers, addresses | Addresses reconciled per customer |\n| **Orders** | orders, lines, discounts, payments, fulfillments | Totals reconciled to the cent; **limited to the last 60 days unless the app holds `read_all_orders`** |\n| **Inventory** | daily stock snapshots + out-of-stock history | Owns one table; enables demand-planning corrections |\n\n---\n\n## Requirements\n\n- An Open Mercato app on **`@open-mercato/core` 0.6.x** or later, with the **`integrations`** and\n  **`data_sync`** modules enabled.\n- **Node.js 24+** (native `fetch`, `AbortSignal.timeout`).\n- **PostgreSQL** (the framework's database).\n- A configured **credential encryption key** — Vault KMS or `TENANT_DATA_ENCRYPTION_FALLBACK_KEY`.\n  Without one, storing the Shopify credentials fails outright (the framework encrypts them at rest).\n- For **scheduled** and **background** syncs: `@open-mercato/queue` on its Redis/BullMQ strategy and\n  `@open-mercato/scheduler`. Without them the sync still runs on demand, but not unattended.\n\n---\n\n## Install\n\n```bash\nyarn mercato module add @northbound-run/sync-shopify --allow-third-party\nyarn db:migrate\n```\n\n`module add` registers the module in `src/modules.ts` and runs `mercato generate`. `db:migrate`\napplies the single migration this package ships (the inventory snapshot table).\n\nThe package declares `@open-mercato/core` / `@open-mercato/shared` as **peer dependencies** —\nyour app provides them. This matters: the Data Sync adapter registry is process-global, so a\nsecond, nested copy of core installed under this package would leave the adapters invisible\nto queue workers.\n\nThe `--allow-third-party` flag is required because the package is not under the `@open-mercato`\nscope — it is a supply-chain opt-in, nothing more.\n\n---\n\n## Connect a Shopify store\n\nThis module authenticates with Shopify's **client credentials grant**: your app exchanges its own\nclient ID and secret for a short-lived access token, with no browser redirect and no user login. It\nis the grant Shopify intends for a server-to-server integration against a store you control, which is\nexactly the self-hosted case here.\n\n> **Why no access token to paste?** Newer Shopify apps do not expose a permanent Admin API token in\n> the UI — only a **client ID** and **client secret** (the value beginning `shpss_`). The module\n> mints and refreshes a 24-hour token from those automatically; you never handle the token yourself.\n\n### 1. Create the app\n\n1. In the [Shopify Dev Dashboard](https://dev.shopify.com/dashboard), create an app.\n2. Configure its **Admin API access scopes** (see below).\n3. **Install the app on the store.** The client credentials grant only works for a store the app is\n   installed in.\n4. From the app's **Settings → API credentials**, copy the **Client ID** and **Client secret**.\n\n### 2. Required scopes\n\nConfigure these on the app, then **release a new app version** — scope changes take effect only on\nrelease, and an already-installed app must re-approve them.\n\n| Scope | Enables |\n|---|---|\n| `read_products` | products, variants, prices — and collections |\n| `read_customers` | customers and addresses |\n| `read_orders` | orders (last 60 days — see below) |\n| `read_inventory` | inventory levels and unit cost |\n|",
+  "modules": [
+    {
+      "id": "sync_shopify",
+      "title": "Shopify Sync",
+      "description": "Sync a Shopify store into Open Mercato: products, variants and prices, collections, customers and orders.",
+      "requires": [
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        },
+        {
+          "raw": "data_sync",
+          "resolvesTo": "core:data_sync"
+        }
+      ],
+      "ejectable": true,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 1,
+          "first": "2026-07-20",
+          "last": "2026-07-20"
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "sync_shopify.view",
+          "sync_shopify.configure",
+          "sync_shopify.run"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [
+          {
+            "id": "sync_shopify.connection.established",
+            "src": {
+              "file": "src/modules/sync_shopify/events.ts",
+              "line": 7
+            }
+          },
+          {
+            "id": "sync_shopify.connection.revoked",
+            "src": {
+              "file": "src/modules/sync_shopify/events.ts",
+              "line": 14
+            }
+          },
+          {
+            "id": "sync_shopify.reconcile.completed",
+            "src": {
+              "file": "src/modules/sync_shopify/events.ts",
+              "line": 21
+            }
+          }
+        ],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 3
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "test-connection",
+          "configure-from-env",
+          "prune-inventory",
+          "relink-orders",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [],
+        "env": []
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/catalog/data/entities": [
+            "CatalogPriceKind",
+            "CatalogProduct",
+            "CatalogProductCategory",
+            "CatalogProductCategoryAssignment",
+            "CatalogProductPrice",
+            "CatalogProductVariant"
+          ],
+          "modules/customers/data/entities": [
+            "CustomerAddress",
+            "CustomerEntity"
+          ],
+          "modules/data_sync/lib/adapter": [
+            "DataMapping",
+            "DataSyncAdapter",
+            "ImportBatch",
+            "ImportItem",
+            "StreamImportInput",
+            "TenantScope",
+            "ValidationResult"
+          ],
+          "modules/data_sync/lib/adapter-registry": [
+            "registerDataSyncAdapter"
+          ],
+          "modules/data_sync/lib/id-mapping": [
+            "ExternalIdMappingService"
+          ],
+          "modules/integrations/data/entities": [
+            "(dynamic)",
+            "SyncExternalIdMapping"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/commands": [
+            "CommandBus"
+          ],
+          "lib/commands/helpers": [
+            "setCustomFieldsIfAny"
+          ],
+          "lib/data/engine": [
+            "DataEngine"
+          ],
+          "lib/di/container": [
+            "(dynamic)",
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findOneWithDecryption",
+            "findWithDecryption"
+          ],
+          "modules/entities": [
+            "CustomEntitySpec"
+          ],
+          "modules/events/factory": [
+            "createModuleEvents"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "sync_shopify",
+        "tables": [],
+        "aclFeatures": [
+          "sync_shopify.view",
+          "sync_shopify.configure",
+          "sync_shopify.run"
+        ],
+        "eventIds": [
+          "sync_shopify.connection.established",
+          "sync_shopify.connection.revoked",
+          "sync_shopify.reconcile.completed"
+        ],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "1002200",
+      "lint": [
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for >=0.6.6 <0.7.0 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "unparsed"
+  },
+  "diagnostics": []
+}

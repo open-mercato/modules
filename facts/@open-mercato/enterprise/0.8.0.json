@@ -1,0 +1,95 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 36
+  },
+  "package": {
+    "locator": "npm:@open-mercato/enterprise",
+    "name": "@open-mercato/enterprise",
+    "version": "0.8.0",
+    "integrity": "sha512-Qu0gJgeaFutNi7DFLWenS3Piaj0PYUcFHcZK8ulQh+tHjbX5jL2JmHhqZasBnVFP4Fk03t0DIsl4Ux8JCaSx5A==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": true,
+    "reason": null,
+    "modules": [
+      {
+        "id": "agent_orchestrator",
+        "src": true,
+        "dist": true
+      },
+      {
+        "id": "record_locks",
+        "src": true,
+        "dist": true
+      },
+      {
+        "id": "security",
+        "src": true,
+        "dist": true
+      },
+      {
+        "id": "sso",
+        "src": true,
+        "dist": true
+      },
+      {
+        "id": "system_status_overlays",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "SEE LICENSE IN LICENSE.md",
+    "kind": "enterprise",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "SEE LICENSE IN LICENSE.md",
+      "licenseFile": "custom",
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.8.0"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.1",
+    "@ai-sdk/openai": "^4.0.2",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@open-mercato/ai-assistant": "0.8.0",
+    "@open-mercato/core": "0.8.0",
+    "@open-mercato/queue": "0.8.0",
+    "@open-mercato/scheduler": "0.8.0",
+    "@open-mercato/ui": "0.8.0",
+    "@open-mercato/web-research": "0.8.0",
+    "@simplewebauthn/browser": "^13.3.0",
+    "@simplewebauthn/server": "^13.3.2",
+    "@simplewebauthn/types": "^12.0.0",
+    "@types/qrcode": "^1.5.5",
+    "ai": "^7.0.4",
+    "openid-client": "^6.8.4",
+    "otpauth": "9.5.1",
+    "qrcode": "^1.5.4"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": "# Open Mercato Enterprise Subscription\n\nThe commercial layer of Open Mercato — proprietary enterprise modules plus certification, review, and operational support that take AI-built CRM/ERP systems to production. Delivered as the `@open-mercato/enterprise` package.\n\n## The Problem We Solve\n\nEnterprise clients do not accept production risk.\n\nOpen-source or AI-generated systems without certification create concrete concerns around:\n- security\n- maintainability\n- compliance\n- long-term support\n\nIn serious enterprise environments, \"let's deploy and see what happens\" is not acceptable.\n\n## Our Position\n\nUncertified Open Mercato deployments should not go to production.\n\nProduction requires:\n- enterprise license\n- architecture/security audit\n- production approval\n\nThis is a production requirement.\n\n## The Solution\n\nThe Enterprise Subscription answers this directly: run verified builds of Open Mercato on Open Mercato's infrastructure, develop and edit them in the cloud, and let Open Mercato's tooling certify them for production. One subscription bundles the proprietary enterprise modules, the certification path (architecture audit, security / performance / custom-code reviews, homologation), and operational support. It is governed by the Open Mercato Enterprise License Agreement.\n\n## Licensing Model\n\n- **Per project, not per seat.** Charged per Open Mercato project / monorepo, never per developer or end user.\n- **Unlimited seats.** No limit on users or servers within a given system.\n- **Revenue-based tiers.** The applicable tier is determined by the Licensee's annual revenue, verified against public registry data (e.g. KRS).\n- **Usage verification (\"Phone Home\").** On-premise deployments report aggregate usage counts for transparent billing verification, without Open Mercato needing standing access to your repository.\n\nA *project* is a single business domain / department / goal-oriented deployment of Open Mercato — not limited to a single physical instance (a multi-server deployment can be one project).\n\n## Subscription Tiers\n\nThree tiers scale the level of service with company size. Every tier includes the full Enterprise Software Package and unlimited seats. Commercial terms are provided on request.\n\n| Capability | Basic | Medium | Enterprise |\n|---|---|---|---|\n| Company revenue band | below $25M | $25M–$250M | above $250M |\n| Enterprise software modules (MFA, SSO & Directory Sync, Record Locking) | Included | Included | Included |\n| Unlimited users & servers (per project / monorepo) | Included | Included | Included |\n| Project sandboxes — *time-limited offer* (dev/staging + prod env, CI/CD, AI SDLC pipeline, 7-day restore) | 1 active project | 3 active projects | 10 active projects |\n| Priority support (AI-assisted helpdesk, issue triage) | up to 5 accounts | up to 10 accounts, Discord | unlimited accounts, Discord |\n| Support & review coverage | Open Mercato core (open-source) | core + custom code | core + custom code |\n| Software updates | self-serve | assisted | managed for you |\n| Pre-deployment Architecture Audit | — | Included | Included |\n| Monthly Security / Performance / Custom-code Reviews | — | optional | Included |\n| Production Approval (Homologation) & go-live recommendation | — | optional | Included |\n| Proactive deployment monitoring & lead-application upgrades | — | — | Included |\n| Dedicated Customer Success Manager (pre-go-live) | — | optional | Included |\n| GDPR documentation & production-config advisory | templates | Included | Included |\n\nStartups below $5M in annual revenue can request a startup discount via [info@openmercato.com](mailto:info@openmercato.com).\n\n## Service Detail\n\n**Pre-deployment Architecture Audit.** A structured architecture review before production deployment: overall system architecture, identification of structural risks, and recommendations for production readiness.\n\n**Monthly Security Review (up to 4h/mo).** Application code review, infrastructure and environment configuration review, i",
+  "modules": [],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": [
+    "Anatomy withheld: the enterprise license does not allow publishing it."
+  ]
+}

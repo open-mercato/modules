@@ -1,0 +1,325 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 1",
+    "durationMs": 152
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-gmail",
+    "name": "@open-mercato/channel-gmail",
+    "version": "0.9.0",
+    "integrity": "sha512-Jlf7ZY7+Rlg2rk3dXCJzMdRi7exhLxq8xmWQTWkVJ37fzStm0FiRVZ5HvDUasL4QlaaYbWfTLzwXWWXnX2tbiA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_gmail",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/shared": "0.9.0"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.9.0",
+    "@open-mercato/ui": "0.9.0",
+    "@types/mailparser": "^3.4.5",
+    "mailparser": "^3.9.17"
+  },
+  "agentsMd": true,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_gmail",
+      "title": "Gmail Email Channel",
+      "description": "Connect per-user Gmail accounts via OAuth2. Outbound via gmail.users.messages.send; inbound via History API polling. Pairs with the Communications Hub.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_gmail.view",
+          "channel_gmail.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "clientId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientSecret",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "scopes",
+            "type": "text",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_CHANNEL_GMAIL_REQUEST_TIMEOUT_MS",
+            "src": {
+              "file": "src/modules/channel_gmail/lib/gmail-client.ts",
+              "line": 124
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "accounts.google.com",
+            "src": {
+              "file": "src/modules/channel_gmail/lib/oauth.ts",
+              "line": 65
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "gmail.googleapis.com",
+            "src": {
+              "file": "src/modules/channel_gmail/lib/gmail-client.ts",
+              "line": 19
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "oauth2.googleapis.com",
+            "src": {
+              "file": "src/modules/channel_gmail/lib/oauth.ts",
+              "line": 22
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "www.googleapis.com",
+            "src": {
+              "file": "src/modules/channel_gmail/lib/oauth.ts",
+              "line": 105
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_gmail"
+        },
+        {
+          "kind": "widget",
+          "target": "profile:communication-channels:connect"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ApplyPushNotificationInput",
+            "BuildOAuthAuthorizeUrlInput",
+            "BuildOAuthAuthorizeUrlResult",
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ContactHint",
+            "ConvertOutboundInput",
+            "DeleteChannelMessageInput",
+            "ExchangeOAuthCodeInput",
+            "ExchangeOAuthCodeResult",
+            "FetchHistoryInput",
+            "GetMessageStatusInput",
+            "HistoryPage",
+            "ImportHistoryInput",
+            "ImportHistoryPage",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "PushRegistration",
+            "RefreshCredentialsInput",
+            "RefreshedCredentials",
+            "RegisterPushInput",
+            "ResolveContactInput",
+            "SendMessageInput",
+            "SendMessageResult",
+            "UnregisterPushInput",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": [
+            "baseEmailCapabilities"
+          ],
+          "modules/communication_channels/lib/email-contact": [
+            "emailResolveContact"
+          ],
+          "modules/communication_channels/lib/email-mime": [
+            "ParsedMail",
+            "assembleRfc2822",
+            "decodeCursor",
+            "encodeCursor",
+            "escapeQuotes",
+            "generateMessageId",
+            "htmlToText",
+            "normalizeMimeInbound",
+            "referencesFromMeta",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/import-history-limits": [
+            "IMPORT_HISTORY_DEFAULT_MAX_MESSAGES",
+            "IMPORT_HISTORY_DEFAULT_SINCE_DAYS",
+            "getImportHistoryMaxMessages",
+            "getImportHistoryMaxSinceDays"
+          ],
+          "modules/communication_channels/lib/oauth-token": [
+            "OAuthTokenResponse",
+            "requestOAuthToken",
+            "tokenResponseToExpiresAt"
+          ],
+          "modules/communication_channels/lib/provider-health": [
+            "makeClientConfigHealthCheck"
+          ],
+          "modules/communication_channels/lib/use-connect-channel": [
+            "useConnectChannel"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/http/fetchWithTimeout": [
+            "FetchTimeoutError",
+            "fetchWithTimeout"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/social-button": [
+            "SocialButton"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_gmail",
+        "tables": [],
+        "aclFeatures": [
+          "channel_gmail.view",
+          "channel_gmail.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0010002",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/shared 0.9.0). Use a range.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.9.0.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_gmail/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

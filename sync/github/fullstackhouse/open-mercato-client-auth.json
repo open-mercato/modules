@@ -1,0 +1,46 @@
+{
+  "locator": "github:fullstackhouse/open-mercato-client-auth",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": null,
+  "github": {
+    "repo": "fullstackhouse/open-mercato-client-auth",
+    "redirectedFrom": null,
+    "archived": false,
+    "pushedAt": "2026-10-02T14:21:23Z",
+    "defaultBranch": "main",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [],
+    "ownerType": "Organization",
+    "tags": [
+      {
+        "name": "v0.4.0",
+        "sha": "afb5217b11ce8cd2fe9828f117e03ca287b3a03a"
+      },
+      {
+        "name": "v0.3.1",
+        "sha": "43b2b9b4e5fb3923a8aaa73849cb24515c4e0390"
+      },
+      {
+        "name": "v0.3.0",
+        "sha": "21b894d9c9f668aeb9be7e9a80513ad5c7ab3e6e"
+      },
+      {
+        "name": "v0.2.1",
+        "sha": "66b5837873152466c9a453f3dcb1a8291407abbd"
+      }
+    ]
+  },
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "community",
+  "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
+  "downloads30d": null,
+  "errors": []
+}

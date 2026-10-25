@@ -1,0 +1,60 @@
+{
+  "locator": "npm:@open-mercato/forms",
+  "checkedAt": "2026-10-23T09:39:49Z",
+  "firstSeenAt": "2026-10-23T02:34:30Z",
+  "npm": {
+    "name": "@open-mercato/forms",
+    "distTags": {
+      "latest": "0.0.0-canary.20260603190311.74d2590",
+      "canary": "0.0.0-canary.28083028272.1.3a1f8fc",
+      "develop": "0.0.0-develop.11.d694a75880"
+    },
+    "latestStable": null,
+    "previousStable": null,
+    "preview": "0.0.0-canary.20260603190311.74d2590",
+    "publishedAt": {
+      "0.0.0-canary.20260603190311.74d2590": "2026-06-03T19:03:17Z"
+    },
+    "deprecated": null,
+    "license": null,
+    "repositoryUrl": null,
+    "gitHead": "74d25905206224c81cd0ab246272e16018b8cdc0",
+    "keywords": [],
+    "maintainers": [
+      "pat-lewczuk",
+      "patryk.andrzejewski",
+      "piotrkarwatka"
+    ],
+    "peerDependencies": {
+      "zod": "^4.3.6",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
+      "@mikro-orm/core": "^7.0.14",
+      "@open-mercato/ui": "^0.6.0",
+      "@open-mercato/core": "^0.6.0",
+      "@open-mercato/queue": "^0.6.0",
+      "@open-mercato/shared": "^0.6.0",
+      "@mikro-orm/decorators": "^7.0.14"
+    },
+    "dependencies": {
+      "ajv": "^8.17.1",
+      "pdf-lib": "^1.17.1",
+      "ajv-formats": "^3.0.1"
+    },
+    "installScripts": [],
+    "integrity": "sha512-VABatiQT3XBwfFzh8CP2HWePcXmki+lhXikP1uBE9upuyN72BGwAAvmbhaBelltsYFN92OvlxLvDKL9KQW+CWw==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/forms/-/forms-0.0.0-canary.20260603190311.74d2590.tgz"
+  },
+  "github": null,
+  "provenance": {
+    "status": "none",
+    "sourceRepo": null,
+    "commit": null,
+    "workflow": null
+  },
+  "advisories": [],
+  "type": "official",
+  "typeReason": "Scope @open-mercato.",
+  "downloads30d": 32,
+  "errors": []
+}
