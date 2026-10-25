@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.h57bd9b",
+  "dataVersion": "1.0.0-202610230305.h2ab1fc",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -2197,8 +2197,8 @@
         }
       },
       "install": {
-        "cli": "yarn mercato module add @open-mercato/enterprise@0.9.0",
-        "cmm": "npx create-mercato-module install @open-mercato/enterprise@0.9.0",
+        "cli": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate",
+        "cmm": null,
         "needsAllowThirdParty": false,
         "moduleFlag": null
       },

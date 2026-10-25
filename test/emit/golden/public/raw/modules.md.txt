@@ -69,7 +69,7 @@ Commercial Open Mercato modules for SSO, security, record locks and agent orches
 Use when a production app needs SSO, record locks or agent orchestration under a commercial license.
 Level: No level · official · enterprise · enterprise
 Agent policy on 0.9: ask
-Install: yarn mercato module add @open-mercato/enterprise@0.9.0
+Install: echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate
 Card: https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise.md
 
 ## Storage & Infrastructure

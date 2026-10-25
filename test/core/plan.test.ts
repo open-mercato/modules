@@ -111,6 +111,99 @@ describe('install commands', () => {
     )
   })
 
+  it('a provider without a module of its own is a dependency, then yarn generate (finding of 25 Oct)', () => {
+    const version = {
+      latest: '0.9.0',
+      preview: null,
+      publishedAt: null,
+      integrity: null,
+      installableFrom: null,
+      gitRef: null,
+      recommended: { '0.9': '0.9.0' },
+    }
+    const exa = {
+      npm: '@open-mercato/web-research-exa',
+      locator: 'npm:@open-mercato/web-research-exa',
+      moduleFlag: null,
+      version,
+      kind: 'provider' as const,
+    }
+    // `module add` throws `has no modules in src/modules/ or dist/modules/` on the adapter
+    expect(installInfo({ ...exa, moduleIds: [] }, '0.9')).toEqual({
+      cli: 'yarn add @open-mercato/web-research-exa@0.9.0',
+      cmm: null,
+      needsAllowThirdParty: false,
+      moduleFlag: null,
+    })
+    // a provider that ships a module keeps module add
+    expect(installInfo({ ...exa, moduleIds: ['exa'] }, '0.9').cli).toBe(
+      'yarn mercato module add @open-mercato/web-research-exa@0.9.0',
+    )
+  })
+
+  it('a package with several modules and none named gets one command per module (finding of 25 Oct)', () => {
+    const version = {
+      latest: '1.0.0',
+      preview: null,
+      publishedAt: null,
+      integrity: null,
+      installableFrom: null,
+      gitRef: null,
+      recommended: { '0.9': '1.0.0' },
+    }
+    const info = installInfo(
+      { npm: '@acme/suite', locator: 'npm:@acme/suite', moduleIds: ['a_one', 'b_two'], moduleFlag: null, version },
+      '0.9',
+    )
+    expect(info).toEqual({
+      cli: 'yarn mercato module add @acme/suite@1.0.0 --allow-third-party --module a_one && yarn mercato module add @acme/suite@1.0.0 --allow-third-party --module b_two',
+      cmm: null,
+      needsAllowThirdParty: true,
+      moduleFlag: null,
+    })
+    // named, one command
+    expect(
+      installInfo(
+        { npm: '@acme/suite', locator: 'npm:@acme/suite', moduleIds: ['a_one', 'b_two'], moduleFlag: 'b_two', version },
+        '0.9',
+      ).cli,
+    ).toBe('yarn mercato module add @acme/suite@1.0.0 --allow-third-party --module b_two')
+  })
+
+  it('the enterprise package is turned on in .env, as a new app does it (finding of 25 Oct)', () => {
+    const ent = fixture.entries.find((e) => e.locator === LOC.enterprise)!
+    expect(ent.moduleIds.length).toBeGreaterThan(1)
+    expect(ent.install).toEqual({
+      cli: 'echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate',
+      cmm: null,
+      needsAllowThirdParty: false,
+      moduleFlag: null,
+    })
+    const plan = InstallPlan.parse(planInstall({ refs: [LOC.enterprise] }, fixture))
+    expect(plan.commands).toEqual(['echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env'])
+    expect(plan.then[0]).toMatch(/^A new app already has @open-mercato\/enterprise\. /)
+    expect(plan.then.join('\n')).toContain('OM_ENABLE_ENTERPRISE_MODULES_SSO=true')
+    expect(plan.then).toContain('yarn generate')
+    expect(plan.then).toContain('yarn db:migrate (ask the user first)')
+    // never a bare module add of a package with several modules
+    for (const c of [...plan.commands, ...(plan.emptyPreset?.commands ?? [])])
+      expect(c).not.toMatch(/module add @open-mercato\/enterprise@[^ ]+$/)
+  })
+
+  it('no entry gets a module add that the OM CLI refuses: a module to add, and --module where there are several', () => {
+    // the fixture entries as the emitter builds them, and every corpus entry (all kinds) through installInfo
+    const commands = [
+      ...fixture.entries.map((e) => ({ e, cli: e.install.cli })),
+      ...corpus.entries.map((e) => ({ e, cli: installInfo({ ...e, moduleFlag: e.install.moduleFlag }, '0.9').cli })),
+    ]
+    for (const { e, cli } of commands) {
+      for (const cmd of cli.split(' && ').filter((c) => c.includes(' module add '))) {
+        expect(e.moduleIds.length, e.locator).toBeGreaterThan(0)
+        if (e.moduleIds.length > 1) expect(cmd, e.locator).toMatch(/ --module [a-z][a-z0-9_]*$/)
+      }
+    }
+  })
+
   it('GitHub-only entries install through create-mercato-module with --ref', () => {
     const version = {
       latest: '0.2.0',

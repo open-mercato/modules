@@ -1099,8 +1099,8 @@
       }
     },
     "install": {
-      "cli": "yarn mercato module add @open-mercato/enterprise@0.9.0",
-      "cmm": "npx create-mercato-module install @open-mercato/enterprise@0.9.0",
+      "cli": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate",
+      "cmm": null,
       "needsAllowThirdParty": false,
       "moduleFlag": null
     },

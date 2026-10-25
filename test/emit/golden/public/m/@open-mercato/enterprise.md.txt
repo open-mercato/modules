@@ -6,9 +6,9 @@ license: enterprise
 level: none
 verified_on: []
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
-install: yarn mercato module add @open-mercato/enterprise@0.9.0
+install: "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate"
 installable_from: 2026-10-09
-data_version: 1.0.0-202610230305.h57bd9b
+data_version: 1.0.0-202610230305.h2ab1fc
 ---
 # Enterprise
 Commercial Open Mercato modules for SSO, security, record locks and agent orchestration.
@@ -26,8 +26,11 @@ Built for 0.9 (peers 0.9.0). A declaration, not a test.
 Anatomy not published. Commercial license.
 
 ## Install plan (0.9)
-1. yarn mercato module add @open-mercato/enterprise@0.9.0
+1. echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env
+   - A new app already has @open-mercato/enterprise. Its modules stay off until .env turns them on, and production use needs the license. OM_ENABLE_ENTERPRISE_MODULES=true turns on record_locks and system_status_overlays.
+   - For sso, security or agent_orchestrator, also set OM_ENABLE_ENTERPRISE_MODULES_SSO=true, OM_ENABLE_ENTERPRISE_MODULES_SECURITY=true or OM_ENABLE_ENTERPRISE_MODULES_AGENTS=true.
 2. yarn generate
+3. yarn db:migrate (ask the user first)
 
 Agent policy (0.9): ask. Not yet tested in a new app on 0.9. License: enterprise (SEE LICENSE IN LICENSE.md).
 Consent: the user types "Install @open-mercato/enterprise@0.9.0".

@@ -3,7 +3,7 @@
 import type { IndexEntry } from '../schema/published/modules.ts'
 import { byLineKey } from './lines.ts'
 import { installVersion, judgeLine, listAnd, type VersionSource } from './policy.ts'
-import { packageCommand } from './plan.ts'
+import { isEnterprisePackage, packageCommand } from './plan.ts'
 
 const RE = {
   npm: /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/,
@@ -95,7 +95,10 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
   const card = site && ok(RE.locpath, e.path) ? `${site}/m/${e.path}.md` : null
   let command: string | null = ok(RE.command, e.install.cli) ? e.install.cli : null
   if (command && version && e.npm && !command.includes(`${e.npm}@${version}`)) command = null
-  if (!command && name && version && e.npm) {
+  // no single `module add` exists for the enterprise package (.env turns its modules on) or for a package with several
+  // modules and none named (finding of 25 Oct): the prompt then sends the agent to the plan without a command
+  const several = e.moduleIds.length > 1 && !ok(RE.moduleId, e.install.moduleFlag)
+  if (!command && name && version && e.npm && !several && !isEnterprisePackage(e)) {
     const third = e.npm.startsWith('@open-mercato/') ? '' : ' --allow-third-party'
     const mod = ok(RE.moduleId, e.install.moduleFlag) ? ` --module ${e.install.moduleFlag}` : ''
     command = packageCommand(e, `${e.npm}@${version}`) ?? `yarn mercato module add ${e.npm}@${version}${third}${mod}`

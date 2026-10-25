@@ -22,6 +22,7 @@ import {
   emptyPresetVersion,
   installVersion,
   lineVersion,
+  listAnd,
   newAppInstallText,
   packageRef,
   strictestPolicy,
@@ -84,11 +85,59 @@ export type InstallTarget = Pick<IndexEntry, 'npm' | 'locator' | 'moduleIds' | '
 /**
  * The command of a package that is no Open Mercato module (finding of 25 Oct: create-mercato-module got `yarn mercato
  * module add ... --allow-third-party`): a library is a dependency of the app (`yarn add`), a tool tagged `cli` runs on
- * its own (`npx`), any other tool is a dependency too. Null for a module or a provider.
+ * its own (`npx`), any other tool is a dependency too. A provider without a module of its own (the web-research
+ * adapters, finding of 25 Oct: `module add` fails with `has no modules in src/modules/ or dist/modules/`) is a
+ * dependency as well; `yarn generate` then registers it (docs: framework/ai-assistant/web-research). Null for a module
+ * and for a provider that ships modules.
  */
-export function packageCommand(e: Pick<InstallTarget, 'kind' | 'tags'>, spec: string): string | null {
+export function packageCommand(
+  e: Pick<InstallTarget, 'kind' | 'tags'> & { moduleIds?: readonly string[] },
+  spec: string,
+): string | null {
   if (e.kind === 'tool') return e.tags?.includes('cli') ? `npx ${spec}` : `yarn add ${spec}`
+  if (e.kind === 'provider' && (e.moduleIds?.length ?? 0) === 0) return `yarn add ${spec}`
   return e.kind === 'library' ? `yarn add ${spec}` : null
+}
+
+export const ENTERPRISE_PACKAGE = '@open-mercato/enterprise'
+
+/**
+ * How an app turns on the modules of @open-mercato/enterprise (finding of 25 Oct: `module add` without `--module` fails
+ * on a package with five modules, and the page never named the way a new app does it). Every new app has the package in
+ * its package.json, and src/modules.ts of both presets registers its modules behind these flags (create-mercato-app
+ * 0.8.0 and 0.9.0 templates; docs: architecture/module-dependencies, customization/standalone-app). The first flag
+ * holds the others: each needs it on too.
+ */
+export const ENTERPRISE_FLAGS: readonly { env: string; modules: readonly string[] }[] = [
+  { env: 'OM_ENABLE_ENTERPRISE_MODULES', modules: ['record_locks', 'system_status_overlays'] },
+  { env: 'OM_ENABLE_ENTERPRISE_MODULES_SSO', modules: ['sso'] },
+  { env: 'OM_ENABLE_ENTERPRISE_MODULES_SECURITY', modules: ['security'] },
+  { env: 'OM_ENABLE_ENTERPRISE_MODULES_AGENTS', modules: ['agent_orchestrator'] },
+]
+
+/** True for the package whose modules a new app turns on with `ENTERPRISE_FLAGS`. */
+export const isEnterprisePackage = (e: Pick<InstallTarget, 'npm'>): boolean => e.npm === ENTERPRISE_PACKAGE
+
+/** The step that turns on the base modules of the enterprise package: one line of .env. */
+export const ENTERPRISE_ENABLE_STEP = `echo ${ENTERPRISE_FLAGS[0]!.env}=true >> .env`
+
+/**
+ * The sentences around that step, for the plan, the card and the page: what a new app has, and the flags of the other
+ * modules the package has.
+ */
+export function enterpriseNotes(moduleIds: readonly string[]): { lead: string; more: string | null } {
+  const base = ENTERPRISE_FLAGS[0]!
+  const rest = ENTERPRISE_FLAGS.slice(1).filter((f) => f.modules.some((m) => moduleIds.includes(m)))
+  const lead = `A new app already has ${ENTERPRISE_PACKAGE}. Its modules stay off until .env turns them on, and production use needs the license. ${base.env}=true turns on ${listAnd(base.modules.filter((m) => moduleIds.length === 0 || moduleIds.includes(m)))}.`
+  const more =
+    rest.length > 0
+      ? `For ${listOr(rest.flatMap((f) => f.modules))}, also set ${listOr(rest.map((f) => `${f.env}=true`))}.`
+      : null
+  return { lead, more }
+}
+
+function listOr(items: readonly string[]): string {
+  return items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} or ${items[items.length - 1]}`
 }
 
 /** True when every module of the entry is already registered from this package (an app's src/modules.ts, D10). */
@@ -124,9 +173,27 @@ export function installInfo(
   const thirdParty = !e.npm.startsWith('@open-mercato/')
   const cmm = `npx create-mercato-module install ${spec}`
   if (inPreset(e, preset)) return { cli: `yarn add ${spec}`, cmm, needsAllowThirdParty: false, moduleFlag: null }
-  const flags = `${thirdParty ? ' --allow-third-party' : ''}${e.moduleFlag ? ` --module ${e.moduleFlag}` : ''}`
+  // a new app has the enterprise package and turns its modules on in .env (finding of 25 Oct); one module of it (the
+  // picker's row) keeps its own `--module` command
+  if (isEnterprisePackage(e) && !e.moduleFlag)
+    return {
+      cli: `${ENTERPRISE_ENABLE_STEP} && yarn generate`,
+      cmm: null,
+      needsAllowThirdParty: false,
+      moduleFlag: null,
+    }
+  const third = thirdParty ? ' --allow-third-party' : ''
+  // a package with several modules and no module named: `module add` refuses it without `--module` (OM CLI
+  // module-package.ts), so one command per module (finding of 25 Oct)
+  if (!e.moduleFlag && e.moduleIds.length > 1)
+    return {
+      cli: e.moduleIds.map((id) => `yarn mercato module add ${spec}${third} --module ${id}`).join(' && '),
+      cmm: null,
+      needsAllowThirdParty: thirdParty,
+      moduleFlag: null,
+    }
   return {
-    cli: `yarn mercato module add ${spec}${flags}`,
+    cli: `yarn mercato module add ${spec}${third}${e.moduleFlag ? ` --module ${e.moduleFlag}` : ''}`,
     cmm,
     needsAllowThirdParty: thirdParty,
     moduleFlag: e.moduleFlag,
@@ -323,6 +390,14 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
         )
         continue
       }
+      // a new app has the enterprise package; .env turns its modules on (finding of 25 Oct), in both presets
+      if (isEnterprisePackage(e)) {
+        commands.push(ENTERPRISE_ENABLE_STEP)
+        const t = enterpriseNotes(e.moduleIds)
+        notes.push(t.lead, ...(t.more ? [t.more] : []))
+        installing.push(e)
+        continue
+      }
       for (const r of e.replaces) commands.push(removeCoreStep(r.replace(/^core:/, '')))
       // an app from the empty preset installs the version a new app ships where the other one broke there (checkout
       // 0.8.0 on 0.8, not 0.9.0, review of 24 Oct)
@@ -336,8 +411,9 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
     const then: string[] = [...notes]
     // a library or a tool adds no module, so nothing to generate for it
     if (installing.some((x) => x.kind === 'module' || x.kind === 'provider') || enabling > 0) then.push('yarn generate')
+    // the enterprise anatomy is not published; its modules have tables (record_locks, sso)
     const migrations = installing.some(
-      (e) => (e.anatomy?.counts.migrations ?? 0) > 0 || (e.anatomy?.counts.tables ?? 0) > 0,
+      (e) => (e.anatomy?.counts.migrations ?? 0) > 0 || (e.anatomy?.counts.tables ?? 0) > 0 || isEnterprisePackage(e),
     )
     if (migrations || enabling > 0) then.push('yarn db:migrate (ask the user first)')
     const grant = uniq(installing.flatMap((e) => e.anatomy?.lists.aclFeatures ?? []))
@@ -502,7 +578,7 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
  * numbers steps only and prints a note under its step (round 14: a note stood as step 4).
  */
 export function isPlanStep(line: string): boolean {
-  return /^(?:yarn|npx|npm|node|pnpm|bun) |^Grant |^Remove \{/.test(line)
+  return /^(?:yarn|npx|npm|node|pnpm|bun|echo) |^Grant |^Remove \{/.test(line)
 }
 
 /** One step of a plan with the notes that stand under it (`n` null: notes before any step). */

@@ -26,7 +26,7 @@ import ViewToggle from '../../islands/ViewToggle.tsx'
 import ReceiptDrawer from '../../islands/ReceiptDrawer.tsx'
 import type { DrawerLine } from '../../islands/ReceiptDrawer.tsx'
 import { GENERATED_DIR, loadSiteData } from '../../../../lib/emit/site-data.ts'
-import { installInfo } from '../../../../lib/core/plan.ts'
+import { enterpriseNotes, installInfo, isEnterprisePackage } from '../../../../lib/core/plan.ts'
 import { promptParts } from '../../../../lib/core/prompt.ts'
 import { compareVersions } from '../../../../lib/core/semver.ts'
 import type { IndexEntry, Receipt as ReceiptT } from '../../../../lib/schema/index.ts'
@@ -584,6 +584,11 @@ function installNote(l: (typeof lines)[number], withIso = true): string {
   if (st === 'quarantine' && !heldBack(entry.compat.lines[l.key])) return `In the Yarn age gate on ${l.key}.`
   return lineSentence(l, others[l.key] ? null : (lastByLine[l.key] ?? null), st, withIso)
 }
+function enterpriseNote(note: string): string {
+  if (!isEnterprisePackage(entry)) return note
+  const t = enterpriseNotes(entry.moduleIds)
+  return [t.lead, t.more, note].filter(Boolean).join(' ')
+}
 const installLines: InstallLine[] = lines.map((l) => {
   // a line whose app from the empty preset registers the package too (events): `yarn add`, never `module add`, which
   // throws `already enabled` (D10, spec 4.6); elsewhere the command of an app that does not have it
@@ -641,7 +646,9 @@ const installLines: InstallLine[] = lines.map((l) => {
     command: refused || previewOnly ? null : info.cli,
     anyway: refused && !unusable ? info.cli : null,
     previewBuild: previewOnly ? info.cli : null,
-    note: refused || rec ? null : installNote(l, !emptyOwn),
+    // the enterprise command turns modules on in .env (finding of 25 Oct): the note says what a new app has and the
+    // flags of the other modules
+    note: refused || rec ? null : enterpriseNote(installNote(l, !emptyOwn)),
     // a night that judged nothing reads calm (round 15: the age gate's sentence stood in the colour of waiting)
     noteCalm: (() => {
       const c = entry.compat.lines[l.key]
