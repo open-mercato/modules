@@ -11,9 +11,11 @@ import {
   CORE_PACKAGE,
   TEXT,
   buildDescriptor,
+  ciRejection,
   collisionText,
   installCommand,
   installableText,
+  listedMatches,
   listedRunText,
   noticeTag,
   stateBanners,
@@ -301,6 +303,14 @@ test("a listed package's Installable fact carries the catalog's last run on the 
   ).toBe('On 0.9 a new app installs 0.3.0, which has no receipt yet.')
 })
 
+test('a bare word that is no npm package points at the listed modules it names (25 Oct)', () => {
+  expect(listedMatches('ksef', CTX.catalog).map((c) => c.npm)).toEqual([KSEF])
+  expect(listedMatches('KSeF Integration', CTX.catalog).map((c) => c.npm)).toEqual([KSEF])
+  // a scoped name or a word too short to mean anything finds nothing
+  expect(listedMatches('@acme/ksef', CTX.catalog)).toEqual([])
+  expect(listedMatches('ks', CTX.catalog)).toEqual([])
+})
+
 test('every notice banner has a mono tag', () => {
   expect(noticeTag({ level: 'warn', text: TEXT.githubLimit })).toBe('Rate limit')
   expect(noticeTag({ level: 'error', text: TEXT.npmDown })).toBe('npm unreachable')
@@ -431,6 +441,62 @@ describe('acceptance cases', () => {
     const f = formFromPackage(r, [], emptyForm())
     expect(buildDescriptor(npm(DEMO), r, f).kind).toBe('tool')
     expect(liveRules(npm(DEMO), r, [], []).find((x) => x.id === 'LST-3')).toMatchObject({ state: 'pass' })
+  })
+
+  test('an archived repository fails LST-2 and is a CI rejection, so the pull request stays off (25 Oct)', async () => {
+    const gh: Target = { kind: 'github', repo: 'open-mercato/official-modules' }
+    const { deps } = mockFetch([
+      [
+        /api\.github\.com\/repos\/open-mercato\/official-modules$/,
+        { body: { ...repoJson('open-mercato/official-modules'), archived: true } },
+      ],
+      [/jsdelivr\.com\/v1\/packages\/gh\/open-mercato\/official-modules$/, { body: { versions: [] } }],
+    ])
+    const r = await runChecks(gh, CTX, deps)
+    expect(liveRules(gh, r, [], []).find((x) => x.id === 'LST-2')).toEqual({
+      id: 'LST-2',
+      state: 'fail',
+      text: 'Repository is archived.',
+    })
+    expect(ciRejection(gh, r)).toBe(
+      'CI rejects an archived repository (open-mercato/official-modules). Unarchive it, or use Request listing.',
+    )
+  })
+
+  test('a deprecated or prerelease-only package is a CI rejection; a stable one is not', async () => {
+    const name = '@om-wp13-test/dep'
+    const route = (m: Record<string, unknown>, v = '1.0.0'): [RegExp, Answer][] => [
+      [/registry\.npmjs\.org\/@om-wp13-test%2Fdep$/, { body: packument(name, v, { license: 'MIT', ...m }) }],
+      [/jsdelivr/, { body: MODULE_FILES('dep') }],
+    ]
+    const dep = await runChecks(npm(name), CTX, mockFetch(route({ deprecated: 'use @x/y' })).deps)
+    expect(ciRejection(npm(name), dep)).toMatch(/^CI rejects a deprecated package\./)
+    const pre = await runChecks(npm(name), CTX, mockFetch(route({}, '1.0.0-beta.1')).deps)
+    expect(ciRejection(npm(name), pre)).toMatch(/^CI rejects a package without a stable version\./)
+    const ok = await runChecks(npm(name), CTX, mockFetch(route({})).deps)
+    expect(ciRejection(npm(name), ok)).toBeNull()
+  })
+
+  test('the YAML never names a repository GitHub does not know or that is archived (CI checks github too)', async () => {
+    const name = '@om-wp13-test/repo'
+    const routes = (repo: Answer): [RegExp, Answer][] => [
+      [
+        /registry\.npmjs\.org\/@om-wp13-test%2Frepo$/,
+        { body: packument(name, '1.0.0', { license: 'MIT', repository: 'github:acme/repo' }) },
+      ],
+      [/jsdelivr/, { body: MODULE_FILES('repo') }],
+      [/api\.github\.com\/repos\/acme\/repo$/, repo],
+    ]
+    const missing = await runChecks(npm(name), CTX, mockFetch(routes({ status: 404, body: {} })).deps)
+    expect(buildDescriptor(npm(name), missing, emptyForm()).github).toBeUndefined()
+    const archived = await runChecks(
+      npm(name),
+      CTX,
+      mockFetch(routes({ body: { ...repoJson('acme/repo'), archived: true } })).deps,
+    )
+    expect(buildDescriptor(npm(name), archived, emptyForm()).github).toBeUndefined()
+    const live = await runChecks(npm(name), CTX, mockFetch(routes({ body: repoJson('acme/repo') })).deps)
+    expect(buildDescriptor(npm(name), live, emptyForm()).github).toBe('acme/repo')
   })
 
   test('renamed: an old name of a listed entry', async () => {

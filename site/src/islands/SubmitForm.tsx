@@ -219,6 +219,8 @@ export interface CheckResult {
   peers: { text: string; level: 'ok' | 'warn'; range?: string } | null
   /** Module IDs of the package that are built into core and not declared in `replaces`. */
   collisions: string[]
+  /** GitHub answered 404 for the repository of package.json (missing or private): CI would reject it as `github`. */
+  repoMissing?: boolean
   notices: Notice[]
 }
 
@@ -490,9 +492,10 @@ export async function runChecks(t: Target, ctx: CheckContext, deps: Deps): Promi
       if (r.pkg.repo) {
         const g = await getJson<GithubRepoJson>(`${GH}/repos/${r.pkg.repo}`, deps)
         if (g.ok) r.repo = repoInfo(g.data, null)
-        else if (g.why === 'not-found')
+        else if (g.why === 'not-found') {
+          r.repoMissing = true
           note('warn', `The repository ${r.pkg.repo} in package.json is not on GitHub or is private.`)
-        else down('github', g.why)
+        } else down('github', g.why)
       }
     } else if (p.why === 'not-found') found = false
     else down('npm', p.why)
@@ -662,7 +665,9 @@ export function buildDescriptor(t: Target, r: CheckResult | null, f: FormState):
   const d: Record<string, unknown> = {}
   if (t.kind === 'npm') {
     d.npm = t.name
-    const repo = r?.repo?.repo || r?.pkg?.repo
+    // only a repository GitHub answered for and that is not archived: CI checks `github` too and fails a missing or
+    // archived one (lib/validate/remote.ts); when GitHub did not answer, the repository of package.json
+    const repo = r?.repo ? (r.repo.archived ? null : r.repo.repo) : r?.repoMissing ? null : r?.pkg?.repo
     if (repo && GithubRepo.safeParse(repo).success) d.github = repo
   } else d.github = r?.repo?.repo || t.repo
   return withForm(d, r, f)
@@ -859,17 +864,20 @@ export function liveRules(
     else out.push({ id: 'LST-2', state: 'pass', text: `Version ${r.pkg.version} on npm.` })
   } else {
     out.push(
-      r.repo
-        ? {
-            id: 'LST-2',
-            state: r.repo.tag ? 'pass' : 'fail',
-            text: r.repo.tag ? `Tag ${r.repo.tag} on GitHub.` : 'No version tag yet.',
-          }
-        : {
-            id: 'LST-2',
-            state: r.states.includes('not-found') ? 'fail' : 'unknown',
-            text: r.states.includes('not-found') ? 'No such public repository.' : 'GitHub did not answer.',
-          },
+      r.repo?.archived
+        ? // CI rejects it (locator/archived) and tier.ts fails LST-2 on it (finding of 25 Oct)
+          { id: 'LST-2', state: 'fail', text: 'Repository is archived.' }
+        : r.repo
+          ? {
+              id: 'LST-2',
+              state: r.repo.tag ? 'pass' : 'fail',
+              text: r.repo.tag ? `Tag ${r.repo.tag} on GitHub.` : 'No version tag yet.',
+            }
+          : {
+              id: 'LST-2',
+              state: r.states.includes('not-found') ? 'fail' : 'unknown',
+              text: r.states.includes('not-found') ? 'No such public repository.' : 'GitHub did not answer.',
+            },
     )
   }
   if (!r.gate) out.push({ id: 'LST-3', state: 'unknown', text: 'File list not checked yet.' })
@@ -1038,6 +1046,24 @@ export function cadenceText(lines: readonly { key: string; cadence: Cadence }[])
   return `Lines tested: ${cadenceGroups(lines)
     .map((g) => `${andList(g.keys)} ${g.when}`)
     .join(', ')}.`
+}
+
+/**
+ * Why CI's validate would reject the pull request, from what the check found (finding of 25 Oct: the form opened a PR
+ * for the archived official-modules repository that `yarn om validate` then failed with locator/archived). The same
+ * errors as lib/validate/remote.ts stepLocator: an archived repository, a deprecated package, no stable version
+ * outside @open-mercato. Null when none applies; then the schema issues decide.
+ */
+export function ciRejection(t: Target, r: CheckResult | null): string | null {
+  if (!r) return null
+  if (t.kind === 'github' && r.repo?.archived)
+    return `CI rejects an archived repository (${r.repo.repo}). Unarchive it, or use Request listing.`
+  if (t.kind === 'npm' && r.pkg) {
+    if (r.pkg.deprecated) return 'CI rejects a deprecated package. Publish a version that is not deprecated first.'
+    if (!r.pkg.stable && !t.name.startsWith('@open-mercato/'))
+      return 'CI rejects a package without a stable version. Publish a version like 0.1.0 first.'
+  }
+  return null
 }
 
 /** IndexEntry-shaped preview for the real ModuleRow (fields the row reads; the rest are neutral). */
@@ -1331,6 +1357,9 @@ export default function SubmitForm(props: SubmitFormProps) {
   const names = t ? typosquatHits(t, props.catalog) : []
   const rules = t ? liveRules(t, result, issues, names) : []
   const rulesPass = rules.length > 0 && rules.every((r) => r.state !== 'fail')
+  // CI would fail the pull request (archived, deprecated, no stable version): the button stays off (25 Oct)
+  const rejected = t ? ciRejection(t, result) : null
+  const blocked = issues.length > 0 || !!rejected
   const yaml = descriptor ? descriptorYaml(descriptor) : ''
   const states = result?.states ?? []
   const stopped = states.includes('not-found') || states.includes('core')
@@ -1402,7 +1431,7 @@ export default function SubmitForm(props: SubmitFormProps) {
 
         {result && typed && t && (
           <section class="sf__result" aria-label="Checks">
-            <States r={result} t={typed} repo={props.repo} />
+            <States r={result} t={typed} repo={props.repo} catalog={props.catalog} />
             {/* one leading banner (review r1): the state, else the first finding; network notices keep their own
                 banner; the other findings are lines under it */}
             {(() => {
@@ -1748,8 +1777,9 @@ export default function SubmitForm(props: SubmitFormProps) {
             <pre class="sf__yaml" aria-label="Descriptor YAML">
               <code>{yaml}</code>
             </pre>
-            {issues.length > 0 && (
+            {(issues.length > 0 || rejected) && (
               <ul class="sf__issues" role="list" aria-label="Fill before opening the pull request">
+                {rejected && !result.existing && <li>{rejected}</li>}
                 {issues.slice(0, 6).map((i) => (
                   <li>{i.message}</li>
                 ))}
@@ -1762,12 +1792,12 @@ export default function SubmitForm(props: SubmitFormProps) {
                 </a>
               ) : (
                 <a
-                  class={`btn btn--primary${issues.length > 0 ? ' sf__btn--off' : ''}`}
+                  class={`btn btn--primary${blocked ? ' sf__btn--off' : ''}`}
                   href={pullRequestUrl(props.repo, t, yaml)}
                   rel="noopener noreferrer"
-                  aria-disabled={issues.length > 0 ? 'true' : undefined}
+                  aria-disabled={blocked ? 'true' : undefined}
                   onClick={(e) => {
-                    if (issues.length > 0) e.preventDefault()
+                    if (blocked) e.preventDefault()
                   }}
                 >
                   Open pull request
@@ -1807,7 +1837,22 @@ export function stateBanners(states: readonly StateId[]): { s: StateId; tag: str
   }))
 }
 
-function States({ r, t, repo }: { r: CheckResult; t: Target; repo: string }) {
+/**
+ * Listed entries a bare word names (finding of 25 Oct: `ksef` on /submit answered only `No package ksef on npm`, while
+ * the catalog lists the KSeF module): an unscoped name of 3 or more characters inside a listed npm name or title.
+ */
+export function listedMatches(name: string, catalog: readonly CatalogRef[], max = 3): CatalogRef[] {
+  const q = name.trim().toLowerCase()
+  if (q.length < 3 || q.includes('/')) return []
+  return catalog
+    .filter(
+      (c) =>
+        c.status === 'active' && ((c.npm ?? c.locator).toLowerCase().includes(q) || c.title.toLowerCase().includes(q)),
+    )
+    .slice(0, max)
+}
+
+function States({ r, t, repo, catalog }: { r: CheckResult; t: Target; repo: string; catalog: readonly CatalogRef[] }) {
   if (r.states.length === 0)
     return (
       <Banner tone="ok" tag="Ready">
@@ -1885,6 +1930,25 @@ function States({ r, t, repo }: { r: CheckResult; t: Target; repo: string }) {
             (t.kind === 'npm' ? (
               <>
                 No package <code>{t.name}</code> on npm. Check the spelling, or publish it first.
+                {!t.name.includes('/') && (
+                  <>
+                    {' '}
+                    {listedMatches(t.name, catalog).length > 0 && (
+                      <>
+                        Listed:{' '}
+                        {listedMatches(t.name, catalog).map((c, i) => (
+                          <>
+                            {i > 0 ? ', ' : ''}
+                            <a href={href(modulePage(c.path))}>{c.title}</a> (<code>{c.npm ?? c.locator}</code>)
+                          </>
+                        ))}
+                        .{' '}
+                      </>
+                    )}
+                    Looking for a module?{' '}
+                    <a href={`${href('/')}?q=${encodeURIComponent(t.name)}`}>Search the catalog</a>.
+                  </>
+                )}
               </>
             ) : (
               <>
