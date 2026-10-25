@@ -467,13 +467,16 @@ export async function runChecks(t: Target, ctx: CheckContext, deps: Deps): Promi
     let p = await getJson<Packument>(npmUrl(t.name), deps)
     if (!p.ok && p.why === 'unreachable' && t.name.startsWith('@')) {
       // npm answers 404 for a missing scoped package without a CORS header, so the browser sees a network error.
-      // When the search endpoint of the same registry answers, npm is reachable and the package does not exist.
-      // The probe only has to show that npm answers; the search text must be 2 to 64 characters (else HTTP 400).
-      const probe = await getJson<unknown>(
-        `${NPM}/-/v1/search?text=${encodeURIComponent(t.name.slice(0, 64))}&size=1`,
+      // When the search endpoint of the same registry answers without the package, npm is reachable and the package
+      // does not exist. A search that lists the package means the packument was blocked on the way (an extension, a
+      // proxy, a reset connection): npm stays unreachable, never `not found` (finding of 25 Oct). The search text must
+      // be 2 to 64 characters (else HTTP 400).
+      const probe = await getJson<{ objects?: { package?: { name?: unknown } }[] }>(
+        `${NPM}/-/v1/search?text=${encodeURIComponent(t.name.slice(0, 64))}&size=5`,
         deps,
       )
-      if (probe.ok) p = { ok: false, why: 'not-found', status: 404 }
+      const listed = probe.ok && (probe.data.objects ?? []).some((o) => o?.package?.name === t.name)
+      if (probe.ok && !listed) p = { ok: false, why: 'not-found', status: 404 }
     }
     if (p.ok) {
       found = true

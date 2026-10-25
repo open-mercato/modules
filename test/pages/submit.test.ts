@@ -359,6 +359,28 @@ describe('acceptance cases', () => {
     expect(calls.some((c) => c.includes('/-/v1/search?text=%40om-wp13-test%2Fno-such-module-xyz'))).toBe(true)
   })
 
+  test('a packument blocked on the way while the search lists the package: npm unreachable, not Not found', async () => {
+    const { deps } = mockFetch([
+      [/registry\.npmjs\.org\/@om-wp13-test/, 'throw'],
+      [
+        /registry\.npmjs\.org\/-\/v1\/search/,
+        { body: { objects: [{ package: { name: 'other' } }, { package: { name: NEW } }] } },
+      ],
+    ])
+    const r = await runChecks(npm(NEW), CTX, deps)
+    expect(r.states).not.toContain('not-found')
+    expect(r.states).toEqual(['unknown'])
+    expect(r.notices).toEqual([{ level: 'error', text: TEXT.npmDown }])
+  })
+
+  test('a search that lists only other names still means the package does not exist', async () => {
+    const { deps } = mockFetch([
+      [/registry\.npmjs\.org\/@om-wp13-test/, 'throw'],
+      [/registry\.npmjs\.org\/-\/v1\/search/, { body: { objects: [{ package: { name: `${NEW}-2` } }] } }],
+    ])
+    expect((await runChecks(npm(NEW), CTX, deps)).states).toEqual(['not-found'])
+  })
+
   test('a scoped name longer than 64 characters: the probe stays inside the search text limit', async () => {
     const long = `@om-wp13-test/${'very-long-module-name-'.repeat(4)}xyz`
     expect(long.length).toBeGreaterThan(64)
