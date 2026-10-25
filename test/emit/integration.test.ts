@@ -110,7 +110,9 @@ describe('Astro integration omData()', () => {
     const clean = tmp()
     const ok = copyGenerated(join(to, 'public'), clean)
     expect(ok.collisions).toEqual([])
-    expect(existsSync(join(clean, '.well-known', 'mcp', 'server-card.json'))).toBe(true)
+    expect(existsSync(join(clean, '.well-known', 'agent-skills', 'index.json'))).toBe(true)
+    // no MCP_URL: no server card for a Worker that is not deployed (finding of 25 Oct)
+    expect(existsSync(join(clean, '.well-known', 'mcp', 'server-card.json'))).toBe(false)
     expect(existsSync(join(clean, 'modules.json'))).toBe(true)
   })
 
@@ -122,8 +124,8 @@ describe('Astro integration omData()', () => {
     expect(resolveDevFile(pub, '/modules', '/modules/m/@fastwhitecat/integration-ksef-direct.md?x=1')).toBe(
       join(pub, 'm', '@fastwhitecat', 'integration-ksef-direct.md'),
     )
-    expect(resolveDevFile(pub, '/', '/.well-known/mcp/server-card.json')).toBe(
-      join(pub, '.well-known', 'mcp', 'server-card.json'),
+    expect(resolveDevFile(pub, '/', '/.well-known/agent-skills/index.json')).toBe(
+      join(pub, '.well-known', 'agent-skills', 'index.json'),
     )
     expect(resolveDevFile(pub, '/modules', '/modules/../../package.json')).toBeNull()
     expect(resolveDevFile(pub, '/modules', '/modules/%2e%2e/%2e%2e/package.json')).toBeNull()

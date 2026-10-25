@@ -1,6 +1,7 @@
 # Remote MCP server (spec 5.1, 5.2, 8.3): `wrangler deploy` of mcp/worker.ts to Cloudflare Workers when the Worker,
 # lib/core or lib/schema change on main, or by hand. Without the CLOUDFLARE_API_TOKEN secret (environment `mcp`,
-# spec 5.6 item 6) the job ends with a notice, not an error. No module code runs here.
+# spec 5.6 item 6) the job ends green with a warning annotation and a summary that say the Worker was not deployed
+# (finding of 25 Oct: a quiet notice read as a deployed server). No module code runs here.
 name: mcp-deploy
 
 on:
@@ -41,8 +42,12 @@ jobs:
             echo "present=true" >> "$GITHUB_OUTPUT"
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=mcp-deploy::No CLOUDFLARE_API_TOKEN in environment mcp; the Worker was not deployed."
-            echo "No CLOUDFLARE_API_TOKEN in environment \`mcp\`: the Worker was not deployed (spec 5.6 item 6)." >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning title=mcp-deploy not deployed::No CLOUDFLARE_API_TOKEN in environment mcp; the Worker was not deployed and no MCP server runs."
+            {
+              echo "**Not deployed.** No CLOUDFLARE_API_TOKEN in environment \`mcp\`: the Worker was not deployed (spec 5.6 item 6)."
+              echo ""
+              echo "Until it is, the repo variable MCP_URL stays unset: the site publishes no MCP server card and llms.txt says the MCP server is not deployed yet."
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Checkout

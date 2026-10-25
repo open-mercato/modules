@@ -4,6 +4,10 @@ name = "om-modules"
 main = "worker.ts"
 compatibility_date = "2026-10-01"
 
+# The index URLs are the GitHub Pages address of the site. Pages serves nothing while the repository is private, so
+# the Worker answers its tools with "Catalog data is unavailable" until the site is published there (RUNBOOK) or
+# these are overridden. The Worker's own address is not here: it becomes the repo variable MCP_URL after the first
+# deploy, and nothing advertises an MCP URL before that.
 [vars]
 MODULES_INDEX_URL = "https://open-mercato.github.io/modules/modules.json"
 BUILTIN_INDEX_URL = "https://open-mercato.github.io/modules/built-in.json"

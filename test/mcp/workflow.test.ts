@@ -1,5 +1,5 @@
 // .github/workflows/mcp-deploy.yml (spec 5.1, 5.2): push to main on mcp/**, lib/core/**, lib/schema/** and by hand;
-// read-only token, environment `mcp`, 10 minutes, wrangler-action pinned to its SHA in mcp/, and a notice instead
+// read-only token, environment `mcp`, 10 minutes, wrangler-action pinned to its SHA in mcp/, and a warning instead
 // of an error when the CLOUDFLARE_API_TOKEN secret is missing. The workflow-wide rules are in test/validate.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync } from 'node:fs'
@@ -65,7 +65,7 @@ describe('mcp-deploy.yml', () => {
     for (const s of rest) expect(s.if, s.name).toBe("${{ steps.token.outputs.present == 'true' }}")
   })
 
-  it('without a token the check step ends with a notice and exit code 0', () => {
+  it('without a token the check step ends with a warning annotation, a summary and exit code 0', () => {
     const script = job.steps[0]!.run!
     const dir = mkdtempSync(join(tmpdir(), 'om-mcp-deploy-'))
     const out = join(dir, 'output')
@@ -74,8 +74,12 @@ describe('mcp-deploy.yml', () => {
       env: { PATH: process.env['PATH'] ?? '', HAS_TOKEN: 'false', GITHUB_OUTPUT: out, GITHUB_STEP_SUMMARY: summary },
       encoding: 'utf8',
     })
-    expect(stdout).toContain('::notice title=mcp-deploy::No CLOUDFLARE_API_TOKEN')
+    // a warning, not a quiet notice: the run is visibly flagged while no MCP server runs (finding of 25 Oct)
+    expect(stdout).toContain('::warning title=mcp-deploy not deployed::No CLOUDFLARE_API_TOKEN')
+    expect(stdout).not.toContain('::notice')
     expect(readFileSync(out, 'utf8')).toBe('present=false\n')
+    expect(readFileSync(summary, 'utf8')).toContain('**Not deployed.**')
+    expect(readFileSync(summary, 'utf8')).toContain('the site publishes no MCP server card')
     const withToken = execFileSync('bash', ['-eo', 'pipefail', '-c', script], {
       env: { PATH: process.env['PATH'] ?? '', HAS_TOKEN: 'true', GITHUB_OUTPUT: out, GITHUB_STEP_SUMMARY: summary },
       encoding: 'utf8',

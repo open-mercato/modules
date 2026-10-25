@@ -54,10 +54,17 @@ describe('llms.txt (llmstxt.org)', () => {
     })
   })
 
-  test('without MCP_URL the MCP line is left out (no invented address)', () => {
+  test('without MCP_URL: no MCP link, no server card, and llms.txt says it is not deployed (no invented address)', () => {
     const out = buildEmit(fixtureData(), { ...OPTS, mcpUrl: null })
-    expect(text(out, 'llms.txt')).not.toContain('MCP server')
+    const t2 = text(out, 'llms.txt')
+    expect(t2).not.toContain('[MCP server]')
+    expect(t2).not.toContain('/mcp')
+    expect(t2).toContain('The MCP server is not deployed yet: read the files below.')
+    expect(out.public.has('.well-known/mcp/server-card.json')).toBe(false)
+    expect(out.public.has('.well-known/agent-skills/index.json')).toBe(true)
     expect(out.warnings.some((w) => w.startsWith('MCP_URL is not set'))).toBe(true)
+    // with the Worker deployed the sentence goes
+    expect(text(fixtureEmit(), 'llms.txt')).not.toContain('not deployed')
   })
 
   test('raw/modules.md has the anchors llms.txt links to', () => {

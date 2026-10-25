@@ -256,10 +256,10 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   for (const [path, text] of schemaFiles(opts.site)) pub.set(path, text)
 
   // discovery
-  const mcpUrl = opts.mcpUrl ?? `${opts.site}/mcp`
-  if (!opts.mcpUrl)
-    warn(`MCP_URL is not set; the server card points at ${mcpUrl}, which serves nothing until /mcp runs`)
-  put(SERVER_CARD_PATH, McpServerCard, serverCard(mcpUrl))
+  // the server card only with a deployed Worker (finding of 25 Oct: a card at <site>/mcp advertised an MCP server that
+  // GitHub Pages cannot serve); llms.txt says it is not deployed yet
+  if (opts.mcpUrl) put(SERVER_CARD_PATH, McpServerCard, serverCard(opts.mcpUrl))
+  else warn('MCP_URL is not set; no MCP server card is published and llms.txt says the MCP server is not deployed yet')
   const skills = agentSkills(data.skills, opts.site, warn)
   put('.well-known/agent-skills/index.json', AgentSkillsIndex, skills.index)
   for (const [path, bytes] of skills.files) pub.set(path, bytes)

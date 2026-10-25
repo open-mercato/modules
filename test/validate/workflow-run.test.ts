@@ -42,8 +42,10 @@ const FAKE_YARN = `#!/usr/bin/env bash
 set -euo pipefail
 echo "$*" >> "$CALLS"
 if [ "$1" = build ]; then
-  mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
+  rm -rf dist; mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
+  mkdir -p dist/.well-known/agent-skills; echo '{}' > dist/.well-known/agent-skills/index.json
   if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p dist/.well-known/mcp; echo '{}' > dist/.well-known/mcp/server-card.json; fi
+  if [ "\${FAKE_SKILLS:-1}" = 0 ]; then rm -rf dist/.well-known/agent-skills; fi
   exit 0
 fi
 [ "$1" = om ] || exit 0
@@ -313,10 +315,19 @@ describe('pages.yml steps', () => {
     expect(existsSync(join(work, '.data'))).toBe(false)
   })
 
-  it('a build without the server card stops before upload', () => {
+  it('a build without .well-known stops before upload; the server card is required only with MCP_URL', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_SKILLS: '0' })
+    const bare = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
+    expect(bare.code).not.toBe(0)
+    expect(bare.out).toContain('dist/.well-known/agent-skills/index.json is missing')
+
     runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_CARD: '0' })
-    const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
+    expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
+    const r = runStep(stepRun('pages.yml', 'Check artifact contents'), {
+      ...env(),
+      MCP_URL: 'https://x.workers.dev/mcp',
+    })
     expect(r.code).not.toBe(0)
     expect(r.out).toContain('dist/.well-known/mcp/server-card.json is missing')
   })

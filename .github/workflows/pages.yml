@@ -88,7 +88,12 @@ jobs:
 
       - name: Check artifact contents
         run: |
-          test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
+          # .well-known/ is the hidden folder the upload drops without include-hidden-files; the MCP server card is
+          # there only with MCP_URL (no card for a Worker that is not deployed, finding of 25 Oct)
+          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          if [ -n "${MCP_URL:-}" ]; then
+            test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
+          fi
           test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
 
       - name: Upload Pages artifact
@@ -99,7 +104,7 @@ jobs:
           include-hidden-files: true
 
       - name: Check the packed artifact
-        run: tar -tf "$RUNNER_TEMP/artifact.tar" | grep -qx './.well-known/mcp/server-card.json'
+        run: tar -tf "$RUNNER_TEMP/artifact.tar" | grep -qx './.well-known/agent-skills/index.json'
 
       - name: Deploy
         id: deployment

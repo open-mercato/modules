@@ -278,7 +278,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     for (const g of groups) expect(['watch', 'sync']).toContain(g?.group) // collect (WP07) owns `collect`
   })
 
-  it('pages: triggers, permissions, environment, include-hidden-files and the server card check', () => {
+  it('pages: triggers, permissions, environment, include-hidden-files and the .well-known check', () => {
     const w = wf('pages.yml')
     expect(w.on).toEqual({
       push: { branches: ['main'] },
@@ -297,8 +297,10 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     const run = runText(w)
     expect(run).toContain('git worktree add --detach .data origin/data')
     expect(run).toContain('yarn build')
-    expect(run).toContain('dist/.well-known/mcp/server-card.json')
-    expect(run).toContain("grep -qx './.well-known/mcp/server-card.json'")
+    expect(run).toContain('dist/.well-known/agent-skills/index.json')
+    expect(run).toContain("grep -qx './.well-known/agent-skills/index.json'")
+    // the MCP server card is required only with MCP_URL (finding of 25 Oct)
+    expect(run).toContain('if [ -n "${MCP_URL:-}" ]; then')
     expect(run).toContain('mkdir -p .data') // empty data on the first day
   })
 
