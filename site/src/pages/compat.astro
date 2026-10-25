@@ -16,7 +16,7 @@ import { cadenceSentence, queuedCellSentence, queuedCellsSentence, schedule } fr
 import { PREVIEW_CHIP } from '../lib/receipts.ts'
 import { PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
 import { presetCellsWeekly } from '../../../lib/core/lines.ts'
-import { QUARANTINE_TEXT, otherVersionCells } from '../../../lib/core/policy.ts'
+import { QUARANTINE_TEXT, lineVersion, otherVersionCells } from '../../../lib/core/policy.ts'
 import { isPreviewData } from '../lib/freshness.ts'
 import type { Others } from '../lib/status.ts'
 import { cannotInstall, registryDefault } from './c/_data.ts'
@@ -54,8 +54,20 @@ for (const r of compat.rows) {
 }
 const isOther = (locator: string, key: string): boolean => !!others[locator]?.[key]
 // the signal `in isolation` (decision of 24 Oct): what a module's receipt in an app from the empty preset found, one
-// sentence per module and finding with its lines, listed under the matrix; never counted as a verdict
-const isoList = new Map<string, { title: string; path: string; keys: string[]; receipts: { key: string; id: string }[] }>()
+// sentence per module and finding with its lines, listed under the matrix; never counted as a verdict. A receipt of
+// another version than the one a new app installs on the line names both (K7; finding of 25 Oct: `Checkout on 0.8:
+// Typecheck failed` was the 0.9.0 release on 0.8, where a new app installs 0.8.0, which is verified there)
+const isoList = new Map<
+  string,
+  {
+    title: string
+    path: string
+    keys: string[]
+    receipts: { key: string; id: string }[]
+    tested: string | null
+    installs: string[]
+  }
+>()
 let isoCells = 0
 const isolation: Record<string, Record<string, IsolationCell>> = {}
 for (const r of compat.rows) {
@@ -66,14 +78,19 @@ for (const r of compat.rows) {
     if (!c) continue
     isoCells += 1
     if (!c.finding) continue
-    const k = `${r.locator}|${c.finding}`
-    const g = isoList.get(k) ?? { title: r.title, path: r.path, keys: [], receipts: [] }
+    const e = byLocator.get(r.locator)
+    const installs = e ? lineVersion(e, l.key) : null
+    const other =
+      installs && c.moduleVersion && c.moduleVersion !== installs ? { tested: c.moduleVersion, installs } : null
+    const k = `${r.locator}|${other ? other.tested : ''}|${c.finding}`
+    const g = isoList.get(k) ?? { title: r.title, path: r.path, keys: [], receipts: [], tested: other?.tested ?? null, installs: [] }
     g.keys.push(l.key)
+    if (other && !g.installs.includes(other.installs)) g.installs.push(other.installs)
     if (c.receipt) g.receipts.push({ key: l.key, id: c.receipt })
     isoList.set(k, g)
   }
 }
-const found = [...isoList.entries()].map(([k, g]) => ({ ...g, text: k.slice(k.indexOf('|') + 1) }))
+const found = [...isoList.entries()].map(([k, g]) => ({ ...g, text: k.split('|').slice(2).join('|') }))
 
 const sigils: Record<string, { glyph: string; phase: number; kind: SigilKind; enterprise: boolean; publicRoutes: boolean }> =
   Object.fromEntries(
@@ -364,7 +381,7 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
             <ul role="list" class="cp-found__list">
               {found.map((f) => (
                 <li>
-                  <a href={href(`/m/${f.path}`)}>{f.title}</a> on {listAnd(f.keys)}: <span set:html={whyHtml(f.text)} />
+                  <a href={href(`/m/${f.path}`)}>{f.title}</a> on {listAnd(f.keys)}{f.tested ? ` (tested ${shortVersion(f.tested)}, not the ${f.installs.length === 1 ? `${shortVersion(f.installs[0]!)} ` : 'version '}a new app installs)` : ''}: <span set:html={whyHtml(f.text)} />
                   <span class="cp-found__rs">
                     {f.receipts.length > 1 ? 'Receipts' : 'Receipt'}{' '}
                     {f.receipts.map((x, i) => (
