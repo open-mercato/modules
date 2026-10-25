@@ -66,11 +66,35 @@ export interface HandleOptions {
 }
 
 async function readBody(request: Request): Promise<{ ok: true; body: unknown } | { ok: false; res: Response }> {
+  const tooLarge = () => ({ ok: false as const, res: rpcError(413, -32600, 'Request body is larger than 64 KB.') })
   const declared = Number(request.headers.get('content-length') ?? '0')
-  if (declared > MAX_BODY_BYTES) return { ok: false, res: rpcError(413, -32600, 'Request body is larger than 64 KB.') }
-  const buf = new Uint8Array(await request.arrayBuffer())
-  if (buf.byteLength > MAX_BODY_BYTES)
-    return { ok: false, res: rpcError(413, -32600, 'Request body is larger than 64 KB.') }
+  if (declared > MAX_BODY_BYTES) return tooLarge()
+  // read the stream chunk by chunk and stop past the limit (spec 8.3, finding of 25 Oct): without a Content-Length,
+  // arrayBuffer() buffered the whole body before the check
+  const chunks: Uint8Array[] = []
+  let total = 0
+  const reader = request.body?.getReader()
+  try {
+    for (;;) {
+      if (!reader) break
+      const { done, value } = await reader.read()
+      if (done) break
+      total += value.byteLength
+      if (total > MAX_BODY_BYTES) {
+        await reader.cancel().catch(() => {})
+        return tooLarge()
+      }
+      chunks.push(value)
+    }
+  } catch {
+    return { ok: false, res: rpcError(400, -32700, 'Parse error: the body could not be read.') }
+  }
+  const buf = new Uint8Array(total)
+  let at = 0
+  for (const c of chunks) {
+    buf.set(c, at)
+    at += c.byteLength
+  }
   try {
     return { ok: true, body: JSON.parse(new TextDecoder().decode(buf)) as unknown }
   } catch {

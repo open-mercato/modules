@@ -377,6 +377,38 @@ describe('HTTP surface of the Worker', () => {
     expect(((await bad.json()) as { error: { code: number } }).error.code).toBe(-32700)
   })
 
+  it('a streamed body without Content-Length stops at 64 KB, not after the whole stream (finding of 25 Oct)', async () => {
+    const CHUNK = 64 * 1024
+    let pulls = 0
+    const stream = new ReadableStream<Uint8Array>({
+      pull(c) {
+        pulls++
+        if (pulls > 32) c.close()
+        else c.enqueue(new Uint8Array(CHUNK).fill(0x20))
+      },
+    })
+    const init = { method: 'POST', headers: MCP_HEADERS, body: stream, duplex: 'half' } as RequestInit
+    const r = await call('/mcp', init)
+    expect(r.status).toBe(413)
+    // the second chunk crosses the limit; the stream may have queued one ahead, never the 32 chunks
+    expect(pulls).toBeLessThanOrEqual(3)
+
+    // a valid body of exactly 64 KB, streamed in pieces, still works
+    const body = rpc('tools/list', { pad: '' })
+    const exact = new TextEncoder().encode(body.replace('"pad":""', `"pad":"${'a'.repeat(CHUNK - body.length)}"`))
+    expect(exact.byteLength).toBe(CHUNK)
+    let i = 0
+    const pieces = new ReadableStream<Uint8Array>({
+      pull(c) {
+        if (i >= exact.byteLength) return c.close()
+        c.enqueue(exact.slice(i, i + 10_000))
+        i += 10_000
+      },
+    })
+    const ok = await call('/mcp', { method: 'POST', headers: MCP_HEADERS, body: pieces, duplex: 'half' } as RequestInit)
+    expect(ok.status).toBe(200)
+  })
+
   it('answers a plain JSON-RPC POST statelessly (no session header) with JSON', async () => {
     const r = await call('/mcp', { method: 'POST', headers: MCP_HEADERS, body: rpc('tools/list') })
     expect(r.status).toBe(200)
