@@ -3,7 +3,7 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
+    "catalog": "om-modules rentgen 2",
     "durationMs": 0
   },
   "package": {
@@ -86,7 +86,7 @@
       "ui": {
         "backendPages": [],
         "frontendPages": [],
-        "widgets": 0,
+        "widgets": 1,
         "extensionHosts": 0
       },
       "background": {
@@ -122,7 +122,134 @@
             "required": true
           }
         ],
-        "env": []
+        "env": [
+          {
+            "name": "OM_INTEGRATION_STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 60
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 61
+            }
+          },
+          {
+            "name": "STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 62
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 65
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 66
+            }
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 67
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 70
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 71
+            }
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 72
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 92
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 93
+            }
+          },
+          {
+            "name": "STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 94
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 104
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 105
+            }
+          },
+          {
+            "name": "STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 106
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 109
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 110
+            }
+          },
+          {
+            "name": "STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 111
+            }
+          }
+        ]
       },
       "network": {
         "hosts": [],
@@ -247,7 +374,7 @@
         "backendRoutes": []
       },
       "publicRoutes": 0,
-      "glyph": "0000202",
+      "glyph": "0010202",
       "lint": [
         {
           "code": "peer-exact-pin",

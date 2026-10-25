@@ -3,7 +3,7 @@
   "extractor": {
     "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
     "factsContractVersion": 2,
-    "catalog": "om-modules rentgen 1",
+    "catalog": "om-modules rentgen 2",
     "durationMs": 0
   },
   "package": {
