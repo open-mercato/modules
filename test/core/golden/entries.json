@@ -1102,7 +1102,10 @@
       "needsAllowThirdParty": false,
       "moduleFlag": null
     },
-    "stats": null,
+    "stats": {
+      "downloads30d": 20546,
+      "stars": null
+    },
     "sigil": {
       "glyph": "3333203",
       "phase": 78,
@@ -1348,7 +1351,10 @@
       "needsAllowThirdParty": false,
       "moduleFlag": null
     },
-    "stats": null,
+    "stats": {
+      "downloads30d": 46377,
+      "stars": null
+    },
     "sigil": {
       "glyph": "0020201",
       "phase": 49,
@@ -1577,7 +1583,10 @@
       "needsAllowThirdParty": false,
       "moduleFlag": null
     },
-    "stats": null,
+    "stats": {
+      "downloads30d": 3762,
+      "stars": null
+    },
     "sigil": {
       "glyph": "0000201",
       "phase": 98,

@@ -30,8 +30,9 @@ describe('IndexEntry from the fixture', () => {
     expect(k.addedAt).toBe('2026-10-23')
   })
 
-  it('official stats are hidden; enterprise has no anatomy; hold entries are not listed', () => {
-    expect(get(LOC.stripe).stats).toBeNull()
+  it('official stats are shown; enterprise has no anatomy; hold entries are not listed', () => {
+    // decision A of 26 Oct: official modules show their downloads too
+    expect(get(LOC.stripe).stats).not.toBeNull()
     expect(get(LOC.enterprise).anatomy).toBeNull()
     expect(get(LOC.enterprise).listed).toBe(true)
     expect(get(LOC.enterprise).tier).toBeNull()

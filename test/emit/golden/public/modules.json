@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.h24795a",
+  "dataVersion": "1.0.0-202610230305.h2d3760",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -2206,7 +2206,10 @@
         "needsAllowThirdParty": false,
         "moduleFlag": null
       },
-      "stats": null,
+      "stats": {
+        "downloads30d": 20546,
+        "stars": null
+      },
       "sigil": {
         "glyph": "0000000",
         "phase": 318,
@@ -2475,7 +2478,10 @@
         "needsAllowThirdParty": false,
         "moduleFlag": null
       },
-      "stats": null,
+      "stats": {
+        "downloads30d": 46377,
+        "stars": null
+      },
       "sigil": {
         "glyph": "0020201",
         "phase": 141,
@@ -2704,7 +2710,10 @@
         "needsAllowThirdParty": false,
         "moduleFlag": null
       },
-      "stats": null,
+      "stats": {
+        "downloads30d": 3762,
+        "stars": null
+      },
       "sigil": {
         "glyph": "0000201",
         "phase": 104,

@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"refuse","0.8":"ask","next":"ask"}
 install: yarn mercato module add @piotrkarwatka/marketing-consents@0.1.0 --allow-third-party
 installable_from: 2026-10-19
-data_version: 1.0.0-202610230305.h24795a
+data_version: 1.0.0-202610230305.h2d3760
 ---
 # Marketing Consents
 Records and withdraws marketing consents for customers, with encrypted fields.

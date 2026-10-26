@@ -294,7 +294,7 @@ export const IndexEntry = z.object({
     .describe(
       'Screenshots of the module in a running app, from the descriptor. src is site-relative (with the base path, a file the catalog hosts) or an https URL on GitHub; resolve a site-relative src against the site origin. alt is plain text. Absent: the descriptor has none.',
     ),
-  stats: z.object({ downloads30d: z.number().int().nullable(), stars: z.number().int().nullable() }).nullable(), // null for official
+  stats: z.object({ downloads30d: z.number().int().nullable(), stars: z.number().int().nullable() }).nullable(), // null when not synced (official modules have downloads since 26 Oct)
   sigil: z.object({
     glyph: z.string().regex(/^[0-3]{7}$/),
     phase: z.number().int().min(0).max(359),

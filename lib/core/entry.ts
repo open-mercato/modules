@@ -464,13 +464,12 @@ function indexEntryOf(i: EntryInput, ev: Evaluation): IndexEntry {
     quality: h.quality ? { version: h.quality.version, until: h.quality.until, report: h.quality.report } : null,
     agentPolicy: h.agentPolicy,
     install,
-    stats:
-      h.identity.type === 'official'
-        ? null
-        : {
-            downloads30d: stat?.downloads30d ?? i.sync?.downloads30d ?? null,
-            stars: stat?.stars ?? i.sync?.github?.stars ?? null,
-          },
+    // official modules too (decision A of 26 Oct): a person compares modules by use, whoever made them
+    stats: {
+      downloads30d: stat?.downloads30d ?? i.sync?.downloads30d ?? null,
+      // an official module lives in the monorepo: its stars are the platform's, the same on every page
+      stars: h.identity.type === 'official' ? null : (stat?.stars ?? i.sync?.github?.stars ?? null),
+    },
     sigil: i.sigil ?? {
       glyph: unionGlyph(facts),
       phase: sigilPhase(i.locator),
