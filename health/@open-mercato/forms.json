@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/forms",
   "version": "0.0.0-canary.20260603190311.74d2590",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-26T12:02:41Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -111,8 +111,8 @@
     },
     {
       "id": "VER-5",
-      "pass": true,
-      "detail": "No repository in the descriptor to compare."
+      "pass": false,
+      "detail": "Not checked: neither the descriptor nor the tarball names a repository."
     }
   ],
   "tier": null,
