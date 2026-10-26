@@ -6,3 +6,6 @@ summary: "Standard Webhooks delivery of platform events: signed payloads, retrie
 whenToUse: Use when an external system must learn about changes in the app as they happen, without polling the API.
 links:
   docs: https://docs.openmercato.com/user-guide/webhooks
+screenshots:
+  - src: screenshots/webhooks-1.webp
+    alt: Create webhook form with endpoint URL, HTTP method, event subscription and delivery settings.

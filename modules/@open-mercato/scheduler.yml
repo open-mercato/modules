@@ -6,3 +6,6 @@ summary: Database-managed scheduled jobs with cron or interval timing, time zone
 whenToUse: Use when the app must run commands or enqueue queue jobs on a schedule that admins can change without a deploy.
 links:
   docs: https://docs.openmercato.com/framework/scheduler/overview
+screenshots:
+  - src: screenshots/scheduler-1.webp
+    alt: Scheduled jobs list with cron and interval schedules, queue targets, next runs and source modules.

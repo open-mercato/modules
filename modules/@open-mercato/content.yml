@@ -5,3 +5,6 @@ tags: [legal, pages]
 summary: Adds public terms of service and privacy policy pages to the app, rendered from code in the app layout.
 whenToUse: Use when the app needs public terms and privacy pages and their text can live in code next to the app.
 whenNotToUse: "It is not a CMS: the admin panel has no page editor."
+screenshots:
+  - src: screenshots/content-1.webp
+    alt: Public terms of service page that the content module adds to the app.

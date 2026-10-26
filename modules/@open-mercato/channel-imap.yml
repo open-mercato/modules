@@ -9,3 +9,6 @@ providers:
   - { name: imap, label: IMAP and SMTP }
 links:
   docs: https://docs.openmercato.com/user-guide/communication-channels-imap
+screenshots:
+  - src: screenshots/channel-imap-1.webp
+    alt: IMAP and SMTP channel settings with host, port and TLS mode fields.

@@ -40,6 +40,8 @@ function walk(dir: string): string[] {
 
 const filesIn = (root: string) =>
   walk(join(root, 'modules'))
+    // descriptors only: catalog-hosted screenshots live next to them (modules/<scope>/screenshots/)
+    .filter((p) => p.endsWith('.yml'))
     .map((p) => relative(root, p).split(sep).join('/'))
     .sort()
 const files = filesIn(SEED_ROOT)

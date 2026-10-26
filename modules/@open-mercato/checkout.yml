@@ -7,3 +7,8 @@ whenToUse: Use when you collect one-off payments such as deposits, workshop fees
 whenNotToUse: "It takes no money on its own: pair it with a payment gateway such as gateway-stripe."
 links:
   docs: https://docs.openmercato.com/user-guide/checkout
+screenshots:
+  - src: screenshots/checkout-1.webp
+    alt: Pay links list with price list, custom and fixed amount links, their status and usage.
+  - src: screenshots/checkout-2.webp
+    alt: Link templates list with pricing mode, gateway and maximum uses per template.

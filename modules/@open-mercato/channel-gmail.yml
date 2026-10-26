@@ -9,3 +9,6 @@ providers:
   - { name: gmail, label: Gmail }
 links:
   docs: https://docs.openmercato.com/user-guide/communication-channels-gmail
+screenshots:
+  - src: screenshots/channel-gmail-1.webp
+    alt: Gmail channel settings with OAuth client ID, client secret and scopes.

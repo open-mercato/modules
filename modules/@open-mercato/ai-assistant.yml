@@ -11,3 +11,6 @@ providers:
   - { name: google, label: Google }
 links:
   docs: https://docs.openmercato.com/framework/ai-assistant/overview
+screenshots:
+  - src: screenshots/ai-assistant-1.webp
+    alt: AI agents page showing the Catalog Assistant with its mode, mutation policy and model override.

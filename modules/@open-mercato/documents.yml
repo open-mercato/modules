@@ -5,3 +5,6 @@ tags: [documents, collaboration, editor]
 summary: Internal rich-text documents that staff co-edit in real time, with folders, sharing roles, comments, versions and export.
 whenToUse: Use when teams write proposals, procedures or notes inside the app and export them to .docx or PDF, instead of a separate wiki.
 whenNotToUse: Real-time co-editing needs a separate WebSocket sidecar process; without it one person edits at a time.
+screenshots:
+  - src: screenshots/documents-1.webp
+    alt: Document templates list with eight active templates such as a deal proposal and a quote cover letter.

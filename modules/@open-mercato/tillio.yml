@@ -7,3 +7,6 @@ whenToUse: Use when the team phones customers through Tillio with a Ringostat op
 providers:
   - { name: tillio, label: Tillio }
   - { name: ringostat, label: Ringostat }
+screenshots:
+  - src: screenshots/tillio-1.webp
+    alt: Tillio phone calls integration settings with API URL, API key and time zone fields.

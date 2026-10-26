@@ -10,3 +10,6 @@ providers:
   - { name: meilisearch, label: Meilisearch }
 links:
   docs: https://docs.openmercato.com/framework/database/hybrid-search
+screenshots:
+  - src: screenshots/search-1.webp
+    alt: Search settings with the fulltext, vector and token strategies and the fulltext driver status.

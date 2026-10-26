@@ -9,3 +9,6 @@ providers:
   - { name: ses, label: Amazon SES }
 links:
   docs: https://docs.openmercato.com/user-guide/communication-channels
+screenshots:
+  - src: screenshots/channel-ses-1.webp
+    alt: Amazon SES email channel settings with AWS region, from address and configuration set.

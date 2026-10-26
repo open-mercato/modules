@@ -9,3 +9,6 @@ providers:
   - { name: apns, label: Apple Push Notification service }
 links:
   docs: https://docs.openmercato.com/framework/modules/push-notifications
+screenshots:
+  - src: screenshots/channel-apns-1.webp
+    alt: Apple Push Notification service settings with auth key, key ID and team ID fields.

@@ -9,3 +9,6 @@ providers:
   - { name: fcm, label: Firebase Cloud Messaging }
 links:
   docs: https://docs.openmercato.com/framework/modules/push-notifications
+screenshots:
+  - src: screenshots/channel-fcm-1.webp
+    alt: Firebase Cloud Messaging channel settings with service account JSON and app name fields.

@@ -9,3 +9,6 @@ providers:
   - { name: akeneo, label: Akeneo PIM }
 links:
   docs: https://docs.openmercato.com/user-guide/akeneo-pim
+screenshots:
+  - src: screenshots/sync-akeneo-1.webp
+    alt: Akeneo PIM integration settings with credentials, sync settings and sync schedule tabs.

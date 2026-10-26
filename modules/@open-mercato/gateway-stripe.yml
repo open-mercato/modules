@@ -9,3 +9,6 @@ providers:
   - { name: stripe, label: Stripe }
 links:
   docs: https://docs.openmercato.com/user-guide/stripe-payments
+screenshots:
+  - src: screenshots/gateway-stripe-1.webp
+    alt: Stripe payment gateway settings with publishable key, secret key and webhook signing secret fields.

@@ -9,3 +9,6 @@ providers:
   - { name: expo, label: Expo }
 links:
   docs: https://docs.openmercato.com/framework/modules/push-notifications
+screenshots:
+  - src: screenshots/channel-expo-1.webp
+    alt: Expo push channel settings with an optional access token field.

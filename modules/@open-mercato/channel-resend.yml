@@ -9,3 +9,6 @@ providers:
   - { name: resend, label: Resend }
 links:
   docs: https://docs.openmercato.com/user-guide/communication-channels
+screenshots:
+  - src: screenshots/channel-resend-1.webp
+    alt: Resend email channel settings with API key and verified from address.
