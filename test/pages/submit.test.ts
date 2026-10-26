@@ -38,6 +38,8 @@ import {
   repoFromUrl,
   runChecks,
   showsCommand,
+  FORM_SCREENSHOTS,
+  screenshotIssueText,
   targetKey,
   typosquatHits,
   type CatalogRef,
@@ -881,6 +883,94 @@ describe('listed entries', () => {
       const text = readFileSync(file, 'utf8')
       expect(descriptorYaml(parseYaml(text) as Record<string, unknown>), file).toBe(fields(text))
     }
+  })
+})
+
+// ---------- screenshots (26 Oct): optional rows of URL and description ----------
+
+describe('screenshots', () => {
+  const base = {
+    ...emptyForm(),
+    category: 'localization-compliance',
+    summary: 'Sends and receives Polish structured e-invoices through the KSeF API v2.',
+    whenToUse: 'Use when the app must issue or receive structured invoices in KSeF (Poland).',
+  }
+  const t: Target = npm(KSEF)
+  // the order of the file: npm, then github, then the form fields
+  const withGithub = (f: typeof base) => ({
+    npm: KSEF,
+    github: 'FastWhiteCat/openmercato-module-ksef',
+    ...buildDescriptor(t, null, f),
+  })
+  const SRC = 'https://raw.githubusercontent.com/FastWhiteCat/openmercato-module-ksef/main/docs/invoices.png'
+
+  test('the form offers up to 3 rows and starts with none', () => {
+    expect(FORM_SCREENSHOTS).toBe(3)
+    expect(emptyForm().screenshots).toEqual([])
+  })
+
+  test('filled rows end up in the YAML as yarn om format writes them; empty rows are left out', async () => {
+    const f = {
+      ...base,
+      screenshots: [
+        { src: ` ${SRC} `, alt: 'The KSeF invoices list with the send status. ' },
+        { src: '', alt: '' },
+        { src: 'https://github.com/user-attachments/assets/7c1d5f4e-2b9a', alt: 'Settings of the KSeF connection.' },
+      ],
+    }
+    const d = buildDescriptor(t, null, f)
+    expect(d.screenshots).toEqual([
+      { src: SRC, alt: 'The KSeF invoices list with the send status.' },
+      { src: 'https://github.com/user-attachments/assets/7c1d5f4e-2b9a', alt: 'Settings of the KSeF connection.' },
+    ])
+    const full = descriptorYaml(withGithub(f))
+    expect(full).toContain(
+      `screenshots:\n  - src: ${SRC}\n    alt: The KSeF invoices list with the send status.\n  - src: https://github.com/user-attachments/assets/7c1d5f4e-2b9a\n`,
+    )
+    const formatted = await formatDescriptorText(full, `modules/${KSEF}.yml`)
+    expect(formatted.text).toBe(full)
+    expect(Descriptor.safeParse(parseYaml(full)).success).toBe(true)
+    // and the pull request carries it
+    expect(new URL(pullRequestUrl(REPO, t, full)).searchParams.get('value')).toContain(`  - src: ${SRC}`)
+  })
+
+  test('no rows, no key', () => {
+    expect('screenshots' in buildDescriptor(t, null, base)).toBe(false)
+  })
+
+  test('a listed entry keeps the screenshots of its file, and removing every row removes them', async () => {
+    const descriptor = {
+      npm: KSEF,
+      github: 'FastWhiteCat/openmercato-module-ksef',
+      category: base.category,
+      summary: base.summary,
+      whenToUse: base.whenToUse,
+      screenshots: [{ src: 'screenshots/invoices.webp', alt: 'The KSeF invoices list with the send status.' }],
+    }
+    const { deps } = mockFetch(KSEF_ROUTES)
+    const r = await runChecks(t, { ...CTX, catalog: [ref(KSEF, KSEF, { descriptor })] }, deps)
+    const f = formFromPackage(r, [], emptyForm())
+    expect(f.screenshots).toEqual(descriptor.screenshots)
+    expect(buildDescriptor(t, r, f).screenshots).toEqual(descriptor.screenshots)
+    expect(buildDescriptor(t, r, { ...f, screenshots: [] }).screenshots).toBeUndefined()
+  })
+
+  test('each problem names its row in one sentence', () => {
+    const issues = (screenshots: { src: string; alt: string }[]) =>
+      descriptorIssues(withGithub({ ...base, screenshots })).map((i) => i.message)
+    expect(issues([{ src: 'https://example.com/a.png', alt: 'The KSeF invoices list.' }])).toEqual([
+      'Screenshot 1: use an https link to an image of your repository on raw.githubusercontent.com, or a github.com/user-attachments link.',
+    ])
+    expect(issues([{ src: SRC, alt: 'List.' }])).toEqual(['Screenshot 1: describe the image in 10 to 120 characters.'])
+    expect(
+      issues([
+        { src: SRC, alt: 'The KSeF invoices list.' },
+        { src: 'https://raw.githubusercontent.com/other/repo/main/a.png', alt: 'The KSeF invoices list.' },
+      ]),
+    ).toEqual([
+      "Screenshot 2: link an image of the module's own repository FastWhiteCat/openmercato-module-ksef, not of other/repo, or host the file under screenshots/.",
+    ])
+    expect(screenshotIssueText(['screenshots'], 'at most 6 screenshots')).toBe('Screenshots: at most 6.')
   })
 })
 

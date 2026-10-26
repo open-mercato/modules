@@ -41,7 +41,8 @@ export function toolsJsonSchema(): JsonObject {
  * descriptor-1.json with the cross-field rules of Descriptor's superRefine that JSON Schema can say (finding of 25 Oct:
  * z.toJSONSchema drops refinements, so `summary: x` or `status: hold` without a reason validated): npm or github, a
  * reason for a status other than active, `extends` only on a provider. Runtime-only, said in CI and /submit: plain
- * text (no URL, markdown, HTML), `enterprise` reserved for @open-mercato/enterprise, and policy/ignore.yml.
+ * text (no URL, markdown, HTML), `enterprise` reserved for @open-mercato/enterprise, policy/ignore.yml, and of
+ * `screenshots` the own repository of a raw.githubusercontent.com link and the hosted file (exists, at most 600 KB).
  */
 export function descriptorJsonSchema(): JsonObject {
   const base = z.toJSONSchema(Descriptor, { io: 'input' }) as JsonObject

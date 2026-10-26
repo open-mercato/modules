@@ -1,7 +1,7 @@
 // Page helpers shared by `/`, `/c/*`, `/m/*`, `/r/*` and `/404` (WP12). The underscore keeps the file out of routing.
 // Isomorphic (no Node API): the Registry island imports it too.
 import type { CellSummary, IndexEntry, Line } from '../../../../lib/schema/index.ts'
-import { catalogSkipText } from '../../../../lib/core/policy.ts'
+import { catalogSkipText, otherVersionCells } from '../../../../lib/core/policy.ts'
 
 type ReceiptLike = { id: string; run: { attempt?: number | null }; transition?: { confirmed?: boolean } }
 
@@ -124,4 +124,157 @@ export function rowSpans(
   }
   if (col > 0 && prev) out[prev] = (out[prev] ?? 1) + (cols - col)
   return out
+}
+
+// ---------- module browser (home and /c/*, the nuxt.com/modules style of 26 Oct) ----------
+
+/**
+ * Words for the origin of an entry: the `Made by` filter, the quiet chip on a card and its hint. The hints say what
+ * the sync computes (policy/community.yml): official is the @open-mercato scope, community is a member of the
+ * open-mercato org or a certified partner, third-party is anyone else.
+ */
+export const MADE_BY: readonly { id: IndexEntry['type']; label: string; hint: string }[] = [
+  { id: 'official', label: 'Official', hint: 'Made by the Open Mercato team.' },
+  { id: 'community', label: 'Community', hint: 'Made by Open Mercato team members and certified partners.' },
+  { id: '3rd-party', label: 'Third-party', hint: 'Made by other authors.' },
+]
+export const madeByLabel = (type: IndexEntry['type']): string => MADE_BY.find((m) => m.id === type)?.label ?? type
+export const madeByHint = (type: IndexEntry['type']): string => MADE_BY.find((m) => m.id === type)?.hint ?? ''
+
+/** Tools and libraries: shown behind `Show more`, never in the default set. */
+export const isToolKind = (e: Pick<IndexEntry, 'kind'>): boolean => e.kind === 'tool' || e.kind === 'library'
+
+/**
+ * The set of the browser: the default set (registryDefault) plus listed tools and libraries without the `example` tag
+ * and outside the held states. Examples and held entries are behind their own switch (extraOf).
+ */
+export function browserSet<T extends Pick<IndexEntry, 'listed' | 'kind' | 'tags' | 'status'>>(
+  entries: readonly T[],
+): T[] {
+  const base = new Set(registryDefault(entries))
+  return entries.filter(
+    (e) => base.has(e) || (e.listed && isToolKind(e) && !HELD_STATES.has(e.status) && !e.tags.includes('example')),
+  )
+}
+
+/** Why an entry outside the browser set is hidden by default: `On hold`, `Example` or `Not listed`; null inside it. */
+export function extraOf(e: Pick<IndexEntry, 'listed' | 'kind' | 'tags' | 'status'>): string | null {
+  if (browserSet([e]).length > 0) return null
+  if (HELD_STATES.has(e.status) || e.status === 'delisted') return 'On hold'
+  if (e.tags.includes('example')) return 'Example'
+  return 'Not listed'
+}
+
+type Grouped = Pick<IndexEntry, 'locator' | 'kind' | 'requires' | 'listed' | 'tags' | 'status'>
+
+/**
+ * Providers that plug into a library or a module of the browser set (the seven web-research adapters): provider
+ * locator to parent locator. A person sees one card for the parent, `7 providers`, and finds the adapters by search.
+ */
+export function providerParents<T extends Grouped>(entries: readonly T[]): Map<string, string> {
+  const set = new Map(browserSet(entries).map((e) => [e.locator, e]))
+  const out = new Map<string, string>()
+  for (const e of registryDefault(entries)) {
+    if (e.kind !== 'provider') continue
+    const parent = e.requires
+      .map((r) => r.resolvesTo)
+      .find((l): l is string => !!l && !!set.get(l) && set.get(l)!.kind !== 'provider')
+    if (parent) out.set(e.locator, parent)
+  }
+  return out
+}
+
+/**
+ * The modules a person browses by default, the one count of every page for people (home, /c/*, 404, the note on
+ * /compat): registryDefault, with grouped providers folded into their parent card.
+ */
+export function browseDefault<T extends Grouped>(entries: readonly T[]): T[] {
+  const parents = providerParents(entries)
+  const parentSet = new Set(parents.values())
+  const def = new Set(registryDefault(entries))
+  return entries.filter((e) => parentSet.has(e.locator) || (def.has(e) && !parents.has(e.locator)))
+}
+
+/** Who made it, in a few words: Open Mercato for official entries, else the npm scope, else the GitHub owner. */
+export function authorOf(e: Pick<IndexEntry, 'type' | 'npm' | 'github'>): string | null {
+  if (e.type === 'official') return 'Open Mercato'
+  const scope = e.npm?.match(/^@([^/]+)\//)?.[1]
+  if (scope) return scope
+  const owner = e.github?.split('/')[0]
+  return owner || null
+}
+
+export type CardStateKind = 'preset' | 'works' | 'broken' | 'untested' | 'enterprise'
+
+/**
+ * The one state of a card, the same five words on every card (review of 26 Oct: a broken module looked healthy on
+ * its card): a new app of the latest line has it, a receipt verified it there, a receipt broke on it there, or nothing
+ * judged it yet. The module page says the same in its pill.
+ */
+export function cardState(
+  e: IndexEntry,
+  latest: Pick<Line, 'key' | 'version'> | null,
+): { kind: CardStateKind; text: string; title: string } {
+  if (e.enterprise)
+    return { kind: 'enterprise', text: 'Enterprise license', title: 'Needs an Open Mercato Enterprise subscription.' }
+  const key = latest?.key ?? null
+  const v = latest ? `Open Mercato ${latest.version}, the latest version` : 'the latest Open Mercato version'
+  if (key && e.compat.inPresets?.includes(key))
+    return { kind: 'preset', text: 'Comes with new apps', title: `Every new app on ${v} already has it.` }
+  if (key && e.compat.verifiedOn.includes(key))
+    return { kind: 'works', text: 'Works on latest', title: `The install test passed on ${v}.` }
+  const broken = !!key && e.compat.lines[key]?.status === 'broken' && !otherVersionCells(e)[key]
+  if (broken) return { kind: 'broken', text: 'Not working on latest', title: `The install test failed on ${v}.` }
+  // an entry the nightly run never installs (a provider, a library) is not waiting for a test: the page's own words
+  if (catalogSkip(e)) return { kind: 'untested', text: 'Not tested', title: catalogSkip(e)! }
+  return { kind: 'untested', text: 'Not tested yet', title: `No install test on ${v} yet.` }
+}
+
+/** `950`, `1.2k`, `12k`, `1.3M`. */
+export function compactCount(n: number): string {
+  const short = (v: number, unit: string): string => `${v >= 10 ? Math.round(v) : Math.round(v * 10) / 10}${unit}`
+  if (n >= 1_000_000) return short(n / 1_000_000, 'M')
+  if (n >= 1_000) return short(n / 1_000, 'k')
+  return String(n)
+}
+
+/** Downloads per month (else GitHub stars above zero) as a short number, its icon and a sentence for screen readers. */
+export function popularity(
+  e: Pick<IndexEntry, 'stats'>,
+): { text: string; icon: 'download' | 'star'; label: string } | null {
+  const d = e.stats?.downloads30d
+  if (d != null)
+    return {
+      text: compactCount(d),
+      icon: 'download',
+      label: `${d.toLocaleString('en-US')} downloads in the last 30 days`,
+    }
+  const s = e.stats?.stars
+  if (s) return { text: compactCount(s), icon: 'star', label: `${s} GitHub ${s === 1 ? 'star' : 'stars'}` }
+  return null
+}
+
+/**
+ * Recommended order (review of 26 Oct: third-party and broken modules stood on top): featured, then the ones that
+ * work on the latest line, then the untested, broken last; within each, official first, then downloads, then the title.
+ */
+export function recommended<T extends Pick<IndexEntry, 'featured' | 'compat' | 'stats' | 'type' | 'title'>>(
+  entries: readonly T[],
+  latestKey: string | null,
+): T[] {
+  const health = (e: T): number =>
+    latestKey && (e.compat.verifiedOn.includes(latestKey) || e.compat.inPresets?.includes(latestKey))
+      ? 0
+      : latestKey && e.compat.lines[latestKey]?.status === 'broken'
+        ? 2
+        : 1
+  const dl = (e: T): number => e.stats?.downloads30d ?? -1
+  return [...entries].sort(
+    (a, b) =>
+      Number(b.featured) - Number(a.featured) ||
+      health(a) - health(b) ||
+      Number(b.type === 'official') - Number(a.type === 'official') ||
+      dl(b) - dl(a) ||
+      a.title.localeCompare(b.title),
+  )
 }

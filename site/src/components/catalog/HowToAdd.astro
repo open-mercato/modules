@@ -1,0 +1,74 @@
+---
+// Under the module grid: how to add a module in three steps, with one real install command from the data (the same
+// line its module page gives: the add command, yarn generate and yarn db:migrate), then how to build your own and one
+// line for people who work with a coding agent.
+import CommandChip from '../CommandChip.astro'
+import { href, modulePage } from '../../lib/url.ts'
+
+interface Props {
+  /** One real install command: an official module of the list and its install line. */
+  example: { title: string; path: string; cli: string } | null
+  /** Some module of the list needs `--allow-third-party` (counted in cards.ts needsThirdPartyFlag). */
+  thirdParty?: boolean
+}
+const { example, thirdParty = false } = Astro.props
+---
+
+<section class="band" id="howto" aria-labelledby="howto-h" tabindex="-1">
+  <div class="sheet section howto">
+    <h2 class="howto__h" id="howto-h">How to add a module</h2>
+    <ol class="howto__steps" role="list">
+      <li>
+        <span class="howto__n" aria-hidden="true">1</span>
+        <h3 class="howto__t">Find a module</h3>
+        <p>Search above or pick a category. Each card opens a page with what the module adds and how to install it.</p>
+      </li>
+      <li>
+        <span class="howto__n" aria-hidden="true">2</span>
+        <h3 class="howto__t">Run its install command</h3>
+        <p>
+          Run it in the folder of your Open Mercato app. It adds the module, registers it with <code>yarn generate</code>{' '}
+          and, when the module has tables, runs <code>yarn db:migrate</code>.
+          {
+            example && (
+              <>
+                {' '}
+                For example, <a href={href(modulePage(example.path))}>{example.title}</a>:
+              </>
+            )
+          }
+        </p>
+        {example && <CommandChip command={example.cli} />}
+        {
+          thirdParty && (
+            <p>
+              Modules not made by Open Mercato also need <code>--allow-third-party</code>. Their pages show the full
+              command.
+            </p>
+          )
+        }
+      </li>
+      <li>
+        <span class="howto__n" aria-hidden="true">3</span>
+        <h3 class="howto__t">Restart the app</h3>
+        <p>
+          Restart it so the module loads. When a module adds permissions, its page says so: give them to roles in the
+          admin, under <code>/backend/roles</code>.
+        </p>
+      </li>
+    </ol>
+
+    <div class="howto__own">
+      <div class="howto__own-text">
+        <h3 class="howto__t">Build your own module</h3>
+        <p>Start from a template, publish it to npm, then send it here.</p>
+      </div>
+      <div class="howto__own-act">
+        <CommandChip command="npx create-mercato-module" />
+        <a class="btn btn--secondary" href={href('/submit')}>Submit a module</a>
+      </div>
+    </div>
+
+    <p class="howto__agents">Using an AI agent? Read <a href={href('/for-agents')}>For agents</a>.</p>
+  </div>
+</section>

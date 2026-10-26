@@ -1,6 +1,6 @@
 // Phone checks (spec 7.10, P15, 12.2 WP16): no horizontal page scroll at 360 and 390 px
 // (`document.documentElement.scrollWidth <= innerWidth`), and the Receipts strip of a module page is one touch
-// target of at least 44 x 44 px.
+// target of at least 44 x 44 px (inside Technical details since 26 Oct, opened by the `#receipts` address).
 import { expect, test } from '@playwright/test'
 import { KSEF, PAGES, phone, themed, url } from './env.ts'
 
@@ -62,7 +62,9 @@ for (const width of [360, 390])
     const ctx = await themed(browser, 'light', phone(width))
     const page = await ctx.newPage()
     for (const path of STRIP_PAGES) {
-      await page.goto(url(path), { waitUntil: 'load' })
+      // the strip sits in the closed Technical details (26 Oct); the receipts address opens it
+      await page.goto(url(`${path}#receipts`), { waitUntil: 'load' })
+      await expect(page.locator('details#technical'), `${path}: Technical details open`).toHaveAttribute('open', '')
       const strip = page.locator('[data-receipts-open]').first()
       await expect(strip, `${path}: the Receipts strip`).toBeVisible()
       const box = await strip.boundingBox()

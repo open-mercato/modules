@@ -2,7 +2,7 @@
   "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.h34c6c1",
+  "dataVersion": "1.0.0-202610230305.h24795a",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",
@@ -1020,7 +1020,7 @@
     },
     {
       "id": "payments-finance",
-      "title": "Payments & Finance",
+      "title": "Payments, Billing & Invoicing",
       "wedge": "money",
       "count": 2
     },
@@ -1571,7 +1571,13 @@
           "0.8": "0.1.8",
           "next": "0.1.8"
         }
-      }
+      },
+      "screenshots": [
+        {
+          "src": "/modules/shots/@fastwhitecat/invoices.png",
+          "alt": "The KSeF invoices list with the send status of each invoice."
+        }
+      ]
     },
     {
       "locator": "npm:@fullstackhouse/open-mercato-data-sync-durable",

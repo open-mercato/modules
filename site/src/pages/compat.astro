@@ -4,6 +4,7 @@
 // Sorting without JS: the matrix is rendered once per order and a radio pair shows one of them. Cell texts live in
 // CompatMatrix (lib/compat-cells.ts), so the matrix and the counts above it read one predicate for day 0.
 import Base from '../layouts/Base.astro'
+import Icon from '../components/icons/Icon.astro'
 import CompatMatrix from '../components/CompatMatrix.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { STEPS, STEPS_WORD } from '../../../lib/core/steps.ts'
@@ -19,7 +20,7 @@ import { presetCellsWeekly } from '../../../lib/core/lines.ts'
 import { QUARANTINE_TEXT, lineVersion, otherVersionCells } from '../../../lib/core/policy.ts'
 import { isPreviewData } from '../lib/freshness.ts'
 import type { Others } from '../lib/status.ts'
-import { cannotInstall, registryDefault } from './c/_data.ts'
+import { browseDefault, cannotInstall, registryDefault } from './c/_data.ts'
 import { Square } from '../lib/ui.tsx'
 import { shortVersion } from '../lib/format.ts'
 import { href } from '../lib/url.ts'
@@ -236,6 +237,39 @@ const rowsNote = [
 ]
   .filter(Boolean)
   .join(' ')
+// ---------- the page for people (review of 26 Oct): one verdict, a table of three words, the detail folded ----------
+const latestLine = lines.find((l) => l.source === 'latest') ?? lines[0]!
+type Plain = 'works' | 'broken' | 'untested'
+const plainOf = (r: Row, key: string): Plain => {
+  const c = r.cells[key]
+  if (isOther(r.locator, key)) return 'untested'
+  return c?.status === 'verified' ? 'works' : c?.status === 'broken' ? 'broken' : 'untested'
+}
+const PLAIN_WORD: Record<Plain, string> = { works: 'Works', broken: 'Not working', untested: 'Not tested' }
+const onLatest = { works: 0, broken: 0, untested: 0 }
+for (const r of compat.rows) onLatest[plainOf(r, latestLine.key)] += 1
+const verdict = `On Open Mercato ${latestLine.version}, the latest version, ${onLatest.works} ${onLatest.works === 1 ? 'module works' : 'modules work'}, ${onLatest.broken} ${onLatest.broken === 1 ? 'does' : 'do'} not and ${onLatest.untested} ${onLatest.untested === 1 ? 'is' : 'are'} not tested yet.`
+// why the browse pages count another number (review of 26 Oct: 46 there, 40 here, Visits only here)
+const browse = browseDefault(modules.entries)
+const browseSet = new Set(browse.map((e) => e.locator))
+const neverList = browse.filter((e) => !inRows.has(e.locator))
+const neverHere = neverList.length
+const onlyList = compat.rows.filter((r) => !browseSet.has(r.locator))
+const onlyHere = onlyList.length
+const countNote = [
+  `The module list shows ${browse.length}.`,
+  neverHere > 0
+    ? neverHere <= 3
+      ? `${listAnd(neverList.map((e) => e.title))} ${neverHere === 1 ? 'is' : 'are'} never installed on ${neverHere === 1 ? 'its' : 'their'} own, so ${neverHere === 1 ? 'it is' : 'they are'} not here.`
+      : `${neverHere} of them are never installed on their own (enterprise modules, providers and libraries), so they are not here.`
+    : '',
+  onlyHere > 0
+    ? `${onlyHere <= 3 ? listAnd(onlyList.map((r) => r.title)) : onlyHere} ${onlyHere === 1 ? 'is an example or on hold: tested here, and shown there' : 'are examples or on hold: tested here, and shown there'} under Show more, Examples and paused modules.`
+    : '',
+]
+  .filter(Boolean)
+  .join(' ')
+const plainRows = byCategory
 const description = `${compat.rows.length} Open Mercato modules on ${lines.length} release lines, in a new app with a new app as the baseline. ${meta.peersSentence}`
 ---
 
@@ -248,92 +282,144 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
 >
   <section class="band">
     <div class="sheet section cp-head">
-      <div class="cp-copy">
-        <p class="t-tagline">// Compatibility</p>
-        <h1 class="cp-title">A fresh app per line. A receipt per module.</h1>
-        <p class="cp-lede">
-          {cadenceSentence(lines, sched, previewRun, presetWeekly)} A cell is one module added to a new app of that line,
-          from the classic preset, and run through {STEPS_WORD} steps from {STEPS[0]} to {STEPS[STEPS.length - 1]}. The first
-          row is Open Mercato itself.
-        </p>
-        <dl class="cp-facts">
-          <div><dt>Rows</dt><dd class="num">{compat.rows.length} modules in {categoriesShown} categories</dd></div>
-          <div><dt>Lines</dt><dd>{lineText}</dd></div>
-        </dl>
-        {rowsNote && <p class="cp-rowsnote">{rowsNote}</p>}
-        {
-          previewRun && (
-            <p class="cp-preview">
-              <span class="chip chip--preview">{PREVIEW_CHIP}</span>
-              <span>{PREVIEW_SENTENCE}</span>
-            </p>
-          )
-        }
-      </div>
-      <figure class="cp-count" aria-labelledby="cp-count-cap">
-        <figcaption id="cp-count-cap">{cellCount} cells · {compat.rows.length} modules × {lines.length} lines</figcaption>
-        <ul role="list" aria-label="Receipt state">
-          {
-            shownCounters.map((c) => (
-              <li class:list={[c.n === 0 && 'cp-count--zero']} title={STATE_LEGEND.find((x) => x.mark === c.square)?.title}>
-                <span class="cp-count__sq">
-                  {c.other ? (
-                    <Square status="untested" other />
-                  ) : c.square === 'untested' ? (
-                    <span class="cp-dot" />
-                  ) : c.square === 'held' ? (
-                    <Square status="quarantine" step="install" />
-                  ) : (
-                    <Square status={c.square} />
-                  )}
-                </span>
-                <span class="cp-count__n num">{c.n}</span>
-                {/* a parenthesis wraps whole: `not judged` / `(run did not finish)` */}
-                <span class="cp-count__k">
-                  {c.label.includes(' (') ? (
-                    <>
-                      {c.label.slice(0, c.label.indexOf(' ('))}{' '}
-                      <span class="nw">{c.label.slice(c.label.indexOf(' (') + 1)}</span>
-                    </>
-                  ) : (
-                    c.label
-                  )}
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-        {/* why `not judged (age gate)` is no release of the module (round 14): one calm sentence under the count */}
-        {tally.held > 0 && <p class="cp-count__iso">{QUARANTINE_TEXT}</p>}
-        {
-          isoCells > 0 && (
-            <p class="cp-count__iso">
-              <span class="sq-iso-key sq-iso-key--agree" aria-hidden="true" />
-              <span class="num">{isoCells}</span> {isoCells === 1 ? 'cell has' : 'cells have'} a receipt {ISOLATION_MARK.word}
-            </p>
-          )
-        }
-        <ul role="list" class="cp-count__fits" aria-label="Static fit of the same cells">
-          {
-            FIT_LEGEND.map((f) => (
-              <li class:list={[fitTally[f.fit] === 0 && 'cp-count--zero']} data-fit={f.fit}>
-                <span class="cp-count__f" aria-hidden="true">{FIT_GLYPH[f.fit]}</span>
-                <span class="cp-count__n num">{fitTally[f.fit]}</span>
-                <span class="cp-count__k">{f.text}</span>
-              </li>
-            ))
-          }
-        </ul>
-      </figure>
+      <p class="t-tagline">// Compatibility</p>
+      <h1 class="cp-title">Modules, tested on every Open Mercato version.</h1>
+      <p class="cp-verdict">{verdict}</p>
+      <p class="cp-intro">
+        This page shows whether each module installs and works in a new Open Mercato app, version by version. It is for
+        module authors and Open Mercato maintainers. Just looking for a module? <a href={href('/')}>Browse modules.</a>
+      </p>
+      <dl class="cp-facts">
+        <div><dt>Modules</dt><dd class="num">{compat.rows.length} modules in {categoriesShown} categories</dd></div>
+        <div><dt>Open Mercato versions</dt><dd>{lineText}</dd></div>
+      </dl>
+      {countNote && <p class="cp-countnote">{countNote}</p>}
+      {
+        previewRun && (
+          <p class="cp-preview">
+            <span class="chip chip--preview">{PREVIEW_CHIP}</span>
+            <span>{PREVIEW_SENTENCE}</span>
+          </p>
+        )
+      }
+      {/* how the matrix is made and its counts, folded (review of 26 Oct: the legend and the counters covered the table) */}
+      <details class="cp-how">
+        <summary>How the tests run</summary>
+        <div class="cp-howbody">
+          <p class="cp-lede">
+            {cadenceSentence(lines, sched, previewRun, presetWeekly)} A cell is one module added to a new app of that line,
+            from the classic preset, and run through {STEPS_WORD} steps from {STEPS[0]} to {STEPS[STEPS.length - 1]}. The
+            first row is Open Mercato itself.
+          </p>
+          {rowsNote && <p class="cp-rowsnote">{rowsNote}</p>}
+          <figure class="cp-count" aria-labelledby="cp-count-cap">
+            <figcaption id="cp-count-cap">{cellCount} cells · {compat.rows.length} modules × {lines.length} lines</figcaption>
+            <ul role="list" aria-label="Receipt state">
+              {
+                shownCounters.map((c) => (
+                  <li class:list={[c.n === 0 && 'cp-count--zero']} title={STATE_LEGEND.find((x) => x.mark === c.square)?.title}>
+                    <span class="cp-count__sq">
+                      {c.other ? (
+                        <Square status="untested" other />
+                      ) : c.square === 'untested' ? (
+                        <span class="cp-dot" />
+                      ) : c.square === 'held' ? (
+                        <Square status="quarantine" step="install" />
+                      ) : (
+                        <Square status={c.square} />
+                      )}
+                    </span>
+                    <span class="cp-count__n num">{c.n}</span>
+                    {/* a parenthesis wraps whole: `not judged` / `(run did not finish)` */}
+                    <span class="cp-count__k">
+                      {c.label.includes(' (') ? (
+                        <>
+                          {c.label.slice(0, c.label.indexOf(' ('))}{' '}
+                          <span class="nw">{c.label.slice(c.label.indexOf(' (') + 1)}</span>
+                        </>
+                      ) : (
+                        c.label
+                      )}
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+            {/* why `not judged (age gate)` is no release of the module (round 14): one calm sentence under the count */}
+            {tally.held > 0 && <p class="cp-count__iso">{QUARANTINE_TEXT}</p>}
+            {
+              isoCells > 0 && (
+                <p class="cp-count__iso">
+                  <span class="sq-iso-key sq-iso-key--agree" aria-hidden="true" />
+                  <span class="num">{isoCells}</span> {isoCells === 1 ? 'cell has' : 'cells have'} a receipt {ISOLATION_MARK.word}
+                </p>
+              )
+            }
+            <ul role="list" class="cp-count__fits" aria-label="Static fit of the same cells">
+              {
+                FIT_LEGEND.map((f) => (
+                  <li class:list={[fitTally[f.fit] === 0 && 'cp-count--zero']} data-fit={f.fit}>
+                    <span class="cp-count__f" aria-hidden="true">{FIT_GLYPH[f.fit]}</span>
+                    <span class="cp-count__n num">{fitTally[f.fit]}</span>
+                    <span class="cp-count__k">{f.text}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </figure>
+        </div>
+      </details>
     </div>
   </section>
 
-  <section class="band" id="matrix" aria-labelledby="cp-peers">
-    <div class="sheet section cp-body">
-      <h2 class="cp-peers" id="cp-peers">
-        Peer ranges reject <span class="num">{peers.rejected}</span> of <span class="num">{peers.fitting}</span> combinations
-        that fit statically.
-      </h2>
+  <section class="band" id="matrix" aria-labelledby="cp-plain-h">
+    <div class="sheet section cp-plain">
+      <h2 class="cp-h2" id="cp-plain-h">Modules by Open Mercato version</h2>
+      <div class="cp-tablewrap">
+        <table class="cp-table">
+          <thead>
+            <tr>
+              <th scope="col">Module</th>
+              {lines.map((l) => <th scope="col">{l.source === 'develop' ? 'Next' : l.source === 'latest' ? `${l.key} (latest)` : l.key}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              plainRows.map((r, i) => (
+                <>
+                  {(i === 0 || groups[r.locator] !== groups[plainRows[i - 1]!.locator]) && (
+                    <tr class="cp-table__group">
+                      <th scope="colgroup" colspan={lines.length + 1}>{groups[r.locator]}</th>
+                    </tr>
+                  )}
+                  <tr>
+                    <th scope="row"><a href={href(`/m/${r.path}`)}>{r.title}</a></th>
+                    {lines.map((l) => {
+                      const st = plainOf(r, l.key)
+                      return <td class={`cp-w cp-w--${st}`}>{PLAIN_WORD[st]}</td>
+                    })}
+                  </tr>
+                </>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="cp-note">
+        Works: a new app of that version installed the module and passed every check. Not working: the last test failed.
+        Not tested: no test of that version yet, or the catalog never installs it.
+      </p>
+    </div>
+  </section>
+
+  <section class="band" id="full-matrix" aria-labelledby="cp-matrix-h">
+    <details class="sheet section cp-body cp-full">
+      <summary class="cp-full__sum">
+        <span class="cp-h2" id="cp-matrix-h">
+          Details for module authors <Icon name="chevron-down" size={18} class="icon cp-full__chev" />
+        </span>
+        <span class="cp-full__sub">The full matrix with receipts, static fit and peer ranges, and what a minimal app found.</span>
+      </summary>
       <div class="cp-sort" role="radiogroup" aria-label="Sort modules">
         <span class="t-tagline">Sort</span>
         <label class="cp-sort__opt"><input type="radio" name="cp-sort" id="cp-sort-cat" checked /> By category</label>
@@ -353,7 +439,23 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
           queuedAll={queuedAll}
           skipReasons={skipReasons}
           sentence={false}
-        />
+        >
+          <div class="cp-explain" slot="how">
+            <p>
+              <strong>Show static fit</strong> outlines the cells where every import of the module resolves against the
+              published Open Mercato packages of the line: <code>F</code> fits, <code>×</code> does not fit,{' '}
+              <code>?</code> not analyzed. A static check, not an install. It starts switched on while most cells have no
+              receipt.
+            </p>
+            <p>
+              <strong>Declared overlay</strong> rings the cells the module's peer dependencies accept. A declaration, not a
+              test.
+            </p>
+            <p>
+              <strong>Regressions only</strong> keeps the modules that are broken on at least one line.
+            </p>
+          </div>
+        </CompatMatrix>
       </div>
       <div class="cp-view cp-view--broken">
         <CompatMatrix
@@ -368,12 +470,32 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
           queuedAll={queuedAll}
           skipReasons={skipReasons}
           sentence={false}
-        />
+        >
+          <div class="cp-explain" slot="how">
+            <p>
+              <strong>Show static fit</strong> outlines the cells where every import of the module resolves against the
+              published Open Mercato packages of the line: <code>F</code> fits, <code>×</code> does not fit,{' '}
+              <code>?</code> not analyzed. A static check, not an install. It starts switched on while most cells have no
+              receipt.
+            </p>
+            <p>
+              <strong>Declared overlay</strong> rings the cells the module's peer dependencies accept. A declaration, not a
+              test.
+            </p>
+            <p>
+              <strong>Regressions only</strong> keeps the modules that are broken on at least one line.
+            </p>
+          </div>
+        </CompatMatrix>
       </div>
+      <p class="cp-peers">
+        Peer ranges reject <span class="num">{peers.rejected}</span> of <span class="num">{peers.fitting}</span> combinations
+        that fit statically.
+      </p>
       {
         found.length > 0 && (
           <section class="cp-found" id="cp-found" aria-labelledby="cp-found-h">
-            <h3 class="t-tagline" id="cp-found-h">Found in isolation (empty preset)</h3>
+            <h3 class="t-tagline" id="cp-found-h">Found in a minimal app (empty preset)</h3>
             <p class="cp-found__lede">
               An app from the empty preset has twelve modules on. What a module's receipt there found is a signal about
               the module without the rest of the platform, never its verdict, which a new app gives.
@@ -397,48 +519,168 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
           </section>
         )
       }
-      <div class="cp-explain">
-        <p>
-          <strong>Show static fit</strong> outlines the cells where every import of the module resolves against the
-          published Open Mercato packages of the line: <code>F</code> fits, <code>×</code> does not fit,{' '}
-          <code>?</code> not analyzed. A static check, not an install. It starts switched on while most cells have no
-          receipt.
-        </p>
-        <p>
-          <strong>Declared overlay</strong> rings the cells the module's peer dependencies accept. A declaration, not a
-          test.
-        </p>
-        <p>
-          <strong>Regressions only</strong> keeps the modules that are broken on at least one line.
-        </p>
-      </div>
       <p class="cp-links t-small">
         Data: <a href={href('/compat.json')}>compat.json</a> · schema{' '}
         <a href={href('/schema/compat-1.json')}>compat-1.json</a> · API changes behind the fit on the{' '}
         <a href={href('/radar')}>radar</a>.
       </p>
-    </div>
+    </details>
   </section>
 </Base>
 
 <style>
-  .cp-head {
-    display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    gap: 24px 48px;
-    align-items: start;
-    padding-bottom: 48px;
+  .cp-verdict {
+    max-width: 60ch;
+    font-size: 20px;
+    line-height: 1.45;
+    text-wrap: pretty;
   }
-  .cp-copy {
+  .cp-plain {
     display: grid;
     gap: 16px;
   }
+  .cp-tablewrap {
+    max-width: 880px;
+    overflow-x: auto;
+  }
+  .cp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .cp-table th,
+  .cp-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-weight: 400;
+  }
+  .cp-table thead th {
+    font-size: 13px;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .cp-table tbody th a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
+  .cp-table__group th {
+    padding-top: 20px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cp-w {
+    white-space: nowrap;
+    color: var(--ink-2);
+  }
+  .cp-w--works {
+    color: var(--ok-text);
+  }
+  .cp-w--broken {
+    color: var(--bad-ink);
+  }
+  .cp-note {
+    max-width: 72ch;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .cp-full > .cp-full__sum {
+    display: grid;
+    gap: 4px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .cp-full > .cp-full__sum::-webkit-details-marker {
+    display: none;
+  }
+  .cp-countnote {
+    max-width: 72ch;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .cp-full > .cp-full__sum .cp-h2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cp-full > .cp-full__sum:hover .cp-h2 {
+    text-decoration: underline;
+  }
+  .cp-full[open] :global(.cp-full__chev) {
+    transform: rotate(180deg);
+  }
+  .cp-full__sub {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .cp-full[open] > .cp-full__sum {
+    margin-bottom: 16px;
+  }
+  .cp-head {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
   .cp-title {
-    max-width: 16ch;
+    max-width: 22ch;
     text-wrap: balance;
+  }
+  /* the plain three sentences under the H1 (review of 26 Oct): what the page is, for whom, and the way back */
+  .cp-intro {
+    max-width: 64ch;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .cp-intro a {
+    color: var(--ink);
+    font-weight: 500;
+    text-underline-offset: 3px;
+  }
+  .cp-how {
+    max-width: 880px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+  .cp-how > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  .cp-how > summary::-webkit-details-marker {
+    display: none;
+  }
+  .cp-how > summary::before {
+    content: '+';
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    font-family: var(--font-mono);
+    color: var(--ink-2);
+  }
+  .cp-how[open] > summary::before {
+    content: '\2212';
+  }
+  .cp-howbody {
+    display: grid;
+    gap: 16px;
+    padding: 4px 14px 16px;
   }
   .cp-lede {
     max-width: 64ch;
+    font-size: 14px;
     color: var(--ink-2);
   }
   .cp-count__iso {
@@ -484,6 +726,7 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
     color: var(--ink-2);
   }
   .cp-count {
+    max-width: 480px;
     display: grid;
     gap: 10px;
     margin: 0;
@@ -576,14 +819,15 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
     gap: 20px;
     padding-top: 48px;
   }
-  /* the finding of the page, from data: display size over the table */
+  .cp-h2 {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  /* the peer finding from compat.json, under the table at body size */
   .cp-peers {
-    max-width: 22ch;
-    margin-bottom: 12px;
-    font-size: 44px;
-    line-height: 1.1;
-    letter-spacing: -0.035em;
-    text-wrap: balance;
+    max-width: 64ch;
+    font-size: 16px;
+    color: var(--ink-2);
   }
   .cp-sort {
     display: flex;
@@ -675,11 +919,6 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
     font-family: var(--font-mono);
     font-size: 13px;
   }
-  @media (max-width: 991px) {
-    .cp-head {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
   @media (max-width: 767px) {
     .cp-head {
       padding-bottom: 32px;
@@ -687,8 +926,8 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
     .cp-body {
       padding-top: 32px;
     }
-    .cp-peers {
-      font-size: 32px;
+    .cp-how > summary {
+      min-height: 44px;
     }
     /* phones: the counters sit two per row, so the instrument stays short above the matrix */
     .cp-count ul {

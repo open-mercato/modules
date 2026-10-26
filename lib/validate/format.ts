@@ -27,6 +27,8 @@ const NESTED_ORDER: Readonly<Record<string, readonly string[]>> = {
   enterprise: ['offerUrl', 'modules'],
 }
 const PROVIDER_ORDER = ['name', 'label'] as const
+/** Key order of a screenshot (a block map, one per list item). */
+const SCREENSHOT_ORDER = ['src', 'alt'] as const
 
 export class FormatError extends Error {}
 
@@ -103,6 +105,8 @@ export function normalizeDocument(doc: Document, opts: FormatOptions = {}): stri
         sortPairs(item, PROVIDER_ORDER)
         item.flow = true
       }
+  const shots = root.get('screenshots', true)
+  if (isSeq(shots)) for (const item of shots.items) if (isMap(item)) sortPairs(item, SCREENSHOT_ORDER)
   for (const key of FLOW_SEQ_KEYS) {
     const node = root.get(key, true)
     if (isSeq(node)) node.flow = true

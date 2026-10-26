@@ -28,6 +28,10 @@ export const CONTENT_TYPES: Record<string, string> = {
   '.xml': 'application/atom+xml; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.html': 'text/html; charset=utf-8',
+  // screenshots the catalog hosts (shots/, 26 Oct)
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.jpg': 'image/jpeg',
 }
 
 export interface OmDataOptions {

@@ -78,83 +78,168 @@ const symbolName = (s: string): string => s.slice(s.lastIndexOf('#') + 1)
 const symbolPkg = (s: string): string => s.slice(0, s.lastIndexOf('#'))
 // an empty table is said once, in the stat strip; only Changed APIs has no number there
 const noChanges = radar !== null && radar.changedApis.length === 0
+// The plain summary of the first screen (review of 26 Oct: the charts covered the page): three sentences from the
+// same fields as the summary and the tables below, no sentence starting with a digit.
+const pop = meta.radarNext?.population ?? population
+const touched = radar ? new Set(radar.changedApis.flatMap((c) => c.modules)).size : 0
+const ofPop = (n: number): string => (pop !== null ? `${n} of ${pop}` : String(n))
+function receiptsPlain(): string {
+  if (!radar) return ''
+  const v = radar.receiptsOnNext.verified
+  const b = radar.receiptsOnNext.broken
+  if (v + b === 0)
+    return meta.firstNight
+      ? 'Test installs on the next version start after the first nightly run.'
+      : 'Test installs on the next version are queued.'
+  const t = meta.radarNext
+  const rest = t ? t.quarantine + t.notJudged + t.queued + t.skipped : 0
+  const parts = [
+    t ? `${t.verified} of ${t.population} worked` : `${v} worked`,
+    `${t ? t.broken : b} failed`,
+    ...(rest > 0 ? [`${rest} ${rest === 1 ? 'was' : 'were'} not checked`] : []),
+  ]
+  const said = `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`
+  return `In a test install on the development build of the next version, ${said}. A failure there can come from the module or from Open Mercato.${isPreviewData(meta.dataAsOf) ? ` ${PREVIEW_CHIP}.` : ''}`
+}
+// one verdict first (review of 26 Oct: `community` meant two things, and nothing said whom to ask): the parts that
+// change, the modules that use them by name, linked; `not by Open Mercato` is the population of the radar
+const byLoc = new Map(data.modules.entries.map((e) => [e.locator, e]))
+const touchedEntries = radar
+  ? [...new Set(radar.changedApis.flatMap((c) => c.modules))]
+      .map((l) => byLoc.get(l))
+      .filter((e): e is NonNullable<typeof e> => !!e)
+      .sort((a, b) => a.title.localeCompare(b.title))
+  : []
+// a symbol re-exported from a second path is one part, as the table below counts it
+const changedCount = radar ? new Set(radar.changedApis.map((c) => symbolName(c.symbol))).size : 0
+const plain: string[] = radar
+  ? [
+      // the verdict above names the modules; this line gives the share of the radar's population
+      touched === 0
+        ? 'No module from outside Open Mercato uses a part of Open Mercato that changes in the next version.'
+        : `That is ${ofPop(touched)} modules from outside Open Mercato that the radar reads.`,
+      radar.staticBreaks.length === 0
+        ? 'No module imports something the next version removes.'
+        : `The next version removes something that ${radar.staticBreaks.length} ${radar.staticBreaks.length === 1 ? 'module imports, so it' : 'modules import, so they'} will not build.`,
+      receiptsPlain(),
+    ]
+  : []
 ---
 
 <Base title="Radar · Open Mercato Modules" description={description} path="/radar" dataAsOf={meta.dataAsOf}>
   <section class="band">
     <div class="sheet section rd-head">
-      <div class="rd-copy">
-        <p class="t-tagline">
-          // Release radar
-          {
-            radar ? (
-              <>
-                {' '}· next = <code class="nw" title={radar.next}>{shortVersion(radar.next)}</code> · computed{' '}
-                {day(radar.generatedAt)}
-              </>
-            ) : null
-          }
-        </p>
-        <h1 class="rd-title">What the next snapshot changes.</h1>
+      <p class="t-tagline">
+        // Release radar
         {
           radar ? (
-            <div class="rd-summary">
-              <p class="rd-sent rd-sent--lead" set:html={nwHtml(lead)} />
-              {rest.map((x) => <p class="rd-sent" set:html={nwHtml(x)} />)}
-              <dl class="rd-stats">
-                {stats.map((x) => (
-                  <div>
-                    <dt>{x.k}</dt>
-                    <dd class="num">{x.v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ) : (
-            <p class="rd-summary">The radar appears after the first static fit against the next snapshot.</p>
-          )
+            <>
+              {' '}· next version <code class="nw" title={radar.next}>{shortVersion(radar.next)}</code> · computed{' '}
+              {day(radar.generatedAt)}
+            </>
+          ) : null
         }
-        <p class="rd-lede">
-          Every import of every module outside the <code class="nw">@open-mercato</code> scope, checked against the
-          published Open Mercato {radar?.base ?? meta.coreVersion} packages and against next
-          {nextLine ? <> (<code class="nw" title={nextLine.version}>{shortVersion(nextLine.version)}</code>)</> : null}.
-          Static: no module code runs here. A changed signature can still compile; {isPreviewData(meta.dataAsOf)
-            ? 'the receipts on next tell. Until nightly CI starts, they come from a preview run.'
-            : 'the nightly receipts on next tell.'}
-        </p>
-        {
-          radar && (
-            <div class="rd-actions">
-              {markdown && (
-                <button type="button" class="btn btn--secondary" data-copy={markdown} data-copied="Radar copied as markdown">
-                  <Icon name="copy" size={16} /> Copy as markdown
-                </button>
-              )}
-              <a class="btn btn--ghost" href={href('/radar/next.md')}>
-                radar/next.md
-              </a>
-              <a class="btn btn--ghost" href={href('/surface.json')}>
-                surface.json
-              </a>
-            </div>
-          )
-        }
-      </div>
+      </p>
+      <h1 class="rd-title">What the next Open Mercato version may break.</h1>
+      <p class="rd-intro">
+        This page shows which modules may stop working when the next Open Mercato version comes out. It is for module
+        authors and Open Mercato maintainers. Just looking for a module? <a href={href('/')}>Browse modules.</a>
+      </p>
       {
-        top && (
-          <figure class="rd-gauge" aria-label={`${symbolName(top.symbol)} is imported by ${top.modules} of ${top.of} modules`}>
-            <p class="rd-gauge__num">
-              <span class="num">{top.modules}</span>
-              <span class="rd-gauge__of">of {top.of}</span>
-            </p>
-            <span class="rd-gauge__bar" style={`--v:${top.of ? top.modules / top.of : 0}`} aria-hidden="true"><i /></span>
-            <figcaption>
-              modules import <code>{symbolName(top.symbol)}</code>
-              <span class="rd-gauge__pkg">{symbolPkg(top.symbol)}</span>
-            </figcaption>
-          </figure>
+        radar && (
+          <p class="rd-verdict">
+            {changedCount === 0 ? (
+              'The next version changes no part of Open Mercato that a listed module uses.'
+            ) : (
+              <>
+                The next version changes {changedCount} {changedCount === 1 ? 'part' : 'parts'} of Open Mercato that{' '}
+                {touchedEntries.length} {touchedEntries.length === 1 ? 'module uses' : 'modules use'}. Their authors should
+                check:{' '}
+                {touchedEntries.map((e, i) => (
+                  <>
+                    {i > 0 && (i === touchedEntries.length - 1 ? ' and ' : ', ')}
+                    <a href={href(`/m/${e.path}`)}>{e.title}</a>
+                  </>
+                ))}
+                .
+              </>
+            )}
+          </p>
         )
       }
+      {
+        radar ? (
+          <ul class="rd-plain" role="list" aria-label="In short">
+            {plain.map((x) => (
+              <li set:html={nwHtml(x)} />
+            ))}
+          </ul>
+        ) : (
+          <p class="rd-plain-empty">The radar appears after the first static fit against the next snapshot.</p>
+        )
+      }
+      {
+        radar && (
+          <div class="rd-actions">
+            {markdown && (
+              <button type="button" class="btn btn--secondary" data-copy={markdown} data-copied="Radar copied as markdown">
+                <Icon name="copy" size={16} /> Copy as markdown
+              </button>
+            )}
+            <a class="btn btn--ghost" href={href('/radar/next.md')}>
+              radar/next.md
+            </a>
+            <a class="btn btn--ghost" href={href('/surface.json')}>
+              surface.json
+            </a>
+          </div>
+        )
+      }
+      {/* the computed summary, its counts, the method and the gauge, folded (review of 26 Oct) */}
+      <details class="rd-how">
+        <summary>How to read this</summary>
+        <div class="rd-howbody">
+          {
+            radar && (
+              <div class="rd-summary">
+                <p class="rd-sent rd-sent--lead" set:html={nwHtml(lead)} />
+                {rest.map((x) => <p class="rd-sent" set:html={nwHtml(x)} />)}
+                <dl class="rd-stats">
+                  {stats.map((x) => (
+                    <div>
+                      <dt>{x.k}</dt>
+                      <dd class="num">{x.v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )
+          }
+          <p class="rd-lede">
+            Every import of every module outside the <code class="nw">@open-mercato</code> scope, checked against the
+            published Open Mercato {radar?.base ?? meta.coreVersion} packages and against next
+            {nextLine ? <> (<code class="nw" title={nextLine.version}>{shortVersion(nextLine.version)}</code>)</> : null}.
+            Static: no module code runs here. A changed signature can still compile; {isPreviewData(meta.dataAsOf)
+              ? 'the receipts on next tell. Until nightly CI starts, they come from a preview run.'
+              : 'the nightly receipts on next tell.'}
+          </p>
+          {
+            top && (
+              <figure class="rd-gauge" aria-label={`${symbolName(top.symbol)} is imported by ${top.modules} of ${top.of} modules`}>
+                <p class="rd-gauge__num">
+                  <span class="num">{top.modules}</span>
+                  <span class="rd-gauge__of">of {top.of}</span>
+                </p>
+                <span class="rd-gauge__bar" style={`--v:${top.of ? top.modules / top.of : 0}`} aria-hidden="true"><i /></span>
+                <figcaption>
+                  modules import <code>{symbolName(top.symbol)}</code>
+                  <span class="rd-gauge__pkg">{symbolPkg(top.symbol)}</span>
+                </figcaption>
+              </figure>
+            )
+          }
+        </div>
+      </details>
     </div>
   </section>
 
@@ -188,7 +273,7 @@ const noChanges = radar !== null && radar.changedApis.length === 0
       <section class="band" aria-labelledby="rd-surface">
         <div class="sheet section rd-surface">
           <p class="t-tagline">// Surface</p>
-          <h2 id="rd-surface">The Open Mercato API the ecosystem stands on.</h2>
+          <h2 id="rd-surface">The parts of Open Mercato that modules from outside Open Mercato import.</h2>
           <p class="rd-lede">
             <span class="num">{surface.symbols.length}</span> symbols of Open Mercato {surface.base} are imported by the{' '}
             <span class="num">{surface.externalPackages}</span> npm packages outside the <code class="nw">@open-mercato</code> scope.
@@ -210,24 +295,113 @@ const noChanges = radar !== null && radar.changedApis.length === 0
 </Base>
 
 <style>
+  .rd-verdict {
+    max-width: 64ch;
+    font-size: 20px;
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+  .rd-verdict a {
+    color: var(--ink);
+    text-decoration-color: var(--line-strong);
+  }
   .rd-head {
     display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    gap: 24px 48px;
-    align-items: start;
-    padding-bottom: 48px;
+    gap: 16px;
+    padding-bottom: 40px;
   }
-  .rd-copy,
   .rd-surface,
   .rd-body {
     display: grid;
     gap: 16px;
   }
+  /* the plain three sentences under the H1 (review of 26 Oct): what the page is, for whom, and the way back */
+  .rd-intro {
+    max-width: 64ch;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .rd-intro a {
+    color: var(--ink);
+    font-weight: 500;
+    text-underline-offset: 3px;
+  }
+  /* the first screen: three plain bullets before any chart or table */
+  .rd-plain {
+    display: grid;
+    gap: 10px;
+    max-width: 64ch;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rd-plain li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 18px;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+  .rd-plain li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.62em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-2);
+  }
+  .rd-plain-empty {
+    max-width: 64ch;
+    color: var(--ink-2);
+  }
+  .rd-how {
+    max-width: 880px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+  .rd-how > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  .rd-how > summary::-webkit-details-marker {
+    display: none;
+  }
+  .rd-how > summary::before {
+    content: '+';
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    font-family: var(--font-mono);
+    color: var(--ink-2);
+  }
+  .rd-how[open] > summary::before {
+    content: '\2212';
+  }
+  .rd-howbody {
+    display: grid;
+    gap: 16px;
+    padding: 4px 14px 16px;
+  }
   .rd-body {
     padding-top: 48px;
   }
   .rd-title {
-    max-width: 20ch;
+    max-width: 22ch;
     text-wrap: balance;
   }
   .rd-summary {
@@ -264,7 +438,7 @@ const noChanges = radar !== null && radar.changedApis.length === 0
     color: var(--ink-2);
   }
   .rd-sent--lead {
-    font-size: 24px;
+    font-size: 20px;
     line-height: 1.3;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -290,6 +464,7 @@ const noChanges = radar !== null && radar.changedApis.length === 0
   }
   /* the instrument of the header: the most load-bearing symbol, out of the same population as the tables */
   .rd-gauge {
+    max-width: 360px;
     display: grid;
     gap: 10px;
     margin: 0;
@@ -394,11 +569,6 @@ const noChanges = radar !== null && radar.changedApis.length === 0
   .rd-tables :global(.radar__mods a:hover) {
     text-decoration: underline;
   }
-  @media (max-width: 991px) {
-    .rd-head {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
   @media (max-width: 767px) {
     .rd-head {
       padding-bottom: 32px;
@@ -406,13 +576,17 @@ const noChanges = radar !== null && radar.changedApis.length === 0
     .rd-body {
       padding-top: 32px;
     }
-    .rd-actions .btn {
+    .rd-actions .btn,
+    .rd-how > summary {
       min-height: 44px;
+    }
+    .rd-plain li {
+      font-size: 16px;
     }
   }
   @media (max-width: 479px) {
     .rd-sent--lead {
-      font-size: 19px;
+      font-size: 18px;
     }
     .rd-gauge__num .num {
       font-size: 48px;

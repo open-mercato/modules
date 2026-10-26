@@ -116,3 +116,189 @@ export function readmeWholeLines(text: string, cut: boolean): string {
   const at = text.lastIndexOf('\n')
   return at > 0 ? text.slice(0, at).trimEnd() : text
 }
+
+const escapeHtml = (s: string): string =>
+  s.replace(/[&<>"']/g, (ch) =>
+    ch === '&' ? '&amp;' : ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : `&#${ch.charCodeAt(0)};`,
+  )
+
+/**
+ * Inline Markdown of one escaped line: `code`, links with an https target only (rel nofollow), **bold**, *italic*
+ * and <https://...> autolinks. Images (badges) are dropped. Everything else stays text.
+ */
+function readmeInline(raw: string): string {
+  const codes: string[] = []
+  // images first, also a linked image (a badge): nothing of them is shown
+  const noImages = raw.replace(/\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)/g, '').replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  let s = escapeHtml(noImages).replace(/`([^`]+)`/g, (_m, c: string) => {
+    codes.push(`<code>${c}</code>`)
+    return `\u0000${codes.length - 1}\u0000`
+  })
+  s = s
+    .replace(
+      /\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g,
+      (_m, t: string, u: string) => `<a href="${u}" rel="nofollow noopener noreferrer">${t}</a>`,
+    )
+    // a link to anything but https (a relative file, http, mailto) keeps its text only
+    .replace(/\[([^\]]+)\]\([^)\s]*\)/g, '$1')
+    .replace(
+      /&lt;(https:\/\/[^\s&]+)&gt;/g,
+      (_m, u: string) => `<a href="${u}" rel="nofollow noopener noreferrer">${u}</a>`,
+    )
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\s][^*]*?)\*(?=[\s.,;:!?)]|$)/g, '$1<em>$2</em>')
+  return s.replace(/\u0000(\d+)\u0000/g, (_m, i: string) => codes[Number(i)] ?? '')
+}
+
+/**
+ * The author's README as safe HTML (review of 26 Oct: the module page showed raw `##`, `**` and fences). A small
+ * subset of Markdown, no dependency: headings, paragraphs, lists, fenced code (an unclosed fence at the end of a cut
+ * excerpt is closed), block quotes, tables, rules, inline code, emphasis and https links. Every text is escaped
+ * first, so no HTML of the author reaches the page. Headings start at `topLevel` (h3 under the page's h2) and never
+ * skip a level.
+ */
+export function readmeHtml(text: string, topLevel = 3): string {
+  return readmeBlocks(text, topLevel).join('\n')
+}
+
+/** The blocks of readmeHtml one by one (a heading, a paragraph, a list, a code block, a table, a quote, a rule). */
+export function readmeBlocks(text: string, topLevel = 3): string[] {
+  const lines = text.replace(/\r\n?/g, '\n').split('\n')
+  const out: string[] = []
+  let para: string[] = []
+  let list: { tag: 'ul' | 'ol'; items: string[] } | null = null
+  let quote: string[] = []
+  let prevHeading = topLevel - 1
+  // heading depths outside code blocks only: a `# comment` in a bash block is not a heading (review of 26 Oct)
+  const depths = new Set<number>()
+  let open: string | null = null
+  for (const l of lines) {
+    const f = /^\s*(```|~~~)/.exec(l)
+    if (f) {
+      if (!open) open = f[1]!
+      else if (l.trimStart().startsWith(open)) open = null
+      continue
+    }
+    const d = open ? 0 : (/^(#{1,6})\s/.exec(l)?.[1]?.length ?? 0)
+    if (d) depths.add(d)
+  }
+  const ranks = [...depths].sort((a, b) => a - b)
+  const flushPara = (): void => {
+    const t = readmeInline(para.join(' ')).trim()
+    if (t) out.push(`<p>${t}</p>`)
+    para = []
+  }
+  const flushList = (): void => {
+    if (list) out.push(`<${list.tag}>${list.items.map((i) => `<li>${readmeInline(i)}</li>`).join('')}</${list.tag}>`)
+    list = null
+  }
+  const flushQuote = (): void => {
+    if (quote.length) out.push(`<blockquote><p>${readmeInline(quote.join(' '))}</p></blockquote>`)
+    quote = []
+  }
+  const flushAll = (): void => {
+    flushPara()
+    flushList()
+    flushQuote()
+  }
+  const cells = (row: string): string[] =>
+    row
+      .trim()
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((c) => c.trim())
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i] ?? ''
+    const fence = /^\s*(```|~~~)/.exec(line)
+    if (fence) {
+      flushAll()
+      const body: string[] = []
+      i++
+      while (i < lines.length && !(lines[i] ?? '').trimStart().startsWith(fence[1]!)) body.push(lines[i++] ?? '')
+      while (body.length && !body[body.length - 1]!.trim()) body.pop()
+      out.push(`<pre><code>${escapeHtml(body.join('\n'))}</code></pre>`)
+      continue
+    }
+    if (!line.trim()) {
+      flushAll()
+      continue
+    }
+    const h = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(line)
+    if (h) {
+      flushAll()
+      const level = Math.min(6, topLevel + ranks.indexOf(h[1]!.length), prevHeading + 1)
+      prevHeading = level
+      if (h[2]) out.push(`<h${level}>${readmeInline(h[2])}</h${level}>`)
+      continue
+    }
+    if (/^\s{0,3}([-*_])(\s*\1){2,}\s*$/.test(line)) {
+      flushAll()
+      out.push('<hr>')
+      continue
+    }
+    if (/^\s*\|/.test(line) && /^\s*\|?\s*:?-{2,}/.test(lines[i + 1] ?? '')) {
+      flushAll()
+      const head = cells(line)
+      const rows: string[][] = []
+      i += 2
+      while (i < lines.length && /^\s*\|/.test(lines[i] ?? '')) rows.push(cells(lines[i++] ?? ''))
+      i--
+      out.push(
+        `<div class="md-table"><table><thead><tr>${head.map((c) => `<th>${readmeInline(c)}</th>`).join('')}</tr></thead><tbody>${rows
+          .map((r) => `<tr>${r.map((c) => `<td>${readmeInline(c)}</td>`).join('')}</tr>`)
+          .join('')}</tbody></table></div>`,
+      )
+      continue
+    }
+    const q = /^\s*>\s?(.*)$/.exec(line)
+    if (q) {
+      flushPara()
+      flushList()
+      if (q[1]) quote.push(q[1])
+      continue
+    }
+    const li = /^\s*(?:([-*+])|(\d+)[.)])\s+(.*)$/.exec(line)
+    if (li) {
+      flushPara()
+      flushQuote()
+      const tag = li[1] ? 'ul' : 'ol'
+      if (list && list.tag !== tag) flushList()
+      list ??= { tag, items: [] }
+      list.items.push(li[3] ?? '')
+      continue
+    }
+    // a line that continues a list item or a quote
+    if (list && /^\s{2,}\S/.test(line)) {
+      list.items[list.items.length - 1] += ` ${line.trim()}`
+      continue
+    }
+    if (quote.length) {
+      quote.push(line.trim())
+      continue
+    }
+    flushList()
+    para.push(line.trim())
+  }
+  flushAll()
+  return out
+}
+
+/**
+ * The opening of a README and the rest (review of 26 Oct: a long README with its own install steps read as the
+ * catalog's instructions). The opening is the title and the first two blocks of text before the next heading; the
+ * rest is shown folded. A rest of one block is not worth a fold: then everything is the opening.
+ */
+export function readmeFold(blocks: readonly string[]): { intro: string[]; rest: string[] } {
+  const isHeading = (b: string): boolean => /^<h[1-6]>/.test(b)
+  let i = 0
+  while (i < blocks.length && isHeading(blocks[i]!)) i++
+  let text = 0
+  while (i < blocks.length && !isHeading(blocks[i]!) && text < 2) {
+    i++
+    text++
+  }
+  const rest = blocks.slice(i)
+  return rest.length > 1 ? { intro: blocks.slice(0, i), rest } : { intro: [...blocks], rest: [] }
+}

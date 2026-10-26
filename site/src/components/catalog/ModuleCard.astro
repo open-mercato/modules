@@ -1,0 +1,72 @@
+---
+// One card of the module browser (nuxt.com/modules style, review of 26 Oct): a single link to the module page in
+// three zones. The category icon and the title (with the author for modules not made by Open Mercato), what the
+// module does in two lines, and one foot: the origin, the state in words (the same five on every card) and the
+// monthly downloads. No screenshot on a card, so every card of a row keeps the same height; the gallery is on the
+// module page. The data-* attributes are what the browser script filters and sorts by.
+import Icon from '../icons/Icon.astro'
+import { categoryIconSvg } from './category-icons.ts'
+import { href, modulePage } from '../../lib/url.ts'
+import type { Card } from './cards.ts'
+
+interface Props {
+  card: Card
+  /** Hidden until a switch or a search shows it. */
+  hidden?: boolean
+}
+const { card, hidden = false } = Astro.props
+const stateIcon =
+  card.state.kind === 'works' || card.state.kind === 'preset' ? 'check' : card.state.kind === 'broken' ? 'warning' : null
+// the Official chip already says who made an official module (review of 26 Oct: the author was named twice)
+const by = card.type === 'official' ? null : card.author
+---
+
+<li
+  class="mcard-li"
+  hidden={hidden}
+  data-s={card.search}
+  data-by={card.type}
+  data-tool={card.tool ? '1' : undefined}
+  data-sub={card.sub ? '1' : undefined}
+  data-extra={card.extra ? '1' : undefined}
+  data-r={card.rank}
+  data-n={card.title.toLowerCase()}
+  data-u={card.updated}
+  data-d={card.downloads}
+>
+  <a class="mcard" href={href(modulePage(card.path))}>
+    <div class="mcard__head">
+      <span class="mcard__icon" aria-hidden="true" title={card.categoryTitle} set:html={categoryIconSvg(card.category, 20)} />
+      <div class="mcard__name">
+        <h3 class="mcard__title">{card.title}</h3>
+        {by && <p class="mcard__by">by {by}</p>}
+      </div>
+    </div>
+    <p class="mcard__sum">{card.blurb}</p>
+    <div class="mcard__foot">
+      <div class="mcard__tags">
+        <span class="mcard__type" title={card.typeHint || undefined}>{card.typeLabel}</span>
+        {card.kindLabel && <span class="mcard__type">{card.kindLabel}</span>}
+        {card.extra && <span class="mcard__type mcard__type--extra">{card.extra}</span>}
+        {
+          !card.kindLabel && !card.extra && (
+            <span class={`mcard__state mcard__state--${card.state.kind}`} title={card.state.title}>
+              {stateIcon && <Icon name={stateIcon} size={14} />}
+              <span>{card.state.text}</span>
+            </span>
+          )
+        }
+        {card.providers > 0 && <span class="mcard__note">{card.providers} {card.providers === 1 ? 'provider' : 'providers'}</span>}
+      </div>
+      {
+        card.pop && (
+          <span class="mcard__pop">
+            <Icon name={card.pop.icon} size={14} />
+            <span aria-hidden="true">{card.pop.text}</span>
+            <span class="sr-only">{card.pop.label}</span>
+          </span>
+        )
+      }
+    </div>
+  </a>
+</li>

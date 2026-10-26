@@ -1,6 +1,6 @@
 // /radar text layer over WP11's RadarTables (not a route: the leading underscore). A load-bearing API that also
 // changed since the base release is the strongest finding of the radar: its meter row gets the change chip and the
-// block header counts them ("1 load-bearing API changed"). Runs on the rendered HTML at build time.
+// block header counts them ("1 changed"), whatever the heading's words. Runs on the rendered HTML at build time.
 // Move into RadarTables when WP11 takes it; the page then drops this pass.
 
 const text = (html: string): string => html.replace(/<[^>]+>/g, '')
@@ -27,7 +27,7 @@ export function markChangedLoadBearing(html: string, changed: ReadonlyMap<string
   })
   if (marked > 0)
     out = out.replace(
-      /(<h3 id="rt-load"[^>]*>Load-bearing APIs)(<\/h3>)/,
+      /(<h3 id="rt-load"[^>]*>[^<]*)(<\/h3>)/,
       `$1 <span class="radar__n rd-n--changed">${marked} changed</span>$2`,
     )
   return { html: out, marked }

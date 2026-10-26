@@ -5,11 +5,11 @@ import Base from '../layouts/Base.astro'
 import CommandChip from '../components/CommandChip.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { href } from '../lib/url.ts'
-import { registryDefault } from './c/_data.ts'
+import { browseDefault } from './c/_data.ts'
 
 const { meta, modules } = loadSiteData()
-// the same "modules" as the hero, the registry and the Hive: listed modules and providers without examples
-const moduleCount = registryDefault(modules.entries).length
+// the same "modules" as the hero and the module browser: the cards shown by default
+const moduleCount = browseDefault(modules.entries).length
 ---
 
 <Base

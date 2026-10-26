@@ -1,0 +1,307 @@
+---
+// The module browser of home and /c/* (nuxt.com/modules style): categories on the left (a row of chips on phones) with
+// one `Show more` disclosure for tools, libraries, examples and held modules under them, Made by and the sort in one
+// row above the cards (review of 26 Oct: two checkboxes and two selects took a quarter of a phone screen). The modules
+// a person can add come first; the ones every new app already has follow in their own band (review of 26 Oct: the
+// first 20 cards were modules the app already had). The server renders every card in the recommended order; the
+// small script below filters (search, Made by, tools, held modules and examples), sorts inside each group and keeps
+// the state in the URL (?q=&by=&sort=&tools=&extra=). A search also finds the tools, the folded providers, the held
+// modules and the examples, and names the built-in modules that match, because the best module is often the one
+// Open Mercato has.
+import ModuleCard from './ModuleCard.astro'
+import Icon from '../icons/Icon.astro'
+import { categoryIconSvg } from './category-icons.ts'
+import { builtInPage, categoryPage, href } from '../../lib/url.ts'
+import type { Card, MadeByCount, SideCategory } from './cards.ts'
+
+interface Props {
+  cards: Card[]
+  categories: SideCategory[]
+  /** Counts of the `All` link (every category). */
+  total: { modules: number; all: number }
+  madeBy: MadeByCount[]
+  /** The selected category, '' on the home page. */
+  current: string
+  /** Tools and libraries shown from the start (a category of tools only). */
+  toolsOn: boolean
+  /** Show the `Tools and libraries` switch under `Show more`. */
+  toolsToggle: boolean
+  /** Built-in modules a search names above the grid. */
+  core: readonly { id: string; title: string; description: string }[]
+}
+const { cards, categories, total, madeBy, current, toolsOn, toolsToggle, core } = Astro.props
+const hiddenByDefault = (c: Card): boolean => (c.tool && !toolsOn) || c.sub || !!c.extra
+const extras = cards.filter((c) => c.extra).length
+const toolCount = cards.filter((c) => c.tool && !c.sub && !c.extra).length
+// two groups: modules to add, then the ones a new app of the latest line already has
+const toAdd = cards.filter((c) => c.state.kind !== 'preset')
+const inApps = cards.filter((c) => c.state.kind === 'preset')
+const inAppsShown = inApps.filter((c) => !hiddenByDefault(c)).length
+const SORTS = [
+  { id: 'rec', label: 'Recommended' },
+  { id: 'name', label: 'Name' },
+  { id: 'updated', label: 'Recently updated' },
+  { id: 'downloads', label: 'Most downloaded' },
+]
+const n = (c: { modules: number; all: number }): number => (toolsOn ? c.all : c.modules)
+const coreJson = JSON.stringify(
+  core.map((b) => ({ t: b.title, s: `${b.title} ${b.id.replace(/_/g, ' ')} ${b.description}`.toLowerCase(), h: href(builtInPage(b.id)) })),
+).replace(/</g, '\\u003c')
+---
+
+<div class="mods" data-mods data-tools-default={toolsOn ? '1' : '0'}>
+  <div class="mods__side">
+  <nav class="mods__cats" aria-labelledby="mods-cats-h">
+    <h2 class="mods__h" id="mods-cats-h">Categories</h2>
+    <ul role="list">
+      <li>
+        <a href={href('/')} aria-current={current === '' ? 'page' : undefined}>
+          <Fragment set:html={categoryIconSvg('all', 18)} />
+          <span class="mods__label">All</span>
+          <span class="mods__n" data-c-mod={total.modules} data-c-all={total.all}>{n(total)}</span>
+        </a>
+      </li>
+      {
+        categories.map((c) => (
+          <li
+            data-tools-only={c.modules === 0 && c.id !== current ? '1' : undefined}
+            hidden={!toolsOn && c.modules === 0 && c.id !== current}
+          >
+            <a href={href(categoryPage(c.id))} aria-current={c.id === current ? 'page' : undefined} title={c.title}>
+              <Fragment set:html={categoryIconSvg(c.id, 18)} />
+              <span class="mods__label">{c.title}</span>
+              <span class="mods__n" data-c-mod={c.modules} data-c-all={c.all}>
+                {n(c)}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  {
+    ((toolsToggle && toolCount > 0) || extras > 0) && (
+      <details class="mods__also" data-also open={toolsOn || undefined}>
+        <summary>
+          <span>Show more</span>
+          <Icon name="chevron-down" size={14} class="icon mods__chev" />
+        </summary>
+        <div class="mods__also-body">
+          {toolsToggle && toolCount > 0 && (
+            <label class="mods__tools">
+              <input type="checkbox" data-tools checked={toolsOn} />
+              <span>
+                Tools and libraries <span class="mods__n">{toolCount}</span>
+                <span class="mods__hint">For developers. They add no feature by themselves.</span>
+              </span>
+            </label>
+          )}
+          {extras > 0 && (
+            <label class="mods__tools">
+              <input type="checkbox" data-extra />
+              <span>
+                Examples and paused modules <span class="mods__n">{extras}</span>
+                <span class="mods__hint">Sample code, and modules the catalog put on hold.</span>
+              </span>
+            </label>
+          )}
+        </div>
+      </details>
+    )
+  }
+  </div>
+
+  <div class="mods__main">
+    <div class="mods__bar">
+      <div class="mods__selects">
+        <label class="mods__sel">
+          <span>Made by</span>
+          <select data-by-select>
+            {madeBy.map((m) => <option value={m.id}>{m.label}</option>)}
+          </select>
+        </label>
+        <label class="mods__sel">
+          <span>Sort by</span>
+          <select data-sort>{SORTS.map((s) => <option value={s.id}>{s.label}</option>)}</select>
+        </label>
+      </div>
+    </div>
+    <p class="mods__count" aria-live="polite" data-count></p>
+    <p class="mods__core" data-core hidden></p>
+    <h2 class="sr-only">Modules</h2>
+    <ul class="mods__grid" id="mods-grid" role="list" data-grid>
+      {toAdd.map((c) => <ModuleCard card={c} hidden={hiddenByDefault(c)} />)}
+    </ul>
+    {
+      inApps.length > 0 && (
+        <section class="mods__band" data-band hidden={inAppsShown === 0} aria-labelledby="mods-band-h">
+          <h2 class="mods__band-h" id="mods-band-h">
+            Comes with new apps <span class="mods__n" data-band-n>{inAppsShown}</span>
+          </h2>
+          <p class="mods__band-lead">
+            {core.length > 0 ? (
+              <>
+                Every new Open Mercato app already has these, next to its {core.length}{' '}
+                <a href={href('/built-in')}>built-in modules</a>. An older app can add one from its page.
+              </>
+            ) : (
+              'Every new Open Mercato app already has these. An older app can add one from its page.'
+            )}
+          </p>
+          <ul class="mods__grid" role="list" data-grid>
+            {inApps.map((c) => <ModuleCard card={c} hidden={hiddenByDefault(c)} />)}
+          </ul>
+        </section>
+      )
+    }
+    {
+      cards.length > 0 ? (
+        <div class="mods__empty" data-empty hidden={cards.some((c) => !hiddenByDefault(c))}>
+          <p>No module matches these filters.</p>
+          <button type="button" class="btn btn--secondary" data-clear>
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        <div class="mods__empty">
+          <p>No module here yet.</p>
+          <a class="btn btn--secondary" href={href('/')}>
+            See all modules
+          </a>
+        </div>
+      )
+    }
+  </div>
+  <script type="application/json" data-core-list set:html={coreJson} />
+</div>
+
+<script>
+  type State = { q: string; by: string; sort: string; tools: boolean; extra: boolean }
+  const SORTS = ['rec', 'name', 'updated', 'downloads']
+
+  const root = document.querySelector<HTMLElement>('[data-mods]')
+  const grid = root?.querySelector<HTMLElement>('[data-grid]')
+  if (root && grid) {
+    const input = document.querySelector<HTMLInputElement>('#mods-q')
+    const form = document.querySelector<HTMLFormElement>('[data-mods-form]')
+    const grids = Array.from(root.querySelectorAll<HTMLElement>('[data-grid]'))
+    const items = grids.flatMap((g) => Array.from(g.children) as HTMLElement[])
+    const band = root.querySelector<HTMLElement>('[data-band]')
+    const bandGrid = band?.querySelector<HTMLElement>('[data-grid]') ?? null
+    const bandN = band?.querySelector<HTMLElement>('[data-band-n]') ?? null
+    const also = root.querySelector<HTMLDetailsElement>('[data-also]')
+    const sortSel = root.querySelector<HTMLSelectElement>('[data-sort]')
+    const bySel = root.querySelector<HTMLSelectElement>('[data-by-select]')
+    const tools = root.querySelector<HTMLInputElement>('[data-tools]')
+    const extra = root.querySelector<HTMLInputElement>('[data-extra]')
+    const count = root.querySelector<HTMLElement>('[data-count]')
+    const coreLine = root.querySelector<HTMLElement>('[data-core]')
+    const empty = root.querySelector<HTMLElement>('[data-empty]')
+    const toolsDefault = root.dataset.toolsDefault === '1'
+    let core: { t: string; s: string; h: string }[] = []
+    try {
+      core = JSON.parse(root.querySelector('[data-core-list]')?.textContent ?? '[]')
+    } catch {
+      core = []
+    }
+
+    const p = new URLSearchParams(location.search)
+    const byIds = Array.from(bySel?.options ?? []).map((o) => o.value)
+    const state: State = {
+      q: p.get('q') ?? '',
+      by: byIds.includes(p.get('by') ?? '') ? (p.get('by') ?? '') : '',
+      sort: SORTS.includes(p.get('sort') ?? '') ? (p.get('sort') ?? 'rec') : 'rec',
+      tools: p.has('tools') ? p.get('tools') === '1' : toolsDefault,
+      extra: p.get('extra') === '1',
+    }
+    let sorted = 'rec'
+
+    const num = (el: HTMLElement, k: string): number => Number(el.dataset[k] ?? 0)
+    const order: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+      rec: (a, b) => num(a, 'r') - num(b, 'r'),
+      name: (a, b) => (a.dataset.n ?? '').localeCompare(b.dataset.n ?? '') || num(a, 'r') - num(b, 'r'),
+      updated: (a, b) => (b.dataset.u ?? '').localeCompare(a.dataset.u ?? '') || num(a, 'r') - num(b, 'r'),
+      downloads: (a, b) => num(b, 'd') - num(a, 'd') || num(a, 'r') - num(b, 'r'),
+    }
+    // `emails` finds `email`, `invoices` finds `e-invoicing`, `currencies` finds `currency`
+    const stem = (w: string): string => (w.length > 4 ? w.replace(/(ies|es|s)$/, '') : w)
+    const esc = (s: string): string => s.replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`)
+
+    const apply = (): void => {
+      const words = state.q.toLowerCase().split(/\s+/).filter(Boolean).map(stem)
+      const searching = words.length > 0
+      const match = (text: string): boolean => words.every((w) => text.includes(w))
+      let shown = 0
+      for (const li of items) {
+        const ok =
+          (!li.dataset.tool || state.tools || searching) &&
+          (!li.dataset.sub || searching) &&
+          (!li.dataset.extra || state.extra || searching) &&
+          (!state.by || li.dataset.by === state.by) &&
+          match(li.dataset.s ?? '')
+        li.hidden = !ok
+        if (ok) shown++
+      }
+      if (state.sort !== sorted) {
+        for (const g of grids) g.append(...(Array.from(g.children) as HTMLElement[]).sort(order[state.sort] ?? order.rec))
+        sorted = state.sort
+      }
+      if (band && bandGrid) {
+        const inBand = (Array.from(bandGrid.children) as HTMLElement[]).filter((li) => !li.hidden).length
+        band.hidden = inBand === 0
+        if (bandN) bandN.textContent = String(inBand)
+      }
+      if (also && (state.tools !== toolsDefault || state.extra)) also.open = true
+      // the count only once something narrows or widens the list: the page already says how many there are
+      const filtered = searching || !!state.by || state.tools !== toolsDefault || state.extra
+      if (count) count.textContent = filtered ? `${shown} ${shown === 1 ? 'result' : 'results'}` : ''
+      if (coreLine) {
+        const hits = searching ? core.filter((c) => match(c.s)).slice(0, 5) : []
+        coreLine.hidden = hits.length === 0
+        coreLine.innerHTML = hits.length
+          ? `Already in Open Mercato: ${hits.map((h) => `<a href="${esc(h.h)}">${esc(h.t)}</a>`).join(', ')}.`
+          : ''
+      }
+      if (empty) empty.hidden = shown > 0
+      for (const el of root.querySelectorAll<HTMLElement>('[data-c-mod]'))
+        el.textContent = (state.tools ? el.dataset.cAll : el.dataset.cMod) ?? ''
+      for (const li of root.querySelectorAll<HTMLElement>('[data-tools-only]')) li.hidden = !state.tools
+      if (input && input.value !== state.q) input.value = state.q
+      if (sortSel) sortSel.value = state.sort
+      if (bySel) bySel.value = state.by
+      if (tools) tools.checked = state.tools
+      if (extra) extra.checked = state.extra
+
+      const url = new URL(location.href)
+      const set = (k: string, v: string | null): void => {
+        if (v === null) url.searchParams.delete(k)
+        else url.searchParams.set(k, v)
+      }
+      set('q', state.q.trim() ? state.q : null)
+      set('by', state.by || null)
+      set('sort', state.sort === 'rec' ? null : state.sort)
+      set('tools', state.tools === toolsDefault ? null : state.tools ? '1' : '0')
+      set('extra', state.extra ? '1' : null)
+      if (url.href !== location.href) history.replaceState(history.state, '', url)
+    }
+
+    const update = (patch: Partial<State>): void => {
+      Object.assign(state, patch)
+      apply()
+    }
+    input?.addEventListener('input', () => update({ q: input.value }))
+    form?.addEventListener('submit', (ev) => {
+      ev.preventDefault()
+      update({ q: input?.value ?? '' })
+    })
+    sortSel?.addEventListener('change', () => update({ sort: sortSel.value }))
+    bySel?.addEventListener('change', () => update({ by: bySel.value }))
+    tools?.addEventListener('change', () => update({ tools: tools.checked }))
+    extra?.addEventListener('change', () => update({ extra: extra.checked }))
+    root.querySelector('[data-clear]')?.addEventListener('click', () => {
+      update({ q: '', by: '', tools: toolsDefault, extra: false })
+      input?.focus()
+    })
+    apply()
+  }
+</script>

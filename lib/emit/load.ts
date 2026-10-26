@@ -2,10 +2,10 @@
 // policy files and skills. Every data file is validated with its schema; a broken or missing file is a warning,
 // never a crash, because `pages.yml` must build on an empty first day and on a partial data branch (spec 5.2).
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { join, relative, sep } from 'node:path'
+import { dirname, join, relative, sep } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import type { z } from 'zod'
-import { Descriptor } from '../schema/descriptor.ts'
+import { Descriptor, SCREENSHOT_MAX_BYTES, isHostedScreenshot } from '../schema/descriptor.ts'
 import { assertPathMatches, descriptorLocator } from '../schema/locator.ts'
 import {
   BuiltinCategoriesFile,
@@ -150,9 +150,40 @@ function loadDescriptors(dir: string, r: Reader): LoadedDescriptor[] {
     } catch (err) {
       issues.push((err as Error).message)
     }
-    out.push({ file: rel, locator, descriptor: parsed.success ? parsed.data : null, issues })
+    const shots = parsed.success ? hostedScreenshots(file, rel, parsed.data, r) : null
+    out.push({
+      file: rel,
+      locator,
+      descriptor: parsed.success ? parsed.data : null,
+      issues,
+      ...(shots ? { screenshotFiles: shots } : {}),
+    })
   }
   return out.sort((a, b) => a.locator.localeCompare(b.locator))
+}
+
+/**
+ * Bytes of the screenshots a descriptor hosts in the catalog (`screenshots/<name>` next to the file), by src. A missing
+ * file or one over the size limit is a warning and is left out (validate fails such a pull request). Null: none hosted.
+ */
+function hostedScreenshots(file: string, rel: string, d: Descriptor, r: Reader): Map<string, Uint8Array> | null {
+  const hosted = (d.screenshots ?? []).filter((s) => isHostedScreenshot(s.src))
+  if (hosted.length === 0) return null
+  const out = new Map<string, Uint8Array>()
+  for (const s of hosted) {
+    const abs = join(dirname(file), s.src)
+    if (!existsSync(abs) || !statSync(abs).isFile()) {
+      r.warnings.push(`${rel}: screenshot ${s.src} does not exist, left out`)
+      continue
+    }
+    const bytes = readFileSync(abs)
+    if (bytes.byteLength > SCREENSHOT_MAX_BYTES) {
+      r.warnings.push(`${rel}: screenshot ${s.src} is over ${SCREENSHOT_MAX_BYTES / 1024} KB, left out`)
+      continue
+    }
+    out.set(s.src, bytes)
+  }
+  return out
 }
 
 function loadSkills(dir: string): SkillSource[] {

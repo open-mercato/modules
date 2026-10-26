@@ -31,6 +31,7 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 | `providers`                       | A   | up to 20 `{ name, label }`; searchable                                                         |
 | `extends`                         | A   | locator of the host package, only for `kind: provider`                                         |
 | `links.docs`, `.support`, `.demo` | A   | `https://` URLs (`support` may be `mailto:`)                                                   |
+| `screenshots`                     | A   | optional, up to 6 `{ src, alt }`; see Screenshots below                                        |
 | `pricing`                         | A   | `free` (default), `paid` or `contact`                                                          |
 | `smoke.paths`                     | A   | up to 5 extra GET paths under `/backend/` or `/api/` for the nightly smoke test                |
 | `scriptsRequired.reason`          | A   | explicit reason when the package needs install scripts                                         |
@@ -46,10 +47,27 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 
 Key order in the file follows this table. `yarn om format` sorts keys and formats the file with Prettier; the autofix job only formats. While the repository is private the autofix job does not run, so run `yarn om format modules` before you push: the `checks` job fails on a file in another form, and `validate` warns about it in its summary.
 
+## Screenshots
+
+Optional. Images of the module in a running app, 16:10, at least 1280 px wide. The module page shows them; agents get them as links.
+
+```yaml
+screenshots:
+  - src: screenshots/invoices.webp
+    alt: The invoices list with the send status of each invoice.
+  - src: https://raw.githubusercontent.com/acme/om-invoices/main/docs/settings.png
+    alt: Settings of the connection to the tax office.
+```
+
+- `src` is a file in this repository or an image on GitHub. A file goes next to the descriptor: `screenshots/<name>.webp` (or `.png`, `.jpg`, lower case letters, digits, `-` and `_`) in `modules/@acme/x.yml` means `modules/@acme/screenshots/<name>.webp`, and a descriptor right under `modules/` uses `modules/screenshots/`. Add the file in the same pull request; it must be at most 600 KB, so prefer WebP.
+- An image on GitHub is a `https://raw.githubusercontent.com/<owner>/<repo>/...` link to the module's own repository (the `github` field, or the repository of `repo`), or a `https://github.com/user-attachments/assets/...` link.
+- `alt` says what the image shows: plain text, 10 to 120 characters.
+- The site copies a hosted file to `shots/<folder>/<name>`; `modules.json` and `/m/<path>.json` carry `screenshots` with a `src` the site loads as it is, and the Markdown card lists absolute links.
+
 ## Text rules
 
 - English, short, one idea per sentence, ending with a period. No exclamation marks.
-- Plain text only in `summary`, `whenToUse`, `whenNotToUse`, provider labels and aliases: no URLs, no markdown, no HTML, no backticks.
+- Plain text only in `summary`, `whenToUse`, `whenNotToUse`, provider labels, aliases and screenshot `alt`: no URLs, no markdown, no HTML, no backticks.
 - No long dashes: the characters U+2014 (em dash) and U+2013 (en dash) are banned in every text of this repository, including docs, YAML and commit messages. Use a hyphen or rewrite the sentence. `yarn om check-text` enforces it in CI.
 - Evidence over adjectives: say what the module does, not how good it is.
 - Phrases that look like instructions to an AI model are flagged for a human reviewer.

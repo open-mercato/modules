@@ -8,7 +8,7 @@ verified_on: []
 agent_policy: {"0.9":"refuse","0.8":"refuse","next":"refuse"}
 install: null
 installable_from: null
-data_version: 1.0.0-202610230305.h34c6c1
+data_version: 1.0.0-202610230305.h24795a
 ---
 # treg.to Enrichment
 Enriches companies with data from the Polish business register.

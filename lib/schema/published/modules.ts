@@ -277,6 +277,23 @@ export const IndexEntry = z.object({
     needsAllowThirdParty: z.boolean(),
     moduleFlag: ModuleId.nullable(),
   }),
+  // additive (26 Oct): the descriptor's screenshots, ready for <img src>: a file of the catalog copied to
+  // `<base>/shots/<folder>/<name>` (site-relative, with the base path) or the author's https URL. Absent = none.
+  screenshots: z
+    .array(
+      z.object({
+        src: z
+          .string()
+          .max(300)
+          .regex(/^(\/|https:\/\/)/),
+        alt: z.string().max(120),
+      }),
+    )
+    .max(6)
+    .optional()
+    .describe(
+      'Screenshots of the module in a running app, from the descriptor. src is site-relative (with the base path, a file the catalog hosts) or an https URL on GitHub; resolve a site-relative src against the site origin. alt is plain text. Absent: the descriptor has none.',
+    ),
   stats: z.object({ downloads30d: z.number().int().nullable(), stars: z.number().int().nullable() }).nullable(), // null for official
   sigil: z.object({
     glyph: z.string().regex(/^[0-3]{7}$/),

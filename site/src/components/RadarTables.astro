@@ -1,6 +1,7 @@
 ---
 // Release Radar tables (spec 7.7 E): changed APIs in use, static breaks, the same failure in several modules and the
-// load-bearing APIs (top 15, a meter per symbol). All numbers come from radar/next.json.
+// load-bearing APIs (top 15, a meter per symbol). All numbers come from radar/next.json. The visible headings use plain
+// words (review of 26 Oct); the anchors rt-changed, rt-breaks, rt-same and rt-load stay.
 import type { Radar } from '../../../lib/schema/index.ts'
 import { href, modulePage } from '../lib/url.ts'
 import { locatorToPath } from '../../../lib/schema/locator.ts'
@@ -42,7 +43,7 @@ const changedGroups = (() => {
 
 <div class="radar">
   <section class="radar__block" aria-labelledby="rt-changed">
-    <h3 id="rt-changed" class="radar__h">Changed APIs in use <span class="radar__n">{changedGroups.length}</span></h3>
+    <h3 id="rt-changed" class="radar__h">Changed parts that modules use <span class="radar__n">{changedGroups.length}</span></h3>
     {
       radar.changedApis.length === 0 ? (
         <p class="radar__empty">No API used by a listed module changed since {radar.base}.</p>
@@ -98,7 +99,7 @@ const changedGroups = (() => {
   </section>
 
   <section class="radar__block" aria-labelledby="rt-breaks">
-    <h3 id="rt-breaks" class="radar__h">Static breaks <span class="radar__n">{radar.staticBreaks.length}</span></h3>
+    <h3 id="rt-breaks" class="radar__h">Modules that would not build <span class="radar__n">{radar.staticBreaks.length}</span></h3>
     {
       radar.staticBreaks.length === 0 ? (
         <p class="radar__empty">No listed module breaks statically on next.</p>
@@ -137,7 +138,7 @@ const changedGroups = (() => {
   </section>
 
   <section class="radar__block" aria-labelledby="rt-load">
-    <h3 id="rt-load" class="radar__h">Load-bearing APIs</h3>
+    <h3 id="rt-load" class="radar__h">Most used parts of Open Mercato</h3>
     <p class="radar__note">
       Changing these breaks the ecosystem. Consider them frozen. <a href={bcUrl} rel="noopener noreferrer">BACKWARD_COMPATIBILITY.md</a>
     </p>

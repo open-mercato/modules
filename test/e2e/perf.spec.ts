@@ -1,5 +1,5 @@
-// The budgets of spec 7.11 that a browser can measure without Lighthouse (WP16): JS on / (gzip, with Preact and
-// MiniSearch, measured after the first search), /search-index.json (gzip, fetched only at the first interaction),
+// The budgets of spec 7.11 that a browser can measure without Lighthouse (WP16): JS on / (gzip, measured after the
+// first search, which fetches nothing since 26 Oct), /search-index.json (gzip, the published file),
 // CSS (gzip), HTML of / (gzip), fonts (3 woff2, <= 150 KB, one preload), 0 third-party requests while a page loads,
 // and CLS. Sizes are gzip -6 of the bytes the browser received, as Pages compresses them. LCP, TBT and the
 // Lighthouse scores come from test/e2e/lighthouse.ts (yarn e2e:lighthouse); an unthrottled LCP is only annotated.
@@ -40,44 +40,46 @@ test('HTML of / is within budget', async ({ request }) => {
   expect(size, `HTML / gzip ${kb(size)}`).toBeLessThanOrEqual(BUDGET.htmlHome)
 })
 
-test('JS on / with Preact and MiniSearch, and the search index on first interaction', async ({ browser }) => {
+// The home page of 26 Oct filters its cards in the page (a small plain script, no island): typing fetches nothing.
+// search-index.json stays published for agents and /for-agents, so its budget is checked on the file itself.
+test('JS on / stays within budget through the first search, which fetches nothing', async ({ browser }) => {
   const ctx = await themed(browser, 'light', phone(390))
   const page = await ctx.newPage()
   const rec = record(page)
   await page.goto(url('/'), { waitUntil: 'load' })
   await page.waitForLoadState('networkidle')
-  const atLoad = rec.list.slice()
-  expect(
-    atLoad.some((r) => r.url.includes('search-index.json')),
-    'search-index.json fetched before any interaction',
-  ).toBe(false)
-  const jsLoad = sum(await gzSizes(atLoad.filter(isScript)))
+  const jsLoad = sum(await gzSizes(rec.list.filter(isScript)))
+  const before = rec.list.length
 
-  // the first interaction: focus the search and type
   const input = page.getByRole('search', { name: 'Search modules' }).first().locator('input')
   await input.click()
   await input.pressSequentially('ksef', { delay: 30 })
-  await page.waitForResponse((r) => r.url().includes('search-index.json'), { timeout: 15_000 }).catch(() => null)
   await page.waitForLoadState('networkidle')
-  const all = rec.list.slice()
-  const jsAll = await gzSizes(all.filter(isScript))
-  const index = all.find((r) => r.url.includes('search-index.json'))
-  expect(index, 'search-index.json fetched at the first interaction').toBeDefined()
-  const indexGz = gz(await index!.res.body())
+  const after = rec.list.slice(before)
+  expect(
+    after.map((r) => r.url),
+    'requests made by typing in the home search',
+  ).toEqual([])
+  const jsAll = await gzSizes(rec.list.filter(isScript))
   const top = [...jsAll.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4)
     .map(([u, s]) => `${u.split('/').pop()} ${kb(s)}`)
     .join(', ')
-  test
-    .info()
-    .annotations.push(
-      { type: 'js /', description: `${kb(jsLoad)} at load, ${kb(sum(jsAll))} after the first search (${top})` },
-      { type: 'search-index.json', description: `${kb(indexGz)} gzip` },
-    )
+  test.info().annotations.push({
+    type: 'js /',
+    description: `${kb(jsLoad)} at load, ${kb(sum(jsAll))} after the first search (${top})`,
+  })
   expect(sum(jsAll), `JS on / gzip ${kb(sum(jsAll))}`).toBeLessThanOrEqual(BUDGET.jsHome)
-  expect(indexGz, `search-index.json gzip ${kb(indexGz)}`).toBeLessThanOrEqual(BUDGET.searchIndex)
   await ctx.close()
+})
+
+test('search-index.json is within budget', async ({ request }) => {
+  const res = await request.get(url('/search-index.json'), { headers: { 'accept-encoding': 'identity' } })
+  expect(res.status()).toBe(200)
+  const size = gz(await res.body())
+  test.info().annotations.push({ type: 'search-index.json', description: `${kb(size)} gzip` })
+  expect(size, `search-index.json gzip ${kb(size)}`).toBeLessThanOrEqual(BUDGET.searchIndex)
 })
 
 for (const p of PAGES)

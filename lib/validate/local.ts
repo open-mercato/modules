@@ -11,6 +11,9 @@ import {
   Descriptor,
   DESCRIPTOR_KEY_ORDER,
   LocatorError,
+  SCREENSHOT_MAX_BYTES,
+  isHostedScreenshot,
+  screenshotFile,
   assertPathMatches,
   descriptorLocator,
   type Descriptor as DescriptorT,
@@ -26,6 +29,11 @@ export interface LocalInput {
   baseText?: string | null
   /** Pull request labels (`name-reviewed` lifts typosquat and reserved-name errors). */
   labels?: readonly string[]
+  /**
+   * Size in bytes of a repo-relative file, null when it does not exist. Given, the screenshots hosted in the catalog
+   * are checked (exist, at most 600 KB); absent (triage reads a PR without a checkout), they are not.
+   */
+  fileSize?: (file: string) => number | null
 }
 
 export interface LocalResult {
@@ -263,6 +271,32 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
     if (catalog.entries.has(r.toLowerCase()))
       findings.push(f('schema', 'error', 'renamed', `renamedFrom ${r} is still an entry of its own`))
 
+  // screenshots hosted in the catalog: the file is in the pull request and small enough for a page
+  if (input.fileSize)
+    (d.screenshots ?? []).forEach((s, i) => {
+      if (!isHostedScreenshot(s.src)) return
+      const file = screenshotFile(input.file, s.src)
+      const size = input.fileSize?.(file) ?? null
+      if (size === null)
+        findings.push(
+          f(
+            'schema',
+            'error',
+            'screenshot-missing',
+            `screenshots.${i}.src: add ${file} to the pull request, or fix the name`,
+          ),
+        )
+      else if (size > SCREENSHOT_MAX_BYTES)
+        findings.push(
+          f(
+            'schema',
+            'error',
+            'screenshot-size',
+            `screenshots.${i}.src: ${file} is ${Math.ceil(size / 1024)} KB, max ${SCREENSHOT_MAX_BYTES / 1024} KB; save it as WebP or crop it`,
+          ),
+        )
+    })
+
   // 5. texts: the schema checked PlainText, lengths and `Use when `; phrase flags go to a human
   const texts: [string, string][] = []
   for (const k of TEXT_FIELDS) {
@@ -271,6 +305,7 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
   }
   d.providers.forEach((p, i) => texts.push([`providers.${i}.label`, p.label]))
   ;(d.aliases ?? []).forEach((a, i) => texts.push([`aliases.${i}`, a]))
+  ;(d.screenshots ?? []).forEach((s, i) => texts.push([`screenshots.${i}.alt`, s.alt]))
   for (const [k, v] of texts) {
     const flags = injectionFlags(v)
     if (flags.length > 0) findings.push(f('texts', 'warning', 'text-flag', `${k}: phrase flag ${flags.join(', ')}`))

@@ -69,8 +69,9 @@ export interface DiscoverOptions {
 }
 
 const CATEGORY_HINTS: [RegExp, CategoryId][] = [
-  [/gateway|payment|billing|invoice|pay-|stripe|tpay|payu|przelewy/, 'payments-finance'],
-  [/ksef|e-invoic|compliance|tax|i18n|translation/, 'localization-compliance'],
+  // invoicing, KSeF included, is payments (review of 26 Oct: a person looking for invoices did not find KSeF)
+  [/gateway|payment|billing|invoic|ksef|pay-|stripe|tpay|payu|przelewy/, 'payments-finance'],
+  [/compliance|tax|i18n|translation/, 'localization-compliance'],
   [/channel|email|sms|notification|discord|telephony|chat/, 'communication'],
   [/sync|import|export|akeneo|shopify|sheets|webhook|integration|connector/, 'integrations-sync'],
   [/shipment|shipping|tracking|terminal|carrier|warehouse|logistic|freight/, 'warehouse-shipping'],

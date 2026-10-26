@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import Base from '../layouts/Base.astro'
+import Icon from '../components/icons/Icon.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { TIER_RULES } from '../../../lib/core/tier.ts'
 import { SealView, Square } from '../lib/ui.tsx'
@@ -17,6 +18,8 @@ import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
 import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
 import { isPreviewData } from '../lib/freshness.ts'
 import { receiptOrigin } from '../lib/receipt-origin.ts'
+import { href } from '../lib/url.ts'
+import { MADE_BY } from './c/_data.ts'
 
 const REPO = CATALOG_REPO_URL
 const { meta, modules } = loadSiteData()
@@ -119,12 +122,53 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
     <div class="sheet section q-head">
       <div class="q-copy">
         <p class="t-tagline">// Quality</p>
-        <h1 class="q-title">Three levels. Two are measured, one is reviewed.</h1>
-        <p class="q-lede">
-          One word on every card. Listed and Verified are granted and taken away by machine, from the rules below. OM
-          Quality is granted only by people. There is no score from 0 to 100, and popularity is shown, not scored.
+        <h1 class="q-title">How the catalog checks a module.</h1>
+        {/* three short paragraphs in the words of the cards and the module pages (review of 26 Oct: the page explained
+            badges no page for people shows) */}
+        <p class="q-para">
+          <strong>Official, Community, Third-party</strong> say who made a module.{' '}
+          {MADE_BY.map((m) => `${m.label}: ${m.hint.charAt(0).toLowerCase()}${m.hint.slice(1)}`).join(' ')}
+        </p>
+        <p class="q-para">
+          <strong>Works on latest</strong> means the catalog added the module to a new Open Mercato {latest?.version ?? ''}{' '}
+          app by {origin.run} and every check passed. <strong>Not working on latest</strong> means the last test failed.
+          The data and the README badge call the first one Verified; a module that only passed the listing checks is
+          Listed.
+        </p>
+        <p class="q-para">
+          <strong>OM Quality</strong> is a review by two people of the core team, for one published version, valid 12
+          months.{' '}
+          {holders === 0 ? (
+            <>
+              No module has it yet. Be the first: <a href={requestUrl} rel="noopener noreferrer">request a review</a>.
+            </>
+          ) : (
+            <>
+              {plural(holders, 'module')} {holders === 1 ? 'has' : 'have'} it.{' '}
+              <a href={requestUrl} rel="noopener noreferrer">Request a review</a>.
+            </>
+          )}
+        </p>
+        {previewData && (
+          <p class="q-para q-fine">
+            <span class="chip chip--preview">{PREVIEW_CHIP}</span> {PREVIEW_SENTENCE}
+          </p>
+        )}
+        <p class="q-fine">
+          A test is a compatibility signal, not a security review. Just looking for a module?{' '}
+          <a href={href('/')}>Browse modules.</a>
         </p>
       </div>
+    </div>
+  </section>
+
+  <details class="q-rules" id="rules">
+    <summary class="sheet q-rules__sum">
+      <span class="q-rules__t">Full rules for maintainers <Icon name="chevron-down" size={18} class="icon q-rules__chev" /></span>
+      <span class="q-rules__s">The levels, every rule with its code, the measured signals, the OM Quality checklist and what a level does not mean.</span>
+    </summary>
+  <section class="band">
+    <div class="sheet section">
       <ol class="q-levels" role="list">
         <li>
           <SealView seal={{ kind: 'listed', title: 'Listed' }} />
@@ -136,11 +180,6 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
             Installed in a fresh Open Mercato {latest?.version ?? ''} app by {origin.run}, per version, granted and
             lost automatically.
           </p>
-          {previewData && (
-            <p>
-              <span class="chip chip--preview">{PREVIEW_CHIP}</span> {PREVIEW_SENTENCE}
-            </p>
-          )}
         </li>
         <li>
           <span class="seal seal--quality" title="OM Quality">
@@ -209,7 +248,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
   <section class="band" aria-labelledby="q-signals">
     <div class="sheet section q-sec">
       <p class="t-tagline">// Signals · measured per version · each with a date and evidence</p>
-      <h2 id="q-signals">Signals</h2>
+      <h2 id="q-signals">What is measured for each version</h2>
       <table class="q-table q-table--sig">
         <thead><tr><th scope="col">Signal</th><th scope="col">States</th><th scope="col">Rule</th></tr></thead>
         <tbody>
@@ -263,7 +302,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
       <p class="t-tagline">// OM Quality · people only · per published tarball</p>
       <h2 id="q-omq">OM Quality</h2>
       <p class="q-count">
-        <span class="num">{plural(holders, 'module')}</span> {holders === 1 ? 'holds' : 'hold'} OM Quality.
+        {holders === 0 ? 'No module holds OM Quality yet. Be the first: request a review.' : `${plural(holders, 'module')} ${holders === 1 ? 'holds' : 'hold'} OM Quality.`}
       </p>
       {preconditions && <p class="q-lede" set:html={codeHtml(`Preconditions: ${preconditions}`)} />}
       <table class="q-table">
@@ -335,9 +374,57 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
       </ul>
     </div>
   </section>
+  </details>
 </Base>
 
 <style>
+  .q-para {
+    max-width: 68ch;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .q-para strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .q-para a,
+  .q-fine a {
+    color: var(--ink);
+  }
+  .q-fine {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .q-rules__sum {
+    display: grid;
+    gap: 4px;
+    padding-block: 24px;
+    padding-inline: var(--pad);
+    border-top: 1px solid var(--line);
+    cursor: pointer;
+    list-style: none;
+  }
+  .q-rules__sum::-webkit-details-marker {
+    display: none;
+  }
+  .q-rules__t {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .q-rules[open] :global(.q-rules__chev) {
+    transform: rotate(180deg);
+  }
+  .q-rules__sum:hover .q-rules__t {
+    text-decoration: underline;
+  }
+  .q-rules__s {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
   .q-copy,
   .q-sec {
     display: grid;
@@ -345,7 +432,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
   }
   .q-head {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px 48px;
     align-items: start;
     padding-bottom: 48px;
@@ -360,6 +447,57 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
   .q-lede {
     max-width: 72ch;
     color: var(--ink-2);
+  }
+  /* the plain three sentences under the H1 (review of 26 Oct): what the page is, for whom, and the way back */
+  .q-intro {
+    max-width: 64ch;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .q-intro a {
+    color: var(--ink);
+    font-weight: 500;
+    text-underline-offset: 3px;
+  }
+  .q-how {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+  .q-how > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  .q-how > summary::-webkit-details-marker {
+    display: none;
+  }
+  .q-how > summary::before {
+    content: '+';
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    font-family: var(--font-mono);
+    color: var(--ink-2);
+  }
+  .q-how[open] > summary::before {
+    content: '\2212';
+  }
+  .q-howbody {
+    padding: 4px 14px 16px;
+  }
+  .q-howbody .q-lede {
+    font-size: 14px;
   }
   /* the instrument of the header: the three seals at twice their card size, each with what it means */
   .q-levels {
@@ -543,6 +681,9 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
     .q-levels,
     .q-cols {
       grid-template-columns: 1fr;
+    }
+    .q-how > summary {
+      min-height: 44px;
     }
     .q-levels li > :global(.seal) {
       zoom: 1.5;

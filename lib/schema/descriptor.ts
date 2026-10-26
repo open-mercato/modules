@@ -17,6 +17,7 @@ export const DESCRIPTOR_KEY_ORDER = [
   'providers',
   'extends',
   'links',
+  'screenshots',
   'pricing',
   'smoke',
   'scriptsRequired',
@@ -44,6 +45,69 @@ export const CURATOR_FIELDS = [
   'featured',
   'aliases',
 ] as const
+
+/** At most this many screenshots per descriptor. */
+export const SCREENSHOT_MAX = 6
+/** Size limit of a screenshot file hosted in the catalog (`modules/<scope>/screenshots/<name>`). */
+export const SCREENSHOT_MAX_BYTES = 600 * 1024
+
+const HOSTED_SRC = /^screenshots\/[a-z0-9][a-z0-9_-]{0,63}\.(?:webp|png|jpg)$/
+// no `..` or an encoded dot: a browser resolves them, and the link would leave the repository it names
+const RAW_SRC =
+  /^(?!.*(?:\.\.|%2[eE]))https:\/\/raw\.githubusercontent\.com\/([A-Za-z0-9-]{1,39})\/([A-Za-z0-9._-]{1,100})\/[A-Za-z0-9._~%/-]+$/
+const ATTACHMENT_SRC = /^https:\/\/github\.com\/user-attachments\/assets\/[A-Za-z0-9-]+$/
+
+/**
+ * `src` of a screenshot: a file of the catalog next to the descriptor (`screenshots/<name>.webp`, `.png` or `.jpg`,
+ * lower case), or an image on GitHub (raw.githubusercontent.com of the module's own repository, or an attachment).
+ * One pattern, so descriptor-1.json says the same; the own-repository rule and the file are checked in superRefine and
+ * `validate`.
+ */
+export const ScreenshotSrc = z
+  .string()
+  .max(300)
+  .regex(
+    new RegExp(`${HOSTED_SRC.source}|${RAW_SRC.source}|${ATTACHMENT_SRC.source}`),
+    'use screenshots/<name>.webp (or .png, .jpg, lower case) next to the descriptor, or an https link on raw.githubusercontent.com or github.com/user-attachments/assets',
+  )
+
+/** Bounds of a screenshot's description (alt text), in characters; the /submit form says them from here. */
+export const SCREENSHOT_ALT_MIN = 10
+export const SCREENSHOT_ALT_MAX = 120
+
+export const Screenshot = z
+  .object({
+    src: ScreenshotSrc,
+    alt: PlainText(SCREENSHOT_ALT_MAX).min(SCREENSHOT_ALT_MIN, `min ${SCREENSHOT_ALT_MIN} characters`),
+  })
+  .strict()
+
+/** A `src` that is a file of the catalog (else an https URL). */
+export const isHostedScreenshot = (src: string): boolean => HOSTED_SRC.test(src)
+
+/** Repository (`owner/repo`) a raw.githubusercontent.com `src` points at, or null. */
+export function screenshotRepo(src: string): string | null {
+  const m = RAW_SRC.exec(src)
+  return m ? `${m[1]}/${m[2]}` : null
+}
+
+/** The module's own GitHub repository: `github`, else the repository of `repo` (`owner/name#ref/path`). */
+export function ownRepo(d: { github?: string | undefined; repo?: string | undefined }): string | null {
+  return d.github ?? d.repo?.split('#')[0] ?? null
+}
+
+/**
+ * Repo-relative path of a catalog-hosted screenshot: `src` resolved against the folder of the descriptor file
+ * (`modules/@acme/x.yml` + `screenshots/a.webp` = `modules/@acme/screenshots/a.webp`; a descriptor right under
+ * `modules/` uses `modules/screenshots/`).
+ */
+export function screenshotFile(descriptorFile: string, src: string): string {
+  const dir = descriptorFile.includes('/') ? descriptorFile.slice(0, descriptorFile.lastIndexOf('/')) : '.'
+  return `${dir}/${src}`
+}
+
+/** A changed file that is a catalog-hosted screenshot (`modules/<folder>/screenshots/<name>.<ext>`), not a descriptor. */
+export const SCREENSHOT_FILE = /^modules\/(?:.+\/)?screenshots\/[a-z0-9][a-z0-9_-]{0,63}\.(?:webp|png|jpg)$/
 
 export const Descriptor = z
   .object({
@@ -78,6 +142,7 @@ export const Descriptor = z
       })
       .strict()
       .default({}),
+    screenshots: z.array(Screenshot).max(SCREENSHOT_MAX, `at most ${SCREENSHOT_MAX} screenshots`).optional(),
     pricing: z.enum(['free', 'paid', 'contact']).default('free'),
     smoke: z
       .object({
@@ -118,6 +183,25 @@ export const Descriptor = z
       ctx.addIssue({ code: 'custom', path: ['enterprise'], message: 'enterprise is reserved' })
     if (d.extends && d.kind !== 'provider')
       ctx.addIssue({ code: 'custom', path: ['extends'], message: 'extends is for providers' })
+    // a raw.githubusercontent.com image only from the module's own repository (an image elsewhere can change under it)
+    const own = ownRepo(d)
+    d.screenshots?.forEach((s, i) => {
+      const repo = screenshotRepo(s.src)
+      if (!repo) return
+      if (!own)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['screenshots', i, 'src'],
+          message:
+            'a raw.githubusercontent.com link needs the github field of the module; set it or host the file under screenshots/',
+        })
+      else if (repo.toLowerCase() !== own.toLowerCase())
+        ctx.addIssue({
+          code: 'custom',
+          path: ['screenshots', i, 'src'],
+          message: `link an image of the module's own repository ${own}, not of ${repo}, or host the file under screenshots/`,
+        })
+    })
   })
 
 export type Descriptor = z.output<typeof Descriptor>

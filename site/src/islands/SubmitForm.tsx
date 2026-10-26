@@ -10,7 +10,13 @@ import { licenseKind } from '../../../lib/core/signals.ts'
 import { injectionFlags, plainTextViolation } from '../../../lib/core/text.ts'
 import { CategoryId, GithubRepo, NpmName } from '../../../lib/schema/common.ts'
 import type { IndexEntry } from '../../../lib/schema/published/modules.ts'
-import { DESCRIPTOR_KEY_ORDER, Descriptor } from '../../../lib/schema/descriptor.ts'
+import {
+  DESCRIPTOR_KEY_ORDER,
+  Descriptor,
+  SCREENSHOT_ALT_MAX,
+  SCREENSHOT_ALT_MIN,
+  SCREENSHOT_MAX,
+} from '../../../lib/schema/descriptor.ts'
 import { locatorToPath } from '../../../lib/schema/locator.ts'
 import { renderSigil, sigilPhase } from '../../../lib/sigil/sigil.ts'
 import { CommandChipView, Icon, LicenseChipView, TypeChipView, Wrap } from '../lib/ui.tsx'
@@ -660,6 +666,8 @@ export interface FormState {
   summary: string
   whenToUse: string
   providers: { name: string; label: string }[]
+  /** Optional screenshots (26 Oct): an https URL and an alt text each; empty rows are left out of the YAML. */
+  screenshots?: { src: string; alt: string }[]
   kind: 'module' | 'provider' | 'library' | 'tool'
   /** The author says the module replaces the core modules its IDs collide with (`replaces: core:<id>`, a curator confirms). */
   replacesCore?: boolean
@@ -671,8 +679,12 @@ export const emptyForm = (): FormState => ({
   summary: '',
   whenToUse: 'Use when ',
   providers: [],
+  screenshots: [],
   kind: 'module',
 })
+
+/** Screenshot rows the form offers (the descriptor takes up to SCREENSHOT_MAX; more are added in the file by hand). */
+export const FORM_SCREENSHOTS = 3
 
 export const splitTags = (s: string): string[] => [
   ...new Set(
@@ -719,6 +731,12 @@ function withForm(d: Record<string, unknown>, r: CheckResult | null, f: FormStat
     .filter((p) => p.name || p.label)
   if (providers.length > 0) d.providers = providers
   else delete d.providers
+  // a form without the field (an older state) keeps the screenshots of the file it starts from
+  if (f.screenshots) {
+    const shots = f.screenshots.map((x) => ({ src: x.src.trim(), alt: x.alt.trim() })).filter((x) => x.src || x.alt)
+    if (shots.length > 0) d.screenshots = shots
+    else delete d.screenshots
+  }
   // a core module ID only with the author's tick (finding of 25 Oct: the form opened a pull request the collision-core
   // lint rejects); `replaces` is a curator field, the curator confirms it in review
   const collisions = r?.collisions ?? []
@@ -752,7 +770,13 @@ export function descriptorIssues(d: Record<string, unknown>): { path: string; me
   if (res.success) return []
   const seen = new Set<string>()
   return res.error.issues
-    .map((i) => ({ path: i.path.join('.') || 'descriptor', message: issueText(String(i.path[0] ?? ''), i.message) }))
+    .map((i) => ({
+      path: i.path.join('.') || 'descriptor',
+      message:
+        i.path[0] === 'screenshots'
+          ? screenshotIssueText(i.path, i.message)
+          : issueText(String(i.path[0] ?? ''), i.message),
+    }))
     .filter((i) => !seen.has(i.message) && seen.add(i.message))
 }
 
@@ -762,6 +786,22 @@ const FIELD_NAME: Record<string, string> = {
   tags: 'Tags',
   providers: 'Providers',
   category: 'Category',
+}
+
+/** The problem of one screenshot row, as one sentence that names the row. */
+export function screenshotIssueText(path: readonly PropertyKey[], message: string): string {
+  if (typeof path[1] !== 'number') return `Screenshots: at most ${SCREENSHOT_MAX}.`
+  const row = `Screenshot ${path[1] + 1}`
+  if (path[2] === 'alt')
+    return /plain text/.test(message)
+      ? `${row}: the description is plain text only, no links, markdown, HTML or backticks.`
+      : `${row}: describe the image in ${SCREENSHOT_ALT_MIN} to ${SCREENSHOT_ALT_MAX} characters.`
+  if (path[2] === 'src') {
+    if (message.startsWith('use screenshots/'))
+      return `${row}: use an https link to an image of your repository on raw.githubusercontent.com, or a github.com/user-attachments link.`
+    return `${row}: ${message}.`
+  }
+  return `${row}: give a link and a description.`
 }
 
 /** Short, actionable sentences for the fields of the form; anything else keeps the schema message. */
@@ -819,6 +859,9 @@ const NESTED_ORDER: Record<string, readonly string[]> = {
   enterprise: ['offerUrl', 'modules'],
 }
 
+/** Key order of a screenshot (block maps, as `yarn om format` writes them). */
+const SCREENSHOT_ORDER = ['src', 'alt'] as const
+
 const value = (v: unknown, flow: boolean, locator: boolean): string =>
   typeof v === 'string' ? (locator ? JSON.stringify(v) : scalar(v, flow)) : String(v)
 
@@ -829,6 +872,19 @@ function yamlEntry(k: string, v: unknown, indent: string, out: string[], top: bo
       out.push(`${indent}providers:`)
       for (const p of v as { name: string; label: string }[])
         out.push(`${indent}  - { name: ${scalar(p.name, true)}, label: ${scalar(p.label, true)} }`)
+    } else if (top && k === 'screenshots') {
+      out.push(`${indent}screenshots:`)
+      for (const x of v as Record<string, unknown>[]) {
+        const keys = [
+          ...SCREENSHOT_ORDER.filter((sk) => sk in x),
+          ...Object.keys(x).filter((sk) => !(SCREENSHOT_ORDER as readonly string[]).includes(sk)),
+        ]
+        keys.forEach((sk, j) => {
+          const sv = x[sk]
+          if (sv !== undefined && sv !== null)
+            out.push(`${indent}${j === 0 ? '  - ' : '    '}${sk}: ${value(sv, false, false)}`)
+        })
+      }
     } else if ((top && FLOW_KEYS.has(k)) || (!top && k === 'modules'))
       out.push(`${indent}${k}: [${v.map((x) => value(x, true, top && LOCATOR_KEYS.has(k))).join(', ')}]`)
     else {
@@ -1013,6 +1069,12 @@ export function formFromPackage(
     if (!f.whenToUse.trim() || f.whenToUse.trim() === 'Use when') f.whenToUse = cur.whenToUse
     if (f.providers.length === 0) f.providers = cur.providers.map((p) => ({ ...p }))
   }
+  // the screenshots of a listed entry's file, so a proposed edit keeps them
+  const shots = r.existing?.descriptor?.screenshots
+  if ((f.screenshots ?? []).length === 0 && Array.isArray(shots))
+    f.screenshots = shots
+      .filter((x): x is { src: unknown; alt: unknown } => !!x && typeof x === 'object')
+      .map((x) => ({ src: typeof x.src === 'string' ? x.src : '', alt: typeof x.alt === 'string' ? x.alt : '' }))
   const kw = r.pkg?.keywords.map((k) => k.toLowerCase()) ?? []
   if (!f.category) {
     for (const k of kw) {
@@ -1441,6 +1503,7 @@ export default function SubmitForm(props: SubmitFormProps) {
   const wtuProblem = form.whenToUse ? plainTextViolation(form.whenToUse) : null
   const fieldIssue = (p: string) => issues.find((i) => i.path === p || i.path.startsWith(`${p}.`))?.message ?? null
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }))
+  const shotRows = form.screenshots ?? []
 
   // the YAML the form writes for a listed entry before anyone types: its file as the form reads it
   const baseYaml =
@@ -1811,6 +1874,78 @@ export default function SubmitForm(props: SubmitFormProps) {
                 </button>
               )}
               {fieldIssue('providers') && <p class="sf__err">{fieldIssue('providers')}</p>}
+            </fieldset>
+            <fieldset class="sf__field sf__providers">
+              <legend class="sf__label">
+                Screenshots <span class="sf__opt">optional</span>
+              </legend>
+              <p class="sf__lint" id="sf-shots-help">
+                Optional. Images of the module in a running app, 16:10, at least 1280 px wide. Link a file of your
+                repository on raw.githubusercontent.com, or a GitHub attachment.
+              </p>
+              {shotRows.map((x, i) => (
+                <div class="sf__prow sf__prow--shot">
+                  <input
+                    class="sf__input sf__input--mono"
+                    type="url"
+                    inputMode="url"
+                    aria-label={`Screenshot ${i + 1} URL`}
+                    aria-describedby="sf-shots-help"
+                    placeholder="https://raw.githubusercontent.com/owner/repo/main/docs/list.png"
+                    value={x.src}
+                    onInput={(e) =>
+                      set(
+                        'screenshots',
+                        shotRows.map((y, j) =>
+                          j === i ? { ...y, src: (e.currentTarget as HTMLInputElement).value } : y,
+                        ),
+                      )
+                    }
+                  />
+                  <input
+                    class="sf__input"
+                    type="text"
+                    maxLength={SCREENSHOT_ALT_MAX}
+                    aria-label={`Screenshot ${i + 1} description`}
+                    placeholder="What the image shows."
+                    value={x.alt}
+                    onInput={(e) =>
+                      set(
+                        'screenshots',
+                        shotRows.map((y, j) =>
+                          j === i ? { ...y, alt: (e.currentTarget as HTMLInputElement).value } : y,
+                        ),
+                      )
+                    }
+                  />
+                  <button
+                    type="button"
+                    class="sf__remove"
+                    aria-label={`Remove screenshot ${i + 1}`}
+                    title="Remove"
+                    onClick={() =>
+                      set(
+                        'screenshots',
+                        shotRows.filter((_, j) => j !== i),
+                      )
+                    }
+                  >
+                    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+                      <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+              {shotRows.length < FORM_SCREENSHOTS && (
+                <button
+                  type="button"
+                  class="btn btn--secondary btn--sm"
+                  onClick={() => set('screenshots', [...shotRows, { src: '', alt: '' }])}
+                >
+                  Add screenshot
+                </button>
+              )}
+              {fieldIssue('screenshots') && <p class="sf__err">{fieldIssue('screenshots')}</p>}
             </fieldset>
           </form>
         )}

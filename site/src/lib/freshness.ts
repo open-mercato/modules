@@ -62,8 +62,9 @@ export function stampModel(d: DataAsOf, now: string | Date): StampModel {
   const at = nightly ?? d.npm
   const npmChecked = `npm checked ${d.npm ? stamp(d.npm) : 'not yet'}.`
   return {
-    // a preview run gives its day only (review r6): the run panel names its own hours, and a retry is not a new run
-    label: preview ? `Preview ${day(nightly!)}` : at ? `Data ${stamp(at)}` : 'Data pending',
+    // a preview run gives its day only (review r6): the run panel names its own hours, and a retry is not a new run;
+    // `Updated`, not `Preview` (review of 26 Oct: a word for developers on every page), the tooltip says the rest
+    label: preview ? `Updated ${day(nightly!)}` : at ? `Data ${stamp(at)}` : 'Data pending',
     title: nightly
       ? preview
         ? `${PREVIEW_SENTENCE} Last receipt ${stamp(nightly)}. ${npmChecked}`

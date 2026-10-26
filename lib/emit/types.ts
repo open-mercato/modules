@@ -42,6 +42,8 @@ export interface LoadedDescriptor {
   /** Zod output, or null when the file does not validate (the entry is then left out of the index). */
   descriptor: Descriptor | null
   issues: string[]
+  /** Bytes of the screenshots the catalog hosts, by `src` (`screenshots/<name>`); a file load.ts could not use is absent. */
+  screenshotFiles?: ReadonlyMap<string, Uint8Array>
 }
 
 export interface SkillSource {
@@ -136,6 +138,8 @@ export interface EntryContext {
   allFacts: Map<string, Facts>
   /** LST and VER rules of the entry (`/m/<path>.json` `rules`); absent in contexts built by hand. */
   rules?: Rule[]
+  /** Hosted screenshots to publish: path under the site root (`shots/...`) and bytes. Absent: none. */
+  screenshotFiles?: [string, Uint8Array][]
 }
 
 /** A published or site-data file: path relative to its root and its content. */

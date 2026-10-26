@@ -7,4 +7,7 @@ summary: Sends and receives Polish structured e-invoices through the KSeF API v2
 whenToUse: Use when the app must issue or receive structured invoices in KSeF (Poland).
 providers:
   - { name: ksef, label: KSeF }
+screenshots: # A, a file the catalog hosts next to the descriptor
+  - src: screenshots/invoices.png
+    alt: The KSeF invoices list with the send status of each invoice.
 renamedFrom: ["npm:@fast-white-cat/integration-ksef-direct"] # K

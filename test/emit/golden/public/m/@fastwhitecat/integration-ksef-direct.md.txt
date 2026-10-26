@@ -8,13 +8,16 @@ verified_on: [0.9, next]
 agent_policy: {"0.9":"ask","0.8":"ask","next":"ask"}
 install: yarn mercato module add @fastwhitecat/integration-ksef-direct@0.1.8 --allow-third-party
 installable_from: 2026-10-20
-data_version: 1.0.0-202610230305.h34c6c1
+data_version: 1.0.0-202610230305.h24795a
 ---
 # KSeF Integration
 Sends and receives Polish structured e-invoices through the KSeF API v2.
 Use when the app must issue or receive structured invoices in KSeF (Poland).
 
 Renamed from @fast-white-cat/integration-ksef-direct.
+
+## Screenshots
+- ![The KSeF invoices list with the send status of each invoice.](https://wojciechszyjka.github.io/modules/shots/@fastwhitecat/invoices.png)
 
 ## Compatibility
 | Line | Module | Status | Since | Receipt | In isolation (empty preset) |

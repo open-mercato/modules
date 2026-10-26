@@ -17,13 +17,19 @@ interface Props {
   repoUrl?: string
 }
 const { dataAsOf, repoUrl = CATALOG_REPO_URL } = Astro.props
+// people's links in the row; the data files for agents sit under About this data (review of 26 Oct)
 const links = [
+  { label: 'Compatibility', url: href('/compat') },
+  { label: 'Quality', url: href('/quality') },
+  { label: 'For agents', url: href('/for-agents') },
+  { label: 'GitHub', url: repoUrl },
+  { label: 'Submit', url: href('/submit') },
+]
+const dataLinks = [
   { label: 'modules.json', url: href('/modules.json') },
   { label: 'llms.txt', url: href('/llms.txt') },
   { label: 'MCP', url: href('/for-agents#connect') },
   { label: 'Schema', url: href('/schema/modules-1.json') },
-  { label: 'GitHub', url: repoUrl },
-  { label: 'Submit', url: href('/submit') },
 ]
 const refreshed = dataAsOf.nightly ?? dataAsOf.npm
 // the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one
@@ -40,38 +46,48 @@ const build = meta.build?.commit ? meta.build : null
     <div class="ft__top">
       <div class="ft__brand">
         <Wordmark height={28} />
-        <p class="ft__claim">Descriptions come from authors. Everything else is measured.</p>
       </div>
       <nav class="ft__links" aria-label="Data and project">
         {links.map((l) => <a href={l.url}>{l.label}</a>)}
       </nav>
-      <p class="ft__data">
-        {refreshed ? <>Data refreshed {preview ? day(refreshed) : dayTime(refreshed)}.</> : <>No data yet.</>}
-        <br />
-        {
-          preview ? (
-            <>
-              Sources: npm, GitHub and a preview run.{' '}
-              <span class="chip chip--preview ft__chip" title={PREVIEW_SENTENCE}>
-                {PREVIEW_CHIP}
-              </span>
-            </>
-          ) : (
-            'Sources: npm, GitHub, nightly CI.'
-          )
-        }
-        {
-          build && (
-            <>
-              <br />
-              <span class="ft__build" data-build={build.commit}>
-                Built from <code>{build.commit}</code>
-                {build.dirty ? ' with local changes' : ''} on {dayTime(meta.generatedAt)}.
-              </span>
-            </>
-          )
-        }
-      </p>
+      <div class="ft__data">
+        <p>{refreshed ? <>Data refreshed {preview ? day(refreshed) : dayTime(refreshed)}.</> : <>No data yet.</>}</p>
+        {/* the provenance for developers, folded (review of 26 Oct: PREVIEW, NOT CI and a commit on every page) */}
+        <details class="ft__about">
+          <summary>About this data</summary>
+          <p>
+            Descriptions come from authors. Everything else is measured.{' '}
+            {
+              preview ? (
+                <>
+                  Sources: npm, GitHub and a preview run.{' '}
+                  <span class="chip chip--preview ft__chip" title={PREVIEW_SENTENCE}>
+                    {PREVIEW_CHIP}
+                  </span>
+                </>
+              ) : (
+                'Sources: npm, GitHub, nightly CI.'
+              )
+            }
+            {
+              build && (
+                <span class="ft__build" data-build={build.commit}>
+                  {' '}Built from <code>{build.commit}</code>
+                  {build.dirty ? ' with local changes' : ''} on {dayTime(meta.generatedAt)}.
+                </span>
+              )
+            }
+          </p>
+          <p class="ft__alinks">
+            {dataLinks.map((l, i) => (
+              <>
+                {i > 0 && ' · '}
+                <a href={l.url}>{l.label}</a>
+              </>
+            ))}
+          </p>
+        </details>
+      </div>
     </div>
     <div class="ft__giant" set:html={outline} />
   </div>
@@ -129,9 +145,29 @@ const build = meta.build?.commit ? meta.build : null
     vertical-align: 1px;
   }
   .ft__giant {
-    margin-top: 56px;
+    /* a quiet signature, not half a screen (review of 26 Oct) */
+    max-width: 480px;
+    margin-top: 40px;
     padding-bottom: 16px;
     color: #262626;
+    opacity: 0.35;
+  }
+  .ft__about {
+    margin-top: 6px;
+  }
+  .ft__about > summary {
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .ft__about > summary:hover {
+    color: var(--ink);
+  }
+  .ft__about p {
+    max-width: 44ch;
+    margin: 6px 0 0 auto;
+  }
+  .ft__alinks a {
+    color: var(--ink-2);
   }
   :global(:root[data-theme='dark']) .ft__giant {
     color: #4a4a4a;
@@ -171,8 +207,16 @@ const build = meta.build?.commit ? meta.build : null
       text-align: left;
     }
     .ft__giant {
-      margin-top: 40px;
+      margin-top: 32px;
       padding-bottom: 12px;
+    }
+    .ft__about p {
+      margin-left: 0;
+    }
+    .ft__about > summary {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
     }
   }
 </style>

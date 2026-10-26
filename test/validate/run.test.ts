@@ -158,6 +158,7 @@ whenToUse: Use when the shop rewards repeat customers with points they can spend
       removed: ['modules/@open-mercato/pay-by-links.yml'],
       policy: ['policy/reserved.yml'],
       quality: [],
+      screenshots: [],
     })
 
     const tarball = moduleTarball({

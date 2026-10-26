@@ -1,5 +1,5 @@
-// The README box of a module page scrolls on its own (max-height 640 px), so a keyboard must reach it (review r4: axe
-// scrollable-region-focusable, serious, once the Readme tab was open, in both themes and both data states).
+// The README of a module page is rendered from Markdown and flows with the page (review of 26 Oct: raw `##` and
+// fences in a box with its own scroll, cut mid-sentence). No inner scroll region is left for a keyboard to reach.
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, test } from 'vitest'
@@ -8,14 +8,13 @@ import { README_CUT_TEXT, README_EXCERPT_MAX, readmeWasCut, readmeWholeLines } f
 import { OPTS, ROOT, fixtureData, text } from '../emit/helpers.ts'
 
 describe('module page README', () => {
-  test('the scrolling README is a focusable, named region', () => {
+  test('the README is rendered HTML with no scroll of its own', () => {
     const page = readFileSync(join(ROOT, 'site', 'src', 'pages', 'm', '[...path].astro'), 'utf8')
-    const box = /<div class="readme__text"[^>]*>/.exec(page)?.[0] ?? ''
-    expect(box).toContain('tabindex="0"')
-    expect(box).toContain('role="region"')
-    expect(box).toContain(`aria-label="Author's README"`)
+    expect(page).toContain('<div class="readme__text md" set:html={readmeBody} />')
+    expect(page).toContain('readmeFold(readmeBlocks(readme))')
     const css = readFileSync(join(ROOT, 'site', 'src', 'pages', 'm', '_module.css'), 'utf8')
-    expect(/\.readme__text \{[^}]*overflow: auto/.test(css)).toBe(true)
+    expect(/\.readme__text \{[^}]*overflow: auto/.test(css)).toBe(false)
+    expect(/\.readme__text \{[^}]*max-height: \d/.test(css)).toBe(false)
   })
 })
 

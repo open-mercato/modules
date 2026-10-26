@@ -1,14 +1,14 @@
 ---
-// Module page (spec 7.7 B): breadcrumbs, the header with the sigil and the level seal, state banners, the nameplate,
-// the detailed signal strip (one Receipts button), then 8/4: tabs (Anatomy, Versions, Receipts, Readme, Quality)
-// and the install box. Every value comes from the emitted data; nothing is typed by hand.
+// Module page (redesign of 26 Oct, in the style of nuxt.com/modules): breadcrumbs, a calm header (category icon,
+// title, author, package, summary, one compatibility pill), the Install card, screenshots, when to use, the README and
+// a sidebar of links, stats and details. Everything the page showed before (the per-line strip, the install box with
+// the agent policy, the nameplate, Anatomy, Versions, Receipts, Quality, the agent view) is still on the page, inside
+// one closed `Technical details` disclosure, with its element ids. Every value comes from the emitted data.
 import { existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import Base from '../../layouts/Base.astro'
 import Sigil from '../../components/Sigil.astro'
 import Seal from '../../components/Seal.astro'
-import TypeChip from '../../components/TypeChip.astro'
-import LicenseChip from '../../components/LicenseChip.astro'
 import Banner from '../../components/Banner.astro'
 import Nameplate from '../../components/Nameplate.astro'
 import type { NameplateRow } from '../../components/Nameplate.astro'
@@ -18,8 +18,11 @@ import PlugDiagram from '../../components/PlugDiagram.astro'
 import InstallPlan from '../../components/InstallPlan.astro'
 import Receipt from '../../components/Receipt.astro'
 import CommandChip from '../../components/CommandChip.astro'
-import YMarks from '../../components/YMarks.astro'
 import Icon from '../../components/icons/Icon.astro'
+import CategoryIcon from '../../components/module/CategoryIcon.astro'
+import InstallCard from '../../components/module/InstallCard.astro'
+import type { InstallStep, InstallVariant, OtherLine } from '../../components/module/InstallCard.astro'
+import Screenshots from '../../components/module/Screenshots.astro'
 import InstallBox from '../../islands/InstallBox.tsx'
 import type { InstallLine } from '../../islands/InstallBox.tsx'
 import ViewToggle from '../../islands/ViewToggle.tsx'
@@ -30,7 +33,7 @@ import { enterpriseNotes, installInfo, isEnterprisePackage } from '../../../../l
 import { promptParts } from '../../../../lib/core/prompt.ts'
 import { compareVersions } from '../../../../lib/core/semver.ts'
 import { VER5_NOT_READ } from '../../../../lib/core/tier.ts'
-import { README_CUT_TEXT, readmeWasCut, readmeWholeLines } from '../../../../lib/core/text.ts'
+import { README_CUT_TEXT, readmeBlocks, readmeFold, readmeWasCut, readmeWholeLines } from '../../../../lib/core/text.ts'
 import type { IndexEntry, Receipt as ReceiptT } from '../../../../lib/schema/index.ts'
 import { orderLines, STATUS } from '../../lib/status.ts'
 import type { Others } from '../../lib/status.ts'
@@ -41,7 +44,6 @@ import {
   isPreview,
   appModules,
   lastReceipt,
-  receiptWord,
   routesOf,
   transitionRows,
   whyHtml,
@@ -90,8 +92,10 @@ import { absoluteUrl, builtInPage, categoryPage, href, modulePage, moduleMd, rec
 import { wbrHtml } from '../../lib/wrap.ts'
 import { transitionNames } from '../../lib/vt.ts'
 import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
+import { installLine } from '../../components/catalog/cards.ts'
+import { iconSvg } from '../../components/icons/paths.ts'
 import { levelNote, licenseChip, rulesHeading, verifiedTestNote } from '../../lib/chips.ts'
-import { cannotInstall, catalogSkip, uniqueReceipts, withSkipped } from '../c/_data.ts'
+import { cannotInstall, catalogSkip, madeByHint, popularity, providerParents, uniqueReceipts, withSkipped } from '../c/_data.ts'
 import { headerResults, listAnd, noRecommendedNote } from '../../lib/status.ts'
 import { queuedCellSentence, queuedCellsSentence, queuedSentence, schedule } from '../../lib/schedule.ts'
 import { Square } from '../../lib/ui.tsx'
@@ -674,13 +678,6 @@ const installLines: InstallLine[] = lines.map((l) => {
     cloud: !refused && (entry.npm || entry.github) ? info.cmm ?? info.cli : null,
   }
 })
-/**
- * The install chip of the header on wide screens (owner decision E, 25 Oct): the main command the Install box opens
- * with (its first line), with the same copy button; the box stays. Only where the box shows a plain command: not on
- * hold or unlisted, not refused, not a package a new app already has.
- */
-const headLine = installLines.find((l) => l.key === latest.key)
-const headCommand = !blocked && headLine && !headLine.preset ? headLine.command : null
 /** Every line skipped, or nothing installable: nothing to choose, the line picker is hidden. */
 const allSkipped = noInstall || lines.every((l) => entry.compat.lines[l.key]?.status === 'skipped')
 const thirdParty = entry.type !== 'official' || entry.license.kind === 'proprietary'
@@ -903,20 +900,26 @@ const sitePath = (u: string): string => (u.startsWith(`${siteRoot}/`) ? href(u.s
 const badge = `[![Open Mercato Modules](${meta.site}/badge/${entry.path}.svg)](${meta.site}/m/${entry.path})`
 
 // ---------- related ----------
-const related = modules.entries
-  .filter((e) => e.listed && e.locator !== entry.locator && e.category === entry.category)
-  .slice(0, 5)
 const requiredBy = modules.entries.filter((e) =>
   e.requires.some((r) => r.resolvesTo === entry.locator),
 )
-const linkFor = (r: { raw: string; resolvesTo: string | null }): { href: string; label: string; note: string } => {
-  if (r.resolvesTo?.startsWith('core:'))
-    return { href: href(builtInPage(r.resolvesTo.slice(5))), label: r.raw, note: 'built-in' }
+const linkFor = (r: { raw: string; resolvesTo: string | null }): { href: string; label: string; note: string | null } => {
+  if (r.resolvesTo?.startsWith('core:')) {
+    const id = r.resolvesTo.slice(5)
+    return { href: href(builtInPage(id)), label: builtInById.get(id)?.title ?? id, note: null }
+  }
   const target = r.resolvesTo ? byLocator.get(r.resolvesTo) : undefined
   return target
-    ? { href: href(modulePage(target.path)), label: target.title, note: r.raw }
+    ? { href: href(modulePage(target.path)), label: target.title, note: null }
     : { href: href(`/?q=${encodeURIComponent(r.raw)}`), label: r.raw, note: 'not in the catalog' }
 }
+// built-in requirements fold into one line (review of 26 Oct: six `built-in` ids pushed `Required by` down)
+const requiresCore = entry.requires.filter((r) => r.resolvesTo?.startsWith('core:'))
+const requiresOther = entry.requires.filter((r) => !r.resolvesTo?.startsWith('core:'))
+// the adapters of a library (web-research) are its providers, listed apart from the modules that need it
+const parentsOf = providerParents(modules.entries)
+const providersOf = requiredBy.filter((e) => parentsOf.get(e.locator) === entry.locator)
+const neededBy = requiredBy.filter((e) => parentsOf.get(e.locator) !== entry.locator)
 
 /**
  * The author's README as the page shows it: plain text, with the HTML tags of a GitHub header (`<p align="center">`,
@@ -939,6 +942,44 @@ const readme = facts?.readmeExcerpt
       readmeCut,
     ) || null
   : null
+// rendered as HTML (review of 26 Oct: raw `##`, `**` and fences in a box with its own scroll); every text escaped first.
+// Only the opening shows; the rest, with the author's own install notes, opens on a click (review of 26 Oct: the KSeF
+// README told people to npm install and edit next.config.ts next to the catalog's Install card).
+const readmeParts = readme ? readmeFold(readmeBlocks(readme)) : null
+const readmeBody = readmeParts
+  ? readmeParts.intro.join('\n') +
+    (readmeParts.rest.length
+      ? `\n<details class="readme__more"><summary>Show the full README ${iconSvg('chevron-down', 14, 'icon readme__chev')}</summary><div class="md">${readmeParts.rest.join('\n')}</div></details>`
+      : '')
+  : null
+// where the README and the catalog disagree, the page says which one holds (review of 26 Oct: `Requirements:
+// OpenMercato >=0.7.0 <0.8.0` beside `Works on 0.9`, `install with npm` beside the module add command)
+const readmeVersionNote =
+  declaredMismatch && entry.compat.builtFor.range
+    ? `The author declares Open Mercato ${entry.compat.builtFor.range}. The catalog's test installed it on ${listAnd(entry.compat.verifiedOn)}.`
+    : null
+// what the module adds to an app, in words, from the anatomy (review of 26 Oct: official pages had one sentence and a
+// link to the docs). At most six lines; the full anatomy stays in Technical details, the JSON and the tools.
+const whatItAdds: string[] = (() => {
+  const a = entry.anatomy
+  if (!a) return []
+  const c = a.counts
+  const out: string[] = []
+  const firstPage = a.lists.backendPages?.[0]
+  if (c.backendPages) out.push(`${plural(c.backendPages, 'admin page')}${firstPage ? `, starting at ${firstPage}` : ''}.`)
+  if (c.frontendPages) out.push(`${plural(c.frontendPages, 'storefront page')}.`)
+  if (c.tables) out.push(`${plural(c.tables, 'database table')}.`)
+  if (c.routes) out.push(`${plural(c.routes, 'API route')}${c.publicRoutes ? `, ${c.publicRoutes} open to the public` : ''}.`)
+  if (c.widgets) out.push(`${plural(c.widgets, 'widget')} on other admin pages.`)
+  if (c.aiTools || c.aiAgents)
+    out.push(`${listAnd([c.aiTools ? plural(c.aiTools, 'AI tool') : '', c.aiAgents ? plural(c.aiAgents, 'AI agent') : ''].filter(Boolean))}.`)
+  if (c.workers) out.push(`${plural(c.workers, 'background worker')}.`)
+  if (c.eventsEmitted) out.push(`${plural(c.eventsEmitted, 'event')} other modules can react to.`)
+  if (c.aclFeatures) out.push(`${plural(c.aclFeatures, 'permission')} to give to roles.`)
+  const hosts = a.lists.hosts ?? []
+  if (hosts.length) out.push(`Connects to ${listAnd(hosts.length > 2 ? [...hosts.slice(0, 2), plural(hosts.length - 2, 'more host')] : hosts)}.`)
+  return out.slice(0, 6)
+})()
 const title = `${entry.title} · ${name} · Open Mercato Modules`
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -951,19 +992,184 @@ const jsonLd = {
   ...(entry.version.latest ? { version: entry.version.latest } : {}),
   url: absoluteUrl(meta.site, modulePage(entry.path)),
 }
-const tabsOrder = [
+// the README is the body of the page now (26 Oct); the other four stay as tabs inside Technical details
+const tabs = [
   { id: 'anatomy', label: 'Anatomy' },
   { id: 'versions', label: 'Versions' },
   { id: 'receipts', label: 'Receipts' },
-  { id: 'readme', label: 'Readme' },
   { id: 'quality', label: 'Quality' },
 ]
-// a tool or library ships no module, so its anatomy is empty: the page opens on how to use it, its README (finding of 25
-// Oct: create-mercato-module, the first stop of a new author, opened on a black panel of zeros)
-const readmeFirst = entry.moduleIds.length === 0 && (entry.kind === 'tool' || entry.kind === 'library') && !!readme
-const tabs = readmeFirst
-  ? [tabsOrder[3]!, ...tabsOrder.filter((t) => t.id !== 'readme')]
-  : tabsOrder
+
+// ---------- the page for people (26 Oct) ----------
+// one compatibility pill in words, from the latest line: a new app has it, a receipt verified it, a receipt broke on
+// it, or nothing judged it yet (no letters, squares or seals in the header)
+const latestCell = entry.compat.lines[latest.key]
+const neverTested = !!skipText || noInstall
+// the words of the card (c/_data.ts cardState), with the version written out (review of 26 Oct)
+const pill: { text: string; tone: 'ok' | 'bad' | 'muted' } = preset.has(latest.key)
+  ? { text: `Comes with new Open Mercato ${latest.key} apps`, tone: 'ok' }
+  : entry.compat.verifiedOn.includes(latest.key)
+    ? { text: `Works on Open Mercato ${latest.key}, the latest version`, tone: 'ok' }
+    : latestCell?.status === 'broken' && !others[latest.key]
+      ? { text: `Not working on Open Mercato ${latest.key}, the latest version`, tone: 'bad' }
+      : { text: neverTested ? 'Not tested by the catalog' : 'Not tested yet', tone: 'muted' }
+// by: Open Mercato for official entries, else the npm scope or the GitHub owner
+const repoSlug = entry.github ?? (entry.links.repo?.startsWith('https://github.com/') ? entry.links.repo.slice(19) : null)
+const npmScope = entry.npm?.startsWith('@') ? entry.npm.slice(1, entry.npm.indexOf('/')) : null
+const author = entry.type === 'official' ? 'Open Mercato' : (npmScope ?? repoSlug?.split('/')[0] ?? null)
+const TYPE_WORD: Record<IndexEntry['type'], string> = { official: 'Official', community: 'Community', '3rd-party': 'Third-party' }
+const KIND_WORD: Record<IndexEntry['kind'], string | null> = { module: null, provider: 'Provider', library: 'Library', tool: 'Tool' }
+const versionText = entry.version.latest ?? (entry.version.preview ? `${entry.version.preview} (preview)` : null) ?? entry.version.gitRef
+// the Install card (components/module/InstallCard.astro)
+const installVariant: InstallVariant = blocked
+  ? 'blocked'
+  : entry.enterprise
+    ? 'enterprise'
+    : noInstall
+      ? 'unavailable'
+      : preset.has(latest.key)
+        ? 'preset'
+        : 'steps'
+const installMessage = blocked ?? (noInstall ? notListedText : null)
+const restart = entry.kind !== 'tool'
+const enterpriseInstall = entry.enterprise
+  ? (() => {
+      const t = enterpriseNotes(entry.moduleIds)
+      return { offer: entry.links.docs, lead: [t.lead, t.more].filter(Boolean).join(' '), command: entry.install.cli }
+    })()
+  : null
+// the steps of the latest line from the install plan the agents get (lib/core/plan.ts `then`, review of 26 Oct: the
+// card said only `Restart the app.`, the plan and the agent prompt run yarn generate and yarn db:migrate too)
+const latestThen = plans[latest.key]?.then ?? null
+const addsModule = entry.kind === 'module' || entry.kind === 'provider'
+const hasTables = (entry.anatomy?.counts.tables ?? 0) > 0 || (entry.anatomy?.counts.migrations ?? 0) > 0
+const needsGenerate = latestThen ? latestThen.includes('yarn generate') : addsModule
+const needsMigrate = latestThen ? latestThen.some((t) => t.startsWith('yarn db:migrate')) : hasTables
+const grantCount = latestThen?.some((t) => t.startsWith('Grant these permissions'))
+  ? (entry.anatomy?.lists.aclFeatures.length ?? 0)
+  : 0
+// one install command (review of 26 Oct: the home page promised one command, the card listed five steps): the add
+// command, yarn generate and yarn db:migrate joined with &&, as the plan of the latest line runs them
+const installCommand = installLine(entry.install.cli, latestThen, { generate: addsModule, migrate: hasTables })
+const installDoes = ['adds the module', ...(needsGenerate ? ['registers it'] : []), ...(needsMigrate ? ['creates its database tables'] : [])]
+const installSteps: InstallStep[] =
+  installVariant === 'steps'
+    ? [
+        {
+          text: restart ? `Run this in your app folder. It ${listAnd(installDoes)}.` : 'Run this in a terminal.',
+          command: installCommand,
+        },
+        ...(grantCount > 0
+          ? [
+              {
+                text: `In the admin, open Roles (/backend/roles) and give its ${plural(grantCount, 'permission')} to the roles that need them.`,
+                command: null,
+              },
+            ]
+          : []),
+        ...(restart ? [{ text: 'Restart the app.', command: null }] : []),
+      ]
+    : []
+// an app from the empty preset has it too on the latest line (events): no app needs a command, so none is offered
+const presetCommand =
+  installVariant === 'preset' && !(raw.compat.inEmptyPreset ?? []).includes(latest.key) ? entry.install.cli : null
+const presetAfterParts = [
+  ...(addsModule ? ['run yarn generate'] : []),
+  ...(hasTables ? ['run yarn db:migrate'] : []),
+  ...(restart ? ['restart the app'] : []),
+]
+const presetInstall = presetCommand
+  ? { command: presetCommand, after: presetAfterParts.length ? `Then ${listAnd(presetAfterParts)}.` : null }
+  : null
+// a failed test on the latest version is said first, above the command (review of 26 Oct: it stood under it, grey)
+const worksElsewhere = lines.filter((l) => l.key !== latest.key && entry.compat.verifiedOn.includes(l.key)).map((l) => l.key)
+// failed on every version the catalog tried and verified on none (review of 26 Oct: Billing still listed five steps):
+// said in those words, and the steps fold away
+const judged = lines.filter((l) => ['verified', 'broken'].includes(entry.compat.lines[l.key]?.status ?? ''))
+const brokenEverywhere =
+  installVariant === 'steps' &&
+  pill.tone === 'bad' &&
+  entry.compat.verifiedOn.length === 0 &&
+  judged.length > 1 &&
+  judged.every((l) => entry.compat.lines[l.key]?.status === 'broken')
+const versionWord = (l: (typeof lines)[number]): string => (l.source === 'develop' ? 'the next development build' : l.key)
+const installWarning =
+  installVariant === 'steps' && pill.tone === 'bad'
+    ? brokenEverywhere
+      ? `Not working on any tested version. The install test failed on Open Mercato ${listAnd(judged.map(versionWord))}.`
+      : `The last install test on Open Mercato ${latest.version} failed. It may not work in your app.${worksElsewhere.length ? ` It works on ${listAnd(worksElsewhere)}, see Other Open Mercato versions.` : ''}`
+    : null
+// the state of the latest version, said once, in the Install card (review of 26 Oct: a pill in the header said it too)
+const installStatus = installVariant === 'steps' && pill.tone !== 'bad' ? pill : null
+const installNotes: { text: string; link?: { href: string; label: string } }[] =
+  installVariant === 'steps' || installVariant === 'preset'
+    ? [
+        ...(entry.install.needsAllowThirdParty || thirdParty
+          ? [
+              {
+                text: 'Not published by Open Mercato. Review the code before you install it.',
+                ...(entry.links.repo ? { link: { href: entry.links.repo, label: 'Open the repository.' } } : {}),
+              },
+            ]
+          : []),
+        ...(entry.replaces.length
+          ? [{ text: `Replaces the built-in ${listAnd(entry.replaces.map((r) => r.replace(/^core:/, '')))} module. You cannot enable both.` }]
+          : []),
+        ...(quarantineUntil
+          ? [{ text: `New release. A fresh app installs it from ${day(quarantineUntil)} (Yarn ${sched.ageGateDays}-day age gate).` }]
+          : []),
+        ...(preview ? [{ text: 'No stable release yet. Only preview builds are published.' }] : []),
+      ]
+    : []
+const lineName = (l: (typeof lines)[number]): string =>
+  l.source === 'develop'
+    ? `Next development build (${shortVersion(l.version)})`
+    : `Open Mercato ${l.key}${l.source === 'latest' ? ', latest' : l.source === 'previous' ? ', previous' : ''}`
+const lineState = (k: string): string => {
+  if (preset.has(k)) return 'Comes with new apps.'
+  if (others[k]) return 'Not tested yet.'
+  const s = entry.compat.lines[k]?.status ?? 'untested'
+  if (s === 'verified') return 'Works.'
+  if (s === 'broken') return 'Not working.'
+  if (s === 'skipped') return 'Not tested by the catalog.'
+  if (s === 'untested') return 'Not tested yet.'
+  return 'Not judged yet.'
+}
+const otherLines: OtherLine[] =
+  installVariant === 'steps' || installVariant === 'preset'
+    ? lines
+        .filter((l) => l.key !== latest.key)
+        .map((l) => {
+          const il = installLines.find((x) => x.key === l.key)
+          if (il?.preset)
+            return { label: lineName(l), state: lineState(l.key), command: il.emptyCommand ?? null, lead: il.emptyCommand ? 'For an app without it:' : null }
+          if (il?.command) return { label: lineName(l), state: lineState(l.key), command: il.command, lead: null }
+          if (il?.previewBuild)
+            return { label: lineName(l), state: lineState(l.key), command: il.previewBuild, lead: 'Only a preview build, not tested on this version:' }
+          return { label: lineName(l), state: lineState(l.key), command: null, lead: 'No recommended command for this version.' }
+        })
+    : []
+// the sidebar
+const support = (entry.links as { support?: string | null }).support ?? null
+const demo = (entry.links as { demo?: string | null }).demo ?? null
+const repoLabel = entry.links.repo?.startsWith('https://github.com/') ? 'GitHub' : 'Repository'
+const alternatives = entry.alternatives.map((loc) => {
+  const e = byLocator.get(loc)
+  return e
+    ? { href: href(modulePage(e.path)), label: e.title }
+    : { href: href(`/?q=${encodeURIComponent(loc.replace(/^npm:|^github:/, ''))}`), label: loc.replace(/^npm:|^github:/, '') }
+})
+const replacesLinks = entry.replaces.map((r) =>
+  r.startsWith('core:')
+    ? { href: href(builtInPage(r.slice(5))), label: `${r.slice(5)} (built-in)` }
+    : { href: href(`/?q=${encodeURIComponent(r)}`), label: r },
+)
+const hasRelated = alternatives.length > 0 || replacesLinks.length > 0 || entry.requires.length > 0 || neededBy.length > 0
+const pop = popularity(entry)
+const stars = entry.stats?.downloads30d != null && (entry.stats?.stars ?? 0) > 0 ? entry.stats!.stars! : null
+// banners that change what a person does stay above the header; the others move into Technical details
+const techBanners =
+  entry.replaces.length > 0 || entry.enterprise || github || (preview && !held) || (!!quarantineUntil && !held) || harnessRed
 ---
 
 <Base
@@ -982,77 +1188,10 @@ const tabs = readmeFirst
         <ol role="list">
           <li><a href={href('/')}>Modules</a></li>
           <li><a href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
-          <li aria-current="page"><code translate="no" set:html={wbrHtml(name)} /></li>
         </ol>
       </nav>
 
-      <header class="mhd">
-        <YMarks inset={8} />
-        <div class="mhd__sig"><Sigil entry={entry} size={96} transition /></div>
-        <div class="mhd__main">
-          <h1 class="t-h1 mhd__title" style={`view-transition-name:${vt.title}`}>{entry.title}</h1>
-          <p class="mhd__loc">
-            <code translate="no" set:html={wbrHtml(entry.locator)} />
-            <button type="button" class="mhd__copy" data-copy={entry.locator} aria-label={`Copy locator ${entry.locator}`}>
-              <Icon name="copy" size={14} />
-            </button>
-          </p>
-          <p class="mhd__sum">{entry.summary}</p>
-          <ul class="mhd__chips" role="list">
-            <li class="mhd__level">
-              {
-                entry.enterprise ? (
-                  <span class="chip chip--enterprise" title="Commercial license. Anatomy not published.">
-                    Enterprise license
-                  </span>
-                ) : (
-                  <Seal entry={{ ...entry, levelNote: note }} latestKey={latest.key} preview={previewData} />
-                )
-              }
-            </li>
-            <li><TypeChip type={entry.type} /></li>
-            <li><span class="chip chip--line">{entry.kind}</span></li>
-            {!entry.enterprise && <li><LicenseChip license={entry.license} /></li>}
-            <li><a class="chip chip--line chip--link" href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
-            {
-              /* claims are for authors outside the org: an @open-mercato package is never "unclaimed" (lib/core claimLabel,
-                 the card's Trust line reads the same) */
-              claimLabel(entry) && (
-                <li>
-                  {claimLabel(entry) === 'Claimed' ? (
-                    <span class="chip chip--line" title="The author confirmed this listing.">Claimed</span>
-                  ) : (
-                    <a
-                      class="chip chip--line chip--link"
-                      href={`${repoUrl}/blob/main/CONTRIBUTING.md`}
-                      title="Not claimed by its author yet. CONTRIBUTING.md says how to claim a listing."
-                    >
-                      Unclaimed
-                    </a>
-                  )}
-                </li>
-              )
-            }
-          </ul>
-          <ul class="mhd__built dotlist" role="list">
-            {headerParts.map((t) => <li class:list={{ mhd__verified: t.startsWith('Verified on ') }}>{t}</li>)}
-          </ul>
-          {
-            headCommand && (
-              <div class="mhd__install">
-                <CommandChip command={headCommand} label="Copy install command" />
-              </div>
-            )
-          }
-        </div>
-        <div class="mhd__side">
-          <ViewToggle client:painted="idle" md={href(moduleMd(entry.path))} json={href(`/m/${entry.path}.json`)} target="agent-view" />
-          {/* a click on Human or Agent before the island hydrates: shown at once, replayed by the island (25 Oct) */}
-          <script is:inline set:html={EARLY_VIEW_JS} />
-        </div>
-      </header>
-
-      <div class="mod__banners" data-human>
+      <div class="mod__banners">
         {held && (
           <Banner variant="hold" link={entry.supersededBy ? { href: entry.supersededBy.startsWith('core:') ? href(builtInPage(entry.supersededBy.slice(5))) : href(modulePage(byLocator.get(entry.supersededBy)?.path ?? '')), label: entry.supersededBy.startsWith('core:') ? `Built-in ${entry.supersededBy.slice(5)}` : 'Use instead' } : undefined}>
             {/* the banner label already says ON HOLD (6.8 text stays in the install box, cards and JSON) */}
@@ -1066,6 +1205,302 @@ const tabs = readmeFirst
           </Banner>
         )}
         {reason('ADVISORY') && <Banner variant="advisory">{reason('ADVISORY')} Do not install until fixed.</Banner>}
+      </div>
+
+
+      <div class="mod__grid">
+        <header class="mh">
+          <CategoryIcon category={entry.category} size={56} class="mh__icon" />
+          <div class="mh__main">
+            <h1 class="mh__title" style={`view-transition-name:${vt.title}`}>{entry.title}</h1>
+            <p class="mh__by">
+              {author && <span>by {author}</span>}
+              <span class="mh__pkg">
+                <code translate="no" set:html={wbrHtml(name)} />
+                <button type="button" class="mh__copy" data-copy={name} aria-label={`Copy package name ${name}`} title="Copy">
+                  <Icon name="copy" size={14} />
+                </button>
+              </span>
+            </p>
+          </div>
+          <p class="mh__lead">{entry.summary}</p>
+          {/* one row of facts, like nuxt's stats line (review of 26 Oct): who made it, the category, the numbers, the version */}
+          <ul class="mh__meta" role="list">
+            <li><span class="mh__chip" title={madeByHint(entry.type)}>{TYPE_WORD[entry.type]}</span></li>
+            {KIND_WORD[entry.kind] && <li><span class="mh__chip">{KIND_WORD[entry.kind]}</span></li>}
+            <li><a class="mh__cat" href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
+            {
+              pop && (
+                <li class="mh__stat">
+                  <Icon name={pop.icon} size={14} />
+                  {pop.icon === 'download'
+                    ? `${entry.stats!.downloads30d!.toLocaleString('en-US')} downloads a month`
+                    : plural(entry.stats!.stars!, 'GitHub star')}
+                </li>
+              )
+            }
+            {stars !== null && <li class="mh__stat"><Icon name="star" size={14} />{plural(stars, 'star')}</li>}
+            {versionText && <li><code translate="no" set:html={wbrHtml(`v${versionText.replace(/^v/, '')}`)} /></li>}
+          </ul>
+        </header>
+        <div class="mod__install">
+          <InstallCard
+            variant={installVariant}
+            steps={installSteps}
+            preset={presetInstall}
+            warning={installWarning}
+            status={installStatus}
+            stepsFolded={brokenEverywhere}
+            notes={installNotes}
+            message={installMessage}
+            enterprise={enterpriseInstall}
+            others={otherLines}
+            othersOpen={!!installWarning && worksElsewhere.length > 0}
+          />
+        </div>
+
+        <div class="mod__main" id="module-body">
+          <Screenshots shots={entry.screenshots} title={entry.title} />
+
+          <section class="use" aria-label="When to use">
+            <div class="use__block">
+              <h2 class="use__h">When to use</h2>
+              <p>{entry.whenToUse}</p>
+            </div>
+            {entry.whenNotToUse && (
+              <div class="use__block use__block--not">
+                <h2 class="use__h">When not to use</h2>
+                <p>{entry.whenNotToUse}</p>
+              </div>
+            )}
+          </section>
+
+          {
+            whatItAdds.length > 0 && (
+              <section class="adds" id={readmeBody ? undefined : 'panel-readme'} aria-labelledby="adds-h">
+                <h2 class="msec__h" id="adds-h">What it adds</h2>
+                <ul class="adds__list" role="list">
+                  {whatItAdds.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          {
+            providersOf.length > 0 && (
+              <section class="works" aria-labelledby="provs-h">
+                <h2 class="msec__h" id="provs-h">{plural(providersOf.length, 'provider')}</h2>
+                <ul class="provs" role="list">
+                  {providersOf.map((e) => (
+                    <li>
+                      <a href={href(modulePage(e.path))}>{e.title}</a>
+                      <span>{e.summary}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+          {
+            entry.providers.length > 0 && (
+              <section class="works" aria-labelledby="works-h">
+                <h2 class="msec__h" id="works-h">Works with</h2>
+                <ul class="works__list" role="list">
+                  {entry.providers.map((p) => (
+                    <li class="works__chip">{p.label}</li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          {
+            readmeBody && (
+              <section class="rd" id="panel-readme" aria-labelledby="readme-h">
+                <h2 class="msec__h" id="readme-h">Readme</h2>
+                <div class="rd__note">
+                  <Icon name="info" size={18} />
+                  <div class="rd__note-text">
+                    <p>
+                      This is the author's README{readmeCut ? ', shortened' : ''}.{' '}
+                      {installVariant === 'steps' || installVariant === 'preset' ? (
+                        <>
+                          To install, use the steps in <a href="#install">Install</a>.
+                        </>
+                      ) : (
+                        'The catalog has not checked it.'
+                      )}
+                    </p>
+                    {(installVariant === 'steps' || installVariant === 'preset' || readmeVersionNote) && (
+                      <p class="rd__note-fine">
+                        {installVariant === 'steps' || installVariant === 'preset'
+                          ? 'The catalog tests those steps. Install notes in the README may be out of date.'
+                          : ''}
+                        {readmeVersionNote && ` ${readmeVersionNote}`}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <figure class="readme">
+                  <div class="readme__text md" set:html={readmeBody} />
+                  {readmeCut && <p class="readme__cut">{README_CUT_TEXT}</p>}
+                </figure>
+              </section>
+            )
+          }
+        </div>
+
+        <aside class="mod__side" aria-label="About this module">
+          <section class="sb" aria-labelledby="links-h">
+            <h2 class="sb__h" id="links-h">Links</h2>
+            <ul class="sb__links" role="list">
+              {entry.links.docs && <li><a href={entry.links.docs} rel="noopener noreferrer">Docs <Icon name="external" size={14} /></a></li>}
+              {entry.links.npm && <li><a href={entry.links.npm} rel="noopener noreferrer">npm <Icon name="external" size={14} /></a></li>}
+              {entry.links.repo && <li><a href={entry.links.repo} rel="noopener noreferrer">{repoLabel} <Icon name="external" size={14} /></a></li>}
+              {support && <li><a href={support} rel="noopener noreferrer">Support <Icon name="external" size={14} /></a></li>}
+              {demo && <li><a href={demo} rel="noopener noreferrer">Demo <Icon name="external" size={14} /></a></li>}
+            </ul>
+          </section>
+
+          <section class="sb" aria-labelledby="details-h">
+            <h2 class="sb__h" id="details-h">Details</h2>
+            <dl class="sb__dl">
+              {entry.version.publishedAt && (
+                <div>
+                  <dt>Published</dt>
+                  <dd>{dayYear(entry.version.publishedAt)}</dd>
+                </div>
+              )}
+              <div>
+                <dt>License</dt>
+                <dd>{licenseValue}</dd>
+              </div>
+            </dl>
+          </section>
+
+          {
+            (detail?.maintainers?.length ?? 0) > 0 && (
+              <section class="sb" aria-labelledby="maint-h">
+                <h2 class="sb__h" id="maint-h">Maintainers</h2>
+                <ul class="sb__links" role="list">
+                  {detail!.maintainers!.map((m) => (
+                    <li><a href={`https://www.npmjs.com/~${encodeURIComponent(m)}`} rel="noopener noreferrer">{m}</a></li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          {
+            hasRelated && (
+              <section class="sb" aria-labelledby="rel-h">
+                <h2 class="sb__h" id="rel-h">Related</h2>
+                {alternatives.length > 0 && (
+                  <>
+                    <p class="sb__k">Alternatives</p>
+                    <ul class="sb__links" role="list">
+                      {alternatives.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+                    </ul>
+                  </>
+                )}
+                {replacesLinks.length > 0 && (
+                  <>
+                    <p class="sb__k">Replaces</p>
+                    <ul class="sb__links" role="list">
+                      {replacesLinks.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+                    </ul>
+                  </>
+                )}
+                {requiresOther.length > 0 && (
+                  <>
+                    <p class="sb__k">Requires</p>
+                    <ul class="sb__links" role="list">
+                      {requiresOther.map((r) => {
+                        const l = linkFor(r)
+                        return (
+                          <li>
+                            <a href={l.href}>{l.label}</a>
+                            {l.note && <span class="sb__note"> {l.note}</span>}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </>
+                )}
+                {requiresCore.length > 0 && (
+                  <details class="sb__more">
+                    <summary>
+                      Uses {plural(requiresCore.length, 'built-in module')} <Icon name="chevron-down" size={14} class="icon sb__chev" />
+                    </summary>
+                    <ul class="sb__links" role="list">
+                      {requiresCore.map((r) => {
+                        const l = linkFor(r)
+                        return <li><a href={l.href}>{l.label}</a></li>
+                      })}
+                    </ul>
+                  </details>
+                )}
+                {neededBy.length > 0 && (
+                  <>
+                    <p class="sb__k">Required by</p>
+                    <ul class="sb__links" role="list">
+                      {neededBy.map((e) => <li><a href={href(modulePage(e.path))}>{e.title}</a></li>)}
+                    </ul>
+                  </>
+                )}
+              </section>
+            )
+          }
+        </aside>
+      </div>
+
+      <details class="tech" id="technical">
+        <summary class="tech__sum">
+          <span class="tech__t">Technical details for maintainers and agents</span>
+          <span class="tech__s">Test results per Open Mercato version, anatomy, versions, receipts, quality and agent rules.</span>
+          <Icon name="chevron-down" size={16} class="icon tech__chev" />
+        </summary>
+        <div class="tech__body">
+          <section class="tech__sec" aria-labelledby="tech-listing-h">
+            <h2 class="tech__h" id="tech-listing-h">Listing</h2>
+            <ul class="tech__chips" role="list">
+              <li class="tech__level">
+                {
+                  entry.enterprise ? (
+                    <span class="chip chip--enterprise" title="Commercial license. Anatomy not published.">
+                      Enterprise license
+                    </span>
+                  ) : (
+                    <Seal entry={{ ...entry, levelNote: note }} latestKey={latest.key} preview={previewData} />
+                  )
+                }
+              </li>
+              <li><code class="tech__loc" translate="no" set:html={wbrHtml(entry.locator)} /></li>
+              {
+                /* claims are for authors outside the org: an @open-mercato package is never "unclaimed" (lib/core claimLabel,
+                   the card's Trust line reads the same) */
+                claimLabel(entry) && (
+                  <li>
+                    {claimLabel(entry) === 'Claimed' ? (
+                      <span class="chip chip--line" title="The author confirmed this listing.">Claimed</span>
+                    ) : (
+                      <a
+                        class="chip chip--line chip--link"
+                        href={`${repoUrl}/blob/main/CONTRIBUTING.md`}
+                        title="Not claimed by its author yet. CONTRIBUTING.md says how to claim a listing."
+                      >
+                        Unclaimed
+                      </a>
+                    )}
+                  </li>
+                )
+              }
+            </ul>
+            {
+              techBanners && (
+                <div class="mod__banners">
         {entry.replaces.length > 0 && (
           <Banner variant="replaces">
             Replaces the built-in {entry.replaces.map((r) => r.replace(/^core:/, '')).join(', ')} module. You cannot enable both.
@@ -1096,19 +1531,24 @@ const tabs = readmeFirst
             A new Open Mercato {latest.version} app failed tonight. Module results on this line are withheld.
           </Banner>
         )}
-      </div>
+                </div>
+              )
+            }
+          </section>
 
-      <div id="agent-view" class="mod__agent"></div>
-
-
-
+          <section class="tech__sec" aria-labelledby="tech-compat-h">
+            <h2 class="tech__h" id="tech-compat-h">Compatibility per Open Mercato version</h2>
+            <ul class="tech__facts dotlist" role="list">
+              {headerParts.map((t) => <li class:list={{ tech__verified: t.startsWith('Verified on ') }}>{t}</li>)}
+            </ul>
       {
         /* entries the catalog never installs: no strip; the header line and the plate already say why */
         noStrip ? null : (
-          <div class="mod__strip" data-human>
-            {/* the island's marker covers the strip (_module.css), so the drawer hydrates as soon as any of it shows */}
+          <div class="mod__strip">
+            {/* the strip sits in the closed Technical details (26 Oct): the drawer hydrates when idle, not when seen, so a
+                tap right after the disclosure opens already finds its click listener */}
             <ReceiptDrawer
-              client:painted="visible"
+              client:painted="idle"
               title={entry.title}
               previewSentence={previewReceipts ? PREVIEW_SENTENCE : null}
               lines={drawerLines}
@@ -1153,9 +1593,54 @@ const tabs = readmeFirst
           </div>
         )
       }
+          </section>
 
-      <div class="mod__grid" id="module-body" data-human>
-        <div class="mod__main">
+          <section class="tech__sec" aria-labelledby="tech-install-h">
+            <h2 class="tech__h" id="tech-install-h">Install per version and agent rules</h2>
+            <div class="tech__ib">
+            <InstallBox
+              client:painted="visible"
+              lines={installLines}
+              initial={latest.key}
+              warning={warning}
+              cloudUrl="https://app.openmercatocloud.com/dashboard?create=1"
+              blocked={blocked}
+              hideLines={allSkipped}
+              reasonLabels={REASON_LABELS}
+            >
+              {
+                lines.map((l) =>
+                  plans[l.key] ? (
+                    <div data-plan-line={l.key} hidden={l.key !== latest.key}>
+                      <InstallPlan
+                        plan={plans[l.key]!}
+                        omVersion={l.version}
+                        preset={preset.has(l.key)}
+                        title={(() => {
+                          // the module of the page, not the first item of the order (round 14: `events@0.9.0`
+                          // headed the plan of shipment-tracking, whose requires come first)
+                          // a plan with nothing of this module to install (a GitHub repository with no tag) is still
+                          // its plan: its name, never the `empty` that read like the empty preset (finding of 25 Oct)
+                          const own = plans[l.key]!.order.find((o) => o.locator === entry.locator)
+                          return own ? `${name}@${own.version}` : name
+                        })()}
+                      />
+                    </div>
+                  ) : null,
+                )
+              }
+            </InstallBox>
+            </div>
+          </section>
+
+          <section class="tech__sec" aria-labelledby="tech-plate-h">
+            <h2 class="tech__h" id="tech-plate-h">Package facts</h2>
+          <div class="mod__plate">
+            <Nameplate rows={rows} more={moreRows} title="Nameplate" />
+          </div>
+          </section>
+
+          <section class="tech__sec tech__tabs" aria-label="Anatomy, versions, receipts and quality">
           <div class="tabs" data-tabs>
             <div class="tabs__list" role="tablist" aria-label="Module details" hidden>
               {
@@ -1391,36 +1876,6 @@ const tabs = readmeFirst
               }
             </section>
 
-            <!-- Readme -->
-            <section class="tabs__panel" id="panel-readme" role="tabpanel" aria-labelledby="tab-readme" tabindex="0">
-              <h2 class="tabs__h">Readme</h2>
-              {
-                readme ? (
-                  <figure class="readme">
-                    <figcaption class="readme__cap">
-                      <Icon name="warning" size={14} /> {readmeCut ? "Excerpt of the author's README" : "Author's README"}. Not verified by the catalog.
-                    </figcaption>
-                    {/* a scrolling region a keyboard can reach (axe scrollable-region-focusable, review r4) */}
-                    <div class="readme__text" tabindex="0" role="region" aria-label="Author's README">{readme}</div>
-                    {readmeCut && <p class="readme__cut">{README_CUT_TEXT}</p>}
-                  </figure>
-                ) : (
-                  <p class="mod__empty">
-                    {/* nothing was read from a repository without a tag (finding of 25 Oct: treg has a README) */}
-                    {!facts && github && !entry.version.gitRef
-                      ? 'Not read yet: the repository has no tag to read the README from.'
-                      : !facts
-                        ? 'Not read yet. The catalog reads the published package within minutes of a release.'
-                        : 'No README text in the published package.'}
-                  </p>
-                )
-              }
-              <p class="readme__links">
-                {entry.links.npm && <a href={entry.links.npm} rel="noopener noreferrer">npm <Icon name="external" size={14} /></a>}
-                {entry.links.repo && <a href={entry.links.repo} rel="noopener noreferrer">Repository <Icon name="external" size={14} /></a>}
-              </p>
-            </section>
-
             <!-- Quality -->
             <section class="tabs__panel" id="panel-quality" role="tabpanel" aria-labelledby="tab-quality" tabindex="0">
               <h2 class="tabs__h">Quality</h2>
@@ -1462,151 +1917,68 @@ const tabs = readmeFirst
               </div>
             </section>
           </div>
-          <div class="mod__plate">
-            <Nameplate rows={rows} more={moreRows} title="Nameplate" />
-          </div>
-        </div>
+          </section>
 
-        <aside class="mod__side" aria-label="Install and links">
-          <div class="mod__sticky">
-            <InstallBox
-              client:painted="visible"
-              lines={installLines}
-              initial={latest.key}
-              warning={warning}
-              cloudUrl="https://app.openmercatocloud.com/dashboard?create=1"
-              blocked={blocked}
-              hideLines={allSkipped}
-              reasonLabels={REASON_LABELS}
-            >
-              {
-                lines.map((l) =>
-                  plans[l.key] ? (
-                    <div data-plan-line={l.key} hidden={l.key !== latest.key}>
-                      <InstallPlan
-                        plan={plans[l.key]!}
-                        omVersion={l.version}
-                        preset={preset.has(l.key)}
-                        title={(() => {
-                          // the module of the page, not the first item of the order (round 14: `events@0.9.0`
-                          // headed the plan of shipment-tracking, whose requires come first)
-                          // a plan with nothing of this module to install (a GitHub repository with no tag) is still
-                          // its plan: its name, never the `empty` that read like the empty preset (finding of 25 Oct)
-                          const own = plans[l.key]!.order.find((o) => o.locator === entry.locator)
-                          return own ? `${name}@${own.version}` : name
-                        })()}
-                      />
-                    </div>
-                  ) : null,
-                )
-              }
-            </InstallBox>
-          </div>
-
-        </aside>
-      </div>
-
-      {/* links, stats and related run under both columns (review r1): the right column holds only the install box,
-          so it never leaves a column of white beside a short page */}
-      <div class="mod__foot" data-human>
-          <section class="side__sec" aria-labelledby="links-h">
-            <h2 class="side__h" id="links-h">Links</h2>
-            <ul class="side__links" role="list">
-              {entry.links.npm && <li><a href={entry.links.npm} rel="noopener noreferrer">npm <Icon name="external" size={14} /></a></li>}
-              {entry.links.repo && <li><a href={entry.links.repo} rel="noopener noreferrer">Repository <Icon name="external" size={14} /></a></li>}
-              {entry.links.docs && <li><a href={entry.links.docs} rel="noopener noreferrer">Docs <Icon name="external" size={14} /></a></li>}
+          <section class="tech__sec" aria-labelledby="tech-agent-h">
+            <h2 class="tech__h" id="tech-agent-h">For agents</h2>
+            <p class="mod__fine">Every fact on this page is also in the agent card and the JSON document. The MCP tools and WebMCP return the same data.</p>
+            <ul class="tech__links" role="list">
               <li><a href={href(moduleMd(entry.path))}><span>Agent card <code>.md</code></span></a></li>
-              <li><a href={href(`/m/${entry.path}.json`)}>JSON</a></li>
+              <li><a href={href(`/m/${entry.path}.json`)}><span>Detail <code>JSON</code></span></a></li>
               {/* a site path like the two above (finding of 25 Oct: the absolute link left a preview for a host that 404s) */}
               {entry.links.facts && <li><a href={sitePath(entry.links.facts)}><span>Anatomy facts <code>facts.json</code></span></a></li>}
             </ul>
+            <div class="tech__vt">
+              <span class="mod__fine">Show what an agent reads:</span>
+              <ViewToggle client:painted="idle" md={href(moduleMd(entry.path))} json={href(`/m/${entry.path}.json`)} target="agent-view" />
+              {/* a click on Human or Agent before the island hydrates: shown at once, replayed by the island (25 Oct) */}
+              <script is:inline set:html={EARLY_VIEW_JS} />
+            </div>
+            <div id="agent-view" class="mod__agent"></div>
           </section>
-
-          {
-            // SPEC 7.x item 5 (finding of 25 Oct): who can publish the package, from the npm sync
-            (detail?.maintainers?.length ?? 0) > 0 && (
-              <section class="side__sec" aria-labelledby="maint-h">
-                <h2 class="side__h" id="maint-h">Maintainers <span class="side__sub">npm, can publish.</span></h2>
-                <ul class="side__links" role="list">
-                  {detail!.maintainers!.map((m) => (
-                    <li><a href={`https://www.npmjs.com/~${encodeURIComponent(m)}`} rel="noopener noreferrer">{m} <Icon name="external" size={14} /></a></li>
-                  ))}
-                </ul>
-              </section>
-            )
-          }
-
-          {
-            entry.stats && entry.type !== 'official' && (
-              <section class="side__sec" aria-labelledby="stats-h">
-                <h2 class="side__h" id="stats-h">Stats <span class="side__sub">Shown, not scored.</span></h2>
-                <dl class="side__stats">
-                  <div>
-                    <dt>npm downloads, 30 days</dt>
-                    {entry.stats.downloads30d === null ? <dd class="side__na">Not available</dd> : <dd>{entry.stats.downloads30d.toLocaleString('en-US')}</dd>}
-                  </div>
-                  <div>
-                    <dt>GitHub stars</dt>
-                    {entry.stats.stars === null ? <dd class="side__na">Not available</dd> : <dd>{entry.stats.stars.toLocaleString('en-US')}</dd>}
-                  </div>
-                </dl>
-              </section>
-            )
-          }
-
-          {
-            (entry.requires.length > 0 || requiredBy.length > 0 || related.length > 0) && (
-              <section class="side__sec" aria-labelledby="rel-h">
-                <h2 class="side__h" id="rel-h">Related</h2>
-                {entry.requires.length > 0 && (
-                  <>
-                    <p class="side__k">Requires</p>
-                    <ul class="side__rel" role="list">
-                      {entry.requires.map((r) => {
-                        const l = linkFor(r)
-                        return (
-                          <li>
-                            <a href={l.href}>{l.label}</a> <span>{l.note}</span>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </>
-                )}
-                {requiredBy.length > 0 && (
-                  <>
-                    <p class="side__k">Required by</p>
-                    <ul class="side__rel" role="list">
-                      {requiredBy.map((e) => (
-                        <li>
-                          <a href={href(modulePage(e.path))}>{e.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-                {related.length > 0 && (
-                  <>
-                    <p class="side__k">Same category</p>
-                    <ul class="side__rel" role="list">
-                      {related.map((e) => (
-                        <li class="side__relrow">
-                          <Sigil entry={e} size={16} />
-                          <a href={href(modulePage(e.path))}>{e.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </section>
-            )
-          }
-      </div>
+        </div>
+      </details>
     </div>
   </div>
 </Base>
 
 <script>
+  // Technical details (26 Oct): a link or an address that points inside the closed disclosure (#receipts,
+  // #panel-anatomy, #hygiene, #agent-view) opens it and scrolls to the target, so the old deep links still work.
+  const tech = document.getElementById('technical') as HTMLDetailsElement | null
+  const targetOf = (hash: string): HTMLElement | null => {
+    if (hash.length < 2) return null
+    let id = hash.slice(1)
+    try {
+      id = decodeURIComponent(id)
+    } catch {
+      // keep the raw id
+    }
+    return document.getElementById(id) ?? document.getElementById(`panel-${id}`)
+  }
+  const reveal = (hash: string, scroll: boolean): void => {
+    const el = targetOf(hash)
+    // `#readme` of the old tab row: the README is the body of the page now, outside the disclosure
+    if (el && scroll && !tech?.contains(el) && el.id !== hash.slice(1)) el.scrollIntoView({ block: 'start' })
+    if (!tech || !el || !tech.contains(el) || el === tech) return
+    tech.open = true
+    // a target inside a tab panel shows its tab (the tab script listens for this event)
+    el.dispatchEvent(new CustomEvent('om:reveal', { bubbles: true }))
+    if (scroll) requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }))
+  }
+  reveal(location.hash, true)
+  window.addEventListener('hashchange', () => reveal(location.hash, true))
+  // a click on an in-page link opens the disclosure before the browser scrolls to the target
+  document.addEventListener(
+    'click',
+    (ev) => {
+      const a = (ev.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]')
+      const h = a?.getAttribute('href')
+      if (h) reveal(h, false)
+    },
+    true,
+  )
+
   // ARIA tabs (spec 7.9): without JavaScript every panel stays visible, one under another.
   for (const root of Array.from(document.querySelectorAll<HTMLElement>('[data-tabs]'))) {
     const list = root.querySelector<HTMLElement>('[role="tablist"]')
@@ -1631,7 +2003,14 @@ const tabs = readmeFirst
         // ignore
       }
     }
-    const fromHash = tabs.findIndex((t) => `#${t.id.replace(/^tab-/, '')}` === location.hash)
+    /** The tab whose panel holds the element of a hash (`#receipts`, `#panel-quality`, `#hygiene`), or -1. */
+    const tabOf = (hash: string): number => {
+      const byName = tabs.findIndex((t) => `#${t.id.replace(/^tab-/, '')}` === hash)
+      if (byName >= 0) return byName
+      const panel = targetOf(hash)?.closest('[role="tabpanel"]')
+      return panel ? panels.indexOf(panel as HTMLElement) : -1
+    }
+    const fromHash = tabOf(location.hash)
     select(fromHash >= 0 ? fromHash : 0, false, false)
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => select(i, false))
@@ -1645,13 +2024,17 @@ const tabs = readmeFirst
         }
       })
     })
-    // links into a panel (#hygiene) switch to its tab
+    // links into a panel (#hygiene, #panel-receipts) switch to its tab
     document.addEventListener('click', (ev) => {
       const a = (ev.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]')
-      const id = a?.getAttribute('href')?.slice(1)
-      const panel = id ? document.getElementById(id)?.closest('[role="tabpanel"]') : null
+      const i = tabOf(a?.getAttribute('href') ?? '')
+      if (i >= 0) select(i, false, false)
+    })
+    // an address change into a panel (the back button, a pasted link) switches too
+    root.addEventListener('om:reveal', (ev) => {
+      const panel = (ev.target as Element).closest('[role="tabpanel"]')
       const i = panel ? panels.indexOf(panel as HTMLElement) : -1
-      if (i >= 0) select(i, false)
+      if (i >= 0) select(i, false, false)
     })
   }
 </script>

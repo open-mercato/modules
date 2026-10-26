@@ -32,6 +32,7 @@ import type {
 } from '../schema/published/modules.ts'
 import type { Allowlist } from './types.ts'
 import type { EmitData, EmitOptions, EntryContext } from './types.ts'
+import { publishedScreenshots } from './screenshots.ts'
 import { escapeXml, lineList } from './util.ts'
 
 /**
@@ -158,6 +159,9 @@ export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: 
     if (entry.enterprise) entry.links.facts = null
     // Fit per line of the version each line is judged on (E5, `lineVersion`: the one a new app ships there, else the
     // one it installs), as in entry.signals.fit
+    // screenshots of the descriptor (26 Oct), as the site loads them; absent when there are none
+    const shots = publishedScreenshots(d, opts.base)
+    if (shots.list.length > 0) entry.screenshots = shots.list
     const lineFit: Record<string, FitCell | null> = {}
     for (const l of lines) {
       const v = lineVersion(entry, l.key)
@@ -173,6 +177,7 @@ export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: 
       receipts,
       allFacts,
       rules,
+      ...(shots.files.length > 0 ? { screenshotFiles: shots.files } : {}),
     })
   }
   const withConflicts = withSlotConflicts(out.map((c) => c.entry))

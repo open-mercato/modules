@@ -23,7 +23,7 @@ Agent policy on 0.9: refuse. Broken at typecheck on 0.9 since 23 Oct.
 Install: yarn mercato module add @piotrkarwatka/marketing-consents@0.1.0 --allow-third-party
 Card: https://wojciechszyjka.github.io/modules/m/@piotrkarwatka/marketing-consents.md
 
-## Payments & Finance
+## Payments, Billing & Invoicing
 
 ### Stripe Payment Gateway (@open-mercato/gateway-stripe)
 Card payments through Stripe for checkout and sales documents.

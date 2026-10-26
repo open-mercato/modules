@@ -22,53 +22,38 @@ const text = async (page: Page, sel: string): Promise<string> =>
 
 test.describe.configure({ mode: 'serial' })
 
-test('step: Hive with the core in the middle', async ({ browser }) => {
+test('step: the home page, modules by category', async ({ browser }) => {
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/'))
-  const hive = page.locator('svg.hive__svg')
-  await expect(hive).toBeVisible()
-  // the core sits in the middle: its cells are nearer the plate's centre than the catalog's
-  const cells = await hive.evaluate((svg) => {
-    const box = svg.getBoundingClientRect()
-    const cx = box.left + box.width / 2
-    const cy = box.top + box.height / 2
-    const dist = (a: Element): number => {
-      const r = a.getBoundingClientRect()
-      return Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy)
-    }
-    const links = [...svg.querySelectorAll('a')]
-    const core = links.filter((a) => (a.getAttribute('data-k') ?? '').startsWith('core:'))
-    const rest = links.filter((a) => !core.includes(a))
-    const mean = (xs: Element[]): number => xs.reduce((n, a) => n + dist(a), 0) / Math.max(1, xs.length)
-    return { total: links.length, core: core.length, coreMean: mean(core), restMean: mean(rest) }
-  })
-  const legend = (await page.locator('.hive__legend').innerText()).replace(/\s+/g, ' ')
-  expect(cells.core).toBeGreaterThan(0)
-  expect(cells.coreMean).toBeLessThan(cells.restMean)
-  await shot(page, 'hive', `Hive: ${cells.total} cells, ${cells.core} of them core, in the middle; legend: ${legend}`)
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  const cats = page.locator('.mods__cats a')
+  const cards = page.locator('.mods__grid > li:not([hidden]) .mcard')
+  expect(await cats.count()).toBeGreaterThan(1)
+  expect(await cards.count()).toBeGreaterThan(0)
+  await expect(page.getByRole('heading', { name: 'How to add a module' })).toBeAttached()
+  await shot(
+    page,
+    'home',
+    `Home: ${await cards.count()} cards, ${(await cats.count()) - 1} categories; count line: ${await text(page, '.mods__count')}`,
+  )
   await ctx.close()
 })
 
-test('step: exchange rates lights the built-in currencies', async ({ browser }) => {
+test('step: search for ksef narrows the grid to the KSeF module', async ({ browser }) => {
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/'))
   const input = page.getByRole('search', { name: 'Search modules' }).first().locator('input')
   await input.click()
-  await input.pressSequentially('exchange rates', { delay: 40 })
-  const answer = page.locator('.reg__answer')
-  await expect(answer).toContainText(/Already in Open Mercato core/i)
-  await expect(answer).toContainText('currencies')
-  await expect(page.getByText(/In core: currencies/i).first()).toBeVisible()
-  const lit = await page.evaluate(
-    () => [...document.querySelectorAll('svg a')].filter((a) => Number(getComputedStyle(a).opacity) > 0.5).length,
-  )
+  await input.pressSequentially('ksef', { delay: 40 })
+  const shown = page.locator('.mods__grid > li:not([hidden]) .mcard')
+  await expect(shown.filter({ hasText: 'KSeF' }).first()).toBeVisible()
+  await expect(page).toHaveURL(/[?&]q=ksef/)
   await shot(
     page,
-    'exchange-rates',
-    `query in URL: ${new URL(page.url()).search}; answer: ${(await text(page, '.reg__answer')).slice(0, 160)}; ` +
-      `Hive cells left lit: ${lit}`,
+    'search-ksef',
+    `query in URL: ${new URL(page.url()).search}; cards left: ${await shown.count()}; count line: ${await text(page, '.mods__count')}`,
   )
   await ctx.close()
 })
@@ -76,7 +61,9 @@ test('step: exchange rates lights the built-in currencies', async ({ browser }) 
 test('step: KSeF page, sigil, Rentgen and file:line', async ({ browser }) => {
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
-  await page.goto(url(KSEF))
+  // the sigil and the anatomy sit in the closed Technical details; the anatomy address opens it
+  await page.goto(url(`${KSEF}#panel-anatomy`))
+  await expect(page.locator('details#technical')).toHaveAttribute('open', '')
   const sigil = page.locator('svg[role=img][aria-label^="Anatomy:"]').first()
   await expect(sigil).toBeVisible()
   const level = await text(page, 'main')
@@ -97,7 +84,9 @@ test('step: KSeF page, sigil, Rentgen and file:line', async ({ browser }) => {
 test('step: KSeF receipts and the api-keys patch', async ({ browser }) => {
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
-  await page.goto(url(KSEF))
+  // the Receipts strip sits in the closed Technical details; the receipts address opens it
+  await page.goto(url(`${KSEF}#receipts`))
+  await expect(page.locator('details#technical')).toHaveAttribute('open', '')
   await page.locator('[data-receipts-open]').first().click()
   const drawer = page.locator('dialog[open]').first()
   await expect(drawer).toBeVisible()
@@ -133,10 +122,12 @@ test('step: KSeF receipts and the api-keys patch', async ({ browser }) => {
   await ctx.close()
 })
 
-test('step: Human / Agent toggle', async ({ browser }) => {
+test('step: Human / Agent toggle in Technical details', async ({ browser }) => {
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url(KSEF))
+  // the page header has no toggle any more (26 Oct); it moved into the closed Technical details
+  await page.locator('details#technical > summary').click()
   await page.getByRole('group', { name: 'View' }).getByRole('button', { name: /agent/i }).click()
   const pane = page.locator('.agentv')
   await expect(pane).toContainText('locator: npm:@fastwhitecat/integration-ksef-direct')
@@ -148,10 +139,12 @@ test('step: /compat, Open Mercato itself and the peer sentence', async ({ browse
   const ctx = await themed(browser, 'dark', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/compat'))
-  await expect(page.getByText('Open Mercato itself').first()).toBeVisible()
+  // the first row of the matrix; the same words also sit in the closed `How the tests run`
+  const itself = page.locator('table').getByText('Open Mercato itself').first()
+  await expect(itself).toBeVisible()
   const peers = page.getByText(/^Peer ranges reject/).first()
   await expect(peers).toBeVisible()
-  await page.getByText('Open Mercato itself').first().scrollIntoViewIfNeeded()
+  await itself.scrollIntoViewIfNeeded()
   await shot(page, 'compat', `${(await peers.innerText()).trim()}`)
   await ctx.close()
 })

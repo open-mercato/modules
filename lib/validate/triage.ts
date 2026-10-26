@@ -3,8 +3,9 @@
 // locally on the PR's descriptor.
 // Merging is a separate, confirmed step: `gh pr merge --squash --match-head-commit <sha>` per ready PR, from the
 // curator's own `gh` login. Nothing is merged without the confirmation.
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { SCREENSHOT_FILE } from '../schema/descriptor.ts'
 import type { Catalog } from './catalog.ts'
 import { ghJson, type Gh } from './gh.ts'
 import { checkLocal } from './local.ts'
@@ -123,7 +124,8 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
   const reasons: string[] = []
   const locators: string[] = []
   const descriptors = pr.files.filter((f) => /^modules\/.+\.yml$/.test(f.path))
-  const others = pr.files.filter((f) => !/^modules\/.+\.yml$/.test(f.path))
+  // a screenshot the catalog hosts (modules/<folder>/screenshots/<name>) belongs to its descriptor, not an other file
+  const others = pr.files.filter((f) => !/^modules\/.+\.yml$/.test(f.path) && !SCREENSHOT_FILE.test(f.path))
   if (pr.isCrossRepository) flags.push('fork')
   if (pr.isDraft) {
     flags.push('draft')
@@ -148,6 +150,8 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
     pr.headRepository?.nameWithOwner ??
     (pr.headRepositoryOwner && pr.headRepository ? `${pr.headRepositoryOwner.login}/${pr.headRepository.name}` : null)
   let blocked = false
+  // descriptor texts of the pull request by path, so a changed screenshot can be matched to the one that names it
+  const prTexts = new Map<string, string>()
   for (const df of descriptors) {
     if (df.changeType === 'DELETED') {
       flags.push('removal')
@@ -161,6 +165,7 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
       locators.push(df.path)
       continue
     }
+    prTexts.set(df.path, text)
     const basePath = join(ctx.catalog.root, df.path)
     const baseText = existsSync(basePath) ? readFileSync(basePath, 'utf8') : null
     flags.push(baseText === null ? 'new' : 'update')
@@ -176,6 +181,25 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
         if (fnd.code === 'curator-fields')
           reasons.push(`${res.locator ?? df.path}: ${fnd.message}; merge it on its own`)
       }
+    }
+  }
+  // a screenshot no descriptor names is an orphan (review of 26 Oct): neither CI nor this list would look at it
+  for (const f of pr.files.filter((x) => SCREENSHOT_FILE.test(x.path) && x.changeType !== 'DELETED')) {
+    const name = f.path.slice(f.path.lastIndexOf('/') + 1)
+    const folder = dirname(dirname(f.path))
+    const baseDir = join(ctx.catalog.root, folder)
+    const texts = [
+      ...[...prTexts].filter(([p]) => dirname(p) === folder).map(([, t]) => t),
+      ...(existsSync(baseDir)
+        ? readdirSync(baseDir)
+            .filter((n) => n.endsWith('.yml') && !prTexts.has(`${folder}/${n}`))
+            .map((n) => readFileSync(join(baseDir, n), 'utf8'))
+        : []),
+    ]
+    if (!texts.some((t) => t.includes(`screenshots/${name}`))) {
+      if (!flags.includes('screenshot-orphan')) flags.push('screenshot-orphan')
+      reasons.push(`${f.path}: no descriptor names this screenshot`)
+      blocked = true
     }
   }
   const { ci, byCheck } = requiredCiState(pr)

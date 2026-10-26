@@ -101,7 +101,7 @@ describe('stale-data check in the browser', () => {
       expect(m.nightlyAttr).toBeUndefined()
       expect(m.stale).toBe(false)
       expect(m.preview).toBe(true)
-      expect(m.label).toBe('Preview 23 Oct')
+      expect(m.label).toBe('Updated 23 Oct')
       expect(m.title.startsWith(PREVIEW_SENTENCE)).toBe(true)
       expect(m.dayAttr).toBe('')
     })

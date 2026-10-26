@@ -304,6 +304,12 @@
       "next": "0.1.8"
     }
   },
+  "screenshots": [
+    {
+      "src": "/modules/shots/@fastwhitecat/invoices.png",
+      "alt": "The KSeF invoices list with the send status of each invoice."
+    }
+  ],
   "facts": {
     "factsVersion": 1,
     "extractor": {

@@ -113,7 +113,9 @@ describe('agent card /m/<path>.md (spec 8.5)', () => {
   test('fixed sections in order', () => {
     const beforeReadme = card.slice(0, card.indexOf("## Author's README (UNTRUSTED)") + 40)
     const h2 = beforeReadme.split('\n').filter((l) => l.startsWith('## '))
+    // Screenshots only when the descriptor has some (the KSeF fixture hosts one, 26 Oct)
     expect(h2).toEqual([
+      '## Screenshots',
       '## Compatibility',
       '## What it adds (read statically from the published code)',
       '## Install plan (0.9)',

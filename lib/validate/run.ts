@@ -2,8 +2,8 @@
 // all), the ten steps per entry in order (the first hard error stops the entry), policy files and the built-in
 // category map, and the report for $GITHUB_STEP_SUMMARY and out/validate.json.
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync } from 'node:fs'
-import { join, relative, sep } from 'node:path'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { dirname, join, relative, sep } from 'node:path'
 import { parse } from 'yaml'
 import type { z } from 'zod'
 import {
@@ -14,6 +14,8 @@ import {
   IgnoreFile,
   OfficialMaintainersFile,
   ReservedFile,
+  SCREENSHOT_FILE,
+  SCREENSHOT_MAX_BYTES,
   SiteFile,
 } from '../schema/index.ts'
 import { BuiltinUpcomingFile, QualityReview } from '../schema/policy.ts'
@@ -24,13 +26,18 @@ import { checkRemote, type RemoteDeps } from './remote.ts'
 import { errorsOf, STEPS, type EntryResult, type Finding, type StepId, type ValidateReport } from './types.ts'
 
 export interface ChangedFiles {
-  /** Added or modified descriptor files (`modules/**`), repo-relative. */
+  /**
+   * Added or modified descriptor files (`modules/**`), repo-relative. A changed screenshot of the catalog
+   * (`modules/<folder>/screenshots/<name>`) brings the descriptors of its folder that name it instead.
+   */
   descriptors: string[]
   removed: string[]
   /** Changed files under policy/ (and harness/lines.yml). */
   policy: string[]
   /** Added or changed OM Quality reviews (`quality/reviews/**`). */
   quality: string[]
+  /** Added or changed screenshots of the catalog, each checked for a descriptor that names it and for its size. */
+  screenshots: string[]
 }
 
 function git(root: string, args: string[]): string {
@@ -41,15 +48,67 @@ function git(root: string, args: string[]): string {
 export function changedFiles(root: string, ref: string): ChangedFiles {
   const out = git(root, ['diff', '--name-status', '--no-renames', '-z', `${ref}...HEAD`])
   const parts = out.split('\0').filter((p) => p !== '')
-  const res: ChangedFiles = { descriptors: [], removed: [], policy: [], quality: [] }
+  const res: ChangedFiles = { descriptors: [], removed: [], policy: [], quality: [], screenshots: [] }
   for (let i = 0; i + 1 < parts.length; i += 2) {
     const status = parts[i] as string
     const file = parts[i + 1] as string
-    if (file.startsWith('modules/')) (status === 'D' ? res.removed : res.descriptors).push(file)
+    if (SCREENSHOT_FILE.test(file)) {
+      res.descriptors.push(...descriptorsNaming(root, file))
+      if (status !== 'D') res.screenshots.push(file)
+    } else if (file.startsWith('modules/')) (status === 'D' ? res.removed : res.descriptors).push(file)
     else if ((file.startsWith('policy/') || file === 'harness/lines.yml') && status !== 'D') res.policy.push(file)
     else if (file.startsWith('quality/reviews/') && file.endsWith('.yml') && status !== 'D') res.quality.push(file)
   }
   return res
+}
+
+/** Descriptors in the folder above `<folder>/screenshots/` whose text names the screenshot file. */
+export function descriptorsNaming(root: string, screenshot: string): string[] {
+  const folder = dirname(dirname(screenshot))
+  const name = screenshot.slice(screenshot.lastIndexOf('/') + 1)
+  const abs = join(root, folder)
+  if (!existsSync(abs)) return []
+  return readdirSync(abs)
+    .filter((n) => n.endsWith('.yml'))
+    .filter((n) => readFileSync(join(abs, n), 'utf8').includes(`screenshots/${name}`))
+    .map((n) => `${folder}/${n}`)
+    .sort()
+}
+
+/**
+ * Changed screenshot files that no descriptor names, or that are over SCREENSHOT_MAX_BYTES (review of 26 Oct: an
+ * orphan image passed CI with no size check). One error each; a named file is also checked by its descriptor.
+ */
+export function checkScreenshotFiles(root: string, files: readonly string[]): Finding[] {
+  const out: Finding[] = []
+  const size = fileSizeIn(root)
+  for (const file of files) {
+    if (descriptorsNaming(root, file).length === 0)
+      out.push(g('schema', 'error', 'screenshot-orphan', `${file}: no descriptor in its folder names this screenshot`))
+    const n = size(file)
+    if (n !== null && n > SCREENSHOT_MAX_BYTES)
+      out.push(
+        g(
+          'schema',
+          'error',
+          'screenshot-size',
+          `${file}: ${Math.ceil(n / 1024)} KB, at most ${SCREENSHOT_MAX_BYTES / 1024} KB`,
+        ),
+      )
+  }
+  return out
+}
+
+/** Size of a repo-relative file, null when it is missing or not a file. */
+export function fileSizeIn(root: string): (file: string) => number | null {
+  return (file) => {
+    try {
+      const st = statSync(join(root, file))
+      return st.isFile() ? st.size : null
+    } catch {
+      return null
+    }
+  }
 }
 
 /** Content of a file at a ref, or null when it did not exist there. */
@@ -204,6 +263,8 @@ export interface ValidateOptions {
   policyFiles?: readonly string[] | null
   /** OM Quality reviews to check (null: all). */
   qualityFiles?: readonly string[] | null
+  /** Changed screenshot files of the catalog (`--changed` only). */
+  screenshots?: readonly string[]
   /** Run step 10 (coverage of the built-in category map). */
   builtinCheck: boolean
   labels: readonly string[]
@@ -242,6 +303,7 @@ export async function validateEntry(file: string, opts: ValidateOptions): Promis
       file,
       text,
       labels: opts.labels,
+      fileSize: fileSizeIn(opts.root),
       ...(opts.baseRef !== null ? { baseText: textAt(opts.root, opts.baseRef, file) } : {}),
     },
     opts.catalog,
@@ -280,6 +342,7 @@ export async function runValidate(opts: ValidateOptions): Promise<ValidateReport
   const global: Finding[] = [
     ...checkPolicyFiles(opts.root, opts.policyFiles ?? null),
     ...checkQualityReviews(opts.root, opts.qualityFiles ?? null),
+    ...checkScreenshotFiles(opts.root, opts.screenshots ?? []),
   ]
   if (opts.builtinCheck) global.push(...checkBuiltinCoverage(opts.catalog, builtinUpcoming(opts.root)))
   return {

@@ -114,9 +114,9 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
         <p class="t-tagline">// For agents</p>
         <h1 class="fa-title">Ask before you build.</h1>
         <p class="fa-lede">
-          Before an agent writes a new module, it can ask the catalog: is it already in Open Mercato core, is there a
-          module for it, is that module verified on this app's version, and what will it add to the app. Read-only,
-          the same answers as on this site.
+          Connect a coding agent, such as Claude Code, to this catalog. Before it writes a new module, it can check if
+          Open Mercato already does the job, if a module for it exists, and if that module works on your app's version.
+          The agent only reads, and gets the same answers as this site.
         </p>
         <nav class="fa-toc" aria-label="On this page">
           {ORDER.map((id) => <a href={`#${id}`}>{TOC[id]}</a>)}

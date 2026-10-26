@@ -25,14 +25,15 @@ categories:
     title: "Operations & Services"
     wedge: operate
     aliases: [scheduling, hr, industry-packs]
+  # review of 26 Oct: a person looking for invoicing did not find KSeF under Localization & Compliance
   - id: payments-finance
-    title: "Payments & Finance"
+    title: "Payments, Billing & Invoicing"
     wedge: money
-    aliases: [payments, finance]
+    aliases: [payments, finance, e-invoicing]
   - id: localization-compliance
     title: "Localization & Compliance"
     wedge: money
-    aliases: [e-invoicing, compliance]
+    aliases: [compliance]
   - id: integrations-sync
     title: "Integrations & Data Sync"
     wedge: connect

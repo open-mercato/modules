@@ -17,9 +17,10 @@ const nav = [
   { label: 'Modules', path: '/' },
   { label: 'Compatibility', path: '/compat' },
   { label: 'Radar', path: '/radar' },
-  { label: 'For agents', path: '/for-agents' },
   { label: 'Quality', path: '/quality' },
+  { label: 'For agents', path: '/for-agents' },
 ]
+// "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in
 const isCurrent = (p: string): boolean =>
   p === '/'
     ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')

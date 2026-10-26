@@ -167,7 +167,7 @@ const EARLY_SUBMIT_JS = `document.addEventListener('submit',function(e){var f=e.
       <div>
         <h2 class="t-h3">Rules</h2>
         <p>
-          English, plain text, no links in the summary. Measured fields are never in the file. See the{' '}
+          English, plain text, no links in the summary. Screenshots are optional. Measured fields are never in the file. See the{' '}
           <a href={`${REPO}/blob/main/CONTRIBUTING.md`} rel="noopener noreferrer">contributing guide</a>.
         </p>
       </div>
@@ -530,6 +530,22 @@ const EARLY_SUBMIT_JS = `document.addEventListener('submit',function(e){var f=e.
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px;
     gap: 8px;
+  }
+  /* a screenshot row: the link gets the room, the description follows; stacked on phones */
+  :global(.sf__prow--shot) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) 40px;
+  }
+  @media (max-width: 479px) {
+    :global(.sf__prow--shot) {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+    :global(.sf__prow--shot > .sf__input:nth-child(2)) {
+      grid-column: 1;
+    }
+    :global(.sf__prow--shot > .sf__remove) {
+      grid-column: 2;
+      grid-row: 1;
+    }
   }
   :global(.sf__remove) {
     display: inline-grid;

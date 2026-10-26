@@ -1,0 +1,212 @@
+---
+// The Install card of the module page: what a person does to add the module, in plain steps. The page computes
+// every sentence and command from the data (the steps follow the install plan the agents get: one command that adds
+// the module and runs `yarn generate` and `yarn db:migrate` when the plan does, then the permissions and the restart);
+// this component only lays them out. The state of the latest version is said here once: a line on top, or, when the
+// last test failed, a warning above the command. Commands wrap at token boundaries, never fade (review of 26 Oct: the
+// package name and --allow-third-party were cut off). The per-line install box with the agent policy and the plans
+// stays in Technical details.
+import CommandChip from '../CommandChip.astro'
+import Icon from '../icons/Icon.astro'
+
+export interface OtherLine {
+  /** `Open Mercato 0.9, latest`. */
+  label: string
+  /** One short sentence: `Works.`, `Comes with new apps.`, `Not tested yet.` */
+  state: string
+  /** The line's command, or null. */
+  command: string | null
+  /** A short lead over the command (`For an app without it:`), or null. */
+  lead: string | null
+}
+
+export interface InstallStep {
+  text: string
+  command: string | null
+}
+
+export type InstallVariant = 'steps' | 'preset' | 'enterprise' | 'blocked' | 'unavailable'
+
+interface Props {
+  variant: InstallVariant
+  /** The steps of the latest line, the install command first. */
+  steps: InstallStep[]
+  /** The command of an app that does not have a preset module yet, and the sentence after it. */
+  preset?: { command: string; after: string | null } | null
+  /** The last test on the latest version failed: said first, above the command. */
+  warning: string | null
+  /** The state of the latest version when it did not fail (`Works on Open Mercato 0.9, the latest version`). */
+  status?: { text: string; tone: 'ok' | 'bad' | 'muted' } | null
+  /** The module failed on every tested version: the steps fold under `Show the steps anyway`. */
+  stepsFolded?: boolean
+  /** One plain sentence per note under the steps (third-party advice, replaced built-in, a release in the age gate). */
+  notes: { text: string; link?: { href: string; label: string } }[]
+  /** The sentence of a blocked or unavailable entry. */
+  message: string | null
+  enterprise?: { offer: string | null; lead: string; command: string } | null
+  others: OtherLine[]
+  /** Open `Other Open Mercato versions` from the start (the latest one failed, another may work). */
+  othersOpen?: boolean
+}
+const {
+  variant,
+  steps,
+  preset = null,
+  warning,
+  status = null,
+  stepsFolded = false,
+  notes,
+  message,
+  enterprise = null,
+  others,
+  othersOpen = false,
+} = Astro.props
+---
+
+<section class="inst" id="install" aria-labelledby="install-h">
+  <h2 class="inst__h" id="install-h">Install</h2>
+  {
+    warning && (
+      <p class="inst__msg inst__msg--bad inst__warn">
+        <Icon name="warning" size={16} /> <span>{warning}</span>
+      </p>
+    )
+  }
+  {
+    status && !warning && (
+      <p class:list={['inst__status', `inst__status--${status.tone}`]}>
+        {status.tone === 'ok' && <Icon name="check" size={16} />} <span>{status.text}</span>
+      </p>
+    )
+  }
+  {
+    variant === 'blocked' && (
+      <p class="inst__msg inst__msg--bad">
+        <Icon name="warning" size={16} /> <span>{message}</span>
+      </p>
+    )
+  }
+  {variant === 'unavailable' && <p class="inst__msg">{message}</p>}
+  {
+    variant === 'enterprise' && (
+      <>
+        <p class="inst__msg">Part of Open Mercato Enterprise.</p>
+        {enterprise?.offer && (
+          <p>
+            <a class="inst__link" href={enterprise.offer} rel="noopener noreferrer">
+              See the offer <Icon name="external" size={14} />
+            </a>
+          </p>
+        )}
+        {enterprise && (
+          <details class="inst__more">
+            <summary>
+              Turn it on in an app <Icon name="chevron-down" size={14} class="icon inst__chev" />
+            </summary>
+            <p class="inst__fine">{enterprise.lead}</p>
+            <CommandChip command={enterprise.command} label="Copy command" />
+          </details>
+        )}
+      </>
+    )
+  }
+  {
+    variant === 'preset' && (
+      <>
+        <p class="inst__msg">
+          <Icon name="check" size={16} class="icon inst__ok" /> <span>Every new Open Mercato app already has it.</span>
+        </p>
+        {preset && (
+          <details class="inst__more">
+            <summary>
+              Add it to an existing app <Icon name="chevron-down" size={14} class="icon inst__chev" />
+            </summary>
+            <CommandChip command={preset.command} label="Copy install command" />
+            {preset.after && <p class="inst__fine">{preset.after}</p>}
+          </details>
+        )}
+      </>
+    )
+  }
+  {
+    variant === 'steps' && steps.length > 0 && !stepsFolded && (
+      <ol class="inst__steps" role="list">
+        {steps.map((s, i) => (
+          <li class="inst__step">
+            <span class="inst__n" aria-hidden="true">
+              {i + 1}
+            </span>
+            <div class="inst__body">
+              <p class="inst__t">{s.text}</p>
+              {s.command && <CommandChip command={s.command} label={i === 0 ? 'Copy install command' : 'Copy command'} />}
+            </div>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  {
+    variant === 'steps' && steps.length > 0 && stepsFolded && (
+      <details class="inst__more">
+        <summary>
+          Show the steps anyway <Icon name="chevron-down" size={14} class="icon inst__chev" />
+        </summary>
+        <ol class="inst__steps" role="list">
+          {steps.map((s, i) => (
+            <li class="inst__step">
+              <span class="inst__n" aria-hidden="true">
+                {i + 1}
+              </span>
+              <div class="inst__body">
+                <p class="inst__t">{s.text}</p>
+                {s.command && <CommandChip command={s.command} label={i === 0 ? 'Copy install command' : 'Copy command'} />}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </details>
+    )
+  }
+  {
+    notes.length > 0 && (
+      <ul class="inst__notes" role="list">
+        {notes.map((n) => (
+          <li>
+            {n.text}
+            {n.link && (
+              <>
+                {' '}
+                <a href={n.link.href} rel="noopener noreferrer">
+                  {n.link.label}
+                </a>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    others.length > 0 && (
+      <details class="inst__more inst__others" id="install-versions" open={othersOpen}>
+        <summary>
+          Other Open Mercato versions <Icon name="chevron-down" size={14} class="icon inst__chev" />
+        </summary>
+        <ul class="inst__lines" role="list">
+          {others.map((o) => (
+            <li class="inst__line">
+              <p class="inst__lk">
+                <span>{o.label}</span> <span class="inst__ls">{o.state}</span>
+              </p>
+              {o.lead && <p class="inst__fine">{o.lead}</p>}
+              {o.command && <CommandChip command={o.command} label={`Copy install command for ${o.label}`} />}
+            </li>
+          ))}
+        </ul>
+        <p class="inst__fine">
+          Agent rules and install plans per version are in <a href="#technical">Technical details</a>.
+        </p>
+      </details>
+    )
+  }
+</section>

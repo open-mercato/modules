@@ -1,31 +1,27 @@
-/* Module page (7.7 B) and its islands: InstallBox, ViewToggle, ReceiptDrawer. The underscore keeps this file out of
+/* Module page (redesign of 26 Oct, in the style of nuxt.com/modules) and its islands: InstallBox, ViewToggle,
+   ReceiptDrawer. The page for people on top (header, Install card, screenshots, README, sidebar); everything else in
+   one closed Technical details disclosure, styled at the end of this file. The underscore keeps this file out of
    routing. Shared primitives (chips, seals, strips, command chips) come from ui.css (WP11). */
 
 .mod {
-  padding: 24px var(--pad) 80px;
-}
-.mod > * + * {
-  margin-top: 24px;
+  padding: 24px var(--pad) 96px;
 }
 
-/* breadcrumbs: mono, uppercase words, identifiers keep their case */
+/* breadcrumbs: two quiet links */
 .crumbs ol {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
+  align-items: center;
+  gap: 4px 8px;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 14px;
   color: var(--ink-2);
 }
 .crumbs li + li::before {
   content: '/';
-  margin-right: 10px;
+  margin-right: 8px;
   color: var(--ink-3);
 }
 .crumbs a {
@@ -36,109 +32,708 @@
   color: var(--ink);
   text-decoration: underline;
 }
-.crumbs code {
-  font: inherit;
-  letter-spacing: 0;
-  color: var(--ink);
+
+.mod__banners {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.mod__banners:empty {
+  display: none;
 }
 
-/* ---------- header (7.7 B.2) ---------- */
-.mhd {
-  position: relative;
+/* ---------- header: icon, title, author and package, lead, one meta row (the state is in the Install card) ---------- */
+.mh {
+  grid-area: head;
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) auto;
-  gap: 28px;
-  padding: 32px;
-  border-radius: var(--radius-s);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  align-self: start;
+  gap: 16px 20px;
+  min-width: 0;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+.cat-tile {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--tile, 56px);
+  height: var(--tile, 56px);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
   background: var(--bg-2);
   color: var(--ink);
 }
-.mhd__sig {
-  color: var(--ink);
-}
-.mhd__main {
+.mh__main {
   display: grid;
-  gap: 10px;
-  align-content: start;
+  gap: 4px;
   min-width: 0;
 }
-.mhd__title {
+.mh__title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   overflow-wrap: break-word;
 }
-.mhd__loc {
+.mh__by {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-.mhd__loc code {
-  font-size: 13px;
+  gap: 2px 14px;
+  margin: 0;
+  font-size: 14px;
   color: var(--ink-2);
 }
-.mhd__copy {
+.mh__pkg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+.mh__pkg code {
+  font-size: 13px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.mh__copy {
   display: inline-grid;
   place-items: center;
+  flex: none;
   width: 28px;
   height: 28px;
   border: 0;
   border-radius: var(--radius-m);
   background: transparent;
   color: var(--ink-2);
+  cursor: pointer;
 }
-.mhd__copy:hover {
+.mh__copy:hover {
   background: var(--bg-3);
   color: var(--ink);
 }
-.mhd__sum {
-  max-width: 62ch;
-  font-size: 18px;
-  line-height: 1.45;
-  color: var(--ink-2);
+.mh__lead,
+.mh__meta {
+  grid-column: 1 / -1;
 }
-.mhd__chips {
+.mh__lead {
+  max-width: 64ch;
+  margin: 4px 0 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.mh__meta {
   display: flex;
   flex-wrap: wrap;
-  /* the level seal and the chips share one centre line (review r8: LISTED sat 6 px above the chips on a phone) */
+  align-items: center;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.mh__meta code {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.mh__chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--bg-3);
+  color: var(--ink);
+  font-size: 13px;
+}
+.mh__cat {
+  color: var(--ink);
+}
+.mh__stat {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin: 2px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+/* ---------- body: header and main column on the left, Install card next to the header, sidebar under it ---------- */
+/* review of 26 Oct: Install, the main action, started 440 px down under an empty right half of the header */
+.mod__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'head install'
+    'main install'
+    'main side';
+  /* no row gap: the sidebar starts 32 px under the taller of header and Install, the main column 32 px under the header */
+  gap: 0 56px;
+  margin-top: 24px;
+}
+.mod__grid > .mod__main,
+.mod__grid > .mod__side {
+  margin-top: 32px;
+}
+.mod__install {
+  grid-area: install;
+  min-width: 0;
+}
+.mod__main {
+  grid-area: main;
+  display: grid;
+  align-content: start;
+  gap: 40px;
+  min-width: 0;
+}
+.mod__side {
+  grid-area: side;
+  display: grid;
+  align-content: start;
+  gap: 24px;
+  min-width: 0;
+}
+.mod__empty {
+  padding: 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-l);
+  color: var(--ink-2);
+}
+.mod__fine {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.mod__fine a {
+  color: var(--ink);
+}
+.msec__h {
+  margin: 0 0 14px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ---------- Install card ---------- */
+.inst {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-l);
+  background: var(--bg);
+  min-width: 0;
+}
+.inst__h {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+/* a failed test on the latest version, said before the command (review of 26 Oct) */
+.inst__warn {
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--bad-ink) 30%, transparent);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--bad-fill) 6%, transparent);
+  font-size: 14px;
+}
+.inst__msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.inst__msg .icon {
+  flex: none;
+  margin-top: 3px;
+}
+.inst__msg--bad {
+  color: var(--bad-ink);
+}
+.inst__ok {
+  color: var(--ok-text);
+}
+.inst__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+.inst__steps {
+  display: grid;
+  gap: 16px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.chip--link {
-  text-decoration: none;
+.inst__step {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
 }
-.chip--link:hover {
-  border-color: var(--ink-3);
+.inst__n {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
   color: var(--ink);
-}
-/* Built for · Verified on · Fits statically: a middot list (base.css .dotlist), a dot never starts a line */
-.mhd__built {
-  row-gap: 2px;
-  font-family: var(--font-mono);
   font-size: 12px;
-  line-height: 18px;
-  color: var(--ink-2);
+  font-weight: 500;
 }
-.mhd__verified {
-  color: var(--ok-text);
-}
-/* the install chip (owner decision E): the Install box's command, as wide as its text; a long one wraps at the token
-   boundaries as in the box */
-.mhd__install {
-  display: flex;
-  margin-top: 4px;
-}
-.mhd__install .cmd {
+.inst__body {
+  display: grid;
+  gap: 8px;
   min-width: 0;
 }
-.mhd__side {
+.inst__t {
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+}
+.inst .cmd {
+  min-width: 0;
+}
+.inst__notes {
   display: grid;
-  align-content: space-between;
-  justify-items: end;
-  gap: 16px;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.inst__fine {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.inst__more {
+  display: block;
+  min-width: 0;
+}
+/* block, not grid: a closed grid <details> keeps a gap for its hidden content and the folds drift apart */
+.inst__more > * + * {
+  margin-top: 10px;
+}
+.inst__more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  font-size: 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+  list-style: none;
+}
+.inst__more > summary::-webkit-details-marker {
+  display: none;
+}
+.inst__more > summary:hover {
+  color: var(--ink);
+}
+.inst__chev {
+  transition: transform var(--dur-1) var(--ease);
+}
+.inst__more[open] > summary .inst__chev {
+  transform: rotate(180deg);
+}
+.inst__lines {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.inst__line {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.inst__lk {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.inst__ls {
+  font-weight: 400;
+  color: var(--ink-2);
 }
 
+/* ---------- screenshots, when to use, works with ---------- */
+.shots__list {
+  display: grid;
+  /* one screenshot takes the column, as on a nuxt module page; more sit two by two */
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shots__link {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-l);
+  background: var(--bg-2);
+  transition: border-color var(--dur-1) var(--ease);
+}
+.shots__list--many {
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+}
+.shots__cap {
+  margin-top: 8px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.shots__link:hover {
+  border-color: var(--ink-3);
+}
+.shots__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.use {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.use__block {
+  padding: 18px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-l);
+  background: var(--bg-2);
+}
+.use__block--not {
+  border-color: var(--line);
+  background: transparent;
+}
+.use__h {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.use__block p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.works__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.provs {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.provs li {
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.provs a {
+  font-weight: 500;
+  color: var(--ink);
+}
+/* what the module adds, from the anatomy: a calm two-column list */
+.adds__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.adds__list li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.adds__list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+/* the state of the latest version, once, on top of the Install card */
+.inst__status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.inst__status .icon {
+  flex: none;
+  margin-top: 2px;
+}
+.inst__status--ok {
+  color: var(--ok-text);
+}
+/* the note over an author's README: which text holds (review of 26 Oct: a 12 px grey caption nobody read) */
+.rd__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: var(--radius-m);
+  background: var(--bg-2);
+  color: var(--ink);
+}
+.rd__note > .icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ink-2);
+}
+.rd__note-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.rd__note-text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.rd__note-text a {
+  color: var(--ink);
+  font-weight: 500;
+}
+.rd__note-text .rd__note-fine {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+/* the rest of the README, folded under its opening */
+.readme__more {
+  margin-top: 16px;
+}
+.readme__more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+.readme__more > summary::-webkit-details-marker {
+  display: none;
+}
+.readme__more > summary:hover {
+  border-color: color-mix(in srgb, var(--ink) 30%, var(--line-strong));
+}
+.readme__more[open] > summary {
+  margin-bottom: 16px;
+}
+.readme__more[open] .readme__chev {
+  transform: rotate(180deg);
+}
+.sb__more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+  list-style: none;
+}
+.sb__more > summary::-webkit-details-marker {
+  display: none;
+}
+.sb__more[open] .sb__chev {
+  transform: rotate(180deg);
+}
+.sb__more > ul {
+  margin-top: 6px;
+}
+.works__chip {
+  padding: 4px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* ---------- sidebar ---------- */
+.sb {
+  display: grid;
+  gap: 10px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.sb:last-child {
+  border-bottom: 0;
+}
+.sb__h {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.sb__links {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.sb__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.sb__note {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.sb__k {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.sb__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.sb__stats div {
+  padding: 10px 12px;
+  border-radius: var(--radius-l);
+  background: var(--bg-2);
+}
+.sb__stats dt {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.sb__stats dd {
+  margin: 2px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.sb__dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.sb__dl div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+.sb__dl dt {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.sb__dl dd {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.sb__dl code {
+  font-size: 13px;
+}
+
+/* tablets and phones: one column, Install right after the header */
+@media (max-width: 991px) {
+  .mod__grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas:
+      'head'
+      'install'
+      'main'
+      'side';
+    gap: 32px;
+  }
+  .mod__grid > .mod__main,
+  .mod__grid > .mod__side {
+    margin-top: 0;
+  }
+}
+@media (max-width: 767px) {
+  .mod {
+    padding-top: 12px;
+  }
+  .mh {
+    gap: 12px 14px;
+    padding-bottom: 24px;
+  }
+  .mh .cat-tile {
+    --tile: 48px;
+  }
+  .mh__lead {
+    font-size: 16px;
+  }
+  /* touch targets of at least 44 px (spec 7.10) */
+  .crumbs a,
+  .sb__links a,
+  .tech__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .sb__links,
+  .tech__links {
+    gap: 0;
+  }
+  .mh__copy {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+  .inst__more > summary {
+    min-height: 44px;
+  }
+  .mh__cat {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* ---------- moved into Technical details: the Human | Agent switch, the agent view, tabs and the rest ---------- */
 /* ---------- Human | Agent ---------- */
 .vt {
   display: inline-flex;
@@ -165,9 +760,6 @@
 }
 .vt button:not([aria-pressed='true']):hover {
   color: var(--ink);
-}
-html[data-view='agent'] [data-human] {
-  display: none !important;
 }
 .mod__agent:empty {
   display: none;
@@ -253,49 +845,6 @@ html[data-view='agent'] [data-human] {
 }
 .agentv__err {
   color: #ff6b6b;
-}
-
-.mod__banners {
-  display: grid;
-  gap: 8px;
-}
-.mod__banners:empty {
-  display: none;
-}
-
-/* ---------- 8/4 body ---------- */
-.mod__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-  gap: 40px;
-  align-items: start;
-  margin-top: 40px !important;
-}
-.mod__main {
-  min-width: 0;
-}
-.mod__side {
-  display: grid;
-  gap: 28px;
-  min-width: 0;
-}
-.mod__sticky {
-  position: sticky;
-  top: calc(var(--header-h) + 16px);
-  z-index: 2;
-}
-.mod__empty {
-  padding: 24px;
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-m);
-  color: var(--ink-2);
-}
-.mod__fine {
-  font-size: 13px;
-  color: var(--ink-2);
-}
-.mod__fine a {
-  color: var(--ink);
 }
 
 /* ---------- tabs (7.9: ARIA tabs; without JS every panel shows) ---------- */
@@ -623,35 +1172,18 @@ html[data-view='agent'] [data-human] {
   font-weight: 500;
 }
 
-/* readme: author text, untrusted, plain text */
+/* readme: author text, untrusted, rendered from a safe subset of Markdown (lib/core/text.ts readmeHtml) */
 .readme {
   margin: 0;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-m);
   overflow: hidden;
 }
-.readme__cap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--bg-2);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--wait-ink);
-}
 .readme__text {
-  max-height: 640px;
-  overflow: auto;
   padding: 16px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink-2);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 /* the catalog's line under an excerpt Rentgen cut: outside the author's text, in the caption's voice */
 .readme__cut {
@@ -744,88 +1276,6 @@ html[data-view='agent'] [data-human] {
 }
 .maint .cmd {
   width: 100%;
-}
-
-/* ---------- side column ---------- */
-.side__sec {
-  display: grid;
-  gap: 10px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-.side__h {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.33;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
-.side__sub {
-  letter-spacing: 0.04em;
-  text-transform: none;
-  color: var(--ink-3);
-}
-.side__links,
-.side__rel {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 14px;
-}
-.side__links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-/* the file type sits in the link text as plain mono (no chip padding), so the underline runs unbroken */
-.side__links code {
-  padding: 0;
-  border: 0;
-  background: none;
-  font-size: 12px;
-  color: var(--ink-2);
-}
-.side__rel span {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-2);
-}
-.side__relrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.side__k {
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--ink-2);
-}
-.side__stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 0;
-}
-.side__stats div {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-}
-.side__stats dt {
-  font-size: 12px;
-  color: var(--ink-2);
-}
-.side__stats dd {
-  margin: 2px 0 0;
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- install box (7.6) ---------- */
@@ -1303,128 +1753,9 @@ html[data-view='agent'] [data-human] {
   font-size: 14px;
 }
 
-/* ---------- tablet and phone (7.10) ---------- */
+/* ---------- tablet and phone (7.10): the receipt drawer is a bottom sheet; the install box of Technical details
+   stays inline (no sticky bar: the Install card is the page's way to install) ---------- */
 @media (max-width: 991px) {
-  .mod__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-  }
-  /* one column in reading order: header, install, nameplate, strip, tabs, links */
-  .mod {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .mod > * + * {
-    margin-top: 0;
-  }
-  .mod__grid,
-  .mod__side {
-    display: contents;
-  }
-  .crumbs {
-    order: 0;
-  }
-  .mhd {
-    order: 1;
-  }
-  .mod__banners {
-    order: 2;
-  }
-  .mod__agent {
-    order: 3;
-  }
-  /* reading order (review r1): header, strip, install (tablets), then the anatomy and the plate */
-  .mod__strip {
-    order: 4;
-  }
-  .mod__sticky {
-    order: 5;
-    position: static;
-  }
-  .mod__main {
-    order: 6;
-    margin-top: 8px;
-  }
-  .side__sec {
-    order: 8;
-  }
-  /* once the inline box scrolls away, a sticky bar at the bottom opens the same box as a bottom sheet; on phones
-     there is no inline box at all, only the bar (review r1: the anatomy comes first) */
-  .ib.is-live.is-away .ib__bar,
-  .ib.is-live.is-open .ib__bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    min-height: 56px;
-    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
-    border: 0;
-    border-top: 1px solid var(--line-strong);
-    background: var(--bg);
-    color: var(--ink);
-    box-shadow: 0 -12px 24px -16px #0000002e;
-    text-align: left;
-  }
-  .ib__bar-main {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-  }
-  /* what the receipts say may take two lines (`broken on 0.8, 0.9, next · agent refuses`), never an ellipsis */
-  .ib__bar-sub {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 16px;
-    color: var(--ink-2);
-  }
-  .ib__bar-chev {
-    transform: rotate(180deg);
-  }
-  .ib.is-live.is-open .ib__box {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 51;
-    display: grid;
-    max-height: 88vh;
-    overflow: auto;
-    padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
-    border-radius: var(--radius-l) var(--radius-l) 0 0;
-    border-bottom: 0;
-    box-shadow: var(--shadow-float);
-    animation: rdrawer-up 180ms var(--ease);
-  }
-  .ib.is-live.is-open .ib__close {
-    display: inline-flex;
-    min-height: 44px;
-  }
-  .ib.is-live.is-open .ib__scrim {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    background: #0c0c0c80;
-  }
-  html.ib-lock {
-    overflow: hidden;
-  }
-  body:has(.ib.is-live) .site-footer {
-    padding-bottom: 64px;
-  }
   .ib__segbtn > span,
   .ib__policy > summary,
   .ib__plan > summary,
@@ -1448,58 +1779,11 @@ html[data-view='agent'] [data-human] {
     animation-name: rdrawer-up;
   }
 }
-/*
- * Phones (review r2, CLS): with JavaScript the bar is there from the first paint and the box opens only as a sheet,
- * so nothing moves when the island hydrates. The sticky column is fixed to the bottom of the screen and holds the
- * bar; it leaves the reading flow, so no empty wrapper or gap stays above the header. Without JavaScript the box
- * stays inline, after the main column (the bar would do nothing).
- */
-@media (max-width: 767px) and (scripting: enabled) {
-  .mod__sticky {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    z-index: 30;
-  }
-  /* an open sheet and its scrim cover the header too */
-  .mod__sticky:has(.ib.is-open) {
-    z-index: 55;
-  }
-  .ib:not(.is-open) .ib__box {
-    display: none;
-  }
-  .ib__bar {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    min-height: 56px;
-    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
-    border: 0;
-    border-top: 1px solid var(--line-strong);
-    background: var(--bg);
-    color: var(--ink);
-    box-shadow: 0 -12px 24px -16px #0000002e;
-    text-align: left;
-  }
-  body:has(.mod__sticky .ib) .site-footer {
-    padding-bottom: 64px;
-  }
-}
-@media (max-width: 767px) and (scripting: none) {
-  .mod__sticky {
-    order: 7;
-  }
-}
 /* without JavaScript (review r3, as on the list): every panel is on the page, and the controls that need a script
-   are not shown, so nothing on the module page is dead. The strip is a link to the Receipts panel that the drawer
-   takes over once scripts run (review r4). */
+   are not shown, so nothing on the module page is dead. The strip is a link to the Receipts panel. */
 @media (scripting: none) {
-  .mhd__side,
-  .mhd__copy,
+  .mh__copy,
+  .tech__vt,
   .mod .cmd__copy,
   .mod .plate__copy,
   .mod .ib__lines,
@@ -1515,38 +1799,6 @@ html[data-view='agent'] [data-human] {
   }
 }
 @media (max-width: 767px) {
-  .mod {
-    padding-top: 16px;
-  }
-  .mhd {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-    padding: 20px 16px;
-  }
-  .mhd__sig svg {
-    width: 64px;
-    height: 64px;
-  }
-  .mhd__side {
-    justify-items: start;
-    grid-auto-flow: column;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .mhd__sum {
-    font-size: 16px;
-  }
-  /* a phone reads the Install box right after the strip: no second command in the header */
-  .mhd__install {
-    display: none;
-  }
-  .mhd__copy {
-    /* never squeezed by a long locator in the flex row (review r7: 35 to 40 px wide) */
-    flex: none;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-  }
   .hyg__item {
     grid-template-columns: 44px minmax(0, 1fr);
     grid-template-areas:
@@ -1561,19 +1813,66 @@ html[data-view='agent'] [data-human] {
   .vers__facts {
     grid-column: 1 / -1;
   }
+  /* the four tabs share the row on a phone; a narrower screen scrolls it (review r11) */
   .tabs__list {
-    margin-inline: calc(-1 * var(--pad));
-    padding-inline: var(--pad);
+    gap: 0;
+    justify-content: space-between;
+    scroll-snap-type: x proximity;
+  }
+  .tabs__list [role='tab'] {
+    flex: 0 0 auto;
+    padding: 0 8px;
+    font-size: 13px;
+    scroll-snap-align: start;
+  }
+  .tabs__list [role='tab']:first-child {
+    padding-left: 0;
+  }
+  .tabs__list [role='tab']:last-child {
+    padding-right: 0;
+  }
+  .tabs__list [role='tab']:first-child[aria-selected='true']::after {
+    left: 0;
+  }
+  .tabs__list [role='tab']:last-child[aria-selected='true']::after {
+    right: 0;
+  }
+  /* small links get a 44 px hit area that grows around the text, so nothing in the layout moves (review r4, r7) */
+  .hyg__links a {
+    position: relative;
+  }
+  .hyg__links a::after {
+    content: '';
+    position: absolute;
+    inset: -13px auto;
+    left: 50%;
+    width: max(calc(100% + 8px), 44px);
+    translate: -50% 0;
+  }
+  .vt button {
+    min-height: 44px;
+  }
+  .tech__chips .chip--link {
+    position: relative;
+  }
+  .tech__chips .chip--link::after {
+    content: '';
+    position: absolute;
+    inset: -13px -4px;
+  }
+  /* beats the nameplate's scoped 40 px */
+  .mod .plate__more > summary {
+    min-height: 44px !important;
   }
 }
 
-/* AnatomyFilm in the 8-column main: the plate (sigil and legend) runs above the 3x3 grid, so every section gets a
+/* AnatomyFilm in Technical details: the plate (sigil and legend) runs above the 3x3 grid, so every section gets a
    third of the column instead of a third of what is left next to a 200 px plate */
 @media (min-width: 768px) {
-  .mod .mod__main .film__body {
+  .mod .tech .film__body {
     grid-template-columns: minmax(0, 1fr);
   }
-  .mod .mod__main .film__plate {
+  .mod .tech .film__plate {
     grid-template-columns: auto minmax(0, 1fr);
     justify-items: start;
     align-items: center;
@@ -1584,16 +1883,16 @@ html[data-view='agent'] [data-human] {
 @media (min-width: 1200px) {
   /* two columns read row by row: every value stays on one line, so the rows keep one height (review r3); below
      1200 px the main column is too narrow for `Events emits 6 · subscribes 5` beside `UI 18 pages · 4 widgets` */
-  .mod .mod__main .film__legend {
+  .mod .tech .film__legend {
     grid-template-columns: repeat(2, minmax(0, 256px));
     column-gap: 32px;
   }
-  .mod .mod__main .film__legend .film__n {
+  .mod .tech .film__legend .film__n {
     white-space: nowrap;
   }
 }
 @media (min-width: 992px) {
-  .mod .mod__main .film__grid {
+  .mod .tech .film__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -1607,20 +1906,6 @@ html[data-view='agent'] [data-human] {
   .mod .film__item {
     min-width: 0;
   }
-}
-
-/* ---------- review round 1 (WP12) ---------- */
-
-/* enterprise: the license chip stands where the level seal would be (6.7) */
-.mhd__ent {
-  white-space: nowrap;
-}
-
-/* stats without a value: small text, no big digit */
-.side__stats dd.side__na {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  color: var(--ink-3);
 }
 
 /* install box: a command without a verified receipt, and a refused one behind a disclosure (D23, D46) */
@@ -1720,50 +2005,6 @@ html[data-view='agent'] [data-human] {
 }
 .ib__policy--refuse[open] .ib__reasons {
   color: var(--ink);
-}
-
-/* phones (7.10): breadcrumbs shrink to the way back, tabs show that they scroll, the nameplate pairs short values */
-@media (max-width: 767px) {
-  .crumbs li:first-child,
-  .crumbs li[aria-current='page'] {
-    display: none;
-  }
-  .crumbs li + li::before {
-    content: none;
-  }
-  .crumbs li:nth-child(2) a::before {
-    content: '\2190\00a0';
-  }
-  .crumbs a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
-  /* the five tabs fit the phone's width (review r11: `Quality` was cut at the right edge at 390 px and nothing said the
-     row scrolls): tighter tabs that share the row; a narrower screen still scrolls the row */
-  .tabs__list {
-    gap: 0;
-    justify-content: space-between;
-    scroll-snap-type: x proximity;
-  }
-  .tabs__list [role='tab'] {
-    flex: 0 0 auto;
-    padding: 0 8px;
-    font-size: 13px;
-    scroll-snap-align: start;
-  }
-  .tabs__list [role='tab']:first-child {
-    padding-left: 0;
-  }
-  .tabs__list [role='tab']:last-child {
-    padding-right: 0;
-  }
-  .tabs__list [role='tab']:first-child[aria-selected='true']::after {
-    left: 0;
-  }
-  .tabs__list [role='tab']:last-child[aria-selected='true']::after {
-    right: 0;
-  }
 }
 
 /* ---------- review round 2 (WP12) ---------- */
@@ -1938,14 +2179,6 @@ a.ssq {
   display: none;
 }
 
-/* AnatomyFilm in the 8-column main: a section with long identifiers spans two columns; the page computes the spans so
-   every row ends at the edge (an inline style with this page's rules) */
-
-/* the header facts are short sentences: on a narrow header they wrap inside an item instead of running out */
-.mhd__built.dotlist > li {
-  white-space: normal;
-}
-
 /* nameplate slots 3 and 4 (RECOMMENDED, LATEST; fixed geometry): a long version wraps at the zero-width spaces the
    page puts after its dots, never inside a number */
 .mod .plate__cell:nth-child(3) .nw,
@@ -1953,101 +2186,256 @@ a.ssq {
   white-space: normal;
 }
 
-/* ---------- review r1 ---------- */
-/* the level sits first in the chip line (no lonely chip in the corner) */
-.mhd__level {
+/* ---------- README: the body of the page (26 Oct), calm and full length ---------- */
+.rd .readme {
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+/* the README flows with the page, rendered from Markdown (review of 26 Oct: no inner scroll, no raw `##`) */
+.rd .readme__text {
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.md > * + * {
+  margin-top: 14px;
+}
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  margin-top: 28px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.md h3 {
+  font-size: 20px;
+}
+.md h4 {
+  font-size: 17px;
+}
+.md h5,
+.md h6 {
+  font-size: 15px;
+}
+.md > :first-child {
+  margin-top: 0;
+}
+.md ul,
+.md ol {
+  display: grid;
+  gap: 4px;
+  padding-left: 22px;
+}
+.md ul {
+  list-style: disc;
+}
+.md ol {
+  list-style: decimal;
+}
+.md code {
+  padding: 1px 5px;
+  border-radius: var(--radius-s);
+  background: var(--bg-3);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+.md pre {
+  padding: 14px 16px;
+  border-radius: var(--radius-m);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.md pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+.md blockquote {
+  padding-left: 14px;
+  border-left: 3px solid var(--line-strong);
+  color: var(--ink-2);
+}
+.md a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+}
+.md hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.md-table {
+  overflow-x: auto;
+}
+.md table {
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.md th,
+.md td {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.md th {
+  font-weight: 500;
+  background: var(--bg-2);
+}
+.rd .readme__cut {
+  padding: 10px 0 0;
+  border: 0;
+  background: none;
+}
+@media (max-width: 767px) {
+  .rd .readme__text {
+    font-size: 14px;
+  }
+}
+
+/* ---------- Technical details: one closed disclosure with everything for maintainers and agents ---------- */
+.tech {
+  margin-top: 64px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-l);
+  background: var(--bg);
+}
+.tech__sum {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 16px;
+  min-height: 44px;
+  padding: 18px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+.tech__sum::-webkit-details-marker {
+  display: none;
+}
+.tech__sum:hover .tech__t {
+  text-decoration: underline;
+}
+.tech__t {
+  font-size: 16px;
+  font-weight: 500;
+}
+.tech__s {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.tech__chev {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--ink-2);
+  transition: transform var(--dur-1) var(--ease);
+}
+.tech[open] > .tech__sum .tech__chev {
+  transform: rotate(180deg);
+}
+.tech__body {
+  display: grid;
+  gap: 48px;
+  padding: 24px 20px 32px;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.tech__sec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+.tech__h {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.tech__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tech__level {
   display: inline-flex;
   align-items: center;
 }
-.mhd__side {
-  align-content: start;
+.tech__loc {
+  font-size: 13px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
 }
-/* the plate comes after the anatomy, in the main column */
-.mod__plate {
-  margin-top: 40px;
+.tech__chips .chip--link {
+  text-decoration: none;
 }
-/* links, stats and related: a row of three under the two columns */
-.mod__foot {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 40px;
-  margin-top: 48px !important;
-  padding-top: 8px;
-  border-top: 1px solid var(--line);
+/* Built for, Verified on, Fits statically: a middot list (base.css .dotlist), a dot never starts a line */
+.tech__facts {
+  row-gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-2);
 }
-/* a tall Related column must not stretch Links and Stats: each section keeps its own height, rows from the top */
-.mod__foot > .side__sec {
-  border-top: 0;
-  align-content: start;
-  align-self: start;
+.tech__facts.dotlist > li {
+  white-space: normal;
 }
-@media (max-width: 991px) {
-  .mod__foot {
-    order: 9;
-    grid-template-columns: minmax(0, 1fr);
-    margin-top: 16px !important;
-  }
+.tech__verified {
+  color: var(--ok-text);
 }
-
-/* touch targets of at least 44 px on phones (spec 7.10, review r2): the category and Unclaimed chips reach 44 px
-   through an invisible edge, the links stack at 44 px */
+.tech__ib {
+  max-width: 640px;
+  min-width: 0;
+}
+.tech__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+/* the file type sits in the link text as plain mono (no chip padding), so the underline runs unbroken */
+.tech__links code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.tech__vt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
 @media (max-width: 767px) {
-  .mhd__chips .chip--link {
-    position: relative;
+  .tech__sum {
+    padding: 16px;
   }
-  .mhd__chips .chip--link::after {
-    content: '';
-    position: absolute;
-    inset: -12px -3px;
+  .tech__body {
+    padding: 20px 16px 24px;
   }
-  .side__links {
-    gap: 0;
-  }
-  .side__links a {
-    min-height: 44px;
-    /* a short label (`JSON`) is still a 44 px target (review r7) */
-    min-width: 44px;
-  }
-}
-
-/* phones (spec 7.10: touch targets >= 44 px, review r4): the small links of the page get a 44 px hit area that grows
-   around the text, so nothing in the layout moves; the toggle and the plate's disclosure grow themselves */
-@media (max-width: 767px) {
-  .hyg__links a,
-  .mhd__chips .chip--link {
-    position: relative;
-  }
-  .hyg__links a::after,
-  .mhd__chips .chip--link::after {
-    content: '';
-    position: absolute;
-    /* 18 px of text + 2 x 13 px = 44 px */
-    inset: -13px -4px;
-  }
-  /* a short link (`rule`) is 44 px wide too, centred on its text; the 14 px gap keeps neighbours apart (review r7) */
-  .hyg__links a::after {
-    inset: -13px auto;
-    left: 50%;
-    width: max(calc(100% + 8px), 44px);
-    translate: -50% 0;
-  }
-  .vt button {
-    min-height: 44px;
-  }
-  /* stacked Related links (review r6): an edge that overlapped the next row gave each link 27 px of its own; now
-     each row is a 44 px link of its own, as in Links */
-  .side__rel {
-    gap: 0;
-  }
-  .side__rel a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    /* a short title (`sales`, `Billing`) is a 44 px target too (review r8) */
-    min-width: 44px;
-  }
-  /* beats the nameplate's scoped 40 px */
-  .mod .plate__more > summary {
-    min-height: 44px !important;
+  .tabs__list {
+    margin-inline: -16px;
+    padding-inline: 16px;
   }
 }

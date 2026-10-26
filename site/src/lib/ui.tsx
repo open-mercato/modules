@@ -320,10 +320,10 @@ export function CommandChipView({
         </span>
       )}
       {/* translate="no": Preact types the attribute as boolean, the HTML value is the string "no" */}
-      {/* a URL may scroll sideways: the scroll region is then reachable from the keyboard */}
+      {/* a URL or a one-line command may scroll sideways: the scroll region is then reachable from the keyboard */}
       <code
         class="cmd__text"
-        tabIndex={(display ?? command).includes('://') ? 0 : undefined}
+        tabIndex={oneLine || (display ?? command).includes('://') ? 0 : undefined}
         title={display ? command : undefined}
         {...({ translate: 'no' } as Record<string, string>)}
       >

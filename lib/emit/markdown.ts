@@ -316,6 +316,19 @@ export interface CardInput {
   preview?: boolean
 }
 
+/**
+ * `## Screenshots` of a card (26 Oct): one absolute image link per screenshot, a site-relative src resolved against
+ * the site. Nothing when the descriptor has none.
+ */
+export function screenshotsSection(e: Pick<IndexEntry, 'screenshots'>, site: string): string[] {
+  const list = e.screenshots ?? []
+  if (list.length === 0) return []
+  const abs = (src: string): string =>
+    src.startsWith('https://') ? src : new URL(src, `${site.replace(/\/$/, '')}/`).href
+  const alt = (t: string): string => t.replace(/[\\[\]]/g, (c) => `\\${c}`)
+  return ['', '## Screenshots', ...list.map((x) => `- ![${alt(x.alt)}](${abs(x.src)})`)]
+}
+
 /** The card, cut to 20 KB: the README first, then the tail. */
 export function moduleCard(i: CardInput): string {
   const e = i.ctx.entry
@@ -355,6 +368,7 @@ export function moduleCard(i: CardInput): string {
     head.push('', `Renamed from ${e.renamedFrom.map((r) => r.replace(/^npm:/, '')).join(', ')}.`)
   const body = [
     ...head,
+    ...screenshotsSection(e, i.site),
     '',
     '## Compatibility',
     ...compatSection(

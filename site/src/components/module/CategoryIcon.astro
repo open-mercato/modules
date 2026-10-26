@@ -1,0 +1,21 @@
+---
+// The icon of a module's category in a quiet 56 px tile (module page header). The icon itself is the one the module
+// browser draws for the category (../catalog/category-icons.ts), so a card and its page show the same sign.
+// Decorative: aria-hidden; the category's name is always written next to it.
+import { categoryIconSvg } from '../catalog/category-icons.ts'
+
+interface Props {
+  category: string
+  /** Tile size in px; the icon is a little under half of it. */
+  size?: number
+  class?: string
+}
+const { category, size = 56, class: className } = Astro.props
+---
+
+<span
+  class:list={['cat-tile', className]}
+  style={`--tile:${size}px`}
+  aria-hidden="true"
+  set:html={categoryIconSvg(category, Math.round(size * 0.46))}
+/>

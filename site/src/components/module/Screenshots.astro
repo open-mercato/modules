@@ -1,0 +1,32 @@
+---
+// Screenshots of a module in a running app (descriptor `screenshots`, optional): a gallery of 16:10 thumbnails, each a
+// link to the full image. Nothing renders without screenshots. `src` comes ready for <img src> from the emitter:
+// site-relative with the base path already in it, or an https URL.
+
+interface Props {
+  shots: readonly { src: string; alt: string }[] | undefined
+  /** The module's title, for the region's label. */
+  title: string
+}
+const { shots = [], title } = Astro.props
+---
+
+{
+  shots.length > 0 && (
+    <section class="shots" aria-labelledby="shots-h">
+      <h2 class="msec__h" id="shots-h">
+        Screenshots
+      </h2>
+      <ul class={`shots__list${shots.length > 1 ? ' shots__list--many' : ''}`} role="list" aria-label={`Screenshots of ${title}`}>
+        {shots.map((s) => (
+          <li class="shots__item">
+            <a class="shots__link" href={s.src}>
+              <img class="shots__img" src={s.src} alt={s.alt} width="1440" height="900" loading="lazy" decoding="async" />
+            </a>
+            <p class="shots__cap" aria-hidden="true">{s.alt}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

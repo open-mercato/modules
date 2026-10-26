@@ -202,6 +202,7 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
     const e = c.entry
     const p = e.path
     put(`m/${p}.json`, ModuleDetail, moduleDetail(c, lines))
+    for (const [path, bytes] of c.screenshotFiles ?? []) pub.set(path, bytes)
     put(`m/${p}/receipts.json`, ModuleReceipts, moduleReceipts(c, lineKeys))
     if (factsPublished(c)) for (const [v, f] of c.allFacts) put(`m/${p}/v/${v}/facts.json`, Facts, f)
     const card = moduleCard({
