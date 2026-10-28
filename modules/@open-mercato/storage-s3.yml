@@ -1,7 +1,7 @@
 npm: "@open-mercato/storage-s3"
 repo: open-mercato/open-mercato#main/packages/storage-s3
 category: storage-infrastructure
-tags: [s3, files, attachments]
+tags: [s3, files, attachments, object-storage]
 summary: Stores attachments in Amazon S3 or an S3-compatible store such as DigitalOcean Spaces, MinIO, Cloudflare R2 or B2.
 whenToUse: Use when uploaded files must live in object storage instead of the app server disk, for example with several app instances.
 providers:
