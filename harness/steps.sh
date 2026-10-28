@@ -260,7 +260,10 @@ prepare)
   as_root chown -R root:root "$HARNESS"
   as_root chmod -R u=rwX,go=rX "$HARNESS"
   as_root find "$HARNESS" -name '*.sh' -exec chmod 0755 {} +
-  command -v yarn >/dev/null 2>&1 || corepack enable
+  # ubuntu-latest ships a global Yarn 1.22 in /usr/local/bin, so "yarn exists" is not enough: the app pins Yarn 4 in
+  # packageManager and Yarn 1 refuses it (first night on Actions, 28 Oct). corepack enable puts its shims next to node,
+  # which comes first in CELL_PATH.
+  case "$(yarn --version 2>/dev/null)" in "" | 1.*) corepack enable ;; esac
   if [[ -n "${GITHUB_ENV:-}" ]]; then
     as_root rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
   fi
