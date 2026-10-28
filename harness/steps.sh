@@ -264,9 +264,13 @@ prepare)
   # packageManager and Yarn 1 refuses it (first night on Actions, 28 Oct). corepack enable puts its shims next to node,
   # which comes first in CELL_PATH.
   case "$(yarn --version 2>/dev/null)" in "" | 1.*) corepack enable ;; esac
-  if [[ -n "${GITHUB_ENV:-}" ]]; then
+  # Deleting the runner's .NET, GHC and Android trees takes 100-200 s and pushed prepare past its 220 s limit on
+  # 2 of 6 cells (28 Oct). A cell needs 5-6.5 GB of disk (spike of 23 Oct), so the trees go only when / has less than
+  # 15 GB free.
+  if [[ -n "${GITHUB_ENV:-}" ]] && (($(df -Pk / | awk 'NR==2 {print $4}') < 15 * 1024 * 1024)); then
     as_root rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
   fi
+  say "disk: $(df -Ph / | awk 'NR==2 {print $4}') free on /"
   check_inputs
   say "node $(node --version), om-cell $(id -u "$CELL_USER"), harness $(cd "$HARNESS" && ls | tr '\n' ' ')"
   ;;
