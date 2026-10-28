@@ -95,8 +95,9 @@ describe('mcp/wrangler.toml (spec 3.4)', () => {
     expect(toml).toMatch(/^name = "om-modules"$/m)
     expect(toml).toMatch(/^main = "worker.ts"$/m)
     expect(toml).toMatch(/^compatibility_date = "2026-10-01"$/m)
-    expect(toml).toMatch(/^MODULES_INDEX_URL = "https:\/\/open-mercato\.github\.io\/modules\/modules\.json"$/m)
-    expect(toml).toMatch(/^BUILTIN_INDEX_URL = "https:\/\/open-mercato\.github\.io\/modules\/built-in\.json"$/m)
+    // the site on Cloudflare Pages at its domain (Piotr and owner decision A(a), 28 Oct)
+    expect(toml).toMatch(/^MODULES_INDEX_URL = "https:\/\/modules\.openmercato\.com\/modules\.json"$/m)
+    expect(toml).toMatch(/^BUILTIN_INDEX_URL = "https:\/\/modules\.openmercato\.com\/built-in\.json"$/m)
     expect(toml).toMatch(/\[observability\]\nenabled = false/)
   })
 

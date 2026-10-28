@@ -1,6 +1,7 @@
 // Internal links and data links (spec 12.2 WP16): every page in the sitemap, every internal href/src in it, and
 // every site URL written into the published data files (llms.txt, modules.json and the rest of 4.6) answers 200,
-// with no 404 and no redirect (the local server answers like GitHub Pages, so a 301 there is a 301 on Pages).
+// with no 404 and no redirect (the local server follows the static host's lookup order, so a 301 there is a
+// redirect on the host too).
 // Absolute URLs on the site's own origin (`site` of modules.json) are checked against the site under test.
 import { expect, test, type APIRequestContext } from '@playwright/test'
 import { E2E, url } from './env.ts'
@@ -46,7 +47,7 @@ async function pool<T>(items: T[], n: number, fn: (x: T) => Promise<void>): Prom
 test('internal and data links answer 200 without redirects', async ({ request }) => {
   test.setTimeout(240_000)
   const index = (await (await request.get(url('/modules.json'))).json()) as { site: string }
-  // the site's public address (https://open-mercato.github.io/modules) and its path (/modules)
+  // the site's public address (https://modules.openmercato.com) and its path ('' at the domain root)
   const site = index.site.replace(/\/+$/, '')
   const sitePath = new URL(site).pathname.replace(/\/+$/, '')
   const toLocal = (raw: string, from: string): string | null => {

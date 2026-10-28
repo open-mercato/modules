@@ -1,6 +1,12 @@
-# Site on GitHub Pages (spec 5.1, 5.2): `yarn build` (emit + astro) from main and the data branch, then deploy.
-# Runs after watch, sync and collect finish on main (pushes with GITHUB_TOKEN do not start workflows), on push to
-# main, daily and by hand. With no data branch yet the build runs on empty data and shows the empty states.
+# Site on Cloudflare Pages (spec 5.1, 5.2; Cloudflare instead of GitHub Pages, Piotr and owner decision A(a), 28 Oct):
+# `yarn build` (emit + astro) from main and the data branch, then `wrangler pages deploy` (direct upload) to the
+# project CF_PAGES_PROJECT, served at modules.openmercato.com. Runs after watch, sync and collect finish on main
+# (pushes with GITHUB_TOKEN do not start workflows), on push to main, daily and by hand. With no data branch yet the
+# build runs on empty data and shows the empty states.
+# Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
+# `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
+# set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
+# still run, then the run ends green with a warning and a summary that say the site was not deployed.
 name: pages
 
 on:
@@ -22,8 +28,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -33,24 +37,41 @@ defaults:
   run:
     shell: bash
 
+env:
+  SITE_URL: ${{ vars.SITE_URL || 'https://modules.openmercato.com' }}
+  BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+  CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}
+
 jobs:
-  deploy:
-    name: deploy
-    # Pages stays off while the repository is private (nothing to publish yet); it starts once the repository is public.
+  build:
+    name: build
+    # Off while the repository is private (nothing to publish yet); it starts once the repository is public.
     if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      commit: ${{ steps.checkout.outputs.commit }}
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
-      SITE_URL: ${{ vars.SITE_URL || 'https://open-mercato.github.io' }}
-      BASE_PATH: ${{ vars.BASE_PATH || '/modules' }}
       MCP_URL: ${{ vars.MCP_URL }}
       WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
     steps:
+      - name: Check deploy settings
+        id: settings
+        # A job without an environment does not see the secrets of environment `cloudflare`, and a job-level `if`
+        # cannot read secrets at all. The repository variable is visible here, so it is the switch for `deploy`.
+        env:
+          HAS_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_ACCOUNT_ID" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
+        id: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
@@ -88,24 +109,121 @@ jobs:
 
       - name: Check artifact contents
         run: |
-          # .well-known/ is the hidden folder the upload drops without include-hidden-files; the MCP server card is
-          # there only with MCP_URL (no card for a Worker that is not deployed, finding of 25 Oct)
+          # wrangler 4.149.0 pages deploy uploads dotfiles (its walk skips only .DS_Store, .git, .wrangler, node_modules and the
+          # _headers/_redirects/_routes.json/_worker.js/functions config names), so .well-known/ goes up as built.
+          # The MCP server card is there only with MCP_URL (no card for a Worker that is not deployed, finding of 25 Oct).
           test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
           if [ -n "${MCP_URL:-}" ]; then
             test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
           fi
           test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
+          # Cloudflare Pages serves 404.html for missing paths; without it every missing path answers 200 with index.html
+          test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      - name: Check Pages limits
+        # The walk wrangler runs before an upload (20,000 files, 25 MiB per file), offline and without the token, so a
+        # run that does not deploy still proves the build would deploy.
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          yarn wrangler pages project validate dist
+          echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Upload site
+        # Only for a deploy (artifact storage counts against the account quota), kept one day. upload-artifact skips
+        # dotfiles unless told otherwise, and .well-known/ must reach the deploy job.
+        if: ${{ steps.settings.outputs.deploy == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
+          name: site
           path: dist
-          # v5.0.0 packs with --exclude=.[^/]* by default; without this the whole .well-known/ is dropped
           include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
 
-      - name: Check the packed artifact
-        run: tar -tf "$RUNNER_TEMP/artifact.tar" | grep -qx './.well-known/agent-skills/index.json'
+      - name: Not deployed
+        if: ${{ steps.settings.outputs.deploy != 'true' }}
+        run: |
+          echo "::warning title=pages not deployed::No repository variable CLOUDFLARE_ACCOUNT_ID; the site was built and checked but not deployed."
+          {
+            echo "**Not deployed.** No repository variable CLOUDFLARE_ACCOUNT_ID: the site was built and checked, nothing was uploaded."
+            echo ""
+            echo "To deploy, create the Cloudflare Pages project \`$CF_PAGES_PROJECT\` (direct upload, production branch main) with"
+            echo "the custom domain modules.openmercato.com, add the secret CLOUDFLARE_API_TOKEN (Account > Cloudflare Pages > Edit)"
+            echo "in Settings > Environments > cloudflare, then the repository variable CLOUDFLARE_ACCOUNT_ID in Settings > Secrets"
+            echo "and variables > Actions > Variables. See docs/RUNBOOK.md, Repository setup."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    name: deploy
+    needs: build
+    if: ${{ needs.build.outputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: cloudflare
+      url: ${{ steps.deploy.outputs.deployment-url }}
+    steps:
+      - name: Check token
+        # The token stays an environment secret, so the main-only rule of `cloudflare` guards it; only this job sees
+        # it. The variable that started this job without the token is a half setup: fail red, do not pass quietly.
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set but environment cloudflare has no CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+
+      - name: Checkout
+        # The commit the build job built, for the locked wrangler and the commit the deployment names.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        # wrangler-action finds wrangler 4.149.0 here from the lockfile and installs nothing of its own.
+        run: yarn install --immutable
+
+      - name: Download site
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: site
+          path: dist
+
+      - name: Check downloaded site
+        # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip.
+        run: |
+          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
 
       - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          # --branch main is the production branch of the project; --commit-dirty silences the wrangler warning about local
+          # changes (dist/ and the yarn state are ignored, so the checkout is clean)
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true
+
+      - name: Summary
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          {
+            echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL}${BASE_PATH}"
+            echo ""
+            echo "This deployment: ${DEPLOYMENT_URL:-see the wrangler output}"
+          } >> "$GITHUB_STEP_SUMMARY"

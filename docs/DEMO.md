@@ -9,14 +9,14 @@ say what the screen showed then. Numbers move with the data; read them off the s
 
 ## Before the call
 
-1. Build the site from the data you will show and serve it like GitHub Pages:
+1. Build the site from the data you will show and serve it at the domain root, as Cloudflare Pages does:
 
    ```sh
    E2E_DATA=<checkout of the data branch> node test/e2e/build.ts
    node test/e2e/serve.ts out/e2e/real 4410
    ```
 
-   Then open `http://127.0.0.1:4410/modules/`. Or present the deployed site.
+   Then open `http://127.0.0.1:4410/`. Or present the deployed site at `https://modules.openmercato.com/`.
 
 2. Rehearse in a browser: `yarn e2e test/e2e/demo.spec.ts` clicks every step below and saves one screenshot per
    step to `out/e2e/demo/` (the report in `playwright-report/` lists what each step showed).

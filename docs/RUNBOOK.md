@@ -289,8 +289,9 @@ om-preview-yarn-cache`, `docker image rm om-modules-cell:node24.21.0 om-modules-
 ### Serving a preview build
 
 A build is for one address. Without `SITE_URL` and `BASE_PATH` it links to the default
-`https://open-mercato.github.io/modules`, which serves nothing while the repository is private and Pages is off, so
-`llms.txt`, `modules.json`, the `.md` cards and the canonical tags of a preview point at dead pages (finding of 25 Oct).
+`https://modules.openmercato.com` (Cloudflare Pages, 28 Oct), which serves nothing of this build until the deploy of
+`pages.yml` runs, so `llms.txt`, `modules.json`, the `.md` cards and the canonical tags of a preview point at other
+or dead pages (finding of 25 Oct).
 `yarn om emit` warns when `SITE_URL` is not set. For a preview, build for the address that serves it:
 
 ```sh
@@ -354,34 +355,48 @@ Before the repository is public:
    so authors and testers run `yarn om format modules` themselves; the validate message says so.
 4. Settings > Actions > General: require approval for first-time contributors; workflow permissions: read.
 
-At the switch to the public address:
+At the switch to the public address (Cloudflare Pages at `modules.openmercato.com`, Piotr and owner decision A(a) of
+28 Oct; GitHub Pages is not used):
 
-5. Repository variables `SITE_URL` and `BASE_PATH` (`https://modules.openmercato.com` and `/` once the domain serves
-   this site, see step 9; until then `https://open-mercato.github.io` and `/modules`), `MCP_URL` after the Worker deploy
-   (D-OPEN-1). `modules.openmercato.com` answers already, from the `*.openmercato.com` wildcard on the Traefik host, so
-   "answers" is not the test: switch only after step 9 shows the catalog there.
-6. Settings > Pages > Source: GitHub Actions. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on
-   their own once the repository is public; while it is private they run only by hand (Actions minutes).
-7. Environments `github-pages` and `mcp` (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`), and the WebMCP origin
-   trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 items 6 and 8). `mcp` exists already: set its deployment branch policy
-   to `main` (Settings > Environments > mcp > Deployment branches) before adding `CLOUDFLARE_API_TOKEN`, so no other
-   branch can deploy with it.
-8. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
-9. The custom domain. `pages.yml` deploys with GitHub Actions, so a `CNAME` file in the build is ignored: the domain is
-   set only in the settings. First verify `modules.openmercato.com` in the organization (Settings > Pages > Add a
-   domain; GitHub shows the TXT record `_github-pages-challenge-open-mercato.modules.openmercato.com`), then devops add
-   that TXT and a CNAME `modules.openmercato.com` -> `open-mercato.github.io` (the CNAME replaces the wildcard for this
-   name), then Settings > Pages > Custom domain `modules.openmercato.com` and Enforce HTTPS once the certificate is
-   issued. Change `SITE_URL` and `BASE_PATH` (step 5) in the same sitting and rerun `pages`.
-10. Right after the repository is public: test the fork path, which the private repository cannot test (forking is off
-    there, and the only test pull request so far, #1, came from a branch of the repository). From a fork, open a pull
-    request with one new valid descriptor and one broken one. Check that the `validate` summary appears within 3 minutes
-    and reads the data branch (Fit is not skipped), that `checks` and `build` are green for the valid file alone, that
-    `autofix` runs, that a typosquat error goes away after a curator adds `name-reviewed` and re-runs `validate`, that
-    the first-time contributor approval of step 4 holds the run until approved, and that `yarn om triage` lists the pull
-    request with the right verdict. Close it and write the run ids into the report. The CI fixes of 25 Oct (`checks`,
-    the data branch read in `validate`, `collect` and the nightly plan, the current labels, the private autofix skip)
-    were tested locally only; this is their first run on Actions unless a test pull request ran before.
+5. Devops, in the Cloudflare account:
+   1. Create the Pages project `open-mercato-modules` for direct upload, production branch `main`:
+      `npx wrangler pages project create open-mercato-modules --production-branch main`, or Workers & Pages > Create >
+      Pages > Upload assets. Another name works when the repo variable `CF_PAGES_PROJECT` names it.
+   2. Create an API token (My Profile > API Tokens > Create Custom Token) with Account > Cloudflare Pages > Edit on
+      this account only. Note the account ID.
+   3. In the project: Custom domains > Set up a custom domain > `modules.openmercato.com`. Cloudflare adds the DNS
+      record by itself only when the `openmercato.com` zone is on the same Cloudflare account as the Pages project.
+      Otherwise add by hand a CNAME `modules` -> `<project>.pages.dev` (the `*.pages.dev` name the project shows,
+      `open-mercato-modules.pages.dev` when the name is free) at the DNS provider of the zone; it replaces the
+      `*.openmercato.com` wildcard for this name. Wait for the domain to show Active.
+6. Settings > Environments: create `cloudflare` with deployment branches `main` only, then add the secret
+   `CLOUDFLARE_API_TOKEN` from step 5. Then add the account ID as the repository variable `CLOUDFLARE_ACCOUNT_ID`
+   (Settings > Secrets and variables > Actions > Variables; an account ID is not a secret). `pages.yml` and
+   `mcp-deploy.yml` both read this variable, not a secret and not an environment variable. In `pages.yml` it is also
+   the switch: the `build` job has no environment and cannot see the token, so it hands the site to the `deploy` job
+   (environment `cloudflare`) only when the variable is set. Add it last: with the variable and no token, `deploy`
+   fails red. `mcp` exists already: set its deployment branch policy to `main` the same way before adding its own
+   `CLOUDFLARE_API_TOKEN` (spec 5.6 item 6). Repo variables: `MCP_URL` after the Worker deploy
+   (D-OPEN-1) and the WebMCP origin trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 item 8). `SITE_URL` and `BASE_PATH`
+   stay unset: `pages.yml` defaults to `https://modules.openmercato.com` and `/`.
+7. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
+8. Make the repository public. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on their own from
+   then on (while the repository is private `pages` is skipped and the others run only by hand, for Actions minutes).
+   Run `pages` once by hand (Actions > pages > Run workflow). Its summary says `Site deployed` with the deployment
+   URL; without the `CLOUDFLARE_ACCOUNT_ID` variable it ends green with the warning `pages not deployed` and records
+   no deployment. Then every push to `main`, every data refresh (`watch`, `sync`, `collect`) and the daily 05:47 UTC
+   run deploy by themselves. `modules.openmercato.com` answers already from the wildcard on the Traefik host, so
+   "answers" is not the test. The test is the first line of `https://modules.openmercato.com/llms.txt`, which must be
+   `# Open Mercato Modules`.
+9. Right after the repository is public: test the fork path, which the private repository cannot test (forking is off
+   there, and the only test pull request so far, #1, came from a branch of the repository). From a fork, open a pull
+   request with one new valid descriptor and one broken one. Check that the `validate` summary appears within 3 minutes
+   and reads the data branch (Fit is not skipped), that `checks` and `build` are green for the valid file alone, that
+   `autofix` runs, that a typosquat error goes away after a curator adds `name-reviewed` and re-runs `validate`, that
+   the first-time contributor approval of step 4 holds the run until approved, and that `yarn om triage` lists the pull
+   request with the right verdict. Close it and write the run ids into the report. The CI fixes of 25 Oct (`checks`,
+   the data branch read in `validate`, `collect` and the nightly plan, the current labels, the private autofix skip)
+   were tested locally only; this is their first run on Actions unless a test pull request ran before.
 
 ## Triage of submissions
 

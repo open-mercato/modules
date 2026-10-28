@@ -3,9 +3,12 @@
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { Browser, BrowserContext, BrowserContextOptions } from '@playwright/test'
+import { DEFAULT_BASE_PATH } from '../../lib/core/home.ts'
 
 const root = resolve(import.meta.dirname, '..', '..')
-const basePath = `/${(process.env.BASE_PATH ?? '/modules').replace(/^\/+|\/+$/g, '')}`.replace(/^\/$/, '')
+// the same default as emit and astro.config.ts (domain root since the Cloudflare move, 28 Oct), so a plain
+// `node test/e2e/build.ts` is served where it was built; '' when the site sits at the root
+const basePath = `/${(process.env.BASE_PATH ?? DEFAULT_BASE_PATH).replace(/^\/+|\/+$/g, '')}`.replace(/^\/$/, '')
 const port = 4410
 const stalePort = 4411
 const external = !!process.env.E2E_BASE_URL
@@ -44,7 +47,7 @@ export const PAGES = [
   { name: 'for-agents', path: '/for-agents' },
 ] as const
 
-/** URL of a site path; `/` is the base with its slash (Pages answers the bare base with a 301). */
+/** URL of a site path; `/` is the base with its slash (under a base path, the bare base answers 301). */
 export function url(path: string, base: string = E2E.base): string {
   return path === '/' ? `${base}/` : `${base}${path}`
 }

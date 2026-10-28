@@ -14,17 +14,20 @@ export const CATALOG_REPO_URL = `https://github.com/${CATALOG_REPO}`
  */
 export const CATALOG_MAINTAINERS = 'the Open Mercato core team'
 
-/** Default site origin before the custom domain: GitHub Pages of the repository's owner. */
-export const DEFAULT_SITE_ORIGIN = 'https://open-mercato.github.io'
+/**
+ * Default site origin: Cloudflare Pages at the custom domain, the only place of the site (Piotr and owner decision
+ * A(a), 28 Oct; GitHub Pages is no longer a target).
+ */
+export const DEFAULT_SITE_ORIGIN = 'https://modules.openmercato.com'
 
-/** Default base path on that origin (the repository name). */
-export const DEFAULT_BASE_PATH = '/modules'
+/** Default base path on that origin: the domain root. */
+export const DEFAULT_BASE_PATH = '/'
 
-/** Default site root plus base path, without a trailing slash. */
-export const DEFAULT_SITE_URL = `${DEFAULT_SITE_ORIGIN}${DEFAULT_BASE_PATH}`
+/** Default site root plus base path, without a trailing slash (the origin itself while the base path is `/`). */
+export const DEFAULT_SITE_URL = DEFAULT_SITE_ORIGIN
 
-/** The address the site moves to once the domain routes there (spec 1). */
-export const TARGET_SITE_URL = 'https://modules.openmercato.com'
+/** The address of the site (spec 1); since 28 Oct the same as the default. */
+export const TARGET_SITE_URL = DEFAULT_SITE_URL
 
 /** User-Agent suffix of the catalog's read-only fetchers. */
 export const USER_AGENT_HOME = `+${CATALOG_REPO_URL}`

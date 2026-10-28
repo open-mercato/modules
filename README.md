@@ -2,11 +2,11 @@
 
 Extend everything. Start with 80% done. Every entry here is read from its published code, and every module is installed in a fresh Open Mercato app on each release line by the nightly run. Providers, libraries and tools are read, not installed.
 
-This repository holds the module descriptors, the code that measures them and the site at https://open-mercato.github.io/modules (later https://modules.openmercato.com). Descriptions come from authors. Everything else is measured.
+This repository holds the module descriptors, the code that measures them and the site at https://modules.openmercato.com. Descriptions come from authors. Everything else is measured.
 
 ## Submit a module in 3 steps
 
-Fastest: paste your npm name into the form at https://open-mercato.github.io/modules/submit. It runs the checks below in your browser, writes the YAML and opens GitHub with the file filled in. Commit it there (GitHub makes the fork for you), then create the pull request.
+Fastest: paste your npm name into the form at https://modules.openmercato.com/submit. It runs the checks below in your browser, writes the YAML and opens GitHub with the file filled in. Commit it there (GitHub makes the fork for you), then create the pull request.
 
 By hand:
 

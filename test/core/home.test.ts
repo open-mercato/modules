@@ -19,10 +19,12 @@ import { ROOT } from './helpers.ts'
 const PERSONAL = /wojciechszyjka\.github\.io|github\.com\/wojciechszyjka\/modules|\bwojciechszyjka\/modules\b/
 
 describe('default addresses', () => {
-  it('one configuration: open-mercato/modules on its GitHub Pages', () => {
+  // Cloudflare Pages at the custom domain, not GitHub Pages (Piotr and owner decision A(a), 28 Oct)
+  it('one configuration: open-mercato/modules at modules.openmercato.com', () => {
     expect(CATALOG_REPO).toBe('open-mercato/modules')
     expect(CATALOG_REPO_URL).toBe('https://github.com/open-mercato/modules')
-    expect(DEFAULT_SITE_URL).toBe('https://open-mercato.github.io/modules')
+    expect(DEFAULT_SITE_URL).toBe('https://modules.openmercato.com')
+    expect(DEFAULT_BASE_PATH).toBe('/')
     expect(siteUrl(DEFAULT_SITE_ORIGIN, DEFAULT_BASE_PATH).site).toBe(DEFAULT_SITE_URL)
   })
 

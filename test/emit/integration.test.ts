@@ -48,7 +48,7 @@ describe('yarn om emit', () => {
     ])
       expect(existsSync(join(to, f)), f).toBe(true)
     const m = JSON.parse(readFileSync(join(to, 'public', 'modules.json'), 'utf8')) as ModulesIndex
-    expect(m.site).toBe('https://open-mercato.github.io/modules')
+    expect(m.site).toBe('https://modules.openmercato.com') // the default address since 28 Oct (Cloudflare Pages)
     const site = loadSiteData(to)
     expect(site.modules.entries).toHaveLength(8)
     expect(site.detail('@fastwhitecat/integration-ksef-direct')?.facts?.package.version).toBe('0.1.8')

@@ -1,12 +1,15 @@
-// A tiny static server with the lookup order of GitHub Pages (spec 3.4, WP02 item 13), for the e2e suite (WP16).
-// `/modules/m/@x/y` answers with `m/@x/y.html` even when the folder `m/@x/y/` sits next to it, a folder without a
-// trailing slash and with an index.html answers 301, and so does the project root without its slash (`/modules`),
-// as Pages does, so the link check can see it; anything else answers 404 with 404.html. Serves only under the base.
-//   node test/e2e/serve.ts <dist> [port] [base]      (defaults: out/e2e/real, 4410, BASE_PATH or /modules)
+// A tiny static server with the lookup order of the static host (spec 3.4, WP02 item 13), for the e2e suite (WP16).
+// `/m/@x/y` answers with `m/@x/y.html` even when the folder `m/@x/y/` sits next to it, a folder without a trailing
+// slash and with an index.html answers 301, and so does a base path without its slash (`/modules`), so the link
+// check can see it; anything else answers 404 with 404.html. Serves only under the base. The base defaults to the
+// domain root, as the site is built and deployed to Cloudflare Pages since 28 Oct; pass `/modules` (or set
+// BASE_PATH) for a build made under a path.
+//   node test/e2e/serve.ts <dist> [port] [base]      (defaults: out/e2e/real, 4410, BASE_PATH or /)
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs'
 import { createServer, type ServerResponse } from 'node:http'
 import { extname, join, normalize, resolve, sep } from 'node:path'
 import { gzipSync } from 'node:zlib'
+import { DEFAULT_BASE_PATH } from '../../lib/core/home.ts'
 
 const TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -90,7 +93,7 @@ export function startServer(dist: string, port: number, basePath: string): Retur
       send(res, 404, isFile(notFound) ? notFound : null, head, gzip)
       return
     }
-    // Pages answers the project root without its slash (`/modules`) with a 301 to `/modules/`
+    // a base path without its slash (`/modules`) answers with a 301 to `/modules/`, as GitHub Pages did
     if (base && url.pathname === base) {
       res.writeHead(301, { location: `${base}/${url.search}` })
       res.end()
@@ -116,7 +119,7 @@ export function startServer(dist: string, port: number, basePath: string): Retur
 if (import.meta.url === `file://${process.argv[1]}`) {
   const dist = process.argv[2] ?? 'out/e2e/real'
   const port = Number(process.argv[3] ?? 4410)
-  const base = process.argv[4] ?? process.env.BASE_PATH ?? '/modules'
+  const base = process.argv[4] ?? process.env.BASE_PATH ?? DEFAULT_BASE_PATH
   if (!isFile(join(dist, 'index.html'))) {
     console.error(`serve: ${join(dist, 'index.html')} not found; run yarn e2e:build first`)
     process.exit(2)

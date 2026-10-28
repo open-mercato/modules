@@ -18,8 +18,6 @@ const PINS: Record<string, [string, string]> = {
   'actions/setup-node': ['949feb2413d6458794dcd2491c4babbbce0c15c1', 'v7.1.0'],
   'actions/upload-artifact': ['cf430e030ddbb5b0abf93d22962f4752f3646cd9', 'v7.0.2'],
   'actions/download-artifact': ['9000827ccba6bdab643e8b6fd33ac0654aef8333', 'v8.0.2'],
-  'actions/upload-pages-artifact': ['fc324d3547104276b827a68afc52ff2a11cc49c9', 'v5.0.0'],
-  'actions/deploy-pages': ['368f82528645a54fb793d4d04e342629a3f51346', 'v5.0.1'],
   'danielroe/provenance-action': ['fcc45fd5a5b818c477432b32c838dcd0c79cd2dd', 'v0.2.0'],
   'autofix-ci/action': ['c5b2d67aa2274e7b5a18224e8171550871fc7e4a', 'v1.3.4'],
   'cloudflare/wrangler-action': ['953926a2e2182532811c01a25e53647d93bf07c0', 'v4.1.3'],
@@ -285,7 +283,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     for (const g of groups) expect(['watch', 'sync']).toContain(g?.group) // collect (WP07) owns `collect`
   })
 
-  it('pages: triggers, permissions, environment, include-hidden-files and the .well-known check', () => {
+  it('pages: triggers, read only, a build job without environment and a deploy job in cloudflare', () => {
     const w = wf('pages.yml')
     expect(w.on).toEqual({
       push: { branches: ['main'] },
@@ -293,22 +291,140 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       schedule: [{ cron: '47 5 * * *' }],
       workflow_dispatch: null,
     })
-    expect(w.permissions).toEqual({ contents: 'read', pages: 'write', 'id-token': 'write' })
+    // Cloudflare Pages instead of GitHub Pages (Piotr and owner decision A(a), 28 Oct): no pages or id-token scope
+    expect(w.permissions).toEqual({ contents: 'read' })
     expect(w.concurrency).toEqual({ group: 'pages', 'cancel-in-progress': false })
-    const job = Object.values(w.jobs)[0] as Job
-    expect(job['timeout-minutes']).toBe(15)
-    expect(job.environment).toMatchObject({ name: 'github-pages' })
-    expect(job.if).toContain("github.event.workflow_run.conclusion == 'success'")
-    const up = steps(w).find((s) => s.uses?.startsWith('actions/upload-pages-artifact@'))
-    expect(up?.with).toEqual({ path: 'dist', 'include-hidden-files': true })
+    expect((w as Workflow & { env: Record<string, string> }).env).toEqual({
+      SITE_URL: "${{ vars.SITE_URL || 'https://modules.openmercato.com' }}",
+      BASE_PATH: "${{ vars.BASE_PATH || '/' }}",
+      CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
+    })
+    expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)
+    expect(Object.keys(w.jobs)).toEqual(['build', 'deploy'])
+    type PagesJob = Job & { env?: Record<string, string>; outputs?: Record<string, string>; needs?: string }
+    const build = w.jobs.build as PagesJob
+    const deploy = w.jobs.deploy as PagesJob
+
+    // build: no environment, so a run that does not deploy records no deployment (review of 28 Oct)
+    expect(build.environment).toBeUndefined()
+    expect(build['timeout-minutes']).toBe(15)
+    expect(build.if).toContain('!github.event.repository.private')
+    expect(build.if).toContain("github.event.workflow_run.conclusion == 'success'")
+    expect(build.outputs).toEqual({
+      deploy: '${{ steps.settings.outputs.deploy }}',
+      commit: '${{ steps.checkout.outputs.commit }}',
+    })
+    const b = build.steps
+    expect(b.map((x) => x.name)).toEqual([
+      'Check deploy settings',
+      'Checkout',
+      'Set up Node',
+      'Enable Corepack',
+      'Install',
+      'Read data branch',
+      'Build',
+      'Check artifact contents',
+      'Check Pages limits',
+      'Upload site',
+      'Not deployed',
+    ])
+    // the build and its checks run with or without the deploy settings
+    for (const x of b.slice(0, 9)) expect(x.if, x.name).toBeUndefined()
+    // the switch is the repository variable: a job without environment sees no environment secret, and a
+    // job-level if cannot read secrets (review of 28 Oct)
+    expect(b[0]?.env).toEqual({ HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}" })
+    expect(text('pages.yml')).not.toMatch(/secrets\.CLOUDFLARE_ACCOUNT_ID/)
+    const upload = b.find((x) => x.name === 'Upload site')
+    expect(upload?.if).toBe("${{ steps.settings.outputs.deploy == 'true' }}")
+    expect(upload?.uses).toMatch(/^actions\/upload-artifact@/)
+    // .well-known/ is a dotfolder: without include-hidden-files the artifact drops it
+    expect(upload?.with).toEqual({
+      name: 'site',
+      path: 'dist',
+      'include-hidden-files': true,
+      'if-no-files-found': 'error',
+      'retention-days': 1,
+    })
+    expect(b.find((x) => x.name === 'Not deployed')?.if).toBe("${{ steps.settings.outputs.deploy != 'true' }}")
+
+    // deploy: the only job in environment cloudflare, and only when the build says so
+    expect(deploy.needs).toBe('build')
+    expect(deploy.if).toBe("${{ needs.build.outputs.deploy == 'true' }}")
+    expect(deploy.environment).toEqual({ name: 'cloudflare', url: '${{ steps.deploy.outputs.deployment-url }}' })
+    expect(deploy['timeout-minutes']).toBe(15)
+    const d = deploy.steps
+    expect(d.map((x) => x.name)).toEqual([
+      'Check token',
+      'Checkout',
+      'Set up Node',
+      'Enable Corepack',
+      'Install',
+      'Download site',
+      'Check downloaded site',
+      'Deploy',
+      'Summary',
+    ])
+    for (const x of d) expect(x.if, x.name).toBeUndefined()
+    expect(d[0]?.env).toEqual({ HAS_TOKEN: "${{ secrets.CLOUDFLARE_API_TOKEN != '' }}" })
+    expect(d.find((x) => x.name === 'Checkout')?.with).toEqual({
+      ref: '${{ needs.build.outputs.commit }}',
+      'persist-credentials': false,
+    })
+    const download = d.find((x) => x.name === 'Download site')
+    expect(download?.uses).toMatch(/^actions\/download-artifact@/)
+    expect(download?.with).toEqual({ name: 'site', path: 'dist' })
+    const dep = d.find((x) => x.name === 'Deploy')
+    expect(dep?.uses).toMatch(/^cloudflare\/wrangler-action@/)
+    expect(dep?.with).toEqual({
+      apiToken: '${{ secrets.CLOUDFLARE_API_TOKEN }}',
+      accountId: '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
+      wranglerVersion: '4.149.0',
+      packageManager: 'yarn',
+      command: 'pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true',
+    })
+
     const run = runText(w)
     expect(run).toContain('git worktree add --detach .data origin/data')
     expect(run).toContain('yarn build')
     expect(run).toContain('dist/.well-known/agent-skills/index.json')
-    expect(run).toContain("grep -qx './.well-known/agent-skills/index.json'")
+    expect(run).toContain('test -f dist/404.html')
+    expect(run).toContain('yarn wrangler pages project validate dist')
     // the MCP server card is required only with MCP_URL (finding of 25 Oct)
     expect(run).toContain('if [ -n "${MCP_URL:-}" ]; then')
     expect(run).toContain('mkdir -p .data') // empty data on the first day
+    expect(run).toContain('::warning title=pages not deployed::')
+  })
+
+  it('pages and mcp-deploy read the Cloudflare account ID the same way, from the repository variable', () => {
+    const accountIds = ['pages.yml', 'mcp-deploy.yml'].flatMap((f) =>
+      steps(wf(f))
+        .filter((s) => s.uses?.startsWith('cloudflare/wrangler-action@'))
+        .map((s) => s.with?.accountId),
+    )
+    expect(accountIds).toEqual(['${{ vars.CLOUDFLARE_ACCOUNT_ID }}', '${{ vars.CLOUDFLARE_ACCOUNT_ID }}'])
+  })
+
+  it('the wrangler the deploy runs uploads .well-known (its walk skips no dotfolder but .git and .wrangler)', () => {
+    // pinned to 4.149.0 like wranglerVersion: a new wrangler with another ignore list fails here and is re-checked
+    const pkg = JSON.parse(readFileSync(join(ROOT, 'node_modules', 'wrangler', 'package.json'), 'utf8')) as {
+      version: string
+    }
+    expect(pkg.version).toBe('4.149.0')
+    const cli = readFileSync(join(ROOT, 'node_modules', 'wrangler', 'wrangler-dist', 'cli.js'), 'utf8')
+    const at = cli.indexOf('validate2 = /* @__PURE__ */ __name(async (args) => {')
+    expect(at).toBeGreaterThan(0)
+    const list = /const IGNORE_LIST = \[([^\]]*)\]/.exec(cli.slice(at, at + 2000))?.[1] ?? ''
+    expect([...list.matchAll(/"([^"]+)"/g)].map((m) => m[1])).toEqual([
+      '_worker.js',
+      '_redirects',
+      '_headers',
+      '_routes.json',
+      'functions',
+      '**/.DS_Store',
+      '**/node_modules',
+      '**/.git',
+      '.wrangler',
+    ])
   })
 
   it('workflow names match the workflow_run chain of pages.yml', () => {

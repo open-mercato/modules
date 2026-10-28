@@ -2,7 +2,8 @@
 // `yarn` and `gh` replaced by recorders, against a local bare repository as `origin`. Proves the step logic
 // itself: the order of commands, the queue conditions, the single commit on `data` through data-branch.ts,
 // no commit when nothing changed, the discovery issue edited in place (created only once), and for pages.yml the
-// data checkout (empty on the first day), the artifact checks and the effect of include-hidden-files.
+// data checkout (empty on the first day), the artifact checks, the deploy switch (the account ID variable), the token
+// check of the deploy job and the summaries.
 import { execFileSync, spawnSync } from 'node:child_process'
 import {
   chmodSync,
@@ -44,6 +45,7 @@ echo "$*" >> "$CALLS"
 if [ "$1" = build ]; then
   rm -rf dist; mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
   mkdir -p dist/.well-known/agent-skills; echo '{}' > dist/.well-known/agent-skills/index.json
+  if [ "\${FAKE_404:-1}" = 1 ]; then echo '<h1>Not found</h1>' > dist/404.html; fi
   if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p dist/.well-known/mcp; echo '{}' > dist/.well-known/mcp/server-card.json; fi
   if [ "\${FAKE_SKILLS:-1}" = 0 ]; then rm -rf dist/.well-known/agent-skills; fi
   exit 0
@@ -323,15 +325,6 @@ describe.skipIf(!hasJq)('sync.yml steps', () => {
   })
 })
 
-/** The archive command of actions/upload-pages-artifact v5.0.0 (action.yml, Linux branch), for both flag values. */
-function packLikeUploadPagesArtifact(includeHidden: boolean): void {
-  const tar = join(tmp, 'runner', 'artifact.tar')
-  mkdirSync(dirname(tar), { recursive: true })
-  const args = ['--dereference', '--directory', join(work, 'dist'), '-cf', tar, '--exclude=.git', '--exclude=.github']
-  if (!includeHidden) args.push('--exclude=.[^/]*')
-  execFileSync('tar', [...args, '.'])
-}
-
 describe('pages.yml steps', () => {
   const env = () => ({ GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'), RUNNER_TEMP: join(tmp, 'runner') })
 
@@ -344,7 +337,7 @@ describe('pages.yml steps', () => {
     expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
   })
 
-  it('builds on the data branch, and the packed artifact keeps .well-known only with include-hidden-files', () => {
+  it('builds on the data branch and checks the Pages limits with wrangler', () => {
     // a data branch on origin
     const seed = join(tmp, 'seed')
     execFileSync('git', ['clone', '--quiet', origin, seed])
@@ -361,10 +354,85 @@ describe('pages.yml steps', () => {
     expect(readFileSync(join(work, 'dist', 'data-files.txt'), 'utf8')).toContain('lines.json')
     expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
 
-    packLikeUploadPagesArtifact(true)
-    expect(runStep(stepRun('pages.yml', 'Check the packed artifact'), env()).code).toBe(0)
-    packLikeUploadPagesArtifact(false)
-    expect(runStep(stepRun('pages.yml', 'Check the packed artifact'), env()).code).not.toBe(0)
+    writeFileSync(calls, '')
+    const limits = runStep(stepRun('pages.yml', 'Check Pages limits'), env())
+    expect(limits.code, limits.out).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe('wrangler pages project validate dist\n')
+    expect(limits.out).toContain('dist: 5 files')
+  })
+
+  it('a build without 404.html stops: Cloudflare Pages would answer every missing path with the home page', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_404: '0' })
+    const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('dist/404.html is missing')
+  })
+
+  it('without the account ID variable the run ends green with a warning and a summary that say it was not deployed', () => {
+    const vars = {
+      ...env(),
+      SITE_URL: 'https://modules.openmercato.com',
+      BASE_PATH: '/',
+      CF_PAGES_PROJECT: 'open-mercato-modules',
+    }
+    const out = join(tmp, 'output.txt')
+    writeFileSync(out, '')
+    const settings = runStep(stepRun('pages.yml', 'Check deploy settings'), {
+      ...vars,
+      HAS_ACCOUNT_ID: 'false',
+      GITHUB_OUTPUT: out,
+    })
+    expect(settings.code, settings.out).toBe(0)
+    expect(readFileSync(out, 'utf8')).toBe('deploy=false\n')
+    const r = runStep(stepRun('pages.yml', 'Not deployed'), vars)
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('::warning title=pages not deployed::No repository variable CLOUDFLARE_ACCOUNT_ID')
+    const summary = readFileSync(join(tmp, 'summary.md'), 'utf8')
+    expect(summary).toContain('**Not deployed.**')
+    expect(summary).toContain('CLOUDFLARE_API_TOKEN')
+    expect(summary).toContain('Settings > Environments > cloudflare')
+    expect(summary).toContain('`open-mercato-modules`')
+    expect(summary).toContain('modules.openmercato.com')
+
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Check deploy settings'), { ...vars, HAS_ACCOUNT_ID: 'true', GITHUB_OUTPUT: out })
+    expect(readFileSync(out, 'utf8')).toBe('deploy=true\n')
+  })
+
+  it('the deploy job fails red when the variable is set but the token is missing, and sums up a deploy', () => {
+    const vars = {
+      ...env(),
+      SITE_URL: 'https://modules.openmercato.com',
+      BASE_PATH: '/',
+      CF_PAGES_PROJECT: 'open-mercato-modules',
+    }
+    const half = runStep(stepRun('pages.yml', 'Check token'), { ...vars, HAS_TOKEN: 'false' })
+    expect(half.code).not.toBe(0)
+    expect(half.out).toContain('::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set')
+    expect(runStep(stepRun('pages.yml', 'Check token'), { ...vars, HAS_TOKEN: 'true' }).code).toBe(0)
+
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    const ok = runStep(stepRun('pages.yml', 'Summary'), {
+      ...vars,
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
+    })
+    expect(ok.code, ok.out).toBe(0)
+    expect(ok.out).not.toContain('::warning')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://modules.openmercato.com/\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev\n',
+    )
+  })
+
+  it('the deploy job finds .well-known in the downloaded site and stops without it', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), env())
+    expect(runStep(stepRun('pages.yml', 'Check downloaded site'), env()).code).toBe(0)
+    rmSync(join(work, 'dist', '.well-known'), { recursive: true, force: true })
+    const r = runStep(stepRun('pages.yml', 'Check downloaded site'), env())
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('dist/.well-known/agent-skills/index.json is missing')
   })
 
   it('stops instead of building on empty data when the data branch cannot be read', () => {
