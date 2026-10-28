@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T11:51:24Z",
+  "computedAt": "2026-10-28T16:14:26Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -93,7 +93,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): not judged on 28 Oct."
     },
     {
       "id": "VER-2",
@@ -124,7 +124,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): not judged on 28 Oct."
         }
       ],
       "consentText": "Install @open-mercato/storage-s3@0.9.0"
@@ -134,7 +134,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): not judged on 28 Oct."
         }
       ],
       "consentText": "Install @open-mercato/storage-s3@0.8.0"
@@ -144,7 +144,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): not judged on 28 Oct."
         }
       ],
       "consentText": "Install @open-mercato/storage-s3@0.9.0"
