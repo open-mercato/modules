@@ -182,6 +182,9 @@
 .mod__main {
   grid-area: main;
   display: grid;
+  /* one track that may shrink below its content: a wide README block (a long code line, a table) widened the whole
+     column and the page to 557-651 px on a 375 px phone (review of 28 Oct) */
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 40px;
   min-width: 0;
