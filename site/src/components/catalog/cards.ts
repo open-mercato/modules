@@ -161,16 +161,86 @@ export function madeByCounts(cards: readonly Card[]): MadeByCount[] {
 /**
  * The install line a person copies (review of 26 Oct: `one command` on the home page, then five steps on the module
  * page): the add command, then `yarn generate` and `yarn db:migrate` when the install plan of the line runs them, else
- * when the fallback says so. The agents keep the steps apart in the plan.
+ * when the fallback says so. The agents keep the steps apart in the plan. A step the command already runs is not
+ * added twice (the enterprise command ends in `&& yarn generate`). The page uses it for every command of every line
+ * (review of 28 Oct: the other versions gave the bare add command).
  */
 export function installLine(
   cli: string,
   then: readonly string[] | null,
   fallback: { generate: boolean; migrate: boolean },
 ): string {
-  const generate = then ? then.includes('yarn generate') : fallback.generate
-  const migrate = then ? then.some((t) => t.startsWith('yarn db:migrate')) : fallback.migrate
+  const has = cli.split(' && ')
+  const generate = (then ? then.includes('yarn generate') : fallback.generate) && !has.includes('yarn generate')
+  const migrate =
+    (then ? then.some((t) => t.startsWith('yarn db:migrate')) : fallback.migrate) && !has.includes('yarn db:migrate')
   return [cli, ...(generate ? ['yarn generate'] : []), ...(migrate ? ['yarn db:migrate'] : [])].join(' && ')
+}
+
+/**
+ * The create-mercato-module way under the main command, or null when the data has none or it is the same command.
+ * It ends like the main command (review of 28 Oct: `npx create-mercato-module install` only adds and enables the
+ * module, it runs neither `yarn generate` nor `yarn db:migrate`, so the bare command left the module unregistered and
+ * without tables).
+ */
+export function installAltLine(
+  cli: string,
+  cmm: string | null | undefined,
+  then: readonly string[] | null,
+  fallback: { generate: boolean; migrate: boolean },
+): string | null {
+  return cmm && cmm !== cli ? installLine(cmm, then, fallback) : null
+}
+
+/** The words around the install command of a module page, from the kind of the entry. */
+export interface InstallWords {
+  /** One sentence above the steps that says what the package is, or null for a module. */
+  lead: string | null
+  /** The text of the first step, the one with the command. */
+  first: string
+  /** True when `Restart the app.` closes the steps. */
+  restart: boolean
+}
+
+/**
+ * What the Install card says around the command, written once from the kind, never per package (Piotr, 28 Oct: the
+ * web-research page said `yarn add` and `Restart the app.`, which does not turn on a module). A module, and a provider
+ * that ships modules, is added and registered. A library is a dependency other modules use, nothing to turn on and no
+ * restart (the install plan has none). A provider without modules is an adapter that `yarn generate` registers (OM
+ * docs: framework/ai-assistant/web-research). A tool runs in a terminal.
+ */
+export function installWords(
+  kind: IndexEntry['kind'],
+  hasModules: boolean,
+  does: { generate: boolean; migrate: boolean },
+  /** Catalog libraries the command adds with a provider (sandbox test of 28 Oct: web-research-model). */
+  peerLibraries = 0,
+): InstallWords {
+  if (kind === 'tool') return { lead: null, first: 'Run this in a terminal.', restart: false }
+  const what = kind === 'library' ? 'library' : kind === 'provider' && !hasModules ? 'provider' : 'module'
+  const withPeers =
+    what === 'provider' && peerLibraries > 0
+      ? ` with the ${peerLibraries === 1 ? 'library' : 'libraries'} it needs`
+      : ''
+  const parts = [
+    `adds the ${what}${withPeers}`,
+    ...(does.generate ? ['registers it'] : []),
+    ...(does.migrate ? ['creates its database tables'] : []),
+  ]
+  const first = `Run this in your app folder. It ${parts.length <= 1 ? parts[0] : `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`}.`
+  if (what === 'library')
+    return {
+      lead: 'A library other modules use, not a module. There is nothing to turn on in the app.',
+      first,
+      restart: false,
+    }
+  if (what === 'provider')
+    return {
+      lead: `A provider for the modules that use it, not a module of its own.${does.generate ? ' After yarn add, yarn generate registers it so those modules can use it.' : ''}`,
+      first,
+      restart: true,
+    }
+  return { lead: null, first, restart: true }
 }
 
 /** Entries whose install command needs `--allow-third-party` (How to add a module says so only when one does). */

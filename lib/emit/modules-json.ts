@@ -5,6 +5,7 @@
 import { buildIndexEntryWithRules, anatomySummary, withSlotConflicts, type CatalogRef } from '../core/entry.ts'
 import { judgedFacts, presetBackendRoutes } from '../core/health.ts'
 import { lineVersion } from '../core/policy.ts'
+import { withPeerLibraries } from '../core/plan.ts'
 import {
   ascendingLines,
   cellSummary,
@@ -180,7 +181,9 @@ export function buildEntryContexts(data: EmitData, opts: EmitOptions, warn: (m: 
       ...(shots.files.length > 0 ? { screenshotFiles: shots.files } : {}),
     })
   }
-  const withConflicts = withSlotConflicts(out.map((c) => c.entry))
+  // an adapter's `yarn add` takes the catalog libraries it peers on, at versions only the whole list knows (sandbox
+  // test of 28 Oct: web-research-model without @open-mercato/web-research)
+  const withConflicts = withPeerLibraries(withSlotConflicts(out.map((c) => c.entry)), latestLine(lines)?.key ?? null)
   return out.map((c, i) => ({ ...c, entry: withConflicts[i] as IndexEntry }))
 }
 

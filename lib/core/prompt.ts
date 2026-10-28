@@ -3,7 +3,7 @@
 import type { IndexEntry } from '../schema/published/modules.ts'
 import { byLineKey } from './lines.ts'
 import { installVersion, judgeLine, listAnd, type VersionSource } from './policy.ts'
-import { isEnterprisePackage, packageCommand } from './plan.ts'
+import { isEnterprisePackage, packageCommand, peerLibrarySpecs, type PeerLookup } from './plan.ts'
 import { servicesOf } from './sdks.ts'
 
 const RE = {
@@ -20,8 +20,9 @@ const RE = {
     /^(@[a-z0-9-~][a-z0-9-._~]*\/[a-z0-9-~][a-z0-9-._~]*|[a-z0-9-~][a-z0-9-._~]*|github\/[a-z0-9-]{1,39}\/[a-z0-9._-]{1,100})$/,
   site: /^https:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[A-Za-z0-9._~-]+)*$/,
   gitRef: /^[A-Za-z0-9._-]{1,100}$/,
+  // `yarn add` of an adapter names the catalog libraries it peers on too (sandbox test of 28 Oct)
   command:
-    /^(?:yarn mercato module add|yarn add|npx create-mercato-module install|npx) [A-Za-z0-9@/._~-]+(?: --allow-third-party)?(?: --module [a-z][a-z0-9_]*)?(?: --ref [A-Za-z0-9._-]+)?$/,
+    /^(?:(?:yarn mercato module add|npx create-mercato-module install|npx) [A-Za-z0-9@/._~-]+|yarn add(?: [A-Za-z0-9@/._~-]+){1,4})(?: --allow-third-party)?(?: --module [a-z][a-z0-9_]*)?(?: --ref [A-Za-z0-9._-]+)?$/,
 } as const
 
 const ok = (re: RegExp, v: string | null | undefined): v is string =>
@@ -43,7 +44,7 @@ export type PromptEntry = Pick<
   'npm' | 'locator' | 'path' | 'version' | 'compat' | 'anatomy' | 'install' | 'moduleIds'
 > &
   Pick<VersionSource, 'installableVersions' | '_meta'> &
-  Partial<Pick<IndexEntry, 'kind' | 'tags'>>
+  Partial<Pick<IndexEntry, 'kind' | 'tags' | 'requires'>>
 
 export interface PromptOptions {
   /** Site root without a trailing slash, https only. */
@@ -52,6 +53,8 @@ export interface PromptOptions {
   line?: string | null
   /** Items per list (10; deeplinks retry with 5). */
   maxList?: number
+  /** The catalog, for the libraries an adapter peers on in a command of another line (`peerLibrarySpecs`). */
+  find?: PeerLookup
 }
 
 export interface PromptParts {
@@ -107,7 +110,9 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
   if (!command && name && version && e.npm && !several && !isEnterprisePackage(e)) {
     const third = e.npm.startsWith('@open-mercato/') ? '' : ' --allow-third-party'
     const mod = ok(RE.moduleId, e.install.moduleFlag) ? ` --module ${e.install.moduleFlag}` : ''
-    command = packageCommand(e, `${e.npm}@${version}`) ?? `yarn mercato module add ${e.npm}@${version}${third}${mod}`
+    command =
+      packageCommand(e, `${e.npm}@${version}`, peerLibrarySpecs(e, version, line, opts.find)) ??
+      `yarn mercato module add ${e.npm}@${version}${third}${mod}`
   }
   const lists = e.anatomy?.lists
   const ids = clean(e.moduleIds, RE.moduleId)

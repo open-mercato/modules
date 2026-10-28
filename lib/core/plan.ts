@@ -75,6 +75,8 @@ export function removeCoreStep(id: string): string {
 
 export type InstallTarget = Pick<IndexEntry, 'npm' | 'locator' | 'moduleIds' | 'version'> &
   Pick<VersionSource, 'installableVersions' | '_meta'> & {
+    /** The entry's `requires`; an adapter's catalog libraries among them join its `yarn add` (`peerLibrarySpecs`). */
+    requires?: IndexEntry['requires']
     /** `--module <id>` for packages with several modules (descriptor `module` or the facts gate). */
     moduleFlag: string | null
     /** Entry kind; absent reads as a module. A library or a tool is no module to add (`packageCommand`). */
@@ -94,10 +96,49 @@ export type InstallTarget = Pick<IndexEntry, 'npm' | 'locator' | 'moduleIds' | '
 export function packageCommand(
   e: Pick<InstallTarget, 'kind' | 'tags'> & { moduleIds?: readonly string[] },
   spec: string,
+  /** The catalog libraries an adapter peers on (`peerLibrarySpecs`), added in the same `yarn add`. */
+  peers: readonly string[] = [],
 ): string | null {
   if (e.kind === 'tool') return runsWithNpx(e) ? `npx ${spec}` : `yarn add ${spec}`
-  if (e.kind === 'provider' && (e.moduleIds?.length ?? 0) === 0) return `yarn add ${spec}`
+  if (isAdapter(e)) return `yarn add ${[...peers, spec].join(' ')}`
   return e.kind === 'library' ? `yarn add ${spec}` : null
+}
+
+/** A provider without a module of its own: an adapter `yarn add` adds and `yarn generate` registers. */
+export const isAdapter = (e: { kind?: IndexEntry['kind']; moduleIds?: readonly string[] }): boolean =>
+  e.kind === 'provider' && (e.moduleIds?.length ?? 0) === 0
+
+/** What `peerLibrarySpecs` reads of a catalog entry: its kind, its npm name and its versions. */
+export type PeerEntry = Pick<IndexEntry, 'locator' | 'npm' | 'kind'> & VersionSource
+
+/** Finds a catalog entry by locator (the entries of modules.json, the site's map, the search index). */
+export type PeerLookup = (locator: string) => PeerEntry | null | undefined
+
+/**
+ * The catalog libraries an adapter peers on, as `name@version` for its `yarn add` (sandbox test of 28 Oct:
+ * @open-mercato/web-research-model peers on @open-mercato/web-research, which a new app does not declare, and the
+ * adapter file `yarn generate` writes imports it, so `yarn add` of the adapter alone worked only through hoisting). An
+ * @open-mercato peer of an @open-mercato adapter comes from the same release, so it takes the adapter's version; any
+ * other peer takes its own install version on the line. Empty for every other kind: a module's peers stay its
+ * `requires`, which the install plan installs in its own commands.
+ */
+export function peerLibrarySpecs(
+  e: Pick<InstallTarget, 'npm' | 'moduleIds' | 'kind' | 'requires'>,
+  version: string | null,
+  line: string | null,
+  find: PeerLookup | undefined,
+): string[] {
+  if (!find || !e.npm || !isAdapter(e)) return []
+  const out: string[] = []
+  for (const r of e.requires ?? []) {
+    const peer = r.resolvesTo?.startsWith('npm:') ? find(r.resolvesTo) : null
+    if (!peer?.npm || peer.kind !== 'library' || peer.npm === e.npm) continue
+    const sameRelease = !!version && peer.npm.startsWith('@open-mercato/') && e.npm.startsWith('@open-mercato/')
+    const v = sameRelease ? version : installVersion(peer, line)
+    const spec = v ? `${peer.npm}@${v}` : peer.npm
+    if (!out.includes(spec)) out.push(spec)
+  }
+  return out
 }
 
 /**
@@ -170,6 +211,11 @@ export function installInfo(
   preset?: readonly { id: string; from: string }[] | null,
   /** The version to install; the command of an app from the empty preset passes `emptyPresetVersion`. */
   version: string | null = installVersion(e, line),
+  /**
+   * The catalog, to add the libraries an adapter peers on to its `yarn add` (`peerLibrarySpecs`). The install plan
+   * leaves it out: its order installs them in commands of their own.
+   */
+  find?: PeerLookup,
 ): IndexEntry['install'] {
   if (e.npm === null) {
     const repo = e.locator.replace(/^github:/, '')
@@ -178,7 +224,7 @@ export function installInfo(
     return { cli: cmd, cmm: cmd, needsAllowThirdParty: false, moduleFlag: e.moduleFlag }
   }
   const spec = version ? `${e.npm}@${version}` : e.npm
-  const own = packageCommand(e, spec)
+  const own = packageCommand(e, spec, peerLibrarySpecs(e, version, line, find))
   if (own) return { cli: own, cmm: null, needsAllowThirdParty: false, moduleFlag: null }
   const thirdParty = !e.npm.startsWith('@open-mercato/')
   const cmm = cmmInstallCommand(spec)
@@ -208,6 +254,26 @@ export function installInfo(
     needsAllowThirdParty: thirdParty,
     moduleFlag: e.moduleFlag,
   }
+}
+
+/**
+ * The list with each adapter's `install` built against the whole catalog (sandbox test of 28 Oct): one entry is built
+ * before the versions of the others are known, so the libraries an adapter peers on join its `yarn add` here, over
+ * the finished list. Only adapters change; the version stays the one `IndexEntry.install` already had.
+ */
+export function withPeerLibraries<E extends IndexEntry>(entries: readonly E[], line: string | null): E[] {
+  const byLocator = new Map<string, IndexEntry>(entries.map((e) => [e.locator, e]))
+  return entries.map((e) => {
+    if (!isAdapter(e) || !e.npm || !e.requires.some((r) => r.resolvesTo?.startsWith('npm:'))) return e
+    const install = installInfo(
+      { ...e, moduleFlag: e.install.moduleFlag },
+      line,
+      null,
+      emptyPresetVersion(e, line),
+      (l) => byLocator.get(l),
+    )
+    return install.cli === e.install.cli ? e : { ...e, install: { ...e.install, cli: install.cli } }
+  })
 }
 
 /** Built-in module as the plan and search need it (BuiltInIndex modules fit). */

@@ -228,6 +228,82 @@
   font-size: 18px;
   font-weight: 500;
 }
+/* the Install button (Piotr, 28 Oct): a green full-width button on top of the right column opens the steps. The green
+   is the Verified chip's pair (ok-ink on ok-fill, 6.86:1 in both themes); the edge keeps it apart from a white page */
+.inst__open {
+  display: block;
+  min-width: 0;
+}
+.inst__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--ok-ink) 30%, transparent);
+  border-radius: var(--radius-m);
+  background: var(--ok-fill);
+  color: var(--ok-ink);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+  list-style: none;
+  transition: box-shadow var(--dur-1) var(--ease);
+}
+.inst__btn::-webkit-details-marker {
+  display: none;
+}
+.inst__btn:hover {
+  box-shadow: inset 0 0 0 1px var(--ok-ink);
+}
+.inst__btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.inst__open[open] > .inst__btn .inst__chev {
+  transform: rotate(180deg);
+}
+/* failed on every tested version: the button only shows the steps, so it does not look like the way forward */
+.inst__btn--quiet {
+  border-color: var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+}
+.inst__btn--quiet:hover {
+  box-shadow: none;
+  background: var(--bg-2);
+}
+.inst__panel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.inst__open > .inst__panel {
+  margin-top: 16px;
+}
+/* the state line under the closed button; while the steps are open, its copy on top of them speaks instead */
+.inst:has(> .inst__open[open]) > .inst__state--out,
+.inst:has(> .inst__open[open]) > .inst__caution--out {
+  display: none;
+}
+.inst__lead {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+/* a long token in a sentence (OM_ENABLE_ENTERPRISE_MODULES_SECURITY=true) breaks instead of widening a 375 px page */
+.inst__panel .inst__t,
+.inst__lead {
+  overflow-wrap: anywhere;
+}
+.inst__alt {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
 /* a failed test on the latest version, said before the command (review of 26 Oct) */
 .inst__warn {
   padding: 10px 12px;
@@ -500,6 +576,17 @@
 }
 .inst__status--ok {
   color: var(--ok-text);
+}
+/* the section a failed test points to, in the words of the warning (review of 28 Oct) */
+.inst__warnlink {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* third-party code, in view under the closed Install button (review of 28 Oct) */
+.inst__caution .inst__link {
+  display: inline;
 }
 /* the note over an author's README: which text holds (review of 26 Oct: a 12 px grey caption nobody read) */
 .rd__note {

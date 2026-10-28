@@ -413,6 +413,13 @@
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
 }
+/* a word of a command (lib/ui.tsx CommandWord, review of 28 Oct): moves to the next line whole, and only a word wider
+   than the chip breaks inside, at its own token boundaries, so no chip scrolls sideways at 375 px */
+.cmd__w {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
 /* one-line variant (hero): fade the end and keep a visible thin scrollbar instead of a hard cut */
 .cmd--line .cmd__text {
   white-space: nowrap;
@@ -424,6 +431,9 @@
 /* Chrome breaks at <wbr> even under nowrap: a one-line command has no break point at all */
 .cmd--line .cmd__text wbr {
   display: none;
+}
+.cmd--line .cmd__w {
+  max-width: none;
 }
 .cmd__copy {
   flex: none;

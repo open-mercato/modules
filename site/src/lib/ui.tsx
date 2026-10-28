@@ -249,6 +249,42 @@ export function Wrap({ text, dots = false }: { text: string; dots?: boolean }) {
   )
 }
 
+/** A piece of a command word long enough to need its own last-resort breaks (after '-' and '.'). */
+const longPiece = (s: string): boolean => s.length > 16 && /[-.]/.test(s)
+
+/**
+ * One word of a command (review of 28 Oct: on a 375 px page the enterprise command and long package names scrolled
+ * sideways in their chips). It breaks after '/' and before a version '@' (an environment setting after a '_' of its
+ * name). A short word (24 characters at most) is one inline block, so it moves to the next line whole when it fits
+ * there; a piece still wider than the chip (`open-mercato-data-sync-durable`, a develop version) is a block that
+ * breaks after its '-' and '.' only as the last resort. Nothing is cut, and the copy keeps the command as it is.
+ */
+function CommandWord({ word }: { word: string }) {
+  const segs = breakSegments(word, { underscores: /^[A-Z][A-Z0-9_]*=/.test(word) })
+  if (segs.length === 1 && !longPiece(word)) return <span class="nw">{word}</span>
+  const piece = (s: string) => {
+    if (!longPiece(s)) return <span class="nw">{s}</span>
+    const parts = breakSegments(s, { hyphens: true, dots: true })
+    return (
+      <span class="cmd__w">
+        {parts.map((x, i) => (
+          <>
+            <span class="nw">{x}</span>
+            {i < parts.length - 1 ? <wbr /> : null}
+          </>
+        ))}
+      </span>
+    )
+  }
+  const inner = segs.map((s, i) => (
+    <>
+      {piece(s)}
+      {i < segs.length - 1 ? <wbr /> : null}
+    </>
+  ))
+  return word.length <= 24 ? <span class="cmd__w">{inner}</span> : <>{inner}</>
+}
+
 /**
  * A command wraps at its spaces (review r1): `module enable` never splits. A long package name may still break
  * after '/' and before its version, a URL never breaks (the chip scrolls sideways instead).
@@ -274,10 +310,8 @@ export function CommandText({ text }: { text: string }) {
               </>
             ) : null}
           </>
-        ) : w.length > 24 ? (
-          <Wrap text={w} />
         ) : (
-          <span class="nw">{w}</span>
+          <CommandWord word={w} />
         )
         return (
           <>

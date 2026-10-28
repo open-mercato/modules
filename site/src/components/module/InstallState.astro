@@ -1,0 +1,62 @@
+---
+// The one-line state of the Install card (Piotr, 28 Oct): it stays in view under the closed Install button and leads
+// the open steps. InstallCard renders it in both places and the CSS shows one at a time, so the red warning of a
+// failed test is still said before the command (review of 26 Oct).
+import Icon from '../icons/Icon.astro'
+
+export interface InstallStateLine {
+  text: string
+  tone: 'ok' | 'bad' | 'muted'
+  /** A failed test on the latest version: the boxed red warning. */
+  warn?: boolean
+  /** A link after the text; one to this page (`#install-versions`) has no external icon, `end` follows it. */
+  link?: { href: string; label: string; end?: string } | null
+}
+
+interface Props {
+  line: InstallStateLine
+  /** `out`: the copy under the closed button, hidden while the steps are open. */
+  where?: 'in' | 'out' | 'plain'
+}
+const { line, where = 'plain' } = Astro.props
+const cls = where === 'out' ? 'inst__state--out' : null
+const external = !!line.link && /^https?:/.test(line.link.href)
+---
+
+{
+  line.warn ? (
+    <p class:list={['inst__msg inst__msg--bad inst__warn', cls]}>
+      <Icon name="warning" size={16} />{' '}
+      <span>
+        {line.text}
+        {line.link && (
+          <>
+            {' '}
+            <a class="inst__warnlink" href={line.link.href}>
+              {line.link.label}
+            </a>
+            {line.link.end ?? ''}
+          </>
+        )}
+      </span>
+    </p>
+  ) : (
+    <p class:list={['inst__status', `inst__status--${line.tone}`, cls]}>
+      {line.tone === 'ok' && <Icon name="check" size={16} />}
+      {line.tone === 'bad' && <Icon name="warning" size={16} />}{' '}
+      {/* the link runs on in the sentence, not as a column of its own (375 px, 28 Oct) */}
+      <span>
+        {line.text}
+        {line.link && (
+          <>
+            {' '}
+            <a class="inst__link" href={line.link.href} rel={external ? 'noopener noreferrer' : undefined}>
+              {line.link.label} {external && <Icon name="external" size={14} />}
+            </a>
+            {line.link.end ?? ''}
+          </>
+        )}
+      </span>
+    </p>
+  )
+}

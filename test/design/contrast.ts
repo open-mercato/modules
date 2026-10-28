@@ -109,5 +109,8 @@ export function pairs(root: string): Pair[] {
     // plug diagram on light: requires and extends strokes (graphic objects)
     { name: 'requires stroke ok-ink on bg (light)', fg: t(L, '--ok-ink'), bg: t(L, '--bg'), min: 3 },
     { name: 'extends stroke id-ink on bg (light)', fg: t(L, '--id-ink'), bg: t(L, '--bg'), min: 3 },
+    // the green Install button of the module page (Piotr, 28 Oct): the same pair in both themes
+    { name: 'Install button ok-ink on ok-fill (light)', fg: t(L, '--ok-ink'), bg: t(L, '--ok-fill'), min: 4.5 },
+    { name: 'Install button ok-ink on ok-fill (dark)', fg: t(D, '--ok-ink'), bg: t(D, '--ok-fill'), min: 4.5 },
   ]
 }

@@ -29,7 +29,7 @@ import ViewToggle from '../../islands/ViewToggle.tsx'
 import ReceiptDrawer from '../../islands/ReceiptDrawer.tsx'
 import type { DrawerLine } from '../../islands/ReceiptDrawer.tsx'
 import { GENERATED_DIR, loadSiteData } from '../../../../lib/emit/site-data.ts'
-import { enterpriseNotes, installInfo, isEnterprisePackage } from '../../../../lib/core/plan.ts'
+import { enterpriseNotes, installInfo, isEnterprisePackage, peerLibrarySpecs } from '../../../../lib/core/plan.ts'
 import { promptParts } from '../../../../lib/core/prompt.ts'
 import { compareVersions } from '../../../../lib/core/semver.ts'
 import { VER5_NOT_READ } from '../../../../lib/core/tier.ts'
@@ -92,7 +92,7 @@ import { absoluteUrl, builtInPage, categoryPage, href, modulePage, moduleMd, rec
 import { wbrHtml } from '../../lib/wrap.ts'
 import { transitionNames } from '../../lib/vt.ts'
 import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
-import { installLine } from '../../components/catalog/cards.ts'
+import { installAltLine, installLine, installWords } from '../../components/catalog/cards.ts'
 import { iconSvg } from '../../components/icons/paths.ts'
 import { levelNote, licenseChip, rulesHeading, verifiedTestNote } from '../../lib/chips.ts'
 import { cannotInstall, catalogSkip, madeByHint, popularity, providerParents, uniqueReceipts, withSkipped } from '../c/_data.ts'
@@ -602,6 +602,11 @@ function enterpriseNote(note: string): string {
   const t = enterpriseNotes(entry.moduleIds)
   return [t.lead, t.more, note].filter(Boolean).join(' ')
 }
+// what an add command is followed by when the line has no install plan: yarn generate for a module or a provider,
+// yarn db:migrate for one with tables (the main command and the commands of the other versions share it)
+const addsModule = entry.kind === 'module' || entry.kind === 'provider'
+const hasTables = (entry.anatomy?.counts.tables ?? 0) > 0 || (entry.anatomy?.counts.migrations ?? 0) > 0
+const installFallback = { generate: addsModule, migrate: hasTables }
 const installLines: InstallLine[] = lines.map((l) => {
   // a line whose app from the empty preset registers the package too (events): `yarn add`, never `module add`, which
   // throws `already enabled` (D10, spec 4.6); elsewhere the command of an app that does not have it
@@ -610,7 +615,10 @@ const installLines: InstallLine[] = lines.map((l) => {
   // where a new app ships it and the empty preset does not, the command is that preset's, with the version it does not
   // break on (`emptyPresetVersion`: checkout 0.8.0 on 0.8, not 0.9.0, review of 24 Oct)
   const emptyVersion = preset.has(l.key) && !both ? emptyPresetVersion(raw, l.key) : installVersion(entry, l.key)
-  const info = installInfo({ ...entry, moduleFlag: entry.install.moduleFlag }, l.key, shipped, emptyVersion)
+  // an adapter's `yarn add` takes the catalog libraries it peers on, on every line (sandbox test of 28 Oct)
+  const info = installInfo({ ...entry, moduleFlag: entry.install.moduleFlag }, l.key, shipped, emptyVersion, (loc) =>
+    byLocator.get(loc),
+  )
   const iso = isoOf(l.key)
   const policy = entry.agentPolicy[l.key] ?? { decision: 'ask' as const, reasons: [] }
   const rec = entry.version.recommended[l.key] ?? null
@@ -618,7 +626,7 @@ const installLines: InstallLine[] = lines.map((l) => {
     rec && entry.version.latest && entry.version.latest !== rec && quarantineUntil
       ? `${entry.version.latest} installable from ${day(quarantineUntil)}${entry.compat.lines[l.key]?.precheck === 'pass' ? ', pre-check passed' : ''}. Install ${rec} until then.`
       : null
-  const parts = promptParts(entry, { site: meta.site, line: l.key })
+  const parts = promptParts(entry, { site: meta.site, line: l.key, find: (loc) => byLocator.get(loc) })
   // D23: `refuse` takes the main action away (no command, no deeplink); the command stays behind a disclosure,
   // except when nothing can be installed at all
   const refused = policy.decision === 'refuse'
@@ -629,6 +637,13 @@ const installLines: InstallLine[] = lines.map((l) => {
   // on a line a new app ships, the empty preset's command carries its own signal `in isolation` right under it, with
   // the version it installs (review of 24 Oct); the note and the box then speak of a new app only
   const emptyOwn = preset.has(l.key) && !both && !!iso
+  // every command of the line ends like the main command of the Install card: yarn generate and yarn db:migrate when
+  // the line's plan runs them (review of 28 Oct: the other versions gave the bare add command). Where a new app ships
+  // the package, the command is for an app from the empty preset, so that preset's plan says. The enterprise command
+  // keeps its own form.
+  const lineThen = (preset.has(l.key) ? plans[l.key]?.emptyPreset?.then : plans[l.key]?.then) ?? null
+  const tail = (cmd: string | null): string | null =>
+    cmd && !entry.enterprise ? installLine(cmd, lineThen, installFallback) : cmd
   return {
     key: l.key,
     label: lineLabel(l),
@@ -640,7 +655,7 @@ const installLines: InstallLine[] = lines.map((l) => {
           preset: true,
           shippedIds: entry.moduleIds,
           shippedText: presetInstallText(entry.moduleIds),
-          emptyCommand: both ? null : info.cli,
+          emptyCommand: both ? null : tail(info.cli),
           emptyLead: EMPTY_PRESET_LEAD,
           // the receipt in isolation of another version than the command's says there is none for it (round 13)
           emptyNote:
@@ -656,9 +671,9 @@ const installLines: InstallLine[] = lines.map((l) => {
     // the signal `in isolation` beside a verdict; with no verdict yet the note says it (lineSentence)
     isolation: iso && !emptyOwn && isoBeside(l.key) ? { dot: isolationDot(iso), sentence: isoBeside(l.key)! } : null,
     isoDot: iso ? isolationDot(iso) : null,
-    command: refused || previewOnly ? null : info.cli,
-    anyway: refused && !unusable ? info.cli : null,
-    previewBuild: previewOnly ? info.cli : null,
+    command: refused || previewOnly ? null : tail(info.cli),
+    anyway: refused && !unusable ? tail(info.cli) : null,
+    previewBuild: previewOnly ? tail(info.cli) : null,
     // the enterprise command turns modules on in .env (finding of 25 Oct): the note says what a new app has and the
     // flags of the other modules
     note: refused || rec ? null : enterpriseNote(installNote(l, !emptyOwn)),
@@ -674,8 +689,8 @@ const installLines: InstallLine[] = lines.map((l) => {
     quarantine: newer,
     prompt: !refused && !previewOnly && parts.command ? parts : null,
     // More ways to install follow the chosen line (D46): the same recommended version as the main command
-    cmm: refused ? null : info.cmm,
-    cloud: !refused && (entry.npm || entry.github) ? info.cmm ?? info.cli : null,
+    cmm: refused ? null : tail(info.cmm),
+    cloud: !refused && (entry.npm || entry.github) ? tail(info.cmm ?? info.cli) : null,
   }
 })
 /** Every line skipped, or nothing installable: nothing to choose, the line picker is hidden. */
@@ -1041,8 +1056,6 @@ const enterpriseInstall = entry.enterprise
 // the steps of the latest line from the install plan the agents get (lib/core/plan.ts `then`, review of 26 Oct: the
 // card said only `Restart the app.`, the plan and the agent prompt run yarn generate and yarn db:migrate too)
 const latestThen = plans[latest.key]?.then ?? null
-const addsModule = entry.kind === 'module' || entry.kind === 'provider'
-const hasTables = (entry.anatomy?.counts.tables ?? 0) > 0 || (entry.anatomy?.counts.migrations ?? 0) > 0
 const needsGenerate = latestThen ? latestThen.includes('yarn generate') : addsModule
 const needsMigrate = latestThen ? latestThen.some((t) => t.startsWith('yarn db:migrate')) : hasTables
 const grantCount = latestThen?.some((t) => t.startsWith('Grant these permissions'))
@@ -1050,36 +1063,58 @@ const grantCount = latestThen?.some((t) => t.startsWith('Grant these permissions
   : 0
 // one install command (review of 26 Oct: the home page promised one command, the card listed five steps): the add
 // command, yarn generate and yarn db:migrate joined with &&, as the plan of the latest line runs them
-const installCommand = installLine(entry.install.cli, latestThen, { generate: addsModule, migrate: hasTables })
-const installDoes = ['adds the module', ...(needsGenerate ? ['registers it'] : []), ...(needsMigrate ? ['creates its database tables'] : [])]
+const installCommand = installLine(entry.install.cli, latestThen, installFallback)
+// the words around the command come from the kind (Piotr, 28 Oct: web-research said `It adds the module` and
+// `Restart the app.`, a library has no module to turn on); a library and a provider get one lead sentence
+// an adapter's command adds the catalog libraries it peers on too, and the first step says so (sandbox test of 28 Oct)
+const peerCount = peerLibrarySpecs(entry, installVersion(entry, latest.key), latest.key, (loc) => byLocator.get(loc)).length
+const words = installWords(
+  entry.kind,
+  entry.moduleIds.length > 0,
+  { generate: needsGenerate, migrate: needsMigrate },
+  peerCount,
+)
+const installLead = installVariant === 'steps' ? words.lead : null
+// the create-mercato-module way under the module command (Piotr, 28 Oct), only when the data has one and it differs;
+// it ends with the same yarn generate and yarn db:migrate as the main command (review of 28 Oct)
+const installAltCommand =
+  installVariant === 'steps'
+    ? installAltLine(entry.install.cli, entry.install.cmm, latestThen, installFallback)
+    : null
+const installAlt = installAltCommand ? { lead: 'Or with create-mercato-module:', command: installAltCommand } : null
 const installSteps: InstallStep[] =
   installVariant === 'steps'
     ? [
-        {
-          text: restart ? `Run this in your app folder. It ${listAnd(installDoes)}.` : 'Run this in a terminal.',
-          command: installCommand,
-        },
+        { text: words.first, command: installCommand, alt: installAlt },
         ...(grantCount > 0
           ? [
               {
-                text: `In the admin, open Roles (/backend/roles) and give its ${plural(grantCount, 'permission')} to the roles that need them.`,
+                // one permission reads `its permission ... that need it`, not `its 1 permission ... them` (28 Oct)
+                text:
+                  grantCount === 1
+                    ? 'In the admin, open Roles (/backend/roles) and give its permission to the roles that need it.'
+                    : `In the admin, open Roles (/backend/roles) and give its ${plural(grantCount, 'permission')} to the roles that need them.`,
                 command: null,
               },
             ]
           : []),
-        ...(restart ? [{ text: 'Restart the app.', command: null }] : []),
+        ...(words.restart ? [{ text: 'Restart the app.', command: null }] : []),
       ]
     : []
 // an app from the empty preset has it too on the latest line (events): no app needs a command, so none is offered
 const presetCommand =
   installVariant === 'preset' && !(raw.compat.inEmptyPreset ?? []).includes(latest.key) ? entry.install.cli : null
-const presetAfterParts = [
-  ...(addsModule ? ['run yarn generate'] : []),
-  ...(hasTables ? ['run yarn db:migrate'] : []),
-  ...(restart ? ['restart the app'] : []),
-]
+// one command with yarn generate and yarn db:migrate, as in the steps (review of 28 Oct: the add command, then a
+// sentence that said to run them), from the plan of an app from the empty preset; the create-mercato-module way under
+// it ends the same
+const presetThen = plans[latest.key]?.emptyPreset?.then ?? null
+const presetAlt = presetCommand ? installAltLine(presetCommand, entry.install.cmm, presetThen, installFallback) : null
 const presetInstall = presetCommand
-  ? { command: presetCommand, after: presetAfterParts.length ? `Then ${listAnd(presetAfterParts)}.` : null }
+  ? {
+      command: installLine(presetCommand, presetThen, installFallback),
+      alt: presetAlt ? { lead: 'Or with create-mercato-module:', command: presetAlt } : null,
+      after: restart ? 'Restart the app.' : null,
+    }
   : null
 // a failed test on the latest version is said first, above the command (review of 26 Oct: it stood under it, grey)
 const worksElsewhere = lines.filter((l) => l.key !== latest.key && entry.compat.verifiedOn.includes(l.key)).map((l) => l.key)
@@ -1097,21 +1132,19 @@ const installWarning =
   installVariant === 'steps' && pill.tone === 'bad'
     ? brokenEverywhere
       ? `Not working on any tested version. The install test failed on Open Mercato ${listAnd(judged.map(versionWord))}.`
-      : `The last install test on Open Mercato ${latest.version} failed. It may not work in your app.${worksElsewhere.length ? ` It works on ${listAnd(worksElsewhere)}, see Other Open Mercato versions.` : ''}`
+      : `The last install test on Open Mercato ${latest.version} failed. It may not work in your app.${worksElsewhere.length ? ` It works on ${listAnd(worksElsewhere)}, see` : ''}`
+    : null
+// the section the warning points to is a link that opens the Install button and the section (review of 28 Oct: the
+// words named a section inside the closed panel)
+const installWarningLink =
+  installWarning && !brokenEverywhere && worksElsewhere.length
+    ? { href: '#install-versions', label: 'Other Open Mercato versions', end: '.' }
     : null
 // the state of the latest version, said once, in the Install card (review of 26 Oct: a pill in the header said it too)
 const installStatus = installVariant === 'steps' && pill.tone !== 'bad' ? pill : null
 const installNotes: { text: string; link?: { href: string; label: string } }[] =
   installVariant === 'steps' || installVariant === 'preset'
     ? [
-        ...(entry.install.needsAllowThirdParty || thirdParty
-          ? [
-              {
-                text: 'Not published by Open Mercato. Review the code before you install it.',
-                ...(entry.links.repo ? { link: { href: entry.links.repo, label: 'Open the repository.' } } : {}),
-              },
-            ]
-          : []),
         ...(entry.replaces.length
           ? [{ text: `Replaces the built-in ${listAnd(entry.replaces.map((r) => r.replace(/^core:/, '')))} module. You cannot enable both.` }]
           : []),
@@ -1121,6 +1154,15 @@ const installNotes: { text: string; link?: { href: string; label: string } }[] =
         ...(preview ? [{ text: 'No stable release yet. Only preview builds are published.' }] : []),
       ]
     : []
+// third-party code is a security signal: said under the Install button, in view while it is closed (review of 28 Oct:
+// the note sat inside the closed panel)
+const installCaution =
+  (installVariant === 'steps' || installVariant === 'preset') && (entry.install.needsAllowThirdParty || thirdParty)
+    ? {
+        text: 'Not published by Open Mercato. Review the code before you install it.',
+        ...(entry.links.repo ? { link: { href: entry.links.repo, label: 'Open the repository.' } } : {}),
+      }
+    : null
 const lineName = (l: (typeof lines)[number]): string =>
   l.source === 'develop'
     ? `Next development build (${shortVersion(l.version)})`
@@ -1249,6 +1291,8 @@ const techBanners =
             steps={installSteps}
             preset={presetInstall}
             warning={installWarning}
+            warningLink={installWarningLink}
+            caution={installCaution}
             status={installStatus}
             stepsFolded={brokenEverywhere}
             notes={installNotes}
@@ -1256,6 +1300,7 @@ const techBanners =
             enterprise={enterpriseInstall}
             others={otherLines}
             othersOpen={!!installWarning && worksElsewhere.length > 0}
+            lead={installLead}
           />
         </div>
 
@@ -1488,8 +1533,8 @@ const techBanners =
                     ) : (
                       <a
                         class="chip chip--line chip--link"
-                        href={`${repoUrl}/blob/main/CONTRIBUTING.md`}
-                        title="Not claimed by its author yet. CONTRIBUTING.md says how to claim a listing."
+                        href={`${repoUrl}/blob/main/CONTRIBUTING.md#add-or-edit-an-entry`}
+                        title="Not claimed by its author yet. See CONTRIBUTING.md to propose an edit."
                       >
                         Unclaimed
                       </a>

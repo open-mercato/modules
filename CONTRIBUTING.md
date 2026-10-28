@@ -1,8 +1,46 @@
-# Contributing
+# Contributing guide
+
+This guide is for people who add or edit a module entry in the catalog. It also covers the rules for text and for the code of this repository.
 
 One file in `modules/` is one entry. A descriptor holds only what an author or a curator decides. Everything measured (versions, anatomy, receipts, levels) is computed by CI and lives on the `data` branch, never in YAML.
 
-## Where the file goes
+## Why contribute
+
+An entry is how a module becomes visible to people and to agents. A good entry says what the module does and when to use it, so the right people find it and the wrong people skip it.
+
+You can add your own module, fix a summary, add screenshots or correct a field. Small pull requests are welcome.
+
+## Quick start
+
+1. Publish your module to npm. `create-mercato-module` turns a module of your app into a package and a GitHub repository. A GitHub-only entry is possible too.
+2. Open the `/submit` page of the site, or write the file by hand. The page checks the package in your browser, builds the descriptor with the same schema as CI and opens GitHub's new-file page with it filled in.
+3. Commit the file and create the pull request. Tick `I maintain this package or have the maintainer's consent`.
+4. Read the summary of the `validate` check. Fix what it lists.
+5. A person reviews and merges.
+
+> **Good to know:**
+>
+> The /submit page needs JavaScript. Without it, add the descriptor by hand at the path from [File structure](#file-structure), or open a [listing request](https://github.com/open-mercato/modules/issues/new?template=listing-request.yml) issue.
+
+## How to contribute
+
+### Pull requests
+
+- Tick `I maintain this package or have the maintainer's consent`. Agents may open a PR; a person merges it.
+- Run `yarn om format modules` before you push. See [Formatting](#formatting).
+- Add screenshot files in the same pull request as the descriptor.
+- A PR that changes a curator field gets a note in the summary.
+
+### Review process
+
+- CI runs `yarn check`, `yarn test` and `yarn om validate`, and writes up to 10 lines per entry in the job summary. There are no bot comments.
+- A person reads the summary and the descriptor, then merges.
+- The nightly install runs only for entries merged to `main`, never for PR content.
+- Phrases that look like instructions to an AI model are flagged for a human reviewer.
+
+## File structure
+
+The path of a descriptor follows its locator. The locator is the key of an entry. Two entries may register the same module ID; the site shows that they compete for the slot.
 
 | Source                       | Locator                                         | File                                                                     |
 | ---------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------ |
@@ -10,7 +48,16 @@ One file in `modules/` is one entry. A descriptor holds only what an author or a
 | unscoped npm package         | `npm:create-mercato-module`                     | `modules/create-mercato-module.yml`                                      |
 | GitHub only (no npm release) | `github:Chmarusso/open-mercato-enrichment-treg` | `modules/github/chmarusso/open-mercato-enrichment-treg.yml` (lower case) |
 
-The locator is the key of an entry. Two entries may register the same module ID; the site shows that they compete for the slot.
+Screenshot files sit next to the descriptor, in a `screenshots/` folder. See [Screenshots](#screenshots).
+
+## Add or edit an entry
+
+1. Work out the path from your locator, as in the table above. For an edit, open the file that exists.
+2. Fill the author fields (A) from [Fields](#fields). Leave curator fields (K) alone.
+3. Write the texts with the [Style guide](#style-guide).
+4. Add screenshots if you have them (optional).
+5. Run `yarn om format modules`.
+6. Open the pull request.
 
 ## Fields
 
@@ -31,7 +78,7 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 | `providers`                       | A   | up to 20 `{ name, label }`; searchable                                                         |
 | `extends`                         | A   | locator of the host package, only for `kind: provider`                                         |
 | `links.docs`, `.support`, `.demo` | A   | `https://` URLs (`support` may be `mailto:`)                                                   |
-| `screenshots`                     | A   | optional, up to 6 `{ src, alt }`; see Screenshots below                                        |
+| `screenshots`                     | A   | optional, up to 6 `{ src, alt }`; see [Screenshots](#screenshots)                              |
 | `pricing`                         | A   | `free` (default), `paid` or `contact`                                                          |
 | `smoke.paths`                     | A   | up to 5 extra GET paths under `/backend/` or `/api/` for the nightly smoke test                |
 | `scriptsRequired.reason`          | A   | explicit reason when the package needs install scripts                                         |
@@ -45,7 +92,13 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 | `featured`                        | K   | featured section only; never changes ranking                                                   |
 | `aliases`                         | K   | extra search phrases                                                                           |
 
-Key order in the file follows this table. `yarn om format` sorts keys and formats the file with Prettier; the autofix job only formats. While the repository is private the autofix job does not run, so run `yarn om format modules` before you push: the `checks` job fails on a file in another form, and `validate` warns about it in its summary.
+### Formatting
+
+Key order in the file follows the table above. `yarn om format` sorts keys and formats the file with Prettier; the autofix job only formats.
+
+> **Good to know:**
+>
+> While the repository is private the autofix job does not run, so run `yarn om format modules` before you push. The `checks` job fails on a file in another form, and `validate` warns about it in its summary.
 
 ## Screenshots
 
@@ -64,20 +117,22 @@ screenshots:
 - `alt` says what the image shows: plain text, 10 to 120 characters.
 - The site copies a hosted file to `shots/<folder>/<name>`; `modules.json` and `/m/<path>.json` carry `screenshots` with a `src` the site loads as it is, and the Markdown card lists absolute links.
 
-## Text rules
+## Style guide
 
-- English, short, one idea per sentence, ending with a period. No exclamation marks.
+Texts for people are English and short. Evidence over adjectives: say what the module does, not how good it is.
+
+- One idea per sentence, ending with a period. No exclamation marks.
 - Plain text only in `summary`, `whenToUse`, `whenNotToUse`, provider labels, aliases and screenshot `alt`: no URLs, no markdown, no HTML, no backticks.
 - No long dashes: the characters U+2014 (em dash) and U+2013 (en dash) are banned in every text of this repository, including docs, YAML and commit messages. Use a hyphen or rewrite the sentence. `yarn om check-text` enforces it in CI.
-- Evidence over adjectives: say what the module does, not how good it is.
-- Phrases that look like instructions to an AI model are flagged for a human reviewer.
-
-## Pull requests
-
-- Tick `I maintain this package or have the maintainer's consent`. Agents may open a PR; a person merges it.
-- CI runs `yarn check`, `yarn test` and `yarn om validate`, and writes up to 10 lines per entry in the job summary. There are no bot comments.
-- The nightly install runs only for entries merged to `main`, never for PR content.
 
 ## Working on the code
+
+For changes to the emitter, the schemas or the site, not for adding an entry. Read `AGENTS.md` first.
+
+```bash
+yarn install
+yarn check
+yarn test
+```
 
 Node 24 runs TypeScript directly (type stripping), so only erasable syntax is allowed: relative imports with the `.ts` extension, `import type` for types, no `enum`, `namespace`, parameter properties or decorators. Exact dependency versions, no new dependencies without a change to the specification.

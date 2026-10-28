@@ -8,7 +8,7 @@ import type { BuiltInModule } from '../schema/published/builtin.ts'
 import type { AnatomySummary, IndexEntry } from '../schema/published/modules.ts'
 import type { BuiltInCard, ModuleCard, SearchModulesInput, SearchModulesOutput } from '../schema/tools.ts'
 import { latestLine, resolveLine, type LineInfo } from './lines.ts'
-import { builtInEnableCommand, builtInPresetText, installInfo } from './plan.ts'
+import { builtInEnableCommand, builtInPresetText, installInfo, isAdapter } from './plan.ts'
 import {
   emptyPresetVersion,
   INSTALLABLE_META_KEY,
@@ -196,6 +196,11 @@ export interface ModuleMeta {
    * install version (`emptyPresetVersion`: checkout 0.8.0 on 0.8, review of 24 Oct); absent for none.
    */
   emptyVersions?: Record<string, string>
+  /**
+   * An adapter's catalog entries it requires (npm locators): the libraries among them join its `yarn add` on other
+   * lines too (sandbox test of 28 Oct); absent for every other entry.
+   */
+  peers?: string[]
   featured: boolean
   example: boolean
   listed: boolean
@@ -278,6 +283,12 @@ function emptyVersionsField(e: IndexEntry): Pick<ModuleMeta, 'emptyVersions'> {
   return Object.keys(out).length ? { emptyVersions: out } : {}
 }
 
+function peersField(e: IndexEntry): Pick<ModuleMeta, 'peers'> {
+  if (!isAdapter(e)) return {}
+  const out = e.requires.flatMap((r) => (r.resolvesTo?.startsWith('npm:') ? [r.resolvesTo] : []))
+  return out.length ? { peers: out } : {}
+}
+
 export function moduleMeta(e: IndexEntry): ModuleMeta {
   // statuses of the versions a fresh app installs: a receipt of another version is not the line's verdict (review r6)
   const lines: ModuleMeta['lines'] = {}
@@ -312,6 +323,7 @@ export function moduleMeta(e: IndexEntry): ModuleMeta {
     ...(e.compat.inPresets?.length ? { inPresets: e.compat.inPresets } : {}),
     ...(e.compat.inEmptyPreset?.length ? { inEmptyPreset: e.compat.inEmptyPreset } : {}),
     ...emptyVersionsField(e),
+    ...peersField(e),
     featured: e.featured,
     example: e.tags.includes('example'),
     listed: e.listed,
@@ -544,7 +556,12 @@ function statusOn(m: ModuleMeta, line: string): CellStatus {
 }
 
 /** The command of an app that does not register the package yet (an app from the empty preset), on a line. */
-function commandFor(m: ModuleMeta, line: string | null, latest: string | null): string {
+function commandFor(
+  m: ModuleMeta,
+  line: string | null,
+  latest: string | null,
+  metas: Readonly<Record<string, ModuleMeta>> = {},
+): string {
   if (line === null || line === latest) return m.install
   // where the empty preset registers it too (events), `yarn add`, never `module add` (D10)
   const both = !!m.npm && (m.inEmptyPreset ?? []).includes(line)
@@ -558,10 +575,23 @@ function commandFor(m: ModuleMeta, line: string | null, latest: string | null): 
       moduleFlag: m.moduleFlag,
       kind: m.kind,
       tags: m.tags,
+      requires: (m.peers ?? []).map((l) => ({ raw: l.slice(4), resolvesTo: l })),
     },
     line,
     both ? m.moduleIds.map((id) => ({ id, from: m.npm as string })) : null,
     m.emptyVersions?.[line],
+    (l) => {
+      const p = metas[l]
+      return p
+        ? {
+            locator: p.locator,
+            npm: p.npm,
+            kind: p.kind,
+            version: { ...p.version, publishedAt: null, integrity: null },
+            ...(p.installable ? { installableVersions: p.installable } : {}),
+          }
+        : null
+    },
   ).cli
 }
 
@@ -576,8 +606,10 @@ export function installFields(
   m: ModuleMeta,
   line: string | null,
   latest: string | null,
+  /** The search index's entries, for the libraries an adapter peers on (`peerLibrarySpecs`). */
+  metas: Readonly<Record<string, ModuleMeta>> = {},
 ): Pick<ModuleCard, 'install' | 'presetNote' | 'installEmptyPreset'> {
-  const command = commandFor(m, line, latest)
+  const command = commandFor(m, line, latest, metas)
   if (line === null || !(m.inPresets ?? []).includes(line)) return { install: command }
   const empty = (m.inEmptyPreset ?? []).includes(line) ? null : command
   return {
@@ -694,7 +726,7 @@ function search(searcher: Searcher, rawInput: SearchModulesInput, maxLimit: numb
     status: line ? statusOn(m, line) : null,
     agentPolicy: line ? (m.policy[line] ?? null) : null,
     installableFrom: m.version.installableFrom,
-    ...installFields(m, line, latest),
+    ...installFields(m, line, latest, data.modules),
     matchedOn: chips,
     card: absolute(data.site, m.page),
   })

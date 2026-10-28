@@ -1,0 +1,29 @@
+---
+// The third-party caution of the Install card (review of 28 Oct): said under the closed button and, while the steps
+// are open, on top of them, before any command, never under the whole panel. `where` names the copy; CSS shows one.
+import Icon from '../icons/Icon.astro'
+
+interface Props {
+  caution: { text: string; link?: { href: string; label: string } }
+  where?: 'in' | 'out'
+}
+const { caution, where } = Astro.props
+const external = (h: string): boolean => /^https?:/.test(h)
+---
+
+<p class:list={['inst__status', 'inst__caution', where && `inst__caution--${where}`]}>
+  <Icon name="info" size={16} />{' '}
+  <span>
+    {caution.text}
+    {
+      caution.link && (
+        <>
+          {' '}
+          <a class="inst__link" href={caution.link.href} rel={external(caution.link.href) ? 'noopener noreferrer' : undefined}>
+            {caution.link.label}
+          </a>
+        </>
+      )
+    }
+  </span>
+</p>
