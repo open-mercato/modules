@@ -19,7 +19,7 @@ A person who builds or runs an Open Mercato app and wants a feature. They should
 **Module page**
 
 1. Breadcrumb, icon, title, author, package name with copy, summary, a quiet meta row.
-2. Install card: the state in words and the numbered steps with a copyable command. This is the most important block after the title.
+2. Install: a green Install button at the top of the right column (asked by the CEO on 28 Oct). It opens the numbered steps with a copyable command (`yarn mercato module add`, or `create-mercato-module install`, then `yarn generate`); the state in words and the third-party caution stay visible under the closed button. This is the most important block after the title.
 3. Screenshots (optional; 17 official modules have them, 1440x900 WebP).
 4. When to use, When not to use, Works with (providers), What it adds.
 5. The author's README, folded after the first section.
@@ -37,9 +37,9 @@ A person who builds or runs an Open Mercato app and wants a feature. They should
 
 - Card density, icon style (category icons are interim line icons), the place of the compatibility hint.
 - Whether cards show a screenshot thumbnail once more modules have screenshots.
-- The Install card layout on phones, and how long commands wrap.
+- The Install button and its open panel on phones (today the button is full width above the page body), and how long commands wrap.
 - The hero: today it is plain; it may get an illustration if it does not push the grid below the first screen on a laptop.
 
 ## Where to look
 
-Preview: the sandbox link the team already has. Code: `site/src/pages/index.astro`, `site/src/components/catalog/`, `site/src/pages/m/[...path].astro`, `site/src/components/module/`.
+Preview: the sandbox link the team already has, later https://modules.openmercato.com. The guide for module authors, `CONTRIBUTING.md`, follows the structure of the Next.js docs contribution guide. Code: `site/src/pages/index.astro`, `site/src/components/catalog/`, `site/src/pages/m/[...path].astro`, `site/src/components/module/`.
