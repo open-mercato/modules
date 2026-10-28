@@ -1,7 +1,7 @@
 {
   "locator": "npm:@fastwhitecat/integration-ksef-direct",
   "version": "0.1.8",
-  "computedAt": "2026-10-28T16:14:26Z",
+  "computedAt": "2026-10-28T16:27:35Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner FastWhiteCat is the GitHub org of certified partner Fast White Cat (policy/community.yml).",
@@ -91,7 +91,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): not judged on 28 Oct."
+      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 28 Oct."
     },
     {
       "id": "VER-2",
@@ -126,7 +126,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): not judged on 28 Oct."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 28 Oct."
         }
       ],
       "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
@@ -140,7 +140,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): not judged on 28 Oct."
+          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): verified on 28 Oct."
         }
       ],
       "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
@@ -154,7 +154,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): not judged on 28 Oct."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): verified on 28 Oct."
         }
       ],
       "consentText": "Install @fastwhitecat/integration-ksef-direct@0.1.8"
