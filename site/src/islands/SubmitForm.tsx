@@ -825,7 +825,10 @@ function issueText(field: string, message: string): string {
 }
 
 const YAML_RESERVED = /^(?:true|True|TRUE|false|False|FALSE|null|Null|NULL|~)$/ // YAML 1.2 core schema
-const YAML_NUMBER = /^[-+]?(?:\.?\d|0x|0o|\.inf|\.nan)/i
+// a whole scalar the YAML 1.2 core schema reads as a number (the int and float tests of the yaml library), so `2fa`
+// and `1.2.3` stay plain as `yarn om format` writes them while `123`, `1e3` or `0x1f` are quoted
+const YAML_NUMBER =
+  /^(?:[-+]?(?:[0-9]+|\.[0-9]+|[0-9]+\.[0-9]*)(?:[eE][-+]?[0-9]+)?|0o[0-7]+|0x[0-9a-fA-F]+|[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/
 
 /**
  * Whether a string can stay a plain YAML scalar. Mirrors what `yarn om format` keeps plain (the yaml library
