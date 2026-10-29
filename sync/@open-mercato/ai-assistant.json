@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/ai-assistant",
-  "checkedAt": "2026-10-29T13:10:05Z",
+  "checkedAt": "2026-10-29T22:48:35Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/ai-assistant",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7701.1.87b1ad4224"
+      "develop": "0.10.1-develop.7721.1.b5c4a00a68"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -55,9 +55,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-29T13:09:55Z",
+    "pushedAt": "2026-10-29T22:45:34Z",
     "defaultBranch": "main",
-    "stars": 1889,
+    "stars": 1890,
     "license": "MIT",
     "topics": [
       "crm",
@@ -245,6 +245,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 49183,
+  "downloads30d": 49635,
   "errors": []
 }

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-resend",
   "version": "0.9.0",
-  "computedAt": "2026-10-29T13:11:45Z",
+  "computedAt": "2026-10-29T22:50:25Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -165,7 +165,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.7701.1.87b1ad4224"
+    "next": "0.10.1-develop.7721.1.b5c4a00a68"
   },
   "verdictPreset": "classic"
 }
