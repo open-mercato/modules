@@ -13,15 +13,59 @@ import {
   type ApiJob,
   type ApiRun,
   type BundleAttempt,
+  type CellOutcome,
   type NightBundle,
 } from './from-actions.ts'
-import type { Matrix } from './matrix.ts'
-import { retryKeys, type History } from './state.ts'
+import { PRESET_IDS } from '../core/lines.ts'
+import type { Matrix, MatrixCell } from './matrix.ts'
+import { MINUTES_BY_PRESET, PARALLEL } from './plan.ts'
+import { rawResult, retryKeys, type History } from './state.ts'
 
 export const NIGHTLY_WORKFLOW = 'nightly.yml'
-/** collect waits at most this long for the retry run (spec 5.1: up to 40 min). */
+/** collect waits at least this long for the retry run (spec 5.1: up to 40 min for a retry of one wave). */
 export const RETRY_WAIT_MS = 40 * 60 * 1000
+/** ... and at most this long for a larger one: collect.yml `timeout-minutes: 150` keeps 30 minutes for the rest. */
+export const RETRY_WAIT_MAX_MS = 120 * 60 * 1000
+/** The plan job of the retry and the runner queue before its first cell starts. */
+export const RETRY_START_MIN = 10
 export const POLL_MS = 30 * 1000
+
+/** Minutes a retry of these cells takes: its start, then waves of PARALLEL cells per preset (plan.ts weights). */
+export function retryMinutes(cells: readonly Pick<MatrixCell, 'preset'>[]): number {
+  return PRESET_IDS.reduce(
+    (min, p) => min + Math.ceil(cells.filter((c) => c.preset === p).length / PARALLEL) * MINUTES_BY_PRESET[p],
+    RETRY_START_MIN,
+  )
+}
+
+/**
+ * The retry that fits the wait (audit C18: a retry of 7 classic cells outlasted the fixed 40 minutes and was never
+ * collected): the cells go in by baseline, then infra, then module-fail, in the order of the keys, while the retry
+ * still ends within RETRY_WAIT_MAX_MS; the rest is left out and named in the notes. `waitMs` is how long collect waits.
+ */
+export function retryPlan(
+  cells: readonly MatrixCell[],
+  outcomes: readonly CellOutcome[],
+  keys: readonly string[],
+): { keys: string[]; left: string[]; waitMs: number } {
+  const cellOf = new Map(cells.map((c) => [c.key, c]))
+  const rank = (k: string): number => {
+    const c = cellOf.get(k)
+    if (c?.baseline) return 0
+    const o = outcomes.find((x) => x.key === k)
+    return c && o && rawResult(o, false).klass === 'infra' ? 1 : 2
+  }
+  const taken: MatrixCell[] = []
+  const chosen = new Set<string>()
+  for (const k of [...keys].sort((a, b) => rank(a) - rank(b))) {
+    const c = cellOf.get(k)
+    if (!c || retryMinutes([...taken, c]) * 60_000 > RETRY_WAIT_MAX_MS) continue
+    taken.push(c)
+    chosen.add(k)
+  }
+  const waitMs = Math.min(RETRY_WAIT_MAX_MS, Math.max(RETRY_WAIT_MS, retryMinutes(taken) * 60_000))
+  return { keys: keys.filter((k) => chosen.has(k)), left: keys.filter((k) => !chosen.has(k)), waitMs }
+}
 
 /** Inputs of the retry dispatch; a contract test checks they are declared in nightly.yml `on.workflow_dispatch.inputs`. */
 export function retryDispatchInputs(keys: readonly string[], nightId: number): Record<string, string> {
@@ -86,9 +130,21 @@ export async function gatherFromActions(runId: number, deps: GatherDeps): Promis
 
   const first = await attemptOf(api, night, 1, join(deps.artifactsRoot, String(night.id)), null)
   const matrix = first.matrix
-  const keys = retryKeys(matrix.cells, first.attempt.outcomes, deps.history)
+  const planned = retryPlan(
+    matrix.cells,
+    first.attempt.outcomes,
+    retryKeys(matrix.cells, first.attempt.outcomes, deps.history),
+  )
+  const keys = planned.keys
   const attempts: BundleAttempt[] = [first.attempt]
   const notes: string[] = []
+  if (planned.left.length > 0) {
+    const labels = planned.left.map((k) => matrix.cells.find((c) => c.key === k)?.label ?? k)
+    notes.push(
+      `retry left out ${planned.left.length} cell(s) that do not fit the wait: ${labels.join(', ')}; those cells stay unconfirmed`,
+    )
+    log(notes[notes.length - 1] as string)
+  }
   if (keys.length > 0) {
     const title = runTitle(2, night.id)
     const findRetry = async (): Promise<ApiRun | null> => {
@@ -105,7 +161,7 @@ export async function gatherFromActions(runId: number, deps: GatherDeps): Promis
       log(`dispatching retry of ${keys.length} cell(s) for night ${night.id}`)
       await api.dispatch(NIGHTLY_WORKFLOW, 'main', retryDispatchInputs(keys, night.id))
     }
-    const deadline = now() + RETRY_WAIT_MS
+    const deadline = now() + planned.waitMs
     while (deps.waitRetry && now() < deadline) {
       retry = retry ? await api.getRun(retry.id) : await findRetry()
       if (retry && retry.status === 'completed') break
