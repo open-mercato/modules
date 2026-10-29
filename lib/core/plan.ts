@@ -201,6 +201,35 @@ function listOr(items: readonly string[]): string {
   return items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} or ${items[items.length - 1]}`
 }
 
+/**
+ * Modules outside the enterprise package that src/modules.ts of a new app (the classic preset) registers behind an env
+ * flag (create-mercato-app 0.8.0 and 0.9.0 templates: `if (parseBooleanWithDefault(process.env.OM_ENABLE_STORAGE_S3,
+ * false)) enabledModules.push({ id: 'storage_s3', ... })`). The preset lists leave such a block out, the template's
+ * package.json does not have the package, and `module add` adds a second entry with no condition (audit of 29 Oct, C01,
+ * open-mercato#8112). test/core/preset-flags.test.ts keeps it in step with the templates.
+ */
+export const PRESET_FLAGS: readonly { env: string; id: string; from: string }[] = [
+  { env: 'OM_ENABLE_STORAGE_S3', id: 'storage_s3', from: '@open-mercato/storage-s3' },
+]
+
+/** The env flag a new app registers every module of the entry behind, or null. */
+export function presetFlagOf(e: Pick<IndexEntry, 'npm' | 'moduleIds'>): (typeof PRESET_FLAGS)[number] | null {
+  if (!e.npm || e.moduleIds.length !== 1) return null
+  return PRESET_FLAGS.find((f) => f.from === e.npm && f.id === e.moduleIds[0]) ?? null
+}
+
+/** The .env line that turns such a module on. */
+export const presetFlagStep = (f: { env: string }): string => `echo ${f.env}=true >> .env`
+
+/**
+ * The command of a new app (the classic preset) for a module it registers behind a flag: `yarn add` of the package,
+ * then the flag, never `module add`. Null for any other entry.
+ */
+export function presetFlagCommand(e: Pick<IndexEntry, 'npm' | 'moduleIds'>, version: string | null): string | null {
+  const f = presetFlagOf(e)
+  return f && e.npm ? `yarn add ${version ? `${e.npm}@${version}` : e.npm} && ${presetFlagStep(f)}` : null
+}
+
 /** True when every module of the entry is already registered from this package (an app's src/modules.ts, D10). */
 export function inPreset(
   e: Pick<IndexEntry, 'npm' | 'moduleIds'>,
@@ -488,7 +517,16 @@ export function planInstall(input: PlanInstallInput, ctx: PlanContext): InstallP
       // an app from the empty preset installs the version a new app ships where the other one broke there (checkout
       // 0.8.0 on 0.8, not 0.9.0, review of 24 Oct)
       const v = isolation ? emptyPresetVersion(e, line) : installVersion(e, line)
-      commands.push(installInfo({ ...e, moduleFlag: moduleFlagOf(e) }, line, mods, v).cli)
+      // a module a new app registers behind an env flag: the package and the flag, as the template means it (audit of
+      // 29 Oct, C01); an app from the empty preset has no such block, so module add, and the flag too
+      const flag = appGiven ? null : presetFlagOf(e)
+      if (flag && !isolation && e.npm) {
+        commands.push(`yarn add ${v ? `${e.npm}@${v}` : e.npm}`)
+        notes.push(
+          `A new app registers ${flag.id} in src/modules.ts behind ${flag.env}, so yarn add and the flag turn it on. yarn mercato module add would register it a second time.`,
+        )
+      } else commands.push(installInfo({ ...e, moduleFlag: moduleFlagOf(e) }, line, mods, v).cli)
+      if (flag) commands.push(presetFlagStep(flag))
       installing.push(e)
       // the empty preset's own signal right after its command, when that very version broke there (review of 24 Oct)
       const caution = isolation ? emptyCommandCaution(e, line, v) : null

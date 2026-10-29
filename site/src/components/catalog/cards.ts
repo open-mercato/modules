@@ -1,6 +1,7 @@
 // The module browser's model (home and /c/*): one card per entry of browserSet plus the hidden ones (on hold,
 // examples), the sidebar's categories and the `Made by` counts. Every number is counted here from the emitted data,
 // over the same cards, so the hero, the sidebar, the filter and the grid agree (review of 26 Oct: 46, 31 + 7 and 40).
+import { presetFlagOf } from '../../../../lib/core/plan.ts'
 import type { IndexEntry, Line } from '../../../../lib/schema/index.ts'
 import {
   MADE_BY,
@@ -339,8 +340,8 @@ export const needsThirdPartyFlag = (entries: readonly Pick<IndexEntry, 'install'
 
 /**
  * One real install command for `How to add a module`: from the list in recommended order, a module a new app of the
- * latest line does not have yet (an `Included in new apps` module has nothing to install) and that is verified there,
- * official first. Null when the list has none.
+ * latest line does not have yet (an `Included in new apps` module has nothing to install, one it registers behind an
+ * env flag is turned on another way) and that is verified there, official first. Null when the list has none.
  */
 export function installExample(
   entries: readonly IndexEntry[],
@@ -352,6 +353,8 @@ export function installExample(
   const list = recommended(registryDefault(entries), key).filter(
     (e) =>
       !e.enterprise &&
+      // a new app registers storage_s3 behind a flag, where module add would add it twice (audit of 29 Oct, C07)
+      !presetFlagOf(e) &&
       e.install.cli.startsWith('yarn mercato module add') &&
       !(key && e.compat.inPresets?.includes(key)),
   )

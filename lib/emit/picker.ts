@@ -5,7 +5,8 @@
 // The picker belongs to create-mercato-app, which makes the classic preset by default (decision of 24 Oct): the
 // commands per line are those of a new app (the classic preset), and a line whose new app already registers the module
 // has no command (`inPresets` names it), as the site and the tools say `Nothing to install` there.
-import { installInfo } from '../core/plan.ts'
+import { installInfo, presetFlagCommand } from '../core/plan.ts'
+import { installVersion } from '../core/policy.ts'
 import { ascendingKeys, latestLine, registeredIn, type LineInfo } from '../core/lines.ts'
 import { collisionLintText } from '../core/finding.ts'
 import { INSTALLABLE_META_KEY, presetInstallText } from '../core/policy.ts'
@@ -67,7 +68,11 @@ export function buildPicker(
         _meta: { [INSTALLABLE_META_KEY]: e._meta?.[INSTALLABLE_META_KEY] },
         moduleFlag: several ? id : e.install.moduleFlag,
       }
-      const install = several ? installInfo(target, latest?.key ?? null, preset).cli : e.install.cli
+      // a module a new app registers behind an env flag (storage_s3): the package and the flag, never module add, which
+      // registers it a second time (audit of 29 Oct, C01)
+      const flagged = (key: string | null): string | null => presetFlagCommand(e, installVersion(e, key))
+      const install =
+        flagged(latest?.key ?? null) ?? (several ? installInfo(target, latest?.key ?? null, preset).cli : e.install.cli)
       // lines whose new app already registers this module ID from this package: nothing to propose there
       const inPresets = ascendingKeys(
         lines.filter((l) => registeredIn(presets, l.key, 'classic', e.npm, [id])).map((l) => l.key),
@@ -77,7 +82,7 @@ export function buildPicker(
       // version that only the latest line verified; the command of a new app (classic), none where it has the module
       const installByLine: Record<string, string> = {}
       for (const key of e.compat.verifiedOn)
-        if (!inPresets.includes(key)) installByLine[key] = installInfo(target, key, classic(key)).cli
+        if (!inPresets.includes(key)) installByLine[key] = flagged(key) ?? installInfo(target, key, classic(key)).cli
       modules.push({
         id,
         from: e.npm,
