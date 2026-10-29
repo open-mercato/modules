@@ -22,6 +22,11 @@ export interface InstallLine {
   step?: string | null
   /** Exact command for this line, or null when nothing may be installed (hold, not installable, policy refuse). */
   command: string | null
+  /**
+   * Edits by hand the line's plan makes before the command (the removal of a built-in module the entry replaces), as
+   * sentences; never joined into the command (audit of 29 Oct, R3). Absent or empty: none.
+   */
+  manual?: string[]
   /** Policy `refuse` on an installable package: the command, shown only behind "Show the command anyway". */
   anyway: string | null
   /**
@@ -114,6 +119,18 @@ export interface InstallBoxProps {
   children?: ComponentChildren
   /** Words for the reason codes (lib/core/policy.ts REASON_LABELS), passed in so the island bundles no policy code. */
   reasonLabels?: Record<string, string>
+}
+
+/** The edits by hand of a line's plan, before its command (audit of 29 Oct, R3: only the main card had them). */
+function ManualSteps({ steps }: { steps: readonly string[] | undefined }) {
+  if (!steps || steps.length === 0) return null
+  return (
+    <ul class="ib__manual" role="list">
+      {steps.map((t) => (
+        <li>{t}</li>
+      ))}
+    </ul>
+  )
 }
 
 /** A sentence with the given identifiers in mono (`events`, `src/modules.ts`), the rest plain text. */
@@ -456,6 +473,7 @@ export default function InstallBox({
                 {line.emptyCommand && line.command && (
                   <>
                     <p class="ib__shipped-t">{line.emptyLead}</p>
+                    <ManualSteps steps={line.manual} />
                     <CommandChipView
                       command={line.emptyCommand}
                       label="Copy the command for an app from the empty preset"
@@ -476,6 +494,7 @@ export default function InstallBox({
                       <Icon name="chevron-down" size={14} />
                     </summary>
                     <p class="ib__unverified">{line.emptyLead}</p>
+                    <ManualSteps steps={line.manual} />
                     <CommandChipView command={line.anyway} label="Copy the command for an app from the empty preset" />
                     {line.emptyNote && <p class="ib__unverified">{nbspDates(line.emptyNote)}</p>}
                   </details>
@@ -483,6 +502,7 @@ export default function InstallBox({
               </div>
             ) : line.command ? (
               <>
+                <ManualSteps steps={line.manual} />
                 <CommandChipView command={line.command} label="Copy install command" />
                 {line.note && (
                   <p class={line.noteCalm ? 'ib__unverified ib__unverified--calm' : 'ib__unverified'}>
@@ -508,6 +528,7 @@ export default function InstallBox({
                     <span>Show the command anyway</span>
                     <Icon name="chevron-down" size={14} />
                   </summary>
+                  <ManualSteps steps={line.manual} />
                   <CommandChipView command={line.anyway} label="Copy install command" />
                 </details>
               </>
@@ -520,6 +541,7 @@ export default function InstallBox({
                     <Icon name="chevron-down" size={14} />
                   </summary>
                   <p class="ib__unverified">Preview build, not tested on {line.key}.</p>
+                  <ManualSteps steps={line.manual} />
                   <CommandChipView command={line.previewBuild} label="Copy preview build command" />
                 </details>
               </>
