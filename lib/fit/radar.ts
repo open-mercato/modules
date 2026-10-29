@@ -1,6 +1,7 @@
 // Release radar (spec 1.1 pkt 3, 3.7 of K1, 4.6 `Radar`, 7.7 E): what the `next` snapshot does to the modules
 // outside the `@open-mercato` scope. Three layers: static breaks on next, signature drift against latest,
 // receipts on next; plus the load-bearing APIs from the surface. Pure function of the data (no network).
+import { decisiveReceipt, MAIN_PRESET, receiptPreset, sortReceipts } from '../core/lines.ts'
 import type { FitCell, Radar, Receipt, Step, Surface } from '../schema/index.ts'
 import { symbolKey } from './drift.ts'
 import type { MissingRef } from './static.ts'
@@ -8,6 +9,8 @@ import { loadBearing } from './surface.ts'
 
 export interface RadarModule {
   locator: string
+  /** Version the fit cells were computed for; only its receipts are read. Absent: the newest version tested on next. */
+  version?: string | null
   /** Fit of the current version against `next`. */
   next: FitCell
   /** Fit of the same version against `latest` (to tell a removal on next from an old miss). */
@@ -20,14 +23,42 @@ export function missingKey(m: MissingRef): string {
   return m.subpath === '.' ? m.pkg : `${m.pkg}/${m.subpath}`
 }
 
-/** Latest receipt per module on one line (by `run.at`, then attempt). */
-export function latestReceipts(receipts: readonly Receipt[], line: string): Map<string, Receipt> {
+/** Which receipts the radar reads on its line: one snapshot and the module versions it looks at. */
+export interface ReceiptScope {
+  /** Open Mercato version of the snapshot (`om.version`). */
+  om: string
+  /** Version per locator; a locator not listed is left out, null takes the newest version tested. */
+  versions: ReadonlyMap<string, string | null>
+}
+
+/**
+ * The receipt per module that judges it on `line`, picked as `versionStatus` picks it: realistic mode and the
+ * classic preset only (the main verdict), the last receipt when it judged the module, else the decisive one. With a
+ * scope, only receipts of that snapshot and of the listed module versions count, so an older snapshot, an early-mode
+ * or empty-preset receipt or an outdated version never stands for a module under a newer `next` (audit R8).
+ */
+export function latestReceipts(
+  receipts: readonly Receipt[],
+  line: string,
+  scope: ReceiptScope | null = null,
+): Map<string, Receipt> {
+  const by = new Map<string, Receipt[]>()
+  for (const r of sortReceipts(receipts)) {
+    if (!r.module || r.om.line !== line || r.harness.mode !== 'realistic' || receiptPreset(r) !== MAIN_PRESET) continue
+    if (scope && (r.om.version !== scope.om || !scope.versions.has(r.module.locator))) continue
+    const want = scope?.versions.get(r.module.locator) ?? null
+    if (want !== null && r.module.version !== want) continue
+    by.set(r.module.locator, [...(by.get(r.module.locator) ?? []), r])
+  }
   const out = new Map<string, Receipt>()
-  for (const r of receipts) {
-    if (!r.module || r.om.line !== line) continue
-    const prev = out.get(r.module.locator)
-    const newer = !prev || r.run.at > prev.run.at || (r.run.at === prev.run.at && r.run.attempt >= prev.run.attempt)
-    if (newer) out.set(r.module.locator, r)
+  for (const [locator, all] of by) {
+    // without a named version: the newest version tested on the line
+    const version = scope?.versions.get(locator) ?? all.at(-1)?.module?.version
+    const list = all.filter((r) => r.module?.version === version)
+    const last = list.at(-1)
+    if (!last) continue
+    const judged = last.result.status === 'verified' || last.result.status === 'broken'
+    out.set(locator, judged ? last : (decisiveReceipt(list, line, version) ?? last))
   }
   return out
 }
@@ -85,7 +116,8 @@ export function buildRadar(args: {
   const changedApis = [...changed.entries()]
     .map(([symbol, e]) => ({ symbol, change: e.change, modules: [...e.modules].sort() }))
     .sort((a, b) => b.modules.length - a.modules.length || a.symbol.localeCompare(b.symbol))
-  const onNext = latestReceipts(args.receipts, 'next')
+  const versions = new Map(args.modules.map((m) => [m.locator, m.version ?? null]))
+  const onNext = latestReceipts(args.receipts, 'next', { om: args.next, versions })
   const statuses = [...onNext.values()].map((r) => r.result.status)
   const receiptsOnNext = {
     verified: statuses.filter((s) => s === 'verified').length,
