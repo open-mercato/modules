@@ -8,7 +8,7 @@ import type { BuiltInModule } from '../schema/published/builtin.ts'
 import type { AnatomySummary, IndexEntry } from '../schema/published/modules.ts'
 import type { BuiltInCard, ModuleCard, SearchModulesInput, SearchModulesOutput } from '../schema/tools.ts'
 import { latestLine, resolveLine, type LineInfo } from './lines.ts'
-import { builtInEnableCommand, builtInPresetText, installInfo, isAdapter } from './plan.ts'
+import { builtInEnableCommand, builtInPresetText, isAdapter, newAppInstallInfo } from './plan.ts'
 import {
   emptyPresetVersion,
   INSTALLABLE_META_KEY,
@@ -555,7 +555,10 @@ function statusOn(m: ModuleMeta, line: string): CellStatus {
   return m.lines[line]?.status ?? 'untested'
 }
 
-/** The command of an app that does not register the package yet (an app from the empty preset), on a line. */
+/**
+ * The command of an app that does not register the package yet (an app from the empty preset), on a line; for a module
+ * a new app registers behind an env flag, the plan of a new app (`newAppInstallInfo`, audit of 29 Oct, C01).
+ */
 function commandFor(
   m: ModuleMeta,
   line: string | null,
@@ -565,7 +568,7 @@ function commandFor(
   if (line === null || line === latest) return m.install
   // where the empty preset registers it too (events), `yarn add`, never `module add` (D10)
   const both = !!m.npm && (m.inEmptyPreset ?? []).includes(line)
-  return installInfo(
+  return newAppInstallInfo(
     {
       npm: m.npm,
       locator: m.locator,

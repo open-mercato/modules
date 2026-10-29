@@ -3,7 +3,7 @@
 import { anatomyNote, NOT_MEASURED_TEXT } from '../core/entry.ts'
 import { ascendingKeys, ascendingLines, latestLine, type LineInfo } from '../core/lines.ts'
 import { collisionConflictItems, hostDuplicateFindings, hostDuplicateText } from '../core/finding.ts'
-import { numberedSteps, planStepsText } from '../core/plan.ts'
+import { numberedSteps, planStepsText, presetFlagEmptyCommand } from '../core/plan.ts'
 import {
   builtForText,
   claimLabel,
@@ -337,6 +337,7 @@ export function moduleCard(i: CardInput): string {
   // the version a new app has on the latest line, as in check_compat and /compat (review of 24 Oct)
   const version = lineVersion(e, lk)
   const policies = Object.fromEntries(i.lines.map((l) => [l.key, e.agentPolicy[l.key]?.decision ?? 'ask']))
+  const flagEmpty = presetFlagEmptyCommand({ ...e, moduleFlag: e.install.moduleFlag }, emptyPresetVersion(e, lk))
   const head = [
     '---',
     `locator: ${yamlScalar(e.locator)}`,
@@ -352,6 +353,9 @@ export function moduleCard(i: CardInput): string {
     // gave a command while the plan below said there is no installable version; the page hides it behind a toggle)
     `install: ${yamlScalar(presetOn(e, lk) || version === null ? null : e.install.cli)}`,
     ...(presetOn(e, lk) && !emptyPresetOn(e, lk) ? [`install_empty_preset: ${yamlScalar(e.install.cli)}`] : []),
+    // a module a new app registers behind an env flag: `install` is the plan of a new app, the empty preset's command
+    // (module add and the flag) in the same key (audit of 29 Oct, C01)
+    ...(flagEmpty && version !== null ? [`install_empty_preset: ${yamlScalar(flagEmpty)}`] : []),
     `installable_from: ${yamlScalar(e.version.installableFrom)}`,
     `data_version: ${yamlScalar(i.dataVersion)}`,
     '---',
