@@ -76,7 +76,7 @@ const ANY = 'any' as const
 export const INFRA_RE =
   /ENOSPC|EAI_AGAIN|ETIMEDOUT|ECONNRESET|npm ERR! code E5\d\d|503 Service Unavailable|The operation was canceled/
 export const TS_ERROR_RE = /^(.+?)\((\d+),(\d+)\): error TS(\d+)/
-/** Written by harness/steps.sh itself when a step (or `timeout 600 yarn build`) runs out of time, on both runners. */
+/** Written by harness/steps.sh itself when a step (or `timeout 900 yarn build`) runs out of time, on both runners. */
 export const STEP_TIMEOUT_RE = /^\[harness\] step timed out/
 /** A failed check of harness/smoke.sh. */
 export const SMOKE_FAIL_RE = /^smoke: FAIL /
