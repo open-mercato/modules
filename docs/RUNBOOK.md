@@ -31,7 +31,7 @@ Every line runs in two starter presets of create-mercato-app, a parameter of the
   such a package `add` is `yarn add` of the version the app ships (create-mercato-app pins its own version), note
   `in-preset`. That version (`compat.ships`) is the line's version in every channel: `check_compat` `version`,
   `builtFor` and `fitsStatically`, the `plan_install` order, the `/compat` cell and the card's `Module` column. A cell
-  takes about 15 minutes on Cezar with a warm Yarn cache (typecheck 233 s, build 420 s), 2.7 times the empty one.
+  takes about 15 minutes on a 4 CPU preview host with a warm Yarn cache (typecheck 233 s, build 420 s), 2.7 times the empty one.
 - `empty`, twelve modules. Its receipts are the signal `in isolation` (the module works without the rest of the
   platform), shown as a small dot beside the square and always named (`In isolation (empty preset): ...`). They never
   change the main verdict, the level or the policy.

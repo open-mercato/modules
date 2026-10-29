@@ -128,7 +128,7 @@ export default async function collect(ctx: CommandContext): Promise<number> {
       `${JSON.stringify({ night: bundle.night.id, keys: bundle.retry, collected: bundle.attempts.length > 1 }, null, 2)}\n`,
     )
   }
-  // Preview receipts (runner preview-docker, from Cezar or another Docker host) never go to the real data branch: the
+  // Preview receipts (runner preview-docker, from a Docker host) never go to the real data branch: the
   // CI collect refuses them (docs/RUNBOOK.md). applyNight also reads only history of the bundle's runner.
   if (bundle.runner === 'preview-docker' && process.env.GITHUB_ACTIONS === 'true') {
     console.error('om collect: a preview-docker night is not written to the data branch on GitHub Actions')

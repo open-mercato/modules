@@ -95,6 +95,11 @@ export interface PlanInput {
   attempt?: number
   runner?: Runner
   budgetMin?: number | null
+  /**
+   * Cells this runner may not run, left out before the budget cut, so they take no budget, no `deferred` entry and no
+   * part of the estimate (preview: a cell that runs code from outside @open-mercato, AGENTS.md rule 4).
+   */
+  leaveOut?: ((c: MatrixCell) => boolean) | null
 }
 
 interface Candidate {
@@ -680,6 +685,11 @@ export function planMatrix(input: PlanInput): Matrix {
         if (!memoIsolationUntil || until < memoIsolationUntil) memoIsolationUntil = until
       }
     } else picked.push(cell)
+  }
+  if (input.leaveOut) {
+    const leaveOut = input.leaveOut
+    const kept = picked.filter((c) => !leaveOut(c))
+    picked.splice(0, picked.length, ...kept)
   }
   // the main verdict first: a budget cut defers cells of the empty preset before any cell of the classic one, and in
   // the classic preset the packages a new app already ships (a scaffold and build of the baseline's app again) after
