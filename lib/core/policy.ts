@@ -618,15 +618,31 @@ export function pinnedText(
 }
 
 /**
+ * A GitHub entry without a pinned tag (audit of 29 Oct, C04): no installable version. Its command would install
+ * whatever the default branch holds, so the card, search_modules and raw/modules.md give `unpinnedInstallText`.
+ */
+export const unpinnedGit = (e: { npm: string | null; version: { gitRef: string | null } }): boolean =>
+  e.npm === null && !e.version.gitRef
+
+/** What every place that shows a command says for such an entry, in the words of the install plan. */
+export const unpinnedInstallText = (locator: string): string =>
+  `Nothing to install: ${locator} has no installable version (no stable release or pinned tag).`
+
+/**
  * The install sentence of an entry on a line, the same on the page, in the card, in llms-full.txt, raw/modules.md and
  * the tools (decision of 24 Oct): where a new app already registers it, `presetInstallText` and the command of an app
- * from the empty preset when that preset does not; elsewhere `Install: <command>`.
+ * from the empty preset when that preset does not; a GitHub entry without a pinned tag, `unpinnedInstallText`;
+ * elsewhere `Install: <command>`.
  */
 export function installSentence(
-  e: Pick<IndexEntry, 'moduleIds'> & { compat: { inPresets?: readonly string[]; inEmptyPreset?: readonly string[] } },
+  e: Pick<IndexEntry, 'moduleIds' | 'locator' | 'npm'> & {
+    version: { gitRef: string | null }
+    compat: { inPresets?: readonly string[]; inEmptyPreset?: readonly string[] }
+  },
   line: string | null,
   command: string,
 ): string {
+  if (unpinnedGit(e)) return unpinnedInstallText(e.locator)
   if (!presetOn(e, line)) return `Install: ${command}`
   return newAppInstallText(e.moduleIds, emptyPresetOn(e, line) ? null : command)
 }

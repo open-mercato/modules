@@ -46,7 +46,7 @@ export const ModuleCard = z.object({
   install: z
     .string()
     .describe(
-      'What to run on the line: the exact install command, or, on a line whose new app (from the classic preset) already registers the package (presetNote is set), the sentence that there is nothing to install. Never run it there: the command for an app from the empty preset is installEmptyPreset.',
+      'What to run on the line: the exact install command, or, on a line whose new app (from the classic preset) already registers the package (presetNote is set), the sentence that there is nothing to install. Never run it there: the command for an app from the empty preset is installEmptyPreset. A GitHub entry with no pinned tag (agentPolicy UNPINNED_GIT) gets a sentence too: it has no installable version.',
     ),
   matchedOn: z.array(z.string()).max(5),
   card: z.string().url(),
