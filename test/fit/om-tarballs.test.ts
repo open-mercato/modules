@@ -202,6 +202,31 @@ describe('store', () => {
     expect((await getPackument(again, '@open-mercato/shared'))?.versions['1.0.0']?.version).toBe('1.0.0')
     expect(calls.length).toBe(before)
   })
+  it('waits for a tarball the packument lists but the registry does not serve yet (audit C12)', async () => {
+    const { fetchImpl: real } = fakeRegistry()
+    let misses = 2
+    const tgzCalls: string[] = []
+    const lagging = (async (input: string | URL | Request) => {
+      const url = String(input)
+      if (url.endsWith('.tgz')) {
+        tgzCalls.push(url)
+        if (url.endsWith('/shared.tgz') && misses-- > 0) return new Response('not found', { status: 404 })
+      }
+      return real(input)
+    }) as typeof fetch
+    const store = createStore(tempDir(), {
+      registry: 'https://registry.test',
+      fetchImpl: lagging,
+      tarballWaitMs: [0, 0, 0],
+    })
+    expect(await ensurePackage(store, '@open-mercato/shared', '1.0.0')).not.toBeNull()
+    expect(tgzCalls.filter((u) => u.endsWith('/shared.tgz'))).toHaveLength(3)
+
+    const gone = (async (input: string | URL | Request) =>
+      String(input).endsWith('/shared.tgz') ? new Response('', { status: 404 }) : real(input)) as typeof fetch
+    const never = createStore(tempDir(), { registry: 'https://registry.test', fetchImpl: gone, tarballWaitMs: [0, 0] })
+    await expect(ensurePackage(never, '@open-mercato/shared', '1.0.0')).rejects.toThrow(/tarball not found/)
+  })
   it('fails offline without a cache and refuses tarballs outside the registry', async () => {
     const offline = createStore(tempDir(), { offline: true })
     await expect(ensurePackage(offline, '@open-mercato/shared', '1.0.0')).rejects.toBeInstanceOf(StoreError)

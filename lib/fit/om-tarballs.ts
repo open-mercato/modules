@@ -19,19 +19,28 @@ export interface TarballStore {
   offline: boolean
   registry: string
   fetchImpl: typeof fetch
+  /** Waits before another try when a tarball the packument lists answers 404. */
+  tarballWaitMs: readonly number[]
   /** In-process memo of packuments and unpacked packages. */
   memo: Map<string, Promise<unknown>>
 }
 
+/**
+ * npm lists a fresh version in the packument before its tarball is served: a watch run minutes after a develop
+ * snapshot got 404 for queue-0.10.1-develop.7687 (run 40781553866, audit C12). About a minute in all, then it fails.
+ */
+export const TARBALL_WAIT_MS: readonly number[] = [2_000, 5_000, 10_000, 15_000, 25_000]
+
 export function createStore(
   root: string,
-  opts: { offline?: boolean; registry?: string; fetchImpl?: typeof fetch } = {},
+  opts: { offline?: boolean; registry?: string; fetchImpl?: typeof fetch; tarballWaitMs?: readonly number[] } = {},
 ): TarballStore {
   return {
     root,
     offline: opts.offline ?? false,
     registry: opts.registry ?? REGISTRY,
     fetchImpl: opts.fetchImpl ?? fetch,
+    tarballWaitMs: opts.tarballWaitMs ?? TARBALL_WAIT_MS,
     memo: new Map(),
   }
 }
@@ -196,7 +205,13 @@ export async function unpack(
 async function downloadVerified(store: TarballStore, meta: PackumentVersion): Promise<Uint8Array> {
   const url = meta.dist.tarball
   if (!url.startsWith(`${store.registry}/`)) throw new StoreError(`tarball outside the registry: ${url}`)
-  const res = await fetchOk(store, url)
+  // a 404 here is a version the packument already lists: wait for the registry to serve it
+  let res = await fetchOk(store, url)
+  for (const ms of store.tarballWaitMs) {
+    if (res) break
+    await new Promise((r) => setTimeout(r, ms))
+    res = await fetchOk(store, url)
+  }
   if (!res) throw new StoreError(`tarball not found: ${url}`)
   const buf = new Uint8Array(await res.arrayBuffer())
   if (!checkIntegrity(buf, meta.dist)) throw new StoreError(`integrity mismatch: ${url}`)

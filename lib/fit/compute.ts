@@ -3,7 +3,7 @@
 // declared peers, host duplicates against the create-mercato-app template of that version).
 import type { FitCell } from '../schema/index.ts'
 import type { TarballStore, TemplateDeps } from './om-tarballs.ts'
-import { ensureOmPackages, getPackument, resolveAppVersion, templateDeps } from './om-tarballs.ts'
+import { ensureOmPackages, getPackument, resolveAppVersion, StoreError, templateDeps } from './om-tarballs.ts'
 import type { ImportMap, StaticResult } from './static.ts'
 import {
   checkImports,
@@ -91,24 +91,40 @@ export async function computeFit(
   const latestRes = opts.latest ? await computeStatic(store, opts.latest, opts.modules, log) : null
   const out = new Map<string, Record<string, FitCell>>()
   for (const version of opts.versions) {
-    const res =
-      version === opts.latest && latestRes ? latestRes : await computeStatic(store, version, opts.modules, log)
-    const template = await templateDeps(store, version)
-    if (!template) log(`fit ${version}: no create-mercato-app@${version} template, host duplicates skipped`)
-    const app = await appVersions(store, template, opts.modules, opts.asOf)
-    const cells: Record<string, FitCell> = {}
-    for (const m of opts.modules) {
-      const result = res.get(m.key) as StaticResult
-      const latest = version !== opts.latest && latestRes ? (latestRes.get(m.key) ?? null) : null
-      cells[m.key] = fitCell({
-        result,
-        latest,
-        omPeers: m.omPeers,
-        omVersion: version,
-        hostDuplicates: hostDuplicates(m.dependencies, (n) => app.get(n) ?? null),
-      })
+    try {
+      out.set(version, await versionCells(store, opts, version, latestRes, log))
+    } catch (err) {
+      // one line that cannot be read (a tarball not served yet) leaves the others and the rest of watch running;
+      // its fit file stays as it was (audit C12). The latest line is the drift base and still fails the run.
+      if (version === opts.latest || !(err instanceof StoreError || err instanceof TypeError)) throw err
+      log(`fit ${version}: skipped, ${err.message}`)
     }
-    out.set(version, cells)
   }
   return out
+}
+
+async function versionCells(
+  store: TarballStore,
+  opts: ComputeFitOptions,
+  version: string,
+  latestRes: Map<string, StaticResult> | null,
+  log: Log,
+): Promise<Record<string, FitCell>> {
+  const res = version === opts.latest && latestRes ? latestRes : await computeStatic(store, version, opts.modules, log)
+  const template = await templateDeps(store, version)
+  if (!template) log(`fit ${version}: no create-mercato-app@${version} template, host duplicates skipped`)
+  const app = await appVersions(store, template, opts.modules, opts.asOf)
+  const cells: Record<string, FitCell> = {}
+  for (const m of opts.modules) {
+    const result = res.get(m.key) as StaticResult
+    const latest = version !== opts.latest && latestRes ? (latestRes.get(m.key) ?? null) : null
+    cells[m.key] = fitCell({
+      result,
+      latest,
+      omPeers: m.omPeers,
+      omVersion: version,
+      hostDuplicates: hostDuplicates(m.dependencies, (n) => app.get(n) ?? null),
+    })
+  }
+  return cells
 }
