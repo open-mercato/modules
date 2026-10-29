@@ -527,6 +527,7 @@ export function builtInModule(i: BuiltInInput): BuiltInModule {
       .sort(byLineKey)
   const inPresets = on('classic')
   const inEmptyPreset = on('empty')
+  const requiresCore = m.requires.filter((r) => r.resolvesTo?.startsWith('core:')).map((r) => r.resolvesTo!.slice(5))
   return {
     id: m.id,
     title: m.title ?? m.id,
@@ -534,6 +535,7 @@ export function builtInModule(i: BuiltInInput): BuiltInModule {
     category: i.category,
     wedge: i.wedge,
     requires: m.requires.map((r) => (r.resolvesTo?.startsWith('core:') ? r.resolvesTo.slice(5) : r.raw)),
+    ...(requiresCore.length ? { requiresCore } : {}),
     inPresets,
     ...(inEmptyPreset.length > 0 ? { inEmptyPreset } : {}),
     anatomy: {
