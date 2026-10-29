@@ -4,7 +4,7 @@
 # (pushes with GITHUB_TOKEN do not start workflows), on push to main, daily and by hand. With no data branch yet the
 # build runs on empty data and shows the empty states.
 # templates.openmercato.com (decision B of 29 Oct) is a second custom domain of the same project: functions/_middleware.ts
-# redirects its root to /templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
+# redirects its root to modules.openmercato.com/templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
 # runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
