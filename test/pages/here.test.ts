@@ -42,4 +42,25 @@ describe('rewriteSite', () => {
     expect(run('https://3000-abc.apps.example.com')).toEqual([false, false])
     expect(run('https://open-mercato.github.io')).toEqual([true, true])
   })
+
+  // review of 29 Oct: templates.openmercato.com serves the same build, so it is a production host, not a preview
+  test('a second production host neither rewrites nor shows the preview notes', () => {
+    const js = hereScript(`${FROM}/`, '/modules', ['https://templates.openmercato.com'])
+    const run = (origin: string) => {
+      const notes = [{ hidden: true }]
+      let selected = 0
+      const document = {
+        querySelectorAll: (sel: string) => {
+          if (sel === '[data-preview-note]') return notes
+          selected++
+          return []
+        },
+        body: {},
+      }
+      new Function('location', 'document', 'MutationObserver', js)({ protocol: 'https:', origin }, document, undefined)
+      return [notes[0]!.hidden, selected]
+    }
+    expect(run('https://templates.openmercato.com')).toEqual([true, 0])
+    expect(run('https://3000-abc.apps.example.com')).toEqual([false, 1])
+  })
 })
