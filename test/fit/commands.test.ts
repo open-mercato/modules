@@ -206,6 +206,32 @@ describe('yarn om fit', () => {
     expect(pendingFitLines(data, lines())).toEqual([])
   })
 
+  it('a full fit compares the file with the new latest even when it holds a cell whose facts are gone (review of round 3)', async () => {
+    const { data, out, cache } = fakeSetup()
+    const asOf = ['--cache', cache, '--as-of', '2026-10-22T12:00:00Z']
+    const lines = () => readLines(data)?.lines ?? []
+    expect(await fit(ctx(asOf, data, out))).toBe(0)
+    // a cell of a package version no facts file names any more (removed, or no longer valid): no fit refits it
+    const nextFile = join(data, 'fit', '1.1.0.json')
+    const before = FitResult.parse(readJson(nextFile))
+    const [cell] = Object.values(before.cells)
+    writeFileSync(nextFile, JSON.stringify({ ...before, cells: { ...before.cells, 'npm:@gone/pkg@1.0.0': cell } }))
+
+    writeTree(join(cache, 'pkgs', '@open-mercato__shared@1.0.1', 'package'), fakeShared('A'))
+    writeFileSync(join(cache, 'pkgs', '@open-mercato__shared@1.0.1', '.complete'), '')
+    const t = join(cache, 'templates', 'create-mercato-app@1.0.1')
+    cpSync(join(FIT_FIXTURES, 'create-mercato-app-0.9.0'), join(t, 'package', 'template'), { recursive: true })
+    writeFileSync(join(t, '.complete'), '')
+    const file = join(data, 'lines.json')
+    const moved = readJson(file) as { coreLatest: string; lines: { key: string; version: string; createApp: string }[] }
+    moved.coreLatest = '1.0.1'
+    moved.lines[0] = { ...moved.lines[0]!, version: '1.0.1', createApp: 'create-mercato-app@1.0.1' }
+    writeFileSync(file, JSON.stringify(moved))
+    expect(await fit(ctx(asOf, data, out))).toBe(0)
+    expect(FitResult.parse(readJson(nextFile)).driftAgainst).toBe('1.0.1')
+    expect(pendingFitLines(data, lines())).toEqual([])
+  })
+
   it('radar reads only receipts of the module version its fit cells are for (audit R8 through the command)', async () => {
     const { data, out, cache } = fakeSetup()
     expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)
