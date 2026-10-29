@@ -582,6 +582,25 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
     })
   })
 
+  it('filling a list into an entry without measuredAt that a newer night stamped keeps that night as its measurement (review round 4)', async () => {
+    const data = await provisionalNight()
+    // an entry written before measuredAt, of the same version, with only the other preset and a newer `at`: dating it
+    // by night 100 would let a replay of night 100 with both baselines overwrite the newer list
+    const own = readPresets(data)!['0.9']!
+    const other = base09.preset === 'classic' ? 'empty' : 'classic'
+    const theirs = [{ id: 'auth', from: '@open-mercato/core' }]
+    writePresets(data, { ...readPresets(data), '0.9': { omVersion: base09.omVersion, [other]: theirs, at: LATER } })
+
+    const entry = await lateRetryTwice(data)
+    expect(entry).toEqual({
+      omVersion: base09.omVersion,
+      [other]: theirs,
+      [base09.preset]: own[base09.preset],
+      measuredAt: LATER,
+      at: LATER,
+    })
+  })
+
   it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {
     const data = await provisionalNight()
     const late = await gatherOn(data, 200, lateRetry([]))
