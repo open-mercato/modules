@@ -16,6 +16,8 @@ import {
   judgedLines,
   newAppInstallText,
   presetInstallText,
+  unpinnedGit,
+  unpinnedInstallText,
 } from './policy.ts'
 import type { ReceiptSource } from './source.ts'
 
@@ -612,6 +614,8 @@ export function installFields(
   /** The search index's entries, for the libraries an adapter peers on (`peerLibrarySpecs`). */
   metas: Readonly<Record<string, ModuleMeta>> = {},
 ): Pick<ModuleCard, 'install' | 'presetNote' | 'installEmptyPreset'> {
+  // a GitHub entry without a pinned tag: nothing to install, as its card says (audit of 29 Oct, C04)
+  if (unpinnedGit(m)) return { install: unpinnedInstallText(m.locator) }
   const command = commandFor(m, line, latest, metas)
   if (line === null || !(m.inPresets ?? []).includes(line)) return { install: command }
   const empty = (m.inEmptyPreset ?? []).includes(line) ? null : command
