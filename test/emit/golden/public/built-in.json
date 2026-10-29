@@ -144,6 +144,11 @@
         "sales",
         "feature_toggles"
       ],
+      "requiresCore": [
+        "catalog",
+        "sales",
+        "feature_toggles"
+      ],
       "inPresets": [
         "0.8",
         "0.9",
