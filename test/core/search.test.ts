@@ -1,6 +1,10 @@
 // search_modules (spec 8.2): golden queries of Appendix B (expected result in the top 3), filters, chips, contract.
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { parse as parseYaml } from 'yaml'
 import {
+  ALIASES_META_KEY,
   buildSearchIndex,
   loadSearchIndex,
   relevanceCompare,
@@ -11,9 +15,20 @@ import {
   tokenize,
   type SearchIndexData,
 } from '../../lib/core/search.ts'
+import { Descriptor } from '../../lib/schema/descriptor.ts'
 import { SearchModulesInput, SearchModulesOutput } from '../../lib/schema/tools.ts'
 import { DEFAULTS, passes, toRegistryEntry } from '../../site/src/islands/Registry.tsx'
-import { corpusBuiltIn, corpusEntries, fixtureBuiltIn, fixtureEntries, LOC, loadFixture, NOW, SITE } from './helpers.ts'
+import {
+  corpusBuiltIn,
+  corpusEntries,
+  fixtureBuiltIn,
+  fixtureEntries,
+  LOC,
+  loadFixture,
+  NOW,
+  ROOT,
+  SITE,
+} from './helpers.ts'
 
 const fx = loadFixture()
 const lines = fx.lines.lines
@@ -377,5 +392,36 @@ describe('the registry page searches without the cap of the tools (finding of 25
       .results.map((r) => rows.get(r.locator)!)
       .filter((e) => passes(e, listed))
     expect(before.length).toBeLessThan(want.length)
+  })
+})
+
+describe('single sign-on finds the enterprise entry (audit C05)', () => {
+  // the corpus row of @open-mercato/enterprise with the searchable fields of the real descriptor, aliases included
+  const ENTERPRISE = 'npm:@open-mercato/enterprise'
+  const d = Descriptor.parse(parseYaml(readFileSync(join(ROOT, 'modules', '@open-mercato', 'enterprise.yml'), 'utf8')))
+  const entries = corpusEntries().map((e) =>
+    e.locator === ENTERPRISE
+      ? {
+          ...e,
+          summary: d.summary!,
+          whenToUse: d.whenToUse!,
+          tags: d.tags ?? [],
+          _meta: { [ALIASES_META_KEY]: d.aliases ?? [] },
+        }
+      : e,
+  )
+  const idx = loadSearchIndex(
+    JSON.parse(JSON.stringify(buildSearchIndex({ entries, builtIn: corpusBuiltIn(), ...meta }))) as SearchIndexData,
+  )
+
+  it.each(['single sign on', 'single sign-on', 'oidc', 'openid connect', 'sso', 'two-factor', 'totp'])(
+    '%s ranks the enterprise entry first',
+    (query) => {
+      expect(searchModules(idx, { query }).results[0]?.locator).toBe(ENTERPRISE)
+    },
+  )
+
+  it('no saml alias: the enterprise SSO wizard marks SAML as coming soon', () => {
+    expect(d.aliases ?? []).not.toContain('saml')
   })
 })
