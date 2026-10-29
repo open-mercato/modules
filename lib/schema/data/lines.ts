@@ -49,6 +49,10 @@ export const Presets = z.record(
       empty: z.array(PresetModule).max(80).optional(),
       classic: z.array(PresetModule).max(160).optional(),
       at: IsoDateTime,
+      // additive (review round 4): when the night that last wrote a preset list of this entry measured it (its first
+      // attempt). `at` is stamped by every collected night, measured or not, so only this tells a late retry whether a
+      // newer night measured the line. Absent on entries written before it.
+      measuredAt: IsoDateTime.optional(),
     })
     .strict(),
 )
