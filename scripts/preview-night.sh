@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# preview-night.sh: one preview night on a Docker host (Cezar) in parallel streams, collected into a data copy.
+# preview-night.sh: one preview night on a Docker host in parallel streams, collected into a data copy. Official cells
+# only: plan-matrix and cells-local leave out every cell that runs code from outside @open-mercato (AGENTS.md rule 4).
 #
 #   bash scripts/preview-night.sh --data <dir> --out <dir> --host <ssh target>|local (or OM_PREVIEW_HOST) [--streams 2] [--stagger 300]
 #        [--memory 10g] [--preset classic|empty|both] [--lines 0.9,next] [--min-free-gb 8] [--min-free-mem-gb <n>]
 #        [--plan-only] [--force]
 #
-# 1. plan-matrix --runner preview-docker --event workflow_dispatch --budget 100000: every cell of the lines, no budget cut
-#    (the host runs the streams one cell at a time each).
+# 1. plan-matrix --runner preview-docker --event workflow_dispatch --budget 100000: every official cell of the lines, no
+#    budget cut (the host runs the streams one cell at a time each).
 # 2. The host must be idle: no cell container (omcell-*) and at least --min-free-mem-gb of available memory (default the
 #    sum of the limits, streams x --memory), else the night does not start (--force skips it). --memory is 10g: at 8g
-#    the build of a classic baseline lost its type check to the memory limit (Cezar, 24 Oct), so three streams need
-#    30 GB and the default is two (Cezar has about 28 GB free). A step the limit cuts short is marked by run-cell.sh
+#    the build of a classic baseline lost its type check to the memory limit (24 Oct), so three streams need 30 GB
+#    and the default is two (a 30 GB host shared with other services has about 28 GB free). A step the limit cuts short is marked by run-cell.sh
 #    and collected as infra, never as broken.
 # 3. cells-local --shard i/n per stream, started --stagger seconds apart, so the builds of the streams drift apart.
 # 4. Stream 1 holds every baseline: collect --no-apply, retry its red and infra cells (attempt 2), collect with apply.
@@ -42,7 +43,7 @@ while [[ $# -gt 0 ]]; do
   *) echo "preview-night: unknown argument $1" >&2; exit 64 ;;
   esac
 done
-[[ -n "$data" && -n "$out" ]] || { sed -n '2,22p' "$0" >&2; exit 64; }
+[[ -n "$data" && -n "$out" ]] || { sed -n '2,23p' "$0" >&2; exit 64; }
 [[ -n "$host" ]] || { echo "preview-night: --host <ssh target>, local, or OM_PREVIEW_HOST" >&2; exit 64; }
 [[ "$streams" =~ ^[1-9]$ ]] || { echo "preview-night: --streams 1 to 9" >&2; exit 64; }
 [[ "$stagger" =~ ^[0-9]+$ ]] || { echo "preview-night: --stagger in seconds" >&2; exit 64; }

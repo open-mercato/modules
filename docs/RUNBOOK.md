@@ -185,7 +185,14 @@ group id and, in preview with `--keep-generated`, `api-routes.generated.ts`. `sm
 route check against the generated manifest runs as `om-cell` too. The runner still hashes `package.json`,
 `tsconfig.json` and `.yarnrc.yml` and parses `src/modules.ts` (only digests and a yes or no leave that).
 
-## Preview mode (before the repository is on GitHub)
+## Preview mode (official packages only)
+
+The repository is public on GitHub (28 Oct) and `nightly.yml` is the runner of record. Preview mode is left for
+debugging cells of official packages and the harness on a Docker host; it never runs third-party module code
+(AGENTS.md rule 4). `plan-matrix --runner preview-docker` leaves out, and `cells-local` and `run-cell.sh` refuse,
+every cell that would run code from outside `@open-mercato/*`: the module, a catalog module or `lib:` package it
+requires, a GitHub tarball of another owner, or a package its new app registers. The refusal names the cell and the
+packages (`run-cell.sh` exits 77). Third-party cells get their receipts from `nightly.yml` only.
 
 The same cell can run in Docker on any host with Docker (locally or over ssh) through `harness/local/run-cell.sh`:
 same `steps.sh`, same step conditions and timeouts as the `cell` job. Preview receipts say
@@ -206,9 +213,10 @@ yarn om collect --local out/preview/<run id> --local out/preview/<retry run id>
 
 ### A preview night in streams
 
-A night of every line on one host runs in parallel streams, each one cell at a time (`cells-local --shard i/n`, the
-baselines all in shard 1). The whole night is one bash script; do not paste it into zsh (zsh does not split an
-unquoted variable into words, so a loop over `$RUNS` ran once with every run directory in one word):
+A night of every official cell of the lines on one host runs in parallel streams, each one cell at a time
+(`cells-local --shard i/n`, the baselines all in shard 1). The whole night is one bash script; do not paste it into
+zsh (zsh does not split an unquoted variable into words, so a loop over `$RUNS` ran once with every run directory in
+one word):
 
 ```sh
 N=~/kod/om-modules-night; mkdir -p $N/out && cp -R ~/kod/om-modules-preview/.data $N/.data   # a copy of the data
@@ -216,10 +224,10 @@ bash scripts/preview-night.sh --data $N/.data --out $N/out --host <user>@<docker
 node lib/cli.ts health --changed --data $N/.data && node lib/cli.ts emit --data $N/.data && npx astro build
 ```
 
-The script plans every cell of the lines without a budget cut (`--preset classic` by default, `--lines 0.9` for one
-line, `--plan-only` to read `out/matrix.json` first). Each cell gets `--memory 10g`, and the host must have the sum
-of the limits free (`--min-free-mem-gb`, default streams x memory): three streams need 30 GB, so Cezar (30 GB shared
-with three service containers and agent runs, about 28 GB available when idle) runs a classic night in two streams.
+The script plans every official cell of the lines without a budget cut (`--preset classic` by default, `--lines 0.9`
+for one line, `--plan-only` to read `out/matrix.json` first). Each cell gets `--memory 10g`, and the host must have the
+sum of the limits free (`--min-free-mem-gb`, default streams x memory): three streams need 30 GB, so a host of 30 GB
+shared with other services (about 28 GB available when idle) runs a classic night in two streams.
 8g is too little for a classic cell: in the trial of 24 Oct the baseline of 0.9 reached the limit at typecheck
 (`memory.peak` 8 GiB, page cache reclaimed, no kill) and lost the type check of `next build` to it. The night refuses
 a host with a running cell container (`omcell-*`) or less available memory (wait for its queue, or pass fewer
@@ -234,9 +242,10 @@ Their retries run in parallel, their collects one after another. Every `cells-lo
 exclusive mkdir of `out/preview/<id>` and of `<remote-dir>/<id>` on the host (the next id when it is taken), so two
 retries started in the same second never share a run directory. A stream that stops early (the fence, ssh, a full
 disk) still assembles and prints its run with the cells that ran, its matrix cut to those; a retry that prints no run
-directory is reported and its stream is collected without it. Sizes on Cezar: 119 classic cells of three lines at
-about 15.5 minutes are about 31 hours in one stream, about 15 hours in two; 119 empty cells at about 5.5 minutes are
-about 11 hours in one stream, about 4 hours in three (an empty cell stays well under 8g: `--memory 8g` passed there).
+directory is reported and its stream is collected without it. Sizes on a 30 GB host (24 Oct, third-party cells still
+included): 119 classic cells of three lines at about 15.5 minutes are about 31 hours in one stream, about 15 hours in
+two; 119 empty cells at about 5.5 minutes are about 11 hours in one stream, about 4 hours in three (an empty cell stays
+well under 8g: `--memory 8g` passed there).
 
 Isolation of a preview cell:
 
@@ -245,15 +254,15 @@ Isolation of a preview cell:
   infra, see above), `no-new-privileges`, a private bridge network per cell;
 - the cell network reaches the internet and nothing of the host (review round 2). A bridge network alone does not do
   that: through its gateway a container reaches every service the host listens on, including ports closed to the
-  internet (on Cezar Postgres 5432, Redis 6379, Meilisearch 7700, Traefik 80 and 443), and the cloud metadata service
-  `169.254.169.254` with the server's user-data. `harness/local/cell-firewall.sh` runs in a throwaway container of the
-  `fw` stage of the Dockerfile (`--net host --cap-add NET_ADMIN`, the script on stdin, nothing mounted; the user only
+  internet (databases, caches, a reverse proxy), and the cloud metadata service `169.254.169.254` with the server's
+  user-data. `harness/local/cell-firewall.sh` runs in a throwaway container of the `fw` stage of the Dockerfile
+  (`--net host --cap-add NET_ADMIN`, the script on stdin, nothing mounted; the user only
   needs the `docker` group) and adds, for the cell subnet: a chain `OMC-<suffix>` jumped to from `DOCKER-USER` that
   rejects link-local, private (`10/8`, `172.16/12` except the cell's own subnet, `192.168/16`), shared `100.64/10`,
   loopback and multicast ranges and every IPv4 of the host (published ports of other containers are DNATed to private
   addresses before that chain, so they are covered too), and an `INPUT` rule that rejects anything from the subnet to
-  the host itself. IPv6 is off inside the cell. The rules go on every iptables backend that has `DOCKER-USER` (on Cezar
-  `iptables-nft`; the warning about legacy tables there is harmless); a host where none has it does not run cells;
+  the host itself. IPv6 is off inside the cell. The rules go on every iptables backend that has `DOCKER-USER` (for
+  example `iptables-nft`; a warning about legacy tables is harmless); a host where none has it does not run cells;
 - before any step `run-cell.sh` probes from the cell as `om-cell`: TCP to the gateway, to every address of the host
   (ports 22, 80, 443, 3000, 5432, 6379, 7700, 8080) and to `169.254.169.254:80`. One open target and the cell does not
   start (exit 3; `cells-local` runs no further cell, and assembles the ones that ran before). `registry.npmjs.org:443`
@@ -266,15 +275,15 @@ Isolation of a preview cell:
   them for debugging; then `run-cell.sh --unfence <chain> <subnet>` from the log line, `docker rm -fv` and
   `docker network rm`).
 
-The fence is only as good as the host's firewall stack. The cleaner alternative for a full matrix is a throwaway VM
+The fence is only as good as the host's firewall stack. The cleaner alternative is a throwaway VM
 with Docker and no other services or secrets, destroyed after the run; the same commands work there.
 
 Difference from CI: preview cells share a Yarn cache volume (`om-preview-yarn-cache`, `--yarn-cache none` turns it
 off) to save time and disk on the host. The CI job has no cache at all (D12): a module could poison a shared cache for
 later cells. Drop the volume (`docker volume rm om-preview-yarn-cache`) when in doubt.
 
-The preview host runs third-party module code. Spec rule 0.4 keeps that on ubuntu-latest; preview mode exists only
-until the repository is on GitHub, and only for cells the owner asked for.
+The preview host never runs third-party module code: AGENTS.md rule 4 keeps it on ubuntu-latest, and the refusal at
+the top of this section enforces it in the plan, in `cells-local` and in `run-cell.sh`.
 
 Preview receipts never go to the real `data` branch. `collect` on GitHub Actions refuses a `preview-docker` night, and
 the state machine reads only the history of the night's runner: a preview receipt is never `transition.from`, the last
