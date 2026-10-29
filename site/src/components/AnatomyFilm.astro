@@ -226,7 +226,8 @@ const cliN = ms.reduce((a, m) => a + m.background.cli.length, 0)
 const toolsN = ms.reduce((a, m) => a + m.ai.tools.length, 0)
 const agentsN = ms.reduce((a, m) => a + m.ai.agents.length, 0)
 const credsN = ms.reduce((a, m) => a + m.config.credentials.length, 0)
-const envN = ms.reduce((a, m) => a + m.config.env.length, 0)
+// the rows of the Config section add the env of a package without a module (pkgCode), so the count does too
+const envN = ms.reduce((a, m) => a + m.config.env.length, 0) + (pkgCode?.env.length ?? 0)
 const emitsN = k?.eventsEmitted ?? sec('events').items.filter((i) => i.lead?.startsWith('emits')).length
 const subsN = k?.eventsConsumed ?? sec('events').items.filter((i) => i.lead?.startsWith('subscribes')).length
 const extendsN = ms.reduce((a, m) => a + m.extends.length, 0)
