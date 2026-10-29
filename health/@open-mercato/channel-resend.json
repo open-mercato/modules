@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-resend",
   "version": "0.9.0",
-  "computedAt": "2026-10-25T11:51:24Z",
+  "computedAt": "2026-10-29T09:22:28Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "ok",
-      "next": "ok"
+      "next": "unknown"
     },
     "anatomy": "partial",
     "supplyChain": {
@@ -125,9 +125,12 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers channel_resend in src/modules.ts."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-resend@0.9.0"
+      ]
     },
     "0.8": {
       "decision": "ask",
@@ -145,9 +148,12 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on next."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers channel_resend in src/modules.ts."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-resend@0.9.0"
+      ]
     }
   },
   "state": "active",
@@ -159,7 +165,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.9.0"
+    "next": "0.10.1-develop.7689.1.453d3db612"
   },
   "verdictPreset": "classic"
 }

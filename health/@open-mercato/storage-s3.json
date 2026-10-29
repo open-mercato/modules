@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.9.0",
-  "computedAt": "2026-10-28T16:27:35Z",
+  "computedAt": "2026-10-29T09:22:28Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "untested",
+      "0.9": "verified",
       "0.8": "untested",
       "next": "untested"
     },
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.8, 0.9; verified on no line."
+        "Built for 0.8, 0.9; verified on 0.9."
       ]
     }
   },
@@ -92,8 +92,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 28 Oct."
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.9.0)."
     },
     {
       "id": "VER-2",
@@ -116,18 +116,17 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 28 Oct."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.9."
         }
-      ],
-      "consentText": "Install @open-mercato/storage-s3@0.9.0"
+      ]
     },
     "0.8": {
       "decision": "ask",
@@ -152,7 +151,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.9": null,
+    "0.9": "0.9.0",
     "0.8": null,
     "next": null
   },

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@northbound-run/channel-cloudflare-email",
   "version": "0.2.0",
-  "computedAt": "2026-10-25T11:51:24Z",
+  "computedAt": "2026-10-29T09:22:28Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "untested",
+      "0.9": "verified",
       "0.8": "untested",
       "next": "untested"
     },
@@ -51,8 +51,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for no tested line; verified on 0.9."
+      ]
     }
   },
   "rules": [
@@ -88,8 +90,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.2.0)."
     },
     {
       "id": "VER-2",
@@ -112,7 +114,7 @@
       "detail": "Tarball repository.url matches the descriptor."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.9": {
@@ -121,10 +123,6 @@
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
         }
       ],
       "consentText": "Install @northbound-run/channel-cloudflare-email@0.2.0"
@@ -160,7 +158,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.9": null,
+    "0.9": "0.2.0",
     "0.8": null,
     "next": null
   },
