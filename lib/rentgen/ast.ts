@@ -246,23 +246,30 @@ export function evalLiteral(
   }
   if (ts.isObjectLiteralExpression(node)) {
     const o: LitObject = {}
+    // an unknown spread or key may replace any key written before it, never one written after it (audit R4)
+    const hide = () => {
+      for (const k of Object.keys(o)) o[k] = UNKNOWN
+      o['...'] = UNKNOWN
+    }
     for (const p of node.properties) {
       if (ts.isPropertyAssignment(p)) {
         const k = propKey(p.name, sf, c, depth)
         // a key that cannot be read statically hides what it sets, as a spread does: never `absent`, so a
         // `{ [KEY]: false }` requireAuth is unknown, not the default true (finding of 25 Oct)
         if (k !== null) o[k] = evalLiteral(p.initializer, sf, c, depth)
-        else o['...'] = UNKNOWN
+        else hide()
       } else if (ts.isShorthandPropertyAssignment(p)) {
         o[p.name.text] = evalLiteral(p.name, sf, c, depth)
       } else if (ts.isSpreadAssignment(p)) {
         const v = evalLiteral(p.expression, sf, c, depth)
-        if (isLitObject(v)) Object.assign(o, v)
-        else o['...'] = UNKNOWN
+        if (isLitObject(v)) {
+          if ('...' in v) hide()
+          Object.assign(o, v)
+        } else hide()
       } else if (ts.isMethodDeclaration(p) || ts.isGetAccessorDeclaration(p)) {
         const k = propKey(p.name, sf, c, depth)
         if (k !== null) o[k] = UNKNOWN
-        else o['...'] = UNKNOWN
+        else hide()
       }
     }
     return o

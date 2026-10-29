@@ -168,6 +168,32 @@ describe('routes: computed metadata keys (finding of 25 Oct)', async () => {
   })
 })
 
+describe('routes: a spread or hidden key overrides only what comes before it (audit R4)', async () => {
+  const f = await scanFiles('spr', {
+    'src/modules/spr/api/inner-after/route.ts': `export const metadata = { GET: { requireAuth: true, ...buildOverride() } }\nexport function GET() {}\n`,
+    'src/modules/spr/api/inner-before/route.ts': `export const metadata = { GET: { ...buildOverride(), requireAuth: true } }\nexport function GET() {}\n`,
+    'src/modules/spr/api/outer-after/route.ts': `import { o } from './o'\nexport const metadata = { GET: { requireAuth: true }, ...o }\nexport function GET() {}\n`,
+    'src/modules/spr/api/outer-before/route.ts': `import { o } from './o'\nexport const metadata = { ...o, GET: { requireAuth: true } }\nexport function GET() {}\n`,
+    'src/modules/spr/api/key-after/route.ts': `export const metadata = { requireAuth: true, [keyOf()]: false }\nexport function GET() {}\n`,
+    // a known spread that itself holds an unknown one may still replace what comes before it
+    'src/modules/spr/api/nested/route.ts': `const BASE = { ...f() }\nexport const metadata = { GET: { requireAuth: true, ...BASE } }\nexport function GET() {}\n`,
+  })
+  const m = f.modules[0] as Facts['modules'][number]
+  const auth = (p: string) => m.http.routes.find((r) => r.path === `/api/spr/${p}`)?.requireAuth
+
+  it('a spread after requireAuth or after the method key makes it unknown', () => {
+    expect(auth('inner-after')).toBeNull()
+    expect(auth('outer-after')).toBeNull()
+    expect(auth('key-after')).toBeNull()
+    expect(auth('nested')).toBeNull()
+  })
+
+  it('a key written after the spread overrides it and is read', () => {
+    expect(auth('inner-before')).toBe(true)
+    expect(auth('outer-before')).toBe(true)
+  })
+})
+
 describe('evalLiteral: computed keys read const bindings only (finding F05)', () => {
   const read = (src: string): Lit => {
     const sf = ts.createSourceFile('route.ts', src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
