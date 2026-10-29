@@ -88,4 +88,13 @@ describe('requiresCore (C26)', () => {
     expect(r.requires).toEqual(['integrations', 'data_sync'])
     expect(r.requiresCore).toEqual(['integrations', 'data_sync'])
   })
+
+  test('a built-in row names its core requirements too: absent means none (review round 3)', () => {
+    const wms = picker().modules.find((m) => m.id === 'wms' && m.source === 'core')!
+    expect(wms.requires).toEqual(['catalog', 'sales', 'feature_toggles'])
+    expect(wms.requiresCore).toEqual(['catalog', 'sales', 'feature_toggles'])
+    const none = picker().modules.filter((m) => m.source === 'core' && m.requires.length === 0)
+    expect(none.length).toBeGreaterThan(0)
+    for (const m of none) expect(m.requiresCore).toBeUndefined()
+  })
 })

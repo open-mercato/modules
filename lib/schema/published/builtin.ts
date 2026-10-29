@@ -10,6 +10,11 @@ export const BuiltInModule = z.object({
   category: CategoryId,
   wedge: Wedge,
   requires: z.array(z.string()),
+  // additive (review round 3): /picker.json carries it for its built-in rows, as for package rows (audit C26)
+  requiresCore: z
+    .array(ModuleId)
+    .optional()
+    .describe('The entries of requires that are core modules (@open-mercato/core), by module ID. Absent: none.'),
   // lines whose new app (classic preset, what create-mercato-app makes without --preset) has the module on (redefined
   // 24 Oct: it named the empty preset before)
   inPresets: z

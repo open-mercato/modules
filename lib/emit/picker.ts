@@ -125,6 +125,8 @@ export function buildPicker(
       title: b.title,
       description: b.description,
       requires: b.requires,
+      // the same contract as a package row: absent means no core requirement (review round 3)
+      ...(b.requiresCore?.length ? { requiresCore: [...b.requiresCore] } : {}),
       source: 'core',
       locator: 'npm:@open-mercato/core',
       license: { spdx: 'MIT', kind: 'osi' }, // packages/core/package.json of the monorepo
