@@ -96,6 +96,7 @@ import {
   installWords,
   manualStepText,
   planInstallLine,
+  readmeInstallFine,
 } from '../../components/catalog/cards.ts'
 import { iconSvg } from '../../components/icons/paths.ts'
 import { levelNote, licenseChip, rulesHeading, verifiedTestNote } from '../../lib/chips.ts'
@@ -1058,6 +1059,9 @@ const installVariant: InstallVariant = blocked
         ? 'preset'
         : 'steps'
 const installMessage = blocked ?? (noInstall ? notListedText : null)
+// the README note says the catalog tested the Install steps only for a kind it installs (audit of 29 Oct, R9: a library
+// said both `Not installed by the catalog` and `The catalog tests those steps`)
+const readmeFine = readmeInstallFine(installVariant, skipText)
 const restart = entry.kind !== 'tool'
 const enterpriseInstall = entry.enterprise
   ? (() => {
@@ -1410,11 +1414,9 @@ const techBanners =
                         'The catalog has not checked it.'
                       )}
                     </p>
-                    {(installVariant === 'steps' || installVariant === 'preset' || readmeVersionNote) && (
+                    {(readmeFine || readmeVersionNote) && (
                       <p class="rd__note-fine">
-                        {installVariant === 'steps' || installVariant === 'preset'
-                          ? 'The catalog tests those steps. Install notes in the README may be out of date.'
-                          : ''}
+                        {readmeFine ?? ''}
                         {readmeVersionNote && ` ${readmeVersionNote}`}
                       </p>
                     )}

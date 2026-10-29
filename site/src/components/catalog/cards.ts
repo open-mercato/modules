@@ -270,6 +270,17 @@ export function manualStepText(step: string): string {
   return m ? `In ${m[2]}, remove ${m[1]}.` : `${step.replace(/\.$/, '')}.`
 }
 
+/**
+ * The fine print under the README note (audit of 29 Oct, R9): the catalog tests the Install steps of a module only;
+ * for a kind the nightly run never installs, the words of the skipped strip say so. Null where Install has no steps.
+ */
+export function readmeInstallFine(variant: string, skip: string | null): string | null {
+  if (variant !== 'steps' && variant !== 'preset') return null
+  return skip
+    ? `${skip} The catalog has not tested these steps.`
+    : 'The catalog tests those steps. Install notes in the README may be out of date.'
+}
+
 /** The words around the install command of a module page, from the kind of the entry. */
 export interface InstallWords {
   /** One sentence above the steps that says what the package is, or null for a module. */

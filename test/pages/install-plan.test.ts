@@ -1,5 +1,6 @@
 // The Install card gives the steps of the line's install plan (audit of 29 Oct, R3): the packages a module requires and
-// the removal of the built-in module it replaces, never only the package's own command.
+// the removal of the built-in module it replaces, never only the package's own command. The README note says the
+// catalog tested those steps only where it installs that kind of package (R9).
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, test } from 'vitest'
@@ -7,7 +8,13 @@ import { withSlotConflicts } from '../../lib/core/entry.ts'
 import { presetsOrFallback } from '../../lib/core/lines.ts'
 import { planInstall, type PlanContext } from '../../lib/core/plan.ts'
 import type { IndexEntry } from '../../lib/schema/published/modules.ts'
-import { manualStepText, planInstallLine, installWords } from '../../site/src/components/catalog/cards.ts'
+import {
+  manualStepText,
+  planInstallLine,
+  readmeInstallFine,
+  installWords,
+} from '../../site/src/components/catalog/cards.ts'
+import { catalogSkip } from '../../site/src/pages/c/_data.ts'
 import {
   corpusBuiltIn,
   corpusEntries,
@@ -129,5 +136,26 @@ describe('the Install command follows the install plan (R3)', () => {
     expect(page).not.toContain('installLine(entry.install.cli, latestThen, installFallback)')
     expect(page).toContain('planInstallLine(')
     expect(page).toContain('manualStepText(')
+  })
+})
+
+describe('the README note claims tested steps only for a kind the catalog installs (R9)', () => {
+  const all = corpusEntries()
+  test('a library or a tool says the catalog has not tested the steps', () => {
+    for (const loc of ['npm:@freighttech/ui', 'npm:create-mercato-module']) {
+      const e = all.find((x) => x.locator === loc)!
+      const fine = readmeInstallFine('steps', catalogSkip(e))
+      expect(fine, loc).not.toContain('The catalog tests those steps')
+      expect(fine, loc).toContain('The catalog has not tested these steps.')
+    }
+  })
+  test('a module still says the catalog tests them', () => {
+    const e = fixture.entries.find((x) => x.locator === LOC.ksef)!
+    expect(readmeInstallFine('steps', catalogSkip(e))).toBe(
+      'The catalog tests those steps. Install notes in the README may be out of date.',
+    )
+    expect(readmeInstallFine('unavailable', null)).toBeNull()
+    const page = readFileSync(join(ROOT, 'site', 'src', 'pages', 'm', '[...path].astro'), 'utf8')
+    expect(page).toContain('readmeInstallFine(installVariant, skipText)')
   })
 })
