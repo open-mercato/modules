@@ -8,6 +8,7 @@ const MORE = [
   '/radar',
   '/quality',
   '/about',
+  '/templates',
   '/built-in',
   '/m/@piotrkarwatka/marketing-consents',
   '/m/@fullstackhouse/open-mercato-durable-work',

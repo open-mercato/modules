@@ -1,0 +1,183 @@
+---
+// /templates (decisions of 29 Oct, Piotr and owner C, D): the Templates section, public at once in a coming soon
+// state. It says what an app template is, how the save tool (create-mercato-template, D2 = A) and
+// `create-mercato-app --template` will work, and where to follow the work. No entries until the tool ships: real
+// templates come with the gallery data of phase 1a, never a placeholder. templates.openmercato.com/ leads here
+// (functions/_middleware.ts, lib/core/templates-host.ts).
+import Base from '../layouts/Base.astro'
+import EmptyState from '../components/EmptyState.astro'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { href } from '../lib/url.ts'
+import { TEMPLATES_LINKS } from '../../../lib/core/templates-host.ts'
+
+const { meta } = loadSiteData()
+---
+
+<Base
+  title="Templates · Open Mercato Modules"
+  description="App templates: complete Open Mercato apps in GitHub repositories to start a new app from. Coming soon."
+  path="/templates"
+  dataAsOf={meta.dataAsOf}
+>
+  <section class="band">
+    <div class="sheet section tp-head">
+      <p class="t-tagline">// Templates</p>
+      <h1 class="tp-title">Start a new app from a whole app.</h1>
+      <p class="tp-lede">
+        An app template is a complete Open Mercato app in a GitHub repository, for example a CRM, or a WMS for an
+        e-commerce company. A module adds one feature to your app. A template is the app you start from.
+      </p>
+      <p class="tp-state" data-templates-state="coming-soon">
+        <span class="chip chip--preview">Coming soon</span>
+        <span>No templates are listed yet. Entries appear here after the save tool is released.</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="tp-how">
+    <div class="sheet section tp-grid">
+      <div>
+        <p class="t-tagline">// Plan</p>
+        <h2 id="tp-how">How it will work</h2>
+      </div>
+      <div class="tp-body">
+        <ol class="tp-list" role="list">
+          <li>
+            <strong>Save.</strong> A separate tool, <code>create-mercato-template</code>, works like{' '}
+            <code>create-mercato-module</code>: it prepares a copy of your app without secrets and local data, and
+            pushes it to GitHub as a template repository, public or private.
+          </li>
+          <li>
+            <strong>Start.</strong> <code>create-mercato-app</code> gets a <code>--template</code> option that creates a
+            new app from a listed template or from any repository you can read:{' '}
+            <code class="tp-cmd" translate="no"
+              ><span>npx create-mercato-app my-app</span> <span>--template owner/repo</span></code
+            >
+          </li>
+          <li>
+            <strong>Find.</strong> Public templates are listed on this page. Private ones work with{' '}
+            <code>--template owner/repo</code> and are never listed.
+          </li>
+        </ol>
+        <p class="tp-small">Neither command exists yet. Both are described in the specification below.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="tp-follow">
+    <div class="sheet section tp-grid">
+      <div>
+        <p class="t-tagline">// Follow</p>
+        <h2 id="tp-follow">Follow or contribute</h2>
+      </div>
+      <div class="tp-body">
+        <ul class="tp-list" role="list">
+          <li>
+            <a href={TEMPLATES_LINKS.spec} rel="noopener noreferrer">The specification</a>: what a template holds, the
+            safety checks of the save tool and the gallery. Comments are welcome on the pull request.
+          </li>
+          <li>
+            <a href={TEMPLATES_LINKS.tool} rel="noopener noreferrer">The save tool</a>: tracking issue for{' '}
+            <code>create-mercato-template</code>.
+          </li>
+          <li>
+            <a href={TEMPLATES_LINKS.section} rel="noopener noreferrer">This section</a>: tracking issue for the gallery
+            on this site.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-label="Templates">
+    <div class="sheet section">
+      <EmptyState
+        title="No templates yet"
+        text="The gallery opens with the first templates saved with the tool. Until then, modules add features to an app you already have."
+        actions={[
+          { href: href('/'), label: 'Browse modules', variant: 'secondary' },
+          { href: TEMPLATES_LINKS.section, label: 'Follow the work', variant: 'secondary' },
+        ]}
+      />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tp-head {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 48px;
+  }
+  .band:has(.tp-head) + .band > .section {
+    padding-top: 48px;
+  }
+  .tp-title {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .tp-lede {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  .tp-state {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .tp-grid {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: 24px;
+  }
+  .tp-grid h2 {
+    margin-top: 8px;
+  }
+  .tp-body {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .tp-list {
+    display: grid;
+    gap: 10px;
+    max-width: 70ch;
+    color: var(--ink-2);
+  }
+  .tp-list strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  /* names and options never break at their hyphens; the planned command sits on a line of its own and wraps on
+     phones between its two halves instead of scrolling the page */
+  .tp-list code {
+    white-space: nowrap;
+  }
+  .tp-list .tp-cmd {
+    display: block;
+    margin-top: 6px;
+    white-space: normal;
+  }
+  .tp-cmd > span {
+    white-space: nowrap;
+  }
+  .tp-small {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 767px) {
+    .tp-head {
+      padding-bottom: 32px;
+    }
+    .band:has(.tp-head) + .band > .section {
+      padding-top: 32px;
+    }
+    .tp-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>

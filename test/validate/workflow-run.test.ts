@@ -46,6 +46,8 @@ if [ "$1" = build ]; then
   rm -rf dist; mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
   mkdir -p dist/.well-known/agent-skills; echo '{}' > dist/.well-known/agent-skills/index.json
   if [ "\${FAKE_404:-1}" = 1 ]; then echo '<h1>Not found</h1>' > dist/404.html; fi
+  echo '<h1>Templates</h1>' > dist/templates.html
+  if [ "\${FAKE_ROUTES:-1}" = 1 ]; then echo '{"version":1,"include":["/"],"exclude":[]}' > dist/_routes.json; fi
   if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p dist/.well-known/mcp; echo '{}' > dist/.well-known/mcp/server-card.json; fi
   if [ "\${FAKE_SKILLS:-1}" = 0 ]; then rm -rf dist/.well-known/agent-skills; fi
   exit 0
@@ -389,7 +391,22 @@ describe('pages.yml steps', () => {
     const limits = runStep(stepRun('pages.yml', 'Check Pages limits'), env())
     expect(limits.code, limits.out).toBe(0)
     expect(readFileSync(calls, 'utf8')).toBe('wrangler pages project validate dist\n')
-    expect(limits.out).toContain('dist: 5 files')
+    expect(limits.out).toContain('dist: 7 files')
+
+    writeFileSync(calls, '')
+    const fns = runStep(stepRun('pages.yml', 'Check Pages Functions'), env())
+    expect(fns.code, fns.out).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe(
+      `wrangler pages functions build functions --outdir ${join(tmp, 'runner')}/functions\n`,
+    )
+  })
+
+  it('a build without _routes.json stops: every request would run the templates host Function', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_ROUTES: '0' })
+    const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
+    expect(r.code).not.toBe(0)
+    expect(r.out).toContain('dist/_routes.json is missing')
   })
 
   it('a build without 404.html stops: Cloudflare Pages would answer every missing path with the home page', () => {

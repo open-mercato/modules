@@ -325,11 +325,12 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Build',
       'Check artifact contents',
       'Check Pages limits',
+      'Check Pages Functions',
       'Upload site',
       'Not deployed',
     ])
     // the build and its checks run with or without the deploy settings
-    for (const x of b.slice(0, 9)) expect(x.if, x.name).toBeUndefined()
+    for (const x of b.slice(0, 10)) expect(x.if, x.name).toBeUndefined()
     // the switch is the repository variable: a job without environment sees no environment secret, and a
     // job-level if cannot read secrets (review of 28 Oct)
     expect(b[0]?.env).toEqual({ HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}" })
@@ -389,6 +390,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(run).toContain('dist/.well-known/agent-skills/index.json')
     expect(run).toContain('test -f dist/404.html')
     expect(run).toContain('yarn wrangler pages project validate dist')
+    // templates.openmercato.com (decision B of 29 Oct): the Functions bundle and its route list are checked before a deploy
+    expect(run).toContain('yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"')
+    expect(run).toContain('test -f dist/_routes.json')
     // the MCP server card is required only with MCP_URL (finding of 25 Oct)
     expect(run).toContain('if [ -n "${MCP_URL:-}" ]; then')
     expect(run).toContain('mkdir -p .data') // empty data on the first day
