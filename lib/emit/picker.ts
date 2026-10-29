@@ -58,6 +58,9 @@ export function buildPicker(
     const collide = collisionsOf(e, lines)
     // module IDs (core:<id> -> <id>); a catalog peer keeps its raw npm name
     const requires = e.requires.map((r) => (r.resolvesTo?.startsWith('core:') ? r.resolvesTo.slice(5) : r.raw))
+    // the requirements that are core modules, by module ID (audit of 29 Oct, C26: `data_sync` of sync-shopify matched
+    // a package that publishes data_sync too); additive, `requires` keeps its values for readers of v1
+    const requiresCore = e.requires.filter((r) => r.resolvesTo?.startsWith('core:')).map((r) => r.resolvesTo!.slice(5))
     for (const id of e.moduleIds) {
       const several = e.moduleIds.length > 1
       const target = {
@@ -98,6 +101,7 @@ export function buildPicker(
         title: e.title,
         description: e.summary,
         requires,
+        ...(requiresCore.length ? { requiresCore } : {}),
         source: source(e),
         locator: e.locator,
         license: { spdx: e.license.spdx, kind: e.license.kind },
