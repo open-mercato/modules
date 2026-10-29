@@ -278,6 +278,11 @@
         "sales",
         "feature_toggles"
       ],
+      "requiresCore": [
+        "catalog",
+        "sales",
+        "feature_toggles"
+      ],
       "source": "core",
       "locator": "npm:@open-mercato/core",
       "license": {
