@@ -17,7 +17,12 @@ never invalidates receipts.
    and `MINUTES_BY_PRESET.classic` (`lib/receipts/plan.ts`) from that measure.
 3. `collect.yml` on `workflow_run`. It reads step conclusions from the Actions API (the only source of status), log
    excerpts from artifacts, decides each cell with `lib/receipts/state.ts`, dispatches one retry (attempt 2) for
-   unconfirmed red and infra cells, waits for it (up to 40 minutes) and collects it in the same job. Then
+   unconfirmed red and infra cells, waits for it and collects it in the same job. The wait is sized to the retry: its
+   estimate (10 minutes to start, then waves of 6 cells at the minutes of `lib/receipts/plan.ts`) plus a 10 minute
+   margin, at least 40 and at most 120 minutes (`lib/receipts/gather.ts`). Cells that do not fit 120 minutes are left
+   out of the retry (baselines go in first, then infra, then module failures) and named in the notes of the night. A
+   retry that ends after the wait leaves the night provisional (`receipts/_provisional.json`): the collect its own
+   completion starts applies the whole night again with it, in place of the provisional receipts, once. Then
    `collect --bundle`, `radar` and `health --changed` are written to the `data` branch through `data-branch.ts`.
 
 ## Two starter presets (decision of 24 Oct)
