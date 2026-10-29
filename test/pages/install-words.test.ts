@@ -76,8 +76,11 @@ describe('Install card words (Piotr, 28 Oct)', () => {
     expect(installWords('provider', false, { generate: true, migrate: false }, 2).first).toBe(
       'Run this in your app folder. It adds the provider with the libraries it needs and registers it.',
     )
-    // a module never names the libraries: its command does not add them
+    // a module's command adds the packages its plan installs first (audit of 29 Oct, R3), and says so; none: no words
     expect(installWords('module', true, { generate: true, migrate: false }, 1).first).toBe(
+      'Run this in your app folder. It adds the module with the package it needs and registers it.',
+    )
+    expect(installWords('module', true, { generate: true, migrate: false }).first).toBe(
       'Run this in your app folder. It adds the module and registers it.',
     )
     expect(

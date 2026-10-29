@@ -38,7 +38,7 @@ export type InstallVariant = 'steps' | 'preset' | 'enterprise' | 'blocked' | 'un
 
 interface Props {
   variant: InstallVariant
-  /** The steps of the latest line, the install command first. */
+  /** The steps of the latest line: edits by hand first (a built-in module it replaces), then the install command. */
   steps: InstallStep[]
   /**
    * The command of an app that does not have a preset module yet, the create-mercato-module way under it, and the
@@ -173,7 +173,9 @@ const hasBody = button || notes.length > 0 || others.length > 0
                     </span>
                     <div class="inst__body">
                       <p class="inst__t">{s.text}</p>
-                      {s.command && <CommandChip command={s.command} label={i === 0 ? 'Copy install command' : 'Copy command'} />}
+                      {s.command && (
+                        <CommandChip command={s.command} label={s === steps.find((x) => x.command) ? 'Copy install command' : 'Copy command'} />
+                      )}
                       {s.alt && (
                         <div class="inst__alt">
                           <p class="inst__fine">{s.alt.lead}</p>
