@@ -325,6 +325,27 @@ describe('retention and quarantine', () => {
     expect(receiptOf(apply(week, history), null)?.run.at).toBe('2026-10-30T02:17:00Z')
   })
 
+  it("a module receipt links the stored baseline when retention suppresses tonight's (audit R6)", () => {
+    const durable = cell(LOC.durable)
+    const first = apply(bundle([outcome(base09), outcome(durable)]))
+    const storedBase = receiptOf(first, null)!
+    const storedMod = receiptOf(first, LOC.durable)!
+    const history: History = (loc) => (loc === null ? [storedBase] : loc === LOC.durable ? [storedMod] : [])
+    // three days later: the baseline is green again (not written), the module turns red (written)
+    const at = '2026-10-26T02:17:00Z'
+    const red = { build: 'x.ts(1,1): error TS2304: Cannot find name y\nFailed to type check.\n' }
+    const b = bundle([outcome(base09), outcome(durable, { fail: red })])
+    const later = { ...b, night: { ...b.night, id: 102, at } }
+    later.attempts = [{ ...b.attempts[0]!, run: { ...b.attempts[0]!.run, id: 102, at } }]
+    const res = apply(later, history)
+    expect(receiptOf(res, null)).toBeUndefined()
+    const mod = receiptOf(res, LOC.durable)!
+    expect(mod.result.status).toBe('broken')
+    const ids = [...res.receipts.map((r) => r.receipt.id), storedBase.id]
+    expect(mod.baseline).toEqual({ status: 'verified', receipt: storedBase.id })
+    expect(ids).toContain(mod.baseline!.receipt)
+  })
+
   it('a release in the age gate gets a quarantine receipt and keeps tier and install.cli (D46)', () => {
     // durable-work 0.7.0 published 21 Oct (until 26 Oct); 0.6.0 verified on 0.9 in the fixture.
     const sync = structuredClone(fx.sync(LOC.durable)!)
