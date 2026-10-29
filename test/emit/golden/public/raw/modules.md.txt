@@ -9,7 +9,7 @@ Enriches companies with data from the Polish business register.
 Use when CRM company records need registry data looked up by tax number.
 Level: Listed · 3rd-party · MIT
 Agent policy on 0.9: refuse
-Install: npx create-mercato-module install Chmarusso/open-mercato-enrichment-treg
+Nothing to install: github:Chmarusso/open-mercato-enrichment-treg has no installable version (no stable release or pinned tag).
 Card: https://wojciechszyjka.github.io/modules/m/github/chmarusso/open-mercato-enrichment-treg.md
 
 ## Marketing & Loyalty
