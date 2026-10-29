@@ -8,6 +8,14 @@ export const PickerModule = z.object({
   title: z.string(),
   description: z.string(),
   requires: z.array(z.string()),
+  // additive (29 Oct, audit C26): `requires` names a core module by its bare ID, which a package may publish too
+  // (data_sync of @fullstackhouse/open-mercato-data-sync-durable); its values stay as they are for readers of v1
+  requiresCore: z
+    .array(ModuleId)
+    .optional()
+    .describe(
+      'The entries of requires that are core modules (@open-mercato/core), by module ID. Resolve them as core modules: the preset enables them or `yarn mercato module enable @open-mercato/core --module <id>` does, never a package that publishes the same module ID unless the user asked for that package. Absent: no core requirement.',
+    ),
   source: z.enum(['core', 'official', 'community', 'third-party', 'enterprise']),
   locator: Locator,
   license: z.object({ spdx: z.string().nullable(), kind: LicenseKind }),

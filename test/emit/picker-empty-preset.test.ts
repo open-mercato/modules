@@ -1,13 +1,15 @@
 // picker.json for create-mercato-app #8118 (audit of 29 Oct). C30: installByLine has no command on a line whose new app
 // (the classic preset) already registers the module, so an app from another preset planned nothing there; the
 // additive installEmptyPresetByLine gives the command of an app from the empty preset on each verified line where it
-// differs from installByLine.
+// differs from installByLine. C26: `requires` drops the `core:` prefix, so a core requirement (data_sync) matched a
+// package that publishes the same module ID; the additive requiresCore names the requirements that are core modules,
+// and `requires` keeps its values (the consumer at 576f44f reads them as module IDs).
 import { describe, expect, test } from 'vitest'
 import { presetsOrFallback } from '../../lib/core/lines.ts'
 import { buildPicker } from '../../lib/emit/picker.ts'
 import { PickerIndex } from '../../lib/schema/published/picker.ts'
 import type { IndexEntry } from '../../lib/schema/published/modules.ts'
-import { corpusEntries, fixtureBuiltIn, fixtureEntries, loadFixture, NOW } from '../core/helpers.ts'
+import { corpusEntries, fixtureBuiltIn, fixtureEntries, LOC, loadFixture, NOW } from '../core/helpers.ts'
 
 const fx = loadFixture()
 const lines = fx.lines.lines
@@ -58,5 +60,32 @@ describe('installEmptyPresetByLine (C30)', () => {
       '0.9':
         'yarn mercato module add @open-mercato/storage-s3@0.9.0 && echo OM_ENABLE_STORAGE_S3=true >> .env && yarn generate',
     })
+  })
+})
+
+describe('requiresCore (C26)', () => {
+  test('a core requirement is named; requires keeps the bare module ID', () => {
+    const ksef = row(picker(), 'integration_ksef_direct')
+    expect(ksef.requires).toEqual(['integrations'])
+    expect(ksef.requiresCore).toEqual(['integrations'])
+  })
+
+  test('a package requirement is not', () => {
+    const ds = picker().modules.find((m) => m.locator === LOC.datasync)!
+    expect(ds.requires).toEqual(['@fullstackhouse/open-mercato-durable-work'])
+    expect(ds.requiresCore).toBeUndefined()
+  })
+
+  test('a module that requires core data_sync names it in requiresCore', () => {
+    const shop = {
+      ...entries.find((e) => e.locator === LOC.ksef)!,
+      requires: [
+        { raw: 'integrations', resolvesTo: 'core:integrations' },
+        { raw: 'data_sync', resolvesTo: 'core:data_sync' },
+      ],
+    }
+    const r = row(picker([shop, ...entries.filter((e) => e.locator !== LOC.ksef)]), 'integration_ksef_direct')
+    expect(r.requires).toEqual(['integrations', 'data_sync'])
+    expect(r.requiresCore).toEqual(['integrations', 'data_sync'])
   })
 })
