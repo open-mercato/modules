@@ -296,8 +296,9 @@ type FilledEntry = { omVersion: string; empty: PresetModule[]; classic?: PresetM
  * data/presets.json with every line filled, the one place the preset lists come from (decision of 24 Oct). Per line and
  * preset: the list a baseline of that preset wrote (`collect`); else, for classic, lines.json `defaultPreset` when it
  * is `classic` (`watch` reads the template), else the list read by hand for that exact version (day 0); for empty,
- * the list read by hand, else `NEW_APP_PACKAGES`, whose core modules stay unknown. A line added since the last night
- * with a version nobody read keeps `classic` unknown until its baseline or `watch` runs.
+ * the list read by hand, else `NEW_APP_PACKAGES`, whose core modules stay unknown. A stored list counts only on the
+ * version it was read from. A line added or moved since the last night with a version nobody read keeps `classic`
+ * unknown until its baseline or `watch` runs.
  */
 export function presetsOrFallback(
   presets: Readonly<Record<string, PresetsEntry>> | null | undefined,
@@ -305,7 +306,12 @@ export function presetsOrFallback(
   at: string,
 ): Record<string, FilledEntry> {
   const out: Record<string, FilledEntry> = {}
+  const current = new Map(lines.map((l) => [l.key, l.version]))
   for (const [k, v] of Object.entries(presets ?? {})) {
+    // a list read from another version of the line no longer says what a new app has (audit of 29 Oct, R7: `next`
+    // moved to a new develop snapshot), the rule the writer keeps (lib/receipts/state.ts); the loop below fills the
+    // line from its current version
+    if (current.has(k) && current.get(k) !== v.omVersion) continue
     const empty = v.empty ?? EMPTY_PRESET_FALLBACK[v.omVersion] ?? NEW_APP_PACKAGES
     out[k] = {
       omVersion: v.omVersion,
