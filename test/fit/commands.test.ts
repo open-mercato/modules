@@ -173,6 +173,27 @@ describe('yarn om fit', () => {
     expect(pendingFitLines(data, lines())).toEqual([])
   })
 
+  it('radar reads only receipts of the module version its fit cells are for (audit R8 through the command)', async () => {
+    const { data, out, cache } = fakeSetup()
+    expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)
+    const src = readFileSync(join(DATA_FIXTURE, 'receipts', '@piotrkarwatka', 'marketing-consents.jsonl'), 'utf8')
+    const r0 = JSON.parse(src.split('\n')[0] as string) as Record<string, Record<string, unknown>>
+    // a newer, broken receipt of an older release (0.0.9) on the same next snapshot: not the version facts hold
+    const old = {
+      ...r0,
+      id: 'r_20261024_9dc851ba3c0e',
+      module: { ...r0.module, version: '0.0.9' },
+      om: { line: 'next', version: '1.1.0', createApp: 'create-mercato-app@1.1.0', preset: 'classic' },
+      result: { ...r0.result, status: 'broken' },
+      run: { ...r0.run, at: '2026-10-24T02:30:00Z' },
+    }
+    writeTree(data, { 'receipts/@piotrkarwatka/marketing-consents.jsonl': `${JSON.stringify(old)}\n` })
+    expect(radar(ctx([], data, out))).toBe(0)
+    const r = Radar.parse(readJson(join(data, 'radar', 'next.json')))
+    expect(r.receiptsOnNext).toEqual({ verified: 0, broken: 0 })
+    expect(r.summary).toMatch(/Receipts on next: 0 verified, 0 broken\.$/)
+  })
+
   it('filters with --modules and --om', async () => {
     const { data, out, cache } = fakeSetup()
     expect(await fit(ctx(['--cache', cache, '--om', '1.1.0', '--modules', 'npm:@x/none'], data, out))).toBe(1)
