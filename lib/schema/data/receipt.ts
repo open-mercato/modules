@@ -1,5 +1,6 @@
 // data/receipts/<locpath>.jsonl and data/receipts/_baseline.jsonl (spec 4.5). Written only by `collect`.
 import { z } from 'zod'
+import { Change } from './changes.ts'
 import { CellStatus, IsoDate, IsoDateTime, LineKey, Locator, NpmName, SemVer, StarterPreset, Step } from '../common.ts'
 
 export const Receipt = z
@@ -85,3 +86,29 @@ export const Receipt = z
   .strict()
 
 export type Receipt = z.infer<typeof Receipt>
+
+// data/receipts/_provisional.json (audit R5): nights collected before their retry finished. A later collect of that
+// retry run applies the whole night again, in place of these receipts, and removes the entry; `changes` are the lines
+// the provisional write added to changes/, taken back then. Entries older than the retention window are dropped.
+export const ProvisionalNights = z
+  .object({
+    nights: z
+      .array(
+        z
+          .object({
+            night: z.number().int(),
+            at: IsoDateTime,
+            retry: z
+              .array(z.string().regex(/^[a-f0-9]{64}$/))
+              .min(1)
+              .max(200),
+            changes: z.array(Change).max(200),
+          })
+          .strict(),
+      )
+      .max(60),
+  })
+  .strict()
+
+export type ProvisionalNights = z.infer<typeof ProvisionalNights>
+export type ProvisionalNight = ProvisionalNights['nights'][number]
