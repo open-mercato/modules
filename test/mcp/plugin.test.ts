@@ -12,8 +12,10 @@ import { findBannedChars } from '../../lib/core/text.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const read = (p: string) => readFileSync(join(ROOT, p), 'utf8')
+// audit C14 (28 Oct): no .mcp.json until the first Worker deploy (D-OPEN-1), so the plugin is the skill alone and its
+// description does not promise MCP
 const DESCRIPTION =
-  'Find Open Mercato modules before you build: registry search, nightly install receipts and install plans over MCP, plus the om-find-module skill.'
+  'Find Open Mercato modules before you build: the om-find-module skill searches the registry, checks what is verified on your Open Mercato version and shows the install plan. The MCP server is not deployed yet.'
 
 function ctx(root: string, args: string[] = []): CommandContext {
   return { args, root, flags: { data: '.data', out: 'out', offline: false, json: false } }
@@ -112,7 +114,7 @@ describe('plugin and marketplace', () => {
         description: DESCRIPTION,
         version: '0.1.0',
         category: 'development',
-        tags: ['open-mercato', 'modules', 'mcp'],
+        tags: ['open-mercato', 'modules'],
       },
     ])
     expect(existsSync(join(ROOT, 'plugins/om-modules/.claude-plugin/plugin.json'))).toBe(true)
@@ -127,6 +129,20 @@ describe('plugin and marketplace', () => {
       author: { name: 'Open Mercato Modules' },
       license: 'MIT',
     })
+  })
+
+  it('without .mcp.json the marketplace and plugin descriptions say the MCP server is not deployed', () => {
+    if (existsSync(join(ROOT, MCP_JSON))) return // after the first Worker deploy the description can name the tools
+    const m = JSON.parse(read('.claude-plugin/marketplace.json')) as {
+      plugins: { description: string; tags: string[] }[]
+    }
+    const p = JSON.parse(read('plugins/om-modules/.claude-plugin/plugin.json')) as { description: string }
+    for (const d of [m.plugins[0]!.description, p.description]) {
+      expect(d).toContain('The MCP server is not deployed yet.')
+      expect(d).not.toMatch(/over MCP/)
+      expect(findBannedChars(d)).toEqual([])
+    }
+    expect(m.plugins[0]!.tags).not.toContain('mcp')
   })
 
   it('.mcp.json, when present, is an http server named om-modules at MCP_URL (when the env names one)', () => {

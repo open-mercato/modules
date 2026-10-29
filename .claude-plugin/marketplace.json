@@ -6,10 +6,10 @@
     {
       "name": "om-modules",
       "source": "./plugins/om-modules",
-      "description": "Find Open Mercato modules before you build: registry search, nightly install receipts and install plans over MCP, plus the om-find-module skill.",
+      "description": "Find Open Mercato modules before you build: the om-find-module skill searches the registry, checks what is verified on your Open Mercato version and shows the install plan. The MCP server is not deployed yet.",
       "version": "0.1.0",
       "category": "development",
-      "tags": ["open-mercato", "modules", "mcp"]
+      "tags": ["open-mercato", "modules"]
     }
   ]
 }
