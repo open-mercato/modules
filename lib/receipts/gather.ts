@@ -28,6 +28,11 @@ export const RETRY_WAIT_MS = 40 * 60 * 1000
 export const RETRY_WAIT_MAX_MS = 120 * 60 * 1000
 /** The plan job of the retry and the runner queue before its first cell starts. */
 export const RETRY_START_MIN = 10
+/**
+ * Slack on top of the estimate while RETRY_WAIT_MAX_MS allows (the cell minutes of plan.ts are estimates and a cell
+ * job may run up to 40 minutes): a retry of two waves is not lost when one of its cells runs a few minutes over.
+ */
+export const RETRY_MARGIN_MIN = 10
 export const POLL_MS = 30 * 1000
 
 /** Minutes a retry of these cells takes: its start, then waves of PARALLEL cells per preset (plan.ts weights). */
@@ -63,7 +68,7 @@ export function retryPlan(
     taken.push(c)
     chosen.add(k)
   }
-  const waitMs = Math.min(RETRY_WAIT_MAX_MS, Math.max(RETRY_WAIT_MS, retryMinutes(taken) * 60_000))
+  const waitMs = Math.min(RETRY_WAIT_MAX_MS, Math.max(RETRY_WAIT_MS, (retryMinutes(taken) + RETRY_MARGIN_MIN) * 60_000))
   return { keys: keys.filter((k) => chosen.has(k)), left: keys.filter((k) => !chosen.has(k)), waitMs }
 }
 

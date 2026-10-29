@@ -266,7 +266,8 @@ describe('gather with a fake Actions API', () => {
       [],
       many(7, 'classic').map((c) => c.key),
     )
-    expect(seven.waitMs).toBe(50 * 60 * 1000)
+    // 50 minutes of estimate plus the margin
+    expect(seven.waitMs).toBe(60 * 60 * 1000)
 
     // more than fits: the baseline first, then infra, then the rest, in the order of the keys
     const cells = [...many(40, 'classic'), { ...base09, key: 'base', preset: 'classic' as const }]
