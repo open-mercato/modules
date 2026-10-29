@@ -5,7 +5,14 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Receipt } from '../../lib/schema/data/index.ts'
 import collect, { applyBundle } from '../../lib/commands/collect.ts'
-import { readPresets, readProvisional, readReceiptStore, removeNight, writePresets } from '../../lib/receipts/data.ts'
+import {
+  readPresets,
+  readProvisional,
+  readReceiptStore,
+  removeNight,
+  writePresets,
+  writeProvisional,
+} from '../../lib/receipts/data.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
 import { buildOutcomes, checkNightlyRun, runTitle, type ApiJob, type ApiRun } from '../../lib/receipts/from-actions.ts'
 import {
@@ -474,13 +481,21 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
     applyBundle(ROOT, data, n101.bundle)
     expect(readPresets(data)?.['0.9']).toMatchObject({ omVersion, measuredAt: LATER, at: LATER })
   }
-  /** Night 100's retry lands only now; the bundle is applied twice, the second time as a data-branch retry would. */
+  /**
+   * Night 100's retry lands only now. The bundle is applied twice: the second time with night 100 still listed as
+   * provisional, as after a collect that wrote presets.json and stopped before _provisional.json, so applyNight runs
+   * again on the entry the first apply wrote (a plain second apply ends at "already in the receipts").
+   */
   async function lateRetryTwice(data: string) {
     const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
     if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
+    const pending = readProvisional(data)
     applyBundle(ROOT, data, late.bundle)
     const once = readFileSync(join(data, 'presets.json'), 'utf8')
-    applyBundle(ROOT, data, late.bundle)
+    writeProvisional(data, pending)
+    expect(applyBundle(ROOT, data, late.bundle).join('\n')).toContain(
+      'its late retry replaces the provisional receipts',
+    )
     expect(readFileSync(join(data, 'presets.json'), 'utf8')).toBe(once)
     return readPresets(data)?.['0.9']
   }
@@ -544,6 +559,27 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
 
     const entry = await lateRetryTwice(data)
     expect(entry).toEqual({ ...own, at: LATER })
+  })
+
+  it('a late retry fills the preset list a newer night of the same version left out, keeping its measuredAt (review round 4)', async () => {
+    const data = await provisionalNight()
+    // night 101 measured the same version but only the other preset; this preset's list of night 100 is the only one
+    const own = readPresets(data)!['0.9']!
+    const other = base09.preset === 'classic' ? 'empty' : 'classic'
+    const theirs = [{ id: 'auth', from: '@open-mercato/core' }]
+    writePresets(data, {
+      ...readPresets(data),
+      '0.9': { omVersion: base09.omVersion, [other]: theirs, measuredAt: LATER, at: LATER },
+    })
+
+    const entry = await lateRetryTwice(data)
+    expect(entry).toEqual({
+      omVersion: base09.omVersion,
+      [other]: theirs,
+      [base09.preset]: own[base09.preset],
+      measuredAt: LATER,
+      at: LATER,
+    })
   })
 
   it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {
