@@ -15,6 +15,7 @@ import { jsonLdText } from '../lib/json-ld.ts'
 import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
+import { TEMPLATES_HOST } from '../../../lib/core/templates-host.ts'
 
 interface Props {
   title: string
@@ -112,7 +113,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
       <slot />
     </main>
     <Footer dataAsOf={dataAsOf} />
-    <script is:inline set:html={hereScript(absoluteUrl(site, '/'), BASE)} />
+    <script is:inline set:html={hereScript(absoluteUrl(site, '/'), BASE, [`https://${TEMPLATES_HOST}`])} />
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
     <script>
       const toast = document.getElementById('om-toast')

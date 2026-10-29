@@ -4,6 +4,7 @@
 // The canonical and Open Graph tags keep the configured site. On the configured host the script does nothing.
 // It also shows the `[data-preview-note]` paragraphs (rendered `hidden`): a preview that a share link opens lets in only
 // the browser that holds its cookie, so a command run elsewhere answers 401 (finding of 25 Oct, OM Cloud sandbox).
+// Other production hosts of the same build (templates.openmercato.com, decision B of 29 Oct) are left alone too.
 
 /** `text` with every form of the site root `from` (as is, URL-encoded, without the scheme) replaced by `to`. */
 export function rewriteSite(text: string, from: string, to: string): string {
@@ -20,13 +21,14 @@ export function rewriteSite(text: string, from: string, to: string): string {
  * Inline script for the end of <body>: `site` is the configured site root with its base path, no trailing slash
  * (`https://open-mercato.github.io/modules`), `base` the base path (`/modules`). It rewrites `data-copy`, `href`,
  * `title` and `aria-label`, and the text of command chips and `[data-site-text]`, now and in islands that render
- * later.
+ * later. `production` lists other origins that serve this same build in production, where the script does nothing.
  */
-export function hereScript(site: string, base: string): string {
+export function hereScript(site: string, base: string, production: readonly string[] = []): string {
   const fn = rewriteSite.toString()
   return `(function () {
   var from = ${JSON.stringify(site.replace(/\/+$/, ''))}
   if (!/^https?:$/.test(location.protocol)) return
+  if (${JSON.stringify([...production])}.indexOf(location.origin) !== -1) return
   var to = location.origin + ${JSON.stringify(base.replace(/\/+$/, ''))}
   if (to === from) return
   var notes = document.querySelectorAll('[data-preview-note]')
