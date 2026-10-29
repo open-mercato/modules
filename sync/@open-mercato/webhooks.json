@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/webhooks",
-  "checkedAt": "2026-10-29T08:34:00Z",
+  "checkedAt": "2026-10-29T13:10:05Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/webhooks",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7689.1.453d3db612"
+      "develop": "0.10.1-develop.7701.1.87b1ad4224"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -47,9 +47,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-29T08:11:55Z",
+    "pushedAt": "2026-10-29T13:09:55Z",
     "defaultBranch": "main",
-    "stars": 1888,
+    "stars": 1889,
     "license": "MIT",
     "topics": [
       "crm",
