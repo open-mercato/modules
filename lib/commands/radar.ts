@@ -58,7 +58,8 @@ export default function radar(ctx: CommandContext): number {
       warn(`no fit cell for ${m.key} on ${next}, left out`)
       continue
     }
-    modules.push({ locator: m.locator, next: cell, latest: fitBase?.cells[m.key] ?? null })
+    // the version of the facts and fit cells: only its receipts count on next (audit R8)
+    modules.push({ locator: m.locator, version: m.version, next: cell, latest: fitBase?.cells[m.key] ?? null })
   }
   const generatedAt = new Date().toISOString()
   const surface = Surface.parse(
