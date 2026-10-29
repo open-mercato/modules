@@ -55,6 +55,12 @@ export interface PromptOptions {
   maxList?: number
   /** The catalog, for the libraries an adapter peers on in a command of another line (`peerLibrarySpecs`). */
   find?: PeerLookup
+  /**
+   * The line's install plan `then` (`yarn generate`, `yarn db:migrate (ask the user first)`), which the steps after the
+   * command follow; without it, generate for a module or a provider and a migration for one with tables, as the
+   * Install card does (audit of 29 Oct, C03).
+   */
+  then?: readonly string[] | null
 }
 
 export interface PromptParts {
@@ -78,6 +84,11 @@ export interface PromptParts {
    */
   services?: string[]
   moduleId: string | null
+  /** What the opening sentence calls it (a provider without modules is an adapter); absent: a module. */
+  what?: 'module' | 'library' | 'provider'
+  /** The steps after the command: yarn generate, and a migration the agent asks about; absent: both. */
+  generate?: boolean
+  migrate?: boolean
 }
 
 /**
@@ -120,6 +131,11 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
   }
   const lists = e.anatomy?.lists
   const ids = clean(e.moduleIds, RE.moduleId)
+  const what =
+    e.kind === 'library' ? 'library' : e.kind === 'provider' && e.moduleIds.length === 0 ? 'provider' : 'module'
+  const adds = e.kind !== 'library' && e.kind !== 'tool'
+  const tables = (e.anatomy?.counts.tables ?? 0) > 0 || (e.anatomy?.counts.migrations ?? 0) > 0
+  const then = opts.then ?? null
   return {
     name,
     version,
@@ -138,14 +154,33 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
     hosts: clean(lists?.hosts ?? [], RE.host),
     services: servicesOf(lists?.sdks ?? []),
     moduleId: ids.length === 1 ? (ids[0] ?? null) : null,
+    what,
+    generate: then ? then.includes('yarn generate') : adds,
+    migrate: then ? then.some((t) => t.startsWith('yarn db:migrate')) : adds && tables,
   }
+}
+
+/** The opening sentence of the prompt, by what the package is. */
+function openingOf(p: Pick<PromptParts, 'what'>, target: string): string {
+  if (p.what === 'library') return `Add the library ${target} to this Open Mercato app.`
+  if (p.what === 'provider') return `Add the provider ${target} to this Open Mercato app.`
+  return `Install the Open Mercato module ${target} in this app.`
+}
+
+/** The step after the command, as the plan runs it; null when it runs neither. */
+function afterStep(p: Pick<PromptParts, 'generate' | 'migrate'>): string | null {
+  const generate = p.generate ?? true
+  const migrate = p.migrate ?? true
+  if (generate && migrate) return 'Then run yarn generate, and ask me before yarn db:migrate.'
+  if (generate) return 'Then run yarn generate.'
+  return migrate ? 'Then ask me before yarn db:migrate.' : null
 }
 
 /** Prompt text from validated parts (template of spec 8.7; empty lists leave their step out). */
 export function renderPrompt(p: PromptParts, maxList = 10): string {
   const out: string[] = []
   const target = p.version ? `${p.name}@${p.version}` : p.name
-  out.push(`Install the Open Mercato module ${target} in this app.`)
+  out.push(openingOf(p, target))
   out.push(
     '0. If the current directory is not an Open Mercato app (no @open-mercato/core in package.json), ask me for the app path and cd there first.',
   )
@@ -165,7 +200,8 @@ export function renderPrompt(p: PromptParts, maxList = 10): string {
     `Show me the install plan first: call plan_install from the om-modules MCP server if it is connected, otherwise ${card}. Change nothing before I say yes.`,
   )
   if (p.command) steps.push(`After my yes run: ${p.command}`)
-  steps.push('Then run yarn generate, and ask me before yarn db:migrate.')
+  const after = afterStep(p)
+  if (after) steps.push(after)
   if (p.acl.length > 0)
     steps.push(`It adds these permissions: ${shortList(p.acl, maxList)}. Ask me which roles get them.`)
   if (p.settings.length > 0)

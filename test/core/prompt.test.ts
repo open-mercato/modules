@@ -1,4 +1,6 @@
 // Install prompt and deeplinks (spec 8.7): validated fields only, list limits, 1800-character URL budget.
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { buildDeeplinks, CLIPBOARD_NOTE, sanitizeCwd, URL_BUDGET } from '../../lib/core/deeplinks.ts'
 import {
@@ -9,7 +11,7 @@ import {
   sanitizeUserQuery,
 } from '../../lib/core/prompt.ts'
 import type { IndexEntry } from '../../lib/schema/published/modules.ts'
-import { fixtureEntries, LOC, loadFixture, SITE } from './helpers.ts'
+import { corpusEntries, fixtureEntries, LOC, loadFixture, ROOT, SITE } from './helpers.ts'
 
 const fx = loadFixture()
 const entries = fixtureEntries(fx)
@@ -163,5 +165,47 @@ describe('deeplinks', () => {
     expect(sanitizeCwd('/Users/me/app\nrm -rf')).toBeNull()
     const set = buildDeeplinks(render, { cwd: '../x' })
     expect(set.links[0]!.url).not.toContain('cwd=')
+  })
+})
+
+// audit of 29 Oct (C03): the prompt said `Install the Open Mercato module` and asked for yarn generate and a migration
+// for a library, an adapter and a tool alike; the steps after the command now follow the line's install plan
+describe('install prompt by kind', () => {
+  const all = corpusEntries()
+  const of = (loc: string) => structuredClone(all.find((e) => e.locator === loc) as IndexEntry)
+
+  it('a library is added, with no generate and no migration', () => {
+    const p = buildInstallPrompt(of('npm:@freighttech/ui'), { site: SITE, line: '0.9' })
+    expect(p.split('\n')[0]).toMatch(/^Add the library @freighttech\/ui@\S+ to this Open Mercato app\.$/)
+    expect(p).not.toContain('yarn generate')
+    expect(p).not.toContain('db:migrate')
+  })
+
+  it('an adapter is added and registered, with no migration', () => {
+    const p = buildInstallPrompt(of('npm:@open-mercato/web-research-model'), { site: SITE, line: '0.9' })
+    expect(p.split('\n')[0]).toMatch(
+      /^Add the provider @open-mercato\/web-research-model@\S+ to this Open Mercato app\.$/,
+    )
+    expect(p).toContain('Then run yarn generate.')
+    expect(p).not.toContain('db:migrate')
+  })
+
+  it('a module without tables runs yarn generate only; the plan of the line decides when it is given', () => {
+    const e = entry(LOC.ksef)
+    e.anatomy!.counts.tables = 0
+    e.anatomy!.counts.migrations = 0
+    expect(buildInstallPrompt(e, { site: SITE, line: '0.9' })).toContain('Then run yarn generate.\n')
+    const planned = buildInstallPrompt(ksef, {
+      site: SITE,
+      line: '0.9',
+      then: ['yarn generate', 'yarn db:migrate (ask the user first)'],
+    })
+    expect(planned).toContain('Then run yarn generate, and ask me before yarn db:migrate.')
+    expect(buildInstallPrompt(ksef, { site: SITE, line: '0.9', then: ['yarn generate'] })).not.toContain('db:migrate')
+  })
+
+  it('a tool gets no install prompt on its page', () => {
+    const page = readFileSync(join(ROOT, 'site', 'src', 'pages', 'm', '[...path].astro'), 'utf8')
+    expect(page).toContain("entry.kind !== 'tool' && parts.command ? parts : null")
   })
 })

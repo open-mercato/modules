@@ -631,7 +631,6 @@ const installLines: InstallLine[] = lines.map((l) => {
     rec && entry.version.latest && entry.version.latest !== rec && quarantineUntil
       ? `${entry.version.latest} installable from ${day(quarantineUntil)}${entry.compat.lines[l.key]?.precheck === 'pass' ? ', pre-check passed' : ''}. Install ${rec} until then.`
       : null
-  const parts = promptParts(entry, { site: meta.site, line: l.key, find: (loc) => byLocator.get(loc) })
   // D23: `refuse` takes the main action away (no command, no deeplink); the command stays behind a disclosure,
   // except when nothing can be installed at all
   const refused = policy.decision === 'refuse'
@@ -647,6 +646,8 @@ const installLines: InstallLine[] = lines.map((l) => {
   // the package, the command is for an app from the empty preset, so that preset's plan says. The enterprise command
   // keeps its own form.
   const lineThen = (preset.has(l.key) ? plans[l.key]?.emptyPreset?.then : plans[l.key]?.then) ?? null
+  // the agent prompt runs the steps after the command that the line's plan runs (audit of 29 Oct, C03)
+  const parts = promptParts(entry, { site: meta.site, line: l.key, find: (loc) => byLocator.get(loc), then: lineThen })
   // the command is the line's plan, with the packages the entry requires (audit of 29 Oct, R3: terminal-tracking left out
   // @freighttech/ui on every version); an edit by hand stays on the card as a step of its own
   const lineCommands = (preset.has(l.key) ? plans[l.key]?.emptyPreset?.commands : plans[l.key]?.commands) ?? null
@@ -700,7 +701,8 @@ const installLines: InstallLine[] = lines.map((l) => {
     collision: collisionNote(raw, l.key),
     policy,
     quarantine: newer,
-    prompt: !refused && !previewOnly && parts.command ? parts : null,
+    // a tool runs on its own (`npx create-mercato-module` only prints its help): no prompt to install it into an app
+    prompt: !refused && !previewOnly && entry.kind !== 'tool' && parts.command ? parts : null,
     // More ways to install follow the chosen line (D46): the same recommended version as the main command
     cmm: refused ? null : fullCmm,
     cloud: !refused && (entry.npm || entry.github) ? (fullCmm ?? full) : null,
