@@ -5,8 +5,8 @@
 // The picker belongs to create-mercato-app, which makes the classic preset by default (decision of 24 Oct): the
 // commands per line are those of a new app (the classic preset), and a line whose new app already registers the module
 // has no command (`inPresets` names it), as the site and the tools say `Nothing to install` there.
-import { installInfo, presetFlagCommand } from '../core/plan.ts'
-import { installVersion } from '../core/policy.ts'
+import { installInfo, presetFlagCommand, presetFlagEmptyCommand } from '../core/plan.ts'
+import { emptyPresetVersion, installVersion } from '../core/policy.ts'
 import { ascendingKeys, latestLine, registeredIn, type LineInfo } from '../core/lines.ts'
 import { collisionLintText } from '../core/finding.ts'
 import { INSTALLABLE_META_KEY, presetInstallText } from '../core/policy.ts'
@@ -83,6 +83,15 @@ export function buildPicker(
       const installByLine: Record<string, string> = {}
       for (const key of e.compat.verifiedOn)
         if (!inPresets.includes(key)) installByLine[key] = flagged(key) ?? installInfo(target, key, classic(key)).cli
+      // the command of an app from the empty preset on each verified line, where it is not the one of installByLine
+      // (audit of 29 Oct, C30: a crm or empty app planned nothing on a line whose new app registers the module): module
+      // add, `yarn add` where that preset registers it too, module add and the flag for a module behind one
+      const installEmptyPresetByLine: Record<string, string> = {}
+      for (const key of e.compat.verifiedOn) {
+        const v = emptyPresetVersion(e, key)
+        const cmd = presetFlagEmptyCommand(target, v) ?? installInfo(target, key, presets?.[key]?.empty ?? null, v).cli
+        if (cmd !== installByLine[key]) installEmptyPresetByLine[key] = cmd
+      }
       modules.push({
         id,
         from: e.npm,
@@ -96,6 +105,7 @@ export function buildPicker(
         verifiedOn: e.compat.verifiedOn,
         install,
         installByLine,
+        ...(Object.keys(installEmptyPresetByLine).length ? { installEmptyPresetByLine } : {}),
         ...(inPresets.length ? { inPresets } : {}),
         // the latest line's new app has it (round 13): `install` is the empty preset's, the note says so
         ...(latest && inPresets.includes(latest.key) ? { presetNote: presetInstallText([id]) } : {}),

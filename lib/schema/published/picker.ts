@@ -20,6 +20,14 @@ export const PickerModule = z.object({
    * what create-mercato-app makes); a line of `inPresets` has none. Added after v1, optional for readers.
    */
   installByLine: z.record(LineKey, z.string()),
+  // additive (29 Oct, audit C30): installByLine is for a new app (the classic preset) and has no command on a line
+  // whose new app registers the module, so an app from another preset had nothing to run there
+  installEmptyPresetByLine: z
+    .record(LineKey, z.string())
+    .optional()
+    .describe(
+      'Command per line in verifiedOn for an app from the empty preset, or another app that does not register the module, where it differs from installByLine: a line of inPresets (`yarn mercato module add`, or `yarn add` when the empty preset registers it too) and a module a new app registers behind an env flag (`module add` and the flag). A picker for a preset other than classic prefers it and falls back to installByLine, then install. Absent line or field: installByLine is that command.',
+    ),
   // additive (24 Oct): create-mercato-app makes the classic preset by default, and that preset already registers some
   // modules (checkout, webhooks, currencies): the picker offers nothing to install for them on those lines
   inPresets: z
