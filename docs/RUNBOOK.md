@@ -325,7 +325,7 @@ run): without a module rule that is infra.
 
 Timeouts are one rule on both runners. `steps.sh` limits each step itself, 20 s under `timeout-minutes` of the step in
 `nightly.yml` (`step_secs`), and writes `[harness] step timed out after <n> s` into the step log when the limit really
-passed; the inner `timeout 600 yarn build` writes `[harness] step timed out: yarn build ran 600 s`. An exit code 124 or
+passed; the inner `timeout 900 yarn build` writes `[harness] step timed out: yarn build ran 900 s`. An exit code 124 or
 137 that module code returns before the limit is an ordinary failure. GitHub's `timeout-minutes` and the `timeout` of
 `run-cell.sh` (equal to `timeout-minutes`) are only backstops; the preview runner reports a step ended by its backstop
 as `cancelled`.
@@ -334,15 +334,21 @@ The signature is `sha1(step + ':' + first error line)` with paths reduced to fil
 
 ## Repository setup (owner clicks)
 
-Spec 5.6 was written for a public repository of a personal account; the catalog lives in the private
-`open-mercato/modules`. These are settings of the repository and the organization. A person with admin rights makes them; agents and workflows
-never change them. The one workflow call that touches Actions state is the keepalive of `watch`, which calls `enable` only on
-workflows that are active or that GitHub turned off for inactivity, never on one disabled by hand (see Stop the night). State on 25 Oct: none of them is set (`gh api repos/open-mercato/modules/branches/main/protection`
-answers 404, `gh label list` shows only the GitHub defaults, `gh variable list` is empty). One thing exists already:
-the environment `mcp`, which GitHub created on the first `mcp-deploy` run (25 Oct 11:07 UTC; a job that names an
-environment creates it), with no protection rules and no deployment branch policy.
+Spec 5.6 was written for a public repository of a personal account; the catalog lives in `open-mercato/modules`,
+public since 28 Oct. These are settings of the repository and the organization. A person with admin rights makes
+them; agents and workflows never change them. The one workflow call that touches Actions state is the keepalive of
+`watch`, which calls `enable` only on workflows that are active or that GitHub turned off for inactivity, never on one
+disabled by hand (see Stop the night).
 
-Before the repository is public:
+State on 29 Oct (read with `gh api`): steps 1 to 4 and 8 are done, step 9 except three checks. `main` requires
+`validate` and a code-owner review and blocks force pushes; the six labels exist; workflow permissions are read and
+first-time contributors need approval; the environment `cloudflare` exists with deployment branches `main` only. Still
+to do: step 5, the rest of step 6 (the `CLOUDFLARE_API_TOKEN` secret in `cloudflare`, the variable
+`CLOUDFLARE_ACCOUNT_ID`, the `main` policy and the token of `mcp`, which GitHub created on the first `mcp-deploy` run of
+25 Oct with no rules, then `MCP_URL` and `WEBMCP_OT_TOKENS`) and step 7. Until step 6 ends, `pages` ends green without
+a deployment and `modules.openmercato.com` answers 404.
+
+Before the repository is public (done):
 
 1. Settings > Branches: protect `main`. Require the `validate` check (the job of that name in `validate.yml`), require
    a review from code owners, block force pushes. `data` stays unprotected (only the trusted jobs write it).
@@ -350,9 +356,9 @@ Before the repository is public:
    forms apply `new-entry`; `sync.yml` adds `discovery` to its issue once the label exists; `validate` reads
    `name-reviewed` from the PR when it runs (not from the event), so after adding it a curator re-runs the
    `validate` check of the PR.
-3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs). While the repository is
-   private the `autofix` job is skipped (the action fetches without credentials, which a private repository refuses),
-   so authors and testers run `yarn om format modules` themselves; the validate message says so.
+3. Install the autofix.ci app on the repository (`autofix.yml` formats `modules/**` in PRs). The `autofix` job is
+   skipped while the repository is private (the action fetches without credentials, which a private repository
+   refuses). On the public repository it runs: in PR #4 it pushed the formatted descriptor to the fork.
 4. Settings > Actions > General: require approval for first-time contributors; workflow permissions: read.
 
 At the switch to the public address (Cloudflare Pages at `modules.openmercato.com`, Piotr and owner decision A(a) of
@@ -389,14 +395,17 @@ At the switch to the public address (Cloudflare Pages at `modules.openmercato.co
    "answers" is not the test. The test is the first line of `https://modules.openmercato.com/llms.txt`, which must be
    `# Open Mercato Modules`.
 9. Right after the repository is public: test the fork path, which the private repository cannot test (forking is off
-   there, and the only test pull request so far, #1, came from a branch of the repository). From a fork, open a pull
-   request with one new valid descriptor and one broken one. Check that the `validate` summary appears within 3 minutes
-   and reads the data branch (Fit is not skipped), that `checks` and `build` are green for the valid file alone, that
-   `autofix` runs, that a typosquat error goes away after a curator adds `name-reviewed` and re-runs `validate`, that
-   the first-time contributor approval of step 4 holds the run until approved, and that `yarn om triage` lists the pull
-   request with the right verdict. Close it and write the run ids into the report. The CI fixes of 25 Oct (`checks`,
-   the data branch read in `validate`, `collect` and the nightly plan, the current labels, the private autofix skip)
-   were tested locally only; this is their first run on Actions unless a test pull request ran before.
+   there). From a fork, open a pull request with one new valid descriptor and one broken one. Check that the
+   `validate` summary appears within 3 minutes and reads the data branch (Fit is not skipped), that `checks` and
+   `build` are green for the valid file alone, that `autofix` runs, that a typosquat error goes away after a curator
+   adds `name-reviewed` and re-runs `validate`, that the first-time contributor approval of step 4 holds the run until
+   approved, and that `yarn om triage` lists the pull request with the right verdict. Close it and write the run ids
+   into the report. Done on 28 Oct in PR #4 (from a fork, closed unmerged): `validate` read the data branch (Fit ran),
+   failed the broken entry with three schema errors and passed the other; `autofix` pushed the formatted file to the
+   fork; `checks` and `build` passed. Runs: `validate` 40723885237, `autofix.ci` 40723763547 and 40723885267. Not
+   covered: the first-time contributor approval (the fork belongs to a repository admin), and the report does not
+   mention the typosquat error with `name-reviewed` or `yarn om triage`. Check those three with the first outside pull
+   request.
 
 ## Triage of submissions
 
