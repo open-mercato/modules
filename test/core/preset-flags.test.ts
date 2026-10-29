@@ -58,7 +58,7 @@ describe('a module the classic preset registers behind an env flag', () => {
   test('the picker gives a new app the same command on every verified line', () => {
     const p = buildPicker([s3()], fixtureBuiltIn(fx), lines, presets, NOW)
     const row = p.modules.find((m) => m.id === 'storage_s3')!
-    expect(row.installByLine).toEqual({ '0.9': `yarn add @open-mercato/storage-s3@0.9.0 && ${FLAG}` })
+    expect(row.installByLine).toEqual({ '0.9': `yarn add @open-mercato/storage-s3@0.9.0 && ${FLAG} && yarn generate` })
     expect(row.install).toBe(row.installByLine['0.9'])
   })
 

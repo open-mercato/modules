@@ -223,11 +223,24 @@ export const presetFlagStep = (f: { env: string }): string => `echo ${f.env}=tru
 
 /**
  * The command of a new app (the classic preset) for a module it registers behind a flag: `yarn add` of the package,
- * then the flag, never `module add`. Null for any other entry.
+ * the flag, then `yarn generate`, as the install plan runs them; never `module add`. Null for any other entry. Every
+ * published command of a new app is this one (round 2 of the audit of 29 Oct: modules.json, the card and
+ * search_modules still gave `module add`), as `enterpriseEnableCommand` is for the enterprise package.
  */
 export function presetFlagCommand(e: Pick<IndexEntry, 'npm' | 'moduleIds'>, version: string | null): string | null {
   const f = presetFlagOf(e)
-  return f && e.npm ? `yarn add ${version ? `${e.npm}@${version}` : e.npm} && ${presetFlagStep(f)}` : null
+  return f && e.npm
+    ? [`yarn add ${version ? `${e.npm}@${version}` : e.npm}`, presetFlagStep(f), 'yarn generate'].join(' && ')
+    : null
+}
+
+/**
+ * The same module in an app from the empty preset, whose src/modules.ts has no such block: `module add`, then the flag
+ * and `yarn generate`, as the plan's `emptyPreset` runs them. Null for any other entry.
+ */
+export function presetFlagEmptyCommand(e: InstallTarget, version: string | null): string | null {
+  const f = presetFlagOf(e)
+  return f ? [installInfo(e, null, null, version).cli, presetFlagStep(f), 'yarn generate'].join(' && ') : null
 }
 
 /** True when every module of the entry is already registered from this package (an app's src/modules.ts, D10). */
@@ -293,6 +306,18 @@ export function installInfo(
     needsAllowThirdParty: thirdParty,
     moduleFlag: e.moduleFlag,
   }
+}
+
+/**
+ * `installInfo` of a new app (the classic preset, what create-mercato-app makes without --preset): a module it
+ * registers behind an env flag gets `presetFlagCommand` with the version of the line, never `module add`, which
+ * registers it a second time (audit of 29 Oct, C01, round 2). `IndexEntry.install`, search_modules and the picker
+ * read it; the plan of a given app and of the empty preset keep `installInfo`.
+ */
+export function newAppInstallInfo(...args: Parameters<typeof installInfo>): IndexEntry['install'] {
+  const [e, line] = args
+  const flagged = presetFlagCommand(e, installVersion(e, line))
+  return flagged ? { cli: flagged, cmm: null, needsAllowThirdParty: false, moduleFlag: null } : installInfo(...args)
 }
 
 /**

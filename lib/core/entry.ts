@@ -13,7 +13,7 @@ import { locatorToPath } from '../schema/locator.ts'
 import type { RouteFact } from './finding.ts'
 import { evaluateEntry, type Evaluation, type HealthInput } from './health.ts'
 import { byLineKey, latestLine, presetModules, registeredIn, type PresetMap } from './lines.ts'
-import { builtInEnableCommand, installInfo } from './plan.ts'
+import { builtInEnableCommand, newAppInstallInfo } from './plan.ts'
 import { emptyPresetVersion, INSTALLABLE_META_KEY, otherVersionCells } from './policy.ts'
 import { anatomySignal, unionGlyph } from './signals.ts'
 import { serviceSdks } from './sdks.ts'
@@ -390,7 +390,8 @@ function indexEntryOf(i: EntryInput, ev: Evaluation): IndexEntry {
     d.module ?? (facts?.gate.needsModuleFlag && ev.moduleIds.length === 1 ? (ev.moduleIds[0] ?? null) : null)
   const preset = presetModules(i.presets, latest?.key, 'empty')
   // the command of an app that does not register the package yet: where a new app ships it, the one of an app from the
-  // empty preset, with the version that preset does not break on (`emptyPresetVersion`, review of 24 Oct)
+  // empty preset, with the version that preset does not break on (`emptyPresetVersion`, review of 24 Oct); where a new
+  // app registers it behind an env flag, the plan of a new app (`newAppInstallInfo`, audit of 29 Oct, C01)
   const target = {
     npm,
     locator: i.locator,
@@ -401,7 +402,7 @@ function indexEntryOf(i: EntryInput, ev: Evaluation): IndexEntry {
     kind: ev.kind,
     tags: d.tags ?? [],
   }
-  const install = installInfo(
+  const install = newAppInstallInfo(
     target,
     latest?.key ?? null,
     preset,
