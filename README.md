@@ -2,13 +2,9 @@
 
 Extend everything. Start with 80% done. Every entry here is read from its published code, and every module is installed in a fresh Open Mercato app on each release line by the nightly run. Providers, libraries and tools are read, not installed.
 
-This repository holds the module descriptors, the code that measures them and the site at https://modules.openmercato.com. Descriptions come from authors. Everything else is measured.
+This repository holds the module descriptors, the code that measures them and the site for https://modules.openmercato.com. That address is not live yet: it answers 404 until the Cloudflare deploy is done (see [docs/RUNBOOK.md](docs/RUNBOOK.md#repository-setup-owner-clicks)). Descriptions come from authors. Everything else is measured.
 
 ## Submit a module in 3 steps
-
-Fastest: paste your npm name into the form at https://modules.openmercato.com/submit. It runs the checks below in your browser, writes the YAML and opens GitHub with the file filled in. Commit it there (GitHub makes the fork for you), then create the pull request.
-
-By hand:
 
 1. Publish your module to npm with a stable version (`1.2.3`, not a prerelease). It needs `src/modules/<id>/index.ts` and `dist/modules/<id>/` in the tarball. A GitHub-only module needs a tag that contains `dist/modules/<id>/`.
 2. Add one file to `modules/`: `modules/@scope/name.yml` for a scoped package, `modules/name.yml` for an unscoped one, `modules/github/owner/repo.yml` (lower case) for GitHub only. Minimum content:
@@ -26,6 +22,8 @@ By hand:
 
 Fields, categories and text rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+Once the site is live, the form at https://modules.openmercato.com/submit does the same in your browser: paste your npm name, it runs the checks, writes the YAML and opens GitHub with the file filled in.
+
 ## What the catalog measures
 
 - Anatomy: tables, routes, permissions, events, queues, AI tools, secrets and hosts, read statically from `src/` of the published tarball, each fact with file and line.
@@ -37,9 +35,9 @@ Verified is a compatibility signal, not a security review. A module's own code r
 
 ## For agents
 
-Every module page has a `.md` and a `.json` twin, `/llms.txt` lists them, and the read-only MCP server exposes `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes`.
+Every module page has a `.md` and a `.json` twin, and `/llms.txt` lists them (on the site, once it is live). A read-only MCP server with `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes` is not deployed yet; it starts after the Worker deploy (D-OPEN-1, see [docs/RUNBOOK.md](docs/RUNBOOK.md#repository-setup-owner-clicks)).
 
-The Claude Code plugin brings the `om-find-module` skill. While this repository is private, only people with access to it can add the marketplace.
+The Claude Code plugin brings the `om-find-module` skill.
 
 ```sh
 claude plugin marketplace add open-mercato/modules
