@@ -12,6 +12,7 @@ import {
   HiveSlots,
   Lines,
   Presets,
+  ProvisionalNights,
   Receipt,
   Stats,
   SyncRecord,
@@ -98,12 +99,13 @@ describe('data branch schemas are strict (spec 4.5)', () => {
     expect(dataFileRule('fit/0.10.1-develop.7583.1.0c886d0a14.json')?.schema).toBe(FitResult)
     expect(dataFileRule('receipts/_baseline.jsonl')?.jsonl).toBe(true)
     expect(dataFileRule('receipts/create-mercato-module.jsonl')?.schema).toBe(Receipt)
+    expect(dataFileRule('receipts/_provisional.json')?.schema).toBe(ProvisionalNights)
     expect(dataFileRule('health/@x/y.json')?.schema).toBe(Health)
     expect(dataFileRule('builtin/0.9.0.json')?.schema).toBe(BuiltinData)
     expect(dataFileRule('changes/2026-10.jsonl')?.schema).toBe(Change)
     expect(dataFileRule('radar/next.json')?.schema).toBe(Radar)
     expect(dataFileRule('sync/@X/y.json')).toBeNull()
     expect(dataFileRule('notes.txt')).toBeNull()
-    expect(DATA_FILES.length).toBe(15)
+    expect(DATA_FILES.length).toBe(16)
   })
 })

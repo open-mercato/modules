@@ -1,7 +1,9 @@
 # Receipts from a finished nightly run (spec 5.1, 5.3 "Job collect"). Trusted job, no foreign code: step status from
 # the Actions API only, artifacts only for log excerpts, applied patches, notes and the scaffold metadata.
 # Unconfirmed red cells are dispatched again (nightly.yml, attempt 2) and collected in this same job by polling; a second
-# collect started by that retry run finds the night in the receipts and ends without changes.
+# collect started by that retry run finds the night in the receipts and ends without changes. A retry that ends after
+# the wait leaves the night provisional (receipts/_provisional.json): that second collect then applies the whole night
+# again with the retry, in place of the provisional receipts, once.
 # The write goes through lib/sources/data-branch.ts (fetch, reset, replay `collect --bundle`, commit, push; 3 attempts).
 name: collect
 

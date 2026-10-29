@@ -5,7 +5,7 @@ import { BuiltinData, Facts } from './facts.ts'
 import { FitResult } from './fit.ts'
 import { Health } from './health.ts'
 import { HiveSlots, Lines, Presets } from './lines.ts'
-import { Receipt } from './receipt.ts'
+import { ProvisionalNights, Receipt } from './receipt.ts'
 import { Claims, Stats, SyncRecord } from './sync.ts'
 import { Radar } from '../published/radar.ts'
 import { OfficialCoverageFile } from './coverage.ts'
@@ -38,6 +38,7 @@ export const DATA_FILES: readonly DataFileRule[] = [
   { pattern: new RegExp(`^fit/${VER}\\.json$`), schema: FitResult, jsonl: false, writer: 'watch' },
   { pattern: /^receipts\/_baseline\.jsonl$/, schema: Receipt, jsonl: true, writer: 'collect' },
   { pattern: new RegExp(`^receipts/${LOC}\\.jsonl$`), schema: Receipt, jsonl: true, writer: 'collect' },
+  { pattern: /^receipts\/_provisional\.json$/, schema: ProvisionalNights, jsonl: false, writer: 'collect' },
   { pattern: new RegExp(`^health/${LOC}\\.json$`), schema: Health, jsonl: false, writer: 'any' },
   { pattern: /^builtin\/\d+\.\d+\.\d+\.json$/, schema: BuiltinData, jsonl: false, writer: 'watch' },
   { pattern: /^lines\.json$/, schema: Lines, jsonl: false, writer: 'watch' },

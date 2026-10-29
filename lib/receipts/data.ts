@@ -5,10 +5,11 @@ import { dirname, join, relative, sep } from 'node:path'
 import { locatorToPath } from '../schema/locator.ts'
 import { Change } from '../schema/data/changes.ts'
 import { Presets } from '../schema/data/lines.ts'
-import { Receipt } from '../schema/data/receipt.ts'
+import { ProvisionalNights, Receipt, type ProvisionalNight } from '../schema/data/receipt.ts'
 import type { History } from './state.ts'
 
 export const BASELINE_FILE = 'receipts/_baseline.jsonl'
+export const PROVISIONAL_FILE = 'receipts/_provisional.json'
 
 export function receiptFile(locator: string | null): string {
   return locator === null ? BASELINE_FILE : `receipts/${locatorToPath(locator)}.jsonl`
@@ -81,5 +82,47 @@ export function appendChanges(dataDir: string, changes: readonly Change[]): void
     const file = join(dataDir, 'changes', `${c.at.slice(0, 7)}.jsonl`)
     mkdirSync(dirname(file), { recursive: true })
     appendFileSync(file, `${JSON.stringify(Change.parse(c))}\n`)
+  }
+}
+
+/** Nights collected before their retry finished (audit R5); empty without the file. */
+export function readProvisional(dataDir: string): ProvisionalNight[] {
+  const file = join(dataDir, PROVISIONAL_FILE)
+  return existsSync(file) ? ProvisionalNights.parse(JSON.parse(readFileSync(file, 'utf8'))).nights : []
+}
+
+export function writeProvisional(dataDir: string, nights: readonly ProvisionalNight[]): void {
+  const file = join(dataDir, PROVISIONAL_FILE)
+  mkdirSync(dirname(file), { recursive: true })
+  const sorted = [...nights].sort((a, b) => a.night - b.night)
+  writeFileSync(file, `${JSON.stringify(ProvisionalNights.parse({ nights: sorted }), null, 2)}\n`)
+}
+
+/**
+ * Takes a provisional night back before it is applied again with its retry: every receipt line of the run, and each
+ * change line the provisional write added (one line per recorded change, matched by its JSON).
+ */
+export function removeNight(dataDir: string, nightId: number, changes: readonly Change[]): void {
+  for (const file of walk(join(dataDir, 'receipts'))) {
+    const lines = readFileSync(file, 'utf8')
+      .split('\n')
+      .filter((l) => l.trim() !== '')
+    const kept = lines.filter((l) => Receipt.parse(JSON.parse(l)).run.id !== nightId)
+    if (kept.length !== lines.length) writeFileSync(file, kept.map((l) => `${l}\n`).join(''))
+  }
+  const left = changes.map((c) => JSON.stringify(Change.parse(c)))
+  for (const month of [...new Set(changes.map((c) => c.at.slice(0, 7)))]) {
+    const file = join(dataDir, 'changes', `${month}.jsonl`)
+    if (!existsSync(file)) continue
+    const kept = readFileSync(file, 'utf8')
+      .split('\n')
+      .filter((l) => {
+        if (l.trim() === '') return false
+        const i = left.indexOf(l)
+        if (i < 0) return true
+        left.splice(i, 1)
+        return false
+      })
+    writeFileSync(file, kept.map((l) => `${l}\n`).join(''))
   }
 }

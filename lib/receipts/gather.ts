@@ -3,7 +3,7 @@
 // bundle, so a rejected push can replay the write without calling the API or dispatching again.
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Receipt } from '../schema/data/receipt.ts'
+import type { ProvisionalNight, Receipt } from '../schema/data/receipt.ts'
 import type { ActionsApi } from './actions-api.ts'
 import {
   buildOutcomes,
@@ -90,6 +90,8 @@ export interface GatherDeps {
   history: History
   /** Every receipt on the data branch (for the "already collected" check). */
   allReceipts: readonly Receipt[]
+  /** Nights collected before their retry finished (receipts/_provisional.json): their retry is merged once it ends. */
+  provisional?: readonly ProvisionalNight[]
   /** Where artifacts are downloaded: `<dir>/<run id>/<artifact name>/`. */
   artifactsRoot: string
   waitRetry: boolean
@@ -130,6 +132,18 @@ export async function gatherFromActions(runId: number, deps: GatherDeps): Promis
   const night = check.attempt === 1 ? run : await api.getRun(check.parent as number)
   const nightCheck = checkNightlyRun(night)
   if (!nightCheck.ok) return { kind: 'ignored', reason: nightCheck.reason }
+  const title = runTitle(2, night.id)
+  const findRetry = async (): Promise<ApiRun | null> => {
+    if (check.attempt === 2 && run.display_title === title) return run
+    const runs = await api.listWorkflowRuns(NIGHTLY_WORKFLOW, {
+      event: 'workflow_dispatch',
+      branch: 'main',
+      since: night.created_at,
+    })
+    return runs.find((r) => r.display_title === title) ?? null
+  }
+  const pending = deps.provisional?.find((p) => p.night === night.id) ?? null
+  if (pending) return lateRetry(api, night, pending.retry, await findRetry(), deps, log)
   if (nightCollected(deps.allReceipts, night.id))
     return { kind: 'collected', reason: `run ${night.id} is already in the receipts` }
 
@@ -151,16 +165,6 @@ export async function gatherFromActions(runId: number, deps: GatherDeps): Promis
     log(notes[notes.length - 1] as string)
   }
   if (keys.length > 0) {
-    const title = runTitle(2, night.id)
-    const findRetry = async (): Promise<ApiRun | null> => {
-      if (check.attempt === 2 && run.display_title === title) return run
-      const runs = await api.listWorkflowRuns(NIGHTLY_WORKFLOW, {
-        event: 'workflow_dispatch',
-        branch: 'main',
-        since: night.created_at,
-      })
-      return runs.find((r) => r.display_title === title) ?? null
-    }
     let retry = await findRetry()
     if (!retry && deps.waitRetry) {
       log(`dispatching retry of ${keys.length} cell(s) for night ${night.id}`)
@@ -198,6 +202,43 @@ export async function gatherFromActions(runId: number, deps: GatherDeps): Promis
   }
 }
 
+/**
+ * The retry of a night collected provisionally (audit R5): once it has completed, both attempts of the night again,
+ * with the retry keys dispatched then, so collect applies the whole night in place of the provisional receipts. Still
+ * running or not found: nothing to do yet, its own completion starts collect again. Never dispatches or waits.
+ */
+async function lateRetry(
+  api: ActionsApi,
+  night: ApiRun,
+  keys: readonly string[],
+  retry: ApiRun | null,
+  deps: GatherDeps,
+  log: (line: string) => void,
+): Promise<GatherResult> {
+  const done = retry ? await api.getRun(retry.id) : null
+  if (!done || done.status !== 'completed')
+    return { kind: 'collected', reason: `run ${night.id} is collected provisionally; its retry has not finished` }
+  const first = await attemptOf(api, night, 1, join(deps.artifactsRoot, String(night.id)), null)
+  const matrix = first.matrix
+  const second = await attemptOf(api, done, 2, join(deps.artifactsRoot, String(done.id)), {
+    ...matrix,
+    cells: matrix.cells.filter((c) => keys.includes(c.key)),
+  })
+  log(`collected late retry run ${done.id} of night ${night.id}`)
+  return {
+    kind: 'bundle',
+    bundle: {
+      schema: 1,
+      runner: matrix.runner,
+      night: { id: night.id, url: night.html_url, at: runAt(night) },
+      matrix,
+      attempts: [first.attempt, second.attempt],
+      retry: [...keys],
+      notes: [`retry run ${done.id} ended after the first collect; the night is applied again with it`],
+    },
+  }
+}
+
 /** A preview run directory written by `yarn om cells-local` (run.json, jobs.json, artifacts/). */
 export interface LocalRun {
   run: ApiRun
@@ -218,13 +259,15 @@ export function readLocalRun(dir: string): LocalRun {
 /** Bundle from preview runs: the first is the night, an optional second is its retry (attempt 2). */
 export function gatherFromLocal(
   dirs: readonly string[],
-  deps: Pick<GatherDeps, 'history' | 'allReceipts'>,
+  deps: Pick<GatherDeps, 'history' | 'allReceipts' | 'provisional'>,
 ): GatherResult {
   if (dirs.length === 0) throw new Error('no preview run directory')
   const night = readLocalRun(dirs[0] as string)
   const check = checkNightlyRun(night.run)
   if (!check.ok) return { kind: 'ignored', reason: check.reason }
-  if (nightCollected(deps.allReceipts, night.run.id))
+  // a night collected provisionally takes its retry run later, with the keys asked for then (audit R5)
+  const pending = deps.provisional?.find((p) => p.night === night.run.id) ?? null
+  if (pending ? !dirs[1] : nightCollected(deps.allReceipts, night.run.id))
     return { kind: 'collected', reason: `run ${night.run.id} is already in the receipts` }
   const matrix = readMatrixArtifact(night.artifactsDir, 1)
   if (!matrix) throw new Error(`${dirs[0]} has no artifacts/matrix-a1/matrix.json`)
@@ -237,7 +280,7 @@ export function gatherFromLocal(
   const attempts: BundleAttempt[] = [
     { attempt: 1, run: { id: night.run.id, url: night.run.html_url, at: runAt(night.run) }, outcomes },
   ]
-  const keys = retryKeys(matrix.cells, outcomes, deps.history)
+  const keys = pending ? [...pending.retry] : retryKeys(matrix.cells, outcomes, deps.history)
   const notes: string[] = []
   if (dirs[1]) {
     const retry = readLocalRun(dirs[1])

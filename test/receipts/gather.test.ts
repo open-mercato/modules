@@ -4,7 +4,8 @@ import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Receipt } from '../../lib/schema/data/index.ts'
-import collect from '../../lib/commands/collect.ts'
+import collect, { applyBundle } from '../../lib/commands/collect.ts'
+import { readProvisional, readReceiptStore, removeNight } from '../../lib/receipts/data.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
 import { buildOutcomes, checkNightlyRun, runTitle, type ApiJob, type ApiRun } from '../../lib/receipts/from-actions.ts'
 import {
@@ -361,6 +362,148 @@ describe('gather with a fake Actions API', () => {
         })
       ).kind,
     ).toBe('collected')
+  })
+})
+
+describe('a retry that ends after collect stopped waiting (audit R5)', () => {
+  const mm = only([base09.key, consents.key, ksef.key])
+  const nightFiles = (dir: string) => artifacts(dir, mm, 1, { [consents.key]: RED })
+  const redJobs = [job(base09), job(consents, ['typecheck', 'build']), job(ksef)]
+  const EARLIER = '2026-10-22T02:17:00Z'
+  const retryRun = (status: string) =>
+    run(200, { event: 'workflow_dispatch', display_title: runTitle(2, 100), status, conclusion: 'success' })
+  const consentsFile = (data: string) => join(data, 'receipts', '@piotrkarwatka', 'marketing-consents.jsonl')
+  const nightReceipts = (data: string) =>
+    readFileSync(consentsFile(data), 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => Receipt.parse(JSON.parse(l)))
+      .filter((r) => r.run.id === 100)
+  const changes = (data: string) => {
+    const f = join(data, 'changes', '2026-10.jsonl')
+    return existsSync(f) ? readFileSync(f, 'utf8').trim().split('\n').filter(Boolean) : []
+  }
+  const gatherOn = (data: string, id: number, f: ReturnType<typeof fakeApi>) => {
+    const store = readReceiptStore(data)
+    return gatherFromActions(id, {
+      api: f.api,
+      history: store.history,
+      allReceipts: store.all,
+      provisional: readProvisional(data),
+      artifactsRoot: tmp('art'),
+      waitRetry: true,
+      now: f.now,
+      sleep: f.sleep,
+    })
+  }
+
+  /** Night 99 verifies every cell; night 100 turns consents red and its retry outlasts the wait. */
+  async function provisionalNight(): Promise<string> {
+    const data = tmp('late')
+    const early = run(99, { created_at: EARLIER, run_started_at: EARLIER, conclusion: 'success' })
+    const g99 = fakeApi({
+      runs: [early],
+      jobs: { 99: [job(base09), job(consents), job(ksef)] },
+      files: { 99: (dir) => artifacts(dir, mm, 1) },
+    })
+    const n99 = await gatherOn(data, 99, g99)
+    if (n99.kind !== 'bundle') throw new Error('expected a bundle')
+    applyBundle(ROOT, data, n99.bundle)
+
+    const g100 = fakeApi({
+      runs: [run(100), retryRun('queued')],
+      jobs: { 100: redJobs },
+      files: { 100: nightFiles },
+    })
+    const n100 = await gatherOn(data, 100, g100)
+    if (n100.kind !== 'bundle') throw new Error('expected a bundle')
+    expect(n100.bundle.attempts).toHaveLength(1)
+    expect(n100.bundle.retry).toEqual([consents.key])
+    const report = applyBundle(ROOT, data, n100.bundle)
+    expect(report.join('\n')).toContain('provisional')
+    expect(readProvisional(data).map((p) => [p.night, p.retry])).toEqual([[100, [consents.key]]])
+    const [r] = nightReceipts(data)
+    expect([r?.result.status, r?.transition.confirmed, r?.run.attempt]).toEqual(['broken', false, 1])
+    expect(changes(data)).toEqual([])
+    return data
+  }
+
+  const lateRetry = (fail: string[]) =>
+    fakeApi({
+      runs: [run(100), retryRun('completed')],
+      jobs: { 100: redJobs, 200: [job(consents, fail, 2)] },
+      files: {
+        100: nightFiles,
+        200: (dir) => artifacts(dir, only([consents.key]), 2, fail.length ? { [consents.key]: RED } : {}),
+      },
+    })
+
+  it('the completed retry is merged into the night once and confirms the regression', async () => {
+    const data = await provisionalNight()
+    const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
+    if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
+    expect(late.bundle.attempts.map((a) => a.attempt)).toEqual([1, 2])
+    applyBundle(ROOT, data, late.bundle)
+    const rs = nightReceipts(data)
+    expect(rs.map((r) => [r.result.status, r.transition.from, r.transition.confirmed, r.run.attempt])).toEqual([
+      ['broken', 'verified', true, 2],
+    ])
+    expect(changes(data).map((c) => JSON.parse(c) as { type: string; locator: string })).toMatchObject([
+      { type: 'receipt-transition', locator: LOC.consents, from: 'verified', to: 'broken' },
+    ])
+    expect(readProvisional(data)).toEqual([])
+
+    // a replay of the same bundle (data-branch retry) and a third collect change nothing
+    const before = [readFileSync(consentsFile(data), 'utf8'), changes(data)]
+    expect(applyBundle(ROOT, data, late.bundle)[0]).toContain('already in the receipts')
+    expect((await gatherOn(data, 200, lateRetry(['typecheck', 'build']))).kind).toBe('collected')
+    expect([readFileSync(consentsFile(data), 'utf8'), changes(data)]).toEqual(before)
+  })
+
+  it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {
+    const data = await provisionalNight()
+    const late = await gatherOn(data, 200, lateRetry([]))
+    if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
+    applyBundle(ROOT, data, late.bundle)
+    const rs = nightReceipts(data)
+    expect(rs.map((r) => [r.result.status, r.transition.confirmed, r.run.attempt, r.notes])).toEqual([
+      ['verified', true, 2, ['flaky']],
+    ])
+    expect(changes(data)).toEqual([])
+    expect(readProvisional(data)).toEqual([])
+  })
+
+  it('taking a night back removes its receipts and only the change lines it added', () => {
+    const data = tmp('take-back')
+    const change = {
+      at: NIGHT,
+      type: 'receipt-transition' as const,
+      locator: LOC.ksef,
+      line: '0.9',
+      from: 'verified',
+      to: 'broken',
+    }
+    const rc = fx.receipts(LOC.ksef)[0]!
+    mkdirSync(join(data, 'changes'), { recursive: true })
+    mkdirSync(join(data, 'receipts', '@x'), { recursive: true })
+    writeFileSync(join(data, 'changes', '2026-10.jsonl'), `${JSON.stringify(change)}\n${JSON.stringify(change)}\n`)
+    writeFileSync(
+      join(data, 'receipts', '@x', 'y.jsonl'),
+      [rc, { ...rc, run: { ...rc.run, id: 100 } }].map((r) => `${JSON.stringify(r)}\n`).join(''),
+    )
+    removeNight(data, 100, [change])
+    expect(readFileSync(join(data, 'changes', '2026-10.jsonl'), 'utf8')).toBe(`${JSON.stringify(change)}\n`)
+    expect(readFileSync(join(data, 'receipts', '@x', 'y.jsonl'), 'utf8')).toBe(`${JSON.stringify(rc)}\n`)
+  })
+
+  it('a provisional night whose retry is still running stays as it is', async () => {
+    const data = await provisionalNight()
+    const before = readFileSync(consentsFile(data), 'utf8')
+    const f = fakeApi({ runs: [run(100), retryRun('in_progress')], jobs: { 100: redJobs }, files: { 100: nightFiles } })
+    expect((await gatherOn(data, 100, f)).kind).toBe('collected')
+    expect(f.dispatched).toEqual([])
+    expect(readFileSync(consentsFile(data), 'utf8')).toBe(before)
+    expect(readProvisional(data)).toHaveLength(1)
   })
 })
 
