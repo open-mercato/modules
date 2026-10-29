@@ -169,7 +169,8 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   // population: the modules outside the @open-mercato scope its summary counts (review r6)
   const radarPop = radarPopulation(ctxs)
   const radarNextRows = radarRows(entries, radarPop)
-  const radar = data.radar ? radarWithReceipts(data.radar, radarNextRows) : null
+  const receiptOf = (locator: string, id: string) => data.receipts.get(locator)?.find((x) => x.id === id) ?? null
+  const radar = data.radar ? radarWithReceipts(data.radar, radarNextRows, receiptOf) : null
   if (radar) {
     put('radar/next.json', Radar, radar)
     pub.set('radar/next.md', radarMarkdown(radar, titles))
