@@ -120,6 +120,7 @@ describe('yarn om sync --offline on recorded responses (16 real entries)', () =>
   it('checks a retained npm version against OSV when the packument fails, so its advisories stay', async () => {
     const KSEF = '@fastwhitecat/integration-ksef-direct'
     // OSV answers every query; ksef has one advisory
+    const queried: string[][] = []
     const withOsv = (base: Http, npmDown: boolean): Http => ({
       mode: base.mode,
       fixturesDir: base.fixturesDir,
@@ -129,6 +130,7 @@ describe('yarn om sync --offline on recorded responses (16 real entries)', () =>
           return Promise.reject(new HttpError('HTTP 503', url, 503))
         if (url === 'https://api.osv.dev/v1/querybatch') {
           const qs = (o?.body as { queries: { package: { name: string } }[] }).queries
+          queried.push(qs.map((q) => q.package.name))
           const results = qs.map((q) => (q.package.name === KSEF ? { vulns: [{ id: 'GHSA-test-0001' }] } : {}))
           return Promise.resolve({ status: 200, json: { results }, text: '' })
         }
@@ -152,6 +154,8 @@ describe('yarn om sync --offline on recorded responses (16 real entries)', () =>
     const second = await sync(withOsv(offlineHttp(), true), first.data, new Date('2026-10-30T04:17:00Z'))
     const after = second.res.records.find((r) => r.locator === `npm:${KSEF}`)
     expect(after?.npm).toEqual(before.npm)
+    // the retained version is queried again, not only kept as it was
+    expect(queried.at(-1)).toContain(KSEF)
     expect(after?.advisories).toEqual(before.advisories)
   })
 
