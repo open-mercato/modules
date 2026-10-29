@@ -775,6 +775,25 @@ describe('descriptor YAML', () => {
     },
   )
 
+  // round 1 of the audit: `2fa` read as a number to the form, which quoted it while `yarn om format` keeps it plain,
+  // so the enterprise descriptor could not carry the alias and still round-trip through the form
+  test('a string that starts with a digit stays plain, as yarn om format writes it; a number-like one is quoted', async () => {
+    const d = {
+      npm: KSEF,
+      category: 'auth-security',
+      tags: ['2fa', '3d-secure'],
+      summary: '2FA codes and 3D Secure checks for the checkout of an Open Mercato shop.',
+      whenToUse: 'Use when the checkout must ask for a second factor before a card payment.',
+      aliases: ['2fa', '3d secure', '1.2.3', '123', '1.5', '.5', '1e3', '0x1f', '0o17', '-1', '+2'],
+    }
+    const yaml = descriptorYaml(d)
+    expect(yaml).toContain('tags: [2fa, 3d-secure]')
+    expect(yaml).toContain('summary: 2FA codes and 3D Secure checks')
+    expect(yaml).toContain('aliases: [2fa, 3d secure, 1.2.3, "123", "1.5", ".5", "1e3", "0x1f", "0o17", "-1", "+2"]')
+    expect((await formatDescriptorText(yaml, `modules/${KSEF}.yml`)).text).toBe(yaml)
+    expect(parseYaml(yaml)).toEqual(d)
+  })
+
   test('kind from the file list, repository from package.json', async () => {
     const { deps } = mockFetch(KSEF_ROUTES)
     const r = await runChecks(npm(KSEF), CTX, deps)
