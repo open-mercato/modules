@@ -89,7 +89,10 @@ jobs:
               elif [ "$(jq ".items | length" out/queue.json)" -gt 0 ]; then
                 yarn om fit --modules "$(jq -r "[.items[] | \"\(.locator)@\(.version)\"] | join(\",\")" out/queue.json)"
               fi
-              yarn om radar
+              # exit 2: no fit for the next line yet (its tarballs were not served, fit skipped it); the rest still lands
+              code=0
+              yarn om radar || code=$?
+              if [ "$code" -eq 2 ]; then echo "radar skipped (no fit for the next line yet)"; elif [ "$code" -ne 0 ]; then exit "$code"; fi
               yarn om health --changed
               yarn om hive
             '
