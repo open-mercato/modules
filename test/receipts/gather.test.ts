@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Receipt } from '../../lib/schema/data/index.ts'
 import collect, { applyBundle } from '../../lib/commands/collect.ts'
-import { readPresets, readProvisional, readReceiptStore, removeNight } from '../../lib/receipts/data.ts'
+import { readPresets, readProvisional, readReceiptStore, removeNight, writePresets } from '../../lib/receipts/data.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
 import { buildOutcomes, checkNightlyRun, runTitle, type ApiJob, type ApiRun } from '../../lib/receipts/from-actions.ts'
 import {
@@ -488,6 +488,23 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
       ['broken', true, 2],
     ])
     expect(readProvisional(data)).toEqual([])
+  })
+
+  it('a late retry still writes its measurement over an older version a newer night only stamped (review of round 3)', async () => {
+    const data = await provisionalNight()
+    // a later night that ran no baseline on 0.9 only moves `at`; the entry it leaves is of an older version
+    const LATER = '2026-10-24T02:17:00Z'
+    const own = readPresets(data)!['0.9']!
+    expect(own.omVersion).toBe(base09.omVersion)
+    writePresets(data, { ...readPresets(data), '0.9': { ...own, omVersion: '0.9.0-rc.1', at: LATER } })
+
+    const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
+    if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
+    applyBundle(ROOT, data, late.bundle)
+    const entry = readPresets(data)?.['0.9']
+    expect(entry?.omVersion).toBe(base09.omVersion)
+    expect(entry?.[base09.preset]).toEqual(own[base09.preset])
+    expect(entry?.at).toBe(LATER)
   })
 
   it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {

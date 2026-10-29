@@ -18,6 +18,7 @@ import { Receipt } from '../schema/data/receipt.ts'
 import type { HarnessLinesFile } from '../schema/policy.ts'
 import { ModuleId, NpmName } from '../schema/common.ts'
 import { daysBetween, receiptPreset, sortReceipts, type PresetId } from '../core/lines.ts'
+import { compareVersions } from '../core/semver.ts'
 import type { StepFailure } from './classify.ts'
 import { harnessVersion, receiptId } from './cell-key.ts'
 import { LADDER, type BundleAttempt, type CellOutcome, type NightBundle } from './from-actions.ts'
@@ -454,8 +455,13 @@ export function applyNight(input: ApplyInput): ApplyResult {
     }
     // data/presets.json from the scaffold of the baseline, under the key of its preset (`empty`, `classic`); `at` is
     // set for every line after the loop. A line whose Open Mercato version changed starts a new entry.
+    // every collected night stamps `at`, measured or not: the newer night keeps a newer version, or this preset of the
+    // same version; an older version it only stamped still takes this night's measurement
     const newer = newerNight(cell.line)
-    const keepNewer = newer !== null && (newer.omVersion !== cell.omVersion || newer[cell.preset] !== undefined)
+    const keepNewer =
+      newer !== null &&
+      (compareVersions(newer.omVersion, cell.omVersion) > 0 ||
+        (newer.omVersion === cell.omVersion && newer[cell.preset] !== undefined))
     if (cell.baseline && !keepNewer && dec.outcome.modulesTs && dec.outcome.ladder.scaffold.conclusion === 'success') {
       const list = presetFromModulesTs(dec.outcome.modulesTs, cell.preset === 'classic' ? 160 : 80)
       if (list.length > 0) {
@@ -486,7 +492,10 @@ export function applyNight(input: ApplyInput): ApplyResult {
   if (out.presets) {
     const nightAt = newestAt([bundle.night.at, ...bundle.attempts.map(runAt)])
     out.presets = Object.fromEntries(
-      Object.entries(out.presets).map(([k, v]) => [k, { ...v, at: newestAt([v.at, nightAt]) }]),
+      Object.entries(out.presets).map(([k, v]) => {
+        const stored = input.presets?.[k]?.at
+        return [k, { ...v, at: newestAt([...(stored ? [stored] : []), v.at, nightAt]) }]
+      }),
     )
   }
   return out
