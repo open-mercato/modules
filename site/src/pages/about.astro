@@ -66,7 +66,12 @@ const previewData = isPreviewData(meta.dataAsOf)
         <p class="ab-lede">
           Open Mercato Modules lists the modules you can add to an Open Mercato app. It reads the published code of each
           module and installs each one in a new app on every Open Mercato version, nightly or weekly, to check that it
-          still works. People, coding agents and the Open Mercato CLI get the same data.
+          still works. {
+            // the CLI reads the catalog only from the release in policy/site.yml `cliSearchSince` (null until then)
+            meta.features.cliSearch
+              ? 'People, coding agents and the Open Mercato CLI get the same data.'
+              : 'People and coding agents get the same data.'
+          }
         </p>
       </div>
       <figure class="ab-lines">
@@ -172,10 +177,9 @@ const previewData = isPreviewData(meta.dataAsOf)
       </div>
       <div class="ab-body">
         <ul class="ab-list" role="list">
-          {/* true while the repository is private too (finding of 25 Oct: `0 USD. Public CI` read as the state today) */}
           <li>
-            <strong>0 USD once the repository is public.</strong> GitHub Actions is free for public repositories, plus
-            the Cloudflare Pages and Workers free tiers.
+            <strong>0 USD.</strong> GitHub Actions is free for public repositories, plus the Cloudflare Pages and Workers
+            free tiers.
           </li>
           <li><strong>No analytics and no cookies.</strong> Pages load nothing from third parties.</li>
           <li>
