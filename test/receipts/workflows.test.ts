@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { Step } from '../../lib/schema/common.ts'
-import { retryDispatchInputs } from '../../lib/receipts/gather.ts'
+import { RETRY_WAIT_MAX_MS, retryDispatchInputs } from '../../lib/receipts/gather.ts'
 import { cellJobName, parseCellJobName } from '../../lib/receipts/matrix.ts'
 import { parseRunTitle, runTitle } from '../../lib/receipts/from-actions.ts'
 import { ROOT } from './helpers.ts'
@@ -152,7 +152,8 @@ describe('collect.yml', () => {
     expect(collect.permissions).toEqual({ contents: 'write', actions: 'write' })
     expect(collect.concurrency).toEqual({ group: 'collect', 'cancel-in-progress': false })
     const job = collect.jobs.collect!
-    expect(job['timeout-minutes']).toBe(60)
+    // the longest retry wait (RETRY_WAIT_MAX_MS) plus 30 minutes for checkout, install, downloads and the write
+    expect(job['timeout-minutes'] * 60 * 1000).toBe(RETRY_WAIT_MAX_MS + 30 * 60 * 1000)
     const text = read('collect.yml')
     expect(text).toContain("github.event.workflow_run.head_branch == 'main'")
     expect(text).toContain('yarn om collect --run "$RUN_ID" --wait-retry --no-apply')

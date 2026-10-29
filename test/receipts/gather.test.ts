@@ -7,7 +7,14 @@ import { Receipt } from '../../lib/schema/data/index.ts'
 import collect from '../../lib/commands/collect.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
 import { buildOutcomes, checkNightlyRun, runTitle, type ApiJob, type ApiRun } from '../../lib/receipts/from-actions.ts'
-import { gatherFromActions, gatherFromLocal, RETRY_WAIT_MS } from '../../lib/receipts/gather.ts'
+import {
+  gatherFromActions,
+  gatherFromLocal,
+  RETRY_WAIT_MAX_MS,
+  RETRY_WAIT_MS,
+  retryMinutes,
+  retryPlan,
+} from '../../lib/receipts/gather.ts'
 import {
   cellArtifactName,
   cellJobName,
@@ -243,6 +250,71 @@ describe('gather with a fake Actions API', () => {
       expect(res.bundle.attempts.length).toBe(1)
       expect(res.bundle.notes[0]).toContain('not collected')
     } else throw new Error('expected a bundle')
+  })
+
+  it('waits as long as a retry larger than one wave takes, within the collect job (audit C18)', async () => {
+    const many = (n: number, preset: 'classic' | 'empty', tag = preset): MatrixCell[] =>
+      Array.from({ length: n }, (_, i) => ({ ...consents, key: `${tag}-${i}`, preset, baseline: false }))
+    // the retry's plan, then waves of 6 cells: 20 min per classic wave, 7.5 per empty wave
+    expect(retryMinutes(many(1, 'empty'))).toBe(17.5)
+    expect(retryMinutes(many(7, 'classic'))).toBe(50)
+    expect(retryMinutes([...many(6, 'classic'), ...many(1, 'empty')])).toBe(37.5)
+    const small = retryPlan(many(2, 'empty'), [], ['empty-0', 'empty-1'])
+    expect(small).toEqual({ keys: ['empty-0', 'empty-1'], left: [], waitMs: RETRY_WAIT_MS })
+    const seven = retryPlan(
+      many(7, 'classic'),
+      [],
+      many(7, 'classic').map((c) => c.key),
+    )
+    expect(seven.waitMs).toBe(50 * 60 * 1000)
+
+    // more than fits: the baseline first, then infra, then the rest, in the order of the keys
+    const cells = [...many(40, 'classic'), { ...base09, key: 'base', preset: 'classic' as const }]
+    const keys = cells.map((c) => c.key)
+    const infra = buildOutcomes(
+      { ...m, cells: cells.filter((c) => c.key.endsWith('9')) },
+      { jobs: [], artifactsDir: tmp('none'), attempt: 1, runUrl: 'https://x.test/run' },
+    )
+    const big = retryPlan(cells, infra, keys)
+    expect(big.waitMs).toBeLessThanOrEqual(RETRY_WAIT_MAX_MS)
+    expect(big.keys).toHaveLength(30)
+    expect(big.keys).toContain('base')
+    for (const k of ['classic-9', 'classic-19', 'classic-29', 'classic-39']) expect(big.keys).toContain(k)
+    expect(big.left).toHaveLength(11)
+    expect([...big.keys, ...big.left].sort()).toEqual([...keys].sort())
+    expect(big.keys).toEqual(keys.filter((k) => big.keys.includes(k)))
+  })
+
+  it('names the cells a retry leaves out in the notes and dispatches only the rest (audit C18)', async () => {
+    const hex = (i: number) => (i + 1).toString(16).padStart(64, 'a')
+    const reds = Array.from({ length: 31 }, (_, i) => ({
+      ...consents,
+      key: hex(i),
+      key12: hex(i).slice(-12),
+      preset: 'classic' as const,
+    }))
+    const big: Matrix = { ...m, cells: [base09, ...reds] }
+    const f = fakeApi({
+      runs: [run(100)],
+      jobs: { 100: [job(base09)] },
+      files: { 100: (dir) => artifacts(dir, big, 1, {}) },
+    })
+    const res = await gatherFromActions(100, {
+      api: f.api,
+      history: () => [],
+      allReceipts: [],
+      artifactsRoot: tmp('art'),
+      waitRetry: true,
+      now: f.now,
+      sleep: f.sleep,
+    })
+    if (res.kind !== 'bundle') throw new Error('expected a bundle')
+    expect(f.dispatched[0]?.cells?.split(',')).toHaveLength(30)
+    expect(res.bundle.retry).toHaveLength(30)
+    expect(res.bundle.notes[0]).toBe(
+      `retry left out 1 cell(s) that do not fit the wait: ${consents.label}; those cells stay unconfirmed`,
+    )
+    expect(f.now()).toBeGreaterThanOrEqual(110 * 60 * 1000)
   })
 
   it('ignores runs outside main and ends without changes for a night already in the receipts', async () => {
