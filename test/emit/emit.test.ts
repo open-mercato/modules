@@ -263,11 +263,13 @@ describe('published files (spec 4.6)', () => {
       'installByLine',
     ]
     // `inPresets` (additive, 24 Oct) only where a new app already registers the module, and `presetNote` (round 13)
-    // only when that includes the latest line, whose `install` is then the command of an app from the empty preset
+    // only when that includes the latest line, whose `install` is then the command of an app from the empty preset;
+    // `installEmptyPresetByLine` (additive, 29 Oct, C30) only where it has a line
+    const optional = ['inPresets', 'presetNote', 'installEmptyPresetByLine']
     for (const m of p.modules) {
       expect(
         Object.keys(m)
-          .filter((k) => k !== 'inPresets' && k !== 'presetNote')
+          .filter((k) => !optional.includes(k))
           .sort(),
       ).toEqual([...keys].sort())
       const latestIn = (m.inPresets ?? []).includes(p.lines[0] ?? '')
