@@ -254,6 +254,21 @@ describe.skipIf(!hasJq)('watch.yml steps', () => {
     expect(callLog().some((l) => l.startsWith('om fit') || l.startsWith('om scan --queue'))).toBe(false)
   })
 
+  it('a radar without fit for the next line (exit 2) is skipped; health, hive and the commit still run (audit C12)', () => {
+    runStep(stepRun('watch.yml', 'Prepare data checkout'))
+    writeFileSync(
+      join(tmp, 'bin', 'yarn'),
+      FAKE_YARN.replace('case "$cmd" in', '[ "$cmd" = radar ] && exit 2\ncase "$cmd" in'),
+    )
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: ['next'], items: [] }),
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('radar skipped')
+    expect(callLog().slice(-2)).toEqual(['om health --changed', 'om hive'])
+    expect(dataLog()).toHaveLength(1)
+  })
+
   it('a failing command aborts without a commit', () => {
     runStep(stepRun('watch.yml', 'Prepare data checkout'))
     writeFileSync(
