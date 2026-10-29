@@ -15,10 +15,12 @@ const consentsReceipts = readFileSync(
   .map((l) => Receipt.parse(JSON.parse(l)))
 const broken = consentsReceipts[1] as ReceiptT
 
+const NEXT = '0.10.1-develop.2'
+// a classic realistic receipt of the `next` snapshot (the main verdict)
 const onNext = (locator: string, at: string, attempt = 1): ReceiptT => ({
   ...broken,
   module: { ...(broken.module as NonNullable<ReceiptT['module']>), locator },
-  om: { ...broken.om, line: 'next' },
+  om: { ...broken.om, line: 'next', version: NEXT, preset: 'classic' },
   run: { ...broken.run, at, attempt },
 })
 
@@ -67,6 +69,49 @@ describe('radar', () => {
     const sf = sameFailure(three)
     expect(sf).toHaveLength(1)
     expect(sf[0]).toMatchObject({ step: 'typecheck', modules: ['npm:@a/one', 'npm:@a/three', 'npm:@a/two'] })
+  })
+
+  describe('sameFailure reads the receipts of the main verdict on this snapshot (audit R8)', () => {
+    const AT = '2026-10-21T00:00:00Z'
+    const LOCS = ['npm:@a/one', 'npm:@a/three', 'npm:@a/two']
+    const radarOf = (receipts: ReceiptT[], version: (loc: string) => string | null = () => '0.1.0') =>
+      buildRadar({
+        generatedAt: '2026-10-23T00:00:00.000Z',
+        base: '0.9.0',
+        next: NEXT,
+        surface,
+        receipts,
+        modules: LOCS.map((locator) => ({ locator, version: version(locator), next: cell({}), latest: null })),
+      })
+    const three = LOCS.map((l) => onNext(l, AT))
+
+    it('groups the same break of the snapshot in 3 modules', () => {
+      expect(radarOf(three).sameFailure).toEqual([expect.objectContaining({ step: 'typecheck', modules: LOCS })])
+    })
+
+    it('an older snapshot does not group under a newer next', () => {
+      const old = three.map((r) => ({ ...r, om: { ...r.om, version: '0.10.1-develop.1' } }))
+      const r = radarOf(old)
+      expect(r.sameFailure).toEqual([])
+      expect(r.receiptsOnNext).toEqual({ verified: 0, broken: 0 })
+    })
+
+    it('a newer empty-preset or early-mode receipt does not replace the classic realistic one', () => {
+      const green = (r: ReceiptT): ReceiptT => ({
+        ...r,
+        run: { ...r.run, at: '2026-10-22T00:00:00Z' },
+        result: { ...r.result, status: 'verified', failedStep: null, alsoFailed: [] },
+      })
+      const empty = green({ ...(three[0] as ReceiptT), om: { ...(three[0] as ReceiptT).om, preset: 'empty' } })
+      const early = green({ ...(three[1] as ReceiptT), harness: { ...(three[1] as ReceiptT).harness, mode: 'early' } })
+      expect(radarOf([...three, empty, early]).sameFailure[0]?.modules).toEqual(LOCS)
+    })
+
+    it('a receipt of an outdated module version is left out', () => {
+      const r = radarOf(three, (loc) => (loc === 'npm:@a/one' ? '0.2.0' : '0.1.0'))
+      expect(r.sameFailure).toEqual([])
+      expect(r.receiptsOnNext).toEqual({ verified: 0, broken: 2 })
+    })
   })
 
   it('tells a removal on next from a miss that latest already had', () => {
