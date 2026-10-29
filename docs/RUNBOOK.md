@@ -421,6 +421,39 @@ At the switch to the public address (Cloudflare Pages at `modules.openmercato.co
    mention the typosquat error with `name-reviewed` or `yarn om triage`. Check those three with the first outside pull
    request.
 
+## templates.openmercato.com (decision of 29 Oct)
+
+`templates.openmercato.com` is a second custom domain of the same Pages project, `open-mercato-modules`. Its root
+answers a 302 to `/templates`; every other path serves the same site as `modules.openmercato.com`, which is never
+redirected. The redirect ships in this repository: `functions/_middleware.ts` (logic in `lib/core/templates-host.ts`)
+runs on `/` only, because `site/public/_routes.json` limits Functions to that path, and `pages.yml` deploys it with the
+site. Canonical links of every page, `/templates` included, stay on `SITE_URL` (`modules.openmercato.com`), so search
+engines see one copy and the sitemap and `llms.txt` keep one origin.
+
+Devops (Dominik), in the Cloudflare account, after the site deploys (steps 5 and 6 above):
+
+1. Pages project `open-mercato-modules` > Custom domains > Set up a custom domain > `templates.openmercato.com`.
+2. DNS: Cloudflare adds the record by itself when the `openmercato.com` zone is on the same account. Otherwise add a
+   CNAME `templates` -> `open-mercato-modules.pages.dev` (the `*.pages.dev` name the project shows) at the DNS provider
+   of the zone; it replaces the `*.openmercato.com` wildcard for this name. Wait for the domain to show Active.
+
+Nothing changes in the repository: no variable, no `SITE_URL`. To verify:
+
+```sh
+curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
+# HTTP/2 302 and location: https://templates.openmercato.com/templates
+curl -s https://templates.openmercato.com/templates | grep -o 'data-templates-state="coming-soon"'
+curl -s https://templates.openmercato.com/templates | grep -o '<link rel="canonical" href="[^"]*"'
+# href="https://modules.openmercato.com/templates"
+curl -sI https://modules.openmercato.com/ | grep -iE '^(HTTP|location)'
+# HTTP/2 200 and no location
+```
+
+A 200 with the home page on the templates root means the deployment has no Functions: check that the `deploy` job ran
+from the repository root and that the `Check Pages Functions` step of `build` passed. If Functions must be turned off,
+the same redirect can be a Single Redirect rule of the zone (Rules > Redirect Rules: hostname equals
+`templates.openmercato.com` and URI path equals `/`, static target `https://templates.openmercato.com/templates`, 302).
+
 ## Triage of submissions
 
 `yarn om triage` lists every open PR that is labelled `new-entry` or changes `modules/**` (a fork and the `/submit`

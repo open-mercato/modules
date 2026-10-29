@@ -33,6 +33,13 @@ Once the site is live, the form at https://modules.openmercato.com/submit does t
 
 Verified is a compatibility signal, not a security review. A module's own code runs during the test.
 
+## Templates
+
+The site has a Templates section for whole app templates: complete Open Mercato apps in GitHub repositories to start a
+new app from. It is in a coming soon state with no entries until the save tool ships. Plan and tracking:
+[specification](https://github.com/open-mercato/modules/pull/5), [save tool](https://github.com/open-mercato/modules/issues/6),
+[section](https://github.com/open-mercato/modules/issues/7).
+
 ## For agents
 
 Every module page has a `.md` and a `.json` twin, and `/llms.txt` lists them (on the site, once it is live). A read-only MCP server with `search_modules`, `get_module`, `check_compat`, `plan_install` and `get_changes` is not deployed yet; it starts after the Worker deploy (D-OPEN-1, see [docs/RUNBOOK.md](docs/RUNBOOK.md#repository-setup-owner-clicks)).
