@@ -17,7 +17,8 @@
 #   sees it on 127.0.0.1:5432 exactly as the job service;
 # - the only host directory mounted is --out (written by the runner role only); no environment variables except the
 #   harness inputs from <cell.env> (no secrets, no tokens);
-# - optional shared Yarn cache volume (preview only; the CI job has no cache, D12).
+# - optional shared Yarn cache volume (preview only; the CI job has no cache, D12);
+# - a cell that would run code from outside @open-mercato is refused before Docker (exit 77, AGENTS.md rule 4).
 # Step results come from exit codes and are written to <out>/job.json in the shape of an Actions API job.
 # Containers, the network and anonymous volumes of the cell are removed on exit (unless --keep).
 set -euo pipefail
@@ -70,6 +71,29 @@ done <"$envfile"
 [[ "${cellenv[KEY12]:-}" =~ ^[a-f0-9]{12}$ ]] || { echo "run-cell: KEY12 missing in $envfile" >&2; exit 64; }
 line_key=${cellenv[LINE]:-}
 [[ "$line_key" =~ ^([0-9]+\.[0-9]+|next)$ ]] || { echo "run-cell: LINE missing in $envfile" >&2; exit 64; }
+
+# AGENTS.md rule 4: a preview host never runs code from outside @open-mercato. `cells-local` refuses such a cell
+# first; this is the backstop for an env file written by hand. `core:<id>` requires are modules of the app itself.
+own() { [[ "$1" == @open-mercato/* ]]; }
+foreign=()
+npm=${cellenv[MODULE_NPM]:-}
+if [[ -n "$npm" ]] && ! own "$npm"; then foreign+=("$npm")
+elif [[ "${cellenv[THIRD_PARTY]:-0}" != 0 ]]; then foreign+=("${npm:-a third-party module}"); fi
+spec=${cellenv[MODULE_SPEC]:-}
+if [[ -n "$spec" ]]; then
+  if ! own "${spec%@*}"; then [[ "${spec%@*}" == "$npm" ]] || foreign+=("${spec%@*}")
+  elif [[ "${spec##*@}" == https://* && "${spec##*@}" != https://codeload.github.com/open-mercato/* ]]; then foreign+=("$spec"); fi
+fi
+for r in ${cellenv[REQUIRES_SPECS]:-}; do
+  [[ "$r" == core:* ]] && continue
+  r=${r#lib:}
+  own "${r%@*}" || foreign+=("${r%@*}")
+done
+for p in ${cellenv[SMOKE_PRESET]:-}; do own "${p%%=*}" || foreign+=("${p%%=*}"); done
+if [[ ${#foreign[@]} -gt 0 ]]; then
+  echo "run-cell: refused: the cell runs ${foreign[*]}, code from outside @open-mercato/*. Third-party cells run only on GitHub Actions ubuntu-latest (nightly.yml, AGENTS.md rule 4)." >&2
+  exit 77
+fi
 
 mkdir -p "$out"
 out=$(cd "$out" && pwd)
