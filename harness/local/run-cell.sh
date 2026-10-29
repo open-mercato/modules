@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 if [[ ${#unfence[@]} -eq 2 ]]; then fw del "${unfence[@]}"; exit; fi
-[[ -f "$envfile" && -n "$out" ]] || { sed -n '2,24p' "$0" >&2; exit 64; }
+[[ -f "$envfile" && -n "$out" ]] || { sed -n '2,23p' "$0" >&2; exit 64; }
 [[ "$attempt" =~ ^[0-9]+$ ]] || { echo "run-cell: bad --attempt" >&2; exit 64; }
 [[ "$memory" =~ ^[1-9][0-9]?g$ ]] || { echo "run-cell: bad --memory" >&2; exit 64; }
 
