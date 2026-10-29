@@ -23,6 +23,7 @@ import {
   corpusEntries,
   fixtureBuiltIn,
   fixtureEntries,
+  fixtureEntry,
   LOC,
   loadFixture,
   NOW,
@@ -396,23 +397,23 @@ describe('the registry page searches without the cap of the tools (finding of 25
 })
 
 describe('single sign-on finds the enterprise entry (audit C05)', () => {
-  // the corpus row of @open-mercato/enterprise with the searchable fields of the real descriptor, aliases included
+  // the corpus row of @open-mercato/enterprise with the searchable fields of the real descriptor; the aliases reach
+  // `_meta` through buildIndexEntry, as `yarn om generate` writes them
   const ENTERPRISE = 'npm:@open-mercato/enterprise'
   const d = Descriptor.parse(parseYaml(readFileSync(join(ROOT, 'modules', '@open-mercato', 'enterprise.yml'), 'utf8')))
+  const built = fixtureEntry(fx, ENTERPRISE, { descriptor: d })
   const entries = corpusEntries().map((e) =>
     e.locator === ENTERPRISE
-      ? {
-          ...e,
-          summary: d.summary!,
-          whenToUse: d.whenToUse!,
-          tags: d.tags ?? [],
-          _meta: { [ALIASES_META_KEY]: d.aliases ?? [] },
-        }
+      ? { ...e, summary: built.summary, whenToUse: built.whenToUse, tags: built.tags, _meta: built._meta }
       : e,
   )
   const idx = loadSearchIndex(
     JSON.parse(JSON.stringify(buildSearchIndex({ entries, builtIn: corpusBuiltIn(), ...meta }))) as SearchIndexData,
   )
+
+  it('the built entry carries the aliases of the descriptor', () => {
+    expect(built._meta[ALIASES_META_KEY]).toEqual(d.aliases)
+  })
 
   it.each(['single sign on', 'single sign-on', 'oidc', 'openid connect', 'sso', 'two-factor', 'totp', '2fa'])(
     '%s ranks the enterprise entry first',
