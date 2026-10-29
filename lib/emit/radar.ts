@@ -3,7 +3,10 @@
 // versions with WP06 `buildSurface`; the data branch has no surface file. Pure.
 import { buildSurface, externalModules, type SurfaceModule } from '../fit/surface.ts'
 import { mergeImports } from '../fit/static.ts'
+import { sameFailure } from '../fit/radar.ts'
 import { lineVerdicts, type VerdictRow } from '../core/lines.ts'
+import type { CellStatus } from '../schema/common.ts'
+import type { Receipt } from '../schema/data/receipt.ts'
 import { withJudgedLines } from '../core/policy.ts'
 import type { IndexEntry } from '../schema/published/modules.ts'
 import type { Radar, Surface } from '../schema/published/radar.ts'
@@ -46,26 +49,46 @@ export function radarPopulation(ctxs: readonly EntryContext[]): Set<string> {
 }
 
 /** Rows of the radar tile: the population, each line read as a verdict on its install version (review r6). */
-export function radarRows(entries: readonly IndexEntry[], population: ReadonlySet<string>): VerdictRow[] {
+export function radarRows(entries: readonly IndexEntry[], population: ReadonlySet<string>): RadarRow[] {
   return entries.filter((e) => population.has(e.locator)).map((e) => withJudgedLines(e))
 }
 
 /** The receipts sentence of the radar summary, the same words as `lib/fit/radar.ts` writes. */
 const RECEIPTS_SENTENCE = /Receipts on next: \d+ verified, \d+ broken\.$/
 
+/** A row of the radar tile: a verdict row with its locator and the receipt id of each line's cell. */
+export type RadarRow = VerdictRow & {
+  locator: string
+  compat: { lines: Readonly<Record<string, { status: CellStatus; receipt?: string | null } | undefined>> }
+}
+
 /**
  * The radar with `receiptsOnNext` counted at emit time from the cells of the listed entries on the `next` line
- * (`lineVerdicts`; the caller passes the radar's population, `radarRows`). `data/radar/next.json` is computed by `watch` before the night
- * is collected, so between two steps it said `queued` while / showed the night (review r3); the radar file stays the
- * source of the API changes only.
+ * (`lineVerdicts`; the caller passes the radar's population, `radarRows`), and `sameFailure` grouped from the receipts
+ * of the same broken cells (`receiptOf`: the receipt a cell names). `data/radar/next.json` is computed by `watch` before
+ * the night is collected, so between two steps it said `queued` while / showed the night (review r3) and kept the
+ * groups of the night before; the radar file stays the source of the API changes only.
  */
-export function radarWithReceipts(r: Radar, rows: readonly VerdictRow[], nextKey = 'next'): Radar {
+export function radarWithReceipts(
+  r: Radar,
+  rows: readonly RadarRow[],
+  receiptOf: (locator: string, id: string) => Receipt | null,
+  nextKey = 'next',
+): Radar {
   const v = lineVerdicts(rows, nextKey)
   const receiptsOnNext = { verified: v.verified, broken: v.broken }
   const sentence = `Receipts on next: ${receiptsOnNext.verified} verified, ${receiptsOnNext.broken} broken.`
+  const broken = new Map<string, Receipt>()
+  for (const row of rows) {
+    const c = row.compat.lines[nextKey]
+    if (!row.listed || c?.status !== 'broken' || !c.receipt) continue
+    const rc = receiptOf(row.locator, c.receipt)
+    if (rc) broken.set(row.locator, rc)
+  }
   return {
     ...r,
     receiptsOnNext,
+    sameFailure: sameFailure(broken),
     // a summary without the receipts sentence stays as it is (the markdown prints its own receipts line)
     summary: r.summary.replace(RECEIPTS_SENTENCE, sentence),
   }

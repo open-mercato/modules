@@ -501,15 +501,60 @@ describe('radar receipts on next (review r3)', () => {
       receiptsOnNext: { verified: 0, broken: 0 },
     } as z.infer<typeof Radar>
     const rows = [
-      { listed: true, compat: { lines: { next: { status: 'verified' as const } } } },
-      { listed: true, compat: { lines: { next: { status: 'broken' as const } } } },
-      { listed: false, compat: { lines: { next: { status: 'verified' as const } } } },
+      { locator: 'npm:@a/x', listed: true, compat: { lines: { next: { status: 'verified' as const } } } },
+      { locator: 'npm:@a/y', listed: true, compat: { lines: { next: { status: 'broken' as const } } } },
+      { locator: 'npm:@a/z', listed: false, compat: { lines: { next: { status: 'verified' as const } } } },
     ]
-    const after = radarWithReceipts(before, rows)
+    const after = radarWithReceipts(before, rows, () => null)
     expect(after.receiptsOnNext).toEqual({ verified: 1, broken: 1 })
     expect(after.summary).toBe(
       '1 of 2 modules use APIs that changed. 0 break statically. Receipts on next: 1 verified, 1 broken.',
     )
+  })
+})
+
+describe('radar same failure from the cells of this build (round 1 leftover of audit R8)', () => {
+  const broken = (fx: Receipt, locator: string, id: string, signature: string): Receipt => ({
+    ...fx,
+    id,
+    module: { ...fx.module!, locator },
+    result: { ...fx.result, status: 'broken', failedStep: 'typecheck' },
+    steps: fx.steps.map((st) => (st.name === 'typecheck' ? { ...st, status: 'fail', signature } : st)),
+  })
+
+  test('the groups come from the receipts of the next cells the receipts count reads', async () => {
+    const { radarWithReceipts } = await import('../../lib/emit/radar.ts')
+    const data = fixtureData()
+    const fx = [...data.receipts.values()].flat()[0]!
+    const locs = ['npm:@a/one', 'npm:@a/two', 'npm:@a/three', 'npm:@a/four']
+    const receipts = new Map(
+      locs.map((l, i) => [l, broken(fx, l, `r_20261024_00000000000${i}`, i < 3 ? 'TS1' : 'TS2')]),
+    )
+    const rows = locs.map((locator, i) => ({
+      locator,
+      listed: true,
+      compat: { lines: { next: { status: 'broken' as const, receipt: `r_20261024_00000000000${i}` } } },
+    }))
+    const before = { ...data.radar!, sameFailure: [] }
+    const after = radarWithReceipts(before, rows, (loc, id) =>
+      receipts.get(loc)?.id === id ? receipts.get(loc)! : null,
+    )
+    expect(after.sameFailure).toEqual([{ step: 'typecheck', signature: 'TS1', modules: [...locs.slice(0, 3)].sort() }])
+    // a cell that is no longer broken (or not listed) leaves the group, as it leaves the count
+    const fixed = rows.map((r, i) =>
+      i === 0 ? { ...r, compat: { lines: { next: { status: 'verified' as const, receipt: null } } } } : r,
+    )
+    expect(radarWithReceipts(after, fixed, (loc) => receipts.get(loc) ?? null).sameFailure).toEqual([])
+  })
+
+  test('a stale group in data/radar/next.json does not reach the published radar', () => {
+    const data = fixtureData()
+    const stale = [
+      { step: 'build' as const, signature: 'TS2345', modules: ['npm:@a/cpq', 'npm:@a/billing', 'npm:@a/x'] },
+    ]
+    const r = buildEmit({ ...data, radar: { ...data.radar!, sameFailure: stale } }, OPTS)
+    expect(json<z.infer<typeof Radar>>(r, 'radar/next.json').sameFailure).toEqual([])
+    expect(text(r, 'radar/next.md')).not.toContain('TS2345')
   })
 })
 
