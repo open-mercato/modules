@@ -4,7 +4,13 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { TEMPLATES_HOST, TEMPLATES_LINKS, TEMPLATES_PATH, templatesRedirect } from '../../lib/core/templates-host.ts'
+import {
+  TEMPLATES_HOST,
+  TEMPLATES_LINKS,
+  TEMPLATES_PATH,
+  TEMPLATES_TARGET,
+  templatesRedirect,
+} from '../../lib/core/templates-host.ts'
 import { findBannedChars } from '../../lib/core/text.ts'
 import { onRequest } from '../../functions/_middleware.ts'
 import { ROOT } from '../emit/helpers.ts'
@@ -41,7 +47,7 @@ describe('/templates page', () => {
     expect(markup).toContain('<code>create-mercato-template</code>')
     expect(markup).toContain('<code>create-mercato-module</code>')
     expect(words).toContain('npx create-mercato-app my-app --template owner/repo')
-    expect(words).toContain('Neither command exists yet.')
+    expect(words).toContain('Neither exists yet: there is no create-mercato-template package and no --template option.')
   })
 
   it('links the spec and both tracking issues', () => {
@@ -77,14 +83,22 @@ describe('navigation', () => {
 })
 
 describe('templates.openmercato.com', () => {
-  it('redirects the root of the templates host to the section on the same host', () => {
+  it('redirects the root of the templates host to the section at its canonical address', () => {
     expect(TEMPLATES_HOST).toBe('templates.openmercato.com')
     expect(TEMPLATES_PATH).toBe('/templates')
-    expect(templatesRedirect('https://templates.openmercato.com/')).toBe('https://templates.openmercato.com/templates')
-    expect(templatesRedirect('https://templates.openmercato.com')).toBe('https://templates.openmercato.com/templates')
+    expect(TEMPLATES_TARGET).toBe('https://modules.openmercato.com/templates')
+    expect(templatesRedirect('https://templates.openmercato.com/')).toBe('https://modules.openmercato.com/templates')
+    expect(templatesRedirect('https://templates.openmercato.com')).toBe('https://modules.openmercato.com/templates')
     expect(templatesRedirect('https://TEMPLATES.openmercato.com/?utm_source=x')).toBe(
-      'https://templates.openmercato.com/templates?utm_source=x',
+      'https://modules.openmercato.com/templates?utm_source=x',
     )
+  })
+
+  it('the target is the canonical URL of /templates, so the links to `/` on the page reach the module home', () => {
+    // on the templates host itself `/` would bounce straight back to the section (review of 29 Oct)
+    expect(templatesRedirect(TEMPLATES_TARGET)).toBeNull()
+    expect(templatesRedirect('https://modules.openmercato.com/')).toBeNull()
+    expect(new URL(TEMPLATES_TARGET).hostname).not.toBe(TEMPLATES_HOST)
   })
 
   it('leaves every other path of the templates host alone', () => {
@@ -112,7 +126,7 @@ describe('templates.openmercato.com', () => {
     }
     const moved = await onRequest({ request: new Request('https://templates.openmercato.com/'), next })
     expect(moved.status).toBe(302)
-    expect(moved.headers.get('location')).toBe('https://templates.openmercato.com/templates')
+    expect(moved.headers.get('location')).toBe('https://modules.openmercato.com/templates')
     expect(passed).toBe(0)
     const served = await onRequest({ request: new Request('https://modules.openmercato.com/'), next })
     expect(await served.text()).toBe('static')
