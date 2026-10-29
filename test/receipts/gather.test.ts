@@ -460,14 +460,10 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
     expect([readFileSync(consentsFile(data), 'utf8'), changes(data)]).toEqual(before)
   })
 
-  it('a late retry never replaces the preset entry a newer night measured (review round 3)', async () => {
-    const data = await provisionalNight()
-    // night 101, completed, measures a newer Open Mercato version on the same line
-    const LATER = '2026-10-24T02:17:00Z'
-    const newer: Matrix = {
-      ...mm,
-      cells: mm.cells.map((c) => (c.line === '0.9' ? { ...c, omVersion: '0.9.1' } : c)),
-    }
+  const LATER = '2026-10-24T02:17:00Z'
+  /** Night 101, completed and newer than night 100, measures `omVersion` on line 0.9. */
+  async function newerNight(data: string, omVersion: string): Promise<void> {
+    const newer: Matrix = { ...mm, cells: mm.cells.map((c) => (c.line === '0.9' ? { ...c, omVersion } : c)) }
     const g101 = fakeApi({
       runs: [run(101, { created_at: LATER, run_started_at: LATER, conclusion: 'success' })],
       jobs: { 101: [job(base09), job(consents), job(ksef)] },
@@ -476,35 +472,78 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
     const n101 = await gatherOn(data, 101, g101)
     if (n101.kind !== 'bundle') throw new Error('expected a bundle')
     applyBundle(ROOT, data, n101.bundle)
-    const afterB = readPresets(data)
-    expect(afterB?.['0.9']?.omVersion).toBe('0.9.1')
-
-    // night 100's retry lands only now
+    expect(readPresets(data)?.['0.9']).toMatchObject({ omVersion, measuredAt: LATER, at: LATER })
+  }
+  /** Night 100's retry lands only now; the bundle is applied twice, the second time as a data-branch retry would. */
+  async function lateRetryTwice(data: string) {
     const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
     if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
     applyBundle(ROOT, data, late.bundle)
-    expect(readPresets(data)?.['0.9']).toEqual(afterB?.['0.9'])
+    const once = readFileSync(join(data, 'presets.json'), 'utf8')
+    applyBundle(ROOT, data, late.bundle)
+    expect(readFileSync(join(data, 'presets.json'), 'utf8')).toBe(once)
+    return readPresets(data)?.['0.9']
+  }
+
+  it('a provisional night records when it measured the preset entry (review round 4)', async () => {
+    const data = await provisionalNight()
+    expect(readPresets(data)?.['0.9']?.measuredAt).toBe(NIGHT)
+  })
+
+  it('a late retry never replaces the preset entry a newer night measured (review round 3)', async () => {
+    const data = await provisionalNight()
+    await newerNight(data, '0.9.1')
+    const afterB = readPresets(data)?.['0.9']
+    expect(await lateRetryTwice(data)).toEqual(afterB)
     expect(nightReceipts(data).map((r) => [r.result.status, r.transition.confirmed, r.run.attempt])).toEqual([
       ['broken', true, 2],
     ])
     expect(readProvisional(data)).toEqual([])
   })
 
+  it('a late retry never replaces the entry a newer night measured after a tag rollback (review round 4)', async () => {
+    const data = await provisionalNight()
+    // night 101 measures an older version than night 100 did: the line's tag was rolled back (lib/sources/lines.ts)
+    await newerNight(data, '0.9.0-rc.2')
+    const afterB = readPresets(data)?.['0.9']
+    expect(await lateRetryTwice(data)).toEqual(afterB)
+  })
+
+  it('an entry without measuredAt keeps the old rule: a later night with a newer version stays (review round 4)', async () => {
+    const data = await provisionalNight()
+    await newerNight(data, '0.9.1')
+    const { measuredAt: _, ...legacy } = readPresets(data)!['0.9']!
+    writePresets(data, { ...readPresets(data), '0.9': legacy })
+    expect(await lateRetryTwice(data)).toEqual(legacy)
+  })
+
   it('a late retry still writes its measurement over an older version a newer night only stamped (review of round 3)', async () => {
     const data = await provisionalNight()
     // a later night that ran no baseline on 0.9 only moves `at`; the entry it leaves is of an older version
-    const LATER = '2026-10-24T02:17:00Z'
     const own = readPresets(data)!['0.9']!
     expect(own.omVersion).toBe(base09.omVersion)
     writePresets(data, { ...readPresets(data), '0.9': { ...own, omVersion: '0.9.0-rc.1', at: LATER } })
 
-    const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
-    if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
-    applyBundle(ROOT, data, late.bundle)
-    const entry = readPresets(data)?.['0.9']
+    const entry = await lateRetryTwice(data)
     expect(entry?.omVersion).toBe(base09.omVersion)
     expect(entry?.[base09.preset]).toEqual(own[base09.preset])
+    expect(entry?.measuredAt).toBe(NIGHT)
     expect(entry?.at).toBe(LATER)
+  })
+
+  it('a late retry writes its measurement over an entry measured earlier that a newer night only stamped (review round 4)', async () => {
+    const data = await provisionalNight()
+    // the entry was measured by night 99 (another version, another list), and a later night without a baseline on 0.9
+    // stamped `at`; the same version and preset would have stopped the old rule
+    const own = readPresets(data)!['0.9']!
+    const stale = [{ id: 'auth', from: '@open-mercato/core' }]
+    writePresets(data, {
+      ...readPresets(data),
+      '0.9': { omVersion: base09.omVersion, [base09.preset]: stale, measuredAt: EARLIER, at: LATER },
+    })
+
+    const entry = await lateRetryTwice(data)
+    expect(entry).toEqual({ ...own, at: LATER })
   })
 
   it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {

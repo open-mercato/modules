@@ -340,12 +340,19 @@ export function applyNight(input: ApplyInput): ApplyResult {
   const idFor = (at: string, key: string, locator: string | null) =>
     uniqueReceiptId(receiptId(at, key), bundle.night.id, [...input.history(locator), ...issued])
   const runAt = (a: BundleAttempt) => a.run.at
-  // When this night measured its lines: its first attempt. A stored preset entry stamped later was written by a newer
-  // night, which a late retry of this (provisional) night never replaces (review round 3).
+  // When this night measured its lines: its first attempt, the same for a late retry of this (provisional) night.
   const measuredAt = newestAt([bundle.night.at, a1.run.at])
-  const newerNight = (line: string) => {
+  // Whether the stored entry of a line was measured by a newer night, which a late retry never replaces (review rounds
+  // 3 and 4). An entry with `measuredAt` answers it alone: neither `at` (every night stamps it) nor the version (a tag
+  // may roll back, lib/sources/lines.ts) says who measured. An entry written before `measuredAt` keeps the old rule: a
+  // later `at` with a newer version, or with this preset of the same version.
+  const measuredByNewer = (line: string, cell: { omVersion: string; preset: PresetId }) => {
     const stored = input.presets?.[line]
-    return stored && Date.parse(stored.at) > Date.parse(measuredAt) ? stored : null
+    if (!stored) return false
+    if (stored.measuredAt) return Date.parse(stored.measuredAt) > Date.parse(measuredAt)
+    if (Date.parse(stored.at) <= Date.parse(measuredAt)) return false
+    const order = compareVersions(stored.omVersion, cell.omVersion)
+    return order > 0 || (order === 0 && stored[cell.preset] !== undefined)
   }
 
   // Baselines first: their final status decides harness-red for the module cells of the line.
@@ -454,20 +461,19 @@ export function applyNight(input: ApplyInput): ApplyResult {
       })
     }
     // data/presets.json from the scaffold of the baseline, under the key of its preset (`empty`, `classic`); `at` is
-    // set for every line after the loop. A line whose Open Mercato version changed starts a new entry.
-    // every collected night stamps `at`, measured or not: the newer night keeps a newer version, or this preset of the
-    // same version; an older version it only stamped still takes this night's measurement
-    const newer = newerNight(cell.line)
-    const keepNewer =
-      newer !== null &&
-      (compareVersions(newer.omVersion, cell.omVersion) > 0 ||
-        (newer.omVersion === cell.omVersion && newer[cell.preset] !== undefined))
-    if (cell.baseline && !keepNewer && dec.outcome.modulesTs && dec.outcome.ladder.scaffold.conclusion === 'success') {
+    // set for every line after the loop. A line whose Open Mercato version changed starts a new entry. `measuredAt`
+    // records this night as the one that measured the entry.
+    if (
+      cell.baseline &&
+      !measuredByNewer(cell.line, cell) &&
+      dec.outcome.modulesTs &&
+      dec.outcome.ladder.scaffold.conclusion === 'success'
+    ) {
       const list = presetFromModulesTs(dec.outcome.modulesTs, cell.preset === 'classic' ? 160 : 80)
       if (list.length > 0) {
         const prior = out.presets?.[cell.line]
         const base = prior && prior.omVersion === cell.omVersion ? prior : { omVersion: cell.omVersion, at }
-        out.presets = { ...(out.presets ?? {}), [cell.line]: { ...base, [cell.preset]: list } }
+        out.presets = { ...(out.presets ?? {}), [cell.line]: { ...base, [cell.preset]: list, measuredAt } }
       }
     }
   }
