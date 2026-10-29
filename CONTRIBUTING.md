@@ -27,13 +27,13 @@ You can add your own module, fix a summary, add screenshots or correct a field. 
 ### Pull requests
 
 - Tick `I maintain this package or have the maintainer's consent`. Agents may open a PR; a person merges it.
-- Run `yarn om format modules` before you push. See [Formatting](#formatting).
+- Run `yarn om format modules` before you push, or let the autofix job format the file. See [Formatting](#formatting).
 - Add screenshot files in the same pull request as the descriptor.
 - A PR that changes a curator field gets a note in the summary.
 
 ### Review process
 
-- CI runs `yarn check`, `yarn test` and `yarn om validate`, and writes up to 10 lines per entry in the job summary. There are no bot comments.
+- CI runs `yarn om validate` and `yarn check` on every PR, and `yarn test` when the PR changes files outside `modules/`. A PR that changes only `modules/` skips the suite, because `validate` already reports those descriptors. CI writes up to 10 lines per entry in the job summary. There are no bot comments.
 - A person reads the summary and the descriptor, then merges.
 - The nightly install runs only for entries merged to `main`, never for PR content.
 - Phrases that look like instructions to an AI model are flagged for a human reviewer.
@@ -98,7 +98,7 @@ Key order in the file follows the table above. `yarn om format` sorts keys and f
 
 > **Good to know:**
 >
-> While the repository is private the autofix job does not run, so run `yarn om format modules` before you push. The `checks` job fails on a file in another form, and `validate` warns about it in its summary.
+> The autofix job formats `modules/**` in your PR and commits the result, forks included. Running `yarn om format modules` before you push saves that round trip. Until the file is formatted, the `checks` job fails on it and `validate` warns about it in its summary.
 
 ## Screenshots
 
