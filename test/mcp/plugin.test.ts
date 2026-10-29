@@ -79,6 +79,15 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
     expect(text).toContain('When nothing fits, say so and continue with the task router')
     expect(text).toContain('`https://modules.openmercato.com/m/<package>.md`')
   })
+
+  it('checks the CLI for `search` itself, and says what a 404 of the site means (audit of 29 Oct, C34)', () => {
+    // every released CLI up to 0.10.0 prints `module <add|enable|eject>`, so "only add and enable" never matched
+    expect(text).toContain('if it does not list `search`, go to 3')
+    expect(text).not.toMatch(/only `?(module )?add`? and `?(module )?enable/)
+    // modules.openmercato.com answers 404 until the Cloudflare deploy (README, docs/RUNBOOK.md)
+    expect(text).toContain('answers 404 until the site is deployed')
+    expect(text).toContain('https://github.com/open-mercato/modules/tree/main/modules')
+  })
 })
 
 describe('plugin and marketplace', () => {
