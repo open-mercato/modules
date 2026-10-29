@@ -3,7 +3,8 @@
 //   [--modules <dir>] [--github-output <file>]` (spec 5.3, 5.4). `--preset` plans one starter preset only (default
 //   both: classic, the main verdict, then empty, the signal `in isolation`).
 // Reads .data (lines, presets, builtin, sync, facts, receipts), descriptors and harness/lines.yml; writes out/matrix.json.
-// No foreign code runs here (job `plan`).
+// No foreign code runs here (job `plan`). With `--runner preview-docker` the matrix holds no cell that would run code
+// from outside @open-mercato (AGENTS.md rule 4; `cells-local` refuses such a cell too).
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -26,6 +27,7 @@ import { CellMode, Runner } from '../receipts/matrix.ts'
 import { StarterPreset } from '../schema/common.ts'
 import type { PresetId } from '../core/lines.ts'
 import { planMatrix, type PlanEntry } from '../receipts/plan.ts'
+import { foreignCode } from './cells-local.ts'
 
 export const description = 'cells for the nightly install; out/matrix.json'
 
@@ -173,7 +175,7 @@ export default function planMatrixCommand(ctx: CommandContext): number {
       },
     }
   })
-  const matrix = planMatrix({
+  const planned = planMatrix({
     entries: planEntries,
     lines,
     presets: readPresets(data),
@@ -191,6 +193,8 @@ export default function planMatrixCommand(ctx: CommandContext): number {
     runner: o.runner,
     budgetMin: o.budget,
   })
+  const thirdParty = o.runner === 'preview-docker' ? planned.cells.filter((c) => foreignCode(c).length > 0) : []
+  const matrix = { ...planned, cells: planned.cells.filter((c) => !thirdParty.includes(c)) }
   const out = resolve(ctx.flags.out)
   mkdirSync(out, { recursive: true })
   writeFileSync(join(out, 'matrix.json'), `${JSON.stringify(matrix, null, 2)}\n`)
@@ -209,6 +213,10 @@ export default function planMatrixCommand(ctx: CommandContext): number {
       .map((s) => `${matrix.notRun.filter((n) => n.status === s).length} ${s}`)
       .join(', ')})`,
   ]
+  if (o.runner === 'preview-docker')
+    summary.push(
+      `preview: ${thirdParty.length} third-party cell(s) left out; they run only on GitHub Actions (AGENTS.md rule 4)`,
+    )
   if (ctx.flags.json) console.log(JSON.stringify(matrix))
   else for (const l of summary) console.log(l)
   if (process.env.GITHUB_STEP_SUMMARY)

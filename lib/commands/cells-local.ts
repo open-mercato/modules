@@ -17,6 +17,8 @@
 // baseline lost its type check to the limit, 24 Oct); start the shards a few minutes apart (scripts/preview-night.sh),
 // as many as the host has 10 GB of free memory for.
 // Only shard 1 has the baselines: collect it first, so the other shards' retry keys read today's baseline.
+// A cell that would run code from outside @open-mercato is refused (AGENTS.md rule 4: third-party module code runs only
+// on GitHub Actions ubuntu-latest, never on a preview host); the other cells of the selection run.
 import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -96,6 +98,40 @@ export function parseArgs(args: string[], out: string): Options | string {
   if (o.until && !/^[a-z]+$/.test(o.until)) return '--until: a step name'
   if (!/^[1-9][0-9]?g$/.test(o.memory)) return '--memory: gigabytes, e.g. 8g'
   return o
+}
+
+/** The scope whose code a preview host may run. Everything else runs only on GitHub Actions (AGENTS.md rule 4). */
+export const PREVIEW_SCOPE = '@open-mercato/'
+const PREVIEW_TARBALLS = 'https://codeload.github.com/open-mercato/'
+
+/** The npm name of `<npm>@<version or tarball>`, `lib:<npm>@<version>` too. */
+function specName(spec: string): string {
+  return /^(?:lib:)?((?:@[^/@]+\/)?[^@]+)@/.exec(spec)?.[1] ?? spec
+}
+
+/**
+ * What a cell would install from outside @open-mercato: its module, the catalog packages it requires (modules and
+ * `lib:`), a GitHub tarball of another owner, and the packages its new app registers. [] for a cell a preview host may
+ * run. The scaffold itself (`create-mercato-app`) is the platform, not a catalog package.
+ */
+export function foreignCode(c: MatrixCell): string[] {
+  const own = (n: string) => n.startsWith(PREVIEW_SCOPE)
+  const found = new Set<string>()
+  if (c.moduleNpm && (c.thirdParty || !own(c.moduleNpm))) found.add(c.moduleNpm)
+  if (c.moduleSpec) {
+    const n = specName(c.moduleSpec)
+    const at = c.moduleSpec.slice(n.length + 1)
+    if (!own(n)) found.add(n)
+    else if (at.startsWith('https://') && !at.startsWith(PREVIEW_TARBALLS)) found.add(c.moduleSpec)
+  }
+  for (const r of c.requiresSpecs) if (!r.startsWith('core:') && !own(specName(r))) found.add(specName(r))
+  for (const p of c.presetPackages) if (!own(p)) found.add(p)
+  return [...found]
+}
+
+/** The line cells-local prints for a refused cell. */
+export function refusal(c: MatrixCell): string {
+  return `refused ${c.label}: it runs ${foreignCode(c).join(', ')}, code from outside ${PREVIEW_SCOPE}*. Third-party cells run only on GitHub Actions ubuntu-latest (nightly.yml, AGENTS.md rule 4).`
 }
 
 /** Cells of shard i of n: the baselines all in shard 1 (first, as in the matrix), the rest round-robin in matrix order. */
@@ -199,9 +235,12 @@ export default function cellsLocal(ctx: CommandContext): number {
   const pick = (c: MatrixCell) =>
     o.cells.length === 0 || o.cells.some((s) => s === c.key || s === c.key12 || s === c.locator)
   const selected = source.cells.filter(pick)
-  const cells = o.shard ? shardOf(selected, o.shard.i, o.shard.n) : selected
+  const sharded = o.shard ? shardOf(selected, o.shard.i, o.shard.n) : selected
+  const refused = sharded.filter((c) => foreignCode(c).length > 0)
+  for (const c of refused) console.error(`om cells-local: ${refusal(c)}`)
+  const cells = sharded.filter((c) => !refused.includes(c))
   if (cells.length === 0) {
-    console.error('om cells-local: no cell selected')
+    console.error(`om cells-local: no cell selected${refused.length > 0 ? ' that a preview host may run' : ''}`)
     return EXIT_ENV
   }
   // one run id per process, also for streams and retries started in the same second (review of 24 Oct: two retries

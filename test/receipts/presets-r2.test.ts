@@ -46,7 +46,8 @@ describe('run ids of streams and retries started in the same second (P1)', () =>
     const out = tmp('runid-cli')
     const m = plan(fx, { onlyPresets: ['classic'], runner: 'preview-docker' })
     writeFileSync(join(out, 'matrix.json'), `${JSON.stringify(m)}\n`)
-    const key = of(m, LOC.ksef, '0.9', 'classic')!.key12
+    // an official cell: cells-local refuses a third-party one (AGENTS.md rule 4, test/receipts/preview-scope.test.ts)
+    const key = of(m, LOC.stripe, '0.9', 'classic')!.key12
     const run = () =>
       new Promise<string>((resolve, reject) => {
         const p = spawn(
