@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/tillio",
-  "checkedAt": "2026-10-29T05:54:28Z",
+  "checkedAt": "2026-10-29T08:34:00Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/tillio",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7688.1.8bbd70dcdf"
+      "develop": "0.10.1-develop.7689.1.453d3db612"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -46,7 +46,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-29T04:21:46Z",
+    "pushedAt": "2026-10-29T08:11:55Z",
     "defaultBranch": "main",
     "stars": 1888,
     "license": "MIT",
