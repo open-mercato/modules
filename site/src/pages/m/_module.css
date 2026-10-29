@@ -2063,6 +2063,15 @@
   font-size: 12px;
   color: var(--ink-2);
 }
+/* an edit by hand of the line's plan, before its command (audit of 29 Oct, R3): a plain sentence, never in the chip */
+.ib__manual {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
 /* a verified command whose line saw a newer version break (review r7): calm, it explains the pin */
 .ib__pinned {
   margin-top: -4px;

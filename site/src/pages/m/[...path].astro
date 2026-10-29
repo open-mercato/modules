@@ -686,6 +686,8 @@ const installLines: InstallLine[] = lines.map((l) => {
     isolation: iso && !emptyOwn && isoBeside(l.key) ? { dot: isolationDot(iso), sentence: isoBeside(l.key)! } : null,
     isoDot: iso ? isolationDot(iso) : null,
     command: refused || previewOnly ? null : full,
+    // the edits by hand of the line's plan, before its command (audit of 29 Oct, R3 point 6: only the main card had them)
+    manual: steps ? steps.manual.map(manualStepText) : [],
     anyway: refused && !unusable ? full : null,
     previewBuild: previewOnly ? full : null,
     // the enterprise command turns modules on in .env (finding of 25 Oct): the note says what a new app has and the
@@ -1221,12 +1223,14 @@ const otherLines: OtherLine[] =
         .filter((l) => l.key !== latest.key)
         .map((l) => {
           const il = installLines.find((x) => x.key === l.key)
+          // the edits by hand of the version's plan stand before its command, as on the main card (R3 point 6)
+          const manual = il?.manual ?? []
           if (il?.preset)
-            return { label: lineName(l), state: lineState(l.key), command: il.emptyCommand ?? null, lead: il.emptyCommand ? 'For an app without it:' : null }
-          if (il?.command) return { label: lineName(l), state: lineState(l.key), command: il.command, lead: null }
+            return { label: lineName(l), state: lineState(l.key), command: il.emptyCommand ?? null, lead: il.emptyCommand ? 'For an app without it:' : null, manual: il.emptyCommand ? manual : [] }
+          if (il?.command) return { label: lineName(l), state: lineState(l.key), command: il.command, lead: null, manual }
           if (il?.previewBuild)
-            return { label: lineName(l), state: lineState(l.key), command: il.previewBuild, lead: 'Only a preview build, not tested on this version:' }
-          return { label: lineName(l), state: lineState(l.key), command: null, lead: 'No recommended command for this version.' }
+            return { label: lineName(l), state: lineState(l.key), command: il.previewBuild, lead: 'Only a preview build, not tested on this version:', manual }
+          return { label: lineName(l), state: lineState(l.key), command: null, lead: 'No recommended command for this version.', manual: [] }
         })
     : []
 // the sidebar

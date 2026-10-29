@@ -25,6 +25,8 @@ export interface OtherLine {
   command: string | null
   /** A short lead over the command (`For an app without it:`), or null. */
   lead: string | null
+  /** Edits by hand before the command, from the version's plan (audit of 29 Oct, R3), as on the main card. */
+  manual: string[]
 }
 
 export interface InstallStep {
@@ -220,6 +222,7 @@ const hasBody = button || notes.length > 0 || others.length > 0
                         <span>{o.label}</span> <span class="inst__ls">{o.state}</span>
                       </p>
                       {o.lead && <p class="inst__fine">{o.lead}</p>}
+                      {o.command && o.manual.map((t) => <p class="inst__t">{t}</p>)}
                       {o.command && <CommandChip command={o.command} label={`Copy install command for ${o.label}`} />}
                     </li>
                   ))}
