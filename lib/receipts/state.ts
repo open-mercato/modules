@@ -408,9 +408,17 @@ export function applyNight(input: ApplyInput): ApplyResult {
       attestation: null,
       ...(notes.length > 0 ? { notes } : {}),
     })
-    if (cell.baseline) baselineFinal.set(scope(cell), { status: dec.status, id: receipt.id, culprits: heldAgainst })
     const retried = o2 !== null
-    if (shouldWrite(prev, receipt, retried)) {
+    const write = shouldWrite(prev, receipt, retried)
+    // a baseline that retention does not write is linked through the stored receipt it repeats (same status, key and
+    // confirmation), so a module receipt never points at an id that exists nowhere (audit R6)
+    if (cell.baseline)
+      baselineFinal.set(scope(cell), {
+        status: dec.status,
+        id: write ? receipt.id : (prev?.id ?? receipt.id),
+        culprits: heldAgainst,
+      })
+    if (write) {
       out.receipts.push({ locator: cell.locator, receipt })
       issued.push(receipt)
     }
