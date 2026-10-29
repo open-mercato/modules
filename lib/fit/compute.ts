@@ -95,7 +95,8 @@ export async function computeFit(
       out.set(version, await versionCells(store, opts, version, latestRes, log))
     } catch (err) {
       // one line that cannot be read (a tarball not served yet) leaves the others and the rest of watch running;
-      // its fit file stays as it was (audit C12). The latest line is the drift base and still fails the run.
+      // its fit file stays as it was (audit C12) and the next watch refits it (queue `fitPending`). The latest line is
+      // the drift base and still fails the run.
       if (version === opts.latest || !(err instanceof StoreError || err instanceof TypeError)) throw err
       log(`fit ${version}: skipped, ${err.message}`)
     }

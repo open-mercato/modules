@@ -105,6 +105,7 @@ const queue = (o: {
   changed: string[]
   items: { locator: string; version: string }[]
   needsSync?: string[]
+  fitPending?: string[]
 }) => {
   const file = join(tmp, `queue-${Math.random().toString(36).slice(2)}.json`)
   writeFileSync(
@@ -112,7 +113,12 @@ const queue = (o: {
     JSON.stringify({
       items: o.items,
       needsSync: o.needsSync ?? [],
-      lines: { changed: o.changed, coreLatest: '0.9.0', coreChanged: o.coreChanged },
+      lines: {
+        changed: o.changed,
+        coreLatest: '0.9.0',
+        coreChanged: o.coreChanged,
+        fitPending: o.fitPending ?? [],
+      },
     }),
   )
   return file
@@ -252,6 +258,16 @@ describe.skipIf(!hasJq)('watch.yml steps', () => {
     })
     expect(r2.code, r2.out).toBe(0)
     expect(callLog().some((l) => l.startsWith('om fit') || l.startsWith('om scan --queue'))).toBe(false)
+  })
+
+  it('a line whose fit was skipped refits on the next run with nothing else changed', () => {
+    runStep(stepRun('watch.yml', 'Prepare data checkout'))
+    const r = runStep(stepRun('watch.yml', 'Watch and commit to data'), {
+      QUEUE: queue({ coreChanged: false, changed: [], items: [], fitPending: ['next'] }),
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(callLog()).toContain('om fit')
+    expect(dataLog()).toHaveLength(1)
   })
 
   it('a radar without fit for the next line (exit 2) is skipped; health, hive and the commit still run (audit C12)', () => {

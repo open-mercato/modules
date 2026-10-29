@@ -1,9 +1,9 @@
 // `yarn om watch` (spec 5.2 watch.yml step 1, 5): lines -> `.data/lines.json`; new versions of entries ->
 // `out/queue.json` for `yarn om scan --queue` (WP05); optional keepalive of the cron workflows.
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
-import { Lines, LineKey, Locator, SemVer, type Lines as LinesT } from '../schema/index.ts'
+import { Facts, FitResult, Lines, LineKey, Locator, SemVer, type Lines as LinesT } from '../schema/index.ts'
 import { loadEntries, readSyncRecord } from './entries.ts'
 import { API as GITHUB_API, repoTags } from './github.ts'
 import { errText, type Http } from './http.ts'
@@ -21,7 +21,15 @@ import { githubArchiveUrl } from './tarball.ts'
 export const QueueFile = z
   .object({
     generatedAt: z.string(),
-    lines: z.object({ changed: z.array(LineKey), coreLatest: z.string(), coreChanged: z.boolean() }).strict(),
+    lines: z
+      .object({
+        changed: z.array(LineKey),
+        coreLatest: z.string(),
+        coreChanged: z.boolean(),
+        // lines whose fit file lacks a cell of a scanned version (a line fit skipped, audit C12): watch.yml refits them
+        fitPending: z.array(LineKey),
+      })
+      .strict(),
     items: z.array(
       z
         .object({
@@ -68,6 +76,37 @@ function readLines(dataDir: string): LinesT | null {
   if (!existsSync(f)) return null
   const r = Lines.safeParse(JSON.parse(readFileSync(f, 'utf8')))
   return r.success ? r.data : null
+}
+
+function factsKeys(dir: string, acc: Set<string> = new Set()): Set<string> {
+  if (!existsSync(dir)) return acc
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, e.name)
+    if (e.isDirectory()) factsKeys(p, acc)
+    else if (e.isFile() && e.name.endsWith('.json')) {
+      const r = Facts.safeParse(JSON.parse(readFileSync(p, 'utf8')))
+      if (r.success) acc.add(`${r.data.package.locator}@${r.data.package.version}`)
+    }
+  }
+  return acc
+}
+
+/**
+ * Keys of the lines whose `fit/<version>.json` is missing or lacks a cell of a version in `facts/`. `fit` writes every
+ * facts version on every line it reads, so a gap means a line it skipped (a tarball not served yet, audit C12); the
+ * next watch refits it even when no line and no version changed.
+ */
+export function pendingFitLines(dataDir: string, lines: readonly LinesT['lines'][number][]): string[] {
+  const keys = factsKeys(join(dataDir, 'facts'))
+  if (keys.size === 0) return []
+  return lines
+    .filter((l) => {
+      const f = join(dataDir, 'fit', `${l.version}.json`)
+      if (!existsSync(f)) return true
+      const r = FitResult.safeParse(JSON.parse(readFileSync(f, 'utf8')))
+      return !r.success || [...keys].some((k) => !(k in r.data.cells))
+    })
+    .map((l) => l.key)
 }
 
 const hasFacts = (dataDir: string, path: string, version: string) =>
@@ -222,14 +261,20 @@ export async function runWatch(o: WatchOptions): Promise<WatchResult> {
   items.sort((a, b) => a.locator.localeCompare(b.locator) || compareVersions(b.version, a.version))
   const queue = QueueFile.parse({
     generatedAt: isoSeconds(o.now),
-    lines: { changed, coreLatest: lines?.coreLatest ?? '', coreChanged },
+    lines: {
+      changed,
+      coreLatest: lines?.coreLatest ?? '',
+      coreChanged,
+      fitPending: lines ? pendingFitLines(o.dataDir, lines.lines) : [],
+    },
     items,
     needsSync: [...needsSync].sort(),
     errors,
   })
   writeJson(join(o.outDir, 'queue.json'), queue)
   log(
-    `watch: ${items.length} versions queued, ${needsSync.size} entries to sync, lines changed: ${changed.join(', ') || 'none'}`,
+    `watch: ${items.length} versions queued, ${needsSync.size} entries to sync, lines changed: ${changed.join(', ') || 'none'}` +
+      (queue.lines.fitPending.length ? `, fit pending: ${queue.lines.fitPending.join(', ')}` : ''),
   )
   return { lines, queue }
 }
