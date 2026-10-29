@@ -199,11 +199,11 @@ export async function runSync(o: SyncOptions): Promise<SyncResult> {
     }),
   )
 
-  // OSV for the current version of every npm entry
+  // OSV for the current version of every npm entry, also the version retained when the packument failed
   let advisoryMap: Map<string, Advisory[]> | null = null
   let advisoryError: string | null = null
   const osvQueries = selected
-    .map((e) => npmOf.get(e.locator)?.record)
+    .map((e) => (e.locator.startsWith('npm:') ? npmFinal(e) : null))
     .filter((n): n is NpmRecord => !!n && !!(n.latestStable ?? n.preview))
     .map((n) => ({ name: n.name, version: (n.latestStable ?? n.preview) as string }))
   try {
@@ -276,7 +276,7 @@ export async function runSync(o: SyncOptions): Promise<SyncResult> {
     let advisories: Advisory[] = prev?.advisories ?? []
     if (npm && (npm.latestStable ?? npm.preview)) {
       if (advisoryError) errors.push(advisoryError)
-      else advisories = advisoryMap?.get(npm.name) ?? []
+      else if (advisoryMap?.has(npm.name)) advisories = advisoryMap.get(npm.name) ?? []
     } else if (!npm) advisories = []
     // downloads
     let downloads30d: number | null = prev?.downloads30d ?? null

@@ -117,6 +117,44 @@ describe('yarn om sync --offline on recorded responses (16 real entries)', () =>
     expect(after?.errors.some((e) => e.startsWith('npm: HTTP 503'))).toBe(true)
   })
 
+  it('checks a retained npm version against OSV when the packument fails, so its advisories stay', async () => {
+    const KSEF = '@fastwhitecat/integration-ksef-direct'
+    // OSV answers every query; ksef has one advisory
+    const withOsv = (base: Http, npmDown: boolean): Http => ({
+      mode: base.mode,
+      fixturesDir: base.fixturesDir,
+      bytes: (u) => base.bytes(u),
+      request: (url, o) => {
+        if (npmDown && url.includes('integration-ksef-direct') && url.startsWith('https://registry.npmjs.org/'))
+          return Promise.reject(new HttpError('HTTP 503', url, 503))
+        if (url === 'https://api.osv.dev/v1/querybatch') {
+          const qs = (o?.body as { queries: { package: { name: string } }[] }).queries
+          const results = qs.map((q) => (q.package.name === KSEF ? { vulns: [{ id: 'GHSA-test-0001' }] } : {}))
+          return Promise.resolve({ status: 200, json: { results }, text: '' })
+        }
+        if (url === 'https://api.osv.dev/v1/vulns/GHSA-test-0001')
+          return Promise.resolve({
+            status: 200,
+            json: {
+              id: 'GHSA-test-0001',
+              published: '2026-10-01T00:00:00Z',
+              database_specific: { severity: 'HIGH' },
+              affected: [{ package: { name: KSEF }, ranges: [{ events: [{ introduced: '0' }, { fixed: '9.0.0' }] }] }],
+            },
+            text: '',
+          })
+        return base.request(url, o)
+      },
+    })
+    const first = await sync(withOsv(offlineHttp(), false))
+    const before = rec(first.data, KSEF)
+    expect(before.advisories.map((a) => a.id)).toEqual(['GHSA-test-0001'])
+    const second = await sync(withOsv(offlineHttp(), true), first.data, new Date('2026-10-30T04:17:00Z'))
+    const after = second.res.records.find((r) => r.locator === `npm:${KSEF}`)
+    expect(after?.npm).toEqual(before.npm)
+    expect(after?.advisories).toEqual(before.advisories)
+  })
+
   it('a sync of named entries (watch.yml needsSync) leaves every other record, claim and stat as it was', async () => {
     const first = await sync()
     const file = (p: string) => readFileSync(join(first.data, p), 'utf8')
