@@ -90,6 +90,8 @@ export type Receipt = z.infer<typeof Receipt>
 // data/receipts/_provisional.json (audit R5): nights collected before their retry finished. A later collect of that
 // retry run applies the whole night again, in place of these receipts, and removes the entry; `changes` are the lines
 // the provisional write added to changes/, taken back then. Entries older than the retention window are dropped.
+// Both lists hold one item per cell at most: the bound is the matrix's (256 cells, lib/receipts/matrix.ts), so a large
+// night never fails the write of its receipts.
 export const ProvisionalNights = z
   .object({
     nights: z
@@ -101,8 +103,8 @@ export const ProvisionalNights = z
             retry: z
               .array(z.string().regex(/^[a-f0-9]{64}$/))
               .min(1)
-              .max(200),
-            changes: z.array(Change).max(200),
+              .max(256),
+            changes: z.array(Change).max(256),
           })
           .strict(),
       )

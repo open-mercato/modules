@@ -91,6 +91,17 @@ describe('data branch schemas are strict (spec 4.5)', () => {
     expect(Lines.parse(lines).keepaliveAt).toBe('2026-10-23T00:17:00Z')
   })
 
+  it('a provisional night holds a change and a retry key for every cell a matrix can have (256)', () => {
+    const change = sample.change()
+    const night = {
+      night: 100,
+      at: '2026-10-24T02:17:00Z',
+      retry: Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(64, '0')),
+      changes: Array.from({ length: 256 }, () => change),
+    }
+    expect(ProvisionalNights.safeParse({ nights: [night] }).success).toBe(true)
+  })
+
   it('maps data branch paths to schemas', () => {
     expect(dataFileRule('sync/@x/y.json')?.schema).toBe(SyncRecord)
     expect(dataFileRule('sync/github/owner/repo.json')?.schema).toBe(SyncRecord)
