@@ -94,7 +94,7 @@ describe('classifyStep', () => {
   })
 
   it('a step timeout marked by steps.sh is one rule on both runners: infra first, module-fail on the retry', () => {
-    const log = 'Creating an optimized production build ...\n[harness] step timed out: yarn build ran 600 s\n'
+    const log = 'Creating an optimized production build ...\n[harness] step timed out: yarn build ran 900 s\n'
     expect(classifyStep('build', log, { attempt: 1 })).toMatchObject({ classification: 'infra', rule: 'step-timeout' })
     expect(classifyStep('build', log, { attempt: 2 }).classification).toBe('module-fail')
     const own = '[harness] step timed out after 280 s\n'
