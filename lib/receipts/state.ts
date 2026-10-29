@@ -479,8 +479,9 @@ export function applyNight(input: ApplyInput): ApplyResult {
         const prior = out.presets?.[cell.line]
         const same = prior && prior.omVersion === cell.omVersion ? prior : null
         const base = same ?? { omVersion: cell.omVersion, at }
-        // never moved back: filling the list a newer night left out keeps that night's `measuredAt`
-        const when = same?.measuredAt ? newestAt([same.measuredAt, measuredAt]) : measuredAt
+        // never moved back: filling the list a newer night left out keeps that night's `measuredAt`; an entry written
+        // before `measuredAt` is dated by its `at`, so a replay of an older night cannot overwrite the list it kept
+        const when = same ? newestAt([same.measuredAt ?? same.at, measuredAt]) : measuredAt
         out.presets = { ...(out.presets ?? {}), [cell.line]: { ...base, [cell.preset]: list, measuredAt: when } }
       }
     }
