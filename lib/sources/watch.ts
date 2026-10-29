@@ -92,19 +92,22 @@ function factsKeys(dir: string, acc: Set<string> = new Set()): Set<string> {
 }
 
 /**
- * Keys of the lines whose `fit/<version>.json` is missing or lacks a cell of a version in `facts/`. `fit` writes every
- * facts version on every line it reads, so a gap means a line it skipped (a tarball not served yet, audit C12); the
- * next watch refits it even when no line and no version changed.
+ * Keys of the lines whose `fit/<version>.json` is missing, lacks a cell of a version in `facts/`, or compares its drift
+ * with another version than the current `latest` line. `fit` writes every facts version on every line it reads, so a
+ * gap means a line it skipped (a tarball not served yet, audit C12), and a skipped line keeps the drift of the latest
+ * it was last computed against (review round 3); the next watch refits it even when no line and no version changed.
  */
 export function pendingFitLines(dataDir: string, lines: readonly LinesT['lines'][number][]): string[] {
   const keys = factsKeys(join(dataDir, 'facts'))
   if (keys.size === 0) return []
+  // the drift base `fit` takes (lib/fit/data.ts lineVersion)
+  const latest = lines.find((l) => l.source === 'latest')?.version ?? null
   return lines
     .filter((l) => {
       const f = join(dataDir, 'fit', `${l.version}.json`)
       if (!existsSync(f)) return true
       const r = FitResult.safeParse(JSON.parse(readFileSync(f, 'utf8')))
-      return !r.success || [...keys].some((k) => !(k in r.data.cells))
+      return !r.success || r.data.driftAgainst !== latest || [...keys].some((k) => !(k in r.data.cells))
     })
     .map((l) => l.key)
 }
