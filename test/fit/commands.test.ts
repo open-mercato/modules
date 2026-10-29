@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import fit, { splitModuleArg } from '../../lib/commands/fit.ts'
@@ -142,6 +142,15 @@ describe('yarn om fit', () => {
     )
     const s = Surface.parse(readJson(join(out, 'surface.json')))
     expect(s.externalPackages).toBe(1)
+  })
+
+  it('a line whose tarballs cannot be read is skipped, the other lines are still written (audit C12)', async () => {
+    const { data, out, cache } = fakeSetup()
+    rmSync(join(cache, 'pkgs', '@open-mercato__shared@1.1.0'), { recursive: true })
+    expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)
+    expect(existsSync(join(data, 'fit', '1.0.0.json'))).toBe(true)
+    expect(existsSync(join(data, 'fit', '1.1.0.json'))).toBe(false)
+    expect(vi.mocked(console.error).mock.calls.flat().join('\n')).toMatch(/fit 1\.1\.0: skipped/)
   })
 
   it('filters with --modules and --om', async () => {
