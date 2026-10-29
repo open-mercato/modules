@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Receipt } from '../../lib/schema/data/index.ts'
 import collect, { applyBundle } from '../../lib/commands/collect.ts'
-import { readProvisional, readReceiptStore, removeNight } from '../../lib/receipts/data.ts'
+import { readPresets, readProvisional, readReceiptStore, removeNight } from '../../lib/receipts/data.ts'
 import type { ActionsApi } from '../../lib/receipts/actions-api.ts'
 import { buildOutcomes, checkNightlyRun, runTitle, type ApiJob, type ApiRun } from '../../lib/receipts/from-actions.ts'
 import {
@@ -458,6 +458,36 @@ describe('a retry that ends after collect stopped waiting (audit R5)', () => {
     expect(applyBundle(ROOT, data, late.bundle)[0]).toContain('already in the receipts')
     expect((await gatherOn(data, 200, lateRetry(['typecheck', 'build']))).kind).toBe('collected')
     expect([readFileSync(consentsFile(data), 'utf8'), changes(data)]).toEqual(before)
+  })
+
+  it('a late retry never replaces the preset entry a newer night measured (review round 3)', async () => {
+    const data = await provisionalNight()
+    // night 101, completed, measures a newer Open Mercato version on the same line
+    const LATER = '2026-10-24T02:17:00Z'
+    const newer: Matrix = {
+      ...mm,
+      cells: mm.cells.map((c) => (c.line === '0.9' ? { ...c, omVersion: '0.9.1' } : c)),
+    }
+    const g101 = fakeApi({
+      runs: [run(101, { created_at: LATER, run_started_at: LATER, conclusion: 'success' })],
+      jobs: { 101: [job(base09), job(consents), job(ksef)] },
+      files: { 101: (dir) => artifacts(dir, newer, 1) },
+    })
+    const n101 = await gatherOn(data, 101, g101)
+    if (n101.kind !== 'bundle') throw new Error('expected a bundle')
+    applyBundle(ROOT, data, n101.bundle)
+    const afterB = readPresets(data)
+    expect(afterB?.['0.9']?.omVersion).toBe('0.9.1')
+
+    // night 100's retry lands only now
+    const late = await gatherOn(data, 200, lateRetry(['typecheck', 'build']))
+    if (late.kind !== 'bundle') throw new Error(`expected a bundle, got ${late.kind}`)
+    applyBundle(ROOT, data, late.bundle)
+    expect(readPresets(data)?.['0.9']).toEqual(afterB?.['0.9'])
+    expect(nightReceipts(data).map((r) => [r.result.status, r.transition.confirmed, r.run.attempt])).toEqual([
+      ['broken', true, 2],
+    ])
+    expect(readProvisional(data)).toEqual([])
   })
 
   it('a late retry that passes records the recovery: verified, flaky, no regression', async () => {

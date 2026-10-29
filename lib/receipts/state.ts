@@ -339,6 +339,13 @@ export function applyNight(input: ApplyInput): ApplyResult {
   const idFor = (at: string, key: string, locator: string | null) =>
     uniqueReceiptId(receiptId(at, key), bundle.night.id, [...input.history(locator), ...issued])
   const runAt = (a: BundleAttempt) => a.run.at
+  // When this night measured its lines: its first attempt. A stored preset entry stamped later was written by a newer
+  // night, which a late retry of this (provisional) night never replaces (review round 3).
+  const measuredAt = newestAt([bundle.night.at, a1.run.at])
+  const newerNight = (line: string) => {
+    const stored = input.presets?.[line]
+    return stored && Date.parse(stored.at) > Date.parse(measuredAt) ? stored : null
+  }
 
   // Baselines first: their final status decides harness-red for the module cells of the line.
   const baselineFinal = new Map<string, { status: CellStatus; id: string; culprits: string[] | null }>()
@@ -447,7 +454,9 @@ export function applyNight(input: ApplyInput): ApplyResult {
     }
     // data/presets.json from the scaffold of the baseline, under the key of its preset (`empty`, `classic`); `at` is
     // set for every line after the loop. A line whose Open Mercato version changed starts a new entry.
-    if (cell.baseline && dec.outcome.modulesTs && dec.outcome.ladder.scaffold.conclusion === 'success') {
+    const newer = newerNight(cell.line)
+    const keepNewer = newer !== null && (newer.omVersion !== cell.omVersion || newer[cell.preset] !== undefined)
+    if (cell.baseline && !keepNewer && dec.outcome.modulesTs && dec.outcome.ladder.scaffold.conclusion === 'success') {
       const list = presetFromModulesTs(dec.outcome.modulesTs, cell.preset === 'classic' ? 160 : 80)
       if (list.length > 0) {
         const prior = out.presets?.[cell.line]
@@ -472,10 +481,13 @@ export function applyNight(input: ApplyInput): ApplyResult {
     )
   }
   // `at` of every line in data/presets.json = the newest run of this collected night, also on nights without a baseline
-  // cell (the baseline key is memoized 6 nights of 7). WP09 reads dataAsOf.nightly from it (review round 2).
+  // cell (the baseline key is memoized 6 nights of 7). WP09 reads dataAsOf.nightly from it (review round 2). A late retry
+  // of an older night never moves it back.
   if (out.presets) {
     const nightAt = newestAt([bundle.night.at, ...bundle.attempts.map(runAt)])
-    out.presets = Object.fromEntries(Object.entries(out.presets).map(([k, v]) => [k, { ...v, at: nightAt }]))
+    out.presets = Object.fromEntries(
+      Object.entries(out.presets).map(([k, v]) => [k, { ...v, at: newestAt([v.at, nightAt]) }]),
+    )
   }
   return out
 }
