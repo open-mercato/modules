@@ -13,3 +13,4 @@ pricing: contact
 enterprise:
   offerUrl: https://www.openmercato.com/enterprise-level-support
   modules: [agent_orchestrator, record_locks, security, sso, system_status_overlays]
+aliases: [single sign-on, single sign on, oidc, openid connect, two-factor, totp]
