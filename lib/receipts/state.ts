@@ -345,11 +345,16 @@ export function applyNight(input: ApplyInput): ApplyResult {
   // Whether the stored entry of a line was measured by a newer night, which a late retry never replaces (review rounds
   // 3 and 4). An entry with `measuredAt` answers it alone: neither `at` (every night stamps it) nor the version (a tag
   // may roll back, lib/sources/lines.ts) says who measured. An entry written before `measuredAt` keeps the old rule: a
-  // later `at` with a newer version, or with this preset of the same version.
+  // later `at` with a newer version, or with this preset of the same version. Either way a preset list the newer night
+  // left out of an entry of the same version is still filled; the entry keeps the newer `measuredAt`.
   const measuredByNewer = (line: string, cell: { omVersion: string; preset: PresetId }) => {
     const stored = input.presets?.[line]
     if (!stored) return false
-    if (stored.measuredAt) return Date.parse(stored.measuredAt) > Date.parse(measuredAt)
+    if (stored.measuredAt)
+      return (
+        Date.parse(stored.measuredAt) > Date.parse(measuredAt) &&
+        !(stored.omVersion === cell.omVersion && stored[cell.preset] === undefined)
+      )
     if (Date.parse(stored.at) <= Date.parse(measuredAt)) return false
     const order = compareVersions(stored.omVersion, cell.omVersion)
     return order > 0 || (order === 0 && stored[cell.preset] !== undefined)
@@ -472,8 +477,11 @@ export function applyNight(input: ApplyInput): ApplyResult {
       const list = presetFromModulesTs(dec.outcome.modulesTs, cell.preset === 'classic' ? 160 : 80)
       if (list.length > 0) {
         const prior = out.presets?.[cell.line]
-        const base = prior && prior.omVersion === cell.omVersion ? prior : { omVersion: cell.omVersion, at }
-        out.presets = { ...(out.presets ?? {}), [cell.line]: { ...base, [cell.preset]: list, measuredAt } }
+        const same = prior && prior.omVersion === cell.omVersion ? prior : null
+        const base = same ?? { omVersion: cell.omVersion, at }
+        // never moved back: filling the list a newer night left out keeps that night's `measuredAt`
+        const when = same?.measuredAt ? newestAt([same.measuredAt, measuredAt]) : measuredAt
+        out.presets = { ...(out.presets ?? {}), [cell.line]: { ...base, [cell.preset]: list, measuredAt: when } }
       }
     }
   }
