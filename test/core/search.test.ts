@@ -414,7 +414,7 @@ describe('single sign-on finds the enterprise entry (audit C05)', () => {
     JSON.parse(JSON.stringify(buildSearchIndex({ entries, builtIn: corpusBuiltIn(), ...meta }))) as SearchIndexData,
   )
 
-  it.each(['single sign on', 'single sign-on', 'oidc', 'openid connect', 'sso', 'two-factor', 'totp'])(
+  it.each(['single sign on', 'single sign-on', 'oidc', 'openid connect', 'sso', 'two-factor', 'totp', '2fa'])(
     '%s ranks the enterprise entry first',
     (query) => {
       expect(searchModules(idx, { query }).results[0]?.locator).toBe(ENTERPRISE)
