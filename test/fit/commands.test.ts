@@ -173,6 +173,39 @@ describe('yarn om fit', () => {
     expect(pendingFitLines(data, lines())).toEqual([])
   })
 
+  it('a line kept from a skipped refresh after latest moved stays pending until fit compares it with the new latest (review round 3)', async () => {
+    const { data, out, cache } = fakeSetup()
+    const asOf = ['--cache', cache, '--as-of', '2026-10-22T12:00:00Z']
+    const lines = () => readLines(data)?.lines ?? []
+    expect(await fit(ctx(asOf, data, out))).toBe(0)
+    expect(pendingFitLines(data, lines())).toEqual([])
+
+    // latest advances to 1.0.1, next stays 1.1.0, and the refresh of next is skipped (its tarballs are not served)
+    writeTree(join(cache, 'pkgs', '@open-mercato__shared@1.0.1', 'package'), fakeShared('A'))
+    writeFileSync(join(cache, 'pkgs', '@open-mercato__shared@1.0.1', '.complete'), '')
+    const t = join(cache, 'templates', 'create-mercato-app@1.0.1')
+    cpSync(join(FIT_FIXTURES, 'create-mercato-app-0.9.0'), join(t, 'package', 'template'), { recursive: true })
+    writeFileSync(join(t, '.complete'), '')
+    const file = join(data, 'lines.json')
+    const moved = readJson(file) as { coreLatest: string; lines: { key: string; version: string; createApp: string }[] }
+    moved.coreLatest = '1.0.1'
+    moved.lines[0] = { ...moved.lines[0]!, version: '1.0.1', createApp: 'create-mercato-app@1.0.1' }
+    writeFileSync(file, JSON.stringify(moved))
+    const shared = join(cache, 'pkgs', '@open-mercato__shared@1.1.0')
+    const kept = join(out, 'kept-shared')
+    cpSync(shared, kept, { recursive: true })
+    rmSync(shared, { recursive: true })
+    expect(await fit(ctx(asOf, data, out))).toBe(0)
+    expect(vi.mocked(console.error).mock.calls.flat().join('\n')).toMatch(/fit 1\.1\.0: skipped/)
+    // every module key is in fit/1.1.0.json, but its drift still compares with 1.0.0: the next watch queues it
+    expect(pendingFitLines(data, lines())).toEqual(['next'])
+
+    cpSync(kept, shared, { recursive: true })
+    expect(await fit(ctx(asOf, data, out))).toBe(0)
+    expect(FitResult.parse(readJson(join(data, 'fit', '1.1.0.json'))).driftAgainst).toBe('1.0.1')
+    expect(pendingFitLines(data, lines())).toEqual([])
+  })
+
   it('radar reads only receipts of the module version its fit cells are for (audit R8 through the command)', async () => {
     const { data, out, cache } = fakeSetup()
     expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)

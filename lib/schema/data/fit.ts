@@ -28,9 +28,16 @@ export const FitCell = z
   })
   .strict()
 
-// cell key: 'npm:@x/y@1.2.3'
+// cell key: 'npm:@x/y@1.2.3'. driftAgainst (additive, review round 3): the `latest` version every cell's drift was
+// computed against, null when there was no latest line; a file without it, or with another version than the current
+// latest, is refit by the next watch (lib/sources/watch.ts pendingFitLines).
 export const FitResult = z
-  .object({ om: SemVer, computedAt: IsoDateTime, cells: z.record(z.string(), FitCell) })
+  .object({
+    om: SemVer,
+    computedAt: IsoDateTime,
+    driftAgainst: SemVer.nullable().optional(),
+    cells: z.record(z.string(), FitCell),
+  })
   .strict()
 
 export type FitStatus = z.infer<typeof FitStatus>

@@ -82,6 +82,7 @@ describe('yarn om watch --offline', () => {
       declared: { range: null, kind: 'missing', satisfied: true },
       hostDuplicates: [],
     }
+    const latest = lines.lines.find((l) => l.source === 'latest')?.version
     mkdirSync(join(first.dataDir, 'fit'), { recursive: true })
     for (const [key, cells] of [
       ['0.9', { 'npm:@piotrkarwatka/marketing-consents@0.1.0': cell }],
@@ -90,7 +91,7 @@ describe('yarn om watch --offline', () => {
       const om = lines.lines.find((l) => l.key === key)?.version as string
       writeFileSync(
         join(first.dataDir, 'fit', `${om}.json`),
-        JSON.stringify({ om, computedAt: '2026-10-23T00:00:00Z', cells }),
+        JSON.stringify({ om, computedAt: '2026-10-23T00:00:00Z', driftAgainst: latest, cells }),
       )
     }
     const second = await watch(first.dataDir)

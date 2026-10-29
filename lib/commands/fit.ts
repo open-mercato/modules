@@ -112,7 +112,16 @@ export default async function fit(ctx: CommandContext): Promise<number> {
         .sort()
         .map((k) => [k, all[k]]),
     )
-    const merged = FitResult.parse({ om, computedAt, cells: sorted })
+    // a run that refits only some modules keeps the comparison of the file unless it refit every cell of it, or the
+    // file already compared with the same latest: the cells left as they were still compare with the old one
+    const covered = Object.keys(prev?.cells ?? {}).every((k) => k in cells)
+    const against = covered || prev?.driftAgainst === latest ? latest : prev?.driftAgainst
+    const merged = FitResult.parse({
+      om,
+      computedAt,
+      ...(against === undefined ? {} : { driftAgainst: against }),
+      cells: sorted,
+    })
     const file = join(data, 'fit', `${om}.json`)
     writeJson(file, merged)
     const counts = countStatuses(cells)
