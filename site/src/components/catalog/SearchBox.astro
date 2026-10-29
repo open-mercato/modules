@@ -1,6 +1,7 @@
 ---
 // The big search field of the module browser. It filters the cards on this page in the browser (ModuleBrowser's
 // script reads #mods-q); without JavaScript the form reloads the page with ?q= and every card is still there.
+// `data-search-input` is what the `/` shortcut of Base.astro focuses.
 import Icon from '../icons/Icon.astro'
 
 interface Props {
@@ -23,6 +24,7 @@ const { placeholder } = Astro.props
       spellcheck={false}
       enterkeyhint="search"
       aria-controls="mods-grid"
+      data-search-input
     />
   </form>
 </div>
