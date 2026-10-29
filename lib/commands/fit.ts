@@ -113,8 +113,9 @@ export default async function fit(ctx: CommandContext): Promise<number> {
         .map((k) => [k, all[k]]),
     )
     // a run that refits only some modules keeps the comparison of the file unless it refit every cell of it, or the
-    // file already compared with the same latest: the cells left as they were still compare with the old one
-    const covered = Object.keys(prev?.cells ?? {}).every((k) => k in cells)
+    // file already compared with the same latest: the cells left as they were still compare with the old one. A run
+    // without --modules refits every version in facts; a cell it leaves has no facts any more, so nothing refits it.
+    const covered = filters.length === 0 || Object.keys(prev?.cells ?? {}).every((k) => k in cells)
     const against = covered || prev?.driftAgainst === latest ? latest : prev?.driftAgainst
     const merged = FitResult.parse({
       om,
