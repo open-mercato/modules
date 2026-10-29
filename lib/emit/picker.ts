@@ -1,6 +1,7 @@
 // /picker.json (spec 4.6, 9.2): 1:1 with `CatalogModule` of the create-mercato-app picker. One item per module ID
-// of each listed `kind: module` npm entry (install with `--module <id>` when the package has several modules),
-// plus the built-in modules as `source: core`. Pure.
+// of each listed `kind: module` npm entry (install with `--module <id>` when the package has several modules; a module
+// of the enterprise package is turned on in .env, `enterpriseEnableCommand`), plus the built-in modules as
+// `source: core`. Pure.
 // The picker belongs to create-mercato-app, which makes the classic preset by default (decision of 24 Oct): the
 // commands per line are those of a new app (the classic preset), and a line whose new app already registers the module
 // has no command (`inPresets` names it), as the site and the tools say `Nothing to install` there.

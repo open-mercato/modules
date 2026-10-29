@@ -86,7 +86,7 @@
       },
       "tier": null,
       "verifiedOn": [],
-      "install": "yarn mercato module add @open-mercato/enterprise@0.9.0 --module agent_orchestrator",
+      "install": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && echo OM_ENABLE_ENTERPRISE_MODULES_AGENTS=true >> .env && yarn generate",
       "installByLine": {}
     },
     {
@@ -103,7 +103,7 @@
       },
       "tier": null,
       "verifiedOn": [],
-      "install": "yarn mercato module add @open-mercato/enterprise@0.9.0 --module record_locks",
+      "install": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate",
       "installByLine": {}
     },
     {
@@ -120,7 +120,7 @@
       },
       "tier": null,
       "verifiedOn": [],
-      "install": "yarn mercato module add @open-mercato/enterprise@0.9.0 --module security",
+      "install": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && echo OM_ENABLE_ENTERPRISE_MODULES_SECURITY=true >> .env && yarn generate",
       "installByLine": {}
     },
     {
@@ -137,7 +137,7 @@
       },
       "tier": null,
       "verifiedOn": [],
-      "install": "yarn mercato module add @open-mercato/enterprise@0.9.0 --module sso",
+      "install": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && echo OM_ENABLE_ENTERPRISE_MODULES_SSO=true >> .env && yarn generate",
       "installByLine": {}
     },
     {
@@ -154,7 +154,7 @@
       },
       "tier": null,
       "verifiedOn": [],
-      "install": "yarn mercato module add @open-mercato/enterprise@0.9.0 --module system_status_overlays",
+      "install": "echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate",
       "installByLine": {}
     },
     {

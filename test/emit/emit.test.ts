@@ -308,10 +308,18 @@ describe('published files (spec 4.6)', () => {
       '0.9': `yarn mercato module add ${KSEF}@0.1.8 --allow-third-party`,
       next: `yarn mercato module add ${KSEF}@0.1.8 --allow-third-party`,
     })
-    // a package with several modules installs each with --module
+    // a module of the enterprise package is turned on in .env, as a new app does it (audit of 29 Oct, C02: `module add
+    // --module sso` added it a second time, with no flag)
     expect(p.modules.find((m) => m.id === 'sso')?.install).toBe(
-      'yarn mercato module add @open-mercato/enterprise@0.9.0 --module sso',
+      'echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && echo OM_ENABLE_ENTERPRISE_MODULES_SSO=true >> .env && yarn generate',
     )
+    expect(p.modules.find((m) => m.id === 'record_locks')?.install).toBe(
+      'echo OM_ENABLE_ENTERPRISE_MODULES=true >> .env && yarn generate',
+    )
+    for (const m of p.modules.filter((x) => x.source === 'enterprise')) {
+      expect(m.install, m.id).not.toContain('module add')
+      for (const c of Object.values(m.installByLine)) expect(c, m.id).not.toContain('module add')
+    }
     expect(p.modules.find((m) => m.id === 'sso')?.source).toBe('enterprise')
     expect(p.modules.filter((m) => m.source === 'core').map((m) => m.install)).toEqual([
       'yarn mercato module enable @open-mercato/core --module currencies',

@@ -173,6 +173,16 @@ export const isEnterprisePackage = (e: Pick<InstallTarget, 'npm'>): boolean => e
 export const ENTERPRISE_ENABLE_STEP = `echo ${ENTERPRISE_FLAGS[0]!.env}=true >> .env`
 
 /**
+ * The command that turns on the enterprise package, or one module of it (a picker row), in .env: the base flag, the
+ * module's own flag when it has one, then `yarn generate` (audit of 29 Oct, C02: the picker row of sso said `module add
+ * --module sso`, which adds a second entry without the flags the template registers it behind).
+ */
+export function enterpriseEnableCommand(moduleId: string | null = null): string {
+  const own = ENTERPRISE_FLAGS.slice(1).filter((f) => !!moduleId && f.modules.includes(moduleId))
+  return [ENTERPRISE_ENABLE_STEP, ...own.map((f) => `echo ${f.env}=true >> .env`), 'yarn generate'].join(' && ')
+}
+
+/**
  * The sentences around that step, for the plan, the card and the page: what a new app has, and the flags of the other
  * modules the package has.
  */
@@ -229,11 +239,11 @@ export function installInfo(
   const thirdParty = !e.npm.startsWith('@open-mercato/')
   const cmm = cmmInstallCommand(spec)
   if (inPreset(e, preset)) return { cli: `yarn add ${spec}`, cmm, needsAllowThirdParty: false, moduleFlag: null }
-  // a new app has the enterprise package and turns its modules on in .env (finding of 25 Oct); one module of it (the
-  // picker's row) keeps its own `--module` command
-  if (isEnterprisePackage(e) && !e.moduleFlag)
+  // a new app has the enterprise package and turns its modules on in .env (finding of 25 Oct), one module of it (the
+  // picker's row) with its own flag too (audit of 29 Oct, C02)
+  if (isEnterprisePackage(e))
     return {
-      cli: `${ENTERPRISE_ENABLE_STEP} && yarn generate`,
+      cli: enterpriseEnableCommand(e.moduleFlag),
       cmm: null,
       needsAllowThirdParty: false,
       moduleFlag: null,
