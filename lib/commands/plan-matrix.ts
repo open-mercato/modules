@@ -23,7 +23,7 @@ import { HarnessLinesFile } from '../schema/policy.ts'
 import { loadEntries } from '../sources/entries.ts'
 import { harnessHash } from '../receipts/cell-key.ts'
 import { readPresets, readReceiptStore } from '../receipts/data.ts'
-import { CellMode, Runner } from '../receipts/matrix.ts'
+import { CellMode, Runner, type MatrixCell } from '../receipts/matrix.ts'
 import { StarterPreset } from '../schema/common.ts'
 import type { PresetId } from '../core/lines.ts'
 import { planMatrix, type PlanEntry } from '../receipts/plan.ts'
@@ -175,7 +175,14 @@ export default function planMatrixCommand(ctx: CommandContext): number {
       },
     }
   })
-  const planned = planMatrix({
+  // preview: cells that run code from outside @open-mercato are left out before the budget cut (AGENTS.md rule 4)
+  const thirdParty: MatrixCell[] = []
+  const leaveOut = (c: MatrixCell) => {
+    const foreign = foreignCode(c).length > 0
+    if (foreign) thirdParty.push(c)
+    return foreign
+  }
+  const matrix = planMatrix({
     entries: planEntries,
     lines,
     presets: readPresets(data),
@@ -192,9 +199,8 @@ export default function planMatrixCommand(ctx: CommandContext): number {
     attempt: o.attempt,
     runner: o.runner,
     budgetMin: o.budget,
+    leaveOut: o.runner === 'preview-docker' ? leaveOut : null,
   })
-  const thirdParty = o.runner === 'preview-docker' ? planned.cells.filter((c) => foreignCode(c).length > 0) : []
-  const matrix = { ...planned, cells: planned.cells.filter((c) => !thirdParty.includes(c)) }
   const out = resolve(ctx.flags.out)
   mkdirSync(out, { recursive: true })
   writeFileSync(join(out, 'matrix.json'), `${JSON.stringify(matrix, null, 2)}\n`)

@@ -8,6 +8,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { cellEnv, foreignCode } from '../../lib/commands/cells-local.ts'
 import type { Matrix, MatrixCell } from '../../lib/receipts/matrix.ts'
+import { MINUTES_BY_PRESET, MINUTES_PER_CELL, PARALLEL } from '../../lib/receipts/plan.ts'
 import { loadFixture, LOC, NIGHT, plan, ROOT, tmp } from './helpers.ts'
 
 const fx = loadFixture()
@@ -79,6 +80,37 @@ describe('cells-local refuses third-party cells', () => {
     expect(dir).toBeTruthy()
     const run = JSON.parse(readFileSync(join(dir!, 'artifacts', 'matrix-a1', 'matrix.json'), 'utf8')) as Matrix
     expect(run.cells.map((c) => c.key)).toEqual([stripe.key])
+  })
+})
+
+describe('planMatrix leaveOut: the scope applies before the budget cut', () => {
+  const foreign = (c: MatrixCell) => foreignCode(c).length > 0
+  const thirdKeys = new Set(m.cells.filter(foreign).map((c) => c.key))
+
+  it('a left-out cell takes no budget: no deferred entry, and official cells keep the room', () => {
+    expect(thirdKeys.size).toBeGreaterThan(0)
+    // a budget that holds every official cell of the fixture but not every cell
+    const officialMin = m.cells.filter((c) => !foreign(c)).length * MINUTES_BY_PRESET.classic
+    const budgetMin = Math.ceil(officialMin / PARALLEL / MINUTES_PER_CELL) * MINUTES_PER_CELL
+    const cut = plan(fx, { onlyPresets: ['classic'], runner: 'preview-docker', budgetMin })
+    expect(cut.deferred.length).toBeGreaterThan(0)
+    const scoped = plan(fx, { onlyPresets: ['classic'], runner: 'preview-docker', budgetMin, leaveOut: foreign })
+    expect(scoped.cells.filter(foreign)).toEqual([])
+    expect(scoped.deferred.filter((d) => thirdKeys.has(d.key))).toEqual([])
+    expect(scoped.deferred).toEqual([])
+    expect(scoped.cells.map((c) => c.key).sort()).toEqual(
+      m.cells
+        .filter((c) => !foreign(c))
+        .map((c) => c.key)
+        .sort(),
+    )
+  })
+
+  it('the estimate counts the cells that run only', () => {
+    const scoped = plan(fx, { onlyPresets: ['classic'], runner: 'preview-docker', leaveOut: foreign })
+    const minutes = scoped.cells.length * MINUTES_BY_PRESET.classic
+    expect(scoped.estimate.windowMin).toBe(Math.ceil(minutes / PARALLEL / MINUTES_PER_CELL) * MINUTES_PER_CELL)
+    expect(scoped.estimate.windowMin).toBeLessThan(m.estimate.windowMin)
   })
 })
 
