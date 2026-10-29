@@ -1,7 +1,7 @@
 {
   "name": "om-modules",
   "version": "0.1.0",
-  "description": "Find Open Mercato modules before you build: registry search, nightly install receipts and install plans over MCP, plus the om-find-module skill.",
+  "description": "Find Open Mercato modules before you build: the om-find-module skill searches the registry, checks what is verified on your Open Mercato version and shows the install plan. The MCP server is not deployed yet.",
   "author": { "name": "Open Mercato Modules" },
   "license": "MIT"
 }
