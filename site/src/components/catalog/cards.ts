@@ -192,6 +192,84 @@ export function installAltLine(
   return cmm && cmm !== cli ? installLine(cmm, then, fallback) : null
 }
 
+/** A plan line run in a shell, as opposed to an edit by hand (`Remove { id ... } from src/modules.ts`). */
+const isShellStep = (s: string): boolean => /^(?:yarn|npx|npm|node|pnpm|bun|echo) /.test(s)
+
+/** A plan line that installs another package (`yarn add`, `module add`, `create-mercato-module install`). */
+const addsPackage = (s: string): boolean =>
+  /^(?:yarn add |yarn mercato module add |npx create-mercato-module install )/.test(s)
+
+/** Consecutive `yarn add` lines as one (`yarn add @open-mercato/web-research@0.9.0 @open-mercato/web-research-model@0.9.0`). */
+function mergeYarnAdds(steps: readonly string[]): string[] {
+  const out: string[] = []
+  for (const s of steps) {
+    const prev = out[out.length - 1]
+    const plain = (x: string): boolean => x.startsWith('yarn add ') && !x.includes(' && ')
+    if (prev && plain(prev) && plain(s)) out[out.length - 1] = `${prev} ${s.slice('yarn add '.length)}`
+    else out.push(s)
+  }
+  return out
+}
+
+/** The steps of a line's install plan as the Install card gives them (`planInstallLine`). */
+export interface PlanInstallLine {
+  /** Edits by hand, each its own step before the command (plan order: the removal comes first). */
+  manual: string[]
+  /** The plan's shell commands joined with &&, then yarn generate and yarn db:migrate as the plan runs them. */
+  command: string
+  /** The same with the entry's own `module add` swapped for create-mercato-module, or null. */
+  alt: string | null
+  /** Packages the command installs before the entry's own (its requires). */
+  required: number
+}
+
+/**
+ * The command a person copies for one line, from that line's install plan (audit of 29 Oct, R3: the card gave the
+ * package's own command, without the UI library terminal-tracking needs, durable-work, or the removal of data_sync).
+ * Shell lines join with &&; an edit by hand (`Remove { id ... } from src/modules.ts`) is never joined into the command,
+ * it stands as a step of its own. The create-mercato-module way swaps only the entry's own `module add` and keeps the
+ * other packages. Without a plan, or with a plan that has no command of the entry, the entry's own command.
+ */
+export function planInstallLine(
+  own: string,
+  cmm: string | null | undefined,
+  /** npm name, or the GitHub repository, that finds the entry's own command among the plan's. */
+  name: string | null,
+  commands: readonly string[] | null | undefined,
+  then: readonly string[] | null,
+  fallback: { generate: boolean; migrate: boolean },
+): PlanInstallLine {
+  const shell = (commands ?? []).filter(isShellStep)
+  const mentions = (c: string): boolean =>
+    !!name && c.split(' ').some((t) => t === name || t.startsWith(`${name}@`) || t === `npm:${name}`)
+  const at = shell.findLastIndex(mentions)
+  if (at < 0) {
+    return {
+      manual: [],
+      command: installLine(own, then, fallback),
+      alt: installAltLine(own, cmm, then, fallback),
+      required: 0,
+    }
+  }
+  const manual = (commands ?? []).filter((c) => !isShellStep(c))
+  const join = (steps: readonly string[]): string => installLine(mergeYarnAdds(steps).join(' && '), then, fallback)
+  const command = join(shell)
+  const swap = cmm && shell[at]!.startsWith('yarn mercato module add ') ? shell.with(at, cmm) : null
+  const alt = swap ? join(swap) : null
+  return {
+    manual,
+    command,
+    alt: alt && alt !== command ? alt : null,
+    required: shell.filter((c, i) => i !== at && addsPackage(c)).length,
+  }
+}
+
+/** The text of a step done by hand (`Remove { id: 'data_sync', from: '@open-mercato/core' } from src/modules.ts`). */
+export function manualStepText(step: string): string {
+  const m = /^Remove (\{.*\}) from (\S+)$/.exec(step)
+  return m ? `In ${m[2]}, remove ${m[1]}.` : `${step.replace(/\.$/, '')}.`
+}
+
 /** The words around the install command of a module page, from the kind of the entry. */
 export interface InstallWords {
   /** One sentence above the steps that says what the package is, or null for a module. */
@@ -213,15 +291,16 @@ export function installWords(
   kind: IndexEntry['kind'],
   hasModules: boolean,
   does: { generate: boolean; migrate: boolean },
-  /** Catalog libraries the command adds with a provider (sandbox test of 28 Oct: web-research-model). */
-  peerLibraries = 0,
+  /**
+   * Packages the command adds before the entry's own: the catalog libraries of a provider (sandbox test of 28 Oct:
+   * web-research-model), the requires of a module (audit of 29 Oct, R3: terminal-tracking adds @freighttech/ui).
+   */
+  required = 0,
 ): InstallWords {
   if (kind === 'tool') return { lead: null, first: 'Run this in a terminal.', restart: false }
   const what = kind === 'library' ? 'library' : kind === 'provider' && !hasModules ? 'provider' : 'module'
-  const withPeers =
-    what === 'provider' && peerLibraries > 0
-      ? ` with the ${peerLibraries === 1 ? 'library' : 'libraries'} it needs`
-      : ''
+  const noun = what === 'provider' ? ['library', 'libraries'] : ['package', 'packages']
+  const withPeers = required > 0 ? ` with the ${required === 1 ? noun[0] : noun[1]} it needs` : ''
   const parts = [
     `adds the ${what}${withPeers}`,
     ...(does.generate ? ['registers it'] : []),

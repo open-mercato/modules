@@ -92,7 +92,11 @@ import { absoluteUrl, builtInPage, categoryPage, href, modulePage, moduleMd, rec
 import { wbrHtml } from '../../lib/wrap.ts'
 import { transitionNames } from '../../lib/vt.ts'
 import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
-import { installAltLine, installLine, installWords } from '../../components/catalog/cards.ts'
+import {
+  installWords,
+  manualStepText,
+  planInstallLine,
+} from '../../components/catalog/cards.ts'
 import { iconSvg } from '../../components/icons/paths.ts'
 import { levelNote, licenseChip, rulesHeading, verifiedTestNote } from '../../lib/chips.ts'
 import { cannotInstall, catalogSkip, madeByHint, popularity, providerParents, uniqueReceipts, withSkipped } from '../c/_data.ts'
@@ -642,8 +646,16 @@ const installLines: InstallLine[] = lines.map((l) => {
   // the package, the command is for an app from the empty preset, so that preset's plan says. The enterprise command
   // keeps its own form.
   const lineThen = (preset.has(l.key) ? plans[l.key]?.emptyPreset?.then : plans[l.key]?.then) ?? null
-  const tail = (cmd: string | null): string | null =>
-    cmd && !entry.enterprise ? installLine(cmd, lineThen, installFallback) : cmd
+  // the command is the line's plan, with the packages the entry requires (audit of 29 Oct, R3: terminal-tracking left out
+  // @freighttech/ui on every version); an edit by hand stays on the card as a step of its own
+  const lineCommands = (preset.has(l.key) ? plans[l.key]?.emptyPreset?.commands : plans[l.key]?.commands) ?? null
+  const steps = entry.enterprise
+    ? null
+    : planInstallLine(info.cli, info.cmm, entry.npm ?? entry.github, lineCommands, lineThen, installFallback)
+  const full = steps ? steps.command : info.cli
+  // the create-mercato-module way: the plan's with the entry's own module add swapped, the same command for a GitHub
+  // entry, none where its own command is no module add
+  const fullCmm = steps ? (info.cmm && info.cmm === info.cli ? steps.command : steps.alt) : info.cmm
   return {
     key: l.key,
     label: lineLabel(l),
@@ -655,7 +667,7 @@ const installLines: InstallLine[] = lines.map((l) => {
           preset: true,
           shippedIds: entry.moduleIds,
           shippedText: presetInstallText(entry.moduleIds),
-          emptyCommand: both ? null : tail(info.cli),
+          emptyCommand: both ? null : full,
           emptyLead: EMPTY_PRESET_LEAD,
           // the receipt in isolation of another version than the command's says there is none for it (round 13)
           emptyNote:
@@ -671,9 +683,9 @@ const installLines: InstallLine[] = lines.map((l) => {
     // the signal `in isolation` beside a verdict; with no verdict yet the note says it (lineSentence)
     isolation: iso && !emptyOwn && isoBeside(l.key) ? { dot: isolationDot(iso), sentence: isoBeside(l.key)! } : null,
     isoDot: iso ? isolationDot(iso) : null,
-    command: refused || previewOnly ? null : tail(info.cli),
-    anyway: refused && !unusable ? tail(info.cli) : null,
-    previewBuild: previewOnly ? tail(info.cli) : null,
+    command: refused || previewOnly ? null : full,
+    anyway: refused && !unusable ? full : null,
+    previewBuild: previewOnly ? full : null,
     // the enterprise command turns modules on in .env (finding of 25 Oct): the note says what a new app has and the
     // flags of the other modules
     note: refused || rec ? null : enterpriseNote(installNote(l, !emptyOwn)),
@@ -689,8 +701,8 @@ const installLines: InstallLine[] = lines.map((l) => {
     quarantine: newer,
     prompt: !refused && !previewOnly && parts.command ? parts : null,
     // More ways to install follow the chosen line (D46): the same recommended version as the main command
-    cmm: refused ? null : tail(info.cmm),
-    cloud: !refused && (entry.npm || entry.github) ? tail(info.cmm ?? info.cli) : null,
+    cmm: refused ? null : fullCmm,
+    cloud: !refused && (entry.npm || entry.github) ? (fullCmm ?? full) : null,
   }
 })
 /** Every line skipped, or nothing installable: nothing to choose, the line picker is hidden. */
@@ -1061,13 +1073,25 @@ const needsMigrate = latestThen ? latestThen.some((t) => t.startsWith('yarn db:m
 const grantCount = latestThen?.some((t) => t.startsWith('Grant these permissions'))
   ? (entry.anatomy?.lists.aclFeatures.length ?? 0)
   : 0
-// one install command (review of 26 Oct: the home page promised one command, the card listed five steps): the add
-// command, yarn generate and yarn db:migrate joined with &&, as the plan of the latest line runs them
-const installCommand = installLine(entry.install.cli, latestThen, installFallback)
+// one install command (review of 26 Oct: the home page promised one command, the card listed five steps): the plan's
+// commands of the latest line, with the packages the entry requires (audit of 29 Oct, R3), then yarn generate and
+// yarn db:migrate, joined with &&; an edit by hand (the removal of a built-in module it replaces) is a step before it
+const latestSteps = planInstallLine(
+  entry.install.cli,
+  entry.install.cmm,
+  entry.npm ?? entry.github,
+  plans[latest.key]?.commands ?? null,
+  latestThen,
+  installFallback,
+)
+const installCommand = latestSteps.command
 // the words around the command come from the kind (Piotr, 28 Oct: web-research said `It adds the module` and
 // `Restart the app.`, a library has no module to turn on); a library and a provider get one lead sentence
-// an adapter's command adds the catalog libraries it peers on too, and the first step says so (sandbox test of 28 Oct)
-const peerCount = peerLibrarySpecs(entry, installVersion(entry, latest.key), latest.key, (loc) => byLocator.get(loc)).length
+// an adapter's command adds the catalog libraries it peers on too, a module's the packages it requires, and the first
+// step says so (sandbox test of 28 Oct, audit of 29 Oct)
+const peerCount =
+  latestSteps.required ||
+  peerLibrarySpecs(entry, installVersion(entry, latest.key), latest.key, (loc) => byLocator.get(loc)).length
 const words = installWords(
   entry.kind,
   entry.moduleIds.length > 0,
@@ -1076,15 +1100,14 @@ const words = installWords(
 )
 const installLead = installVariant === 'steps' ? words.lead : null
 // the create-mercato-module way under the module command (Piotr, 28 Oct), only when the data has one and it differs;
-// it ends with the same yarn generate and yarn db:migrate as the main command (review of 28 Oct)
-const installAltCommand =
-  installVariant === 'steps'
-    ? installAltLine(entry.install.cli, entry.install.cmm, latestThen, installFallback)
-    : null
+// it adds the same required packages and ends with the same yarn generate and yarn db:migrate (review of 28 Oct)
+const installAltCommand = installVariant === 'steps' ? latestSteps.alt : null
 const installAlt = installAltCommand ? { lead: 'Or with create-mercato-module:', command: installAltCommand } : null
 const installSteps: InstallStep[] =
   installVariant === 'steps'
     ? [
+        // never joined into the command a person copies (audit of 29 Oct, R3)
+        ...latestSteps.manual.map((m) => ({ text: manualStepText(m), command: null })),
         { text: words.first, command: installCommand, alt: installAlt },
         ...(grantCount > 0
           ? [
@@ -1108,11 +1131,20 @@ const presetCommand =
 // sentence that said to run them), from the plan of an app from the empty preset; the create-mercato-module way under
 // it ends the same
 const presetThen = plans[latest.key]?.emptyPreset?.then ?? null
-const presetAlt = presetCommand ? installAltLine(presetCommand, entry.install.cmm, presetThen, installFallback) : null
-const presetInstall = presetCommand
+const presetSteps = presetCommand
+  ? planInstallLine(
+      presetCommand,
+      entry.install.cmm,
+      entry.npm ?? entry.github,
+      plans[latest.key]?.emptyPreset?.commands ?? null,
+      presetThen,
+      installFallback,
+    )
+  : null
+const presetInstall = presetSteps
   ? {
-      command: installLine(presetCommand, presetThen, installFallback),
-      alt: presetAlt ? { lead: 'Or with create-mercato-module:', command: presetAlt } : null,
+      command: presetSteps.command,
+      alt: presetSteps.alt ? { lead: 'Or with create-mercato-module:', command: presetSteps.alt } : null,
       after: restart ? 'Restart the app.' : null,
     }
   : null
