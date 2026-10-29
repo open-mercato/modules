@@ -3,6 +3,9 @@
 # project CF_PAGES_PROJECT, served at modules.openmercato.com. Runs after watch, sync and collect finish on main
 # (pushes with GITHUB_TOKEN do not start workflows), on push to main, daily and by hand. With no data branch yet the
 # build runs on empty data and shows the empty states.
+# templates.openmercato.com (decision B of 29 Oct) is a second custom domain of the same project: functions/_middleware.ts
+# redirects its root to /templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
+# runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
@@ -119,6 +122,9 @@ jobs:
           test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
           # Cloudflare Pages serves 404.html for missing paths; without it every missing path answers 200 with index.html
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
+          # the Functions route list: without it every request would run functions/_middleware.ts
+          test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
+          test -f dist/templates.html || { echo "dist/templates.html is missing"; exit 1; }
 
       - name: Check Pages limits
         # The walk wrangler runs before an upload (20,000 files, 25 MiB per file), offline and without the token, so a
@@ -128,6 +134,12 @@ jobs:
         run: |
           yarn wrangler pages project validate dist
           echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Check Pages Functions
+        # The bundle `pages deploy` makes of functions/ (the templates host redirect), offline and without the token.
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
 
       - name: Upload site
         # Only for a deploy (artifact storage counts against the account quota), kept one day. upload-artifact skips
@@ -205,6 +217,7 @@ jobs:
         run: |
           test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
+          test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
 
       - name: Deploy
         id: deploy
@@ -215,7 +228,8 @@ jobs:
           wranglerVersion: "4.149.0"
           packageManager: yarn
           # --branch main is the production branch of the project; --commit-dirty silences the wrangler warning about local
-          # changes (dist/ and the yarn state are ignored, so the checkout is clean)
+          # changes (dist/ and the yarn state are ignored, so the checkout is clean). functions/ of the checkout goes up
+          # with the site: the action runs in the repository root.
           command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true
 
       - name: Summary

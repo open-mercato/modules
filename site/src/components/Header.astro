@@ -15,12 +15,15 @@ interface Props {
 const { dataAsOf, current = '' } = Astro.props
 const nav = [
   { label: 'Modules', path: '/' },
+  // the second kind of thing to start from (decisions of 29 Oct): whole apps, next to modules; coming soon for now
+  { label: 'Templates', path: '/templates' },
   { label: 'Compatibility', path: '/compat' },
   { label: 'Radar', path: '/radar' },
   { label: 'Quality', path: '/quality' },
   { label: 'For agents', path: '/for-agents' },
 ]
-// "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in
+// "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in.
+// Every other item is active on its own path and below it (/templates and, later, the template pages under it).
 const isCurrent = (p: string): boolean =>
   p === '/'
     ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')
@@ -109,11 +112,14 @@ const isCurrent = (p: string): boolean =>
       flex: 0 0 var(--brand-col);
     }
   }
+  /* 20 px between items: with the stamp, six items at 24 px were 3 px wider than the sheet */
   .hdr__nav {
     display: flex;
-    gap: 24px;
+    gap: 20px;
   }
+  /* one line per item: with six items "For agents" wrapped in two at 1440 px */
   .hdr__link {
+    white-space: nowrap;
     font-size: 14px;
     font-weight: 500;
     color: var(--ink-2);
@@ -209,12 +215,14 @@ const isCurrent = (p: string): boolean =>
     padding: 12px;
     border-top: 1px solid var(--line);
   }
-  @media (max-width: 1119px) {
+  /* six nav items (Templates, 29 Oct) need about 1230 px with the stamp and 1040 px without it: the stamp goes first,
+     then the nav folds into the menu, so the header never scrolls the page sideways (measured at 992 to 1366 px) */
+  @media (max-width: 1279px) {
     .hdr__right > :global(.stamp) {
       display: none;
     }
   }
-  @media (max-width: 991px) {
+  @media (max-width: 1079px) {
     .hdr__nav,
     .hdr__cta {
       display: none;
