@@ -3,7 +3,7 @@
 import type { IndexEntry } from '../schema/published/modules.ts'
 import { byLineKey } from './lines.ts'
 import { installVersion, judgeLine, listAnd, type VersionSource } from './policy.ts'
-import { isEnterprisePackage, packageCommand, peerLibrarySpecs, type PeerLookup } from './plan.ts'
+import { isEnterprisePackage, packageCommand, peerLibrarySpecs, presetFlagOf, type PeerLookup } from './plan.ts'
 import { servicesOf } from './sdks.ts'
 
 const RE = {
@@ -107,7 +107,11 @@ export function promptParts(e: PromptEntry, opts: PromptOptions): PromptParts {
   // no single `module add` exists for the enterprise package (.env turns its modules on) or for a package with several
   // modules and none named (finding of 25 Oct): the prompt then sends the agent to the plan without a command
   const several = e.moduleIds.length > 1 && !ok(RE.moduleId, e.install.moduleFlag)
-  if (!command && name && version && e.npm && !several && !isEnterprisePackage(e)) {
+  // a module a new app registers behind an env flag (storage_s3): its command depends on the app's preset, so the plan
+  // gives it (audit of 29 Oct, C01: module add registers it a second time in a new app)
+  const flagged = !!presetFlagOf(e)
+  if (flagged) command = null
+  if (!command && name && version && e.npm && !several && !flagged && !isEnterprisePackage(e)) {
     const third = e.npm.startsWith('@open-mercato/') ? '' : ' --allow-third-party'
     const mod = ok(RE.moduleId, e.install.moduleFlag) ? ` --module ${e.install.moduleFlag}` : ''
     command =
