@@ -84,7 +84,8 @@ jobs:
               if [ "$(jq ".items | length" out/queue.json)" -gt 0 ]; then
                 yarn om scan --queue out/queue.json
               fi
-              if [ "$(jq ".lines.changed | length" out/queue.json)" -gt 0 ]; then
+              # a line fit skipped earlier (fitPending) refits too, even when nothing else changed
+              if [ "$(jq "(.lines.changed | length) + (.lines.fitPending | length)" out/queue.json)" -gt 0 ]; then
                 yarn om fit
               elif [ "$(jq ".items | length" out/queue.json)" -gt 0 ]; then
                 yarn om fit --modules "$(jq -r "[.items[] | \"\(.locator)@\(.version)\"] | join(\",\")" out/queue.json)"

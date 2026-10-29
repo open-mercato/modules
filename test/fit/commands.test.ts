@@ -3,6 +3,8 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import fit, { splitModuleArg } from '../../lib/commands/fit.ts'
 import radar from '../../lib/commands/radar.ts'
+import { pendingFitLines } from '../../lib/sources/watch.ts'
+import { readLines } from '../../lib/fit/data.ts'
 import { COMMANDS, commandFile } from '../../lib/cli.ts'
 import type { CommandContext } from '../../lib/cli.ts'
 import { FitResult, Radar, Surface } from '../../lib/schema/index.ts'
@@ -151,6 +153,24 @@ describe('yarn om fit', () => {
     expect(existsSync(join(data, 'fit', '1.0.0.json'))).toBe(true)
     expect(existsSync(join(data, 'fit', '1.1.0.json'))).toBe(false)
     expect(vi.mocked(console.error).mock.calls.flat().join('\n')).toMatch(/fit 1\.1\.0: skipped/)
+  })
+
+  it('a skipped line stays pending for the next watch run, which computes it once the tarballs are served', async () => {
+    const { data, out, cache } = fakeSetup()
+    const shared = join(cache, 'pkgs', '@open-mercato__shared@1.1.0')
+    const kept = join(out, 'kept-shared')
+    cpSync(shared, kept, { recursive: true })
+    rmSync(shared, { recursive: true })
+    const lines = () => readLines(data)?.lines ?? []
+    expect(pendingFitLines(data, lines())).toEqual(['1.0', 'next'])
+    expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)
+    // nothing else changed: the next watch still queues the skipped line
+    expect(pendingFitLines(data, lines())).toEqual(['next'])
+    cpSync(kept, shared, { recursive: true })
+    expect(await fit(ctx(['--cache', cache, '--as-of', '2026-10-22T12:00:00Z'], data, out))).toBe(0)
+    const next = FitResult.parse(readJson(join(data, 'fit', '1.1.0.json')))
+    expect(Object.keys(next.cells)).toEqual(['npm:@piotrkarwatka/marketing-consents@0.1.0'])
+    expect(pendingFitLines(data, lines())).toEqual([])
   })
 
   it('filters with --modules and --om', async () => {

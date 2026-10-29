@@ -46,7 +46,7 @@ describe('yarn om watch --offline', () => {
   it('queues versions without facts and skips the ones already scanned', async () => {
     const first = await watch()
     const q = QueueFile.parse(JSON.parse(readFileSync(join(first.out, 'queue.json'), 'utf8')))
-    expect(q.lines).toEqual({ changed: ['0.9', '0.8', 'next'], coreLatest: '0.9.0', coreChanged: true })
+    expect(q.lines).toEqual({ changed: ['0.9', '0.8', 'next'], coreLatest: '0.9.0', coreChanged: true, fitPending: [] })
     const stripe = q.items.filter((i) => i.locator === 'npm:@open-mercato/gateway-stripe').map((i) => i.version)
     expect(stripe).toEqual(['0.9.0', '0.8.0'])
     expect(q.items.find((i) => i.locator === 'npm:@open-mercato/gateway-tpay')?.version).toBe(
@@ -63,6 +63,39 @@ describe('yarn om watch --offline', () => {
     ).toEqual(['0.8.0'])
     expect(second.queue.lines.changed).toEqual([])
     expect(second.queue.lines.coreChanged).toBe(false)
+  })
+
+  it('fitPending: the lines whose fit file lacks a scanned version, even when no line changed', async () => {
+    const first = await watch()
+    const facts = join(ROOT, 'test', 'fixtures', 'data', 'facts', '@piotrkarwatka', 'marketing-consents', '0.1.0.json')
+    mkdirSync(join(first.dataDir, 'facts', '@piotrkarwatka', 'marketing-consents'), { recursive: true })
+    writeFileSync(
+      join(first.dataDir, 'facts', '@piotrkarwatka', 'marketing-consents', '0.1.0.json'),
+      readFileSync(facts, 'utf8'),
+    )
+    const lines = Lines.parse(JSON.parse(readFileSync(join(first.dataDir, 'lines.json'), 'utf8')))
+    const cell = {
+      status: 'ok',
+      checked: 1,
+      missing: [],
+      drift: [],
+      declared: { range: null, kind: 'missing', satisfied: true },
+      hostDuplicates: [],
+    }
+    mkdirSync(join(first.dataDir, 'fit'), { recursive: true })
+    for (const [key, cells] of [
+      ['0.9', { 'npm:@piotrkarwatka/marketing-consents@0.1.0': cell }],
+      ['0.8', { 'npm:@other/x@1.0.0': cell }],
+    ] as const) {
+      const om = lines.lines.find((l) => l.key === key)?.version as string
+      writeFileSync(
+        join(first.dataDir, 'fit', `${om}.json`),
+        JSON.stringify({ om, computedAt: '2026-10-23T00:00:00Z', cells }),
+      )
+    }
+    const second = await watch(first.dataDir)
+    expect(second.queue.lines.changed).toEqual([])
+    expect(second.queue.lines.fitPending).toEqual(['0.8', 'next'])
   })
 
   it('needsSync: every entry without a sync record, then only the one whose dist-tag moved (finding of 25 Oct)', async () => {
