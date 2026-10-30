@@ -390,9 +390,10 @@ export default function InstallBox({
         aria-modal={sheet ? true : undefined}
       >
         <div class="ib__head">
-          <h2 class="ib__h" id="ib-h">
+          {/* an h3: the box sits under `Install per version and agent rules` (live review of 30 Oct) */}
+          <h3 class="ib__h" id="ib-h">
             Install
-          </h2>
+          </h3>
           <button type="button" class="btn btn--ghost btn--sm ib__close" ref={closeBtn} onClick={() => setSheet(false)}>
             Close
           </button>

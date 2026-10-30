@@ -110,9 +110,10 @@ export default function ReceiptDrawer({
           <div class="rdrawer__head">
             <div>
               <p class="t-tagline">Receipts</p>
-              <h2 class="t-h3" id="rdrawer-h">
+              {/* an h3: the drawer sits under `Compatibility per Open Mercato version` (live review of 30 Oct) */}
+              <h3 class="t-h3" id="rdrawer-h">
                 {title}
-              </h2>
+              </h3>
               {previewNote && (
                 <p class="rdrawer__preview">
                   <span class="chip chip--preview">{previewNote}</span>
