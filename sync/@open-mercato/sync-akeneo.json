@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/sync-akeneo",
-  "checkedAt": "2026-10-29T22:48:35Z",
+  "checkedAt": "2026-10-30T05:55:30Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/sync-akeneo",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7721.1.b5c4a00a68"
+      "develop": "0.10.1-develop.7723.1.3b2ea82ea7"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -45,9 +45,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-29T22:45:34Z",
+    "pushedAt": "2026-10-30T05:39:18Z",
     "defaultBranch": "main",
-    "stars": 1890,
+    "stars": 1891,
     "license": "MIT",
     "topics": [
       "crm",
