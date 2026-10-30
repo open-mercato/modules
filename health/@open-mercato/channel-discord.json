@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-discord",
   "version": "0.9.0",
-  "computedAt": "2026-10-30T09:39:45Z",
+  "computedAt": "2026-10-30T22:27:29Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "drift",
-      "next": "drift"
+      "next": "no-fit"
     },
     "anatomy": "full",
     "supplyChain": {

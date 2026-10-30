@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
-  "checkedAt": "2026-10-30T13:02:33Z",
+  "checkedAt": "2026-10-30T22:26:01Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/carrier-inpost",
     "distTags": {
       "latest": "0.4.6-canary-5eb138494e",
       "canary": "1.0.0-canary.30085482738.1.198ca40",
-      "develop": "0.10.1-develop.7751.1.a11f57298b"
+      "develop": "0.10.1-develop.7767.2.440f7c2b4c"
     },
     "latestStable": null,
     "previousStable": null,
@@ -44,6 +44,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 5229,
+  "downloads30d": 7606,
   "errors": []
 }
