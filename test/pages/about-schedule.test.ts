@@ -14,10 +14,24 @@ const about = readFileSync(join(ROOT, 'site', 'src', 'pages', 'about.astro'), 'u
 
 describe('the schedule on /about', () => {
   it('reads each workflow file: the cron as a schedule, and the push trigger where there is one', () => {
-    expect(workflowWhen(wf('watch.yml'))).toBe('scheduled every 6 hours at minute 17, and after a push to main')
+    // watch runs on a push to main only when it changes one of its paths (review of the fix): the words name them
+    expect(workflowWhen(wf('watch.yml'))).toBe(
+      'scheduled every 6 hours at minute 17, and after a push to main that changes modules/, policy/ or quality/',
+    )
     expect(workflowWhen(wf('nightly.yml'))).toBe('scheduled daily at 02:17 UTC')
     expect(workflowWhen(wf('sync.yml'))).toBe('scheduled every Monday at 04:17 UTC')
     expect(workflowWhen('on:\n  workflow_dispatch:\n')).toBeNull()
+  })
+
+  it('a push trigger without paths, or on another branch', () => {
+    const cron = '  schedule:\n    - cron: "17 2 * * *"\n'
+    expect(workflowWhen(`on:\n${cron}  push:\n    branches: [main]\n`)).toBe(
+      'scheduled daily at 02:17 UTC, and after a push to main',
+    )
+    expect(workflowWhen(`on:\n${cron}  push:\n    branches:\n      - develop\n`)).toBe('scheduled daily at 02:17 UTC')
+    expect(workflowWhen(`on:\n${cron}  push:\n    branches: [main]\n    paths: ["modules/**"]\n`)).toBe(
+      'scheduled daily at 02:17 UTC, and after a push to main that changes modules/',
+    )
   })
 
   it('says why the data times can differ from the schedules', () => {
