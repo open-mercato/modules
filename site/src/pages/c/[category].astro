@@ -19,6 +19,7 @@ import {
 import { loadSiteData } from '../../../../lib/emit/site-data.ts'
 import { orderLines } from '../../lib/status.ts'
 import { builtInPage, categoryPage, href } from '../../lib/url.ts'
+import { categoryInSentence } from './_data.ts'
 import './_registry.css'
 
 export function getStaticPaths() {
@@ -45,7 +46,8 @@ const core = builtIn.modules.filter((m) => m.category === id).sort((a, b) => a.t
 const total = { modules: allCards.filter(isDefaultCard).length, all: allCards.filter((c) => !c.sub && !c.extra).length }
 const example = installExample(inCategory, latest, plans) ?? installExample(modules.entries, latest, plans)
 
-const titleLower = cat.title.toLowerCase()
+// acronyms stay (live review of 30 Oct: `1 module for crm & sales`)
+const titleLower = categoryInSentence(cat.title)
 const lead =
   n > 0
     ? `${n} ${n === 1 ? 'module' : 'modules'} for ${titleLower}.`
