@@ -21,8 +21,11 @@ import { EMAIL_OFF, EMAIL_ON } from '../lib/email-off.ts'
 interface Props {
   title: string
   description: string
-  /** Site path of this page without the base, e.g. '/m/@x/y'. */
-  path: string
+  /**
+   * Site path of this page without the base, e.g. '/m/@x/y'. Null for a page that stands in for a missing address (the
+   * 404 page, live review of 30 Oct): no canonical and no og:url, since it has no address of its own.
+   */
+  path: string | null
   dataAsOf: DataAsOf
   /** Markdown twin of the page (module pages). */
   mdAlternate?: string
@@ -49,7 +52,7 @@ const {
   bodyClass,
 } = Astro.props
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
-const canonical = absoluteUrl(site, path)
+const canonical = path === null ? null : absoluteUrl(site, path)
 const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
 const ogImage = absoluteUrl(site, '/og-default.png')
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
@@ -71,7 +74,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
     <title>{title}</title>
     <meta name="description" content={description.slice(0, 155)} />
     {robotsNoindex && <meta name="robots" content="noindex" />}
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
     <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
     <link rel="llms-txt" href={href('/llms.txt')} />
@@ -83,7 +86,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
     <meta property="og:site_name" content="Open Mercato Modules" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description.slice(0, 155)} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -101,7 +104,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
-    <Header dataAsOf={dataAsOf} current={path} />
+    <Header dataAsOf={dataAsOf} current={path ?? ''} />
     {
       /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
       !isPreviewData(dataAsOf) && (
