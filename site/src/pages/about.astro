@@ -1,15 +1,13 @@
 ---
 // /about (spec 7.7 K): sources and rhythm, cost, what runs where, privacy, how to report a problem, license and
 // maintainer. Schedules are read from the workflow files and the lines from the data, never typed by hand.
-import { existsSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import Base from '../layouts/Base.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { orderLines } from '../lib/status.ts'
 import { dayTime, shortVersion } from '../lib/format.ts'
 import { href } from '../lib/url.ts'
 import { wbrHtml } from '../lib/wrap.ts'
-import { schedule } from '../lib/schedule.ts'
+import { SCHEDULE_CAVEAT, schedule, workflowWhenOf } from '../lib/schedule.ts'
 import { presetCellsWeekly } from '../../../lib/core/lines.ts'
 import { isPreviewData } from '../lib/freshness.ts'
 import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
@@ -19,27 +17,9 @@ const REPO = CATALOG_REPO_URL
 const { meta, modules } = loadSiteData()
 const lines = orderLines(modules.lines)
 
-/** First `cron:` of a workflow, e.g. "17 2 * * *". */
-function cronOf(file: string): string | null {
-  const p = resolve('.github/workflows', file)
-  if (!existsSync(p)) return null
-  return /cron:\s*["']([^"']+)["']/.exec(readFileSync(p, 'utf8'))?.[1] ?? null
-}
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-const pad = (n: string): string => n.padStart(2, '0')
-/** A cron line in words, for the three shapes the workflows use. */
-function cronText(cron: string | null): string | null {
-  if (!cron) return null
-  const [min = '', hour = '', , , dow = ''] = cron.split(/\s+/)
-  const every = /^\*\/(\d+)$/.exec(hour)
-  if (every) return `every ${every[1]} hours at minute ${pad(min)}`
-  if (/^\d+$/.test(hour) && dow === '*') return `daily at ${pad(hour)}:${pad(min)} UTC`
-  if (/^\d+$/.test(hour) && /^\d$/.test(dow)) return `every ${DAYS[Number(dow)]} at ${pad(hour)}:${pad(min)} UTC`
-  return cron
-}
-const watch = cronText(cronOf('watch.yml'))
-const sync = cronText(cronOf('sync.yml'))
-const nightly = cronText(cronOf('nightly.yml'))
+const watch = workflowWhenOf('watch.yml')
+const sync = workflowWhenOf('sync.yml')
+const nightly = workflowWhenOf('nightly.yml')
 const weeklyLine = lines.find((l) => l.cadence === 'weekly')
 // a new app on next ships a new snapshot of its own packages most nights: their cells run on the weekly night only
 // (lib/core/lines.ts `cellCadence`, review of 24 Oct)
@@ -120,6 +100,7 @@ const previewData = isPreviewData(meta.dataAsOf)
             installs the module without the rest of the platform: a second signal in isolation, never the verdict.
           </li>
         </ul>
+        <p class="ab-small">{SCHEDULE_CAVEAT}</p>
         {/* a preview run is named as one (review r6), never as the nightly run */}
         <p class="ab-small">
           Data as of: npm {meta.dataAsOf.npm ? dayTime(meta.dataAsOf.npm) : 'not yet'},{' '}
