@@ -26,6 +26,27 @@ export function cronText(cron: string | null): string | null {
   return cron
 }
 
+/**
+ * When a workflow runs, in words, from the text of its file (live review of 30 Oct): `scheduled every 6 hours at minute
+ * 17, and after a push to main`. A cron is a schedule, not a promise, so the words say `scheduled`. Null without a cron.
+ */
+export function workflowWhen(yml: string): string | null {
+  const text = cronText(/cron:\s*["']([^"']+)["']/.exec(yml)?.[1] ?? null)
+  if (!text) return null
+  const push = /^\s+push:\s*\n\s+branches:\s*\n\s+-\s*main\s*$/m.test(yml)
+  return `scheduled ${text}${push ? ', and after a push to main' : ''}`
+}
+
+/** `workflowWhen` of a file under .github/workflows, or null when the file is missing. */
+export function workflowWhenOf(file: string): string | null {
+  const p = resolve('.github/workflows', file)
+  return existsSync(p) ? workflowWhen(readFileSync(p, 'utf8')) : null
+}
+
+/** Why the data times differ from the schedules (live review of 30 Oct: 09:17 and 05:55 under `02:17`). */
+export const SCHEDULE_CAVEAT =
+  'These are the schedules of the GitHub workflows. GitHub can start a scheduled run late or skip it when busy, and a run can also be started by hand, so the data times below can differ from them.'
+
 export interface Schedule {
   /** Time of the nightly run, e.g. `02:17 UTC`, or null without the workflow. */
   nightly: string | null
