@@ -16,6 +16,7 @@ import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
 import { TEMPLATES_HOST } from '../../../lib/core/templates-host.ts'
+import { EMAIL_OFF, EMAIL_ON } from '../lib/email-off.ts'
 
 interface Props {
   title: string
@@ -64,6 +65,8 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    {/* package@version reads as an e-mail address to Cloudflare (live review of 30 Oct): head and body are kept apart */}
+    <Fragment set:html={EMAIL_OFF} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description.slice(0, 155)} />
@@ -93,8 +96,10 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
     <script type="speculationrules" is:inline set:html={speculation} />
     {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLdText(jsonLd)} />}
     <slot name="head" />
+    <Fragment set:html={EMAIL_ON} />
   </head>
   <body class={bodyClass}>
+    <Fragment set:html={EMAIL_OFF} />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
     <Header dataAsOf={dataAsOf} current={path} />
     {
@@ -171,6 +176,7 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
         </script>
       )
     }
+    <Fragment set:html={EMAIL_ON} />
   </body>
 </html>
 
