@@ -21,6 +21,7 @@ import type { CheckCompatOutput, InstallPlan, SearchModulesOutput } from '../../
 import { CommandChipView, Icon } from '../lib/ui.tsx'
 import { href } from '../lib/url.ts'
 import { PREVIEW_CHIP } from '../../../lib/core/source.ts'
+import { BUILD_MODULE_COMMAND } from '../lib/build-module.ts'
 
 export const SCENARIOS = ['send invoices to KSeF', 'exchange rates', 'durable data sync'] as const
 export const CAPTION = 'These are the exact calls and responses your agent gets. No model involved.'
@@ -612,7 +613,7 @@ export default function AgentPane({ omVersion, site, initialRun = null }: AgentP
               <div class="ap__empty">
                 <p>No module does that yet.</p>
                 <p>
-                  Build it: <code>npx create-mercato-module init</code>
+                  Build it: <code>{BUILD_MODULE_COMMAND}</code>
                 </p>
               </div>
             )}
