@@ -38,6 +38,7 @@ import { badgeSvg } from '../../../../lib/emit/badges.ts'
 import type { SigilCounts } from '../../../../lib/sigil/sigil.ts'
 import type { CellStatus, IndexEntry } from '../../../../lib/schema/index.ts'
 import sigilCases from '../../../../test/design/fixtures/sigil-cases.json'
+import { BUILD_MODULE_COMMAND } from '../../lib/build-module.ts'
 
 const g = galleryData()
 /** Receipts, verdicts and the receipt-driven components: the fixture until the first nightly run. */
@@ -722,7 +723,7 @@ const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
       <div class="gal-cell gal-cell--wide">
         <EmptyState
           title="No module does that yet."
-          command="npx create-mercato-module init"
+          command={BUILD_MODULE_COMMAND}
           actions={[{ href: '#empty-states', label: 'Copy prompt' }]}
         />
       </div>
@@ -730,7 +731,7 @@ const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
         <EmptyState
           size="page"
           title="This cell is empty."
-          command="npx create-mercato-module init"
+          command={BUILD_MODULE_COMMAND}
           actions={[{ href: '#main', label: 'Search modules', variant: 'primary' }]}
         />
       </div>

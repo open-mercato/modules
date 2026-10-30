@@ -18,6 +18,7 @@ import { builtInPage, href } from '../lib/url.ts'
 import { HELD_STATES, cannotInstall, catalogSkip, withSkipped } from '../pages/c/_data.ts'
 import { QUERY_EVENT, RESULTS_EVENT, askQuery, heldMatchText, loadSearcher, readQueryParam } from './AskBar.tsx'
 import type { QueryDetail, ResultsDetail } from './AskBar.tsx'
+import { BUILD_MODULE_COMMAND } from '../lib/build-module.ts'
 
 /** The fields of an IndexEntry that a row, the filters and the sort read. */
 export type RegistryEntry = Pick<
@@ -1092,7 +1093,7 @@ export default function Registry({
                     </p>
                     <div class="reg__empty-cmd">
                       <span class="t-tagline">Build it</span>
-                      <CommandChipView command="npx create-mercato-module init" />
+                      <CommandChipView command={BUILD_MODULE_COMMAND} />
                     </div>
                     <div class="reg__empty-actions">
                       <span class="t-tagline">Ask an agent</span>

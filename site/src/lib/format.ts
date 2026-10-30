@@ -81,3 +81,12 @@ export function shortVersion(v: string): string {
   const m = /^(\d+\.\d+\.\d+-[a-z]+\.\d+)/.exec(v)
   return m ? (m[1] as string) : v
 }
+
+/**
+ * The separator before each item of a list in a sentence: `A, B and C`, or `A; B, C; and D` when an item has a comma
+ * of its own (live review of 30 Oct: `Configure, Price, Quote` read as three modules on /radar). Two items take `and`.
+ */
+export function listSeparators(items: readonly string[]): string[] {
+  const semi = items.length > 2 && items.some((x) => x.includes(','))
+  return items.map((_, i) => (i === 0 ? '' : i < items.length - 1 ? (semi ? '; ' : ', ') : semi ? '; and ' : ' and '))
+}

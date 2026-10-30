@@ -4,6 +4,7 @@
 // line for people who work with a coding agent.
 import CommandChip from '../CommandChip.astro'
 import { href, modulePage } from '../../lib/url.ts'
+import { BUILD_MODULE_COMMAND, BUILD_MODULE_HINT } from '../../lib/build-module.ts'
 
 interface Props {
   /** One real install command: an official module of the list and its install line. */
@@ -61,10 +62,11 @@ const { example, thirdParty = false } = Astro.props
     <div class="howto__own">
       <div class="howto__own-text">
         <h3 class="howto__t">Build your own module</h3>
-        <p>Start from a template, publish it to npm, then send it here.</p>
+        <p>Scaffold it in your app, publish it to npm, then send it here.</p>
+        <p>{BUILD_MODULE_HINT}</p>
       </div>
       <div class="howto__own-act">
-        <CommandChip command="npx create-mercato-module" />
+        <CommandChip command={BUILD_MODULE_COMMAND} />
         <a class="btn btn--secondary" href={href('/submit')}>Submit a module</a>
       </div>
     </div>

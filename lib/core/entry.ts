@@ -44,13 +44,33 @@ function counts(modules: readonly ModuleFacts[], routesMeasured: boolean): Anato
   }
 }
 
+/** Folders of test code: the ones Rentgen skips plus the usual names of test helpers, fixtures and e2e suites. */
+const TEST_DIR =
+  /^(__(tests|mocks|integration|fixtures)__|tests?|test[-_]?(helpers?|utils?|support|setup)|testing|fixtures|e2e|mocks?)$/
+/** A test or spec file by name (`client.test.ts`, `flow.spec.tsx`). */
+const TEST_FILE = /\.(test|spec)\.[cm]?[jt]sx?$/
+
+/**
+ * Whether a source path (relative, POSIX) is test code: a test folder anywhere on the path or a test file name
+ * (live-site review of 30 Oct, item 5: storage-s3 reads LOCALSTACK_* only in src/test-helpers/s3Fixtures.ts).
+ */
+export function isTestSource(file: string): boolean {
+  const parts = file.split('/')
+  return TEST_FILE.test(parts.at(-1) ?? '') || parts.slice(0, -1).some((d) => TEST_DIR.test(d))
+}
+
 /**
  * Env names split by use: `env` the settings the code uses the value of, `envIfSet` the names it only checks are set
- * (rentgen 4 `ifSet`; a name used both ways counts as used). First 20 each.
+ * (rentgen 4 `ifSet`; a name used both ways counts as used). A read in test code (`isTestSource`) is no setting of
+ * the module and is left out. First 20 each.
  */
-export function splitEnv(reads: readonly { name: string; ifSet?: true }[]): { env: string[]; envIfSet: string[] } {
-  const used = new Set(reads.filter((r) => !r.ifSet).map((r) => r.name))
-  const names = uniq(reads.map((r) => r.name))
+export function splitEnv(reads: readonly { name: string; src?: { file: string }; ifSet?: true }[]): {
+  env: string[]
+  envIfSet: string[]
+} {
+  const own = reads.filter((r) => !r.src || !isTestSource(r.src.file))
+  const used = new Set(own.filter((r) => !r.ifSet).map((r) => r.name))
+  const names = uniq(own.map((r) => r.name))
   return {
     env: names.filter((n) => used.has(n)).slice(0, 20),
     envIfSet: names.filter((n) => !used.has(n)).slice(0, 20),

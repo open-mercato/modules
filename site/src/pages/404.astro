@@ -6,6 +6,7 @@ import CommandChip from '../components/CommandChip.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { href } from '../lib/url.ts'
 import { browseDefault } from './c/_data.ts'
+import { BUILD_MODULE_COMMAND, BUILD_MODULE_HINT } from '../lib/build-module.ts'
 
 const { meta, modules } = loadSiteData()
 // the same "modules" as the hero and the module browser: the cards shown by default
@@ -15,7 +16,7 @@ const moduleCount = browseDefault(modules.entries).length
 <Base
   title="Not found · Open Mercato Modules"
   description="This page does not exist. Search the Open Mercato modules or build the module yourself."
-  path="/404"
+  path={null}
   dataAsOf={meta.dataAsOf}
   noindex
   skip={{ href: '#nf-title', label: 'Skip to content' }}
@@ -37,8 +38,8 @@ const moduleCount = browseDefault(modules.entries).length
       </p>
       <div class="nf__cmd">
         <p class="t-tagline">Build it</p>
-        <CommandChip command="npx create-mercato-module init" />
-        <p class="nf__hint">Scaffolds a new Open Mercato module.</p>
+        <CommandChip command={BUILD_MODULE_COMMAND} />
+        <p class="nf__hint">Scaffolds a new module in your Open Mercato app. {BUILD_MODULE_HINT}</p>
       </div>
       <div class="nf__actions">
         <a class="btn btn--tertiary" href={href('/#registry')}>Search modules</a>

@@ -12,6 +12,7 @@ import ModuleCard from './ModuleCard.astro'
 import Icon from '../icons/Icon.astro'
 import { categoryIconSvg } from './category-icons.ts'
 import { builtInPage, categoryPage, href } from '../../lib/url.ts'
+import { toolsDefaultOf, toolsQuery } from '../../lib/tools-query.ts'
 import type { Card, MadeByCount, SideCategory } from './cards.ts'
 
 interface Props {
@@ -55,7 +56,12 @@ const coreJson = JSON.stringify(
     <h2 class="mods__h" id="mods-cats-h">Categories</h2>
     <ul role="list">
       <li>
-        <a href={href('/')} aria-current={current === '' ? 'page' : undefined}>
+        <a
+          href={href('/') + toolsQuery(false, toolsOn)}
+          data-chip-base={href('/')}
+          data-chip-tools="0"
+          aria-current={current === '' ? 'page' : undefined}
+        >
           <Fragment set:html={categoryIconSvg('all', 18)} />
           <span class="mods__label">All</span>
           <span class="mods__n" data-c-mod={total.modules} data-c-all={total.all}>{n(total)}</span>
@@ -67,7 +73,13 @@ const coreJson = JSON.stringify(
             data-tools-only={c.modules === 0 && c.id !== current ? '1' : undefined}
             hidden={!toolsOn && c.modules === 0 && c.id !== current}
           >
-            <a href={href(categoryPage(c.id))} aria-current={c.id === current ? 'page' : undefined} title={c.title}>
+            <a
+              href={href(categoryPage(c.id)) + toolsQuery(toolsDefaultOf(c), toolsOn)}
+              data-chip-base={href(categoryPage(c.id))}
+              data-chip-tools={toolsDefaultOf(c) ? '1' : '0'}
+              aria-current={c.id === current ? 'page' : undefined}
+              title={c.title}
+            >
               <Fragment set:html={categoryIconSvg(c.id, 18)} />
               <span class="mods__label">{c.title}</span>
               <span class="mods__n" data-c-mod={c.modules} data-c-all={c.all}>
@@ -176,6 +188,8 @@ const coreJson = JSON.stringify(
 </div>
 
 <script>
+  import { toolsQuery } from '../../lib/tools-query.ts'
+
   type State = { q: string; by: string; sort: string; tools: boolean; extra: boolean }
   const SORTS = ['rec', 'name', 'updated', 'downloads']
 
@@ -266,6 +280,9 @@ const coreJson = JSON.stringify(
       for (const el of root.querySelectorAll<HTMLElement>('[data-c-mod]'))
         el.textContent = (state.tools ? el.dataset.cAll : el.dataset.cMod) ?? ''
       for (const li of root.querySelectorAll<HTMLElement>('[data-tools-only]')) li.hidden = !state.tools
+      // a chip leads to its page with the switch as it is here, so its count is what that page shows
+      for (const a of root.querySelectorAll<HTMLAnchorElement>('[data-chip-base]'))
+        a.href = (a.dataset.chipBase ?? '') + toolsQuery(a.dataset.chipTools === '1', state.tools)
       if (input && input.value !== state.q) input.value = state.q
       if (sortSel) sortSel.value = state.sort
       if (bySel) bySel.value = state.by

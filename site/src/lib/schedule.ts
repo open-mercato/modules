@@ -2,6 +2,7 @@
 // Node only: pages call it in their frontmatter and pass the words to islands as props.
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { parse } from 'yaml'
 import { AGE_GATE_DAYS, cellCadence, type LineInfo } from '../../../lib/core/lines.ts'
 import { previewQueued, previewQueuedLines } from '../../../lib/core/source.ts'
 
@@ -25,6 +26,44 @@ export function cronText(cron: string | null): string | null {
   if (/^\d+$/.test(hour) && /^\d$/.test(dow)) return `every ${DAYS[Number(dow)]} at ${pad(hour)}:${pad(min)} UTC`
   return cron
 }
+
+/**
+ * When a workflow runs, in words, from the text of its file (live review of 30 Oct): `scheduled every 6 hours at minute
+ * 17, and after a push to main that changes modules/, policy/ or quality/`. A cron is a schedule, not a promise, so the
+ * words say `scheduled`; a push trigger with `paths` names them, since other pushes start nothing. Null without a cron.
+ */
+export function workflowWhen(yml: string): string | null {
+  const on = (parse(yml) as { on?: WorkflowOn } | null)?.on
+  const cron = on?.schedule?.map((s) => s?.cron).find((c): c is string => typeof c === 'string')
+  const text = cronText(cron ?? null)
+  if (!text) return null
+  const push = on?.push
+  if (!push || !asList(push.branches).includes('main')) return `scheduled ${text}`
+  const dirs = asList(push.paths).map((x) => x.replace(/\*+$/, ''))
+  return `scheduled ${text}, and after a push to main${dirs.length > 0 ? ` that changes ${orList(dirs)}` : ''}`
+}
+
+/** The part of a workflow's `on:` the words read. */
+interface WorkflowOn {
+  schedule?: { cron?: unknown }[]
+  push?: { branches?: unknown; paths?: unknown } | null
+}
+
+const asList = (v: unknown): string[] =>
+  (Array.isArray(v) ? v : typeof v === 'string' ? [v] : []).filter((x): x is string => typeof x === 'string')
+
+const orList = (xs: readonly string[]): string =>
+  xs.length > 1 ? `${xs.slice(0, -1).join(', ')} or ${xs[xs.length - 1]}` : (xs[0] ?? '')
+
+/** `workflowWhen` of a file under .github/workflows, or null when the file is missing. */
+export function workflowWhenOf(file: string): string | null {
+  const p = resolve('.github/workflows', file)
+  return existsSync(p) ? workflowWhen(readFileSync(p, 'utf8')) : null
+}
+
+/** Why the data times differ from the schedules (live review of 30 Oct: 09:17 and 05:55 under `02:17`). */
+export const SCHEDULE_CAVEAT =
+  'These are the schedules of the GitHub workflows. GitHub can start a scheduled run late or skip it when busy, and a run can also be started by hand, so the data times below can differ from them.'
 
 export interface Schedule {
   /** Time of the nightly run, e.g. `02:17 UTC`, or null without the workflow. */

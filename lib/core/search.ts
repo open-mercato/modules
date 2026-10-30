@@ -40,7 +40,11 @@ export const SEARCH_FIELDS = Object.keys(SEARCH_BOOST) as SearchField[]
 /** `_meta` key that carries curator aliases (descriptor `aliases`) into the index entry. */
 export const ALIASES_META_KEY = 'com.openmercato.modules/aliases'
 
-/** Built-in group: at most 5, shown when its score reaches half of the best module score (spec 8.2). */
+/**
+ * Built-in group: at most 5, shown when its score reaches half of the best module score (spec 8.2). The best score is
+ * that of a module a fresh app can take on the line: an entry broken or refused there does not hide core (live-site
+ * review of 30 Oct, item 2: `invoices` hid `sales` behind a broken, refused billing entry).
+ */
 export const BUILTIN_MAX = 5
 export const BUILTIN_RATIO = 0.5
 export const BOOST_VERIFIED = 0.15
@@ -754,8 +758,9 @@ function search(searcher: Searcher, rawInput: SearchModulesInput, maxLimit: numb
     total: number,
     didYouMean: string | null,
   ): SearchModulesOutput => ({
-    results,
+    // built-in matches first (server instructions: `built-in modules come first`)
     builtIn,
+    results,
     total,
     line,
     dataVersion: data.dataVersion,
@@ -863,15 +868,26 @@ function search(searcher: Searcher, rawInput: SearchModulesInput, maxLimit: numb
     found = { mods: [...found.mods, ...strong(or.mods, top).filter((x) => !seen.has(x.m.locator))], bis: found.bis }
   }
 
-  const best = found.mods[0]?.r.score ?? 0
+  // entries broken or refused on the line follow the others (live-site review of 30 Oct, item 2), score order within
+  const held = (m: ModuleMeta) =>
+    line !== null && (statusOn(m, line) === 'broken' || m.policy[line]?.decision === 'refuse')
+  const mods = [...found.mods.filter((x) => !held(x.m)), ...found.mods.filter((x) => held(x.m))]
+  const best = Math.max(0, ...mods.filter((x) => !held(x.m)).map((x) => x.r.score))
   const q = (didYouMean ?? input.query).trim().toLowerCase()
+  // every word as typed in a built-in (`invoices` in sales_invoices) passes at the floor of OR hits: the long anatomy
+  // of a core module dilutes its BM25 score (sales has 27 tables), so half of a module that names the word misses it
+  const asked = [...new Set(tokenize(didYouMean ?? input.query).filter((t) => processTerm(t) !== null))]
+  const allTyped = (r: SearchResult) => asked.length > 0 && asked.every((w) => w in r.match)
   const builtIn: BuiltInCard[] = found.bis
     .filter(
       ({ b, r }) =>
-        r.score >= BUILTIN_RATIO * best || b.title.toLowerCase() === q || b.id === q.replace(/[\s-]+/g, '_'),
+        r.score >= BUILTIN_RATIO * best ||
+        (allTyped(r) && r.score >= WEAK_HIT_RATIO * best) ||
+        b.title.toLowerCase() === q ||
+        b.id === q.replace(/[\s-]+/g, '_'),
     )
     .slice(0, BUILTIN_MAX)
     .map(({ b, r }) => builtInCard(b, matchedOn(r.match, { ids: b.ids }, r.queryTerms)))
-  const results = found.mods.slice(0, input.limit).map(({ m, r }) => moduleCard(m, matchedOn(r.match, m, r.queryTerms)))
-  return output(results, builtIn, found.mods.length, didYouMean)
+  const results = mods.slice(0, input.limit).map(({ m, r }) => moduleCard(m, matchedOn(r.match, m, r.queryTerms)))
+  return output(results, builtIn, mods.length, didYouMean)
 }

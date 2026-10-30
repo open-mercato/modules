@@ -79,7 +79,9 @@
     "modules": [
       "@dainamite/cpq"
     ],
-    "builtIn": []
+    "builtIn": [
+      "sales"
+    ]
   },
   "subscriptions billing": {
     "modules": [

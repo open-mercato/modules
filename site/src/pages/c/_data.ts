@@ -21,6 +21,14 @@ export function uniqueReceipts<T extends ReceiptLike>(list: readonly T[]): T[] {
   return [...byId.values()]
 }
 
+/**
+ * A category title inside a sentence (live review of 30 Oct: `1 module for crm & sales`): words in lower case, an
+ * acronym (`CRM`, `AI`) as it is.
+ */
+export function categoryInSentence(title: string): string {
+  return title.replace(/[A-Za-z]+/g, (w) => (w.length > 1 && w === w.toUpperCase() ? w : w.toLowerCase()))
+}
+
 /** Held states that the registry hides behind its switch (6.4). */
 export const HELD_STATES: ReadonlySet<string> = new Set(['hold', 'unmaintained', 'deprecated', 'archived', 'stale'])
 
