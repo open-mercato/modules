@@ -1,0 +1,2 @@
+# Cloudflare Pages redirects (live review of 30 Oct): crawlers ask for /sitemap.xml; @astrojs/sitemap writes sitemap-index.xml.
+/sitemap.xml /sitemap-index.xml 301
