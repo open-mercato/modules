@@ -6,6 +6,7 @@ import { buildDeeplinks, CLIPBOARD_NOTE, sanitizeCwd, URL_BUDGET } from '../../l
 import {
   buildInstallPrompt,
   buildSearchPrompt,
+  promptOffered,
   promptParts,
   renderPrompt,
   sanitizeUserQuery,
@@ -206,6 +207,11 @@ describe('install prompt by kind', () => {
 
   it('a tool gets no install prompt on its page', () => {
     const page = readFileSync(join(ROOT, 'site', 'src', 'pages', 'm', '[...path].astro'), 'utf8')
-    expect(page).toContain("entry.kind !== 'tool' && parts.command ? parts : null")
+    // the page asks promptOffered (live review of 30 Oct), which never offers it for a tool
+    expect(page).toContain('prompt: promptOffered(entry, parts, l.key, refused || previewOnly) ? parts : null')
+    const tool = { kind: 'tool', npm: 'create-mercato-module', moduleIds: [], compat: { inPresets: [] } } as const
+    expect(promptOffered(tool as unknown as IndexEntry, { command: 'npx create-mercato-module' }, '0.9', false)).toBe(
+      false,
+    )
   })
 })
