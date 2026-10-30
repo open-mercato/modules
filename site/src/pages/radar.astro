@@ -9,7 +9,7 @@ import RadarText from './_radar-tables.astro'
 import EmptyState from '../components/EmptyState.astro'
 import Icon from '../components/icons/Icon.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
-import { day, shortVersion } from '../lib/format.ts'
+import { day, listSeparators, shortVersion } from '../lib/format.ts'
 import { href } from '../lib/url.ts'
 import { isPreviewData } from '../lib/freshness.ts'
 import { PREVIEW_CHIP } from '../../../lib/core/source.ts'
@@ -110,6 +110,8 @@ const touchedEntries = radar
       .filter((e): e is NonNullable<typeof e> => !!e)
       .sort((a, b) => a.title.localeCompare(b.title))
   : []
+// semicolons when a title has a comma (live review of 30 Oct: `Configure, Price, Quote` read as three modules)
+const touchedSeparators = listSeparators(touchedEntries.map((e) => e.title))
 // a symbol re-exported from a second path is one part, as the table below counts it
 const changedCount = radar ? new Set(radar.changedApis.map((c) => symbolName(c.symbol))).size : 0
 const plain: string[] = radar
@@ -157,7 +159,7 @@ const plain: string[] = radar
                 check:{' '}
                 {touchedEntries.map((e, i) => (
                   <>
-                    {i > 0 && (i === touchedEntries.length - 1 ? ' and ' : ', ')}
+                    {touchedSeparators[i]}
                     <a href={href(`/m/${e.path}`)}>{e.title}</a>
                   </>
                 ))}
