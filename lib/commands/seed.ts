@@ -407,8 +407,7 @@ export const SEED: readonly SeedEntry[] = [
       repo: mono('telemetry'),
       category: 'storage-infrastructure',
       tags: ['opentelemetry', 'tracing', 'metrics'],
-      summary:
-        'Exports traces, metrics, logs and errors over OTLP/HTTP. Off by default and not loaded until TELEMETRY_BACKEND is set.',
+      summary: 'Exports traces, metrics, logs and errors over OTLP/HTTP. Stays idle until TELEMETRY_BACKEND is set.',
       whenToUse:
         'Use when you run an OpenTelemetry collector or a managed OTLP backend and want app traces and errors there.',
       links: { docs: `${DOCS}/framework/runtime/telemetry` },
