@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/pay-by-links",
   "version": "0.4.9-canary-fcabd45887",
-  "computedAt": "2026-10-26T12:02:41Z",
+  "computedAt": "2026-10-30T09:39:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "skipped",
       "0.8": "skipped",
-      "next": "untested"
+      "next": "broken"
     },
     "fit": {
       "0.9": "no-fit",
@@ -159,8 +159,8 @@
           "text": "On hold: Orphaned canary from March 2026. No source in any repository."
         },
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 30 Oct."
         },
         {
           "code": "LICENSE",

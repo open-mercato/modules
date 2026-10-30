@@ -297,11 +297,11 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-10-29T09:03:43Z",
+    "at": "2026-10-30T09:17:26Z",
     "measuredAt": "2026-10-29T08:29:32Z"
   },
   "next": {
-    "omVersion": "0.10.1-develop.7688.1.8bbd70dcdf",
+    "omVersion": "0.10.1-develop.7723.1.3b2ea82ea7",
     "empty": [
       {
         "id": "auth",
@@ -602,7 +602,7 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-10-29T09:03:43Z",
-    "measuredAt": "2026-10-29T08:29:32Z"
+    "at": "2026-10-30T09:17:26Z",
+    "measuredAt": "2026-10-30T08:39:35Z"
   }
 }

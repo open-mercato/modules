@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-tpay",
   "version": "0.8.1-develop.7442.1.4c1dbf1f0e",
-  "computedAt": "2026-10-25T08:18:49Z",
+  "computedAt": "2026-10-30T09:39:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "skipped",
       "0.8": "skipped",
-      "next": "untested"
+      "next": "verified"
     },
     "fit": {
       "0.9": "ok",
@@ -53,8 +53,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for no tested line; verified on next."
+      ]
     }
   },
   "rules": [
@@ -138,14 +140,13 @@
       "consentText": "Install @open-mercato/gateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e"
     },
     "next": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on next."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e"
+      ]
     }
   },
   "state": "active",

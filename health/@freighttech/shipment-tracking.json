@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
   "version": "0.7.2",
-  "computedAt": "2026-10-29T09:22:28Z",
+  "computedAt": "2026-10-30T09:39:45Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "broken",
       "0.8": "untested",
-      "next": "untested"
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -146,28 +146,23 @@
         },
         {
           "code": "ROUTE_COLLISION",
-          "text": "0.7.2 broke at add on 0.9: in a new app from the default preset, the module adds the backend route /backend/webhooks, which the webhooks module…"
+          "text": "0.7.2 broke at add on 0.9 and next: in a new app from the default preset, the module adds the backend route /backend/webhooks, which the webhooks module…"
         }
       ],
       "consentText": "Install @freighttech/shipment-tracking@0.7.2"
     },
     "next": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at add on next since 30 Oct."
+        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
-        },
-        {
-          "code": "ROUTE_COLLISION",
-          "text": "Static check: the module adds the backend route /backend/webhooks, which a new app already has from the webhooks module (@open-mercato/webhooks)."
         }
-      ],
-      "consentText": "Install @freighttech/shipment-tracking@0.7.2"
+      ]
     }
   },
   "state": "active",

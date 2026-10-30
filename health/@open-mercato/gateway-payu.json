@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-payu",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-10-26T12:02:41Z",
+  "computedAt": "2026-10-30T09:39:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "skipped",
       "0.8": "skipped",
-      "next": "untested"
+      "next": "verified"
     },
     "fit": {
       "0.9": "ok",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "No Open Mercato peer range; verified on no line."
+        "No Open Mercato peer range; verified on next."
       ]
     }
   },
@@ -151,10 +151,6 @@
         {
           "code": "HOLD",
           "text": "On hold: Orphaned canary from March 2026. No source in any repository."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
         }
       ]
     }

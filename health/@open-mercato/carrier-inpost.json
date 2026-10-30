@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-10-26T12:02:41Z",
+  "computedAt": "2026-10-30T09:39:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "skipped",
       "0.8": "skipped",
-      "next": "untested"
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -153,8 +153,8 @@
           "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 30 Oct."
         }
       ]
     }
