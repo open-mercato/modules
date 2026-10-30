@@ -1,7 +1,10 @@
 {
-  "at": "2026-10-30T05:55:30Z",
+  "at": "2026-10-30T13:02:33Z",
   "listed": 37,
-  "missing": [],
+  "missing": [
+    "@open-mercato/channel-smtp",
+    "@open-mercato/gateway-autopay"
+  ],
   "packages": [
     "@open-mercato/ai-assistant",
     "@open-mercato/carrier-inpost",
@@ -13,12 +16,14 @@
     "@open-mercato/channel-imap",
     "@open-mercato/channel-resend",
     "@open-mercato/channel-ses",
+    "@open-mercato/channel-smtp",
     "@open-mercato/checkout",
     "@open-mercato/content",
     "@open-mercato/documents",
     "@open-mercato/enterprise",
     "@open-mercato/events",
     "@open-mercato/forms",
+    "@open-mercato/gateway-autopay",
     "@open-mercato/gateway-payu",
     "@open-mercato/gateway-przelewy24",
     "@open-mercato/gateway-stripe",

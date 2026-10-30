@@ -1,5 +1,5 @@
 {
-  "resolvedAt": "2026-10-30T05:55:24Z",
+  "resolvedAt": "2026-10-30T13:02:28Z",
   "coreLatest": "0.9.0",
   "keepaliveAt": "2026-10-25T11:50:39Z",
   "lines": [
@@ -519,9 +519,9 @@
     },
     {
       "key": "next",
-      "version": "0.10.1-develop.7723.1.3b2ea82ea7",
+      "version": "0.10.1-develop.7751.1.a11f57298b",
       "source": "develop",
-      "createApp": "create-mercato-app@0.10.1-develop.7723.1.3b2ea82ea7",
+      "createApp": "create-mercato-app@0.10.1-develop.7751.1.a11f57298b",
       "cadence": "nightly",
       "preapproved": [
         "@open-mercato/*"
@@ -720,6 +720,10 @@
           {
             "id": "channel_ses",
             "from": "@open-mercato/channel-ses"
+          },
+          {
+            "id": "channel_smtp",
+            "from": "@open-mercato/channel-smtp"
           },
           {
             "id": "channel_imap",

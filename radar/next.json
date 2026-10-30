@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-30T09:39:44.618Z",
-  "next": "0.10.1-develop.7723.1.3b2ea82ea7",
+  "generatedAt": "2026-10-30T13:04:06.646Z",
+  "next": "0.10.1-develop.7751.1.a11f57298b",
   "base": "0.9.0",
-  "summary": "10 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 3 verified, 6 broken.",
+  "summary": "10 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
@@ -43,10 +43,31 @@
       ]
     },
     {
+      "symbol": "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
+      ]
+    },
+    {
       "symbol": "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
       "change": "signature",
       "modules": [
         "npm:@northbound-run/sync-shopify"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq"
       ]
     },
     {
@@ -62,12 +83,19 @@
       "modules": [
         "npm:@dainamite/billing"
       ]
+    },
+    {
+      "symbol": "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+      "change": "signature",
+      "modules": [
+        "npm:@freighttech/shipment-tracking"
+      ]
     }
   ],
   "staticBreaks": [],
   "receiptsOnNext": {
-    "verified": 3,
-    "broken": 6
+    "verified": 0,
+    "broken": 0
   },
   "sameFailure": [],
   "loadBearing": [
