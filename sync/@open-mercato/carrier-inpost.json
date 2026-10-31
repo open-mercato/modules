@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
-  "checkedAt": "2026-10-30T22:26:01Z",
+  "checkedAt": "2026-10-31T05:51:22Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/carrier-inpost",
     "distTags": {
       "latest": "0.4.6-canary-5eb138494e",
       "canary": "1.0.0-canary.30085482738.1.198ca40",
-      "develop": "0.10.1-develop.7767.2.440f7c2b4c"
+      "develop": "0.10.1-develop.7774.1.9a13ef7580"
     },
     "latestStable": null,
     "previousStable": null,

@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/web-research-tavily",
-  "checkedAt": "2026-10-30T22:26:01Z",
+  "checkedAt": "2026-10-31T05:51:22Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research-tavily",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7767.2.440f7c2b4c"
+      "develop": "0.10.1-develop.7774.1.9a13ef7580"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -39,7 +39,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-30T22:09:29Z",
+    "pushedAt": "2026-10-31T05:34:28Z",
     "defaultBranch": "main",
     "stars": 1890,
     "license": "MIT",
