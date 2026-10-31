@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/tillio",
-  "checkedAt": "2026-10-31T12:41:15Z",
+  "checkedAt": "2026-10-31T21:40:48Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/tillio",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7782.1.91d78919ba"
+      "develop": "0.10.1-develop.7798.1.dddc3c71f6"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -46,9 +46,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-31T12:40:14Z",
+    "pushedAt": "2026-10-31T21:25:03Z",
     "defaultBranch": "main",
-    "stars": 1891,
+    "stars": 1895,
     "license": "MIT",
     "topics": [
       "crm",

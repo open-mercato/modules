@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/documents",
   "version": "0.9.0",
-  "computedAt": "2026-10-31T12:42:44Z",
+  "computedAt": "2026-10-31T21:42:16Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -165,7 +165,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.7782.1.91d78919ba"
+    "next": "0.10.1-develop.7798.1.dddc3c71f6"
   },
   "verdictPreset": "classic"
 }
