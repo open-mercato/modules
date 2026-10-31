@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T09:24:20.267Z",
-  "next": "0.10.1-develop.7774.1.9a13ef7580",
+  "generatedAt": "2026-10-31T12:42:44.162Z",
+  "next": "0.10.1-develop.7782.1.91d78919ba",
   "base": "0.9.0",
-  "summary": "10 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 4 verified, 6 broken.",
+  "summary": "10 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
@@ -108,8 +108,8 @@
   ],
   "staticBreaks": [],
   "receiptsOnNext": {
-    "verified": 4,
-    "broken": 6
+    "verified": 0,
+    "broken": 0
   },
   "sameFailure": [],
   "loadBearing": [
