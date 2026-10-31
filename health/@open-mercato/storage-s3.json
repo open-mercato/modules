@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.9.0",
-  "computedAt": "2026-10-31T05:53:00Z",
+  "computedAt": "2026-10-31T09:24:20Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "verified",
       "0.8": "untested",
-      "next": "verified"
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.8, 0.9; verified on 0.9, next."
+        "Built for 0.8, 0.9; verified on 0.9."
       ]
     }
   },
@@ -139,11 +139,11 @@
       "consentText": "Install @open-mercato/storage-s3@0.8.0"
     },
     "next": {
-      "decision": "allow",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "OFFICIAL_VERIFIED",
-          "text": "Official, verified on next."
+          "code": "BROKEN",
+          "text": "Broken at add on next since 31 Oct."
         }
       ]
     }
@@ -152,7 +152,7 @@
   "recommended": {
     "0.9": "0.9.0",
     "0.8": null,
-    "next": "0.9.0"
+    "next": null
   },
   "evaluated": {
     "0.9": "0.9.0",

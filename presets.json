@@ -297,11 +297,11 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-10-30T09:17:26Z",
+    "at": "2026-10-31T09:04:00Z",
     "measuredAt": "2026-10-29T08:29:32Z"
   },
   "next": {
-    "omVersion": "0.10.1-develop.7723.1.3b2ea82ea7",
+    "omVersion": "0.10.1-develop.7774.1.9a13ef7580",
     "empty": [
       {
         "id": "auth",
@@ -550,6 +550,10 @@
         "from": "@open-mercato/channel-ses"
       },
       {
+        "id": "channel_smtp",
+        "from": "@open-mercato/channel-smtp"
+      },
+      {
         "id": "channel_imap",
         "from": "@open-mercato/channel-imap"
       },
@@ -602,7 +606,7 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-10-30T09:17:26Z",
-    "measuredAt": "2026-10-30T08:39:35Z"
+    "at": "2026-10-31T09:04:00Z",
+    "measuredAt": "2026-10-31T08:26:22Z"
   }
 }

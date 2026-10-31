@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/ai-assistant",
   "version": "0.9.0",
-  "computedAt": "2026-10-31T05:53:00Z",
+  "computedAt": "2026-10-31T09:24:20Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -94,7 +94,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 31 Oct."
     },
     {
       "id": "VER-2",
@@ -125,7 +125,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 31 Oct."
         },
         {
           "code": "IN_PRESET",

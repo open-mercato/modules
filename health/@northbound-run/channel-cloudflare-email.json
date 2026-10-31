@@ -1,7 +1,7 @@
 {
   "locator": "npm:@northbound-run/channel-cloudflare-email",
   "version": "0.2.0",
-  "computedAt": "2026-10-31T05:53:00Z",
+  "computedAt": "2026-10-31T09:24:20Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "verified",
       "0.8": "untested",
-      "next": "untested"
+      "next": "verified"
     },
     "fit": {
       "0.9": "ok",
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for no tested line; verified on 0.9."
+        "Built for no tested line; verified on 0.9, next."
       ]
     }
   },
@@ -147,10 +147,6 @@
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
         }
       ],
       "consentText": "Install @northbound-run/channel-cloudflare-email@0.2.0"
@@ -160,7 +156,7 @@
   "recommended": {
     "0.9": "0.2.0",
     "0.8": null,
-    "next": null
+    "next": "0.2.0"
   },
   "evaluated": {
     "0.9": "0.2.0",
