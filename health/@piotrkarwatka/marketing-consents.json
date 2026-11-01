@@ -1,7 +1,7 @@
 {
   "locator": "npm:@piotrkarwatka/marketing-consents",
   "version": "0.1.0",
-  "computedAt": "2026-10-31T05:53:00Z",
+  "computedAt": "2026-11-01T10:58:41Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner pkarw is listed in policy/community.yml.",
@@ -28,8 +28,8 @@
   "signals": {
     "receipt": {
       "0.9": "broken",
-      "0.8": "untested",
-      "next": "untested"
+      "0.8": "broken",
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -138,40 +138,38 @@
       ]
     },
     "0.8": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.8 since 1 Nov."
+        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         },
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
-        },
-        {
           "code": "LICENSE",
           "text": "License: proprietary (UNLICENSED)."
         }
-      ],
-      "consentText": "Install @piotrkarwatka/marketing-consents@0.1.0"
+      ]
     },
     "next": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 1 Nov."
+        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         },
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
-        },
-        {
           "code": "LICENSE",
           "text": "License: proprietary (UNLICENSED)."
         }
-      ],
-      "consentText": "Install @piotrkarwatka/marketing-consents@0.1.0"
+      ]
     }
   },
   "state": "active",

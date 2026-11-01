@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-discord",
   "version": "0.9.0",
-  "computedAt": "2026-10-31T05:53:00Z",
+  "computedAt": "2026-11-01T10:58:41Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -28,7 +28,7 @@
   "signals": {
     "receipt": {
       "0.9": "broken",
-      "0.8": "untested",
+      "0.8": "broken",
       "next": "broken"
     },
     "fit": {
@@ -129,14 +129,13 @@
       ]
     },
     "0.8": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.8 since 1 Nov."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-discord@0.8.0"
+      ]
     },
     "next": {
       "decision": "refuse",

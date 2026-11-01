@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-apns",
   "version": "0.9.0",
-  "computedAt": "2026-11-01T06:16:44Z",
+  "computedAt": "2026-11-01T10:58:41Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -138,9 +138,12 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.8."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers channel_apns in src/modules.ts."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-apns@0.8.0"
+      ]
     },
     "next": {
       "decision": "ask",
