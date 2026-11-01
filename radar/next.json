@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T13:38:28.393Z",
-  "next": "0.10.1-develop.7816.1.6c959754cf",
+  "generatedAt": "2026-11-01T22:08:18.652Z",
+  "next": "0.10.1-develop.7822.1.5d6a1d00a1",
   "base": "0.9.0",
-  "summary": "11 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
+  "summary": "12 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
@@ -82,6 +82,13 @@
       "change": "signature",
       "modules": [
         "npm:@dainamite/cpq"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/queue#createModuleQueue",
+      "change": "signature",
+      "modules": [
+        "npm:@fastwhitecat/integration-ksef-direct"
       ]
     },
     {
