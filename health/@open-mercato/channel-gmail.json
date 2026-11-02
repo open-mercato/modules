@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-gmail",
   "version": "0.9.0",
-  "computedAt": "2026-11-02T12:29:02Z",
+  "computedAt": "2026-11-02T16:18:39Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -168,7 +168,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.7825.1.185c04f3b7"
+    "next": "0.10.1-develop.7841.1.af87ac614d"
   },
   "verdictPreset": "classic"
 }
