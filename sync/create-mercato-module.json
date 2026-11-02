@@ -1,6 +1,6 @@
 {
   "locator": "npm:create-mercato-module",
-  "checkedAt": "2026-10-23T09:39:49Z",
+  "checkedAt": "2026-11-02T12:26:57Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "create-mercato-module",
@@ -44,9 +44,9 @@
     "repo": "open-mercato/create-mercato-module",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-22T23:55:47Z",
+    "pushedAt": "2026-10-30T09:43:05Z",
     "defaultBranch": "main",
-    "stars": 1,
+    "stars": 2,
     "license": "MIT",
     "topics": [
       "cli",
@@ -88,6 +88,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Tool from the open-mercato GitHub org published only by Open Mercato npm maintainers (D38).",
-  "downloads30d": 646,
+  "downloads30d": 700,
   "errors": []
 }
