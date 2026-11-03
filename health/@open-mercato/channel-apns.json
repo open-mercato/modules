@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-apns",
   "version": "0.9.0",
-  "computedAt": "2026-11-03T09:32:18Z",
+  "computedAt": "2026-11-03T14:25:47Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -168,7 +168,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.7894.1.2c464c73e3"
+    "next": "0.10.1-develop.7907.1.28240ddda3"
   },
   "verdictPreset": "classic"
 }
