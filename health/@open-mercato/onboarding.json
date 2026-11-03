@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/onboarding",
   "version": "0.9.0",
-  "computedAt": "2026-11-03T09:32:18Z",
+  "computedAt": "2026-11-03T09:51:36Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -94,7 +94,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 3 Nov."
     },
     {
       "id": "VER-2",
@@ -125,7 +125,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): verified on 3 Nov."
         },
         {
           "code": "IN_PRESET",

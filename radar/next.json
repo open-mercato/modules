@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T09:32:18.008Z",
+  "generatedAt": "2026-11-03T09:51:36.176Z",
   "next": "0.10.1-develop.7894.1.2c464c73e3",
   "base": "0.9.0",
   "summary": "13 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 11 break statically. Receipts on next: 0 verified, 0 broken.",
