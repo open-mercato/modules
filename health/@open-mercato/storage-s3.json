@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.9.0",
-  "computedAt": "2026-11-02T12:29:02Z",
+  "computedAt": "2026-11-03T09:32:18Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "drift",
-      "next": "drift"
+      "next": "no-fit"
     },
     "anatomy": "full",
     "supplyChain": {
