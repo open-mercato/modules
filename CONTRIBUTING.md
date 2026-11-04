@@ -131,7 +131,7 @@ A template is a whole Open Mercato app in a public GitHub repository that a new 
 
 ### Template quick start
 
-1. Save your app as a template repository with `create-mercato-template`: `prepare`, review the report, then `publish`. The tool is not on npm yet. Run it from GitHub as its [README](https://github.com/open-mercato/create-mercato-template#try-it-before-the-npm-release) shows. A repository made by hand works too, when it passes the [checklist](#template-review-checklist).
+1. Save your app as a template repository with `create-mercato-template`: `prepare`, review the report, then `publish`. The tool is not on npm yet. Run it from GitHub as its [guide](https://github.com/open-mercato/create-mercato-template/blob/main/docs/guide.md#try-the-github-version) shows. A repository made by hand works too, when it passes the [checklist](#template-review-checklist).
 2. Run `create-mercato-template describe`. It prints the entry file and its path. A required value it could not fill is a comment that says what to pass.
 3. Add the file at that path. Run `yarn om format templates`.
 4. Open the pull request and tick `I maintain this package or have the maintainer's consent` (for a template, the repository).
@@ -167,7 +167,7 @@ Author fields (A) are yours. Curator fields (K) are set by a maintainer of this 
 | Field                             | Who | Rule                                                                                                                      |
 | --------------------------------- | --- | ------------------------------------------------------------------------------------------------------------------------- |
 | `github`                          | A   | `owner/repo`, required; must match the file path                                                                          |
-| `ref`                             | A   | optional branch, tag or commit sha, the default branch otherwise; a sha must be on a branch or tag of this repository     |
+| `ref`                             | A   | optional branch, tag or commit sha, the default branch otherwise; a sha must be on a branch or tag; no `pull/` refs       |
 | `useCase`                         | A   | required: `crm`, `commerce`, `b2b-portal`, `partner-portal`, `operations`, `field-service`, `internal-tools` or `starter` |
 | `summary`                         | A   | required, plain text, 20 to 140 characters, English, no install instructions                                              |
 | `whenToUse`                       | A   | required, plain text, 40 to 240 characters, starts with `Use when `                                                       |
@@ -191,12 +191,13 @@ The repository may hold a `mercato-template.json` written by the save tool ([`me
 `yarn om validate` checks these on every pull request and writes the result in the job summary:
 
 - The file is at the path of its `github`, matches the schema and has no `# TODO` marks.
-- The repository exists, is public and is not archived. `ref` resolves to a commit on a branch or tag of the repository; a commit GitHub serves only through a fork is refused.
+- The repository exists, is public and is not archived. `ref` resolves to a commit on a branch or tag of the repository; a commit GitHub serves only through a fork is refused, and so is a pull request ref.
 - The archive of that commit, read without running it: at most 50 MB and 5,000 files, regular files and directories only (no links), no path ending in `.template`.
 - A root `package.json` that depends on `@open-mercato/core`, with Yarn 4 as `packageManager`.
 - A Yarn 4 `yarn.lock` that resolves every `@open-mercato/*` dependency, all on one Open Mercato line.
 - A `src/modules.ts` the catalog can read.
-- License (D4): an `active` entry needs an OSI license. A repository without one can only be listed as `hold`.
+- The root README is not a stock `create-mercato-app` README (no release up to 0.9.0 ships one yet).
+- License (D4): an `active` entry needs an OSI license. A LICENSE text the catalog does not recognize counts as none, whatever `package.json` says. A repository without one can only be listed as `hold`.
 - Names: a reserved repository name or a look-alike of another template is an error until a curator adds the `name-reviewed` label.
 - A slug no other entry uses, in any status.
 - Differences between `mercato-template.json` and the app are warnings.
@@ -207,6 +208,7 @@ A person also checks what CI cannot:
 - `links.demo` is a deployment of this repository, not someone's production site.
 - The screenshots show this app.
 - `declares.env` names keys only, with no value in a description.
+- Seed and demo data use no real-looking people, emails or links (`example.com` or `acme.com` only).
 
 ### Template status
 
