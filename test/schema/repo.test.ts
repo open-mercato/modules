@@ -85,6 +85,8 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       '.agents/',
       '.claude/',
       '.npm/',
+      // byte copies of the create-mercato-app scaffold, the modulesFromModulesTs contract (templates spec, rev. 7)
+      'test/fixtures/templates/modules-from-modules-ts/scaffold-*',
     ])
   })
 
@@ -103,7 +105,8 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       allowImportingTsExtensions: true,
       jsxImportSource: 'preact',
     })
-    expect(ts.exclude).toEqual(['mcp'])
+    // the modulesFromModulesTs fixtures are src/modules.ts files of apps, named `.ts` for the save tool's contract test
+    expect(ts.exclude).toEqual(['mcp', 'test/fixtures/templates/modules-from-modules-ts'])
     const mcp = JSON.parse(readFileSync(`${ROOT}/mcp/tsconfig.json`, 'utf8')) as {
       compilerOptions: Record<string, unknown>
       include: string[]

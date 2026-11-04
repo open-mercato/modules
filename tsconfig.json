@@ -15,5 +15,5 @@
     "skipLibCheck": true
   },
   "include": ["lib", "site/src", "scripts", "test"],
-  "exclude": ["mcp"]
+  "exclude": ["mcp", "test/fixtures/templates/modules-from-modules-ts"]
 }
