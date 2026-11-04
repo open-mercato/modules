@@ -1,0 +1,137 @@
+{
+  "factsVersion": 1,
+  "github": "open-mercato/ready-app-oss-prm",
+  "sha": "fee310a608fdb483fad978594b68adc590f25324",
+  "readAt": "2026-11-04T23:30:22Z",
+  "archive": {
+    "files": 283,
+    "bytes": 21241133
+  },
+  "omVersion": "0.4.10",
+  "omLine": "0.4",
+  "linesBehind": 5,
+  "latestStable": "0.9.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "yarn@4.12.0+sha512.f45ab632439a67f8bc759bf32ead036a1f413287b9042726b7cc4818b7b49e14e9423ba49b18f9e06",
+  "requiresEnterprise": false,
+  "enterpriseModules": [],
+  "enterpriseDependency": false,
+  "modules": {
+    "entries": [
+      {
+        "id": "dashboards",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "perspectives",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "configs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "query_index",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "audit_logs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "attachments",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_keys",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_docs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "business_rules",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "feature_toggles",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "notifications",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "progress",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "messages",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "translations",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "search",
+        "from": "@open-mercato/search",
+        "package": "@open-mercato/search@0.4.10"
+      },
+      {
+        "id": "events",
+        "from": "@open-mercato/events",
+        "package": "@open-mercato/events@0.4.10"
+      },
+      {
+        "id": "scheduler",
+        "from": "@open-mercato/scheduler",
+        "package": "@open-mercato/scheduler@0.4.10"
+      },
+      {
+        "id": "customers",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "entities",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dictionaries",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "workflows",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "partnerships",
+        "from": "@app"
+      }
+    ],
+    "unparsed": []
+  },
+  "manifest": "absent",
+  "manifestEnv": null,
+  "license": {
+    "value": null,
+    "kind": "unknown",
+    "sources": {
+      "licenseFile": null,
+      "packageJson": null,
+      "github": null
+    }
+  },
+  "findings": []
+}

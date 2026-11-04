@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/onboarding",
-  "checkedAt": "2026-11-04T22:13:45Z",
+  "checkedAt": "2026-11-04T23:28:23Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/onboarding",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7937.1.cf4cfe1a1f"
+      "develop": "0.10.1-develop.7938.1.5d3536acd2"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -38,7 +38,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-04T22:05:10Z",
+    "pushedAt": "2026-11-04T23:20:27Z",
     "defaultBranch": "main",
     "stars": 1905,
     "license": "MIT",

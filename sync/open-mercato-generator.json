@@ -1,6 +1,6 @@
 {
   "locator": "npm:open-mercato-generator",
-  "checkedAt": "2026-11-02T12:26:57Z",
+  "checkedAt": "2026-11-04T23:28:23Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "open-mercato-generator",
@@ -48,6 +48,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository owner mkadziolka is a contributor of certified partner FilaNovum.",
-  "downloads30d": 17,
+  "downloads30d": 20,
   "errors": []
 }

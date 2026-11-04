@@ -1,6 +1,6 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
-  "checkedAt": "2026-11-02T12:26:57Z",
+  "checkedAt": "2026-11-04T23:28:23Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@freighttech/terminal-tracking",
@@ -96,6 +96,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
-  "downloads30d": 248,
+  "downloads30d": 251,
   "errors": []
 }
