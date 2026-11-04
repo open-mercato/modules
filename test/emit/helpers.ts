@@ -36,12 +36,16 @@ export function skillsDir(): string {
   return dir
 }
 
-export function fixtureData(overrides: Partial<{ data: string; modules: string; skills: string }> = {}): EmitData {
+export function fixtureData(
+  overrides: Partial<{ data: string; modules: string; skills: string; templates: string }> = {},
+): EmitData {
   return loadEmitData({
     data: overrides.data ?? DATA,
     modules: overrides.modules ?? DESCRIPTORS,
     policy: POLICY,
     skills: overrides.skills ?? join(ROOT, 'test', 'emit', 'no-skills'),
+    // no template entries unless a test brings them (the repo's own templates/ never changes the module goldens)
+    templates: overrides.templates ?? join(ROOT, 'test', 'emit', 'no-templates'),
     root: ROOT,
   })
 }

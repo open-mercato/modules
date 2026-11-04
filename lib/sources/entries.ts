@@ -163,8 +163,8 @@ export function commitsTouching(repoRoot: string, file: string, max = 20): { sha
 }
 
 /** Descriptor files changed since a git ref (`--changed=<ref>`), repo-relative. */
-export function changedDescriptorFiles(repoRoot: string, ref: string): string[] {
-  const out = execFileSync('git', ['-C', repoRoot, 'diff', '--name-only', `${ref}...HEAD`, '--', 'modules/'], {
+export function changedDescriptorFiles(repoRoot: string, ref: string, dir = 'modules/'): string[] {
+  const out = execFileSync('git', ['-C', repoRoot, 'diff', '--name-only', `${ref}...HEAD`, '--', dir], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   })

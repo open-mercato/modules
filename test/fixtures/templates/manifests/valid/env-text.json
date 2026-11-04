@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "name": "crm-starter",
+  "env": [
+    { "name": "APP_URL", "description": "Public URL, e.g. http://localhost:3000" },
+    { "name": "OM_ENABLE_SEARCH", "description": "Set to `true` to enable <search> in the *backend*" }
+  ],
+  "modules": [{ "id": "auth", "from": "@open-mercato/core" }],
+  "createdWith": { "tool": "create-mercato-template", "version": "0.1.0" }
+}

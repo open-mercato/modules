@@ -1,12 +1,14 @@
-# Formatting only (spec 5.1, 5.5): `yarn om format modules` (key order and Prettier, category aliases to their ID),
-# then the autofix.ci app commits the diff to the pull request, forks included. The workflow name must be
-# `autofix.ci`. No write permission here: the app holds it, and the format step never changes a value.
+# Formatting only (spec 5.1, 5.5): `yarn om format modules templates` (key order and Prettier, category aliases to
+# their ID; template entries with their own key order), then the autofix.ci app commits the diff to the pull request,
+# forks included. The workflow name must be `autofix.ci`. No write permission here: the app holds it, and the format
+# step never changes a value.
 name: autofix.ci
 
 on:
   pull_request:
     paths:
       - "modules/**"
+      - "templates/**"
 
 permissions:
   contents: read
@@ -24,7 +26,8 @@ jobs:
     name: autofix
     # autofix-ci/action fetches the PR head without credentials, which a private repository refuses (run 40202361840:
     # `could not read Username`, a red check on every PR with a fix). Until the repository is public and the app is
-    # installed (docs/RUNBOOK.md), the job is skipped and validate tells the author to run `yarn om format modules`.
+    # installed (docs/RUNBOOK.md), the job is skipped and validate tells the author to run `yarn om format modules` (or
+    # `templates`).
     if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -46,7 +49,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Format descriptors
-        run: yarn om format modules
+        run: yarn om format modules templates
 
       - name: Send fixes
         uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4

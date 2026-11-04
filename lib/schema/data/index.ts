@@ -7,6 +7,7 @@ import { Health } from './health.ts'
 import { HiveSlots, Lines, Presets } from './lines.ts'
 import { ProvisionalNights, Receipt } from './receipt.ts'
 import { Claims, Stats, SyncRecord } from './sync.ts'
+import { TEMPLATE_FACTS_FILE, TEMPLATE_SYNC_FILE, TemplateFacts, TemplateSyncRecord } from './templates.ts'
 import { Radar } from '../published/radar.ts'
 import { OfficialCoverageFile } from './coverage.ts'
 
@@ -18,6 +19,7 @@ export * from './health.ts'
 export * from './lines.ts'
 export * from './receipt.ts'
 export * from './sync.ts'
+export * from './templates.ts'
 
 export interface DataFileRule {
   /** Path pattern relative to the root of the `data` branch. */
@@ -35,6 +37,9 @@ const VER = String.raw`\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?`
 export const DATA_FILES: readonly DataFileRule[] = [
   { pattern: new RegExp(`^sync/${LOC}\\.json$`), schema: SyncRecord, jsonl: false, writer: 'sync' },
   { pattern: new RegExp(`^facts/${LOC}/${VER}\\.json$`), schema: Facts, jsonl: false, writer: 'watch' },
+  // templates (docs/specs/2026-10-29-templates.md, Data branch): one record per entry, facts per commit sha
+  { pattern: TEMPLATE_SYNC_FILE, schema: TemplateSyncRecord, jsonl: false, writer: 'sync' },
+  { pattern: TEMPLATE_FACTS_FILE, schema: TemplateFacts, jsonl: false, writer: 'sync' },
   { pattern: new RegExp(`^fit/${VER}\\.json$`), schema: FitResult, jsonl: false, writer: 'watch' },
   { pattern: /^receipts\/_baseline\.jsonl$/, schema: Receipt, jsonl: true, writer: 'collect' },
   { pattern: new RegExp(`^receipts/${LOC}\\.jsonl$`), schema: Receipt, jsonl: true, writer: 'collect' },

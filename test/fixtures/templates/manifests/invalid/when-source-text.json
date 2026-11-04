@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "name": "x",
+  "modules": [{ "id": "flagged", "from": "@app", "when": "process.env.OM_A === '1'" }],
+  "createdWith": { "tool": "create-mercato-template", "version": "1.0.0" }
+}

@@ -71,6 +71,8 @@ describe('check-text', () => {
   it('scopes texts and skips fixtures and generated files', () => {
     expect(inScope('README.md')).toBe(true)
     expect(inScope('modules/@x/y.yml')).toBe(true)
+    expect(inScope('templates/acme/b2b-portal.yml')).toBe(true)
+    expect(inScope('docs/design/registry-list/notes.json')).toBe(true)
     expect(inScope('site/src/pages/index.astro')).toBe(true)
     expect(inScope('test/fixtures/README.md')).toBe(false)
     expect(inScope('site/.generated/public/llms.txt')).toBe(false)

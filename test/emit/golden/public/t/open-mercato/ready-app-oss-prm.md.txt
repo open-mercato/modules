@@ -1,0 +1,36 @@
+# open-mercato/ready-app-oss-prm
+
+Partner relationship management app with partner accounts and deal registration.
+
+- Use case: partner-portal
+- Status: hold. Reason: No license yet, and it pins Open Mercato 0.4.
+- Slug: none (reachable as `open-mercato/ready-app-oss-prm` only)
+- Repository: https://github.com/open-mercato/ready-app-oss-prm
+- Stars: 3. Last push: 2026-05-10. GitHub license: none detected
+- Commit: `f0a0000000000000000000000000000000000410` (default branch `main`, synced 2026-11-04)
+- Verification: not verified (the nightly template smoke has not run on this commit)
+- Built on: Open Mercato 0.4.10 (0.4.x, 5 lines behind 0.9.0)
+- Requires an Enterprise license: no
+- License: none (unknown)
+- Engines: node >=24. Package manager: yarn@4.17.1
+
+## Create an app
+
+On hold, so there is no create command. Reason: No license yet, and it pins Open Mercato 0.4.
+
+## When to use
+
+Use when a vendor runs a partner program with registered deals and tiers.
+
+## Modules
+
+3 modules in src/modules.ts: 1 of the template's own, 0 behind a condition.
+
+- `auth` from `@open-mercato/core`
+- `directory` from `@open-mercato/core`
+- `partners` from `@app`
+
+## Data
+
+- This template: https://wojciechszyjka.github.io/modules/t/open-mercato/ready-app-oss-prm.json
+- All templates: https://wojciechszyjka.github.io/modules/templates.json

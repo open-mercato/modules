@@ -1,0 +1,29 @@
+github: acme/b2b-portal
+ref: v1.2.0
+useCase: b2b-portal
+summary: B2B self-service portal with quotes, customer accounts and order history.
+whenToUse: Use when wholesale customers should order and track quotes on their own.
+whenNotToUse: Retail shops with anonymous checkout.
+links:
+  docs: https://github.com/acme/b2b-portal#readme
+  support: mailto:support@example.com
+  demo: https://b2b-portal-demo.example.com
+screenshots:
+  - src: screenshots/b2b-portal-quotes.webp
+    alt: Quote list of a customer account
+  - src: https://raw.githubusercontent.com/acme/b2b-portal/main/docs/orders.png
+    alt: Order history with filters
+pricing: free
+declares:
+  env:
+    - name: OPENAI_API_KEY
+      description: Used by the AI assistant.
+      link: https://platform.openai.com/api-keys
+  hosts:
+    - api.openai.com
+smoke:
+  paths:
+    - /backend/quotes_portal
+slug: b2b-portal
+status: active
+featured: true

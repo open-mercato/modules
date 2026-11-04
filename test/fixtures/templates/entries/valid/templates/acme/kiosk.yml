@@ -1,0 +1,14 @@
+github: acme/kiosk
+useCase: internal-tools
+summary: Self-service kiosk app that replaces the default demo login.
+whenToUse: Use when a shared screen in a shop should show orders without a login.
+smoke:
+  login: false
+  ready: /kiosk
+  paths:
+    - /api/kiosk/status
+status: unmaintained
+reason: The author no longer updates it.
+alternatives:
+  - acme/b2b-portal
+supersededBy: acme/b2b-portal

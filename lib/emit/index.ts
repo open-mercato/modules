@@ -40,6 +40,8 @@ import { buildPublishedSurface, radarMarkdown, radarPopulation, radarRows, radar
 import { schemaFiles } from './schemas.ts'
 import { buildPublishedSearchIndex } from './search-index.ts'
 import type { SiteMeta } from './site-data.ts'
+import { TemplateDetail, TemplatesIndex } from '../schema/published/templates.ts'
+import { buildTemplates } from './templates.ts'
 import type { EmitData, EmitOptions, FileMap } from './types.ts'
 import { byteLength, lineList, toJson, toPrettyJson } from './util.ts'
 import { agentSkills, originTrialFor, robotsTxt, serverCard, SERVER_CARD_PATH } from './wellknown.ts'
@@ -224,6 +226,23 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   }
   for (const r of renamedRedirects(entries)) pub.set(`m/${r.path}.html`, redirectPage(r.target, r.title, r.relative))
 
+  // templates (docs/specs/2026-10-29-templates.md): additive files, the module files above do not depend on them
+  const templates = buildTemplates(
+    data,
+    opts,
+    {
+      builtIn: new Set(builtIn.map((m) => m.id)),
+      modules: new Map(entries.filter((e) => e.listed && e.npm).map((e) => [e.npm as string, e.path])),
+    },
+    warn,
+  )
+  put('templates.json', TemplatesIndex, templates.index)
+  for (const t of templates.details) {
+    put(`t/${t.path}.json`, TemplateDetail, t.json)
+    pub.set(`t/${t.path}.md`, t.md)
+  }
+  for (const [path, bytes] of templates.files) pub.set(path, bytes)
+
   // receipts
   const allReceipts: ReceiptT[] = [...data.baseline, ...ctxs.flatMap((c) => c.receipts)].sort(
     (a, b) => Date.parse(a.run.at) - Date.parse(b.run.at) || a.id.localeCompare(b.id),
@@ -289,6 +308,7 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
     mcpUrl: opts.mcpUrl,
     originTrial: originTrial ? { token: originTrial.token, expires: originTrial.expires } : null,
     counts: index.counts,
+    templates: templates.counts,
     coreVersion,
     peersSentence: peersSentence(compat.peersRejectFitting),
     firstNight: index.dataAsOf.nightly === null,

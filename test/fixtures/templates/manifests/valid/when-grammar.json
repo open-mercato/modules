@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "name": "crm-starter",
+  "env": [{ "name": "CRM_WEBHOOK_URL" }],
+  "modules": [
+    { "id": "auth", "from": "@open-mercato/core" },
+    { "id": "example_customers_sync", "from": "@app", "when": "module:example" },
+    {
+      "id": "sso",
+      "from": "@open-mercato/enterprise",
+      "package": "@open-mercato/enterprise@0.9.0",
+      "when": "OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_SSO"
+    },
+    { "id": "legacy_import", "from": "@app", "when": "!OM_DISABLE_LEGACY && module:customers" },
+    { "id": "either", "from": "@app", "when": "custom" },
+    { "id": "local_alias", "from": "./vendor/local-alias" }
+  ],
+  "createdWith": { "tool": "create-mercato-template", "version": "0.2.0-rc.1" }
+}

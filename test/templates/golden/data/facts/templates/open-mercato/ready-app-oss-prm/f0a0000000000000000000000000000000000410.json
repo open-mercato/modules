@@ -1,0 +1,50 @@
+{
+  "factsVersion": 1,
+  "github": "open-mercato/ready-app-oss-prm",
+  "sha": "f0a0000000000000000000000000000000000410",
+  "readAt": "2026-11-04T06:00:00Z",
+  "archive": {
+    "files": 5,
+    "bytes": 1254
+  },
+  "omVersion": "0.4.10",
+  "omLine": "0.4",
+  "linesBehind": 5,
+  "latestStable": "0.9.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "yarn@4.17.1",
+  "requiresEnterprise": false,
+  "enterpriseModules": [],
+  "enterpriseDependency": true,
+  "modules": {
+    "entries": [
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "partners",
+        "from": "@app"
+      }
+    ],
+    "unparsed": []
+  },
+  "manifest": "absent",
+  "manifestEnv": null,
+  "license": {
+    "value": null,
+    "kind": "unknown",
+    "sources": {
+      "licenseFile": null,
+      "packageJson": null,
+      "github": null
+    }
+  },
+  "findings": []
+}

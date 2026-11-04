@@ -16,9 +16,12 @@ import {
   Receipt,
   Stats,
   SyncRecord,
+  TemplateFacts,
+  TemplateSyncRecord,
 } from '../../lib/schema/data/index.ts'
 import { Radar } from '../../lib/schema/published/radar.ts'
 import { DATA, readJson, readJsonl } from './helpers.ts'
+import { TEMPLATE_DATA } from '../templates/world.ts'
 
 const sample = {
   sync: () => readJson(`${DATA}/sync/@fastwhitecat/integration-ksef-direct.json`) as Record<string, unknown>,
@@ -32,6 +35,12 @@ const sample = {
   stats: () => readJson(`${DATA}/stats.json`) as Record<string, unknown>,
   radar: () => readJson(`${DATA}/radar/next.json`) as Record<string, unknown>,
   change: () => readJsonl(`${DATA}/changes/2026-10.jsonl`)[0] as Record<string, unknown>,
+  // what template sync writes for its fixture (test/templates/sync.test.ts)
+  templateSync: () => readJson(`${TEMPLATE_DATA}/sync/templates/acme/b2b-portal.json`) as Record<string, unknown>,
+  templateFacts: () =>
+    readJson(
+      `${TEMPLATE_DATA}/facts/templates/acme/b2b-portal/b2b0000000000000000000000000000000000120.json`,
+    ) as Record<string, unknown>,
 }
 
 const cases: [string, z.ZodType, () => Record<string, unknown>][] = [
@@ -46,6 +55,8 @@ const cases: [string, z.ZodType, () => Record<string, unknown>][] = [
   ['Stats', Stats, sample.stats],
   ['Radar', Radar, sample.radar],
   ['Change', Change, sample.change],
+  ['TemplateSyncRecord', TemplateSyncRecord, sample.templateSync],
+  ['TemplateFacts', TemplateFacts, sample.templateFacts],
 ]
 
 describe('data branch schemas are strict (spec 4.5)', () => {
@@ -117,6 +128,13 @@ describe('data branch schemas are strict (spec 4.5)', () => {
     expect(dataFileRule('radar/next.json')?.schema).toBe(Radar)
     expect(dataFileRule('sync/@X/y.json')).toBeNull()
     expect(dataFileRule('notes.txt')).toBeNull()
-    expect(DATA_FILES.length).toBe(16)
+    // templates (docs/specs/2026-10-29-templates.md): one record per entry, facts per sha; an npm package named
+    // `templates` keeps its module paths
+    expect(dataFileRule('sync/templates/acme/b2b-portal.json')?.schema).toBe(TemplateSyncRecord)
+    expect(dataFileRule(`facts/templates/acme/b2b-portal/${'a'.repeat(40)}.json`)?.schema).toBe(TemplateFacts)
+    expect(dataFileRule('sync/templates.json')?.schema).toBe(SyncRecord)
+    expect(dataFileRule('facts/templates/1.0.0.json')?.schema).toBe(Facts)
+    expect(dataFileRule('facts/templates/acme/b2b-portal/main.json')).toBeNull()
+    expect(DATA_FILES.length).toBe(18)
   })
 })

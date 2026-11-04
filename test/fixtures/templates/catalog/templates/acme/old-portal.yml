@@ -1,0 +1,6 @@
+github: acme/old-portal
+useCase: b2b-portal
+summary: An earlier B2B portal that the same author replaced with a new one.
+whenToUse: Use when you maintain an app that started from this portal before it moved.
+status: delisted
+reason: Replaced by acme/b2b-portal.

@@ -32,7 +32,7 @@ describe('JSON Schema from Zod (spec 4, 4.6)', () => {
     expect(failures).toEqual([])
   })
 
-  it('publishes the six schema files with $id', () => {
+  it('publishes every schema file with $id', () => {
     const out = publishedJsonSchemas('https://wojciechszyjka.github.io/modules/')
     expect(Object.keys(out).sort()).toEqual([...PUBLISHED_SCHEMAS].sort())
     for (const name of PUBLISHED_SCHEMAS) {

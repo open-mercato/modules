@@ -1,0 +1,4 @@
+github: acme/gone
+useCase: starter
+summary: A starter app whose repository was deleted after it was listed.
+whenToUse: Use when you want an empty app with the default modules and nothing else.

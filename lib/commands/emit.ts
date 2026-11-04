@@ -2,9 +2,9 @@
 // site/.generated/public and the page data into site/.generated/data, from `.data` (the `data` branch), the
 // descriptors and policy. The only source of those files; the Astro integration (lib/emit/astro-integration.ts)
 // copies public/ into dist/. Works on an empty or missing `.data` (first day: empty states).
-// Extra flags: --to <dir> (default site/.generated), --modules <dir>, --policy <dir>, --skills <dir>,
-// --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, MCP_URL, WEBMCP_OT_TOKENS, GITHUB_SHA
-// (the build stamp in the footer; otherwise `git rev-parse` of the repo).
+// Extra flags: --to <dir> (default site/.generated), --modules <dir>, --templates <dir>, --policy <dir>,
+// --skills <dir>, --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, MCP_URL, WEBMCP_OT_TOKENS,
+// GITHUB_SHA (the build stamp in the footer; otherwise `git rev-parse` of the repo).
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
@@ -20,7 +20,17 @@ import type { BuildStamp } from '../emit/types.ts'
 
 export const description = 'published files and site data from .data'
 
-const VALUE_FLAGS = ['--site', '--base', '--to', '--modules', '--policy', '--skills', '--now', '--mcp-url'] as const
+const VALUE_FLAGS = [
+  '--site',
+  '--base',
+  '--to',
+  '--modules',
+  '--templates',
+  '--policy',
+  '--skills',
+  '--now',
+  '--mcp-url',
+] as const
 type Flag = (typeof VALUE_FLAGS)[number]
 
 function parseArgs(args: string[]): Partial<Record<Flag, string>> | string {
@@ -108,6 +118,7 @@ export default function emit(ctx: CommandContext): number {
   const data = loadEmitData({
     data: dataDir,
     modules: fromRoot(args['--modules'], 'modules'),
+    templates: fromRoot(args['--templates'], 'templates'),
     policy,
     skills: fromRoot(args['--skills'], 'skills'),
     root: ctx.root,

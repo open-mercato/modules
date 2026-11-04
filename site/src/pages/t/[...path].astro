@@ -1,0 +1,563 @@
+---
+// Template page /t/<owner>/<repo> (docs/specs/2026-10-29-templates.md, UI/UX, Phase 1a step 7), in the layout of a
+// module page: breadcrumbs, a calm header, the create card next to it and a sidebar. In the order of the spec: the
+// create command, or the `hold` reason instead of it; what the commit is built on and its verification state, each for
+// the named sha; the modules of `src/modules.ts` (npm modules linked to their catalog pages, the template's own ones
+// listed as its own, conditional ones marked); the env keys to fill; license, last push and the archived flag; links
+// and screenshots. Every value comes from `/t/<owner>/<repo>.json` (rule 8).
+import Base from '../../layouts/Base.astro'
+import Banner from '../../components/Banner.astro'
+import CommandChip from '../../components/CommandChip.astro'
+import Icon from '../../components/icons/Icon.astro'
+import Screenshots from '../../components/module/Screenshots.astro'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import { APP_FROM, builtOn, DEFAULT_FROM } from '../../../../lib/core/template-facts.ts'
+import { templatePagePath, templatePath } from '../../../../lib/schema/template.ts'
+import type { TemplateDetail } from '../../../../lib/schema/published/templates.ts'
+import { TEMPLATE_OPTION_RELEASED, USE_CASE_LABELS, createCommand, lineBadge, verification } from '../../lib/templates.ts'
+import { CommandText } from '../../lib/ui.tsx'
+import { dayYear, plural } from '../../lib/format.ts'
+import { listAnd } from '../../lib/status.ts'
+import { href } from '../../lib/url.ts'
+import '../m/_module.css'
+
+export function getStaticPaths() {
+  return (loadSiteData().templates?.templates ?? []).map((t) => ({ params: { path: templatePath(t.github) } }))
+}
+
+const path = Astro.params.path as string
+const data = loadSiteData()
+const { meta } = data
+const t = data.template(path)
+if (!t) throw new Error(`t/${path}.json is missing. Run yarn om emit first.`)
+const e = t.entry
+const f = t.source.facts
+const listed = new Set((data.templates?.templates ?? []).map((x) => templatePath(x.github)))
+const [owner = '', name = ''] = e.github.split('/')
+const hold = e.status === 'hold'
+const command = createCommand(e)
+const badge = lineBadge(f)
+const state = verification(t.verified)
+const repoUrl = `https://github.com/${e.github}`
+const sha12 = t.source.sha.slice(0, 12)
+const refText = (s: TemplateDetail['source']): string =>
+  s.kind === 'commit' ? 'the commit the entry names' : s.kind === 'default branch' ? `default branch ${s.ref}` : `${s.kind} ${s.ref}`
+const useCase = USE_CASE_LABELS[e.useCase]
+const useCaseHref = href(`/templates?use=${e.useCase}`)
+
+// the inventory of src/modules.ts at this sha, in three groups
+const inv = f?.modules ?? null
+const mods = inv?.entries ?? []
+const own = mods.filter((m) => m.from === APP_FROM)
+const fromPackages = mods.filter((m) => m.from !== APP_FROM && m.from !== DEFAULT_FROM)
+const builtIns = mods.filter((m) => m.from === DEFAULT_FROM)
+const conditional = mods.filter((m) => m.when !== undefined).length
+const whenText = (w: string): string => (w === 'custom' ? 'behind a condition the catalog cannot read' : w)
+
+const env = f?.env ?? e.declares?.env ?? []
+const hosts = e.declares?.hosts ?? []
+const engines = Object.entries(f?.engines ?? {})
+const license = f?.license.value ?? t.repo?.license ?? null
+
+/** An `owner/repo` of another template: its page when it is listed, else the repository. */
+const templateLink = (g: string): { href: string; label: string } =>
+  listed.has(templatePath(g)) ? { href: href(templatePagePath(g)), label: g } : { href: `https://github.com/${g}`, label: g }
+const alternatives = (e.alternatives ?? []).map(templateLink)
+const supersededBy = e.supersededBy ? templateLink(e.supersededBy) : null
+---
+
+<Base
+  title={`${e.github} · Templates · Open Mercato Modules`}
+  description={e.summary}
+  path={templatePagePath(e.github)}
+  dataAsOf={meta.dataAsOf}
+  mdAlternate={`/t/${path}.md`}
+  skip={{ href: '#template-body', label: 'Skip to template details' }}
+>
+  <div class="band">
+    <div class="sheet mod">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol role="list">
+          <li><a href={href('/templates')}>Templates</a></li>
+          <li><a href={useCaseHref}>{useCase}</a></li>
+        </ol>
+      </nav>
+
+      <div class="mod__banners">
+        {
+          e.status === 'unmaintained' && (
+            <Banner variant="hold" tag="Unmaintained" link={supersededBy ? { href: supersededBy.href, label: 'Use instead' } : undefined}>
+              {e.reason ?? 'Not maintained.'}
+            </Banner>
+          )
+        }
+        {
+          t.repo?.renamed && (
+            <Banner variant="renamed">
+              GitHub now serves this repository as {t.repo.fullName}. The entry still lists it as {e.github}.
+            </Banner>
+          )
+        }
+        {
+          t.repo?.archived && (
+            <Banner variant="hold" tag="Archived">
+              The repository is archived on GitHub. It is read-only and gets no more changes.
+            </Banner>
+          )
+        }
+      </div>
+
+      <div class="mod__grid">
+        <header class="mh tmh">
+          <div class="mh__main">
+            <h1 class="mh__title">{name}</h1>
+            <p class="mh__by">
+              <span>by {owner}</span>
+              <span class="mh__pkg">
+                <code translate="no">{e.github}</code>
+                <button type="button" class="mh__copy" data-copy={e.github} aria-label={`Copy repository name ${e.github}`} title="Copy">
+                  <Icon name="copy" size={14} />
+                </button>
+              </span>
+            </p>
+          </div>
+          <p class="mh__lead">{e.summary}</p>
+          <ul class="mh__meta" role="list">
+            <li><a class="mh__cat" href={useCaseHref}>{useCase}</a></li>
+            {badge && <li><span class="chip chip--line" title={badge.title} data-line-badge>{badge.text}</span></li>}
+            {badge?.behind && <li><span class="chip chip--unknown" title={badge.title} data-behind>{badge.behind}</span></li>}
+            <li>
+              <span class:list={['chip', state.ok ? 'chip--official' : 'chip--preview']} title={state.title} data-verified={state.ok ? '1' : '0'}>
+                {state.text}
+              </span>
+            </li>
+            {f?.requiresEnterprise && <li><span class="chip chip--enterprise" data-enterprise>Enterprise license</span></li>}
+            {t.repo && <li class="mh__stat"><Icon name="star" size={14} />{plural(t.repo.stars, 'GitHub star')}</li>}
+          </ul>
+        </header>
+
+        <div class="mod__install">
+          <section class="inst tcreate" id="create" aria-labelledby="create-h" data-template-status={e.status}>
+            <h2 class="inst__h" id="create-h">Create an app</h2>
+            {
+              hold || !command ? (
+                <div class="tcreate__hold" data-hold-reason>
+                  <p>
+                    <span class="chip chip--unknown">On hold</span> {e.reason}
+                  </p>
+                  <p class="tcreate__fine">The catalog gives no create command for a template on hold.</p>
+                </div>
+              ) : (
+                <>
+                  {f?.requiresEnterprise && (
+                    <p class="tcreate__ent">
+                      Requires an Enterprise license: {listAnd(f.enterpriseModules)}{' '}
+                      {f.enterpriseModules.length === 1 ? 'is' : 'are'} registered without a condition.
+                    </p>
+                  )}
+                  {TEMPLATE_OPTION_RELEASED ? (
+                    <CommandChip command={command} />
+                  ) : (
+                    <>
+                      <div class="cmd tcreate__cmd" data-create-command={command}>
+                        <span class="cmd__prompt" aria-hidden="true">$</span>
+                        <code class="cmd__text" translate="no"><CommandText text={command} /></code>
+                      </div>
+                      <p class="tcreate__fine">
+                        <span class="chip chip--preview">Planned</span> The <code>--template</code> option of{' '}
+                        <code>create-mercato-app</code> is not released yet.
+                      </p>
+                    </>
+                  )}
+                  {env.length > 0 && (
+                    <p class="tcreate__fine">
+                      Then copy <code>.env.example</code> to <code>.env</code> and fill{' '}
+                      <a href="#env">{plural(env.length, 'environment key')}</a>.
+                    </p>
+                  )}
+                </>
+              )
+            }
+            <dl class="sb__dl tcreate__facts">
+              <div>
+                <dt>Commit</dt>
+                <dd>
+                  <a href={`${repoUrl}/commit/${t.source.sha}`} rel="noopener noreferrer"><code translate="no">{sha12}</code></a>,{' '}
+                  {refText(t.source)}
+                </dd>
+              </div>
+              <div>
+                <dt>Built on</dt>
+                <dd data-built-on>{f ? builtOn(f) : 'not known yet: the archive of this commit was not read'}</dd>
+              </div>
+              <div>
+                <dt>Verified</dt>
+                <dd data-verification>{state.ok ? `${state.text}. ${state.title}` : `No. ${state.title}`}</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+
+        <div class="mod__main" id="template-body">
+          <section class="use" aria-label="When to use">
+            <div class="use__block">
+              <h2 class="use__h">When to use</h2>
+              <p>{e.whenToUse}</p>
+            </div>
+            {
+              e.whenNotToUse && (
+                <div class="use__block use__block--not">
+                  <h2 class="use__h">When not to use</h2>
+                  <p>{e.whenNotToUse}</p>
+                </div>
+              )
+            }
+          </section>
+
+          <section class="tmods" id="modules" aria-labelledby="mods-h">
+            <h2 class="msec__h" id="mods-h">Modules</h2>
+            {
+              !f ? (
+                <p class="mod__fine">The archive of this commit was not read yet.</p>
+              ) : !inv ? (
+                <p class="mod__fine">The catalog could not read src/modules.ts of this commit.</p>
+              ) : (
+                <>
+                  <p class="mod__fine" data-modules-summary>
+                    {plural(mods.length, 'module')} in <code>src/modules.ts</code> of {sha12}: {own.length} of the
+                    template's own, {plural(conditional, 'module')} behind a condition.
+                  </p>
+                  {own.length > 0 && (
+                    <div class="tmods__group" data-group="own">
+                      <h3 class="tmods__h">The template's own</h3>
+                      <ul class="tmods__list" role="list">
+                        {own.map((m) => (
+                          <li>
+                            <code translate="no">{m.id}</code>
+                            {m.when && <span class="tmods__when" title="Registered only when this holds">{whenText(m.when)}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {fromPackages.length > 0 && (
+                    <div class="tmods__group" data-group="packages">
+                      <h3 class="tmods__h">From packages</h3>
+                      <ul class="tmods__list" role="list">
+                        {fromPackages.map((m) => (
+                          <li>
+                            {m.page ? (
+                              <a href={href(m.page)}>
+                                <code translate="no">{m.id}</code>
+                              </a>
+                            ) : (
+                              <code translate="no">{m.id}</code>
+                            )}
+                            <span class="tmods__from">{m.package ?? m.from}</span>
+                            {m.when && <span class="tmods__when" title="Registered only when this holds">{whenText(m.when)}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {builtIns.length > 0 && (
+                    <details class="tmods__group sb__more" data-group="built-in">
+                      <summary>
+                        {plural(builtIns.length, 'built-in module')} of @open-mercato/core{' '}
+                        <Icon name="chevron-down" size={14} class="icon sb__chev" />
+                      </summary>
+                      <ul class="tmods__list" role="list">
+                        {builtIns.map((m) => (
+                          <li>
+                            {m.page ? (
+                              <a href={href(m.page)}>
+                                <code translate="no">{m.id}</code>
+                              </a>
+                            ) : (
+                              <code translate="no">{m.id}</code>
+                            )}
+                            {m.when && <span class="tmods__when" title="Registered only when this holds">{whenText(m.when)}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  {inv.unparsed.length > 0 && (
+                    <p class="mod__fine">
+                      Not read: {inv.unparsed.map((u) => `line ${u.line} (${u.reason})`).join('; ')}.
+                    </p>
+                  )}
+                </>
+              )
+            }
+          </section>
+
+          <section class="tenv" id="env" aria-labelledby="env-h">
+            <h2 class="msec__h" id="env-h">Environment</h2>
+            {
+              env.length > 0 ? (
+                <dl class="tenv__list">
+                  {env.map((k) => (
+                    <div>
+                      <dt>
+                        <code translate="no">{k.name}</code>
+                      </dt>
+                      <dd>
+                        {k.description ?? 'No description.'}
+                        {k.link && (
+                          <>
+                            {' '}
+                            <a href={k.link} rel="noopener noreferrer">
+                              Where to get it <Icon name="external" size={14} />
+                            </a>
+                          </>
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p class="mod__fine">No keys to fill beyond the stock .env.example.</p>
+              )
+            }
+            {
+              hosts.length > 0 && (
+                <p class="mod__fine">
+                  Hosts it expects to reach: {hosts.map((h, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <code translate="no">{h}</code>
+                    </>
+                  ))}.
+                </p>
+              )
+            }
+          </section>
+
+          <Screenshots shots={e.screenshots} title={e.github} />
+        </div>
+
+        <aside class="mod__side" aria-label="About this template">
+          <section class="sb" aria-labelledby="links-h">
+            <h2 class="sb__h" id="links-h">Links</h2>
+            <ul class="sb__links" role="list">
+              <li><a href={repoUrl} rel="noopener noreferrer">GitHub <Icon name="external" size={14} /></a></li>
+              {e.links?.docs && <li><a href={e.links.docs} rel="noopener noreferrer">Docs <Icon name="external" size={14} /></a></li>}
+              {e.links?.support && <li><a href={e.links.support} rel="noopener noreferrer">Support <Icon name="external" size={14} /></a></li>}
+              {e.links?.demo && <li><a href={e.links.demo} rel="noopener noreferrer">Demo <Icon name="external" size={14} /></a></li>}
+              <li><a href={href(`/t/${path}.md`)}>Card for agents</a></li>
+              <li><a href={href(`/t/${path}.json`)}>JSON</a></li>
+            </ul>
+          </section>
+
+          <section class="sb" aria-labelledby="details-h">
+            <h2 class="sb__h" id="details-h">Details</h2>
+            <dl class="sb__dl">
+              <div>
+                <dt>License</dt>
+                <dd data-license>{license ?? 'None detected'}</dd>
+              </div>
+              {
+                t.repo && (
+                  <div>
+                    <dt>Last push</dt>
+                    <dd>{t.repo.pushedAt ? dayYear(t.repo.pushedAt) : 'Unknown'}</dd>
+                  </div>
+                )
+              }
+              {
+                t.repo && (
+                  <div>
+                    <dt>Archived</dt>
+                    <dd data-archived>{t.repo.archived ? 'Yes' : 'No'}</dd>
+                  </div>
+                )
+              }
+              {
+                t.repo && (
+                  <div>
+                    <dt>GitHub template</dt>
+                    <dd>{t.repo.isTemplate ? 'Yes' : 'No'}</dd>
+                  </div>
+                )
+              }
+              {
+                engines.map(([k, v]) => (
+                  <div>
+                    <dt>Engine {k}</dt>
+                    <dd>
+                      <code translate="no">{v}</code>
+                    </dd>
+                  </div>
+                ))
+              }
+              {
+                f?.packageManager && (
+                  <div>
+                    <dt>Package manager</dt>
+                    <dd>
+                      <code translate="no">{f.packageManager.replace(/\+.*$/, '')}</code>
+                    </dd>
+                  </div>
+                )
+              }
+              <div>
+                <dt>Synced</dt>
+                <dd>{dayYear(t.source.syncedAt)}</dd>
+              </div>
+            </dl>
+          </section>
+
+          {
+            (alternatives.length > 0 || supersededBy) && (
+              <section class="sb" aria-labelledby="rel-h">
+                <h2 class="sb__h" id="rel-h">Related</h2>
+                {supersededBy && (
+                  <>
+                    <p class="sb__k">Use instead</p>
+                    <ul class="sb__links" role="list">
+                      <li><a href={supersededBy.href}>{supersededBy.label}</a></li>
+                    </ul>
+                  </>
+                )}
+                {alternatives.length > 0 && (
+                  <>
+                    <p class="sb__k">Alternatives</p>
+                    <ul class="sb__links" role="list">
+                      {alternatives.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+                    </ul>
+                  </>
+                )}
+              </section>
+            )
+          }
+        </aside>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  /* no category tile: the title takes the whole header row */
+  .tmh {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tcreate__hold {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .tcreate__ent {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  /* a planned command: the chip's type on a dashed outline (the mark of the Planned chip), with no copy button and
+     without the chip's colours in either theme, until --template is released */
+  .inst.tcreate .cmd.tcreate__cmd {
+    border: 1px dashed var(--ink-3);
+    background: transparent;
+    color: var(--ink-2);
+    box-shadow: none;
+  }
+  .tcreate__fine {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .tcreate__fine a {
+    color: var(--ink);
+  }
+  .tcreate__facts {
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .tcreate__facts code {
+    font-size: 13px;
+  }
+  .tmods {
+    display: grid;
+    gap: 16px;
+  }
+  .tmods .msec__h {
+    margin-bottom: 0;
+  }
+  .tmods__group {
+    display: grid;
+    gap: 8px;
+  }
+  .tmods__h {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .tmods__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: 6px 16px;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+  }
+  .tmods__list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+    min-width: 0;
+  }
+  .tmods__list code {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  .tmods__list a {
+    color: var(--ink);
+  }
+  .tmods__from,
+  .tmods__when {
+    font-size: 12px;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+  .tmods__when {
+    font-family: var(--font-mono);
+  }
+  .tenv {
+    display: grid;
+    gap: 12px;
+  }
+  .tenv .msec__h {
+    margin-bottom: 0;
+  }
+  .tenv__list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+  }
+  .tenv__list div {
+    display: grid;
+    gap: 2px;
+  }
+  .tenv__list dd {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .tenv__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ink);
+  }
+  @media (max-width: 767px) {
+    .tmods__list a,
+    .tenv__list a,
+    .tcreate__facts a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

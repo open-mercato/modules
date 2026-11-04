@@ -1,0 +1,4 @@
+github: Acme/Field-CRM
+useCase: field-service
+summary: CRM for field teams with visit planning and mobile check-ins.
+whenToUse: Use when sales reps visit customers on site and log each visit.

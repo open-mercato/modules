@@ -10,6 +10,12 @@ import type { Catalog } from './catalog.ts'
 import { ghJson, type Gh } from './gh.ts'
 import { checkLocal } from './local.ts'
 
+/**
+ * A screenshot a module descriptor hosts. Triage lists module entries only: template entries and their screenshots
+ * are other files here, merged one by one by a person.
+ */
+const moduleScreenshot = (path: string): boolean => path.startsWith('modules/') && SCREENSHOT_FILE.test(path)
+
 export const PR_FIELDS = [
   'number',
   'title',
@@ -125,7 +131,7 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
   const locators: string[] = []
   const descriptors = pr.files.filter((f) => /^modules\/.+\.yml$/.test(f.path))
   // a screenshot the catalog hosts (modules/<folder>/screenshots/<name>) belongs to its descriptor, not an other file
-  const others = pr.files.filter((f) => !/^modules\/.+\.yml$/.test(f.path) && !SCREENSHOT_FILE.test(f.path))
+  const others = pr.files.filter((f) => !/^modules\/.+\.yml$/.test(f.path) && !moduleScreenshot(f.path))
   if (pr.isCrossRepository) flags.push('fork')
   if (pr.isDraft) {
     flags.push('draft')
@@ -184,7 +190,7 @@ export async function triagePr(pr: GhPr, ctx: { gh: Gh; catalog: Catalog }): Pro
     }
   }
   // a screenshot no descriptor names is an orphan (review of 26 Oct): neither CI nor this list would look at it
-  for (const f of pr.files.filter((x) => SCREENSHOT_FILE.test(x.path) && x.changeType !== 'DELETED')) {
+  for (const f of pr.files.filter((x) => moduleScreenshot(x.path) && x.changeType !== 'DELETED')) {
     const name = f.path.slice(f.path.lastIndexOf('/') + 1)
     const folder = dirname(dirname(f.path))
     const baseDir = join(ctx.catalog.root, folder)

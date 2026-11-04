@@ -2,6 +2,7 @@
 // pure function of these inputs, so `emit` is testable without a disk and deterministic for golden files.
 import type { CategoryId, Wedge } from '../schema/common.ts'
 import type { Descriptor } from '../schema/descriptor.ts'
+import type { TemplateDescriptor } from '../schema/template.ts'
 import type {
   BuiltinData,
   Change,
@@ -17,6 +18,8 @@ import type {
   Receipt,
   Stats,
   SyncRecord,
+  TemplateFacts,
+  TemplateSyncRecord,
 } from '../schema/data/index.ts'
 import type { Radar } from '../schema/published/radar.ts'
 import type { IndexEntry } from '../schema/published/modules.ts'
@@ -46,6 +49,19 @@ export interface LoadedDescriptor {
   screenshotFiles?: ReadonlyMap<string, Uint8Array>
 }
 
+/** A template entry (`templates/<owner>/<repo>.yml`). */
+export interface LoadedTemplate {
+  /** Path relative to the parent of the templates folder, e.g. `templates/acme/b2b-portal.yml`. */
+  file: string
+  /** Lower-case `owner/repo`, the key of its data files and page. */
+  path: string
+  /** Zod output, or null when the file does not validate or is not at its path (left out of the published files). */
+  descriptor: TemplateDescriptor | null
+  issues: string[]
+  /** Bytes of the screenshots the catalog hosts, by `src`. */
+  screenshotFiles?: ReadonlyMap<string, Uint8Array>
+}
+
 export interface SkillSource {
   /** Folder name under skills/ (equals the skill name, spec 8.6). */
   dir: string
@@ -62,6 +78,12 @@ export interface CategoryInfo {
 /** Everything `emit` reads (load.ts). */
 export interface EmitData {
   descriptors: LoadedDescriptor[]
+  /** Template entries; absent in data built by hand (no templates). */
+  templates?: LoadedTemplate[]
+  /** `sync/templates/**` by lower-case `owner/repo`. */
+  templateSync?: Map<string, TemplateSyncRecord>
+  /** `facts/templates/**` by lower-case `owner/repo`, then by sha. */
+  templateFacts?: Map<string, Map<string, TemplateFacts>>
   lines: Lines | null
   presets: Presets | null
   claims: Claims

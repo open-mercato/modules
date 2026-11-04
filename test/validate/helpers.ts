@@ -36,6 +36,30 @@ export interface FakeRepo {
   archived?: boolean
   ownerType?: 'User' | 'Organization'
   tags?: string[]
+  // REST answers the template steps read (GET /repos/{repo}, branches, tags, commits, compare)
+  private?: boolean
+  defaultBranch?: string
+  /** SPDX id GitHub detects (default MIT; null for none). */
+  license?: string | null
+  /** `full_name` GitHub answers with (a renamed repository). */
+  fullName?: string
+  /** Branch heads, name to sha. */
+  branches?: Record<string, string>
+  /** Tags, name to commit sha. */
+  tagShas?: Record<string, string>
+  /** Shas each branch or tag contains, besides its head. */
+  contains?: Record<string, string[]>
+  /** Shas GitHub serves through this repository that no branch or tag contains (commits of a fork). */
+  foreign?: string[]
+  /** Branches beyond the first page of the branch list, name to sha. */
+  moreBranches?: Record<string, string>
+  /** Other names the commits API resolves, such as `pull/1/head`, name to sha. */
+  refs?: Record<string, string>
+  // further REST fields template sync reads (defaults as in the GraphQL answer)
+  stars?: number
+  pushedAt?: string
+  isTemplate?: boolean
+  topics?: string[]
 }
 
 export interface FakeWorld {
@@ -118,6 +142,66 @@ export function fakeFetch(world: FakeWorld, seen: string[] = []): typeof fetch {
         }
       }
       return json({ data, ...(errors.length ? { errors } : {}) })
+    }
+    const rest = /^https:\/\/api\.github\.com\/repos\/([^/]+\/[^/?]+)(\/.*)?$/.exec(url)
+    if (rest) {
+      const r = world.repos?.find((x) => x.nameWithOwner.toLowerCase() === (rest[1] as string).toLowerCase())
+      if (!r || (r.private && !rest[2])) return json({ message: 'Not Found' }, 404)
+      const branches = r.branches ?? {}
+      const tags = r.tagShas ?? {}
+      const allBranches = { ...branches, ...r.moreBranches }
+      const head = (name: string): string | undefined => branches[name] ?? tags[name]
+      const resolve = (name: string): string | undefined => {
+        const m = /^refs\/(heads|tags)\/(.+)$/.exec(name)
+        if (m) return m[1] === 'heads' ? allBranches[m[2] as string] : tags[m[2] as string]
+        return allBranches[name] ?? tags[name] ?? r.refs?.[name]
+      }
+      const known = [...Object.values(branches), ...Object.values(tags), ...Object.values(r.contains ?? {}).flat()]
+      const tail = rest[2] ?? ''
+      if (tail === '')
+        return json({
+          full_name: r.fullName ?? r.nameWithOwner,
+          private: r.private ?? false,
+          archived: r.archived ?? false,
+          default_branch: r.defaultBranch ?? 'main',
+          license: r.license === null ? null : { spdx_id: r.license ?? 'MIT' },
+          owner: { login: r.nameWithOwner.split('/')[0], type: r.ownerType ?? 'User' },
+          is_template: r.isTemplate ?? false,
+          stargazers_count: r.stars ?? 3,
+          pushed_at: r.pushedAt ?? '2026-10-01T10:00:00Z',
+          topics: r.topics ?? [],
+        })
+      if (tail === '/branches?per_page=100')
+        return json(Object.entries(branches).map(([name, sha]) => ({ name, commit: { sha } })))
+      if (tail === '/tags?per_page=30')
+        return json(Object.entries(tags).map(([name, sha]) => ({ name, commit: { sha } })))
+      const commit = /^\/commits\/(.+)$/.exec(tail)
+      if (commit) {
+        const ref = decodeURIComponent(commit[1] as string)
+        const sha =
+          resolve(ref) ??
+          [...known, ...(r.foreign ?? [])].find((x) => /^[0-9a-f]{7,40}$/.test(ref) && x.startsWith(ref))
+        return sha
+          ? new Response(sha, { status: 200, headers: { 'content-type': 'application/vnd.github.sha' } })
+          : json({ message: 'No commit found for SHA' }, 422)
+      }
+      const named = /^\/git\/ref\/(heads|tags)\/(.+)$/.exec(tail)
+      if (named) {
+        const ref = decodeURIComponent(named[2] as string)
+        const sha = named[1] === 'heads' ? allBranches[ref] : tags[ref]
+        return sha
+          ? json({ ref: `refs/${named[1]}/${ref}`, object: { type: 'commit', sha } })
+          : json({ message: 'Not Found' }, 404)
+      }
+      const compare = /^\/compare\/(.+)\.\.\.([0-9a-f]{40})\?per_page=1$/.exec(tail)
+      if (compare) {
+        const base = decodeURIComponent(compare[1] as string)
+        const sha = compare[2] as string
+        const status =
+          head(base) === sha ? 'identical' : (r.contains?.[base] ?? []).includes(sha) ? 'behind' : 'diverged'
+        return json({ status })
+      }
+      return json({ message: 'Not Found' }, 404)
     }
     const member = /^https:\/\/api\.github\.com\/orgs\/([^/]+)\/public_members\/([^/]+)$/.exec(url)
     if (member)

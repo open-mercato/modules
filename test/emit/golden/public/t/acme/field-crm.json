@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "path": "acme/field-crm",
+  "page": "/t/acme/field-crm",
+  "entry": {
+    "github": "Acme/Field-CRM",
+    "useCase": "field-service",
+    "summary": "CRM for field teams with visit planning and mobile check-ins.",
+    "whenToUse": "Use when sales reps visit customers on site and log each visit.",
+    "pricing": "free",
+    "status": "active",
+    "featured": false,
+    "slug": null,
+    "reason": null
+  },
+  "repo": {
+    "fullName": "acme-labs/field-crm",
+    "renamed": true,
+    "archived": false,
+    "isTemplate": false,
+    "defaultBranch": "main",
+    "pushedAt": "2026-10-01T10:00:00Z",
+    "stars": 7,
+    "license": "Apache-2.0",
+    "topics": [],
+    "checkedAt": "2026-11-04T06:00:00Z"
+  },
+  "source": {
+    "ref": "main",
+    "kind": "default branch",
+    "sha": "c4a0000000000000000000000000000000000072",
+    "syncedAt": "2026-11-04T06:00:00Z",
+    "facts": {
+      "readAt": "2026-11-04T06:00:00Z",
+      "omLine": "0.7",
+      "omVersion": "0.7.2",
+      "linesBehind": 2,
+      "latestStable": "0.9.0",
+      "requiresEnterprise": true,
+      "enterpriseModules": [
+        "sso"
+      ],
+      "enterpriseDependency": true,
+      "engines": {
+        "node": ">=24"
+      },
+      "packageManager": "yarn@4.17.1",
+      "modules": {
+        "entries": [
+          {
+            "id": "auth",
+            "from": "@open-mercato/core",
+            "page": null
+          },
+          {
+            "id": "customers",
+            "from": "@open-mercato/core",
+            "page": null
+          },
+          {
+            "id": "currencies",
+            "from": "@open-mercato/core",
+            "page": "/built-in/currencies"
+          },
+          {
+            "id": "field_visits",
+            "from": "@app",
+            "page": null
+          },
+          {
+            "id": "sso",
+            "from": "@open-mercato/enterprise",
+            "package": "@open-mercato/enterprise@0.7.2",
+            "page": "/m/@open-mercato/enterprise"
+          },
+          {
+            "id": "security",
+            "from": "@open-mercato/enterprise",
+            "package": "@open-mercato/enterprise@0.7.2",
+            "when": "OM_ENABLE_ENTERPRISE_MODULES_SECURITY",
+            "page": "/m/@open-mercato/enterprise"
+          }
+        ],
+        "unparsed": []
+      },
+      "manifest": "absent",
+      "env": [],
+      "license": {
+        "value": "Apache-2.0",
+        "kind": "osi"
+      },
+      "archive": {
+        "files": 7,
+        "bytes": 1703
+      },
+      "findings": []
+    }
+  },
+  "verified": null
+}

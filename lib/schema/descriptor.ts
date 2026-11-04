@@ -48,7 +48,7 @@ export const CURATOR_FIELDS = [
 
 /** At most this many screenshots per descriptor. */
 export const SCREENSHOT_MAX = 6
-/** Size limit of a screenshot file hosted in the catalog (`modules/<scope>/screenshots/<name>`). */
+/** Size limit of a screenshot file hosted in the catalog (`<folder>/screenshots/<name>` in modules/ or templates/). */
 export const SCREENSHOT_MAX_BYTES = 600 * 1024
 
 const HOSTED_SRC = /^screenshots\/[a-z0-9][a-z0-9_-]{0,63}\.(?:webp|png|jpg)$/
@@ -106,8 +106,12 @@ export function screenshotFile(descriptorFile: string, src: string): string {
   return `${dir}/${src}`
 }
 
-/** A changed file that is a catalog-hosted screenshot (`modules/<folder>/screenshots/<name>.<ext>`), not a descriptor. */
-export const SCREENSHOT_FILE = /^modules\/(?:.+\/)?screenshots\/[a-z0-9][a-z0-9_-]{0,63}\.(?:webp|png|jpg)$/
+/**
+ * A changed file that is a catalog-hosted screenshot (`modules/<folder>/screenshots/<name>.<ext>`, or
+ * `templates/<owner>/screenshots/<name>.<ext>` for a template entry), not a descriptor.
+ */
+export const SCREENSHOT_FILE =
+  /^(?:modules|templates)\/(?:.+\/)?screenshots\/[a-z0-9][a-z0-9_-]{0,63}\.(?:webp|png|jpg)$/
 
 export const Descriptor = z
   .object({

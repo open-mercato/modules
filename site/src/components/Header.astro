@@ -15,7 +15,7 @@ interface Props {
 const { dataAsOf, current = '' } = Astro.props
 const nav = [
   { label: 'Modules', path: '/' },
-  // the second kind of thing to start from (decisions of 29 Oct): whole apps, next to modules; coming soon for now
+  // the second kind of thing to start from (decisions of 29 Oct): whole apps, next to modules
   { label: 'Templates', path: '/templates' },
   { label: 'Compatibility', path: '/compat' },
   { label: 'Radar', path: '/radar' },
@@ -23,11 +23,13 @@ const nav = [
   { label: 'For agents', path: '/for-agents' },
 ]
 // "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in.
-// Every other item is active on its own path and below it (/templates and, later, the template pages under it).
+// "Templates" likewise on its template pages (/t/*, Phase 1a). Every other item is active on its own path and below it.
 const isCurrent = (p: string): boolean =>
   p === '/'
     ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')
-    : current.startsWith(p)
+    : p === '/templates'
+      ? current.startsWith(p) || current.startsWith('/t/')
+      : current.startsWith(p)
 ---
 
 <header class="site-header">

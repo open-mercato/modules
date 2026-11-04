@@ -1,0 +1,217 @@
+---
+// One card of the template gallery (docs/specs/2026-10-29-templates.md, UI/UX): a single link to the template page
+// with the first screenshot, the repository name and owner, the summary, then the use case, the Open Mercato line
+// badge, the verification state, the Enterprise mark (D5) and the stars. Unlike a module card it has a screenshot: a
+// template is a whole app, and the picture is what tells one apart. A card without one keeps the same frame.
+import Icon from '../icons/Icon.astro'
+import { href } from '../../lib/url.ts'
+import { dayYear, plural } from '../../lib/format.ts'
+import type { GalleryCard } from '../../lib/templates.ts'
+
+interface Props {
+  card: GalleryCard
+}
+const { card } = Astro.props
+---
+
+<li class="tcard-li" data-use={card.useCase} data-status={card.status}>
+  <a class="tcard" href={href(card.page)}>
+    <div class="tcard__shot">
+      {
+        card.shot ? (
+          <img src={card.shot.src} alt="" width="1440" height="900" loading="lazy" decoding="async" />
+        ) : (
+          <span class="tcard__noshot" aria-hidden="true">
+            {card.name}
+          </span>
+        )
+      }
+    </div>
+    <div class="tcard__body">
+      <div class="tcard__name">
+        <h3 class="tcard__title">{card.name}</h3>
+        <p class="tcard__by">by {card.owner}</p>
+      </div>
+      <p class="tcard__sum">{card.summary}</p>
+      {
+        card.status === 'hold' && (
+          <p class="tcard__hold">
+            <span class="chip chip--unknown">On hold</span> {card.reason}
+          </p>
+        )
+      }
+      <ul class="tcard__chips" role="list">
+        <li><span class="tcard__use">{card.useCaseLabel}</span></li>
+        {
+          card.badge && (
+            <li>
+              <span class="chip chip--line" title={card.badge.title} data-line-badge>
+                {card.badge.text}
+              </span>
+            </li>
+          )
+        }
+        {
+          card.badge?.behind && (
+            <li>
+              <span class="chip chip--unknown" title={card.badge.title} data-behind>
+                {card.badge.behind}
+              </span>
+            </li>
+          )
+        }
+        <li>
+          <span class:list={['chip', card.verified.ok ? 'chip--official' : 'chip--preview']} title={card.verified.title} data-verified={card.verified.ok ? '1' : '0'}>
+            {card.verified.text}
+          </span>
+        </li>
+        {
+          card.enterprise && (
+            <li>
+              <span class="chip chip--enterprise" title="Registers a module of @open-mercato/enterprise without a condition." data-enterprise>
+                Enterprise license
+              </span>
+            </li>
+          )
+        }
+        {card.archived && <li><span class="chip chip--line">Archived</span></li>}
+      </ul>
+      <div class="tcard__foot">
+        {card.pushedAt && <span>Last push {dayYear(card.pushedAt)}</span>}
+        {
+          card.stars !== null && (
+            <span class="tcard__stars">
+              <Icon name="star" size={14} />
+              <span aria-hidden="true">{card.stars}</span>
+              <span class="sr-only">{plural(card.stars, 'GitHub star')}</span>
+            </span>
+          )
+        }
+      </div>
+    </div>
+  </a>
+</li>
+
+<style>
+  .tcard-li {
+    display: grid;
+    min-width: 0;
+  }
+  .tcard {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-l);
+    background: var(--bg);
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-2) var(--ease),
+      box-shadow var(--dur-2) var(--ease);
+  }
+  .tcard:hover {
+    border-color: color-mix(in srgb, var(--ink) 22%, var(--line-strong));
+    box-shadow: 0 8px 24px -16px #00000040;
+  }
+  /* the 16:10 frame of the screenshots (CONTRIBUTING), the same with or without a picture */
+  .tcard__shot {
+    aspect-ratio: 16 / 10;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .tcard__shot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+  }
+  .tcard__noshot {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+  .tcard__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 16px 20px 20px;
+  }
+  .tcard__name {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .tcard__title {
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+  .tcard__by {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ink-2);
+  }
+  .tcard__sum {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--ink-2);
+  }
+  .tcard__hold {
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--ink-2);
+  }
+  .tcard__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+  }
+  .tcard__use {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--bg-3);
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .tcard__foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 4px;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ink-2);
+  }
+  .tcard__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

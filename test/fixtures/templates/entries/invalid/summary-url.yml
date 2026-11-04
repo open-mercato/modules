@@ -1,0 +1,5 @@
+# expect-message: plain text only
+github: acme/x
+useCase: crm
+summary: See https://example.com for the CRM template.
+whenToUse: Use when sales teams need to send quotes to customers.

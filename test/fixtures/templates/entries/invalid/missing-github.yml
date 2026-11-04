@@ -1,0 +1,4 @@
+# expect-path: github
+useCase: crm
+summary: Sends quotes to customers by email.
+whenToUse: Use when sales teams need to send quotes to customers.

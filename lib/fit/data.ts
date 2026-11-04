@@ -4,6 +4,7 @@ import { dirname, join, relative, sep } from 'node:path'
 import type { z } from 'zod'
 import type { FitResult, Lines, Receipt } from '../schema/index.ts'
 import { Facts, FitResult as FitResultSchema, Lines as LinesSchema, Receipt as ReceiptSchema } from '../schema/index.ts'
+import { isTemplateDataPath } from '../schema/data/templates.ts'
 import type { FitModule } from './compute.ts'
 import { compare, isPrerelease, valid } from './semver.ts'
 import { mergeImports } from './static.ts'
@@ -48,7 +49,8 @@ export function readAllFacts(data: string, warn: (m: string) => void = () => {})
   const root = join(data, 'facts')
   const out: FactsFile[] = []
   for (const file of walk(root).sort()) {
-    if (!file.endsWith('.json')) continue
+    // facts of template shas (facts/templates/**) are not module facts
+    if (!file.endsWith('.json') || isTemplateDataPath(relative(data, file))) continue
     const r = Facts.safeParse(readJson(file))
     if (r.success) out.push({ file, facts: r.data })
     else warn(`skip ${relative(data, file).split(sep).join('/')}: ${r.error.issues[0]?.message ?? 'invalid'}`)

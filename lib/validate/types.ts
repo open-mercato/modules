@@ -13,7 +13,24 @@ export const STEPS = [
   'claim', // 9. preliminary claim, curator fields
   'builtin', // 10. policy/builtin-categories.yml coverage
 ] as const
-export type StepId = (typeof STEPS)[number]
+
+/**
+ * Steps of a template entry (`templates/<owner>/<repo>.yml`, docs/specs/2026-10-29-templates.md Phase 1a steps 2 and
+ * 3), in order. The status `reason` and the `smoke.login: false` rule are part of `schema`; keeping the slug of an
+ * entry moved to `hold` is part of `slug`.
+ */
+export const TEMPLATE_STEPS = [
+  'schema', // YAML, TemplateDescriptor, path = github
+  'texts', // injection flags, TODO marks
+  'name', // reserved names, typosquat against other templates
+  'slug', // unique across statuses, kept when moving to hold
+  'repo', // exists, public, not archived, ref resolves and is reachable from a branch or tag
+  'archive', // static read of the tarball of that sha
+  'license', // D4: an OSI license for an active entry
+  'claim', // curator fields, ownership
+] as const
+
+export type StepId = (typeof STEPS)[number] | (typeof TEMPLATE_STEPS)[number]
 
 export type Severity = 'error' | 'warning' | 'info'
 
@@ -32,10 +49,11 @@ export interface Row {
 }
 
 export interface EntryResult {
-  /** Repo-relative descriptor path. */
+  /** Repo-relative descriptor or template entry path. */
   file: string
+  /** Locator of a module, `owner/repo` of a template. */
   locator: string | null
-  /** Version that was checked (latest stable, preview or tag), when known. */
+  /** Version that was checked (latest stable, preview or tag; the sha of a template), when known. */
   version: string | null
   status: 'pass' | 'fail'
   findings: Finding[]

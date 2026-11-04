@@ -29,9 +29,11 @@ import {
   Stats,
   SyncRecord,
 } from '../schema/data/index.ts'
+import { isTemplateDataPath, TemplateFacts, TemplateSyncRecord } from '../schema/data/templates.ts'
 import { Radar } from '../schema/published/radar.ts'
+import { TemplateDescriptor, templateFile, templatePath } from '../schema/template.ts'
 import { linkNightBaselines } from '../core/lines.ts'
-import type { EmitData, LoadedDescriptor, SkillSource } from './types.ts'
+import type { EmitData, LoadedDescriptor, LoadedTemplate, SkillSource } from './types.ts'
 
 function walk(dir: string, acc: string[] = []): string[] {
   if (!existsSync(dir)) return acc
@@ -122,6 +124,8 @@ export interface LoadOptions {
   root: string
   /** OM Quality folder (`quality/`); default `<root>/quality`. */
   quality?: string
+  /** Template entries (`templates/`); default `<root>/templates`. */
+  templates?: string
 }
 
 function loadDescriptors(dir: string, r: Reader): LoadedDescriptor[] {
@@ -166,7 +170,12 @@ function loadDescriptors(dir: string, r: Reader): LoadedDescriptor[] {
  * Bytes of the screenshots a descriptor hosts in the catalog (`screenshots/<name>` next to the file), by src. A missing
  * file or one over the size limit is a warning and is left out (validate fails such a pull request). Null: none hosted.
  */
-function hostedScreenshots(file: string, rel: string, d: Descriptor, r: Reader): Map<string, Uint8Array> | null {
+function hostedScreenshots(
+  file: string,
+  rel: string,
+  d: Pick<Descriptor, 'screenshots'>,
+  r: Reader,
+): Map<string, Uint8Array> | null {
   const hosted = (d.screenshots ?? []).filter((s) => isHostedScreenshot(s.src))
   if (hosted.length === 0) return null
   const out = new Map<string, Uint8Array>()
@@ -184,6 +193,41 @@ function hostedScreenshots(file: string, rel: string, d: Descriptor, r: Reader):
     out.set(s.src, bytes)
   }
   return out
+}
+
+/**
+ * Template entries (`templates/<owner>/<repo>.yml`, docs/specs/2026-10-29-templates.md). An entry that does not parse,
+ * or whose file is not at the path of its `github`, keeps its issues and is left out of the published files.
+ */
+function loadTemplates(dir: string, r: Reader): LoadedTemplate[] {
+  const out: LoadedTemplate[] = []
+  const parent = join(dir, '..')
+  for (const file of walk(dir).filter((f) => f.endsWith('.yml'))) {
+    const rel = relPath(parent, file)
+    let raw: unknown
+    try {
+      raw = parseYaml(readFileSync(file, 'utf8'))
+    } catch (err) {
+      r.warnings.push(`${rel}: YAML error: ${(err as Error).message}, skipped`)
+      continue
+    }
+    const parsed = TemplateDescriptor.safeParse(raw)
+    const issues = parsed.success ? [] : parsed.error.issues.map((x) => `${x.path.join('.') || '(root)'}: ${x.message}`)
+    let path = rel.replace(/^templates\//, '').replace(/\.yml$/, '')
+    if (parsed.success) {
+      path = templatePath(parsed.data.github)
+      if (templateFile(parsed.data.github) !== rel) issues.push(`file must be ${templateFile(parsed.data.github)}`)
+    }
+    const shots = parsed.success && issues.length === 0 ? hostedScreenshots(file, rel, parsed.data, r) : null
+    out.push({
+      file: rel,
+      path,
+      descriptor: parsed.success && issues.length === 0 ? parsed.data : null,
+      issues,
+      ...(shots ? { screenshotFiles: shots } : {}),
+    })
+  }
+  return out.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
 }
 
 function loadSkills(dir: string): SkillSource[] {
@@ -216,12 +260,14 @@ export function loadEmitData(o: LoadOptions): EmitData {
 
   const lines = r.json(join(data, 'lines.json'), Lines)
   const sync = new Map<string, SyncRecord>()
-  for (const f of walk(join(data, 'sync')).filter((x) => x.endsWith('.json'))) {
+  // templates have their own files under sync/templates and facts/templates (loadTemplateData)
+  const moduleFile = (f: string): boolean => f.endsWith('.json') && !isTemplateDataPath(relPath(data, f))
+  for (const f of walk(join(data, 'sync')).filter(moduleFile)) {
     const s = r.json(f, SyncRecord)
     if (s) sync.set(s.locator, s)
   }
   const facts = new Map<string, Map<string, Facts>>()
-  for (const f of walk(join(data, 'facts')).filter((x) => x.endsWith('.json'))) {
+  for (const f of walk(join(data, 'facts')).filter(moduleFile)) {
     const doc = r.json(f, Facts)
     if (!doc) continue
     const byVersion = facts.get(doc.package.locator) ?? new Map<string, Facts>()
@@ -253,6 +299,21 @@ export function loadEmitData(o: LoadOptions): EmitData {
   for (const f of walk(join(data, 'health')).filter((x) => x.endsWith('.json'))) {
     const h = r.json(f, Health)
     if (h) health.set(h.locator, h)
+  }
+  // templates: one sync record per entry, facts per sha
+  const templateSync = new Map<string, TemplateSyncRecord>()
+  const templateFacts = new Map<string, Map<string, TemplateFacts>>()
+  for (const f of walk(join(data, 'sync', 'templates')).filter((x) => isTemplateDataPath(relPath(data, x)))) {
+    const s = r.json(f, TemplateSyncRecord)
+    if (s) templateSync.set(templatePath(s.github), s)
+  }
+  for (const f of walk(join(data, 'facts', 'templates')).filter((x) => isTemplateDataPath(relPath(data, x)))) {
+    const doc = r.json(f, TemplateFacts)
+    if (!doc) continue
+    const key = templatePath(doc.github)
+    const bySha = templateFacts.get(key) ?? new Map<string, TemplateFacts>()
+    bySha.set(doc.sha, doc)
+    templateFacts.set(key, bySha)
   }
   const changes: Change[] = []
   for (const f of walk(join(data, 'changes')).filter((x) => x.endsWith('.jsonl'))) changes.push(...r.jsonl(f, Change))
@@ -290,6 +351,9 @@ export function loadEmitData(o: LoadOptions): EmitData {
 
   return {
     descriptors: loadDescriptors(o.modules, r),
+    templates: loadTemplates(o.templates ?? join(o.root, 'templates'), r),
+    templateSync,
+    templateFacts,
     lines,
     presets: r.json(join(data, 'presets.json'), Presets),
     claims: r.json(join(data, 'claims.json'), Claims) ?? {},

@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import * as prettier from 'prettier'
 import { afterAll, describe, expect, it } from 'vitest'
-import { Document, isMap, isScalar, isSeq, parseDocument, Scalar } from 'yaml'
+import { Document, isMap, isScalar, isSeq, parseDocument, Scalar, stringify } from 'yaml'
 import { main } from '../../lib/cli.ts'
 import { CURATOR_FIELDS } from '../../lib/schema/index.ts'
 import { formatDescriptorText, FormatError, readCategoryAliases, yamlFiles } from '../../lib/validate/format.ts'
@@ -231,6 +231,74 @@ describe('om format on author input', () => {
       console.log = log
       console.error = err
     }
+  })
+
+  it('formats a template entry in its own key order, block style, and keeps what describe prints as it is', async () => {
+    const file = join(ROOT, 'templates', 'acme', 'b2b-portal.yml')
+    const tfmt = (text: string) => formatDescriptorText(text, file, { template: true })
+    // create-mercato-template describe writes each field with yaml.stringify (lineWidth 0), in table order
+    const field = (key: string, value: unknown) => stringify({ [key]: value }, { lineWidth: 0 })
+    const described =
+      '# templates/acme/b2b-portal.yml\n' +
+      field('github', 'acme/b2b-portal') +
+      field('useCase', 'b2b-portal') +
+      field('summary', 'B2B self-service portal with quotes and customer accounts.') +
+      field('whenToUse', 'Use when wholesale customers should order and track quotes on their own.') +
+      field('pricing', 'free') +
+      field('declares', {
+        env: [
+          {
+            name: 'OPENAI_API_KEY',
+            description: 'Used by the AI assistant.',
+            link: 'https://platform.openai.com/api-keys',
+          },
+        ],
+      }) +
+      '\n# Add this file to the catalog with a pull request to open-mercato/modules:\n# https://github.com/open-mercato/modules/blob/main/CONTRIBUTING.md#templates\n'
+    expect((await tfmt(described)).changed).toBe(false)
+    const messy = [
+      'status: hold',
+      'smoke: { ready: /kiosk, login: false, paths: [/api/kiosk] }',
+      "reason: 'No license yet.'",
+      'alternatives: ["acme/other"]',
+      'declares:',
+      '  hosts: [api.openai.com]',
+      '  env:',
+      '    - { link: https://x.example.com, description: Used by the kiosk., name: KIOSK_TOKEN }',
+      'github: acme/b2b-portal',
+      'links: { demo: https://demo.example.com, docs: https://docs.example.com }',
+      'useCase: b2b-portal',
+      '',
+    ].join('\n')
+    const once = await tfmt(messy)
+    expect(once.text).toBe(
+      [
+        'github: acme/b2b-portal',
+        'useCase: b2b-portal',
+        'links:',
+        '  docs: https://docs.example.com',
+        '  demo: https://demo.example.com',
+        'declares:',
+        '  env:',
+        '    - name: KIOSK_TOKEN',
+        '      description: Used by the kiosk.',
+        '      link: https://x.example.com',
+        '  hosts:',
+        '    - api.openai.com',
+        'smoke:',
+        '  paths:',
+        '    - /api/kiosk',
+        '  login: false',
+        '  ready: /kiosk',
+        'status: hold',
+        'reason: No license yet.',
+        'alternatives:',
+        '  - acme/other',
+        '',
+      ].join('\n'),
+    )
+    expect(values(once.text)).toEqual(values(messy))
+    expect((await tfmt(once.text)).changed).toBe(false)
   })
 
   it('builds the same text from a document as the seed command does', () => {

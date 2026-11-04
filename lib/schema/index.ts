@@ -2,6 +2,7 @@
 export * from './common.ts'
 export * from './locator.ts'
 export * from './descriptor.ts'
+export * from './template.ts'
 export * from './policy.ts'
 export * from './data/index.ts'
 export * from './published/modules.ts'

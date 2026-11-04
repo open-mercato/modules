@@ -6,7 +6,9 @@
 //   E2E_BASE_URL   site under test, with its base path (default http://127.0.0.1:4410); when set, nothing
 //                  is served locally and the stale tests run only if E2E_STALE_URL is set too
 //   E2E_STALE_URL  the stale variant (default http://127.0.0.1:4411)
-//   E2E_DIST, E2E_STALE_DIST   built sites to serve (default out/e2e/real, out/e2e/stale)
+//   E2E_TEMPLATES_URL  the template fixture variant (default http://127.0.0.1:4412)
+//   E2E_DIST, E2E_STALE_DIST, E2E_TEMPLATES_DIST   built sites to serve (default out/e2e/real, out/e2e/stale,
+//                  out/e2e/templates)
 //   E2E_SHOTS      where the 16 screenshots go (default out/e2e/shots; also attached to the report)
 //   BASE_PATH      base path the sites were built with (default /, as for emit and astro since 28 Oct); set it
 //                  for build.ts and here alike
@@ -39,5 +41,9 @@ export default defineConfig({
   },
   webServer: E2E.external
     ? undefined
-    : [serve(E2E.dist, E2E.port), ...(E2E.staleDist ? [serve(E2E.staleDist, E2E.stalePort)] : [])],
+    : [
+        serve(E2E.dist, E2E.port),
+        ...(E2E.staleDist ? [serve(E2E.staleDist, E2E.stalePort)] : []),
+        ...(E2E.templatesDist ? [serve(E2E.templatesDist, E2E.templatesPort)] : []),
+      ],
 })
