@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T10:03:26.729Z",
-  "next": "0.10.1-develop.7921.1.e5774a7073",
+  "generatedAt": "2026-11-04T19:51:19.635Z",
+  "next": "0.10.1-develop.7935.1.cc82ba7697",
   "base": "0.9.0",
-  "summary": "12 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 3 verified, 7 broken.",
+  "summary": "12 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
@@ -33,6 +33,14 @@
         "npm:@freighttech/shipment-tracking",
         "npm:@freighttech/terminal-tracking",
         "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/data/engine#DataEngine",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/billing",
+        "npm:@northbound-run/sync-shopify"
       ]
     },
     {
@@ -129,8 +137,8 @@
   ],
   "staticBreaks": [],
   "receiptsOnNext": {
-    "verified": 3,
-    "broken": 7
+    "verified": 0,
+    "broken": 0
   },
   "sameFailure": [],
   "loadBearing": [

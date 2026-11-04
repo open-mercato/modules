@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
-  "version": "0.7.2",
-  "computedAt": "2026-11-03T14:25:47Z",
+  "version": "0.9.0",
+  "computedAt": "2026-11-04T19:51:20Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -52,7 +52,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-09-24",
+      "lastRelease": "2026-11-04",
       "catchUpDays": null
     },
     "declaredVsObserved": {
