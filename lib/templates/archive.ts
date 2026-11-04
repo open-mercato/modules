@@ -1,9 +1,10 @@
 // Static archive check of a template (docs/specs/2026-10-29-templates.md, Phase 1a step 3): the GitHub tarball of the
 // one sha an entry names, read in memory and never unpacked or run. Within the catalog's own tarball limits, no links
 // or special entries, no `.template` files (the importer refuses them), a standalone Open Mercato app on Yarn 4 with
-// one framework line in `yarn.lock` and a `src/modules.ts` the module inventory can read. `engines` and
-// `mercato-template.json` are read; the manifest is a hint, so a manifest that is invalid or differs from what the
-// catalog reads is a warning, never an error. Messages name paths, packages and versions, never file content.
+// one framework line in `yarn.lock`, a `src/modules.ts` the module inventory can read, and no stock create-mercato-app
+// README. `engines` and `mercato-template.json` are read; the manifest is a hint, so a manifest that is invalid or
+// differs from what the catalog reads is a warning, never an error. Messages name paths, packages and versions, never file content.
+import { createHash } from 'node:crypto'
 import { MAX_PARSE_BYTES } from '../rentgen/ast.ts'
 import { LICENSE_FILE_NAME, licenseIdOfText, normalizeLicense } from '../rentgen/license.ts'
 import {
@@ -71,11 +72,22 @@ export interface ArchiveOptions {
   limits?: { maxBytes: number; maxFiles: number }
   /** Env names of the entry's `declares.env`, compared with the manifest `env`. */
   declaredEnv?: readonly string[]
+  /** sha256 values of stock READMEs, STOCK_READMES by default. */
+  stockReadmes?: readonly string[]
 }
+
+/**
+ * sha256 of the root README.md of each stable create-mercato-app release that ships one: the stock README is an error
+ * in catalog validation (spec, file policy item 9). None of 0.4.5 to 0.9.0 ships one. The save tool's stock table,
+ * read from the npm tarballs, has no README for any of them, and `packages/create-app/template/` of open-mercato
+ * v0.9.0 has no README.md (checked on 2026-11-04). Add the hash, as the save tool hashes it, when a release adds one.
+ */
+export const STOCK_READMES: readonly string[] = []
 
 const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
 const MONOREPO_CORE = 'packages/core/package.json'
+const README = /^readme\.md$/i
 const MAX_LISTED = 5
 /** An npm package name as a module `from` (not `@app`, not a path). */
 const NPM_FROM = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/
@@ -99,6 +111,7 @@ function wanted(path: string): boolean {
     path === YARN_LOCK ||
     path === TEMPLATE_MANIFEST_FILE ||
     path === MONOREPO_CORE ||
+    README.test(path) ||
     LICENSE_FILE_NAME.test(path) ||
     /^src\/[^/]+\.(?:ts|tsx|mts)$/.test(path) ||
     (/^src\/[^/]+\/index\.ts$/.test(path) && !path.startsWith('src/modules/'))
@@ -185,6 +198,17 @@ export async function checkTemplateArchive(bytes: Uint8Array, opts: ArchiveOptio
   // the license sources, for the license step
   const licenseName = [...files.keys()].filter((p) => LICENSE_FILE_NAME.test(p)).sort()[0]
   if (licenseName) facts.license.file = licenseIdOfText(files.get(licenseName) ?? '')
+
+  const stock = new Set(opts.stockReadmes ?? STOCK_READMES)
+  for (const name of [...files.keys()].filter((p) => README.test(p)).sort())
+    if (
+      stock.has(
+        createHash('sha256')
+          .update(files.get(name) ?? '')
+          .digest('hex'),
+      )
+    )
+      err('default-readme', `${name} is the stock create-mercato-app README; describe what the template is for`)
 
   if (readJson(files.get(MONOREPO_CORE))?.name === CORE_PACKAGE)
     err('monorepo', 'this is the Open Mercato framework monorepo, not an app made with create-mercato-app')

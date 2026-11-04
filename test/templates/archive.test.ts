@@ -1,8 +1,9 @@
 // The static archive step of template validation (docs/specs/2026-10-29-templates.md, Phase 1a step 3): tarballs built
 // in memory, no network. Limits, links and `.template` files, the root rules of the save tool (Yarn 4, core, one line),
 // a readable src/modules.ts, engines, and the manifest cross-check, which only ever warns.
+import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { checkTemplateArchive, listed } from '../../lib/templates/archive.ts'
+import { checkTemplateArchive, listed, STOCK_READMES } from '../../lib/templates/archive.ts'
 import { parseLockfile, frameworkNames } from '../../lib/templates/lockfile.ts'
 import { modulesFromModulesTs } from '../../lib/templates/modules-ts.ts'
 import {
@@ -217,6 +218,28 @@ describe('checkTemplateArchive', () => {
     })
     expect(r.findings).toEqual([])
     expect(r.facts.manifest.state === 'valid' && r.facts.manifest.data.env).toEqual(env)
+  })
+
+  it('refuses the stock create-mercato-app README; no release up to 0.9.0 ships one', async () => {
+    expect(STOCK_READMES).toEqual([])
+    const stockText = '# My app\n\nCreated with create-mercato-app.\n'
+    const stockReadmes = [createHash('sha256').update(stockText).digest('hex')]
+    const stock = await checkTemplateArchive(templateArchive({ 'README.md': stockText }), { stockReadmes })
+    expect(stock.findings).toEqual([
+      {
+        severity: 'error',
+        code: 'default-readme',
+        message: 'README.md is the stock create-mercato-app README; describe what the template is for',
+      },
+    ])
+    const lower = await checkTemplateArchive(templateArchive({ 'README.md': null, 'readme.md': stockText }), {
+      stockReadmes,
+    })
+    expect(lower.findings.map((f) => f.code)).toEqual(['default-readme'])
+    const own = await checkTemplateArchive(templateArchive({ 'README.md': `${stockText}\nQuotes for B2B buyers.\n` }), {
+      stockReadmes,
+    })
+    expect(own.findings).toEqual([])
   })
 
   it('lists at most five items', () => {
