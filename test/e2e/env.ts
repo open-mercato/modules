@@ -11,8 +11,11 @@ const root = resolve(import.meta.dirname, '..', '..')
 const basePath = `/${(process.env.BASE_PATH ?? DEFAULT_BASE_PATH).replace(/^\/+|\/+$/g, '')}`.replace(/^\/$/, '')
 const port = 4410
 const stalePort = 4411
+const templatesPort = 4412
 const external = !!process.env.E2E_BASE_URL
 const staleDistRaw = resolve(root, process.env.E2E_STALE_DIST ?? 'out/e2e/stale')
+const templatesDistRaw = resolve(root, process.env.E2E_TEMPLATES_DIST ?? 'out/e2e/templates')
+const templatesBuilt = !external && existsSync(join(templatesDistRaw, 'index.html'))
 
 export const E2E = {
   root,
@@ -33,6 +36,15 @@ export const E2E = {
       ? `http://127.0.0.1:${stalePort}${basePath}`
       : null,
   shots: resolve(root, process.env.E2E_SHOTS ?? 'out/e2e/shots'),
+  templatesPort,
+  /** The template fixture variant to serve locally, or null when it was not built. */
+  templatesDist: templatesBuilt ? templatesDistRaw : null,
+  /** The template fixture variant, or null when there is none to test. */
+  templatesBase: process.env.E2E_TEMPLATES_URL
+    ? process.env.E2E_TEMPLATES_URL.replace(/\/+$/, '')
+    : templatesBuilt
+      ? `http://127.0.0.1:${templatesPort}${basePath}`
+      : null,
 }
 
 /** The module every page check uses (spec 7.9 and 12.2). */

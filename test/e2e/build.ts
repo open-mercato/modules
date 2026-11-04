@@ -1,10 +1,13 @@
-// Builds the two static sites the e2e suite reads (WP16): `real` from a data checkout (E2E_DATA, default .data),
-// and `stale`, a variant of the CI fixture (test/fixtures/data) whose newest receipt (`dataAsOf.nightly`) is 3 days
+// Builds the static sites the e2e suite reads (WP16): `real` from a data checkout (E2E_DATA, default .data),
+// `stale`, a variant of the CI fixture (test/fixtures/data) whose newest receipt (`dataAsOf.nightly`) is 3 days
 // and 1 hour old while `generatedAt` and the npm check are fresh, so the STALE DATA banner of spec 7.6 / 7.8 (P5)
-// must show. The stale variant is built first, so site/.generated ends up holding the real data.
+// must show, and `templates`, the same fixture with the template fixture on top (the catalog entries of
+// test/fixtures/templates/catalog and what sync wrote for them, test/templates/golden/data), so /templates is the
+// gallery and /t/ pages exist (docs/specs/2026-10-29-templates.md, Phase 1a step 7). The real site is built last, so
+// site/.generated ends up holding the real data.
 //   node test/e2e/build.ts                 (wrap it in a build lock on a shared machine: lockf -k /tmp/om-build.lock)
 // Env: E2E_DATA (data dir), E2E_OUT (default out/e2e), E2E_STALE_SOURCE (default test/fixtures/data),
-// E2E_ONLY=real|stale. SITE_URL and BASE_PATH reach emit and astro as usual.
+// E2E_ONLY=real|stale|templates. SITE_URL and BASE_PATH reach emit and astro as usual.
 import { spawnSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -14,6 +17,9 @@ const out = resolve(root, process.env.E2E_OUT ?? 'out/e2e')
 const realData = resolve(root, process.env.E2E_DATA ?? '.data')
 const staleSource = resolve(root, process.env.E2E_STALE_SOURCE ?? 'test/fixtures/data')
 const only = process.env.E2E_ONLY
+/** The template fixture: catalog entries, and the sync records and facts the data branch holds for them. */
+const templateEntries = resolve(root, 'test', 'fixtures', 'templates', 'catalog', 'templates')
+const templateData = resolve(root, 'test', 'templates', 'golden', 'data')
 
 /** Age of `dataAsOf.nightly` in the stale variant: 3 days and 1 hour (the banner threshold is 48 h). */
 export const STALE_AGE_MS = (3 * 24 + 1) * 3600 * 1000
@@ -68,21 +74,32 @@ export function staleVariant(src: string, dest: string, now: number): { nightly:
   return { nightly, npm }
 }
 
-function build(data: string, dist: string, now: number): void {
+/** Copy of the module fixture `src` with the template data of the fixture on top. */
+export function templatesVariant(src: string, dest: string): void {
+  rmSync(dest, { recursive: true, force: true })
+  cpSync(src, dest, { recursive: true })
+  cpSync(templateData, dest, { recursive: true })
+}
+
+function build(data: string, dist: string, now: number, extra: string[] = []): void {
   rmSync(dist, { recursive: true, force: true })
-  run('node', ['lib/cli.ts', 'emit', '--data', data, '--now', iso(now)])
+  run('node', ['lib/cli.ts', 'emit', '--data', data, '--now', iso(now), ...extra])
   run(join(root, 'node_modules', '.bin', 'astro'), ['build', '--outDir', dist])
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   mkdirSync(out, { recursive: true })
   const now = Date.now()
-  if (only !== 'real') {
+  if (!only || only === 'stale') {
     const v = staleVariant(staleSource, join(out, 'stale-data'), now)
     build(join(out, 'stale-data'), join(out, 'stale'), now)
     writeFileSync(join(out, 'stale', '.e2e-stale.json'), `${JSON.stringify({ ...v, generatedAt: iso(now) })}\n`)
   }
-  if (only !== 'stale') {
+  if (!only || only === 'templates') {
+    templatesVariant(staleSource, join(out, 'templates-data'))
+    build(join(out, 'templates-data'), join(out, 'templates'), now, ['--templates', templateEntries])
+  }
+  if (!only || only === 'real') {
     if (!existsSync(realData)) console.warn(`e2e build: ${realData} does not exist; the real site shows empty states`)
     build(realData, join(out, 'real'), now)
   }
