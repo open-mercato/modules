@@ -15,6 +15,7 @@ import {
   TEMPLATE_MANIFEST_KEY_ORDER,
   TemplateDescriptor,
   TemplateManifest,
+  TemplateRef,
   WHEN_PATTERN,
   templateFile,
   templatePagePath,
@@ -61,6 +62,29 @@ describe('TemplateDescriptor', () => {
   it('applies defaults', () => {
     const d = TemplateDescriptor.parse(readYaml(join(ENTRIES, 'valid', 'templates', 'acme', 'field-crm.yml')))
     expect(d).toMatchObject({ pricing: 'free', status: 'active', featured: false })
+  })
+
+  it('takes a ref by the git ref name rules, and no pull request ref', () => {
+    const ref = (schemas.template.properties as Record<string, { pattern: string }>).ref!.pattern
+    const check = (r: string) => [TemplateRef.safeParse(r).success, new RegExp(ref, 'u').test(r)]
+    for (const r of ['main', 'v1.2.0', 'release/9', 'feature/a.b', 'a'.repeat(40), 'refs/heads/main', 'x/pull/1'])
+      expect(check(r), r).toEqual([true, true])
+    for (const r of [
+      'pull/1/head',
+      'refs/pull/7/merge',
+      '../x',
+      'a/../b',
+      'a..b',
+      '.hidden',
+      'a/.b',
+      '/a',
+      'a/',
+      'a//b',
+      'x.lock',
+      'x.lock/y',
+      'a.',
+    ])
+      expect(check(r), r).toEqual([false, false])
   })
 
   // rules JSON Schema cannot say: plain text and the own repository of a raw.githubusercontent.com image

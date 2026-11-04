@@ -62,12 +62,20 @@ export type TemplateUseCase = z.infer<typeof TemplateUseCase>
 export const TemplateStatus = z.enum(['active', 'hold', 'unmaintained', 'delisted'])
 export type TemplateStatus = z.infer<typeof TemplateStatus>
 
-/** A branch, tag or sha. Reachability is checked by validation, not here. */
+/**
+ * A branch, tag or sha. The `git check-ref-format` rules that keep the GitHub request inside the repository: no empty
+ * segment, no segment that starts with `.` or ends with `.lock`, no `..` and no trailing `.`. A `pull/` or `refs/pull/`
+ * ref is refused, because it names a pull request's commits, a fork's among them. Reachability is checked by
+ * validation, not here.
+ */
 export const TemplateRef = z
   .string()
   .min(1)
   .max(250)
-  .regex(/^[A-Za-z0-9._/-]+$/)
+  .regex(
+    /^(?!\/)(?!.*\/\/)(?!.*\/$)(?!(?:.*\/)?\.)(?!.*\.\.)(?!.*\.lock(?:\/|$))(?!.*\.$)(?!(?:refs\/)?pull\/)[A-Za-z0-9._/-]+$/,
+    'a branch, tag or commit sha: git ref name rules, no pull/ ref',
+  )
 
 /** A curator slug (A6): lower-case words joined by single hyphens. */
 export const TemplateSlug = z
