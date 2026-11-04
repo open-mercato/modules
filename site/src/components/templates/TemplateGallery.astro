@@ -1,0 +1,196 @@
+---
+// The template gallery of /templates (docs/specs/2026-10-29-templates.md, UI/UX, Phase 1a step 7): cards of the
+// `active` and `hold` entries of `/templates.json`, sorted by featured, then a green smoke, then the last push, and one
+// filter, the use case (A13 defers every other one). The server renders every card in that order; the small script
+// below only hides the cards of other use cases and keeps the choice in the URL (?use=). Without JavaScript every card
+// shows and the filter is not shown.
+import TemplateCard from './TemplateCard.astro'
+import { loadSiteData } from '../../../../lib/emit/site-data.ts'
+import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
+import { TEMPLATES_LINKS } from '../../../../lib/core/templates-host.ts'
+import { galleryCards, useCaseFilter } from '../../lib/templates.ts'
+import { plural } from '../../lib/format.ts'
+
+const data = loadSiteData()
+const index = data.templates?.templates ?? []
+const cards = galleryCards(index, data.template)
+const filter = useCaseFilter(cards)
+// D10: "not verified" until the nightly template smoke (Phase 1b) passes on a template's commit
+const allUnverified = cards.every((c) => !c.verified.ok)
+// unmaintained entries keep their pages but leave the gallery (UI/UX, States)
+const unmaintained = index.filter((t) => t.status === 'unmaintained').length
+---
+
+<section class="band">
+  <div class="sheet section tg-head">
+    <p class="t-tagline">// Templates</p>
+    <h1 class="tg-title">Start a new app from a whole app.</h1>
+    <p class="tg-lede">
+      An app template is a complete Open Mercato app in a GitHub repository. A module adds one feature to your app. A
+      template is the app you start from.
+    </p>
+    <p class="tg-note">
+      Each template page names the commit it describes, the Open Mercato version that commit is built on and the
+      modules it registers.
+      {allUnverified && ' None has passed the nightly template smoke yet, so each is marked not verified.'}
+    </p>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="tg-list-h">
+  <div class="sheet section tg-body" data-tgallery>
+    <h2 class="sr-only" id="tg-list-h">Templates</h2>
+    <div class="tg-filter" role="group" aria-label="Use case" data-needs-js>
+      <button type="button" class="tg-chip" data-use="" aria-pressed="true">
+        All <span class="tg-n">{cards.length}</span>
+      </button>
+      {
+        filter.map((u) => (
+          <button type="button" class="tg-chip" data-use={u.id} aria-pressed="false">
+            {u.label} <span class="tg-n">{u.count}</span>
+          </button>
+        ))
+      }
+    </div>
+    <p class="tg-count" aria-live="polite" data-tcount></p>
+    <ul class="tg-grid" role="list" data-tgrid>
+      {cards.map((c) => <TemplateCard card={c} />)}
+    </ul>
+    <p class="tg-foot">
+      {
+        unmaintained > 0 &&
+          `${plural(unmaintained, 'unmaintained template')} ${unmaintained === 1 ? 'is' : 'are'} left out of the gallery; ${unmaintained === 1 ? 'its page still works' : 'their pages still work'}. `
+      }
+      To list a template, add its entry by pull request, as <a href={`${CATALOG_REPO_URL}/blob/main/CONTRIBUTING.md`} rel="noopener noreferrer">CONTRIBUTING</a> describes. The <a href={TEMPLATES_LINKS.spec} rel="noopener noreferrer">specification</a> says what a template holds and how it is checked.
+    </p>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-tgallery]')
+  if (root) {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('button[data-use]'))
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-tgrid] > li'))
+    const count = root.querySelector<HTMLElement>('[data-tcount]')
+    const ids = buttons.map((b) => b.dataset.use ?? '')
+    const apply = (use: string): void => {
+      let shown = 0
+      for (const li of items) {
+        li.hidden = use !== '' && li.dataset.use !== use
+        if (!li.hidden) shown++
+      }
+      for (const b of buttons) b.setAttribute('aria-pressed', String((b.dataset.use ?? '') === use))
+      if (count) count.textContent = use ? `${shown} ${shown === 1 ? 'template' : 'templates'}` : ''
+      const url = new URL(location.href)
+      if (use) url.searchParams.set('use', use)
+      else url.searchParams.delete('use')
+      if (url.href !== location.href) history.replaceState(history.state, '', url)
+    }
+    for (const b of buttons) b.addEventListener('click', () => apply(b.dataset.use ?? ''))
+    const asked = new URLSearchParams(location.search).get('use') ?? ''
+    apply(ids.includes(asked) ? asked : '')
+  }
+</script>
+
+<style>
+  .tg-head {
+    display: grid;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .band:has(.tg-head) + .band > .section {
+    padding-top: 40px;
+  }
+  .tg-title {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .tg-lede {
+    max-width: 72ch;
+    color: var(--ink-2);
+  }
+  .tg-note {
+    max-width: 72ch;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .tg-body {
+    display: grid;
+    gap: 16px;
+  }
+  .tg-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink-2);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .tg-chip:hover {
+    color: var(--ink);
+  }
+  .tg-chip[aria-pressed='true'] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .tg-n {
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+  .tg-count:empty {
+    display: none;
+  }
+  .tg-count {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .tg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+  }
+  .tg-foot {
+    max-width: 72ch;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .tg-foot a {
+    color: var(--ink);
+  }
+  @media (max-width: 991px) {
+    .tg-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .tg-head {
+      padding-bottom: 32px;
+    }
+    .band:has(.tg-head) + .band > .section {
+      padding-top: 32px;
+    }
+    .tg-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* touch targets of at least 44 px on phones (spec 7.10) */
+    .tg-chip {
+      min-height: 44px;
+    }
+  }
+</style>

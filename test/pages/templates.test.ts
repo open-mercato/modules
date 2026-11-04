@@ -1,6 +1,7 @@
 // /templates (decisions of 29 Oct): the section is public at once in a coming soon state, with no entries until the
 // save tool ships; the header and the footer link it; templates.openmercato.com/ leads to it through one Pages
-// Function on `/` only, and modules.openmercato.com is never redirected.
+// Function on `/` only, and modules.openmercato.com is never redirected. From Phase 1a the page switches to the gallery
+// once templates.json has an active entry; the coming soon state lives in components/templates/ComingSoon.astro.
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -16,7 +17,8 @@ import { onRequest } from '../../functions/_middleware.ts'
 import { ROOT } from '../emit/helpers.ts'
 
 const read = (...p: string[]): string => readFileSync(join(ROOT, ...p), 'utf8')
-const page = read('site', 'src', 'pages', 'templates.astro')
+const route = read('site', 'src', 'pages', 'templates.astro')
+const page = read('site', 'src', 'components', 'templates', 'ComingSoon.astro')
 /** The markup of the page without its frontmatter, styles and comments. */
 const markup = page
   .replace(/^---[\s\S]*?\n---\n/, '')
@@ -66,13 +68,21 @@ describe('/templates page', () => {
   })
 })
 
+describe('/templates switch (Phase 1a)', () => {
+  it('shows the gallery only when templates.json has an active entry, computed from data', () => {
+    expect(route).toContain('const gallery = (meta.templates?.active ?? 0) > 0')
+    expect(route).toContain('{gallery ? <TemplateGallery /> : <ComingSoon />}')
+  })
+})
+
 describe('navigation', () => {
   it('the header lists Templates once, rendered in the desktop and the mobile menu', () => {
     const header = read('site', 'src', 'components', 'Header.astro')
     expect(header).toContain("{ label: 'Templates', path: '/templates' }")
     expect(header.match(/nav\.map\(/g)).toHaveLength(2)
-    // every item but Modules is current on its own path and below it
+    // every item but Modules is current on its own path and below it; Templates also on the template pages
     expect(header).toContain(': current.startsWith(p)')
+    expect(header).toContain("current.startsWith(p) || current.startsWith('/t/')")
   })
 
   it('the footer links the page', () => {
