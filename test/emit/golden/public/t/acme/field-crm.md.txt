@@ -1,0 +1,39 @@
+# Acme/Field-CRM
+
+CRM for field teams with visit planning and mobile check-ins.
+
+- Use case: field-service
+- Status: active
+- Slug: none (reachable as `Acme/Field-CRM` only)
+- Repository: https://github.com/Acme/Field-CRM (GitHub now serves it as acme-labs/field-crm)
+- Stars: 7. Last push: 2026-10-01. GitHub license: Apache-2.0
+- Commit: `c4a0000000000000000000000000000000000072` (default branch `main`, synced 2026-11-04)
+- Verification: not verified (the nightly template smoke has not run on this commit)
+- Built on: Open Mercato 0.7.2 (0.7.x, 2 lines behind 0.9.0)
+- Requires an Enterprise license: yes (`sso` registered without a condition)
+- License: Apache-2.0 (osi)
+- Engines: node >=24. Package manager: yarn@4.17.1
+
+## Create an app
+
+Planned and not released yet: `npx create-mercato-app my-app --template Acme/Field-CRM`.
+
+## When to use
+
+Use when sales reps visit customers on site and log each visit.
+
+## Modules
+
+6 modules in src/modules.ts: 1 of the template's own, 1 behind a condition.
+
+- `auth` from `@open-mercato/core`
+- `customers` from `@open-mercato/core`
+- `currencies` from `@open-mercato/core` (https://wojciechszyjka.github.io/modules/built-in/currencies)
+- `field_visits` from `@app`
+- `sso` from `@open-mercato/enterprise@0.7.2` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `security` from `@open-mercato/enterprise@0.7.2` when `OM_ENABLE_ENTERPRISE_MODULES_SECURITY` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+
+## Data
+
+- This template: https://wojciechszyjka.github.io/modules/t/acme/field-crm.json
+- All templates: https://wojciechszyjka.github.io/modules/templates.json

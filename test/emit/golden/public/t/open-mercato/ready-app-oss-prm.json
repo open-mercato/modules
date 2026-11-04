@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-23T03:05:00Z",
+  "path": "open-mercato/ready-app-oss-prm",
+  "page": "/t/open-mercato/ready-app-oss-prm",
+  "entry": {
+    "github": "open-mercato/ready-app-oss-prm",
+    "useCase": "partner-portal",
+    "summary": "Partner relationship management app with partner accounts and deal registration.",
+    "whenToUse": "Use when a vendor runs a partner program with registered deals and tiers.",
+    "pricing": "free",
+    "status": "hold",
+    "reason": "No license yet, and it pins Open Mercato 0.4.",
+    "featured": false,
+    "slug": null
+  },
+  "repo": {
+    "fullName": "open-mercato/ready-app-oss-prm",
+    "renamed": false,
+    "archived": false,
+    "isTemplate": false,
+    "defaultBranch": "main",
+    "pushedAt": "2026-05-10T09:00:00Z",
+    "stars": 3,
+    "license": null,
+    "topics": [],
+    "checkedAt": "2026-11-04T06:00:00Z"
+  },
+  "source": {
+    "ref": "main",
+    "kind": "default branch",
+    "sha": "f0a0000000000000000000000000000000000410",
+    "syncedAt": "2026-11-04T06:00:00Z",
+    "facts": {
+      "readAt": "2026-11-04T06:00:00Z",
+      "omLine": "0.4",
+      "omVersion": "0.4.10",
+      "linesBehind": 5,
+      "latestStable": "0.9.0",
+      "requiresEnterprise": false,
+      "enterpriseModules": [],
+      "enterpriseDependency": true,
+      "engines": {
+        "node": ">=24"
+      },
+      "packageManager": "yarn@4.17.1",
+      "modules": {
+        "entries": [
+          {
+            "id": "auth",
+            "from": "@open-mercato/core",
+            "page": null
+          },
+          {
+            "id": "directory",
+            "from": "@open-mercato/core",
+            "page": null
+          },
+          {
+            "id": "partners",
+            "from": "@app",
+            "page": null
+          }
+        ],
+        "unparsed": []
+      },
+      "manifest": "absent",
+      "env": [],
+      "license": {
+        "value": null,
+        "kind": "unknown"
+      },
+      "archive": {
+        "files": 5,
+        "bytes": 1254
+      },
+      "findings": []
+    }
+  },
+  "verified": null
+}

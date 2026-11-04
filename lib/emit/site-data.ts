@@ -34,6 +34,11 @@ export interface SiteMeta {
   /** WebMCP origin trial token valid today for the site's origin (5.6 item 8), or null. */
   originTrial: { token: string; expires: string } | null
   counts: ModulesIndex['counts']
+  /**
+   * Entries of `/templates.json` by status (docs/specs/2026-10-29-templates.md): `/templates` shows the coming-soon
+   * page while `active` is 0. Absent in data emitted before templates.
+   */
+  templates?: { listed: number; active: number; hold: number; unmaintained: number }
   coreVersion: string
   /** The /compat sentence from data, e.g. `Peer ranges reject 53 of 62 combinations that fit statically.` */
   peersSentence: string

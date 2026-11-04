@@ -1,0 +1,115 @@
+# acme/b2b-portal
+
+B2B self-service portal with quotes, customer accounts and order history.
+
+- Use case: b2b-portal
+- Status: active
+- Slug: `b2b-portal`
+- Repository: https://github.com/acme/b2b-portal (GitHub template repository)
+- Stars: 42. Last push: 2026-10-30. GitHub license: MIT
+- Commit: `b2b0000000000000000000000000000000000120` (tag `v1.2.0`, synced 2026-11-04)
+- Verification: not verified (the nightly template smoke has not run on this commit)
+- Built on: Open Mercato 0.9.0 (0.9.x, on or ahead of the latest stable 0.9.0)
+- Requires an Enterprise license: no
+- License: MIT (osi)
+- Engines: node >=24. Package manager: yarn@4.17.1
+
+## Create an app
+
+Planned and not released yet: `npx create-mercato-app my-app --template b2b-portal`.
+
+## When to use
+
+Use when wholesale customers should order and track quotes on their own.
+
+Not for: Retail shops with anonymous checkout.
+
+## Modules
+
+70 modules in src/modules.ts: 3 of the template's own, 8 behind a condition.
+
+- `dashboards` from `@open-mercato/core`
+- `auth` from `@open-mercato/core`
+- `directory` from `@open-mercato/core`
+- `customers` from `@open-mercato/core`
+- `perspectives` from `@open-mercato/core`
+- `entities` from `@open-mercato/core`
+- `configs` from `@open-mercato/core`
+- `query_index` from `@open-mercato/core`
+- `audit_logs` from `@open-mercato/core`
+- `attachments` from `@open-mercato/core`
+- `catalog` from `@open-mercato/core`
+- `sales` from `@open-mercato/core`
+- `warranty_claims` from `@open-mercato/core`
+- `wms` from `@open-mercato/core` (https://wojciechszyjka.github.io/modules/built-in/wms)
+- `api_keys` from `@open-mercato/core`
+- `devices` from `@open-mercato/core`
+- `dictionaries` from `@open-mercato/core`
+- `content` from `@open-mercato/content`
+- `onboarding` from `@open-mercato/onboarding`
+- `api_docs` from `@open-mercato/core`
+- `business_rules` from `@open-mercato/core`
+- `feature_toggles` from `@open-mercato/core`
+- `workflows` from `@open-mercato/core`
+- `search` from `@open-mercato/search`
+- `currencies` from `@open-mercato/core` (https://wojciechszyjka.github.io/modules/built-in/currencies)
+- `planner` from `@open-mercato/core`
+- `resources` from `@open-mercato/core`
+- `staff` from `@open-mercato/core`
+- `events` from `@open-mercato/events`
+- `notifications` from `@open-mercato/core`
+- `progress` from `@open-mercato/core`
+- `integrations` from `@open-mercato/core`
+- `data_sync` from `@open-mercato/core` (https://wojciechszyjka.github.io/modules/built-in/data_sync)
+- `sync_excel` from `@open-mercato/core`
+- `messages` from `@open-mercato/core`
+- `communication_channels` from `@open-mercato/core`
+- `push_notifications` from `@open-mercato/core`
+- `phone_calls` from `@open-mercato/core`
+- `ai_assistant` from `@open-mercato/ai-assistant`
+- `translations` from `@open-mercato/core`
+- `scheduler` from `@open-mercato/scheduler`
+- `inbox_ops` from `@open-mercato/core`
+- `payment_gateways` from `@open-mercato/core`
+- `checkout` from `@open-mercato/checkout`
+- `documents` from `@open-mercato/documents`
+- `gateway_stripe` from `@open-mercato/gateway-stripe` (https://wojciechszyjka.github.io/modules/m/@open-mercato/gateway-stripe)
+- `channel_resend` from `@open-mercato/channel-resend`
+- `channel_ses` from `@open-mercato/channel-ses`
+- `channel_imap` from `@open-mercato/channel-imap`
+- `channel_gmail` from `@open-mercato/channel-gmail`
+- `channel_apns` from `@open-mercato/channel-apns`
+- `channel_expo` from `@open-mercato/channel-expo`
+- `channel_fcm` from `@open-mercato/channel-fcm`
+- `sync_akeneo` from `@open-mercato/sync-akeneo`
+- `tillio` from `@open-mercato/tillio`
+- `shipping_carriers` from `@open-mercato/core`
+- `eudr` from `@open-mercato/core`
+- `webhooks` from `@open-mercato/webhooks`
+- `telemetry` from `@open-mercato/telemetry`
+- `customer_accounts` from `@open-mercato/core`
+- `portal` from `@open-mercato/core`
+- `ratelimit_probe` from `@app`
+- `example_customers_sync` from `@app` when `module:example`
+- `storage_s3` from `@open-mercato/storage-s3@0.9.0` when `OM_ENABLE_STORAGE_S3`
+- `record_locks` from `@open-mercato/enterprise@0.9.0` when `OM_ENABLE_ENTERPRISE_MODULES` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `system_status_overlays` from `@open-mercato/enterprise@0.9.0` when `OM_ENABLE_ENTERPRISE_MODULES` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `sso` from `@open-mercato/enterprise@0.9.0` when `OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_SSO` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `security` from `@open-mercato/enterprise@0.9.0` when `OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_SECURITY` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `agent_orchestrator` from `@open-mercato/enterprise@0.9.0` when `OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_AGENTS` (https://wojciechszyjka.github.io/modules/m/@open-mercato/enterprise)
+- `agent_examples` from `@app` when `OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_AGENTS`
+
+## Environment keys to fill
+
+- `OPENAI_API_KEY`: Used by the AI assistant. (https://platform.openai.com/api-keys)
+
+## Links
+
+- docs: https://github.com/acme/b2b-portal#readme
+- support: mailto:support@example.com
+- demo: https://b2b-portal-demo.example.com
+
+## Data
+
+- This template: https://wojciechszyjka.github.io/modules/t/acme/b2b-portal.json
+- All templates: https://wojciechszyjka.github.io/modules/templates.json

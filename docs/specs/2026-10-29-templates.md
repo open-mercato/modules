@@ -246,6 +246,8 @@ Optional. Written by the save tool. Read by catalog validation (to prefill and c
 
 `templates.json` lists `active`, `hold` and `unmaintained` entries; `reason` is set for every entry that is not `active`. `delisted` entries and deleted or private repos are left out. Entries without a curator slug have `slug: null`.
 
+As built in Phase 1a: each entry also has `archived` (the GitHub flag, per the edge case below). An entry appears once sync has resolved its `ref`; `ref` and `source.sha` come from that sync, and `source.facts` is null until the archive of that sha is read. `linesBehind` counts minor lines against `coreLatest` of `lines.json` (0 on or ahead of it, null across a major). `env` is the entry's `declares.env`, else the `env` of the sha's `mercato-template.json`. A slug two entries share is published on neither, with an emit warning. `SiteMeta.templates` counts the index by status, so `/templates` keeps the coming-soon page while `active` is 0.
+
 Later: MCP (tools@1 is additive-only) gets `search_templates`, `get_template` and a resource `om-modules://template/{+path}`. Existing tools keep their names and fields.
 
 ### Save tool contract

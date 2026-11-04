@@ -28,6 +28,7 @@ import {
   ShieldsBadge,
 } from '../../lib/schema/published/misc.ts'
 import { ModuleDetail, ModuleReceipts, ModulesIndex } from '../../lib/schema/published/modules.ts'
+import { TemplateDetail, TemplatesIndex } from '../../lib/schema/published/templates.ts'
 import { PickerIndex } from '../../lib/schema/published/picker.ts'
 import { Radar, Surface } from '../../lib/schema/published/radar.ts'
 import type { SearchIndexData } from '../../lib/core/search.ts'
@@ -62,6 +63,8 @@ function schemaOf(path: string): z.ZodType | 'json' | null {
   if (/^m\/.+\.json$/.test(path)) return ModuleDetail
   if (/^r\/r_\d{8}_[a-f0-9]{12}(?:_\d{1,3})?\.json$/.test(path)) return Receipt
   if (/^badge\/.+\.json$/.test(path)) return ShieldsBadge
+  if (path === 'templates.json') return TemplatesIndex
+  if (/^t\/.+\.json$/.test(path)) return TemplateDetail
   if (path === 'search-index.json' || /^schema\/.+-1\.json$/.test(path)) return 'json'
   return null
 }
