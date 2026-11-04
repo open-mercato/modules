@@ -8,11 +8,10 @@
 import * as posix from 'node:path/posix'
 import { ts } from 'ts-morph'
 import { MAX_PARSE_BYTES } from '../rentgen/ast.ts'
+import { APP_FROM, DEFAULT_FROM } from '../core/template-facts.ts'
 
+export { APP_FROM, DEFAULT_FROM }
 export const MODULES_TS_PATH = 'src/modules.ts'
-/** A missing `from` means core, as the scaffold's `ModuleEntry` type says. */
-export const DEFAULT_FROM = '@open-mercato/core'
-export const APP_FROM = '@app'
 
 const MODULE_ID = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/
 const ENV_NAME = /^[A-Z][A-Z0-9_]{1,63}$/

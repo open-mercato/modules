@@ -3,7 +3,7 @@
 // hosted screenshots, and the counts the site reads. Pure: load.ts reads the entries and the data branch. Every number
 // comes from data (rule 8). Module files are not touched.
 import { linesBehind } from '../templates/facts.ts'
-import { APP_FROM, DEFAULT_FROM } from '../templates/modules-ts.ts'
+import { APP_FROM, builtOn, DEFAULT_FROM } from '../core/template-facts.ts'
 import { isHostedScreenshot } from '../schema/descriptor.ts'
 import type { TemplateFacts, TemplateSyncRecord } from '../schema/data/templates.ts'
 import type {
@@ -16,6 +16,8 @@ import type {
 import { templatePagePath, type TemplateDescriptor } from '../schema/template.ts'
 import { basePrefix } from './screenshots.ts'
 import type { EmitData, LoadedTemplate } from './types.ts'
+
+export { builtOn }
 
 /** Counts of `templates.json` for the site (`SiteMeta.templates`): the Phase 0 page stays while `active` is 0. */
 export interface TemplateCounts {
@@ -257,19 +259,6 @@ export function buildTemplates(
 }
 
 const plural = (n: number, one: string, many = `${one}s`): string => `${n} ${n === 1 ? one : many}`
-
-/** "Open Mercato 0.9.0 (0.9.x, the latest line)" or "Open Mercato 0.7.2 (0.7.x, 2 lines behind 0.9.0)". */
-export function builtOn(f: Pick<TemplateDetailFacts, 'omVersion' | 'omLine' | 'linesBehind' | 'latestStable'>): string {
-  if (!f.omVersion || !f.omLine) return 'unknown (@open-mercato/core is not pinned in yarn.lock)'
-  const head = `Open Mercato ${f.omVersion} (${f.omLine}.x`
-  if (f.latestStable === null) return `${head})`
-  if (f.linesBehind === null) return `${head}, latest stable is ${f.latestStable})`
-  if (f.linesBehind === 0)
-    return f.latestStable.startsWith(`${f.omLine}.`)
-      ? `${head}, the latest line)`
-      : `${head}, newer than the latest stable ${f.latestStable})`
-  return `${head}, ${plural(f.linesBehind, 'line')} behind ${f.latestStable})`
-}
 
 /** The Markdown twin of `/t/<owner>/<repo>.json` for agents. Only validated fields and computed facts. */
 export function templateCard(t: TemplateDetail, site: string): string {

@@ -6,6 +6,7 @@
 //                       `emptyPreset` for an app from the empty preset)
 //   data/receipts.json  every receipt, baseline included, oldest first (pages /r/<id>)
 //   data/files.json     [{ path, bytes }] of the published files
+// Template pages read the published `/templates.json` and `/t/<owner>/<repo>.json` (docs/specs/2026-10-29-templates.md).
 // The readers below are the only supported way to load them (Node, build time only).
 import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -16,9 +17,10 @@ import type { CompatIndex } from '../schema/published/compat.ts'
 import type { Change } from '../schema/data/index.ts'
 import type { ModuleDetail, ModuleReceipts, ModulesIndex } from '../schema/published/modules.ts'
 import type { Radar, Surface } from '../schema/published/radar.ts'
+import type { TemplateDetail, TemplatesIndex } from '../schema/published/templates.ts'
 import type { InstallPlan } from '../schema/tools.ts'
 import type { BuildStamp } from './types.ts'
-import { LocPath } from '../schema/common.ts'
+import { GithubRepo, LocPath } from '../schema/common.ts'
 
 export interface SiteMeta {
   schemaVersion: 1
@@ -84,6 +86,19 @@ export interface SiteData {
   moduleReceipts(path: string): ModuleReceipts | null
   /** Text of `/m/<path>.md` (the Agent view of the page). */
   card(path: string): string | null
+  /** `/templates.json`, or null in data emitted before templates. */
+  templates: TemplatesIndex | null
+  /** `/t/<owner>/<repo>.json` of one listed template (`path` in lower case). */
+  template(path: string): TemplateDetail | null
+}
+
+/** A template path as emit writes it: `owner/repo` in lower case, never a `.` or `..` segment. */
+export function isTemplatePath(path: string): boolean {
+  return (
+    GithubRepo.safeParse(path).success &&
+    path === path.toLowerCase() &&
+    !path.split('/').some((s) => s === '.' || s === '..')
+  )
 }
 
 function read<T>(file: string): T {
@@ -125,6 +140,9 @@ export function loadSiteData(generated: string = resolve(GENERATED_DIR)): SiteDa
       const f = join(pub, 'm', `${path}.md`)
       return existsSync(f) ? readFileSync(f, 'utf8') : null
     },
+    templates: readOptional<TemplatesIndex>(join(pub, 'templates.json')),
+    // checked like `detail`: a route parameter can never leave site/.generated
+    template: (path) => (isTemplatePath(path) ? readOptional<TemplateDetail>(join(pub, 't', `${path}.json`)) : null),
   }
   cache.set(generated, data)
   return data
