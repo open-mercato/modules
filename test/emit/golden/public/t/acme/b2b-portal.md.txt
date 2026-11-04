@@ -9,7 +9,7 @@ B2B self-service portal with quotes, customer accounts and order history.
 - Stars: 42. Last push: 2026-10-30. GitHub license: MIT
 - Commit: `b2b0000000000000000000000000000000000120` (tag `v1.2.0`, synced 2026-11-04)
 - Verification: not verified (the nightly template smoke has not run on this commit)
-- Built on: Open Mercato 0.9.0 (0.9.x, on or ahead of the latest stable 0.9.0)
+- Built on: Open Mercato 0.9.0 (0.9.x, the latest line)
 - Requires an Enterprise license: no
 - License: MIT (osi)
 - Engines: node >=24. Package manager: yarn@4.17.1

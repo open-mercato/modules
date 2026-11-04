@@ -122,6 +122,25 @@ describe('template sync on the fixture', async () => {
   })
 })
 
+describe('template sync of named entries', () => {
+  test('syncs only the named entry and reports a name without an entry', async () => {
+    const dirs = syncRoot()
+    const seen: string[] = []
+    const result = await runTemplateSync({
+      http: fakeHttp(templateWorld(), seen),
+      root: dirs.root,
+      templatesDir: dirs.templates,
+      dataDir: dirs.data,
+      outDir: dirs.out,
+      now: NOW,
+      only: new Set(['acme/kiosk', 'acme/nope']),
+    })
+    expect(result.records.map((x) => x.github)).toEqual(['acme/kiosk'])
+    expect(result.errors).toEqual(['template acme/nope: no entry templates/acme/nope.yml'])
+    expect(seen.every((u) => u.includes('acme/kiosk'))).toBe(true)
+  })
+})
+
 describe('derived template facts', () => {
   test('linesBehind counts minor lines of one major, 0 on or ahead of the latest', () => {
     expect(linesBehind('0.7.2', '0.9.0')).toBe(2)

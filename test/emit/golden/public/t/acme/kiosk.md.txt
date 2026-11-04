@@ -9,7 +9,7 @@ Self-service kiosk app that replaces the default demo login.
 - Stars: 1. Last push: 2026-10-01. GitHub license: none detected
 - Commit: `a1e0000000000000000000000000000000000009` (default branch `main`, synced 2026-11-04)
 - Verification: not verified (the nightly template smoke has not run on this commit)
-- Built on: Open Mercato 0.9.0 (0.9.x, on or ahead of the latest stable 0.9.0)
+- Built on: Open Mercato 0.9.0 (0.9.x, the latest line)
 - Requires an Enterprise license: no
 - License: MIT (osi)
 - Engines: node >=24. Package manager: yarn@4.17.1

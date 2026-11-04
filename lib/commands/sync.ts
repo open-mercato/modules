@@ -68,7 +68,8 @@ export default async function sync(ctx: CommandContext): Promise<number> {
           modulesRepo: modulesRepo(),
           log: (l) => console.error(l),
         })
-      if (hasTemplates && (templates === null || templates.size > 0))
+      // with no entry at all, only a template named on the command line runs it (and is reported as missing)
+      if (templates === null ? hasTemplates : templates.size > 0)
         tresult = await runTemplateSync({
           http,
           root: ctx.root,

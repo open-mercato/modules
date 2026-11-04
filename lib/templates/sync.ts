@@ -166,6 +166,8 @@ export async function runTemplateSync(o: TemplateSyncOptions): Promise<TemplateS
   const selected = all.filter((e) => !o.only || o.only.has(e.path))
   const attention: TemplateAttention[] = loadErrors.map((e) => ({ github: '', kind: 'invalid-entry', text: e }))
   const globalErrors = [...loadErrors]
+  for (const name of o.only ?? [])
+    if (!all.some((e) => e.path === name)) globalErrors.push(`template ${name}: no entry templates/${name}.yml`)
   log(`sync: ${selected.length} of ${all.length} templates`)
   const kindOf = catalogLicenseKinds(o.dataDir)
   const latestStable = latestStableOf(o.dataDir)

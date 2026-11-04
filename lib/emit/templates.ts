@@ -258,13 +258,16 @@ export function buildTemplates(
 
 const plural = (n: number, one: string, many = `${one}s`): string => `${n} ${n === 1 ? one : many}`
 
-/** "0.9.0 (0.9.x, the latest line)" or "0.7.2 (0.7.x, 2 lines behind 0.9.0)". */
+/** "Open Mercato 0.9.0 (0.9.x, the latest line)" or "Open Mercato 0.7.2 (0.7.x, 2 lines behind 0.9.0)". */
 export function builtOn(f: Pick<TemplateDetailFacts, 'omVersion' | 'omLine' | 'linesBehind' | 'latestStable'>): string {
   if (!f.omVersion || !f.omLine) return 'unknown (@open-mercato/core is not pinned in yarn.lock)'
   const head = `Open Mercato ${f.omVersion} (${f.omLine}.x`
   if (f.latestStable === null) return `${head})`
   if (f.linesBehind === null) return `${head}, latest stable is ${f.latestStable})`
-  if (f.linesBehind === 0) return `${head}, on or ahead of the latest stable ${f.latestStable})`
+  if (f.linesBehind === 0)
+    return f.latestStable.startsWith(`${f.omLine}.`)
+      ? `${head}, the latest line)`
+      : `${head}, newer than the latest stable ${f.latestStable})`
   return `${head}, ${plural(f.linesBehind, 'line')} behind ${f.latestStable})`
 }
 
