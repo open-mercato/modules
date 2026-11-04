@@ -329,7 +329,10 @@ function checkManifest(
   if (!parsed.success) {
     facts.manifest = { state: 'invalid' }
     const where = [...new Set(parsed.error.issues.map((i) => i.path.map(String).join('.') || '(root)'))]
-    warn('manifest', `${TEMPLATE_MANIFEST_FILE} does not match mercato-template-1.json at ${listed(where, 3)}`)
+    warn(
+      'manifest',
+      `${TEMPLATE_MANIFEST_FILE} is not a valid manifest (mercato-template-1.json, plain-text description) at ${listed(where, 3)}`,
+    )
     return
   }
   const m = parsed.data

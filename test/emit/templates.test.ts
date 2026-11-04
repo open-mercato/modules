@@ -5,6 +5,7 @@ import { cpSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, test } from 'vitest'
 import { buildEmit } from '../../lib/emit/index.ts'
+import { mdText } from '../../lib/emit/templates.ts'
 import type { SiteMeta } from '../../lib/emit/site-data.ts'
 import { TemplateDetail, TemplatesIndex } from '../../lib/schema/published/templates.ts'
 import { CATALOG, SHA, TEMPLATE_DATA } from '../templates/world.ts'
@@ -54,6 +55,13 @@ describe('templates.json and /t/ pages', () => {
     expect(env('acme/b2b-portal')).toEqual(['OPENAI_API_KEY'])
     expect(env('acme/kiosk')).toEqual(['KIOSK_SCREEN_TOKEN'])
     expect(env('Acme/Field-CRM')).toEqual([])
+  })
+
+  test('env descriptions from a manifest are inert in the .md twin', () => {
+    expect(mdText('Public URL, e.g. http://localhost:3000')).toBe('Public URL, e.g. http:\\/\\/localhost:3000')
+    expect(mdText('Set to `true` for <b>[x](y)</b> *now*\nor www.acme.com')).toBe(
+      'Set to \\`true\\` for \\<b\\>\\[x\\](y)\\</b\\> \\*now\\* or www\\.acme.com',
+    )
   })
 
   test('warns about what it leaves out', () => {

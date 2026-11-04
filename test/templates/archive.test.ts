@@ -202,9 +202,21 @@ describe('checkTemplateArchive', () => {
       templateArchive({ 'mercato-template.json': JSON.stringify({ ...MANIFEST, schema: 2, extra: true }) }),
     )
     expect(schema.findings.map((f) => f.message)).toEqual([
-      'mercato-template.json does not match mercato-template-1.json at schema, (root)',
+      'mercato-template.json is not a valid manifest (mercato-template-1.json, plain-text description) at schema, (root)',
     ])
     expect(schema.facts.manifest).toEqual({ state: 'invalid' })
+  })
+
+  it('takes env descriptions as the save tool writes them from .env.example comments', async () => {
+    const env = [
+      { name: 'APP_URL', description: 'Public URL, e.g. http://localhost:3000' },
+      { name: 'OPENAI_API_KEY', description: 'Set to `true` to enable <search>' },
+    ]
+    const r = await checkTemplateArchive(templateArchive({ 'mercato-template.json': scaffoldManifest({ env }) }), {
+      declaredEnv: ['APP_URL', 'OPENAI_API_KEY'],
+    })
+    expect(r.findings).toEqual([])
+    expect(r.facts.manifest.state === 'valid' && r.facts.manifest.data.env).toEqual(env)
   })
 
   it('lists at most five items', () => {

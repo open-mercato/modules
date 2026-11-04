@@ -207,8 +207,13 @@ export const TemplateManifest = z
       .string()
       .regex(/^\d+\.\d+\.x$/)
       .optional(),
+    // descriptions come from .env.example comments as the save tool reads them, so any text (pages escape it)
     env: z
-      .array(z.object({ name: EnvName, description: PlainText(240).optional(), link: HttpsUrl.optional() }).strict())
+      .array(
+        z
+          .object({ name: EnvName, description: z.string().min(1).max(240).optional(), link: HttpsUrl.optional() })
+          .strict(),
+      )
       .optional(),
     modules: z.array(TemplateModule),
     createdWith: z.object({ tool: z.literal('create-mercato-template'), version: SemVer }).strict(),

@@ -19,6 +19,18 @@ import type { EmitData, LoadedTemplate } from './types.ts'
 
 export { builtOn }
 
+/**
+ * Text from a template's repository (manifest env descriptions) as inert markdown: one line, markup escaped, and no
+ * bare URL a renderer would turn into a link.
+ */
+export function mdText(s: string): string {
+  return s
+    .replace(/\s+/g, ' ')
+    .replace(/[\\`*_[\]<>#|~!]/g, (c) => `\\${c}`)
+    .replace(/:\/\//g, ':\\/\\/')
+    .replace(/\bwww\./gi, (w) => `${w.slice(0, 3)}\\.`)
+}
+
 /** Counts of `templates.json` for the site (`SiteMeta.templates`): the Phase 0 page stays while `active` is 0. */
 export interface TemplateCounts {
   listed: number
@@ -334,7 +346,7 @@ export function templateCard(t: TemplateDetail, site: string): string {
     out.push('## Environment keys to fill')
     out.push('')
     for (const k of f.env)
-      out.push(`- \`${k.name}\`${k.description ? `: ${k.description}` : ''}${k.link ? ` (${k.link})` : ''}`)
+      out.push(`- \`${k.name}\`${k.description ? `: ${mdText(k.description)}` : ''}${k.link ? ` (${k.link})` : ''}`)
     out.push('')
   }
   const links = Object.entries(e.links ?? {}).filter((x): x is [string, string] => typeof x[1] === 'string')
