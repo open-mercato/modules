@@ -15,6 +15,7 @@ import { inspectTarball, LIMITS, readTarballFiles } from '../sources/tarball.ts'
 import {
   CORE_PACKAGE,
   descriptorName,
+  ENTERPRISE_PACKAGE,
   entriesNamed,
   frameworkNames,
   isRegistryEntry,
@@ -24,6 +25,7 @@ import {
   parseLockfile,
   rangeLookup,
   resolveDependency,
+  resolveModulePackage,
   versionLine,
   type Lockfile,
 } from './lockfile.ts'
@@ -50,6 +52,13 @@ export interface ArchiveFacts {
   manifest: { state: 'absent' } | { state: 'valid'; data: TemplateManifestT } | { state: 'invalid' }
   /** License sources inside the archive: the LICENSE* file (SPDX id or `custom`) and `package.json` `license`. */
   license: { file: string | null; packageJson: string | null }
+  /**
+   * The version yarn.lock resolves for each npm `from` of the inventory other than `@open-mercato/core` (the manifest's
+   * `package` rule), by name. A name that does not resolve to one entry is absent.
+   */
+  packages: Record<string, string>
+  /** `package.json` or `yarn.lock` names `@open-mercato/enterprise` (D5: recorded, never the Enterprise mark alone). */
+  enterpriseDependency: boolean
 }
 
 export interface ArchiveResult {
@@ -68,6 +77,8 @@ const PACKAGE_JSON = 'package.json'
 const YARN_LOCK = 'yarn.lock'
 const MONOREPO_CORE = 'packages/core/package.json'
 const MAX_LISTED = 5
+/** An npm package name as a module `from` (not `@app`, not a path). */
+const NPM_FROM = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/
 
 /** `a, b, c and 2 more`. */
 export function listed(items: readonly string[], max = MAX_LISTED): string {
@@ -134,6 +145,8 @@ export async function checkTemplateArchive(bytes: Uint8Array, opts: ArchiveOptio
     modules: null,
     manifest: { state: 'absent' },
     license: { file: null, packageJson: null },
+    packages: {},
+    enterpriseDependency: false,
   }
   const err = (code: string, message: string) => findings.push({ severity: 'error', code, message })
   const warn = (code: string, message: string) => findings.push({ severity: 'warning', code, message })
@@ -230,6 +243,22 @@ export async function checkTemplateArchive(bytes: Uint8Array, opts: ArchiveOptio
         )}`,
       )
   }
+
+  if (lockfile) {
+    for (const e of facts.modules?.entries ?? []) {
+      if (e.from === CORE_PACKAGE || Object.hasOwn(facts.packages, e.from) || !NPM_FROM.test(e.from)) continue
+      const entry = resolveModulePackage(pkg, lockfile, e.from)
+      if (entry) facts.packages[e.from] = entry.version
+    }
+    facts.packages = Object.fromEntries(Object.entries(facts.packages).sort(([a], [b]) => (a < b ? -1 : 1)))
+  }
+  facts.enterpriseDependency =
+    (pkg !== null &&
+      ['dependencies', 'devDependencies'].some((k) => {
+        const block = pkg[k]
+        return isObject(block) && Object.hasOwn(block, ENTERPRISE_PACKAGE)
+      })) ||
+    (lockfile !== null && entriesNamed(lockfile, ENTERPRISE_PACKAGE).length > 0)
 
   const manifestText = files.get(TEMPLATE_MANIFEST_FILE)
   if (manifestText !== undefined) checkManifest(manifestText, facts, lockfile, opts.declaredEnv, warn)

@@ -1,0 +1,24 @@
+{
+  "github": "acme/kiosk",
+  "checkedAt": "2026-11-04T06:00:00Z",
+  "firstSeenAt": "2026-11-04T06:00:00Z",
+  "repo": {
+    "fullName": "acme/kiosk",
+    "private": false,
+    "archived": true,
+    "isTemplate": false,
+    "defaultBranch": "main",
+    "pushedAt": "2026-10-01T10:00:00Z",
+    "stars": 1,
+    "license": null,
+    "topics": [],
+    "tags": []
+  },
+  "source": {
+    "ref": "main",
+    "kind": "default branch",
+    "sha": "a1e0000000000000000000000000000000000009",
+    "syncedAt": "2026-11-04T06:00:00Z"
+  },
+  "errors": []
+}

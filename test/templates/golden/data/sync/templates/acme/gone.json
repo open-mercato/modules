@@ -1,0 +1,10 @@
+{
+  "github": "acme/gone",
+  "checkedAt": "2026-11-04T06:00:00Z",
+  "firstSeenAt": "2026-11-04T06:00:00Z",
+  "repo": null,
+  "source": null,
+  "errors": [
+    "github: acme/gone returns 404 (2026-11-04)"
+  ]
+}

@@ -42,6 +42,12 @@ export interface TemplateRepo {
   /** SPDX id GitHub detects, null for none or NOASSERTION. */
   license: string | null
   ownerType: 'User' | 'Organization'
+  /** The repository's GitHub template flag. */
+  isTemplate: boolean
+  stars: number
+  /** Last push (ISO date-time), null when GitHub has none. */
+  pushedAt: string | null
+  topics: string[]
 }
 
 /** The repository, or null when it does not exist or the token cannot see it (a private repository). */
@@ -57,6 +63,10 @@ export async function fetchTemplateRepo(http: Http, repo: string): Promise<Templ
     default_branch?: string
     license?: { spdx_id?: string | null } | null
     owner?: { type?: string } | null
+    is_template?: boolean
+    stargazers_count?: number
+    pushed_at?: string | null
+    topics?: unknown
   }
   const spdx = j.license?.spdx_id ?? null
   return {
@@ -66,6 +76,10 @@ export async function fetchTemplateRepo(http: Http, repo: string): Promise<Templ
     defaultBranch: j.default_branch ?? 'main',
     license: spdx && spdx !== 'NOASSERTION' ? spdx : null,
     ownerType: j.owner?.type === 'Organization' ? 'Organization' : 'User',
+    isTemplate: j.is_template === true,
+    stars: typeof j.stargazers_count === 'number' ? j.stargazers_count : 0,
+    pushedAt: typeof j.pushed_at === 'string' ? j.pushed_at : null,
+    topics: Array.isArray(j.topics) ? j.topics.filter((t): t is string => typeof t === 'string') : [],
   }
 }
 
@@ -112,16 +126,18 @@ export interface ResolvedRef {
 /**
  * Resolves the entry's `ref` to one sha of this repository. A named ref (branch or tag) belongs to the repository by
  * definition; a commit sha must be contained in a branch or tag, because GitHub serves a fork's commits through the
- * parent too. Returns the finding instead when the ref does not resolve or no branch or tag contains it.
+ * parent too. Returns the finding instead when the ref does not resolve or no branch or tag contains it. `known`
+ * passes branches or tags the caller already read (sync keeps the tags).
  */
 export async function resolveTemplateRef(
   http: Http,
   repo: string,
   meta: TemplateRepo,
   ref: string | undefined,
+  known?: { branches?: { name: string; sha: string }[]; tags?: { name: string; sha: string }[] },
 ): Promise<{ ref: ResolvedRef } | { finding: Finding }> {
-  const branches = await repoBranches(http, repo)
-  const tags = await repoTags(http, repo)
+  const branches = known?.branches ?? (await repoBranches(http, repo))
+  const tags = known?.tags ?? (await repoTags(http, repo))
   const name = ref ?? meta.defaultBranch
   const notFound = (): { finding: Finding } => ({
     finding: f('repo', 'error', 'ref-not-found', `ref ${name} is not a branch, tag or commit of ${repo}`),

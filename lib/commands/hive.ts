@@ -25,6 +25,7 @@ import {
   Lines,
   SyncRecord,
 } from '../schema/index.ts'
+import { isTemplateDataPath } from '../schema/data/templates.ts'
 import { descriptorLocator } from '../schema/locator.ts'
 
 export const description = 'stable Hive slots; .data/hive.json'
@@ -122,6 +123,7 @@ export function runHive(opts: {
   const sync = new Map<string, HiveSyncInput>()
   const syncDir = join(opts.dataDir, 'sync')
   for (const f of walk(syncDir, '.json')) {
+    if (isTemplateDataPath(relative(opts.dataDir, f))) continue
     const s = readRecord(f, SyncSlice, syncDir, warnings)
     if (s) sync.set(s.locator, { type: s.type, firstSeenAt: s.firstSeenAt })
   }

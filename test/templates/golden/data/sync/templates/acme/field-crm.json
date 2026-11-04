@@ -1,0 +1,24 @@
+{
+  "github": "Acme/Field-CRM",
+  "checkedAt": "2026-11-04T06:00:00Z",
+  "firstSeenAt": "2026-11-04T06:00:00Z",
+  "repo": {
+    "fullName": "acme-labs/field-crm",
+    "private": false,
+    "archived": false,
+    "isTemplate": false,
+    "defaultBranch": "main",
+    "pushedAt": "2026-10-01T10:00:00Z",
+    "stars": 7,
+    "license": "Apache-2.0",
+    "topics": [],
+    "tags": []
+  },
+  "source": {
+    "ref": "main",
+    "kind": "default branch",
+    "sha": "c4a0000000000000000000000000000000000072",
+    "syncedAt": "2026-11-04T06:00:00Z"
+  },
+  "errors": []
+}

@@ -1,0 +1,32 @@
+{
+  "github": "acme/b2b-portal",
+  "checkedAt": "2026-11-04T06:00:00Z",
+  "firstSeenAt": "2026-11-04T06:00:00Z",
+  "repo": {
+    "fullName": "acme/b2b-portal",
+    "private": false,
+    "archived": false,
+    "isTemplate": true,
+    "defaultBranch": "main",
+    "pushedAt": "2026-10-30T12:00:00Z",
+    "stars": 42,
+    "license": "MIT",
+    "topics": [
+      "open-mercato-template",
+      "open-mercato"
+    ],
+    "tags": [
+      {
+        "name": "v1.2.0",
+        "sha": "b2b0000000000000000000000000000000000120"
+      }
+    ]
+  },
+  "source": {
+    "ref": "v1.2.0",
+    "kind": "tag",
+    "sha": "b2b0000000000000000000000000000000000120",
+    "syncedAt": "2026-11-04T06:00:00Z"
+  },
+  "errors": []
+}

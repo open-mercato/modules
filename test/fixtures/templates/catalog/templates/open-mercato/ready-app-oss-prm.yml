@@ -1,0 +1,6 @@
+github: open-mercato/ready-app-oss-prm
+useCase: partner-portal
+summary: Partner relationship management app with partner accounts and deal registration.
+whenToUse: Use when a vendor runs a partner program with registered deals and tiers.
+status: hold
+reason: No license yet, and it pins Open Mercato 0.4.

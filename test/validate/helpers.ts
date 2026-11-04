@@ -51,6 +51,11 @@ export interface FakeRepo {
   contains?: Record<string, string[]>
   /** Shas GitHub serves through this repository that no branch or tag contains (commits of a fork). */
   foreign?: string[]
+  // further REST fields template sync reads (defaults as in the GraphQL answer)
+  stars?: number
+  pushedAt?: string
+  isTemplate?: boolean
+  topics?: string[]
 }
 
 export interface FakeWorld {
@@ -151,6 +156,10 @@ export function fakeFetch(world: FakeWorld, seen: string[] = []): typeof fetch {
           default_branch: r.defaultBranch ?? 'main',
           license: r.license === null ? null : { spdx_id: r.license ?? 'MIT' },
           owner: { login: r.nameWithOwner.split('/')[0], type: r.ownerType ?? 'User' },
+          is_template: r.isTemplate ?? false,
+          stargazers_count: r.stars ?? 3,
+          pushed_at: r.pushedAt ?? '2026-10-01T10:00:00Z',
+          topics: r.topics ?? [],
         })
       if (tail === '/branches?per_page=100')
         return json(Object.entries(branches).map(([name, sha]) => ({ name, commit: { sha } })))

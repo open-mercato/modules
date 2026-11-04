@@ -43,6 +43,20 @@ describe('checkTemplateArchive', () => {
     expect(inv?.unparsed).toEqual([])
     expect(inv?.entries.find((e) => e.id === 'ratelimit_probe')).toEqual({ id: 'ratelimit_probe', from: '@app' })
     expect(inv?.entries.find((e) => e.id === 'storage_s3')?.when).toBe('OM_ENABLE_STORAGE_S3')
+    // the manifest's `package` rule: npm modules other than core, as yarn.lock resolves them
+    expect(r.facts.packages).toEqual({ '@open-mercato/enterprise': '0.9.0', '@open-mercato/storage-s3': '0.9.0' })
+    expect(r.facts.enterpriseDependency).toBe(true)
+  })
+
+  it('records no enterprise dependency when neither package.json nor yarn.lock names it', async () => {
+    const pkg = { ...PACKAGE_JSON, dependencies: { '@open-mercato/core': '0.9.0', '@open-mercato/shared': '0.9.0' } }
+    const lock = lockfile([
+      lockEntry('@open-mercato/core', '0.9.0', { '@open-mercato/shared': '0.9.0' }),
+      lockEntry('@open-mercato/shared', '0.9.0'),
+    ])
+    const r = await checkTemplateArchive(templateArchive({ 'package.json': JSON.stringify(pkg), 'yarn.lock': lock }))
+    expect(r.facts.enterpriseDependency).toBe(false)
+    expect(r.facts.packages).toEqual({})
   })
 
   it('a package released on its own line (@open-mercato/client) is not a second framework line', () => {
