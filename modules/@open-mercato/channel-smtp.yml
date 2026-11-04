@@ -1,0 +1,11 @@
+# No stable release yet (latest is a develop build): preview, nightly on next only (spec 11.4).
+
+npm: "@open-mercato/channel-smtp"
+repo: open-mercato/open-mercato#main/packages/channel-smtp
+category: communication
+tags: [email, smtp, transactional]
+summary: Sends transactional and system email through any SMTP relay over STARTTLS or implicit TLS. Outbound only.
+whenToUse: Use when the app sends transactional or system email through your own mail server or a relay that offers SMTP AUTH, not a provider API.
+whenNotToUse: It does not receive mail. For two-way mailboxes use channel-gmail or channel-imap.
+providers:
+  - { name: smtp, label: SMTP }

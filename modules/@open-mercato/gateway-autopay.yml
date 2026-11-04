@@ -1,0 +1,13 @@
+# No stable release yet (latest is a develop build): preview, nightly on next only (spec 11.4).
+
+npm: "@open-mercato/gateway-autopay"
+repo: open-mercato/open-mercato#main/packages/gateway-autopay
+category: payments-finance
+tags: [payments, blik, poland]
+summary: "PLN payments on the Autopay hosted page: bank transfers, BLIK and cards, with status checks, cancels and refunds."
+whenToUse: Use when Polish customers pay in PLN by bank transfer, BLIK or card and you have registered your own Autopay Partner Service.
+whenNotToUse: PLN only, and status is read on the payer's return because push notifications are not supported yet. For other currencies use gateway-stripe.
+providers:
+  - { name: autopay, label: Autopay }
+links:
+  docs: https://docs.openmercato.com/user-guide/autopay-payments
