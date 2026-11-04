@@ -22,6 +22,12 @@
     "omQuality": 0,
     "builtIn": 3
   },
+  "templates": {
+    "listed": 0,
+    "active": 0,
+    "hold": 0,
+    "unmaintained": 0
+  },
   "coreVersion": "0.9.0",
   "peersSentence": "Peer ranges reject 11 of 14 combinations that fit statically.",
   "firstNight": false,
