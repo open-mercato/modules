@@ -1,0 +1,371 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 74
+  },
+  "package": {
+    "locator": "npm:@open-mercato/gateway-autopay",
+    "name": "@open-mercato/gateway-autopay",
+    "version": "0.10.1-develop.7741.1.61a2652671",
+    "integrity": "sha512-GpvQkQqoFlUxmptFxlN3MnK4cUez6HOeeXpIFVX2UCz0x8ovej3ujeqklSID0cP07pVy/4K57Luv2PsNeJjqdw==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "gateway_autopay",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.10.1-develop.7741.1.61a2652671",
+    "@open-mercato/shared": "0.10.1-develop.7741.1.61a2652671",
+    "@open-mercato/ui": "0.10.1-develop.7741.1.61a2652671"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.10.1-develop.7741.1.61a2652671"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "gateway_autopay",
+      "title": "Autopay Payment Gateway",
+      "description": "Accept hosted PLN payments (bank transfers, BLIK, cards) via Autopay Online.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/api/gateway_autopay/launch",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/gateway_autopay/api/launch/route.ts",
+              "line": 27
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/api/gateway_autopay/return",
+            "requireAuth": false,
+            "requireFeatures": [],
+            "hasOpenApi": true,
+            "src": {
+              "file": "src/modules/gateway_autopay/api/return/route.ts",
+              "line": 25
+            }
+          }
+        ],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "gateway_autopay.view",
+          "gateway_autopay.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": [
+          "configure-from-env",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "serviceId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "sharedKey",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "hashAlgorithm",
+            "type": "select",
+            "required": false
+          },
+          {
+            "key": "gatewayUrl",
+            "type": "url",
+            "required": true
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_SERVICE_ID",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 51
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_SHARED_KEY",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 52
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_GATEWAY_URL",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 53
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_HASH_ALGORITHM",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 71
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 75
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_AUTOPAY_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/preset.ts",
+              "line": 76
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "pay.autopay.eu",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/autopay-client.ts",
+              "line": 13
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "testpay.autopay.eu",
+            "src": {
+              "file": "src/modules/gateway_autopay/lib/autopay-client.ts",
+              "line": 12
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:gateway_autopay"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "payment:autopay"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService",
+            "createCredentialsService"
+          ],
+          "modules/integrations/lib/log-service": [
+            "IntegrationLogService",
+            "createIntegrationLogService"
+          ],
+          "modules/integrations/lib/state-service": [
+            "IntegrationStateService",
+            "createIntegrationStateService"
+          ],
+          "modules/payment_gateways/data/entities": [
+            "GatewayTransaction"
+          ],
+          "modules/payment_gateways/lib/gateway-service": [
+            "PaymentGatewayService"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/encryption/find": [
+            "findWithDecryption"
+          ],
+          "lib/i18n/server": [
+            "resolveTranslations"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/ratelimit/helpers": [
+            "RATE_LIMIT_ERROR_FALLBACK",
+            "checkRateLimit",
+            "getClientIp"
+          ],
+          "lib/ratelimit/service": [
+            "RateLimiterService"
+          ],
+          "lib/telemetry/runtime": [
+            "getTelemetryRuntime"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope"
+          ],
+          "modules/payment_gateways/types": [
+            "CancelInput",
+            "CancelResult",
+            "CaptureInput",
+            "CaptureResult",
+            "CreateSessionInput",
+            "CreateSessionResult",
+            "GatewayAdapter",
+            "GatewayPaymentStatus",
+            "GetStatusInput",
+            "RefundInput",
+            "RefundResult",
+            "UnifiedPaymentStatus",
+            "VerifyWebhookInput",
+            "WebhookEvent",
+            "registerGatewayAdapter",
+            "registerPaymentGatewayDescriptor"
+          ],
+          "modules/registry": [
+            "ModuleCli"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "gateway_autopay",
+        "tables": [],
+        "aclFeatures": [
+          "gateway_autopay.view",
+          "gateway_autopay.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 2,
+      "glyph": "0200202",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.10.1-develop.7741.1.61a2652671 and 2 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.10.1-develop.7741.1.61a2652671 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "public-routes",
+          "severity": "info",
+          "message": "2 of 2 routes do not require authentication.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/gateway_autopay/api/launch/route.ts",
+            "line": 27
+          }
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.10.1-develop.7741.1.61a2652671.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/gateway_autopay/integration.ts",
+            "line": 3
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

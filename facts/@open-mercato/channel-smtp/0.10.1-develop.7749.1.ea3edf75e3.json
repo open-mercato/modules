@@ -1,0 +1,332 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 79
+  },
+  "package": {
+    "locator": "npm:@open-mercato/channel-smtp",
+    "name": "@open-mercato/channel-smtp",
+    "version": "0.10.1-develop.7749.1.ea3edf75e3",
+    "integrity": "sha512-9fOg66PLOhRcuO9C1a8l88yjvaS2I4z7UVolktyRaTf7ljTbJm7kdlZ65/kSToSkp1K56Ye0qXyOfzO/XvFctQ==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "channel_smtp",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.10.1-develop.7749.1.ea3edf75e3",
+    "@open-mercato/shared": "0.10.1-develop.7749.1.ea3edf75e3",
+    "@open-mercato/ui": "0.10.1-develop.7749.1.ea3edf75e3"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.10.1-develop.7749.1.ea3edf75e3",
+    "@types/nodemailer": "^8.0.1",
+    "nodemailer": "^10.0.10"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "channel_smtp",
+      "title": null,
+      "description": "Outbound SMTP relay email channel provider for the Communications Hub.",
+      "requires": [
+        {
+          "raw": "communication_channels",
+          "resolvesTo": "core:communication_channels"
+        },
+        {
+          "raw": "integrations",
+          "resolvesTo": "core:integrations"
+        }
+      ],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "channel_smtp.view",
+          "channel_smtp.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 0,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "host",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "port",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "tls",
+            "type": "select",
+            "required": true
+          },
+          {
+            "key": "user",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "password",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "fromAddress",
+            "type": "text",
+            "required": true
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_CHANNEL_SMTP_ALLOW_INTERNAL_HOSTS",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/credentials.ts",
+              "line": 10
+            }
+          },
+          {
+            "name": "OM_CHANNEL_SMTP_ALLOW_INSECURE_TRANSPORT",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/credentials.ts",
+              "line": 14
+            }
+          },
+          {
+            "name": "SMTP_PORT",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/preset.ts",
+              "line": 49
+            }
+          },
+          {
+            "name": "SMTP_TLS",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/preset.ts",
+              "line": 56
+            }
+          },
+          {
+            "name": "SMTP_HOST",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/preset.ts",
+              "line": 65
+            }
+          },
+          {
+            "name": "SMTP_USER",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/preset.ts",
+              "line": 66
+            }
+          },
+          {
+            "name": "SMTP_PASSWORD",
+            "src": {
+              "file": "src/modules/channel_smtp/lib/preset.ts",
+              "line": 67
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:channel_smtp"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/communication_channels/lib/adapter": [
+            "ChannelAdapter",
+            "ChannelCapabilities",
+            "ChannelNativeContent",
+            "ConvertOutboundInput",
+            "GetMessageStatusInput",
+            "InboundMessage",
+            "MessageStatus",
+            "NormalizedInboundMessage",
+            "SendMessageInput",
+            "SendMessageResult",
+            "ValidateCredentialsInput",
+            "ValidateCredentialsResult",
+            "VerifyWebhookInput"
+          ],
+          "modules/communication_channels/lib/adapter-registry-singleton": [
+            "hasChannelAdapter",
+            "registerChannelAdapter"
+          ],
+          "modules/communication_channels/lib/email-capabilities": [
+            "baseEmailCapabilities"
+          ],
+          "modules/communication_channels/lib/email-mime": [
+            "htmlToText",
+            "sanitizeHeaderValue",
+            "stringOrUndefined",
+            "toAddressList"
+          ],
+          "modules/communication_channels/lib/ensure-system-email-channel": [
+            "ensureSystemEmailChannel"
+          ],
+          "modules/communication_channels/lib/system-email-provider-config": [
+            "isSelectedSystemEmailProvider",
+            "registerSystemEmailProviderConfigResolver"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanWithDefault"
+          ],
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/email/config": [
+            "normalizeEnvString",
+            "resolveDefaultEmailFromAddress"
+          ],
+          "lib/host-pinning": [
+            "isInternalHost",
+            "resolveSafeHostAddress"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/telemetry/runtime": [
+            "getTelemetryRuntime"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "channel_smtp",
+        "tables": [],
+        "aclFeatures": [
+          "channel_smtp.view",
+          "channel_smtp.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0000001",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.10.1-develop.7749.1.ea3edf75e3 and 2 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "peer-range-behind",
+          "severity": "info",
+          "message": "Built for 0.10.1-develop.7749.1.ea3edf75e3 does not include Open Mercato 0.9.0.",
+          "anchor": "w4 §4.2",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 0.1.0, package.json says 0.10.1-develop.7749.1.ea3edf75e3.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/channel_smtp/integration.ts",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

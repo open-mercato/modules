@@ -461,6 +461,16 @@
       "q": -5,
       "r": 0,
       "at": "2026-10-23"
+    },
+    "npm:@open-mercato/channel-smtp": {
+      "q": 4,
+      "r": 2,
+      "at": "2026-11-04"
+    },
+    "npm:@open-mercato/gateway-autopay": {
+      "q": 6,
+      "r": -2,
+      "at": "2026-11-04"
     }
   }
 }

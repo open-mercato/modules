@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-04T19:51:18.718Z",
+  "computedAt": "2026-11-04T22:15:14.853Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -627,6 +627,25 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/channel-smtp@0.10.1-develop.7749.1.ea3edf75e3": {
+      "status": "no-fit",
+      "checked": 34,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/host-pinning",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [],
+      "declared": {
+        "range": "0.10.1-develop.7749.1.ea3edf75e3",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/checkout@0.8.0": {
       "status": "ok",
       "checked": 156,
@@ -755,6 +774,18 @@
       "declared": {
         "range": "^0.6.0",
         "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/gateway-autopay@0.10.1-develop.7741.1.61a2652671": {
+      "status": "ok",
+      "checked": 40,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.10.1-develop.7741.1.61a2652671",
+        "kind": "exact-pin",
         "satisfied": false
       },
       "hostDuplicates": []

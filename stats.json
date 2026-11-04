@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-04T19:49:40Z",
+  "at": "2026-11-04T22:13:45Z",
   "entries": {
     "github:Chmarusso/open-mercato-enrichment-treg": {
       "downloads30d": null,
@@ -109,6 +109,10 @@
       "downloads30d": 42203,
       "stars": null
     },
+    "npm:@open-mercato/channel-smtp": {
+      "downloads30d": 14975,
+      "stars": null
+    },
     "npm:@open-mercato/checkout": {
       "downloads30d": 52150,
       "stars": null
@@ -131,6 +135,10 @@
     },
     "npm:@open-mercato/forms": {
       "downloads30d": 83,
+      "stars": null
+    },
+    "npm:@open-mercato/gateway-autopay": {
+      "downloads30d": 15088,
       "stars": null
     },
     "npm:@open-mercato/gateway-payu": {

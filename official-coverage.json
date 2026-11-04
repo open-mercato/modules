@@ -1,10 +1,7 @@
 {
-  "at": "2026-11-04T19:49:40Z",
-  "listed": 37,
-  "missing": [
-    "@open-mercato/channel-smtp",
-    "@open-mercato/gateway-autopay"
-  ],
+  "at": "2026-11-04T22:13:45Z",
+  "listed": 39,
+  "missing": [],
   "packages": [
     "@open-mercato/ai-assistant",
     "@open-mercato/carrier-inpost",
