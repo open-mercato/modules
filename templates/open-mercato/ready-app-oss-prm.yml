@@ -1,0 +1,6 @@
+github: open-mercato/ready-app-oss-prm
+useCase: partner-portal
+summary: Partner relationship management for a vendor's agency program, with tiers, partner KPIs and lead distribution.
+whenToUse: Use when a software vendor grows through partner agencies and must measure, tier and reward them.
+status: hold
+reason: The repository has no license yet, so it cannot be reused. It also pins Open Mercato 0.4. Listed on hold until its owner adds a license and moves it to the current line.

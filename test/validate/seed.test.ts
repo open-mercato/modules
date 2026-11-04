@@ -3,7 +3,7 @@
 // WP03): schema, path = locator, Prettier, texts, typosquat (same scope skipped), reserved names.
 // The seed tests read the files `yarn om seed` writes, in a throwaway tree (helpers.ts seedTree), not the live
 // modules/**: the catalog grows by pull requests, and a new or edited entry must not fail them (finding of 25 Oct).
-// The live modules/** gets the rules every merged pull request keeps (last describe).
+// The live modules/** and templates/** get the rules every merged pull request keeps (last describes).
 import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -14,6 +14,7 @@ import { parse } from 'yaml'
 import { checkFiles, checkSeedTable, SEED } from '../../lib/commands/seed.ts'
 import { loadCatalog } from '../../lib/validate/catalog.ts'
 import { checkLocal, typosquatHits } from '../../lib/validate/local.ts'
+import { checkTemplateLocal } from '../../lib/validate/template-local.ts'
 import { errorsOf } from '../../lib/validate/types.ts'
 import { findBannedChars, injectionFlags } from '../../lib/core/text.ts'
 import type { Descriptor as DescriptorType } from '../../lib/schema/index.ts'
@@ -365,5 +366,34 @@ describe('modules/** as it is now', () => {
       const r = checkLocal({ file: rel, text: readFileSync(join(ROOT, rel), 'utf8') }, catalog)
       expect(errorsOf(r.findings), rel).toEqual([])
     }
+  })
+})
+
+// Template entries (docs/specs/2026-10-29-templates.md, Phase 1a step 8): the same offline steps, with the steps of a
+// template entry (schema and path, texts, names, slug). The repository, archive and license steps need the network.
+describe('templates/** as it is now', () => {
+  const live = existsSync(join(ROOT, 'templates'))
+    ? walk(join(ROOT, 'templates'))
+        .filter((p) => p.endsWith('.yml'))
+        .map((p) => relative(ROOT, p).split(sep).join('/'))
+        .sort()
+    : []
+
+  it('every entry passes the offline steps of validate without an error', async () => {
+    const catalog = await loadCatalog(ROOT, null)
+    expect(catalog.templates.size).toBe(live.length)
+    for (const rel of live) {
+      const r = checkTemplateLocal({ file: rel, text: readFileSync(join(ROOT, rel), 'utf8') }, catalog)
+      expect(errorsOf(r.findings), rel).toEqual([])
+    }
+  })
+
+  it('PRM is on hold without a slug and with a reason (D4: no license)', () => {
+    const rel = 'templates/open-mercato/ready-app-oss-prm.yml'
+    expect(live).toContain(rel)
+    const d = parse(readFileSync(join(ROOT, rel), 'utf8')) as Record<string, unknown>
+    expect(d.status).toBe('hold')
+    expect(d.slug).toBeUndefined()
+    expect(d.reason).toMatch(/no license/)
   })
 })
