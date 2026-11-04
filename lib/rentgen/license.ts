@@ -75,6 +75,9 @@ const FILE_RULES: readonly [RegExp, string][] = [
   [/This is free and unencumbered software released into the public domain/i, 'Unlicense'],
 ]
 
+/** A LICENSE* file name, as licenseFileOf finds one. */
+export const LICENSE_FILE_NAME = /^(LICEN[CS]E|COPYING)(\.(md|txt|markdown))?$/i
+
 /** SPDX id of the tarball's LICENSE* file, `custom` for other text, null when there is none. */
 export function licenseFileOf(pkgRoot: string): string | null {
   let names: string[]
@@ -83,14 +86,20 @@ export function licenseFileOf(pkgRoot: string): string | null {
   } catch {
     return null
   }
-  const name = names.sort().find((n) => /^(LICEN[CS]E|COPYING)(\.(md|txt|markdown))?$/i.test(n))
+  const name = names.sort().find((n) => LICENSE_FILE_NAME.test(n))
   if (!name) return null
   let text = ''
   try {
-    text = readFileSync(join(pkgRoot, name), 'utf8').slice(0, 20_000)
+    text = readFileSync(join(pkgRoot, name), 'utf8')
   } catch {
     return 'custom'
   }
+  return licenseIdOfText(text)
+}
+
+/** SPDX id of a LICENSE* file text, `custom` for other text. */
+export function licenseIdOfText(full: string): string {
+  const text = full.slice(0, 20_000)
   for (const [re, id] of FILE_RULES) if (re.test(text)) return id
   if (/Redistribution and use in source and binary forms/i.test(text))
     return /Neither the name/i.test(text) ? 'BSD-3-Clause' : 'BSD-2-Clause'
