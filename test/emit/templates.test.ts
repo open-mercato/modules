@@ -102,6 +102,23 @@ describe('templates.json and /t/ pages', () => {
     expect(slugs).toEqual([null, null, null, null])
     expect(r.warnings).toContain('slug b2b-portal is used by acme/b2b-portal and acme/kiosk; published without a slug')
   })
+
+  test('a hold entry keeps its slug in the index, so --template <slug> can refuse it with the reason', () => {
+    const data = templateData()
+    const prm = data.templates?.find((t) => t.path === 'open-mercato/ready-app-oss-prm')
+    if (prm?.descriptor) prm.descriptor = { ...prm.descriptor, slug: 'prm' }
+    const r = buildEmit(data, OPTS)
+    const held = TemplatesIndex.parse(json(r, 'templates.json')).templates.find((t) => t.slug === 'prm')
+    expect([held?.github, held?.status, held?.reason]).toEqual([
+      'open-mercato/ready-app-oss-prm',
+      'hold',
+      'No license yet, and it pins Open Mercato 0.4.',
+    ])
+    expect(TemplateDetail.parse(json(r, 't/open-mercato/ready-app-oss-prm.json')).entry.slug).toBe('prm')
+    const md = text(r, 't/open-mercato/ready-app-oss-prm.md')
+    expect(md).toContain('- Slug: `prm`')
+    expect(md).toContain('On hold, so there is no create command.')
+  })
 })
 
 describe('golden: template files', () => {
