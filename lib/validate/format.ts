@@ -7,11 +7,14 @@
 // Values never change, with one exception the spec asks for: a `category` that is an alias in
 // policy/categories.yml becomes its category ID (an alias names the same category). No key is added or removed,
 // unknown keys stay (after the known ones) so that `validate` can name them.
+// Template entries (`templates/<owner>/<repo>.yml`) get their own key order and block collections only, which is the
+// layout `create-mercato-template describe` prints.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import * as prettier from 'prettier'
 import { isMap, isScalar, isSeq, parseDocument, Scalar, visit, type Document, type Pair, type YAMLMap } from 'yaml'
 import { DESCRIPTOR_KEY_ORDER } from '../schema/index.ts'
+import { TEMPLATE_KEY_ORDER } from '../schema/template.ts'
 
 /** Lists written inline (`[a, b]`), as in the spec 4.3 examples. */
 export const FLOW_SEQ_KEYS = ['tags', 'alternatives', 'replaces', 'renamedFrom', 'aliases'] as const
@@ -35,7 +38,17 @@ export class FormatError extends Error {}
 export interface FormatOptions {
   /** Category aliases from policy/categories.yml (`alias -> category id`). */
   categoryAliases?: ReadonlyMap<string, string>
+  /** A template entry (`templates/<owner>/<repo>.yml`): its own key order, every collection a block. */
+  template?: boolean
 }
+
+/** Key order inside the nested maps of a template entry (the spec's field table). */
+const TEMPLATE_NESTED_ORDER: Readonly<Record<string, readonly string[]>> = {
+  links: ['docs', 'support', 'demo'],
+  declares: ['env', 'hosts'],
+  smoke: ['paths', 'login', 'ready'],
+}
+const TEMPLATE_ENV_ORDER = ['name', 'description', 'link'] as const
 
 export interface FormatResult {
   text: string
@@ -67,23 +80,17 @@ function quoteScalar(node: unknown): void {
   if (isScalar(node) && typeof node.value === 'string') node.type = Scalar.QUOTE_DOUBLE
 }
 
-/** Applies key order and house style to a parsed descriptor document in place. Returns value-rewrite notes. */
-export function normalizeDocument(doc: Document, opts: FormatOptions = {}): string[] {
-  const root = doc.contents
-  if (!isMap(root)) throw new FormatError('a descriptor is a YAML map of fields')
-  const notes: string[] = []
-  // A comment right above the first key belongs to the file, not to whichever key sorts first.
+/** A comment right above the first key belongs to the file, not to whichever key sorts first. */
+function liftFileComment(doc: Document, root: YAMLMap): void {
   const first = root.items[0]?.key
   if (isScalar(first) && first.commentBefore) {
     doc.commentBefore = doc.commentBefore ? `${doc.commentBefore}\n${first.commentBefore}` : first.commentBefore
     first.commentBefore = null
   }
-  sortPairs(root, DESCRIPTOR_KEY_ORDER)
-  for (const [key, order] of Object.entries(NESTED_ORDER)) {
-    const node = root.get(key, true)
-    if (isMap(node)) sortPairs(node, order)
-  }
-  // Block collections, plain keys, plain strings wherever YAML allows (the library quotes when plain would misread).
+}
+
+/** Block collections, plain keys, plain strings wherever YAML allows (the library quotes when plain would misread). */
+function blockAndPlain(doc: Document): void {
   visit(doc, {
     Map(_, node) {
       node.flow = false
@@ -98,6 +105,43 @@ export function normalizeDocument(doc: Document, opts: FormatOptions = {}): stri
       if (typeof node.value === 'string') node.type = Scalar.PLAIN
     },
   })
+}
+
+/**
+ * Key order and style of a template entry, in place: the order of TEMPLATE_KEY_ORDER and the field table, block
+ * collections and plain strings, as `create-mercato-template describe` prints them (no locators to quote here).
+ */
+export function normalizeTemplateDocument(doc: Document): string[] {
+  const root = doc.contents
+  if (!isMap(root)) throw new FormatError('a template entry is a YAML map of fields')
+  // describe prints the file path as a comment right above `github`, which stays first: no blank line added there
+  const first = root.items[0]?.key
+  if (!(isScalar(first) && first.value === TEMPLATE_KEY_ORDER[0])) liftFileComment(doc, root)
+  sortPairs(root, TEMPLATE_KEY_ORDER)
+  for (const [key, order] of Object.entries(TEMPLATE_NESTED_ORDER)) {
+    const node = root.get(key, true)
+    if (isMap(node)) sortPairs(node, order)
+  }
+  blockAndPlain(doc)
+  const shots = root.get('screenshots', true)
+  if (isSeq(shots)) for (const item of shots.items) if (isMap(item)) sortPairs(item, SCREENSHOT_ORDER)
+  const env = root.getIn(['declares', 'env'], true)
+  if (isSeq(env)) for (const item of env.items) if (isMap(item)) sortPairs(item, TEMPLATE_ENV_ORDER)
+  return []
+}
+
+/** Applies key order and house style to a parsed descriptor document in place. Returns value-rewrite notes. */
+export function normalizeDocument(doc: Document, opts: FormatOptions = {}): string[] {
+  const root = doc.contents
+  if (!isMap(root)) throw new FormatError('a descriptor is a YAML map of fields')
+  const notes: string[] = []
+  liftFileComment(doc, root)
+  sortPairs(root, DESCRIPTOR_KEY_ORDER)
+  for (const [key, order] of Object.entries(NESTED_ORDER)) {
+    const node = root.get(key, true)
+    if (isMap(node)) sortPairs(node, order)
+  }
+  blockAndPlain(doc)
   const providers = root.get('providers', true)
   if (isSeq(providers))
     for (const item of providers.items)
@@ -149,7 +193,7 @@ export async function formatDescriptorText(
     const first = doc.errors[0] as { message: string }
     throw new FormatError(first.message.split('\n')[0] ?? 'YAML does not parse')
   }
-  const notes = normalizeDocument(doc, opts)
+  const notes = opts.template ? normalizeTemplateDocument(doc) : normalizeDocument(doc, opts)
   const out = doc.toString({ lineWidth: 0, minContentWidth: 0 })
   const formatted = await prettierYaml(out, filepath)
   return { text: formatted, changed: formatted !== text, notes }

@@ -1,9 +1,11 @@
 // `yarn om format [<paths>] [--check]` (spec 5.4, 3.4): normalizes descriptor YAML (key order with the `yaml`
-// library, writing through Prettier). Default path: `modules`. A file that does not parse is skipped with a
-// message (validate explains it); `--check` writes nothing and exits 1 when a file would change or cannot be read.
-// autofix.yml runs `yarn om format modules` on pull requests.
+// library, writing through Prettier). Default paths: `modules` and `templates` (template entries get their own key
+// order). A file that does not parse is skipped with a message (validate explains it); `--check` writes nothing and
+// exits 1 when a file would change or cannot be read. autofix.yml runs `yarn om format modules templates` on pull
+// requests.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve, sep } from 'node:path'
+import { isTemplatePath } from '../validate/template-local.ts'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import { FormatError, formatDescriptorText, readCategoryAliases, yamlFiles } from '../validate/format.ts'
@@ -18,7 +20,7 @@ export default async function format(ctx: CommandContext): Promise<number> {
     console.error(`format: unknown option ${unknown[0]}`)
     return 2
   }
-  const files = yamlFiles((paths.length > 0 ? paths : ['modules']).map((p) => resolve(p)))
+  const files = yamlFiles((paths.length > 0 ? paths : ['modules', 'templates']).map((p) => resolve(p)))
   const aliases = readCategoryAliases(ctx.root)
   const rel = (f: string) => relative(process.cwd(), f).split(sep).join('/')
   let changed = 0
@@ -27,7 +29,8 @@ export default async function format(ctx: CommandContext): Promise<number> {
   for (const file of files) {
     const text = readFileSync(file, 'utf8')
     try {
-      const res = await formatDescriptorText(text, file, { categoryAliases: aliases })
+      const template = isTemplatePath(relative(ctx.root, file).split(sep).join('/'))
+      const res = await formatDescriptorText(text, file, { categoryAliases: aliases, template })
       report.push({ file: rel(file), changed: res.changed, notes: res.notes })
       if (!res.changed) continue
       changed++

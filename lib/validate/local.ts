@@ -56,13 +56,14 @@ export function issueMessage(
   issue: z.core.$ZodIssue,
   raw: Record<string, unknown>,
   aliases: Map<string, string>,
+  keyOrder: readonly string[] = DESCRIPTOR_KEY_ORDER,
 ): string {
   const path = issue.path.map(String).join('.')
   if (issue.code === 'unrecognized_keys') {
     const keys = (issue as { keys: string[] }).keys
     const where = path ? `${path}: ` : ''
     return `${where}unknown field${keys.length > 1 ? 's' : ''} ${keys.map((k) => JSON.stringify(k)).join(', ')}${
-      path ? '' : ` (allowed: ${DESCRIPTOR_KEY_ORDER.join(', ')})`
+      path ? '' : ` (allowed: ${keyOrder.join(', ')})`
     }`
   }
   if (path === 'category') {
@@ -90,17 +91,13 @@ export function issueMessage(
   return `${path || 'descriptor'}: ${issue.message}`
 }
 
-/** Step 1: YAML, schema, path. Returns the parsed descriptor or the errors. */
-export function checkSchema(
-  input: LocalInput,
-  catalog: Pick<Catalog, 'categoryAliases'>,
-): { d: DescriptorT | null; raw: Record<string, unknown> | null; findings: Finding[] } {
+/** The YAML map of an entry file (duplicate keys refused), or the `yaml` errors of step 1. */
+export function parseEntryYaml(
+  text: string,
+  what = 'a descriptor',
+): { raw: Record<string, unknown> | null; findings: Finding[] } {
   const findings: Finding[] = []
-  if (!/^modules\/.+\.yml$/.test(input.file)) {
-    findings.push(f('schema', 'error', 'file-name', `${input.file}: descriptors are modules/<path>.yml files`))
-    return { d: null, raw: null, findings }
-  }
-  const doc = parseDocument(input.text, { prettyErrors: true, uniqueKeys: true })
+  const doc = parseDocument(text, { prettyErrors: true, uniqueKeys: true })
   if (doc.errors.length > 0) {
     for (const e of doc.errors.slice(0, 5)) {
       const pos = e.linePos?.[0]
@@ -114,13 +111,30 @@ export function checkSchema(
         ),
       )
     }
-    return { d: null, raw: null, findings }
+    return { raw: null, findings }
   }
   const raw = doc.toJS() as unknown
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    findings.push(f('schema', 'error', 'yaml', 'a descriptor is a YAML map of fields'))
+    findings.push(f('schema', 'error', 'yaml', `${what} is a YAML map of fields`))
+    return { raw: null, findings }
+  }
+  return { raw: raw as Record<string, unknown>, findings }
+}
+
+/** Step 1: YAML, schema, path. Returns the parsed descriptor or the errors. */
+export function checkSchema(
+  input: LocalInput,
+  catalog: Pick<Catalog, 'categoryAliases'>,
+): { d: DescriptorT | null; raw: Record<string, unknown> | null; findings: Finding[] } {
+  const findings: Finding[] = []
+  if (!/^modules\/.+\.yml$/.test(input.file)) {
+    findings.push(f('schema', 'error', 'file-name', `${input.file}: descriptors are modules/<path>.yml files`))
     return { d: null, raw: null, findings }
   }
+  const yaml = parseEntryYaml(input.text)
+  findings.push(...yaml.findings)
+  const raw = yaml.raw
+  if (raw === null) return { d: null, raw: null, findings }
   const parsed = Descriptor.safeParse(raw)
   if (!parsed.success) {
     const seen = new Set<string>()
@@ -140,6 +154,39 @@ export function checkSchema(
     return { d: null, raw: raw as Record<string, unknown>, findings }
   }
   return { d: parsed.data, raw: raw as Record<string, unknown>, findings }
+}
+
+/** Screenshots an entry hosts in the catalog (`screenshots/<name>` next to it): in the pull request, small enough. */
+export function screenshotFindings(
+  file: string,
+  screenshots: readonly { src: string }[],
+  fileSize: (file: string) => number | null,
+): Finding[] {
+  const out: Finding[] = []
+  screenshots.forEach((s, i) => {
+    if (!isHostedScreenshot(s.src)) return
+    const shot = screenshotFile(file, s.src)
+    const size = fileSize(shot)
+    if (size === null)
+      out.push(
+        f(
+          'schema',
+          'error',
+          'screenshot-missing',
+          `screenshots.${i}.src: add ${shot} to the pull request, or fix the name`,
+        ),
+      )
+    else if (size > SCREENSHOT_MAX_BYTES)
+      out.push(
+        f(
+          'schema',
+          'error',
+          'screenshot-size',
+          `screenshots.${i}.src: ${shot} is ${Math.ceil(size / 1024)} KB, max ${SCREENSHOT_MAX_BYTES / 1024} KB; save it as WebP or crop it`,
+        ),
+      )
+  })
+  return out
 }
 
 /** Owner of a locator for the typosquat rule: npm scope, else the GitHub owner (descriptor `github`), else none. */
@@ -183,7 +230,10 @@ export interface NameHit {
  */
 export function typosquatHits(
   d: Pick<DescriptorT, 'npm' | 'github'>,
-  catalog: Pick<Catalog, 'entries' | 'officialNames'>,
+  catalog: {
+    entries: ReadonlyMap<string, { locator: string; d: Pick<DescriptorT, 'npm' | 'github'> }>
+    officialNames: readonly string[]
+  },
 ): NameHit[] {
   const name = nameOf(d)
   const own = ownerKey(d)
@@ -272,30 +322,7 @@ export function checkLocal(input: LocalInput, catalog: Catalog): LocalResult {
       findings.push(f('schema', 'error', 'renamed', `renamedFrom ${r} is still an entry of its own`))
 
   // screenshots hosted in the catalog: the file is in the pull request and small enough for a page
-  if (input.fileSize)
-    (d.screenshots ?? []).forEach((s, i) => {
-      if (!isHostedScreenshot(s.src)) return
-      const file = screenshotFile(input.file, s.src)
-      const size = input.fileSize?.(file) ?? null
-      if (size === null)
-        findings.push(
-          f(
-            'schema',
-            'error',
-            'screenshot-missing',
-            `screenshots.${i}.src: add ${file} to the pull request, or fix the name`,
-          ),
-        )
-      else if (size > SCREENSHOT_MAX_BYTES)
-        findings.push(
-          f(
-            'schema',
-            'error',
-            'screenshot-size',
-            `screenshots.${i}.src: ${file} is ${Math.ceil(size / 1024)} KB, max ${SCREENSHOT_MAX_BYTES / 1024} KB; save it as WebP or crop it`,
-          ),
-        )
-    })
+  if (input.fileSize) findings.push(...screenshotFindings(input.file, d.screenshots ?? [], input.fileSize))
 
   // 5. texts: the schema checked PlainText, lengths and `Use when `; phrase flags go to a human
   const texts: [string, string][] = []

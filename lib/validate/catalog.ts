@@ -23,6 +23,7 @@ import {
   type Lines as LinesT,
 } from '../schema/index.ts'
 import { OfficialCoverageFile } from '../schema/data/coverage.ts'
+import { TemplateDescriptor, templatePath, type TemplateDescriptor as TemplateDescriptorT } from '../schema/template.ts'
 import { curatorsFrom } from '../sources/entries.ts'
 import { yamlFiles } from './format.ts'
 
@@ -33,10 +34,18 @@ export interface CatalogEntry {
   d: DescriptorT
 }
 
+export interface TemplateCatalogEntry {
+  /** Repo-relative path, `templates/<owner>/<repo>.yml`. */
+  file: string
+  d: TemplateDescriptorT
+}
+
 export interface Catalog {
   root: string
   /** Every descriptor on disk that parses, by lower-case locator. */
   entries: Map<string, CatalogEntry>
+  /** Every template entry on disk that parses, by lower-case `owner/repo`. */
+  templates: Map<string, TemplateCatalogEntry>
   categoryAliases: Map<string, string>
   reserved: string[]
   ignore: IgnoreFileT
@@ -74,6 +83,15 @@ export async function loadCatalog(root: string, dataDir: string | null): Promise
       entries.set(locator.toLowerCase(), { file: rel(root, abs), locator, d })
     } catch {
       // an invalid descriptor is reported when it is validated itself
+    }
+  }
+  const templates = new Map<string, TemplateCatalogEntry>()
+  for (const abs of yamlFiles([join(root, 'templates')])) {
+    try {
+      const d = TemplateDescriptor.parse(parse(readFileSync(abs, 'utf8')))
+      templates.set(templatePath(d.github), { file: rel(root, abs), d })
+    } catch {
+      // the same: reported when the entry is validated
     }
   }
   const pol = (name: string) => join(root, 'policy', name)
@@ -130,6 +148,7 @@ export async function loadCatalog(root: string, dataDir: string | null): Promise
   return {
     root,
     entries,
+    templates,
     categoryAliases,
     reserved,
     ignore,

@@ -1,7 +1,8 @@
 // `yarn om validate [--changed=<ref>] [--files <f>...] [--summary <file>]` (spec 5.2, 5.4).
 // Checks descriptors in the order of spec 5.2 (schema, locator, tarball, license, texts, names, Rentgen + Fit,
 // lint, preliminary claim, built-in map) and writes a markdown summary (at most 10 lines per entry) plus
-// out/validate.json. Without --changed and --files every descriptor in modules/ is checked.
+// out/validate.json. Without --changed and --files every descriptor in modules/ and every template entry in
+// templates/ is checked (template entries go through their own steps, lib/validate/template-*.ts).
 // Extra flags: --labels <a,b> (PR labels; env PR_LABELS), --author <login> (PR author; env PR_AUTHOR),
 // --no-fit (skip Fit), --cache <dir> (OM tarballs for Fit, default <out>/om-tarballs).
 // --offline runs only the steps without network (1, 5, 6, curator fields, 10). Exit 0 ok, 1 invalid, 2 environment.
@@ -107,7 +108,7 @@ export default async function validate(ctx: CommandContext): Promise<number> {
     qualityFiles = []
     builtinCheck = false
   } else {
-    files = yamlFiles([join(root, 'modules')]).map((f) => rel(root, f))
+    files = yamlFiles([join(root, 'modules'), join(root, 'templates')]).map((f) => rel(root, f))
   }
   files = [...new Set(files)].sort()
 

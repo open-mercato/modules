@@ -23,14 +23,26 @@ import { FormatError, formatDescriptorText, readCategoryAliases, yamlFiles } fro
 import type { Catalog } from './catalog.ts'
 import { checkLocal } from './local.ts'
 import { checkRemote, type RemoteDeps } from './remote.ts'
-import { errorsOf, STEPS, type EntryResult, type Finding, type StepId, type ValidateReport } from './types.ts'
+import { checkTemplateLocal, isTemplatePath } from './template-local.ts'
+import { checkTemplateRemote } from './template-remote.ts'
+import {
+  errorsOf,
+  STEPS,
+  TEMPLATE_STEPS,
+  type EntryResult,
+  type Finding,
+  type StepId,
+  type ValidateReport,
+} from './types.ts'
 
 export interface ChangedFiles {
   /**
-   * Added or modified descriptor files (`modules/**`), repo-relative. A changed screenshot of the catalog
-   * (`modules/<folder>/screenshots/<name>`) brings the descriptors of its folder that name it instead.
+   * Added or modified entry files (`modules/**` descriptors and `templates/**` template entries), repo-relative. A
+   * changed screenshot of the catalog (`<folder>/screenshots/<name>`) brings the entries of its folder that name it
+   * instead.
    */
   descriptors: string[]
+  /** Removed entry files (`modules/**` and `templates/**`). */
   removed: string[]
   /** Changed files under policy/ (and harness/lines.yml). */
   policy: string[]
@@ -55,14 +67,15 @@ export function changedFiles(root: string, ref: string): ChangedFiles {
     if (SCREENSHOT_FILE.test(file)) {
       res.descriptors.push(...descriptorsNaming(root, file))
       if (status !== 'D') res.screenshots.push(file)
-    } else if (file.startsWith('modules/')) (status === 'D' ? res.removed : res.descriptors).push(file)
+    } else if (file.startsWith('modules/') || isTemplatePath(file))
+      (status === 'D' ? res.removed : res.descriptors).push(file)
     else if ((file.startsWith('policy/') || file === 'harness/lines.yml') && status !== 'D') res.policy.push(file)
     else if (file.startsWith('quality/reviews/') && file.endsWith('.yml') && status !== 'D') res.quality.push(file)
   }
   return res
 }
 
-/** Descriptors in the folder above `<folder>/screenshots/` whose text names the screenshot file. */
+/** Entries (descriptors or template entries) in the folder above `<folder>/screenshots/` that name the screenshot file. */
 export function descriptorsNaming(root: string, screenshot: string): string[] {
   const folder = dirname(dirname(screenshot))
   const name = screenshot.slice(screenshot.lastIndexOf('/') + 1)
@@ -84,7 +97,14 @@ export function checkScreenshotFiles(root: string, files: readonly string[]): Fi
   const size = fileSizeIn(root)
   for (const file of files) {
     if (descriptorsNaming(root, file).length === 0)
-      out.push(g('schema', 'error', 'screenshot-orphan', `${file}: no descriptor in its folder names this screenshot`))
+      out.push(
+        g(
+          'schema',
+          'error',
+          'screenshot-orphan',
+          `${file}: no ${isTemplatePath(file) ? 'template entry' : 'descriptor'} in its folder names this screenshot`,
+        ),
+      )
     const n = size(file)
     if (n !== null && n > SCREENSHOT_MAX_BYTES)
       out.push(
@@ -251,6 +271,10 @@ export function checkBuiltinCoverage(catalog: Catalog, upcoming: readonly string
 export const FORMAT_WARNING =
   'not in the canonical form (key order, quotes or spacing): run yarn om format modules and commit the result, or the checks job fails'
 
+/** The same for a template entry, formatted by `yarn om format templates`. */
+export const TEMPLATE_FORMAT_WARNING =
+  'not in the canonical form (key order, quotes or spacing): run yarn om format templates and commit the result, or the checks job fails'
+
 export interface ValidateOptions {
   root: string
   catalog: Catalog
@@ -274,8 +298,69 @@ export interface ValidateOptions {
   log?: (line: string) => void
 }
 
-/** Validates one descriptor file through the ten steps. */
+/** Validates one template entry (`templates/<owner>/<repo>.yml`) through TEMPLATE_STEPS. */
+export async function validateTemplateEntry(file: string, opts: ValidateOptions): Promise<EntryResult> {
+  const t0 = Date.now()
+  const abs = join(opts.root, file)
+  const result: EntryResult = {
+    file,
+    locator: null,
+    version: null,
+    status: 'pass',
+    findings: [],
+    skipped: [],
+    rows: [],
+    durationMs: 0,
+  }
+  const finish = (): EntryResult => {
+    result.status = errorsOf(result.findings).length > 0 ? 'fail' : 'pass'
+    result.durationMs = Date.now() - t0
+    return result
+  }
+  if (!existsSync(abs)) {
+    result.findings.push(g('schema', 'error', 'missing', `${file} does not exist`))
+    return finish()
+  }
+  const text = readFileSync(abs, 'utf8')
+  const local = checkTemplateLocal(
+    {
+      file,
+      text,
+      labels: opts.labels,
+      fileSize: fileSizeIn(opts.root),
+      ...(opts.baseRef !== null ? { baseText: textAt(opts.root, opts.baseRef, file) } : {}),
+    },
+    opts.catalog,
+  )
+  result.locator = local.locator
+  result.findings.push(...local.findings)
+  if (!local.d || errorsOf(local.findings).some((x) => x.step === 'schema')) {
+    for (const s of TEMPLATE_STEPS.slice(1)) result.skipped.push({ step: s, reason: 'schema error' })
+    return finish()
+  }
+  try {
+    const formatted = await formatDescriptorText(text, abs, { template: true })
+    if (formatted.changed) result.findings.push(g('schema', 'warning', 'format', TEMPLATE_FORMAT_WARNING))
+  } catch (err) {
+    if (!(err instanceof FormatError)) throw err
+  }
+  if (!opts.remote) {
+    for (const s of ['repo', 'archive', 'license', 'claim'] as const)
+      result.skipped.push({ step: s, reason: 'offline' })
+    return finish()
+  }
+  opts.log?.(`validate: template ${local.locator}`)
+  const remote = await checkTemplateRemote(local.d, opts.catalog, opts.remote)
+  result.version = remote.version
+  result.findings.push(...remote.findings)
+  result.skipped.push(...remote.skipped)
+  result.rows.push(...remote.rows)
+  return finish()
+}
+
+/** Validates one descriptor file through the ten steps (a template entry through TEMPLATE_STEPS). */
 export async function validateEntry(file: string, opts: ValidateOptions): Promise<EntryResult> {
+  if (isTemplatePath(file)) return validateTemplateEntry(file, opts)
   const t0 = Date.now()
   const abs = join(opts.root, file)
   const result: EntryResult = {

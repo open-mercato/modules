@@ -138,6 +138,13 @@ describe('screenshot helpers', () => {
     expect(SCREENSHOT_FILE.test('modules/screenshots/a.png')).toBe(true)
     expect(SCREENSHOT_FILE.test('modules/@acme/a.webp')).toBe(false)
     expect(SCREENSHOT_FILE.test('modules/@acme/screenshots/a.yml')).toBe(false)
+    // template entries host theirs next to them (templates/<owner>/screenshots/, Phase 1a step 2)
+    expect(SCREENSHOT_FILE.test('templates/acme/screenshots/a.webp')).toBe(true)
+    expect(SCREENSHOT_FILE.test('templates/acme/a.webp')).toBe(false)
+    expect(SCREENSHOT_FILE.test('docs/screenshots/a.webp')).toBe(false)
+    expect(screenshotFile('templates/acme/b2b-portal.yml', 'screenshots/a.webp')).toBe(
+      'templates/acme/screenshots/a.webp',
+    )
   })
 })
 

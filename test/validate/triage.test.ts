@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { main } from '../../lib/cli.ts'
 import { loadCatalog, type Catalog } from '../../lib/validate/catalog.ts'
 import { replayGh, type GhRecording } from '../../lib/validate/gh.ts'
-import { ciState, mergeReady, renderLines, triage } from '../../lib/validate/triage.ts'
+import { ciState, mergeReady, renderLines, triage, triagePr, type GhPr } from '../../lib/validate/triage.ts'
 import { ROOT } from './helpers.ts'
 
 const SESSION = join(ROOT, 'test', 'validate', 'fixtures', 'gh', 'session.json')
@@ -42,6 +42,35 @@ describe('triage', () => {
     const text = renderLines(lines)
     expect(text.split('\n')[0]).toBe('#101  ready    ci:pass     npm:@acme-labs/om-loyalty  [fork, new]')
     expect(text.split('\n').at(-1)).toBe('7 open, 1 ready to merge.')
+  })
+
+  it('leaves template entries and their screenshots to a person: other files, never ready', async () => {
+    const pr: GhPr = {
+      number: 120,
+      title: 'Add b2b-portal template',
+      author: { login: 'acme' },
+      headRefOid: 'f'.repeat(40),
+      headRepository: { name: 'modules', nameWithOwner: 'acme/modules' },
+      headRepositoryOwner: { login: 'acme' },
+      isCrossRepository: true,
+      isDraft: false,
+      mergeable: 'MERGEABLE',
+      labels: [],
+      files: [{ path: 'templates/acme/b2b-portal.yml' }, { path: 'templates/acme/screenshots/quotes.webp' }],
+      statusCheckRollup: ['validate', 'checks', 'build'].map((name) => ({
+        name,
+        status: 'COMPLETED',
+        conclusion: 'SUCCESS',
+      })),
+      url: 'https://github.com/open-mercato/modules/pull/120',
+    }
+    const line = await triagePr(pr, { gh: replayGh(SESSION), catalog })
+    expect(line.verdict).toBe('hold')
+    expect(line.flags).toEqual(['fork', 'other-files'])
+    expect(line.reasons).toEqual([
+      'changes files outside modules/: templates/acme/b2b-portal.yml, templates/acme/screenshots/quotes.webp',
+      'no descriptor in the pull request',
+    ])
   })
 
   it('uses the newest run of the validate check', () => {
