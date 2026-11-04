@@ -1,6 +1,7 @@
 // `yarn om check-text`: no U+2014, U+2013 or control characters in human texts (spec 0.7, 3.5).
-// Scope: site/src/**, modules/**, policy/**, quality/**, .github/**, skills/**, plugins/** and every *.md,
-// except test/fixtures/** and generated or vendored directories. Optional args restrict the check to given files.
+// Scope: site/src/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/** and
+// every *.md, except test/fixtures/** and generated or vendored directories. Optional args restrict the check to given
+// files.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -20,7 +21,17 @@ const SKIP_DIRS = new Set([
   'playwright-report',
 ])
 const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/']
-const TEXT_DIRS = ['site/src/', 'modules/', 'policy/', 'quality/', '.github/', 'skills/', 'plugins/']
+const TEXT_DIRS = [
+  'site/src/',
+  'modules/',
+  'templates/',
+  'policy/',
+  'quality/',
+  'docs/',
+  '.github/',
+  'skills/',
+  'plugins/',
+]
 const TEXT_EXT = /\.(md|mdx|ya?ml|astro|tsx?|jsx?|css|html|json|txt|svg)$/
 
 export const description = 'ban long dashes and control characters in texts'

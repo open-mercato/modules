@@ -302,7 +302,8 @@ describe.skipIf(!hasJq)('watch.yml steps', () => {
 })
 
 describe('validate.yml checks scope', () => {
-  // the Scope step against a branch of `work`: only modules/ changed -> descriptors_only=true (finding of 25 Oct)
+  // the Scope step against a branch of `work`: only modules/ or templates/ changed -> descriptors_only=true (finding
+  // of 25 Oct)
   const scope = (files: Record<string, string>) => {
     git(work, 'fetch', '--quiet', 'origin', 'main')
     git(work, 'checkout', '--quiet', '-B', 'pr', 'origin/main')
@@ -321,6 +322,7 @@ describe('validate.yml checks scope', () => {
 
   it('only descriptors: the test suite is skipped; anything else runs it', () => {
     expect(scope({ 'modules/@acme/x.yml': 'npm: "@acme/x"\n' })).toBe('descriptors_only=true')
+    expect(scope({ 'templates/acme/x.yml': 'github: acme/x\n' })).toBe('descriptors_only=true')
     expect(scope({ 'modules/@acme/y.yml': 'npm: "@acme/y"\n', 'policy/ignore.yml': '[]\n' })).toBe(
       'descriptors_only=false',
     )
