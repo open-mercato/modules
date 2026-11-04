@@ -5,7 +5,7 @@
 // of RemoteDeps, so tests answer them with a fake fetch; nothing from the archive is unpacked or run.
 import { licenseKind } from '../rentgen/license.ts'
 import { satisfies } from '../fit/semver.ts'
-import type { TemplateDescriptor as TemplateDescriptorT } from '../schema/template.ts'
+import { TemplateRef, type TemplateDescriptor as TemplateDescriptorT } from '../schema/template.ts'
 import { API, isPublicMember, ownerOf, repoTags } from '../sources/github.ts'
 import { HttpError, OfflineMissError, type Http } from '../sources/http.ts'
 import { githubArchiveUrl } from '../sources/tarball.ts'
@@ -92,7 +92,12 @@ export async function repoBranches(http: Http, repo: string): Promise<{ name: st
   return (res.json as { name: string; commit: { sha: string } }[]).map((b) => ({ name: b.name, sha: b.commit.sha }))
 }
 
-const refPath = (ref: string): string => ref.split('/').map(encodeURIComponent).join('/')
+/** The ref as URL path segments. A `.`, `..` or empty segment would let the URL leave the repository, so it throws. */
+export function refPath(ref: string): string {
+  const parts = ref.split('/')
+  if (parts.some((p) => p === '' || p === '.' || p === '..')) throw new Error(`unsafe ref ${JSON.stringify(ref)}`)
+  return parts.map(encodeURIComponent).join('/')
+}
 
 /** The full sha a ref resolves to in this repository (`GET /repos/{repo}/commits/{ref}`), null when it does not. */
 export async function commitSha(http: Http, repo: string, ref: string): Promise<string | null> {
@@ -103,6 +108,32 @@ export async function commitSha(http: Http, repo: string, ref: string): Promise<
   if (res.status !== 200 || !/^[0-9a-f]{40}$/.test(sha))
     throw new HttpError(`HTTP ${res.status} for ${url}`, url, res.status)
   return sha
+}
+
+/**
+ * The commit of branch or tag `name` of this repository, asked for by exact name (`GET /repos/{repo}/git/ref/heads/{name}`
+ * and `.../tags/{name}`), null when it is neither. Unlike the commits API this never resolves `refs/pull/*`.
+ */
+export async function namedRef(
+  http: Http,
+  repo: string,
+  name: string,
+): Promise<{ kind: 'branch' | 'tag'; sha: string } | null> {
+  for (const [kind, ns] of [
+    ['branch', 'heads'],
+    ['tag', 'tags'],
+  ] as const) {
+    const url = `${API}/repos/${repo}/git/ref/${ns}/${refPath(name)}`
+    const res = await http.request(url)
+    if (res.status === 404) continue
+    if (res.status !== 200 || res.json === null) throw new HttpError(`HTTP ${res.status} for ${url}`, url, res.status)
+    const o = (res.json as { object?: { type?: string; sha?: string } }).object
+    // an annotated tag points at a tag object; the commits API peels it to its commit
+    const sha =
+      o?.type === 'commit' && typeof o.sha === 'string' ? o.sha : await commitSha(http, repo, `refs/${ns}/${name}`)
+    if (sha && /^[0-9a-f]{40}$/.test(sha)) return { kind, sha }
+  }
+  return null
 }
 
 /** True when `base` (a branch or tag) contains `sha`: the compare API says `behind` or `identical`. */
@@ -118,16 +149,20 @@ export async function contains(http: Http, repo: string, base: string, sha: stri
 export interface ResolvedRef {
   /** The ref as the entry names it, or the default branch. */
   name: string
-  /** `ref` is a branch or tag the first pages of either did not list. */
+  /**
+   * `branch` and `tag` are names of this repository; `commit` is a sha and `ref` any other name GitHub resolves (such as
+   * `refs/heads/main`), both contained in a branch or tag.
+   */
   kind: 'default branch' | 'branch' | 'tag' | 'ref' | 'commit'
   sha: string
 }
 
 /**
- * Resolves the entry's `ref` to one sha of this repository. A named ref (branch or tag) belongs to the repository by
- * definition; a commit sha must be contained in a branch or tag, because GitHub serves a fork's commits through the
- * parent too. Returns the finding instead when the ref does not resolve or no branch or tag contains it. `known`
- * passes branches or tags the caller already read (sync keeps the tags).
+ * Resolves the entry's `ref` to one sha of this repository. A branch or tag belongs to the repository by definition:
+ * one of the first pages of either, or one asked for by exact name. Any other sha the commits API gives must be
+ * contained in a branch or tag, because GitHub serves a fork's commits through the parent too (a fork sha, a
+ * `refs/pull/*` ref). Returns the finding instead when the ref is not a valid name, does not resolve, or no branch or
+ * tag contains it. `known` passes branches or tags the caller already read (sync keeps the tags).
  */
 export async function resolveTemplateRef(
   http: Http,
@@ -136,6 +171,11 @@ export async function resolveTemplateRef(
   ref: string | undefined,
   known?: { branches?: { name: string; sha: string }[]; tags?: { name: string; sha: string }[] },
 ): Promise<{ ref: ResolvedRef } | { finding: Finding }> {
+  // the schema checks this; sync and other callers get the same refusal before any request
+  if (ref !== undefined && !TemplateRef.safeParse(ref).success)
+    return {
+      finding: f('repo', 'error', 'ref-invalid', `ref ${JSON.stringify(ref)} is not a branch, tag or commit name`),
+    }
   const branches = known?.branches ?? (await repoBranches(http, repo))
   const tags = known?.tags ?? (await repoTags(http, repo))
   const name = ref ?? meta.defaultBranch
@@ -149,11 +189,13 @@ export async function resolveTemplateRef(
     if (!sha) return notFound()
     return { ref: { name, kind: ref === undefined ? 'default branch' : branch ? 'branch' : 'tag', sha } }
   }
+  // a branch or tag beyond the first pages
+  const named = await namedRef(http, repo, name)
+  if (named) return { ref: { name, ...named } }
   const sha = await commitSha(http, repo, name)
   if (!sha) return notFound()
-  // a name beyond the first pages of branches or tags still resolves; only a sha needs the containment check
-  if (!/^[0-9a-f]{7,40}$/i.test(name) || !sha.startsWith(name.toLowerCase())) return { ref: { name, kind: 'ref', sha } }
-  const resolved: ResolvedRef = { name, kind: 'commit', sha }
+  const isSha = /^[0-9a-f]{7,40}$/i.test(name) && sha.startsWith(name.toLowerCase())
+  const resolved: ResolvedRef = { name, kind: isSha ? 'commit' : 'ref', sha }
   if (branches.some((b) => b.sha === sha) || tags.some((t) => t.sha === sha)) return { ref: resolved }
   const bases = [
     meta.defaultBranch,
@@ -161,12 +203,13 @@ export async function resolveTemplateRef(
     ...tags.map((t) => t.name),
   ].slice(0, MAX_COMPARES)
   for (const base of bases) if (await contains(http, repo, base, sha)) return { ref: resolved }
+  const what = isSha ? `commit ${sha.slice(0, 12)}` : `ref ${name} resolves to commit ${sha.slice(0, 12)}, which`
   return {
     finding: f(
       'repo',
       'error',
       'ref-unreachable',
-      `commit ${sha.slice(0, 12)} is not on a branch or tag of ${repo} (checked ${bases.length}); a commit of a fork is refused. Name a branch or tag, or a commit of one`,
+      `${what} is not on a branch or tag of ${repo} (checked ${bases.length}); a commit of a fork is refused. Name a branch or tag, or a commit of one`,
     ),
   }
 }

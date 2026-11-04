@@ -8,7 +8,14 @@ import { loadCatalog, type Catalog } from '../../lib/validate/catalog.ts'
 import { changedFiles, checkScreenshotFiles, reportFailed, runValidate } from '../../lib/validate/run.ts'
 import { renderSummary } from '../../lib/validate/summary.ts'
 import { checkTemplateLocal, checkTemplateSchema } from '../../lib/validate/template-local.ts'
-import { builtOnText, checkTemplateRemote, MAX_COMPARES } from '../../lib/validate/template-remote.ts'
+import {
+  builtOnText,
+  checkTemplateRemote,
+  fetchTemplateRepo,
+  MAX_COMPARES,
+  refPath,
+  resolveTemplateRef,
+} from '../../lib/validate/template-remote.ts'
 import { TemplateDescriptor } from '../../lib/schema/template.ts'
 import { parse } from 'yaml'
 import { templateArchive } from '../templates/helpers.ts'
@@ -250,6 +257,38 @@ describe('template entries online (fake GitHub)', () => {
       'ref release/9 is not a branch, tag or commit of acme/b2b-portal',
     ])
     expect(MAX_COMPARES).toBe(10)
+  })
+
+  it('checks every sha that is not a branch or tag: a pull request ref is refused, a name GitHub resolves is compared', async () => {
+    const w = world({
+      refs: { 'pull/1/head': FORK, 'refs/changes/1': FORK },
+      moreBranches: { 'feature/x': 'f'.repeat(40) },
+    })
+    const meta = (await fetchTemplateRepo(fakeHttp(w), 'acme/b2b-portal'))!
+    const resolve = async (ref: string) => {
+      const seen: string[] = []
+      const r = await resolveTemplateRef(fakeHttp(w, seen), 'acme/b2b-portal', meta, ref)
+      return { r, seen }
+    }
+    // the schema refuses a pull ref, and so does the resolver before any request (sync calls it too)
+    const pull = await resolve('pull/1/head')
+    expect('finding' in pull.r && pull.r.finding.code).toBe('ref-invalid')
+    expect(pull.seen).toEqual([])
+    expect('finding' in (await resolve('../../../evil/fork/commits/main')).r).toBe(true)
+    // a name the commits API resolves to a fork's commit gets the containment check
+    const other = await resolve('refs/changes/1')
+    expect('finding' in other.r && other.r.finding.message).toBe(
+      `ref refs/changes/1 resolves to commit ${FORK.slice(0, 12)}, which is not on a branch or tag of acme/b2b-portal (checked 3); a commit of a fork is refused. Name a branch or tag, or a commit of one`,
+    )
+    expect(other.seen.filter((s) => s.includes('/compare/'))).toHaveLength(3)
+    // a full ref name of a listed branch passes as a ref; a branch beyond the first page passes by its exact name
+    expect((await resolve('refs/heads/main')).r).toEqual({ ref: { name: 'refs/heads/main', kind: 'ref', sha: MAIN } })
+    const later = await resolve('feature/x')
+    expect(later.r).toEqual({ ref: { name: 'feature/x', kind: 'branch', sha: 'f'.repeat(40) } })
+    expect(later.seen).toContain('GET https://api.github.com/repos/acme/b2b-portal/git/ref/heads/feature/x')
+    expect(later.seen.some((s) => s.includes('/compare/'))).toBe(false)
+    expect(() => refPath('a/../b')).toThrow(/unsafe ref/)
+    expect(refPath('release/v1')).toBe('release/v1')
   })
 
   it('the repository must exist, be public and not archived', async () => {

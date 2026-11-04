@@ -51,6 +51,10 @@ export interface FakeRepo {
   contains?: Record<string, string[]>
   /** Shas GitHub serves through this repository that no branch or tag contains (commits of a fork). */
   foreign?: string[]
+  /** Branches beyond the first page of the branch list, name to sha. */
+  moreBranches?: Record<string, string>
+  /** Other names the commits API resolves, such as `pull/1/head`, name to sha. */
+  refs?: Record<string, string>
   // further REST fields template sync reads (defaults as in the GraphQL answer)
   stars?: number
   pushedAt?: string
@@ -145,7 +149,13 @@ export function fakeFetch(world: FakeWorld, seen: string[] = []): typeof fetch {
       if (!r || (r.private && !rest[2])) return json({ message: 'Not Found' }, 404)
       const branches = r.branches ?? {}
       const tags = r.tagShas ?? {}
+      const allBranches = { ...branches, ...r.moreBranches }
       const head = (name: string): string | undefined => branches[name] ?? tags[name]
+      const resolve = (name: string): string | undefined => {
+        const m = /^refs\/(heads|tags)\/(.+)$/.exec(name)
+        if (m) return m[1] === 'heads' ? allBranches[m[2] as string] : tags[m[2] as string]
+        return allBranches[name] ?? tags[name] ?? r.refs?.[name]
+      }
       const known = [...Object.values(branches), ...Object.values(tags), ...Object.values(r.contains ?? {}).flat()]
       const tail = rest[2] ?? ''
       if (tail === '')
@@ -169,10 +179,19 @@ export function fakeFetch(world: FakeWorld, seen: string[] = []): typeof fetch {
       if (commit) {
         const ref = decodeURIComponent(commit[1] as string)
         const sha =
-          head(ref) ?? [...known, ...(r.foreign ?? [])].find((x) => /^[0-9a-f]{7,40}$/.test(ref) && x.startsWith(ref))
+          resolve(ref) ??
+          [...known, ...(r.foreign ?? [])].find((x) => /^[0-9a-f]{7,40}$/.test(ref) && x.startsWith(ref))
         return sha
           ? new Response(sha, { status: 200, headers: { 'content-type': 'application/vnd.github.sha' } })
           : json({ message: 'No commit found for SHA' }, 422)
+      }
+      const named = /^\/git\/ref\/(heads|tags)\/(.+)$/.exec(tail)
+      if (named) {
+        const ref = decodeURIComponent(named[2] as string)
+        const sha = named[1] === 'heads' ? allBranches[ref] : tags[ref]
+        return sha
+          ? json({ ref: `refs/${named[1]}/${ref}`, object: { type: 'commit', sha } })
+          : json({ message: 'Not Found' }, 404)
       }
       const compare = /^\/compare\/(.+)\.\.\.([0-9a-f]{40})\?per_page=1$/.exec(tail)
       if (compare) {
