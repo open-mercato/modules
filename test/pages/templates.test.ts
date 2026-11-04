@@ -1,5 +1,5 @@
 // /templates (decisions of 29 Oct): the section is public at once in a coming soon state, with no entries until the
-// save tool ships; the header and the footer link it; templates.openmercato.com/ leads to it through one Pages
+// first active template; the header and the footer link it; templates.openmercato.com/ leads to it through one Pages
 // Function on `/` only, and modules.openmercato.com is never redirected. From Phase 1a the page switches to the gallery
 // once templates.json has an active entry; the coming soon state lives in components/templates/ComingSoon.astro.
 import { readFileSync } from 'node:fs'
@@ -34,7 +34,7 @@ describe('/templates page', () => {
   it('shows the coming soon state', () => {
     expect(markup).toContain('data-templates-state="coming-soon"')
     expect(words).toContain('Coming soon')
-    expect(words).toContain('No templates are listed yet.')
+    expect(words).toContain('No template is ready to start from yet.')
     expect(markup).toContain('title="No templates yet"')
   })
 
@@ -49,16 +49,22 @@ describe('/templates page', () => {
     expect(markup).toContain('<code>create-mercato-template</code>')
     expect(markup).toContain('<code>create-mercato-module</code>')
     expect(words).toContain('npx create-mercato-app my-app --template owner/repo')
-    expect(words).toContain('Neither exists yet: there is no create-mercato-template package and no --template option.')
+    // the save tool is on GitHub and not on npm yet (Phase 1a step 8); --template ships in Phase 4
+    expect(words).toContain('create-mercato-template is on GitHub and not on npm yet.')
+    expect(words).toContain('The --template option is not released yet.')
   })
 
-  it('links the spec and both tracking issues', () => {
+  it('links the spec, both tracking issues, the save tool and CONTRIBUTING', () => {
     expect(TEMPLATES_LINKS).toEqual({
       spec: 'https://github.com/open-mercato/modules/pull/5',
       tool: 'https://github.com/open-mercato/modules/issues/6',
       section: 'https://github.com/open-mercato/modules/issues/7',
+      toolRepo: 'https://github.com/open-mercato/create-mercato-template',
+      // the anchor the save tool's describe prints
+      contributing: 'https://github.com/open-mercato/modules/blob/main/CONTRIBUTING.md#templates',
     })
-    for (const key of ['spec', 'tool', 'section']) expect(markup).toContain(`TEMPLATES_LINKS.${key}`)
+    for (const key of ['spec', 'tool', 'section', 'toolRepo', 'contributing'])
+      expect(markup).toContain(`TEMPLATES_LINKS.${key}`)
   })
 
   it('follows the text rules: no typed numbers, no long dashes, no exclamation marks', () => {
@@ -145,5 +151,15 @@ describe('templates.openmercato.com', () => {
 
   it('runs Functions on `/` only, so every other request is served as a static file', () => {
     expect(JSON.parse(read('site', 'public', '_routes.json'))).toEqual({ version: 1, include: ['/'], exclude: [] })
+  })
+})
+
+describe('CONTRIBUTING (Phase 1a step 8)', () => {
+  const guide = read('CONTRIBUTING.md')
+  it('has the Templates section the save tool links (CONTRIBUTING.md#templates)', () => {
+    expect(guide.match(/^## Templates$/gm)).toHaveLength(1)
+    for (const h of ['Template file structure', 'Template fields', 'Template review checklist'])
+      expect(guide).toContain(`\n### ${h}\n`)
+    expect(guide).toContain('(#template-review-checklist)')
   })
 })

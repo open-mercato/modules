@@ -6,7 +6,6 @@
 // shows and the filter is not shown.
 import TemplateCard from './TemplateCard.astro'
 import { loadSiteData } from '../../../../lib/emit/site-data.ts'
-import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
 import { TEMPLATES_LINKS } from '../../../../lib/core/templates-host.ts'
 import { galleryCards, useCaseFilter } from '../../lib/templates.ts'
 import { plural } from '../../lib/format.ts'
@@ -61,7 +60,7 @@ const unmaintained = index.filter((t) => t.status === 'unmaintained').length
         unmaintained > 0 &&
           `${plural(unmaintained, 'unmaintained template')} ${unmaintained === 1 ? 'is' : 'are'} left out of the gallery; ${unmaintained === 1 ? 'its page still works' : 'their pages still work'}. `
       }
-      To list a template, add its entry by pull request, as <a href={`${CATALOG_REPO_URL}/blob/main/CONTRIBUTING.md`} rel="noopener noreferrer">CONTRIBUTING</a> describes. The <a href={TEMPLATES_LINKS.spec} rel="noopener noreferrer">specification</a> says what a template holds and how it is checked.
+      To list a template, add its entry by pull request, as <a href={TEMPLATES_LINKS.contributing} rel="noopener noreferrer">CONTRIBUTING</a> describes. The <a href={TEMPLATES_LINKS.spec} rel="noopener noreferrer">specification</a> says what a template holds and how it is checked.
     </p>
   </div>
 </section>

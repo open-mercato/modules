@@ -10,11 +10,16 @@ export const TEMPLATES_HOST = 'templates.openmercato.com'
 /** Site path of the Templates section (site/src/pages/templates.astro). */
 export const TEMPLATES_PATH = '/templates'
 
-/** Where to follow the work (decision C of 29 Oct): the spec pull request and the two tracking issues. */
+/**
+ * Where to follow the work (decision C of 29 Oct): the spec pull request and the two tracking issues; the save tool's
+ * repository (on GitHub, not on npm yet) and the Templates section of CONTRIBUTING (Phase 1a step 8).
+ */
 export const TEMPLATES_LINKS = {
   spec: `${CATALOG_REPO_URL}/pull/5`,
   tool: `${CATALOG_REPO_URL}/issues/6`,
   section: `${CATALOG_REPO_URL}/issues/7`,
+  toolRepo: 'https://github.com/open-mercato/create-mercato-template',
+  contributing: `${CATALOG_REPO_URL}/blob/main/CONTRIBUTING.md#templates`,
 } as const
 
 /**

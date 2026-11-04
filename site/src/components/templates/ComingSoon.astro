@@ -18,7 +18,7 @@ import { TEMPLATES_LINKS } from '../../../../lib/core/templates-host.ts'
     </p>
     <p class="tp-state" data-templates-state="coming-soon">
       <span class="chip chip--preview">Coming soon</span>
-      <span>No templates are listed yet. Entries appear here after the save tool is released.</span>
+      <span>No template is ready to start from yet. The gallery opens here with the first one.</span>
     </p>
   </div>
 </section>
@@ -49,8 +49,8 @@ import { TEMPLATES_LINKS } from '../../../../lib/core/templates-host.ts'
         </li>
       </ol>
       <p class="tp-small">
-        Neither exists yet: there is no <code>create-mercato-template</code> package and no{' '}
-        <code>--template</code>{' '}option. Both are described in the specification below.
+        <code>create-mercato-template</code> is on GitHub and not on npm yet. The <code>--template</code> option is
+        not released yet. Both are described in the specification below.
       </p>
     </div>
   </div>
@@ -73,8 +73,16 @@ import { TEMPLATES_LINKS } from '../../../../lib/core/templates-host.ts'
           <code>create-mercato-template</code>.
         </li>
         <li>
+          <a href={TEMPLATES_LINKS.toolRepo} rel="noopener noreferrer"><code>create-mercato-template</code></a>: the
+          code of the save tool and how to run it from GitHub before the npm release.
+        </li>
+        <li>
           <a href={TEMPLATES_LINKS.section} rel="noopener noreferrer">This section</a>: tracking issue for the gallery
           on this site.
+        </li>
+        <li>
+          <a href={TEMPLATES_LINKS.contributing} rel="noopener noreferrer">CONTRIBUTING</a>: how to list a template
+          by pull request.
         </li>
       </ul>
     </div>
