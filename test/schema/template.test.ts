@@ -209,6 +209,42 @@ describe('template-1.json and mercato-template-1.json', () => {
     }
   })
 
+  it('say the same nested fields, limits and patterns as the zod schemas', () => {
+    // zod writes HttpsUrl as `^https:\/\/.*`, the hand-written schemas as `^https://`: the same strings
+    const samePattern = (hand: unknown, gen: unknown) =>
+      hand === gen || (hand === '^https://' && gen === '^https:\\/\\/.*')
+    const drift = (hand: Json, gen: Json, at: string, out: string[]): string[] => {
+      // a union the hand-written schema says as one pattern (links.support); its fixtures cover it
+      if (gen.anyOf !== undefined) {
+        out.push(`${at}: union`)
+        return out
+      }
+      for (const k of ['maxLength', 'minLength', 'maxItems', 'minItems', 'enum', 'const'])
+        if (JSON.stringify(hand[k]) !== JSON.stringify(gen[k])) out.push(`${at}.${k}`)
+      if (!samePattern(hand.pattern, gen.pattern)) out.push(`${at}.pattern`)
+      // `enum` and `const` imply the type
+      if (hand.enum === undefined && hand.const === undefined && hand.type !== gen.type) out.push(`${at}.type`)
+      if (hand.properties !== undefined || gen.properties !== undefined) {
+        const keys = Object.keys((hand.properties ?? {}) as Json)
+        if (keys.join() !== Object.keys((gen.properties ?? {}) as Json).join()) out.push(`${at}.properties`)
+        const req = (s: Json) => JSON.stringify([...((s.required ?? []) as string[])].sort())
+        if (req(hand) !== req(gen)) out.push(`${at}.required`)
+        if (hand.additionalProperties !== gen.additionalProperties) out.push(`${at}.additionalProperties`)
+        for (const k of keys) {
+          const g = (gen.properties as Json | undefined)?.[k]
+          if (g !== undefined) drift((hand.properties as Json)[k] as Json, g as Json, `${at}.${k}`, out)
+        }
+      }
+      if (hand.items !== undefined || gen.items !== undefined)
+        drift((hand.items ?? {}) as Json, (gen.items ?? {}) as Json, `${at}[]`, out)
+      return out
+    }
+    const of = (schema: Json, zod: z.ZodType, name: string) =>
+      drift(schema, z.toJSONSchema(zod, { io: 'input' }) as Json, name, [])
+    expect(of(schemas.template, TemplateDescriptor, 'template')).toEqual(['template.links.support: union'])
+    expect(of(schemas['mercato-template'], TemplateManifest, 'mercato-template')).toEqual([])
+  })
+
   it('use only the keywords the save tool validates, plus allOf, if and then for the status rule', () => {
     const used = new Set<string>()
     const visit = (node: unknown, inProperties = false): void => {
