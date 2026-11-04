@@ -18,7 +18,7 @@ import {
 } from '../../lib/validate/template-remote.ts'
 import { TemplateDescriptor } from '../../lib/schema/template.ts'
 import { parse } from 'yaml'
-import { templateArchive } from '../templates/helpers.ts'
+import { PACKAGE_JSON, templateArchive } from '../templates/helpers.ts'
 import { catalogRepo, fakeHttp, git, write, type FakeRepo, type FakeWorld } from './helpers.ts'
 
 const NOW = new Date('2026-11-04T12:00:00Z')
@@ -328,6 +328,28 @@ describe('template entries online (fake GitHub)', () => {
     ])
     const mismatch = await remote(entry(), world({ license: 'Apache-2.0' }))
     expect(codes(mismatch.findings)).toEqual(['warning:license-mismatch'])
+  })
+
+  it('D4: a LICENSE text the catalog does not recognize decides over package.json; NOASSERTION is a mismatch', async () => {
+    const custom = {
+      [`acme/b2b-portal@${MAIN}`]: templateArchive({
+        LICENSE: 'Copyright Acme. All rights reserved.\n',
+        'package.json': JSON.stringify({ ...PACKAGE_JSON, license: 'MIT' }),
+      }),
+    }
+    const own = await remote(entry(), world({ license: 'NOASSERTION' }, custom))
+    expect(own.findings.map((f) => `${f.severity}:${f.code}:${f.message}`)).toEqual([
+      'error:license:the LICENSE text is not a license the catalog recognizes: an active template needs an OSI license (D4); add one, or list it as hold with a reason',
+      'warning:license-mismatch:license sources differ: custom text (LICENSE), unknown, mismatch: LICENSE custom, GitHub NOASSERTION, package.json MIT',
+    ])
+    const held = await remote(entry('status: hold\nreason: Custom license.\n'), world({ license: null }, custom))
+    expect(codes(held.findings)).toEqual(['info:license', 'warning:license-mismatch'])
+    // MIT text with a rider GitHub cannot name: the LICENSE file decides, a curator sees the mismatch
+    const rider = await remote(entry(), world({ license: 'NOASSERTION' }))
+    expect(codes(rider.findings)).toEqual(['warning:license-mismatch'])
+    expect(rider.rows.find((r) => r.check === 'License')?.result).toBe(
+      'MIT (LICENSE), mismatch: LICENSE MIT, GitHub NOASSERTION',
+    )
   })
 
   it('archive findings belong to the archive step and fail the entry', async () => {

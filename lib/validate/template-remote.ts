@@ -30,6 +30,9 @@ const short = (err: unknown): string => {
 const offlineOr = (err: unknown, what: string): string =>
   err instanceof OfflineMissError ? 'offline' : `${what}: ${short(err)}`
 
+/** GitHub's license id for a license file it cannot name. */
+export const NOASSERTION = 'NOASSERTION'
+
 /** At most this many compare requests to find a branch or tag that contains a sha `ref`. */
 export const MAX_COMPARES = 10
 
@@ -39,7 +42,7 @@ export interface TemplateRepo {
   private: boolean
   archived: boolean
   defaultBranch: string
-  /** SPDX id GitHub detects, null for none or NOASSERTION. */
+  /** SPDX id GitHub detects, NOASSERTION for a license file it cannot name, null for none. */
   license: string | null
   ownerType: 'User' | 'Organization'
   /** The repository's GitHub template flag. */
@@ -74,7 +77,7 @@ export async function fetchTemplateRepo(http: Http, repo: string): Promise<Templ
     private: j.private === true,
     archived: j.archived === true,
     defaultBranch: j.default_branch ?? 'main',
-    license: spdx && spdx !== 'NOASSERTION' ? spdx : null,
+    license: spdx || null,
     ownerType: j.owner?.type === 'Organization' ? 'Organization' : 'User',
     isTemplate: j.is_template === true,
     stars: typeof j.stargazers_count === 'number' ? j.stargazers_count : 0,
@@ -240,28 +243,35 @@ export function modulesText(facts: ArchiveFacts): string {
   return parts.join(', ')
 }
 
-/** The license value and kind from the archive's LICENSE file, GitHub's detection and package.json, in that order. */
+/**
+ * The license value and kind from the archive's LICENSE file, GitHub's detection and package.json, in that order. A
+ * LICENSE text the catalog does not recognize (`custom`) decides: its kind is unknown whatever GitHub or package.json
+ * say, because the text is what a user copies. GitHub's NOASSERTION (a license file it cannot name) never decides. Both
+ * are a mismatch when another source names an OSI license.
+ */
 export function templateLicense(
   facts: ArchiveFacts,
   github: string | null,
 ): { value: string | null; kind: string; mismatch: boolean; text: string } {
-  const file = facts.license.file && facts.license.file !== 'custom' ? facts.license.file : null
-  const value = file ?? github ?? facts.license.packageJson
-  const kind = licenseKind(value, '', facts.license.file)
-  const classes = new Set(
-    [file, github, facts.license.packageJson]
-      .filter((v): v is string => v !== null && !/^SEE LICEN[CS]E IN/i.test(v))
-      .map((v) => (v === 'UNLICENSED' || v === 'PROPRIETARY' ? 'proprietary' : v.toUpperCase())),
+  const file = facts.license.file
+  const pkg = facts.license.packageJson
+  const named = github === NOASSERTION ? null : github
+  const value = file ?? named ?? pkg
+  const kind = licenseKind(value, '', file)
+  const ids = [file === 'custom' ? null : file, named, pkg].filter(
+    (v): v is string => v !== null && !/^SEE LICEN[CS]E IN/i.test(v),
   )
-  const mismatch = classes.size > 1
-  const where = file ? 'LICENSE' : github ? 'GitHub' : facts.license.packageJson ? 'package.json' : null
-  let text = `${value ?? 'none'}${where ? ` (${where})` : ''}`
+  const classes = new Set(ids.map((v) => (v === 'UNLICENSED' || v === 'PROPRIETARY' ? 'proprietary' : v.toUpperCase())))
+  const unnamed = file === 'custom' || github === NOASSERTION
+  const mismatch = classes.size > 1 || (unnamed && ids.some((v) => licenseKind(v, '', null) === 'osi'))
+  const where = file ? 'LICENSE' : named ? 'GitHub' : pkg ? 'package.json' : null
+  let text = `${value === 'custom' ? 'custom text' : (value ?? 'none')}${where ? ` (${where})` : ''}`
   if (value !== null && kind !== 'osi') text += `, ${kind}`
   if (mismatch)
     text += `, mismatch: ${[
       ['LICENSE', file],
       ['GitHub', github],
-      ['package.json', facts.license.packageJson],
+      ['package.json', pkg],
     ]
       .filter(([, v]) => v)
       .map(([k, v]) => `${k} ${v}`)
@@ -385,7 +395,12 @@ export async function checkTemplateRemote(
   const lic = templateLicense(facts, meta.license)
   out.rows.push({ check: 'License', result: lic.text })
   if (lic.kind !== 'osi') {
-    const what = lic.value === null ? 'no license' : `${lic.value} is not an OSI license`
+    const what =
+      lic.value === null
+        ? 'no license'
+        : lic.value === 'custom'
+          ? 'the LICENSE text is not a license the catalog recognizes'
+          : `${lic.value} is not an OSI license`
     if (d.status === 'active')
       out.findings.push(
         f(
