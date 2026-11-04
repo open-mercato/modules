@@ -1,0 +1,5 @@
+# expect-path: whenToUse
+github: acme/x
+useCase: crm
+summary: Sends quotes to customers by email.
+whenToUse: When sales teams need to send quotes to customers by email.

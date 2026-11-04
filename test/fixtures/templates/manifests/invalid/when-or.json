@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "name": "x",
+  "modules": [{ "id": "either", "from": "@app", "when": "OM_A || OM_B" }],
+  "createdWith": { "tool": "create-mercato-template", "version": "1.0.0" }
+}

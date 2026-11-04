@@ -1,0 +1,5 @@
+# expect-path: useCase
+github: acme/x
+useCase: shop
+summary: Sends quotes to customers by email.
+whenToUse: Use when sales teams need to send quotes to customers.

@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "name": "x",
+  "env": [{ "name": "OPENAI_API_KEY", "value": "sk-placeholder" }],
+  "modules": [],
+  "createdWith": { "tool": "create-mercato-template", "version": "1.0.0" }
+}

@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "name": "x",
+  "modules": [{ "id": "search", "from": "@open-mercato/search", "package": "@open-mercato/search" }],
+  "createdWith": { "tool": "create-mercato-template", "version": "1.0.0" }
+}
