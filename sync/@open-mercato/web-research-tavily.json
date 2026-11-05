@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/web-research-tavily",
-  "checkedAt": "2026-11-04T23:28:23Z",
+  "checkedAt": "2026-11-05T06:55:06Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research-tavily",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7938.1.5d3536acd2"
+      "develop": "0.10.1-develop.7940.1.2706ec031f"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -39,9 +39,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-04T23:20:27Z",
+    "pushedAt": "2026-11-05T06:38:15Z",
     "defaultBranch": "main",
-    "stars": 1905,
+    "stars": 1906,
     "license": "MIT",
     "topics": [
       "crm",

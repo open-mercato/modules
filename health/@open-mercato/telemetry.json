@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/telemetry",
   "version": "0.9.0",
-  "computedAt": "2026-11-04T23:30:25Z",
+  "computedAt": "2026-11-05T06:56:50Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -163,7 +163,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.7937.1.cf4cfe1a1f"
+    "next": "0.10.1-develop.7940.1.2706ec031f"
   },
   "verdictPreset": "classic"
 }
