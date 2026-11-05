@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
-  "version": "0.7.3",
-  "computedAt": "2026-11-04T23:30:25Z",
+  "version": "0.7.5",
+  "computedAt": "2026-11-05T20:02:57Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -50,7 +50,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-08",
+      "lastRelease": "2026-11-05",
       "catchUpDays": null
     },
     "declaredVsObserved": {

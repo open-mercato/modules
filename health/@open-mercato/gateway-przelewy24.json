@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-przelewy24",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-11-04T23:30:25Z",
+  "computedAt": "2026-11-05T20:02:57Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "ok",
-      "next": "ok"
+      "next": "drift"
     },
     "anatomy": "partial",
     "supplyChain": {

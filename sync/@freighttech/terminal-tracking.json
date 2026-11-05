@@ -1,23 +1,23 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
-  "checkedAt": "2026-11-04T23:28:23Z",
+  "checkedAt": "2026-11-05T20:01:01Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@freighttech/terminal-tracking",
     "distTags": {
-      "latest": "0.7.3"
+      "latest": "0.7.5"
     },
-    "latestStable": "0.7.3",
-    "previousStable": "0.7.2",
+    "latestStable": "0.7.5",
+    "previousStable": "0.7.3",
     "preview": null,
     "publishedAt": {
-      "0.7.3": "2026-10-08T08:23:19Z",
-      "0.7.2": "2026-09-24T19:27:06Z"
+      "0.7.5": "2026-11-05T12:03:09Z",
+      "0.7.3": "2026-10-08T08:23:19Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": null,
-    "gitHead": "d53705e1620697b0975e03eb0dcd423442078e80",
+    "gitHead": "45b54f5a43a736eb2250e4686fe4ad7a1054b577",
     "keywords": [],
     "maintainers": [
       "fto-admin"
@@ -30,31 +30,31 @@
       "react-dom": "^19.0.0",
       "lucide-react": "^0.556.0",
       "@freighttech/ui": "^0.13.0 || ^0.14.0",
-      "@mikro-orm/core": "^7.0.17",
-      "@open-mercato/core": "0.6.2",
-      "@open-mercato/cache": "0.6.2",
-      "@open-mercato/queue": "0.6.2",
-      "@open-mercato/events": "0.6.2",
-      "@open-mercato/shared": "0.6.2",
-      "@mikro-orm/decorators": "^7.0.17",
-      "@mikro-orm/migrations": "^7.0.17",
-      "@mikro-orm/postgresql": "^7.0.17",
+      "@mikro-orm/core": "^7.1.14",
+      "@open-mercato/core": "0.9.0",
+      "@open-mercato/cache": "0.9.0",
+      "@open-mercato/queue": "0.9.0",
+      "@open-mercato/events": "0.9.0",
+      "@open-mercato/shared": "0.9.0",
+      "@mikro-orm/decorators": "^7.1.14",
+      "@mikro-orm/migrations": "^7.1.14",
+      "@mikro-orm/postgresql": "^7.1.14",
       "@tanstack/react-query": "^5.90.12",
-      "@open-mercato/scheduler": "0.6.2"
+      "@open-mercato/scheduler": "0.9.0"
     },
     "dependencies": {
       "undici": "^7.25.0",
       "fuse.js": "^7.1.0"
     },
     "installScripts": [],
-    "integrity": "sha512-KMKigatMEXe8UCmhTFL2a8zqKiwZKY/4qb0W1dveeuf8iUia/Pn9ZVn/YbzVLDY/U9GvyRo0Y3WcBgRp9NE7lQ==",
-    "tarball": "https://registry.npmjs.org/@freighttech/terminal-tracking/-/terminal-tracking-0.7.3.tgz"
+    "integrity": "sha512-Qam3gqT1+AVKYd0CXN+RE+0i4b00aO07yBeivCnUNKq5iRN0Nb2QDTBhaR8pfR4N8ZjzGiehaz13Nyfay6lbVg==",
+    "tarball": "https://registry.npmjs.org/@freighttech/terminal-tracking/-/terminal-tracking-0.7.5.tgz"
   },
   "github": {
     "repo": "FreightTech/open-mercato-modules",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-28T22:02:52Z",
+    "pushedAt": "2026-11-05T13:05:18Z",
     "defaultBranch": "main",
     "stars": 2,
     "license": "MIT",
@@ -96,6 +96,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
-  "downloads30d": 251,
+  "downloads30d": 254,
   "errors": []
 }

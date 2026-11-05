@@ -1,23 +1,23 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
-  "checkedAt": "2026-11-04T23:28:23Z",
+  "checkedAt": "2026-11-05T20:01:01Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@freighttech/shipment-tracking",
     "distTags": {
-      "latest": "0.9.0"
+      "latest": "0.10.1"
     },
-    "latestStable": "0.9.0",
-    "previousStable": "0.7.2",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.9.0": "2026-11-04T14:24:30Z",
-      "0.7.2": "2026-09-24T19:26:05Z"
+      "0.10.1": "2026-11-05T13:12:11Z",
+      "0.10.0": "2026-11-05T12:32:58Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": null,
-    "gitHead": "aba6b90b0da4bcb234947f7b954a1e4b2e46729d",
+    "gitHead": "ff7ab601ec856db7bdb234abdc4d8ece43843aaa",
     "keywords": [],
     "maintainers": [
       "fto-admin"
@@ -47,14 +47,14 @@
     },
     "dependencies": {},
     "installScripts": [],
-    "integrity": "sha512-BOdrlImnDYbFi79Lxjm/7LX4Y4dRCm+M6aleJqUlElZFCzA8B4B3ko527uCaHOJudGnAOWP97A78MVv9Iv/WLg==",
-    "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.9.0.tgz"
+    "integrity": "sha512-M3NVpGOhDPwASoyR72LHV/XwdqKQDoo8sCGUPdv+0nykdbrN43QYgpRup/MacvUXZ3d76QsLZ9uprAJ4M+vpJw==",
+    "tarball": "https://registry.npmjs.org/@freighttech/shipment-tracking/-/shipment-tracking-0.10.1.tgz"
   },
   "github": {
     "repo": "FreightTech/open-mercato-modules",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-28T22:02:52Z",
+    "pushedAt": "2026-11-05T13:05:18Z",
     "defaultBranch": "main",
     "stars": 2,
     "license": "MIT",
@@ -96,6 +96,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
-  "downloads30d": 99,
+  "downloads30d": 213,
   "errors": []
 }
