@@ -1,5 +1,5 @@
 {
-  "resolvedAt": "2026-11-05T20:00:56Z",
+  "resolvedAt": "2026-11-06T06:54:31Z",
   "coreLatest": "0.9.0",
   "keepaliveAt": "2026-10-25T11:50:39Z",
   "lines": [
@@ -519,9 +519,9 @@
     },
     {
       "key": "next",
-      "version": "0.10.1-develop.7978.1.b4468545b6",
+      "version": "0.10.1-develop.7982.1.df20d84e85",
       "source": "develop",
-      "createApp": "create-mercato-app@0.10.1-develop.7978.1.b4468545b6",
+      "createApp": "create-mercato-app@0.10.1-develop.7982.1.df20d84e85",
       "cadence": "nightly",
       "preapproved": [
         "@open-mercato/*"
