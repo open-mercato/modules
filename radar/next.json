@@ -1,10 +1,28 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06T10:07:01.901Z",
-  "next": "0.10.1-develop.7982.1.df20d84e85",
+  "generatedAt": "2026-11-06T19:29:59.538Z",
+  "next": "0.10.1-develop.8025.1.620dfa185f",
   "base": "0.9.0",
-  "summary": "13 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 1 verified, 3 broken.",
+  "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
+    {
+      "symbol": "@open-mercato/shared/modules/registry#ModuleInfo",
+      "change": "signature",
+      "modules": [
+        "github:fullstackhouse/open-mercato-client-auth",
+        "npm:@dainamite/billing",
+        "npm:@dainamite/cpq",
+        "npm:@dainamite/cpq-billing-connector",
+        "npm:@freighttech/shipment-tracking",
+        "npm:@freighttech/terminal-tracking",
+        "npm:@fullstackhouse/open-mercato-durable-work",
+        "npm:@fullstackhouse/open-mercato-health",
+        "npm:@northbound-run/channel-cloudflare-email",
+        "npm:@northbound-run/search-cloudflare",
+        "npm:@piotrkarwatka/marketing-consents",
+        "npm:@piotrkarwatka/visits"
+      ]
+    },
     {
       "symbol": "@open-mercato/shared/modules/setup#ModuleSetupConfig",
       "change": "signature",
@@ -154,8 +172,8 @@
   ],
   "staticBreaks": [],
   "receiptsOnNext": {
-    "verified": 1,
-    "broken": 3
+    "verified": 0,
+    "broken": 0
   },
   "sameFailure": [],
   "loadBearing": [

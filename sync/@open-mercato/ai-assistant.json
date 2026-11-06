@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/ai-assistant",
-  "checkedAt": "2026-11-06T06:54:37Z",
+  "checkedAt": "2026-11-06T19:28:24Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/ai-assistant",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.7982.1.df20d84e85"
+      "develop": "0.10.1-develop.8025.1.620dfa185f"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -55,7 +55,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-06T06:35:04Z",
+    "pushedAt": "2026-11-06T19:16:09Z",
     "defaultBranch": "main",
     "stars": 1908,
     "license": "MIT",
@@ -245,6 +245,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 69428,
+  "downloads30d": 73882,
   "errors": []
 }
