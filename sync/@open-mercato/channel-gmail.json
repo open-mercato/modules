@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/channel-gmail",
-  "checkedAt": "2026-11-06T19:28:24Z",
+  "checkedAt": "2026-11-07T06:05:56Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/channel-gmail",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8025.1.620dfa185f"
+      "develop": "0.10.1-develop.8027.1.ae0a6c9e7b"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -46,9 +46,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-06T19:16:09Z",
+    "pushedAt": "2026-11-07T05:33:58Z",
     "defaultBranch": "main",
-    "stars": 1908,
+    "stars": 1909,
     "license": "MIT",
     "topics": [
       "crm",
@@ -236,6 +236,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 55187,
+  "downloads30d": 57581,
   "errors": []
 }
