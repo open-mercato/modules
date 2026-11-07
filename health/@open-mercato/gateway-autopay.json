@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
   "version": "0.10.1-develop.7741.1.61a2652671",
-  "computedAt": "2026-11-06T10:07:02Z",
+  "computedAt": "2026-11-07T09:10:31Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "skipped",
       "0.8": "skipped",
-      "next": "verified"
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -53,10 +53,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for no tested line; verified on next."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -140,11 +138,11 @@
       "consentText": "Install @open-mercato/gateway-autopay@0.10.1-develop.7741.1.61a2652671"
     },
     "next": {
-      "decision": "allow",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "OFFICIAL_VERIFIED",
-          "text": "Official, verified on next."
+          "code": "BROKEN",
+          "text": "Broken at add on next since 7 Nov."
         }
       ]
     }

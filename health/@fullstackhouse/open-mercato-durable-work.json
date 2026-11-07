@@ -1,7 +1,7 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-durable-work",
   "version": "0.6.0",
-  "computedAt": "2026-11-04T23:30:25Z",
+  "computedAt": "2026-11-07T09:10:31Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository fullstackhouse/open-mercato-durable returns 404; npm scope @fullstackhouse is listed in policy/community.yml.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.9": "verified",
       "0.8": "verified",
-      "next": "verified"
+      "next": "broken"
     },
     "fit": {
       "0.9": "ok",
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for no tested line; verified on 0.8, 0.9, next."
+        "Built for no tested line; verified on 0.8, 0.9."
       ]
     }
   },
@@ -138,21 +138,24 @@
       "consentText": "Install @fullstackhouse/open-mercato-durable-work@0.6.0"
     },
     "next": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at add on next since 7 Nov."
+        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         }
-      ],
-      "consentText": "Install @fullstackhouse/open-mercato-durable-work@0.6.0"
+      ]
     }
   },
   "state": "active",
   "recommended": {
     "0.9": "0.6.0",
     "0.8": "0.6.0",
-    "next": "0.6.0"
+    "next": null
   },
   "evaluated": {
     "0.9": "0.6.0",

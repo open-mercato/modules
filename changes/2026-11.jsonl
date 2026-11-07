@@ -1,1 +1,8 @@
 {"at":"2026-11-01T10:58:41Z","type":"tier-change","locator":"npm:@open-mercato/ai-assistant","from":"listed","to":"verified"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@open-mercato/channel-discord","line":"next","from":"verified","to":"broken","version":"0.9.0"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@open-mercato/gateway-autopay","line":"next","from":"verified","to":"broken","version":"0.10.1-develop.7741.1.61a2652671"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@open-mercato/gateway-payu","line":"next","from":"verified","to":"broken","version":"0.4.6-canary-5eb138494e"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@open-mercato/gateway-przelewy24","line":"next","from":"verified","to":"broken","version":"0.4.6-canary-5eb138494e"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@open-mercato/gateway-tpay","line":"next","from":"verified","to":"broken","version":"0.8.1-develop.7442.1.4c1dbf1f0e"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@fastwhitecat/integration-ksef-direct","line":"next","from":"verified","to":"broken","version":"0.1.8"}
+{"at":"2026-11-07T09:02:20Z","type":"receipt-transition","locator":"npm:@fullstackhouse/open-mercato-durable-work","line":"next","from":"verified","to":"broken","version":"0.6.0"}

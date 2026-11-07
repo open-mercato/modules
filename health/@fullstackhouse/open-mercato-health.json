@@ -1,7 +1,7 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-health",
   "version": "0.3.0",
-  "computedAt": "2026-11-06T19:30:00Z",
+  "computedAt": "2026-11-07T09:10:31Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
@@ -148,7 +148,7 @@
       "reasons": [
         {
           "code": "BROKEN",
-          "text": "Broken at typecheck on next since 30 Oct."
+          "text": "Broken at add on next since 30 Oct."
         },
         {
           "code": "THIRD_PARTY",

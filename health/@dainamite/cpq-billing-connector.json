@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
   "version": "1.0.0",
-  "computedAt": "2026-11-05T20:02:57Z",
+  "computedAt": "2026-11-07T09:10:31Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -146,7 +146,7 @@
       "reasons": [
         {
           "code": "BROKEN",
-          "text": "Broken at typecheck on next since 30 Oct."
+          "text": "Broken at add on next since 30 Oct."
         },
         {
           "code": "THIRD_PARTY",

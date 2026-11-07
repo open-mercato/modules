@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-11-04T23:30:25Z",
+  "computedAt": "2026-11-07T09:10:31Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -154,7 +154,7 @@
         },
         {
           "code": "BROKEN",
-          "text": "Broken at typecheck on next since 30 Oct."
+          "text": "Broken at add on next since 30 Oct."
         }
       ]
     }
