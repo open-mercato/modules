@@ -1,7 +1,7 @@
 {
   "locator": "npm:@fastwhitecat/integration-ksef-direct",
   "version": "0.1.8",
-  "computedAt": "2026-11-07T09:10:31Z",
+  "computedAt": "2026-11-07T13:12:03Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner FastWhiteCat is the GitHub org of certified partner Fast White Cat (policy/community.yml).",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "drift",
-      "next": "drift"
+      "next": "no-fit"
     },
     "anatomy": "full",
     "supplyChain": {

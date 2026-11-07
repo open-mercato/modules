@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-imap",
   "version": "0.9.0",
-  "computedAt": "2026-11-07T06:07:38Z",
+  "computedAt": "2026-11-07T13:12:03Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -168,7 +168,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.8027.1.ae0a6c9e7b"
+    "next": "0.10.1-develop.8033.1.a68811b809"
   },
   "verdictPreset": "classic"
 }
