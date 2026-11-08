@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/ai-assistant",
   "version": "0.9.0",
-  "computedAt": "2026-11-07T13:12:03Z",
+  "computedAt": "2026-11-08T06:11:24Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -169,7 +169,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.8033.1.a68811b809"
+    "next": "0.10.1-develop.8034.1.400508da51"
   },
   "verdictPreset": "classic"
 }
