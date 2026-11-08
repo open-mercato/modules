@@ -293,7 +293,7 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-11-07T09:02:20Z",
+    "at": "2026-11-08T09:51:14Z",
     "measuredAt": "2026-11-01T09:16:52Z"
   },
   "0.9": {
@@ -594,11 +594,11 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-11-07T09:02:20Z",
+    "at": "2026-11-08T09:51:14Z",
     "measuredAt": "2026-11-05T09:29:52Z"
   },
   "next": {
-    "omVersion": "0.10.1-develop.8027.1.ae0a6c9e7b",
+    "omVersion": "0.10.1-develop.8034.1.400508da51",
     "empty": [
       {
         "id": "auth",
@@ -903,7 +903,7 @@
         "from": "@open-mercato/core"
       }
     ],
-    "at": "2026-11-07T09:02:20Z",
-    "measuredAt": "2026-11-07T08:47:24Z"
+    "at": "2026-11-08T09:51:14Z",
+    "measuredAt": "2026-11-08T08:59:30Z"
   }
 }

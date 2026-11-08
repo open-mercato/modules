@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/events",
   "version": "0.9.0",
-  "computedAt": "2026-11-08T06:11:24Z",
+  "computedAt": "2026-11-08T10:04:33Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "untested",
+      "0.9": "verified",
       "0.8": "untested",
       "next": "untested"
     },
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "No Open Mercato peer range; verified on no line."
+        "No Open Mercato peer range; verified on 0.9."
       ]
     }
   },
@@ -90,8 +90,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "Not yet tested in a new app on 0.9. In isolation (empty preset): broken at smoke on 2 Nov."
+      "pass": true,
+      "detail": "Receipt on 0.9: verified (0.9.0)."
     },
     {
       "id": "VER-2",
@@ -114,19 +114,15 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): broken at smoke on 2 Nov."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "In isolation (empty preset): GET /api/events needs the workflows.view feature, and the empty preset does not enable the workflows module."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.9."
         },
         {
           "code": "IN_PRESET",
@@ -163,7 +159,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.9": null,
+    "0.9": "0.9.0",
     "0.8": null,
     "next": null
   },
