@@ -1,6 +1,6 @@
 {
   "locator": "npm:@dainamite/billing",
-  "checkedAt": "2026-11-04T23:28:23Z",
+  "checkedAt": "2026-11-09T12:54:24Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/billing",
@@ -103,6 +103,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 77,
+  "downloads30d": 94,
   "errors": []
 }

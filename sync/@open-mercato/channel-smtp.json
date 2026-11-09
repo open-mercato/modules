@@ -1,6 +1,6 @@
 {
   "locator": "npm:@open-mercato/channel-smtp",
-  "checkedAt": "2026-11-09T06:43:43Z",
+  "checkedAt": "2026-11-09T12:54:24Z",
   "firstSeenAt": "2026-11-04T22:13:11Z",
   "npm": {
     "name": "@open-mercato/channel-smtp",
@@ -45,9 +45,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-09T05:51:47Z",
+    "pushedAt": "2026-11-09T12:09:20Z",
     "defaultBranch": "main",
-    "stars": 1911,
+    "stars": 1913,
     "license": "MIT",
     "topics": [
       "crm",
