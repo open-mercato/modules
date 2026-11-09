@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
   "version": "0.10.1",
-  "computedAt": "2026-11-08T10:04:33Z",
+  "computedAt": "2026-11-09T10:12:43Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -179,7 +179,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 8 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 9 Nov."
         },
         {
           "code": "ROUTE_COLLISION",
