@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/sync-akeneo",
-  "checkedAt": "2026-11-08T22:12:00Z",
+  "checkedAt": "2026-11-09T06:43:43Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/sync-akeneo",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8042.1.c981a94bea"
+      "develop": "0.10.1-develop.8043.1.69f0884009"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -45,7 +45,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-08T21:47:07Z",
+    "pushedAt": "2026-11-09T05:51:47Z",
     "defaultBranch": "main",
     "stars": 1911,
     "license": "MIT",
@@ -235,7 +235,7 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 64165,
+  "downloads30d": 64530,
   "errors": [
     "npm: stable 1.0.1 is above dist-tags.latest 0.9.0; latestStable follows the latest tag"
   ]
