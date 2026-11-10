@@ -1,63 +1,75 @@
 {
   "locator": "npm:@dainamite/cpq",
-  "checkedAt": "2026-11-09T12:54:24Z",
+  "checkedAt": "2026-11-10T19:48:41Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/cpq",
     "distTags": {
-      "latest": "0.4.0"
+      "latest": "0.5.0"
     },
-    "latestStable": "0.4.0",
-    "previousStable": "0.3.0",
+    "latestStable": "0.5.0",
+    "previousStable": "0.4.0",
     "preview": null,
     "publishedAt": {
-      "0.4.0": "2026-08-25T10:53:51Z",
-      "0.3.0": "2026-06-09T11:51:35Z"
+      "0.5.0": "2026-11-10T14:22:48Z",
+      "0.4.0": "2026-08-25T10:53:51Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": "git+https://github.com/dainamite-technologies/dainamite-core.git",
-    "gitHead": "bf641f89e1493ae88a88234140f0cf43daaa0849",
+    "gitHead": "a3e2c6171dc3e88342c2f90be7dc2ba4019817e7",
     "keywords": [],
     "maintainers": [
       "dainamite-acc",
       "kamyyylo"
     ],
     "peerDependencies": {
-      "@mikro-orm/core": "^7.1.5",
-      "@mikro-orm/decorators": "^7.1.5",
-      "@mikro-orm/postgresql": "^7.1.5",
-      "@open-mercato/core": "^0.6.7",
-      "@open-mercato/events": "^0.6.7",
-      "@open-mercato/shared": "^0.6.7",
-      "@open-mercato/ui": "^0.6.7",
-      "@tanstack/react-table": "^8.0.0 || ^9.0.0",
-      "awilix": "^12.0.0",
-      "bcryptjs": "^3.0.0",
-      "lucide-react": "^0.400.0",
+      "zod": "^4.0.0",
       "next": "^16.0.0",
       "react": "^19.0.0",
+      "awilix": "^12.0.0",
+      "bcryptjs": "^3.0.0",
       "react-dom": "^19.0.0",
-      "zod": "^4.0.0"
+      "lucide-react": "^0.400.0",
+      "@mikro-orm/core": "^7.1.14",
+      "@open-mercato/ui": "^0.9.0",
+      "@open-mercato/core": "^0.9.0",
+      "@open-mercato/events": "^0.9.0",
+      "@open-mercato/shared": "^0.9.0",
+      "@mikro-orm/decorators": "^7.1.14",
+      "@mikro-orm/postgresql": "^7.1.14",
+      "@tanstack/react-table": "^9.0.0"
     },
     "dependencies": {
       "xlsx": "^0.18.0"
     },
     "installScripts": [],
-    "integrity": "sha512-ZLQRTwele2z6yJ0ZuhqFd5c3QJLgFfBZeL/A4hfRMpYODctCT8PBLQHPId+r72fUaKBsCrHsOXyqmRUMCEuJ1A==",
-    "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.4.0.tgz"
+    "integrity": "sha512-byBPykyS4oeje1KDPnlHrcf1GQl1KRKj9rwrlQDp2mw+spj4eDqmuUweF2oKX54eSESzVld41ufNn1T0bVU2zg==",
+    "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.5.0.tgz"
   },
   "github": {
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-04T09:03:50Z",
+    "pushedAt": "2026-11-10T19:03:02Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
     "topics": [],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "@dainamite/cpq-billing-connector@2.0.0",
+        "sha": "a3e2c6171dc3e88342c2f90be7dc2ba4019817e7"
+      },
+      {
+        "name": "@dainamite/cpq@0.5.0",
+        "sha": "a3e2c6171dc3e88342c2f90be7dc2ba4019817e7"
+      },
+      {
+        "name": "@dainamite/billing@0.20.0",
+        "sha": "a3e2c6171dc3e88342c2f90be7dc2ba4019817e7"
+      },
       {
         "name": "@dainamite/cpq-billing-connector@1.0.0",
         "sha": "bf641f89e1493ae88a88234140f0cf43daaa0849"
@@ -105,6 +117,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 97,
+  "downloads30d": 100,
   "errors": []
 }

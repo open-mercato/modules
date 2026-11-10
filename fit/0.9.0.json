@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-10T07:27:05.595Z",
+  "computedAt": "2026-11-10T19:50:45.768Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -39,6 +39,18 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/billing@0.20.0": {
+      "status": "ok",
+      "checked": 75,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq-billing-connector@0.1.1": {
       "status": "ok",
       "checked": 6,
@@ -63,6 +75,18 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/cpq-billing-connector@2.0.0": {
+      "status": "ok",
+      "checked": 6,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq@0.3.0": {
       "status": "ok",
       "checked": 58,
@@ -84,6 +108,18 @@
         "range": "^0.6.7",
         "kind": "caret-0x",
         "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@0.5.0": {
+      "status": "ok",
+      "checked": 58,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
       },
       "hostDuplicates": []
     },
@@ -1375,7 +1411,7 @@
         {
           "name": "@tanstack/react-query",
           "moduleRange": "5.104.1",
-          "appVersion": "5.106.0"
+          "appVersion": "5.106.1"
         },
         {
           "name": "@tanstack/react-table",
@@ -1398,7 +1434,7 @@
         {
           "name": "@tanstack/react-query",
           "moduleRange": "5.104.1",
-          "appVersion": "5.106.0"
+          "appVersion": "5.106.1"
         },
         {
           "name": "@tanstack/react-table",

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
   "version": "0.10.1",
-  "computedAt": "2026-11-10T10:10:07Z",
+  "computedAt": "2026-11-10T19:50:47Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -96,7 +96,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "No installable version on 0.9."
+      "detail": "Receipt on 0.9: new release in the install age gate on 6 Nov."
     },
     {
       "id": "VER-2",
@@ -123,12 +123,8 @@
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 10 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
@@ -142,15 +138,11 @@
           "text": "Static check: the module adds the backend route /backend/webhooks, which a new app already has from the webhooks module (@open-mercato/webhooks)."
         }
       ],
-      "until": "2026-11-10"
+      "consentText": "Install @freighttech/shipment-tracking@0.10.1"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 10 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
@@ -164,15 +156,11 @@
           "text": "Static check: the module adds the backend route /backend/webhooks, which a new app already has from the webhooks module (@open-mercato/webhooks)."
         }
       ],
-      "until": "2026-11-10"
+      "consentText": "Install @freighttech/shipment-tracking@0.10.1"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 10 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
@@ -186,7 +174,7 @@
           "text": "Static check: the module adds the backend route /backend/webhooks, which a new app already has from the webhooks module (@open-mercato/webhooks)."
         }
       ],
-      "until": "2026-11-10"
+      "consentText": "Install @freighttech/shipment-tracking@0.10.1"
     }
   },
   "state": "active",

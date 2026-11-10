@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
   "version": "0.7.5",
-  "computedAt": "2026-11-09T12:56:11Z",
+  "computedAt": "2026-11-10T19:50:47Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "broken",
-      "0.8": "broken",
-      "next": "broken"
+      "0.9": "quarantine",
+      "0.8": "quarantine",
+      "next": "quarantine"
     },
     "fit": {
       "0.9": "ok",
@@ -54,8 +54,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.9; verified on no line."
+      ]
     }
   },
   "rules": [
@@ -92,7 +94,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at typecheck on 0.9 since 29 Oct."
+      "detail": "Receipt on 0.9: new release in the install age gate on 6 Nov."
     },
     {
       "id": "VER-2",
@@ -119,43 +121,46 @@
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.9 since 29 Oct."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): in the age gate on 6 Nov."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.5"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.8 since 1 Nov."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): in the age gate on 8 Nov."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.5"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at add on next since 30 Oct."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 10 Nov."
         }
-      ]
+      ],
+      "consentText": "Install @freighttech/terminal-tracking@0.7.5"
     }
   },
   "state": "active",
@@ -165,9 +170,9 @@
     "next": null
   },
   "evaluated": {
-    "0.9": "0.7.3",
-    "0.8": "0.7.3",
-    "next": "0.7.3"
+    "0.9": "0.7.5",
+    "0.8": "0.7.5",
+    "next": "0.7.5"
   },
   "verdictPreset": "classic"
 }
