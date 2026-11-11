@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/channel-expo",
-  "checkedAt": "2026-11-10T19:48:41Z",
+  "checkedAt": "2026-11-11T06:33:42Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/channel-expo",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8060.1.5223f1458b"
+      "develop": "0.10.1-develop.8098.1.f4decc8a57"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -44,9 +44,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-10T19:46:36Z",
+    "pushedAt": "2026-11-11T06:13:12Z",
     "defaultBranch": "main",
-    "stars": 1919,
+    "stars": 1920,
     "license": "MIT",
     "topics": [
       "crm",
