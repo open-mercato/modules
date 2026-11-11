@@ -1,6 +1,6 @@
 {
   "om": "0.8.0",
-  "computedAt": "2026-11-11T06:35:25.195Z",
+  "computedAt": "2026-11-11T19:41:52.709Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -113,6 +113,20 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/cpq-billing-connector@3.0.0": {
+      "status": "drift",
+      "checked": 6,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq@0.3.0": {
       "status": "drift",
       "checked": 58,
@@ -154,6 +168,29 @@
       "drift": [
         "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
         "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+        "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+        "@open-mercato/ui/backend/DataTable#DataTable"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@0.6.0": {
+      "status": "drift",
+      "checked": 88,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+        "@open-mercato/core/modules/feature_toggles/lib/feature-flag-check#FeatureTogglesService",
+        "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/undo#extractUndoPayload",
         "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
         "@open-mercato/ui/backend/DataTable#DataTable"
       ],

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
-  "version": "2.0.0",
-  "computedAt": "2026-11-10T19:50:47Z",
+  "version": "3.0.0",
+  "computedAt": "2026-11-11T19:41:53Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "broken",
-      "0.8": "broken",
-      "next": "broken"
+      "0.9": "untested",
+      "0.8": "untested",
+      "next": "untested"
     },
     "fit": {
       "0.9": "ok",
@@ -47,12 +47,14 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-10",
+      "lastRelease": "2026-11-11",
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.9; verified on no line."
+      ]
     }
   },
   "rules": [
@@ -89,7 +91,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at typecheck on 0.9 since 29 Oct."
+      "detail": "No installable version on 0.9."
     },
     {
       "id": "VER-2",
@@ -119,40 +121,55 @@
       "decision": "refuse",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.9 since 29 Oct."
+          "code": "QUARANTINE",
+          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): 2.0.0 in the age gate on 11 Nov."
         }
-      ]
+      ],
+      "until": "2026-11-16"
     },
     "0.8": {
       "decision": "refuse",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at typecheck on 0.8 since 1 Nov."
+          "code": "QUARANTINE",
+          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 3.0.0 on 0.8 yet; the receipt is for 1.0.0 (broken at typecheck, 1 Nov)."
         }
-      ]
+      ],
+      "until": "2026-11-16"
     },
     "next": {
       "decision": "refuse",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at add on next since 30 Oct."
+          "code": "QUARANTINE",
+          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 3.0.0 on next yet; the receipt is for 1.0.0 (broken at add, 11 Nov)."
         }
-      ]
+      ],
+      "until": "2026-11-16"
     }
   },
   "state": "active",
@@ -162,9 +179,9 @@
     "next": null
   },
   "evaluated": {
-    "0.9": "1.0.0",
-    "0.8": "1.0.0",
-    "next": "1.0.0"
+    "0.9": "3.0.0",
+    "0.8": "3.0.0",
+    "next": "3.0.0"
   },
   "verdictPreset": "classic"
 }
