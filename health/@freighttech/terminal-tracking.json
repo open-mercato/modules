@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
   "version": "0.7.5",
-  "computedAt": "2026-11-10T19:50:47Z",
+  "computedAt": "2026-11-11T09:58:40Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "quarantine",
+      "0.9": "broken",
       "0.8": "quarantine",
       "next": "quarantine"
     },
@@ -94,7 +94,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Receipt on 0.9: new release in the install age gate on 6 Nov."
+      "detail": "Broken at typecheck on 0.9 since 11 Nov."
     },
     {
       "id": "VER-2",
@@ -121,18 +121,17 @@
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
+        {
+          "code": "BROKEN",
+          "text": "Broken at typecheck on 0.9 since 11 Nov."
+        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): in the age gate on 6 Nov."
         }
-      ],
-      "consentText": "Install @freighttech/terminal-tracking@0.7.5"
+      ]
     },
     "0.8": {
       "decision": "ask",
