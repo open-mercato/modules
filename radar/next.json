@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T10:24:47.779Z",
-  "next": "0.10.1-develop.8112.1.e94b1ab345",
+  "generatedAt": "2026-11-12T20:01:13.397Z",
+  "next": "0.10.1-develop.8126.1.ccf499ef4c",
   "base": "0.9.0",
   "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
@@ -195,6 +195,13 @@
       "change": "signature",
       "modules": [
         "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/inputs#ComboboxInput",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/billing"
       ]
     }
   ],
