@@ -23,7 +23,7 @@ const text = async (page: Page, sel: string): Promise<string> =>
 test.describe.configure({ mode: 'serial' })
 
 test('step: the home page, modules by category', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/'))
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
@@ -41,7 +41,7 @@ test('step: the home page, modules by category', async ({ browser }) => {
 })
 
 test('step: search for ksef narrows the grid to the KSeF module', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/'))
   const input = page.getByRole('search', { name: 'Search modules' }).first().locator('input')
@@ -59,7 +59,7 @@ test('step: search for ksef narrows the grid to the KSeF module', async ({ brows
 })
 
 test('step: KSeF page, sigil, Rentgen and file:line', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   // the sigil and the anatomy sit in the closed Technical details; the anatomy address opens it
   await page.goto(url(`${KSEF}#panel-anatomy`))
@@ -82,7 +82,7 @@ test('step: KSeF page, sigil, Rentgen and file:line', async ({ browser }) => {
 })
 
 test('step: KSeF receipts and the api-keys patch', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   // the Receipts strip sits in the closed Technical details; the receipts address opens it
   await page.goto(url(`${KSEF}#receipts`))
@@ -123,7 +123,7 @@ test('step: KSeF receipts and the api-keys patch', async ({ browser }) => {
 })
 
 test('step: Human / Agent toggle in Technical details', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url(KSEF))
   // the page header has no toggle any more (26 Oct); it moved into the closed Technical details
@@ -136,7 +136,7 @@ test('step: Human / Agent toggle in Technical details', async ({ browser }) => {
 })
 
 test('step: /compat, Open Mercato itself and the peer sentence', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/compat'))
   // the first row of the matrix; the same words also sit in the closed `How the tests run`
@@ -150,7 +150,7 @@ test('step: /compat, Open Mercato itself and the peer sentence', async ({ browse
 })
 
 test('step: /radar, createRequestContainer and Consider them frozen', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/radar'))
   await expect(page.getByText(/Consider them frozen\./).first()).toBeVisible()
@@ -163,7 +163,7 @@ test('step: /radar, createRequestContainer and Consider them frozen', async ({ b
 })
 
 test('step: plugin install command on /for-agents', async ({ browser }) => {
-  const ctx = await themed(browser, 'dark', DESKTOP)
+  const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/for-agents'))
   const cmd = page.getByText('claude plugin install om-modules@open-mercato').first()

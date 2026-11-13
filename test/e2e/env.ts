@@ -65,6 +65,7 @@ export function url(path: string, base: string = E2E.base): string {
   return path === '/' ? `${base}/` : `${base}${path}`
 }
 
+/** The colour scheme of the visitor's system. The site has one theme (light, like openmercato.com) and ignores it. */
 export type Theme = 'light' | 'dark'
 
 export const DESKTOP: BrowserContextOptions = { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 }
@@ -74,15 +75,7 @@ export function phone(width = 390): BrowserContextOptions {
   return { viewport: { width, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
 }
 
-/** A context in a theme: the OS preference and the site's own switch (localStorage `om-theme`) agree. */
+/** A context with the given system colour scheme; the page must render the same light theme in both. */
 export async function themed(browser: Browser, theme: Theme, opts: BrowserContextOptions): Promise<BrowserContext> {
-  const ctx = await browser.newContext({ ...opts, colorScheme: theme, reducedMotion: 'reduce' })
-  await ctx.addInitScript((t) => {
-    try {
-      localStorage.setItem('om-theme', t)
-    } catch {
-      // storage blocked: the OS preference alone sets the theme
-    }
-  }, theme)
-  return ctx
+  return browser.newContext({ ...opts, colorScheme: theme, reducedMotion: 'reduce' })
 }

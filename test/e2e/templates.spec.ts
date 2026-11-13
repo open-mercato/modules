@@ -203,38 +203,37 @@ test.describe('templates variant', () => {
     expect(bad).toEqual([])
   })
 
-  // artifacts for review, not golden pixels, next to the 16 of shots.spec.ts
-  for (const [name, path, form, theme] of [
-    ['gallery', '/templates', 'desktop', 'light'],
-    ['gallery', '/templates', 'mobile', 'dark'],
-    ['b2b-portal', B2B, 'desktop', 'dark'],
-    ['b2b-portal', B2B, 'mobile', 'light'],
-    ['prm', PRM, 'desktop', 'light'],
+  // artifacts for review, not golden pixels, next to the 8 of shots.spec.ts
+  for (const [name, path, form] of [
+    ['gallery', '/templates', 'desktop'],
+    ['gallery', '/templates', 'mobile'],
+    ['b2b-portal', B2B, 'desktop'],
+    ['b2b-portal', B2B, 'mobile'],
+    ['prm', PRM, 'desktop'],
   ] as const)
-    test(`screenshot templates ${name} ${form} ${theme}`, async ({ browser }, info) => {
-      const ctx = await themed(browser, theme, form === 'desktop' ? DESKTOP : phone(390))
+    test(`screenshot templates ${name} ${form}`, async ({ browser }, info) => {
+      const ctx = await themed(browser, 'light', form === 'desktop' ? DESKTOP : phone(390))
       const page = await ctx.newPage()
       await page.goto(url(path, base), { waitUntil: 'load' })
       await page.evaluate(() => document.fonts.ready)
       mkdirSync(E2E.shots, { recursive: true })
-      const file = join(E2E.shots, `templates-${name}-${form}-${theme}.png`)
+      const file = join(E2E.shots, `templates-${name}-${form}.png`)
       await page.screenshot({ path: file, fullPage: true })
-      await info.attach(`templates-${name}-${form}-${theme}`, { path: file, contentType: 'image/png' })
+      await info.attach(`templates-${name}-${form}`, { path: file, contentType: 'image/png' })
       await ctx.close()
     })
 
-  for (const theme of ['light', 'dark'] as const)
-    for (const path of ['/templates', B2B, PRM])
-      test(`axe ${path} ${theme}`, async ({ browser }) => {
-        const ctx = await themed(browser, theme, DESKTOP)
-        const page = await ctx.newPage()
-        await page.goto(url(path, base), { waitUntil: 'load' })
-        await page.evaluate(() => document.fonts.ready)
-        const result = await new AxeBuilder({ page }).analyze()
-        const bad = result.violations
-          .filter((v) => v.impact === 'serious' || v.impact === 'critical')
-          .map((v) => `${v.impact} ${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`)
-        expect(bad).toEqual([])
-        await ctx.close()
-      })
+  for (const path of ['/templates', B2B, PRM])
+    test(`axe ${path}`, async ({ browser }) => {
+      const ctx = await themed(browser, 'light', DESKTOP)
+      const page = await ctx.newPage()
+      await page.goto(url(path, base), { waitUntil: 'load' })
+      await page.evaluate(() => document.fonts.ready)
+      const result = await new AxeBuilder({ page }).analyze()
+      const bad = result.violations
+        .filter((v) => v.impact === 'serious' || v.impact === 'critical')
+        .map((v) => `${v.impact} ${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`)
+      expect(bad).toEqual([])
+      await ctx.close()
+    })
 })
