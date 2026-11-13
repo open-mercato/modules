@@ -28,6 +28,14 @@ export const ROOT_FILES = ['404.html', '_routes.json', '_redirects'] as const
 const ROOT_ONLY = ['_routes.json', '_redirects'] as const
 
 /**
+ * Every name the nested layout may hold at the root of the upload: the first folder of the base, ROOT_FILES, schema/
+ * and FIXED_ROOT_FILES. A build empties exactly these when it starts, and the check flags anything else.
+ */
+export function nestedRootEntries(c: SiteConfig): string[] {
+  return [siteDir(c).split('/')[0] as string, ...ROOT_FILES, SCHEMA_DIR, ...FIXED_ROOT_FILES]
+}
+
+/**
  * Lays dist out for a nested site: `root` is the upload folder (dist), the site is already in root/<base>/. Moves the
  * Pages config files to the root (rewritten for the base), copies 404.html there (Pages needs a top-level 404.html, or
  * it treats the upload as a single-page app), and copies schema/, templates.json and picker.json there, so the fixed
@@ -46,10 +54,24 @@ export function finishNestedLayout(root: string, c: SiteConfig): void {
 }
 
 /**
+ * Empties the root of the upload for a nested build: removes only the names nestedRootEntries() lists (Astro empties
+ * only its own outDir, and a root file of an earlier build must not ship). Returns the other names it left in place,
+ * which checkPagesLayout() would flag.
+ */
+export function cleanNestedRoot(root: string, c: SiteConfig): string[] {
+  if (!existsSync(root)) return []
+  const known = new Set(nestedRootEntries(c))
+  for (const name of known) rmSync(join(root, name), { recursive: true, force: true })
+  return readdirSync(root)
+    .filter((name) => !known.has(name))
+    .sort()
+}
+
+/**
  * Astro integration, listed last in astro.config.ts so it runs after the sitemap and the published files. Under a base
- * path it moves outDir to <outDir>/<base> (the configured outDir and `astro build --outDir` alike), empties the whole
- * upload folder when a build starts (Astro empties only its own outDir, and a root file of an earlier build must not
- * ship), and finishes the layout when the build is done. At the domain root it changes nothing.
+ * path it moves outDir to <outDir>/<base> (the configured outDir and `astro build --outDir` alike), removes the known
+ * root entries of an earlier build when a build starts (cleanNestedRoot; anything else stays and gets a warning), and
+ * finishes the layout when the build is done. At the domain root it changes nothing.
  */
 export function pagesLayout(): AstroIntegration {
   let config: SiteConfig | null = null
@@ -68,8 +90,11 @@ export function pagesLayout(): AstroIntegration {
         building = command === 'build'
         updateConfig({ outDir: pathToFileURL(`${join(root, siteDir(config))}/`) })
       },
-      'astro:build:start': () => {
-        if (config && building) rmSync(root, { recursive: true, force: true })
+      'astro:build:start': ({ logger }) => {
+        if (!config || !building) return
+        const left = cleanNestedRoot(root, config)
+        if (left.length > 0)
+          logger.warn(`left at the root of the upload, outside the layout (remove before a deploy): ${left.join(', ')}`)
       },
       'astro:build:done': ({ logger }) => {
         if (!config) return
@@ -192,8 +217,7 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[
     else if (existsSync(join(site, f)) && !readFileSync(copy).equals(readFileSync(join(site, f))))
       say(`${shown(copy)} differs from ${shown(join(site, f))}`)
   }
-  const top = siteDir(c).split('/')[0] as string
-  const allowed = new Set<string>([...ROOT_FILES, SCHEMA_DIR, ...FIXED_ROOT_FILES, top])
+  const allowed = new Set<string>(nestedRootEntries(c))
   for (const name of readdirSync(root)) if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
   for (const f of ROOT_ONLY) if (existsSync(join(site, f))) say(`${shown(join(site, f))} belongs at the root`)
   const pages = [...walk(site).filter((f) => f.endsWith('.html')), join(root, '404.html')].filter((f) => existsSync(f))

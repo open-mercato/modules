@@ -1,7 +1,7 @@
 // Move under www.openmercato.com/modules (decision of 13 Nov, lib/core/site-host.ts): the default build stays as it is
 // (site at the domain root, Functions on `/` only), and a build under a base path lays dist out for the proxy of the
 // main site, redirects the old addresses of the Pages hosts to the site, and keeps the schema addresses fixed.
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -32,9 +32,11 @@ import {
 import { templatesRedirect } from '../../lib/core/templates-host.ts'
 import {
   checkPagesLayout,
+  cleanNestedRoot,
   finishNestedLayout,
   htmlRefs,
   linkProblem,
+  nestedRootEntries,
   pagesLayout,
 } from '../../lib/emit/pages-layout.ts'
 import { PUBLISHED_SCHEMAS } from '../../lib/schema/json-schema.ts'
@@ -362,6 +364,48 @@ describe('the nested layout of dist', () => {
     const problems = checkPagesLayout(dist, WWW).join('\n')
     expect(problems).toContain('templates.json is missing (released create-mercato-app versions fetch it there)')
     expect(problems).toMatch(/dist\/picker\.json differs from .*dist\/modules\/picker\.json/)
+  })
+
+  it('a nested build empties only the known root entries and leaves anything else for the check to flag', () => {
+    const dist = join(tmp, 'dist')
+    site(dist)
+    finishNestedLayout(dist, WWW)
+    writeFileSync(join(dist, 'notes.txt'), 'not ours')
+    mkdirSync(join(dist, 'm'))
+    expect(nestedRootEntries(WWW)).toEqual([
+      'modules',
+      '404.html',
+      '_routes.json',
+      '_redirects',
+      'schema',
+      'templates.json',
+      'picker.json',
+    ])
+    expect(cleanNestedRoot(dist, WWW).sort()).toEqual(['m', 'notes.txt'])
+    expect(readdirSync(dist).sort()).toEqual(['m', 'notes.txt'])
+    expect(readFileSync(join(dist, 'notes.txt'), 'utf8')).toBe('not ours')
+    expect(nestedRootEntries({ origin: WWW.origin, base: '/a/b' })[0]).toBe('a')
+    expect(cleanNestedRoot(join(tmp, 'nothing-here'), WWW)).toEqual([])
+
+    // the integration runs it when a build starts and warns about what it left
+    site(dist)
+    const integration = pagesLayout()
+    const setup = integration.hooks['astro:config:setup'] as unknown as (a: unknown) => void
+    const start = integration.hooks['astro:build:start'] as unknown as (a: unknown) => void
+    setup({
+      config: {
+        base: '/modules',
+        site: WWW.origin,
+        outDir: pathToFileURL(`${dist}/`),
+        root: pathToFileURL(`${tmp}/`),
+      },
+      command: 'build',
+      updateConfig: () => {},
+    })
+    const warn = vi.fn()
+    start({ logger: { warn } })
+    expect(readdirSync(dist).sort()).toEqual(['m', 'notes.txt'])
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('m, notes.txt'))
   })
 
   it('the check names a link outside the base, a stray root file, a wrong $id and a root layout mismatch', () => {
