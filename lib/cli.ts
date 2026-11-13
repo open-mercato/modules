@@ -57,6 +57,11 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     description: 'preview: run matrix cells in Docker (local or ssh host) for collect --local',
   },
   { name: 'emit', owner: 'WP09', description: 'published files and site data from .data' },
+  {
+    name: 'pages-site',
+    owner: 'WP09',
+    description: 'write functions/site.ts from SITE_URL and BASE_PATH; --check <dist> checks the layout',
+  },
   { name: 'plugin-sync', owner: 'WP14', description: 'copy the skill and .mcp.json into the Claude Code plugin' },
   { name: 'check-text', owner: 'WP01', description: 'ban long dashes and control characters in texts' },
 ]

@@ -7,6 +7,7 @@ import sitemap from '@astrojs/sitemap'
 import { defineConfig } from 'astro/config'
 import type { AstroIntegration } from 'astro'
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from './lib/core/home.ts'
+import { pagesLayout } from './lib/emit/pages-layout.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 const emitIntegration = new URL('./lib/emit/astro-integration.ts', import.meta.url)
@@ -64,6 +65,9 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.includes('/_dev/') }),
     devGallery(),
     ...(await loadOmData()),
+    // last: under a base path the site goes to dist/<base>/ and the Pages root files are laid out after everything
+    // else has written (lib/emit/pages-layout.ts); at the domain root it does nothing
+    pagesLayout(),
   ],
   devToolbar: { enabled: false },
   vite: {

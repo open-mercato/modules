@@ -21,6 +21,7 @@ describe('lib/cli.ts (spec 5.4)', () => {
       'collect',
       'cells-local',
       'emit',
+      'pages-site',
       'plugin-sync',
       'check-text',
     ])

@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { Browser, BrowserContext, BrowserContextOptions } from '@playwright/test'
 import { DEFAULT_BASE_PATH } from '../../lib/core/home.ts'
+import { siteFolder } from './serve.ts'
 
 const root = resolve(import.meta.dirname, '..', '..')
 // the same default as emit and astro.config.ts (domain root since the Cloudflare move, 28 Oct), so a plain
@@ -15,7 +16,7 @@ const templatesPort = 4412
 const external = !!process.env.E2E_BASE_URL
 const staleDistRaw = resolve(root, process.env.E2E_STALE_DIST ?? 'out/e2e/stale')
 const templatesDistRaw = resolve(root, process.env.E2E_TEMPLATES_DIST ?? 'out/e2e/templates')
-const templatesBuilt = !external && existsSync(join(templatesDistRaw, 'index.html'))
+const templatesBuilt = !external && existsSync(join(siteFolder(templatesDistRaw, basePath), 'index.html'))
 
 export const E2E = {
   root,
@@ -26,13 +27,13 @@ export const E2E = {
   external,
   dist: resolve(root, process.env.E2E_DIST ?? 'out/e2e/real'),
   /** The stale variant to serve locally, or null when it was not built. */
-  staleDist: !external && existsSync(join(staleDistRaw, 'index.html')) ? staleDistRaw : null,
+  staleDist: !external && existsSync(join(siteFolder(staleDistRaw, basePath), 'index.html')) ? staleDistRaw : null,
   /** Site under test, with the base path and without a trailing slash. */
   base: (process.env.E2E_BASE_URL ?? `http://127.0.0.1:${port}${basePath}`).replace(/\/+$/, ''),
   /** The stale variant, or null when there is none to test. */
   staleBase: process.env.E2E_STALE_URL
     ? process.env.E2E_STALE_URL.replace(/\/+$/, '')
-    : !external && existsSync(join(staleDistRaw, 'index.html'))
+    : !external && existsSync(join(siteFolder(staleDistRaw, basePath), 'index.html'))
       ? `http://127.0.0.1:${stalePort}${basePath}`
       : null,
   shots: resolve(root, process.env.E2E_SHOTS ?? 'out/e2e/shots'),

@@ -3,7 +3,9 @@
 // slash and with an index.html answers 301, and so does a base path without its slash (`/modules`), so the link
 // check can see it; anything else answers 404 with 404.html. Serves only under the base. The base defaults to the
 // domain root, as the site is built and deployed to Cloudflare Pages since 28 Oct; pass `/modules` (or set
-// BASE_PATH) for a build made under a path.
+// BASE_PATH) for a build made under a path. Such a build has the site in <dist>/<base>/ (nested layout of 13 Nov,
+// lib/emit/pages-layout.ts), which is served from there; a flat build of an older tree is served from <dist> itself.
+// Paths outside the base answer 404 here, where Pages runs the redirect Function (lib/core/site-host.ts).
 //   node test/e2e/serve.ts <dist> [port] [base]      (defaults: out/e2e/real, 4410, BASE_PATH or /)
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs'
 import { createServer, type ServerResponse } from 'node:http'
@@ -81,8 +83,14 @@ function send(res: ServerResponse, status: number, file: string | null, head: bo
   else createReadStream(file).pipe(res)
 }
 
+/** The folder that holds the site's index.html: <dist>/<base> for a nested build, else <dist>. */
+export function siteFolder(dist: string, basePath: string): string {
+  const sub = basePath.replace(/^\/+|\/+$/g, '')
+  return sub && isFile(join(dist, sub, 'index.html')) ? join(dist, sub) : dist
+}
+
 export function startServer(dist: string, port: number, basePath: string): ReturnType<typeof createServer> {
-  const root = resolve(dist)
+  const root = resolve(siteFolder(dist, basePath))
   const base = `/${basePath.replace(/^\/+|\/+$/g, '')}`.replace(/^\/$/, '')
   const notFound = join(root, '404.html')
   const server = createServer((req, res) => {
@@ -120,8 +128,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const dist = process.argv[2] ?? 'out/e2e/real'
   const port = Number(process.argv[3] ?? 4410)
   const base = process.argv[4] ?? process.env.BASE_PATH ?? DEFAULT_BASE_PATH
-  if (!isFile(join(dist, 'index.html'))) {
-    console.error(`serve: ${join(dist, 'index.html')} not found; run yarn e2e:build first`)
+  if (!isFile(join(siteFolder(dist, base), 'index.html'))) {
+    console.error(`serve: ${join(siteFolder(dist, base), 'index.html')} not found; run yarn e2e:build first`)
     process.exit(2)
   }
   startServer(dist, port, base)
