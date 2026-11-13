@@ -1,5 +1,5 @@
 ---
-// Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, theme before first paint, self-hosted fonts, header,
+// Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, self-hosted fonts, header,
 // stale-data banner, footer, copy handler with a polite live region, Speculation Rules, and WebMCP on pages that
 // ask for it (site/src/scripts/webmcp.ts, WP14, loaded through import.meta.glob so a missing file is fine).
 import '../styles/tokens.css'
@@ -63,7 +63,6 @@ const stale =
 const speculation = JSON.stringify({
   prefetch: [{ where: { href_matches: `${BASE}/m/*` }, eagerness: 'moderate' }],
 })
-const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()`
 ---
 
 <!doctype html>
@@ -81,9 +80,9 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
     <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
     <link rel="llms-txt" href={href('/llms.txt')} />
     {mdAlternate && <link rel="alternate" type="text/markdown" href={href(mdAlternate)} />}
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0C0C0C" media="(prefers-color-scheme: dark)" />
+    {/* light only, like openmercato.com (move of 13 Nov): no dark theme, whatever the system asks for */}
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#FFFFFF" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Open Mercato Modules" />
     <meta property="og:title" content={title} />
@@ -93,7 +92,6 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline set:html={themeInit} />
     {/* the view-transition opt-in is inline in the head (review r4: the flight from a query to a module page was
         dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
         new page's first style pass could run without it; inline: 96 of 96 flights land in headless Chromium) */}

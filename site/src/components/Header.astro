@@ -1,5 +1,5 @@
 ---
-// Site header (spec 7.6, 7.7 A.1): wordmark + MODULES chip, navigation, DataStamp, theme switch, primary CTA.
+// Site header (spec 7.6, 7.7 A.1): wordmark + MODULES chip, navigation, DataStamp, primary CTA.
 // 56 px, sticky, inside the sheet with rails. On phones the navigation folds into a <details> menu without JS.
 import Wordmark from './Wordmark.astro'
 import DataStamp from './DataStamp.astro'
@@ -46,10 +46,6 @@ const isCurrent = (p: string): boolean =>
     </nav>
     <div class="hdr__right">
       <DataStamp dataAsOf={dataAsOf} />
-      <button type="button" class="btn btn--ghost btn--icon tt" data-theme-toggle data-needs-js aria-label="Switch color theme">
-        <Icon name="moon" size={18} class="icon i-moon" />
-        <Icon name="sun" size={18} class="icon i-sun" />
-      </button>
       <a class="btn btn--primary hdr__cta" href={href('/submit')}>Submit a module</a>
       <details class="hdr__menu">
         <summary class="btn btn--secondary btn--sm" aria-label="Menu">
@@ -73,24 +69,6 @@ const isCurrent = (p: string): boolean =>
     </div>
   </div>
 </header>
-
-<script>
-  const KEY = 'om-theme'
-  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    btn.addEventListener('click', () => {
-      const root = document.documentElement
-      const current =
-        root.dataset.theme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      const next = current === 'dark' ? 'light' : 'dark'
-      root.dataset.theme = next
-      try {
-        localStorage.setItem(KEY, next)
-      } catch {
-        /* private mode: the choice lasts for this page only */
-      }
-    })
-  }
-</script>
 
 <style>
   .site-header {
@@ -147,23 +125,6 @@ const isCurrent = (p: string): boolean =>
   }
   .hdr__right > :global(.stamp) {
     margin-right: 4px;
-  }
-  .tt :global(.i-sun) {
-    display: none;
-  }
-  :global(:root[data-theme='dark']) .tt :global(.i-moon) {
-    display: none;
-  }
-  :global(:root[data-theme='dark']) .tt :global(.i-sun) {
-    display: inline-block;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .tt :global(.i-moon) {
-      display: none;
-    }
-    :global(:root:not([data-theme='light'])) .tt :global(.i-sun) {
-      display: inline-block;
-    }
   }
   .hdr__menu {
     display: none;
@@ -235,8 +196,7 @@ const isCurrent = (p: string): boolean =>
   }
   /* touch targets of at least 44 px on phones (spec 7.10) */
   @media (max-width: 767px) {
-    .hdr__menu > summary,
-    .tt {
+    .hdr__menu > summary {
       min-height: 44px;
       min-width: 44px;
     }
