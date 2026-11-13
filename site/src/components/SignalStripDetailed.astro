@@ -263,14 +263,6 @@ const isoKeys = (['agree', ...ISO_DIFFERS] as const).filter((m) => isoMarks.has(
     background: #e7e7e7;
     box-shadow: inset 0 0 0 1px var(--ink-3);
   }
-  :global(:root[data-theme='dark']) .ssd__night--infra-error {
-    background: #1b1b1b;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .ssd__night--infra-error {
-      background: #1b1b1b;
-    }
-  }
   .ssd__foot {
     display: flex;
     align-items: center;

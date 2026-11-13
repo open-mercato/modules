@@ -510,14 +510,6 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
     accent-color: #0c0c0c;
     margin: 0;
   }
-  :global(:root[data-theme='dark']) .cm__sw input {
-    accent-color: #b4f372;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .cm__sw input {
-      accent-color: #b4f372;
-    }
-  }
   .cm__legend {
     display: flex;
     flex-wrap: wrap;

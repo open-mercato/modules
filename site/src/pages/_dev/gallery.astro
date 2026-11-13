@@ -1,7 +1,7 @@
 ---
 // Design gallery (dev only, WP11): every component of spec 7.6 that is not a page, rendered from test/fixtures.
-// The route exists only in `astro dev` or with OM_DEV_GALLERY=1 (astro.config.ts injects it); the theme switch in
-// the header toggles light and dark.
+// The route exists only in `astro dev` or with OM_DEV_GALLERY=1 (astro.config.ts injects it). One light theme since
+// 13 Nov, like openmercato.com.
 import Base from '../../layouts/Base.astro'
 import AnatomyFilm from '../../components/AnatomyFilm.astro'
 import Banner from '../../components/Banner.astro'
@@ -245,7 +245,7 @@ const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
 
 <Base
   title="Design gallery · Open Mercato Modules"
-  description="Every component of the catalog rendered from test fixtures, in both themes."
+  description="Every component of the catalog rendered from test fixtures."
   path="/_dev/gallery"
   dataAsOf={g.dataAsOf}
   noindex
@@ -256,7 +256,7 @@ const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
       <p class="t-tagline">// Design system · dev only</p>
       <h1 class="t-display">Instruments, not decorations.</h1>
       <p class="gal-lead">
-        Every component of spec 7.6 that is not a page. Use the theme switch in the header for dark. {sourceNote}
+        Every component of spec 7.6 that is not a page. {sourceNote}
       </p>
       <nav class="gal-toc" aria-label="Sections">
         {sections.map((s, i) => <a href={`#${sid(s)}`}><span>{String(i + 1).padStart(2, '0')}</span>{s}</a>)}
@@ -620,7 +620,7 @@ const sid = (s: string): string => s.toLowerCase().replace(/[^a-z]+/g, '-')
   <!-- 12 anatomy film -->
   <section class="band" id={sid('Anatomy film')}>
     <div class="sheet section stack gap-24">
-      <p class="t-tagline">// 12 · AnatomyFilm · dark in both themes</p>
+      <p class="t-tagline">// 12 · AnatomyFilm · always dark</p>
       <AnatomyFilm entry={ksef} facts={ksefFacts} />
       <AnatomyFilm entry={stripe} facts={factsOf(stripe)} />
       {real && <AnatomyFilm entry={cpq} facts={factsOf(cpq)} />}

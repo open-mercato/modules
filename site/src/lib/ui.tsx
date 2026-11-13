@@ -325,7 +325,7 @@ export function CommandText({ text }: { text: string }) {
 }
 
 /**
- * Command chip (spec 7.6): light #EFE7FF / #6B55A0, dark #1B1B1B / #B4F372. A copy target shows the whole
+ * Command chip (spec 7.6): #EFE7FF / #6B55A0 on the page, #1B1B1B / #B4F372 on the film. A copy target shows the whole
  * command: it wraps at token boundaries and the copy button grows with it.
  */
 export function CommandChipView({

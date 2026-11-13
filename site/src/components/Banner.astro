@@ -54,7 +54,7 @@ const m = meta[variant]
 </div>
 
 <style>
-  /* one plate in both themes (review WP11b): a neutral --bg-2 surface, a hairline and a 2 px signal edge on the left.
+  /* one plate (review WP11b): a neutral --bg-2 surface, a hairline and a 2 px signal edge on the left.
      The tag and the icon carry the state in text; the edge only colours it. Enterprise stays dark (spec 7.7 B.7). */
   .banner {
     --b-accent: var(--ink-3);
@@ -94,7 +94,7 @@ const m = meta[variant]
     text-underline-offset: 3px;
   }
   /* light: the yellow and lime of the brand are too pale for a 2 px line on #FAFAFA, so the edge takes a deeper
-     shade of the same hue; dark uses the brand colours themselves */
+     shade of the same hue */
   .banner--stale-data,
   .banner--quarantine,
   .banner--replaces {
@@ -123,30 +123,6 @@ const m = meta[variant]
   }
   .banner--enterprise .banner__link {
     color: #fafafa;
-  }
-  :global(:root[data-theme='dark']) .banner--stale-data,
-  :global(:root[data-theme='dark']) .banner--quarantine,
-  :global(:root[data-theme='dark']) .banner--replaces {
-    --b-accent: #eefb63;
-  }
-  :global(:root[data-theme='dark']) .banner--preview {
-    --b-accent: #bc9aff;
-  }
-  :global(:root[data-theme='dark']) .banner--enterprise {
-    background: var(--bg-2);
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .banner--stale-data,
-    :global(:root:not([data-theme='light'])) .banner--quarantine,
-    :global(:root:not([data-theme='light'])) .banner--replaces {
-      --b-accent: #eefb63;
-    }
-    :global(:root:not([data-theme='light'])) .banner--preview {
-      --b-accent: #bc9aff;
-    }
-    :global(:root:not([data-theme='light'])) .banner--enterprise {
-      background: var(--bg-2);
-    }
   }
   @media (max-width: 767px) {
     .banner {

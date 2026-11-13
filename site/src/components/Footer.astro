@@ -1,7 +1,7 @@
 ---
 // Footer (spec 7.6, 7.7 A.7): links to the data, the provenance sentence, data freshness, and the huge outline
 // "Modules" (Geist Regular outlines, 1 px non-scaling stroke), like the openmercato.com footer: an almost black
-// hairline #262626 on light and #4A4A4A on dark (spec 7.6 says --line-strong, 1.24:1 on white, which disappears;
+// hairline #262626 (spec 7.6 says --line-strong, 1.24:1 on white, which disappears;
 // amendment 23.10, review WP11b).
 import outline from './assets/modules-outline.svg?raw'
 import Wordmark from './Wordmark.astro'
@@ -169,14 +169,6 @@ const build = meta.build?.commit ? meta.build : null
   }
   .ft__alinks a {
     color: var(--ink-2);
-  }
-  :global(:root[data-theme='dark']) .ft__giant {
-    color: #4a4a4a;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .ft__giant {
-      color: #4a4a4a;
-    }
   }
   .ft__giant :global(svg) {
     width: 100%;
