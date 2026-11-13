@@ -315,6 +315,11 @@ SITE_URL=https://<preview host> BASE_PATH=/modules node lib/cli.ts emit --data <
 
 The pages rewrite their copy commands, links and Claude Code prompts to the host they are served from either way.
 
+A build with a `BASE_PATH` other than `/` writes the site to `dist/<base>/` (for `/modules`: `dist/modules/index.html`,
+`dist/modules/_astro/`, `dist/modules/modules.json`), and `astro build --outDir <dir>` to `<dir>/<base>/`. Serve the
+folder above it, so the path keeps its prefix: `node test/e2e/serve.ts dist 4410 /modules` does that, and so does any
+static server started in `dist`. Nothing cuts the prefix any more (see Move under www.openmercato.com/modules).
+
 ## Stop the night
 
 To stop the nightly install at once (a hostile module, an Actions bill), disable the workflow by hand:
@@ -398,7 +403,8 @@ At the switch to the public address (Cloudflare Pages at `modules.openmercato.co
    fails red. `mcp` exists already: set its deployment branch policy to `main` the same way before adding its own
    `CLOUDFLARE_API_TOKEN` (spec 5.6 item 6). Repo variables: `MCP_URL` after the Worker deploy
    (D-OPEN-1) and the WebMCP origin trial tokens in `WEBMCP_OT_TOKENS` (spec 5.6 item 8). `SITE_URL` and `BASE_PATH`
-   stay unset: `pages.yml` defaults to `https://modules.openmercato.com` and `/`.
+   stay unset until the move under `www.openmercato.com/modules` (its own section below): `pages.yml` defaults to
+   `https://modules.openmercato.com` and `/`.
 7. A second curator in `.github/CODEOWNERS` (D-OPEN-5): with one code owner a required code-owner review adds nothing.
 8. Make the repository public. `pages.yml`, and the scheduled `watch`, `sync` and nightly runs, start on their own from
    then on (while the repository is private `pages` is skipped and the others run only by hand, for Actions minutes).
@@ -428,10 +434,12 @@ answers a 302 to `https://modules.openmercato.com/templates`, the canonical addr
 serves the same site as `modules.openmercato.com`, which is never redirected. The target is on the modules host
 because the wordmark, the Modules item and "Browse modules" link to `/`: on the templates host they would land on its
 root and come straight back to the section. The redirect ships in this repository: `functions/_middleware.ts` (logic
-in `lib/core/templates-host.ts`) runs on `/` only, because `site/public/_routes.json` limits Functions to that path,
-and `pages.yml` deploys it with the site. Canonical links of every page, `/templates` included, stay on `SITE_URL`
-(`modules.openmercato.com`), so search engines see one copy and the sitemap and `llms.txt` keep one origin. The
-redirect target comes from `DEFAULT_SITE_ORIGIN` in `lib/core/home.ts`: if `SITE_URL` ever moves, change both.
+in `lib/core/site-host.ts` and `lib/core/templates-host.ts`) runs on `/` only, because `site/public/_routes.json`
+limits Functions to that path, and `pages.yml` deploys it with the site. Canonical links of every page, `/templates`
+included, stay on `SITE_URL` (`modules.openmercato.com`), so search engines see one copy and the sitemap and
+`llms.txt` keep one origin. The redirect target follows `SITE_URL` and `BASE_PATH`: `yarn om pages-site` writes them
+into `functions/site.ts` in both jobs of `pages.yml`, so after the move the templates root leads to
+`https://www.openmercato.com/modules/templates`.
 
 Devops (Dominik), in the Cloudflare account, after the site deploys (steps 5 and 6 above):
 
@@ -456,6 +464,95 @@ A 200 with the home page on the templates root means the deployment has no Funct
 from the repository root and that the `Check Pages Functions` step of `build` passed. If Functions must be turned off,
 the same redirect can be a Single Redirect rule of the zone (Rules > Redirect Rules: hostname equals
 `templates.openmercato.com` and URI path equals `/`, static target `https://modules.openmercato.com/templates`, 302).
+
+## Move under www.openmercato.com/modules (decision of 13 Nov)
+
+The catalog moves from `https://modules.openmercato.com` to `https://www.openmercato.com/modules`, with the Templates
+section at `/modules/templates`. The main site (Webflow behind Cloudflare; the apex answers a 301 to `www`) passes
+`/modules` and `/modules/*` to the Pages project `open-mercato-modules`, which stays the source server. Two repository
+variables switch the build; without them everything stays as it is today.
+
+What the repository does with `SITE_URL=https://www.openmercato.com` and `BASE_PATH=/modules`:
+
+- **Layout.** The build writes the site to `dist/modules/` (pages, `_astro/`, `modules.json`, `llms.txt`,
+  `.well-known/`, sitemap, `robots.txt`). The root of `dist` holds only `404.html` (a copy; Pages needs one at the top),
+  `_routes.json`, `_redirects` and `schema/`. Pages serves the prefix itself, so the proxy never cuts it.
+  `yarn om pages-site --check dist` proves the layout: root files and routes, every link of every page under
+  `/modules` or absolute, and the fixed schema `$id`. Both jobs of `pages.yml` run it.
+- **Old addresses.** `dist/_routes.json` runs Functions on every path but `/modules`, `/modules/*` and `/schema/*`.
+  `functions/_middleware.ts` (`hostRedirect` in `lib/core/site-host.ts`) answers each of them with a 302 to the same
+  path and query on `https://www.openmercato.com/modules`, on every host of the project: `modules.openmercato.com/m/...`,
+  `/templates`, `/llms.txt` and `/modules.json` keep working. `templates.openmercato.com/` goes to
+  `https://www.openmercato.com/modules/templates`. A path under `/modules` or `/schema/` and a request that carries
+  the `www` host are never redirected (no loop); a path with `//` at the start, a backslash or a control character is
+  not redirected at all (no open redirect). The Functions read the layout from `functions/site.ts`, which
+  `yarn om pages-site` writes from the same two variables in the build job and again in the deploy job (the committed
+  copy is the default).
+- **302, not 301,** while the move is new: rollback is removing two variables, and a 301 cached in browsers would keep
+  sending people to an address that then serves nothing. Once the new address is settled, set `MOVED_STATUS` in
+  `lib/core/site-host.ts` to 301.
+- **Schemas.** The `$id` of every published schema, the `$schema` of `modules.json` and every schema link on the pages
+  stay `https://modules.openmercato.com/schema/<name>-1.json` (`SCHEMA_ORIGIN` in `lib/core/home.ts`):
+  create-mercato-template writes that address. The Pages project serves `dist/schema/` there without a redirect.
+  `dist/modules/schema/` keeps a copy for the WebMCP script, which fetches `tools-1.json` from its own origin.
+
+### Contract for the proxy of the main site
+
+1. Route `www.openmercato.com/modules` and `www.openmercato.com/modules/*` to `https://modules.openmercato.com` (or the
+   project's `open-mercato-modules.pages.dev` name) with the same path and query. Do not cut `/modules`: the Pages
+   project serves the site under that prefix. Do not send any other path there.
+2. Pass the answer through as it is: status, `Location` (the source answers redirects such as `/modules` to
+   `/modules/` and `/modules/sitemap.xml` to `/modules/sitemap-index.xml` with paths on the same host), `Content-Type`,
+   `Cache-Control` and `ETag`. Do not follow redirects in the proxy, and do not override the cache: no cache rule with
+   its own edge or browser TTL for `/modules`. The data changes several times a day.
+3. `www.openmercato.com/templates` redirects to `https://www.openmercato.com/modules/templates` (a zone redirect rule).
+4. Add this line to `https://www.openmercato.com/robots.txt`, and keep `/modules` allowed there:
+   `Sitemap: https://www.openmercato.com/modules/sitemap-index.xml`. Crawlers read only the robots.txt at the domain
+   root; the catalog's own `/modules/robots.txt` is not read.
+5. Turn Cloudflare Email Obfuscation off for `/modules` (a configuration rule on URI path starts with `/modules`):
+   `package@version` reads as an e-mail address to it (live review of 30 Oct).
+6. `/.well-known/` and `/llms.txt` at the domain root belong to the main site. The catalog publishes its own under the
+   prefix: `/modules/llms.txt`, `/modules/.well-known/agent-skills/index.json` and, once the MCP Worker is deployed,
+   `/modules/.well-known/mcp/server-card.json`. Tools that look only at the domain root will not find them unless the
+   main site links or redirects to them; the catalog works without that.
+
+### Switch, in order
+
+1. The proxy of the main site goes live with the contract above. Until step 3 its `/modules` paths should get the
+   404 page of the source (the root layout has no `/modules/` folder); nothing links there yet.
+2. Repository variables (Settings > Secrets and variables > Actions > Variables): `SITE_URL` =
+   `https://www.openmercato.com`, `BASE_PATH` = `/modules`.
+3. Run `pages` by hand (Actions > pages > Run workflow). `Check artifact contents` and `Check downloaded site` run
+   `yarn om pages-site --check dist` for the new layout; the summary names `https://www.openmercato.com/modules`.
+4. Verify:
+
+```sh
+curl -s https://www.openmercato.com/modules/llms.txt | head -1
+# # Open Mercato Modules
+curl -s https://www.openmercato.com/modules/ | grep -o '<link rel="canonical" href="[^"]*"'
+# href="https://www.openmercato.com/modules/"
+curl -sI https://modules.openmercato.com/m/@open-mercato/gateway-tpay | grep -iE '^(HTTP|location)'
+# 302 and location: https://www.openmercato.com/modules/m/@open-mercato/gateway-tpay
+curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
+# 302 and location: https://www.openmercato.com/modules/templates
+curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'
+# "$id": "https://modules.openmercato.com/schema/modules-1.json", with a 200 and no redirect
+```
+
+5. The main site: the robots.txt line, the `/templates` redirect and the sitemap in Search Console.
+6. Change the addresses that still name `modules.openmercato.com` for the site (they work through the 302, but
+   `curl -s` without `-L` prints nothing): `MODULES_INDEX_URL` and `BUILTIN_INDEX_URL` in `mcp/wrangler.toml` (then
+   deploy the Worker), the `curl` lines and the module card URL in `skills/om-find-module/SKILL.md` (then
+   `yarn om plugin-sync` for the plugin copy), the `/submit` link in `.github/ISSUE_TEMPLATE/config.yml`, and the
+   site address in `README.md`, `CONTRIBUTING.md` and `docs/DEMO.md`. Leave every `/schema/` address as it is.
+7. Later, once settled: `MOVED_STATUS` to 301.
+
+### Rollback
+
+Delete the repository variables `SITE_URL` and `BASE_PATH` and run `pages` by hand. The build returns to the domain
+root, `functions/site.ts` to the default and Functions to `/` only, so `modules.openmercato.com` serves the site again.
+The 302s were not cached. Then take the `/modules` route off the proxy of the main site, or point it at a redirect to
+`https://modules.openmercato.com` with the prefix cut.
 
 ## Triage of submissions
 
