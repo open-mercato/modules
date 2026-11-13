@@ -283,7 +283,7 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   )
   pub.set('llms-full.txt', llmsFullTxt(cards, builtIn, opts.site, previewReceipts, latest?.key ?? null))
   pub.set('raw/modules.md', rawModulesMd(entries, data.categories, lines, opts.site, previewReceipts))
-  for (const [path, text] of schemaFiles(opts.site)) pub.set(path, text)
+  for (const [path, text] of schemaFiles()) pub.set(path, text)
 
   // discovery
   // the server card only with a deployed Worker (finding of 25 Oct: a card at <site>/mcp advertised an MCP server that

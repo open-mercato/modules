@@ -19,7 +19,7 @@ import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { TOOL_SUMMARIES } from '../../../lib/emit/wellknown.ts'
 import { POLICY_CODES } from '../../../lib/core/policy.ts'
 import { CLIPBOARD_NOTE, FIRST_TIME_HINT, TARGETS, URL_BUDGET } from '../../../lib/core/deeplinks.ts'
-import { href } from '../lib/url.ts'
+import { dataHref, href } from '../lib/url.ts'
 import { CATALOG_REPO } from '../../../lib/core/home.ts'
 import { wbrHtml } from '../lib/wrap.ts'
 
@@ -212,7 +212,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
           {
             readFiles.map((f) => (
               <li>
-                <a href={href(f.path)}>
+                <a href={dataHref(f.path)}>
                   <code>{f.path}</code>
                 </a>
                 <span>{f.what}</span>
@@ -247,7 +247,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
       <p class="t-tagline">// {num('tools')} · tools@1</p>
       <h2 id="fa-tools">Tool contract</h2>
       <p class="fa-lede2">
-        Rendered from <a href={href('/schema/tools-1.json')}><code>tools-1.json</code></a>. Names and required fields are
+        Rendered from <a href={dataHref('/schema/tools-1.json')}><code>tools-1.json</code></a>. Names and required fields are
         frozen in version 1; new inputs are only ever optional. Every tool is read-only and idempotent.
       </p>
       {/* two balanced columns (review r1): search_modules and get_changes on the left, the three per-module tools on

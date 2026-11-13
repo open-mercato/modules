@@ -2,6 +2,7 @@
 // plus the built-in modules) and /raw/modules.md (entries by category) (spec 8.5). Entries tagged `example`,
 // on hold or delisted stay out. Pure.
 import { previewLines } from '../core/source.ts'
+import { schemaUrl } from '../core/home.ts'
 import { latestLine, type LineInfo } from '../core/lines.ts'
 import { builtInPresetText } from '../core/plan.ts'
 import {
@@ -110,7 +111,7 @@ export function llmsTxt(i: LlmsInput): string {
           `- [MCP server](${i.mcpUrl}): search_modules, get_module, check_compat, plan_install, get_changes (streamable HTTP, no auth)`,
         ]
       : []),
-    `- [modules.json](${i.site}/modules.json): full index; schema at ${i.site}/schema/modules-1.json`,
+    `- [modules.json](${i.site}/modules.json): full index; schema at ${schemaUrl('modules')}`,
     `- [Built-in modules](${i.site}/built-in.json): ${i.builtIn.length} modules that ship with Open Mercato core. Check them before building.`,
     `- [All modules as Markdown](${i.site}/raw/modules.md)`,
     '',

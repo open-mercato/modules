@@ -32,11 +32,12 @@ describe('JSON Schema from Zod (spec 4, 4.6)', () => {
     expect(failures).toEqual([])
   })
 
-  it('publishes every schema file with $id', () => {
-    const out = publishedJsonSchemas('https://wojciechszyjka.github.io/modules/')
+  it('publishes every schema file with the fixed $id on modules.openmercato.com (decision of 13 Nov)', () => {
+    // create-mercato-template writes these addresses, so they never follow SITE_URL or BASE_PATH
+    const out = publishedJsonSchemas()
     expect(Object.keys(out).sort()).toEqual([...PUBLISHED_SCHEMAS].sort())
     for (const name of PUBLISHED_SCHEMAS) {
-      expect(out[name].$id).toBe(`https://wojciechszyjka.github.io/modules/schema/${name}-1.json`)
+      expect(out[name].$id).toBe(`https://modules.openmercato.com/schema/${name}-1.json`)
       expect(out[name].$schema).toBe('https://json-schema.org/draft/2020-12/schema')
     }
   })

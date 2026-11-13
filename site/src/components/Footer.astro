@@ -6,7 +6,7 @@
 import outline from './assets/modules-outline.svg?raw'
 import Wordmark from './Wordmark.astro'
 import { day, dayTime } from '../lib/format.ts'
-import { href } from '../lib/url.ts'
+import { dataHref, href } from '../lib/url.ts'
 import { isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
 import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
@@ -30,7 +30,7 @@ const dataLinks = [
   { label: 'modules.json', url: href('/modules.json') },
   { label: 'llms.txt', url: href('/llms.txt') },
   { label: 'MCP', url: href('/for-agents#connect') },
-  { label: 'Schema', url: href('/schema/modules-1.json') },
+  { label: 'Schema', url: dataHref('/schema/modules-1.json') },
 ]
 const refreshed = dataAsOf.nightly ?? dataAsOf.npm
 // the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one

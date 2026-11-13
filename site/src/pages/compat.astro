@@ -23,7 +23,7 @@ import type { Others } from '../lib/status.ts'
 import { browseDefault, cannotInstall, registryDefault } from './c/_data.ts'
 import { Square } from '../lib/ui.tsx'
 import { shortVersion } from '../lib/format.ts'
-import { href } from '../lib/url.ts'
+import { dataHref, href } from '../lib/url.ts'
 
 const data = loadSiteData()
 const { modules, meta } = data
@@ -521,7 +521,7 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
       }
       <p class="cp-links t-small">
         Data: <a href={href('/compat.json')}>compat.json</a> · schema{' '}
-        <a href={href('/schema/compat-1.json')}>compat-1.json</a> · API changes behind the fit on the{' '}
+        <a href={dataHref('/schema/compat-1.json')}>compat-1.json</a> · API changes behind the fit on the{' '}
         <a href={href('/radar')}>radar</a>.
       </p>
     </details>

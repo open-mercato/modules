@@ -1,5 +1,7 @@
 // Internal links (spec 3.4): every internal link goes through href() so the site works under the Pages base path
 // (`/modules`) and on the domain (`/`). Isomorphic: used by Astro components and Preact islands.
+import { SCHEMA_ORIGIN } from '../../../lib/core/home.ts'
+
 const env = (import.meta as unknown as { env?: { BASE_URL?: string } }).env
 
 /** Base path without a trailing slash: '' for '/', '/modules' for '/modules/'. */
@@ -29,6 +31,16 @@ export function href(path: string, base: string = BASE): string {
 function splitSuffix(p: string): [string, string] {
   const i = p.search(/[?#]/)
   return i < 0 ? [p, ''] : [p.slice(0, i), p.slice(i)]
+}
+
+/**
+ * Link to a published data file. A JSON Schema (`/schema/...`) under a base path links to its fixed address on
+ * SCHEMA_ORIGIN (decision of 13 Nov): the nested layout serves the schemas at the root of the Pages host, not under the
+ * base. At the domain root it is href(), as before. Every other path is href().
+ */
+export function dataHref(path: string, base: string = BASE): string {
+  if (base !== '' && path.startsWith('/schema/')) return `${SCHEMA_ORIGIN}${path}`
+  return href(path, base)
 }
 
 /** Absolute URL of a site path on `site` (canonical links, OG). */

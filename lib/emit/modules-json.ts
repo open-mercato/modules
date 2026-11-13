@@ -4,6 +4,7 @@
 // MCP and the CLI agree. Pure: no Node APIs.
 import { buildIndexEntryWithRules, anatomySummary, withSlotConflicts, type CatalogRef } from '../core/entry.ts'
 import { judgedFacts, presetBackendRoutes } from '../core/health.ts'
+import { schemaUrl } from '../core/home.ts'
 import { lineVersion } from '../core/policy.ts'
 import { withPeerLibraries } from '../core/plan.ts'
 import {
@@ -241,7 +242,7 @@ export function buildModulesIndex(
     ? { listed: data.coverage.listed, missing: data.coverage.missing.slice(0, 50) }
     : { listed: official.length, missing: [] }
   const body: Omit<ModulesIndex, 'generatedAt' | 'dataVersion'> = {
-    $schema: `${opts.site}/schema/modules-1.json`,
+    $schema: schemaUrl('modules'),
     schemaVersion: 1,
     site: opts.site,
     dataAsOf: {
