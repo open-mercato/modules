@@ -503,8 +503,10 @@ What the repository does with `SITE_URL=https://www.openmercato.com` and `BASE_P
    project serves the site under that prefix. Do not send any other path there.
 2. Pass the answer through as it is: status, `Location` (the source answers redirects such as `/modules` to
    `/modules/` and `/modules/sitemap.xml` to `/modules/sitemap-index.xml` with paths on the same host), `Content-Type`,
-   `Cache-Control` and `ETag`. Do not follow redirects in the proxy, and do not override the cache: no cache rule with
-   its own edge or browser TTL for `/modules`. The data changes several times a day.
+   `Cache-Control`, `ETag` and `Access-Control-Allow-Origin` (the source sends `*` on every file, so other sites and
+   web tools can fetch `modules.json` and the other data files). Do not follow redirects in the proxy, and do not
+   override the cache: no cache rule with its own edge or browser TTL for `/modules`. The data changes several times a
+   day.
 3. `www.openmercato.com/templates` redirects to `https://www.openmercato.com/modules/templates` (a zone redirect rule).
 4. Add this line to `https://www.openmercato.com/robots.txt`, and keep `/modules` allowed there:
    `Sitemap: https://www.openmercato.com/modules/sitemap-index.xml`. Crawlers read only the robots.txt at the domain
@@ -533,6 +535,10 @@ curl -s https://www.openmercato.com/modules/ | grep -o '<link rel="canonical" hr
 # href="https://www.openmercato.com/modules/"
 curl -sI https://modules.openmercato.com/m/@open-mercato/gateway-tpay | grep -iE '^(HTTP|location)'
 # 302 and location: https://www.openmercato.com/modules/m/@open-mercato/gateway-tpay
+curl -sI -H 'Origin: https://example.com' https://modules.openmercato.com/modules.json | grep -i '^access-control'
+# access-control-allow-origin: * on the 302
+curl -sI -H 'Origin: https://example.com' https://www.openmercato.com/modules/modules.json | grep -i '^access-control'
+# access-control-allow-origin: * through the proxy
 curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
 # 302 and location: https://www.openmercato.com/modules/templates
 curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'

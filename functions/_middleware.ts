@@ -5,7 +5,7 @@
 // Functions on every path outside the base and /schema/, and each of them is redirected to the same path on the site.
 // `wrangler pages deploy dist` bundles this directory because the deploy job runs from the repository root
 // (.github/workflows/pages.yml), after `yarn om pages-site` wrote functions/site.ts.
-import { hostRedirect } from '../lib/core/site-host.ts'
+import { hostRedirect, redirectResponse } from '../lib/core/site-host.ts'
 import { SITE } from './site.ts'
 
 /** The part of the Pages Functions context this middleware uses. */
@@ -16,5 +16,5 @@ export interface MiddlewareContext {
 
 export function onRequest(context: MiddlewareContext): Response | Promise<Response> {
   const target = hostRedirect(context.request.url, SITE)
-  return target ? Response.redirect(target.location, target.status) : context.next()
+  return target ? redirectResponse(target) : context.next()
 }

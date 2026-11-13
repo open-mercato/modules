@@ -137,6 +137,18 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
   return { location, status: MOVED_STATUS }
 }
 
+/**
+ * The redirect as the Function sends it. Pages adds `Access-Control-Allow-Origin: *` to every static file (checked on
+ * modules.json and llms.txt, 13 Nov), but not to a Function's answer, and a browser checks CORS on each redirect: a
+ * cross-origin fetch of an old data address (modules.json, m/*.json) would fail at the 302 without the header.
+ */
+export function redirectResponse(r: HostRedirect): Response {
+  return new Response(null, {
+    status: r.status,
+    headers: { Location: r.location, 'Access-Control-Allow-Origin': '*' },
+  })
+}
+
 /** The custom domains of the Pages project. */
 export const PAGES_ORIGINS: readonly string[] = [DEFAULT_SITE_ORIGIN, `https://${TEMPLATES_HOST}`]
 

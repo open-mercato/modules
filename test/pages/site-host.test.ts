@@ -18,6 +18,7 @@ import {
   otherProductionOrigins,
   pagesRedirects,
   pagesRoutes,
+  redirectResponse,
   siteConfig,
   siteDir,
   siteModule,
@@ -121,6 +122,7 @@ describe('hostRedirect at the domain root (the default)', () => {
     }
     const moved = await onRequest({ request: new Request('https://templates.openmercato.com/'), next })
     expect([moved.status, moved.headers.get('location')]).toEqual([302, 'https://modules.openmercato.com/templates'])
+    expect(moved.headers.get('access-control-allow-origin')).toBe('*')
     const served = await onRequest({ request: new Request('https://modules.openmercato.com/m/x'), next })
     expect(await served.text()).toBe('static')
     expect(passed).toBe(1)
@@ -129,6 +131,19 @@ describe('hostRedirect at the domain root (the default)', () => {
 
 describe('hostRedirect under a base path', () => {
   const at = (u: string): string | null => hostRedirect(u, WWW)?.location ?? null
+
+  it('answers an old data address with a 302 a cross-origin fetch can follow (CORS on the redirect)', async () => {
+    // Pages gives static files `Access-Control-Allow-Origin: *`; a browser checks CORS on the 302 itself
+    for (const p of ['/modules.json', '/picker.json', '/search-index.json', '/m/@open-mercato/gateway-tpay.json']) {
+      const r = hostRedirect(`https://modules.openmercato.com${p}`, WWW)
+      expect(r, p).not.toBeNull()
+      const res = redirectResponse(r!)
+      expect(res.status, p).toBe(MOVED_STATUS)
+      expect(res.headers.get('location'), p).toBe(`https://www.openmercato.com/modules${p}`)
+      expect(res.headers.get('access-control-allow-origin'), p).toBe('*')
+      expect(await res.text(), p).toBe('')
+    }
+  })
 
   it('sends every old address of the Pages hosts to the same path on the site, query kept', () => {
     expect(at('https://modules.openmercato.com/')).toBe('https://www.openmercato.com/modules/')
