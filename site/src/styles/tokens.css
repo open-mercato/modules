@@ -20,7 +20,7 @@
   --grad-rule: linear-gradient(90deg, #BC9AFF, #EEFB63 50%, #B4F372);
   --cta: #1B1B1B; --cta-hover: #343632; --cta-ink: #FFFFFF;                                                /* główny przycisk: ciemny jak "Launch sandbox" na openmercato.com */
   --cta-dark: #EEFB63; --cta-dark-hover: #E4F34E;                                                         /* główny przycisk na ciemnym (klisza, panele agenta): żółty jak w sekcji CTA */
-  --foot: #0C0C0C; --foot-line: #1F1F1F; --foot-ink: #FFFFFF; --foot-ink-2: #A3A6A0; --foot-giant: #2E2E2E; /* stopka: ciemna jak na openmercato.com */
+  --foot: #0C0C0C; --foot-line: #1F1F1F; --foot-ink: #FFFFFF; --foot-ink-2: #A3A6A0; --foot-giant: #3A3A3A; /* stopka: ciemna jak na openmercato.com */
   --mark: #EEFB63;                                                                                      /* żółte podkreślenie słowa w nagłówku (jak "80% done") */
   --focus: #2F520B;
   --shadow-float: 0 24px 48px -12px #0000002e;
