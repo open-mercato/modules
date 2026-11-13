@@ -476,18 +476,29 @@ What the repository does with `SITE_URL=https://www.openmercato.com` and `BASE_P
 
 - **Layout.** The build writes the site to `dist/modules/` (pages, `_astro/`, `modules.json`, `llms.txt`,
   `.well-known/`, sitemap, `robots.txt`). The root of `dist` holds only `404.html` (a copy; Pages needs one at the top),
-  `_routes.json`, `_redirects` and `schema/`. Pages serves the prefix itself, so the proxy never cuts it.
-  `yarn om pages-site --check dist` proves the layout: root files and routes, every link of every page under
-  `/modules` or absolute, and the fixed schema `$id`. Both jobs of `pages.yml` run it.
-- **Old addresses.** `dist/_routes.json` runs Functions on every path but `/modules`, `/modules/*` and `/schema/*`.
-  `functions/_middleware.ts` (`hostRedirect` in `lib/core/site-host.ts`) answers each of them with a 302 to the same
-  path and query on `https://www.openmercato.com/modules`, on every host of the project: `modules.openmercato.com/m/...`,
-  `/templates`, `/llms.txt` and `/modules.json` keep working. `templates.openmercato.com/` goes to
-  `https://www.openmercato.com/modules/templates`. A path under `/modules` or `/schema/` and a request that carries
-  the `www` host are never redirected (no loop); a path with `//` at the start, a backslash or a control character is
-  not redirected at all (no open redirect). The Functions read the layout from `functions/site.ts`, which
+  `_routes.json`, `_redirects`, `schema/`, `templates.json` and `picker.json` (copies, see Fixed addresses below). Pages
+  serves the prefix itself, so the proxy never cuts it. A build empties only these names at the root of `dist` when
+  it starts, and warns about anything else it finds there. `yarn om pages-site --check dist` proves the layout: root
+  files and routes, the root copies of `templates.json` and `picker.json` equal to the site's, nothing else at the
+  root, every link of every page under `/modules` or absolute, and the fixed schema `$id`. Both jobs of `pages.yml` run
+  it.
+- **Old addresses.** `dist/_routes.json` runs Functions on every path but `/modules`, `/modules/*` and the fixed
+  addresses. `functions/_middleware.ts` (`hostRedirect` in `lib/core/site-host.ts`) answers each of them with a 302 to
+  the same path and query on `https://www.openmercato.com/modules`, on the production hosts `modules.openmercato.com`
+  and `templates.openmercato.com`: `modules.openmercato.com/m/...`, `/templates`, `/llms.txt` and `/modules.json` keep
+  working. `templates.openmercato.com/` goes to `https://www.openmercato.com/modules/templates`. A path under `/modules`,
+  a fixed address and a request that carries the `www` host are never redirected (no loop); a path with `//` at the
+  start, a backslash or a control character is not redirected at all (no open redirect). Any other host (local
+  `wrangler pages dev`) is not redirected either. The Functions read the layout from `functions/site.ts`, which
   `yarn om pages-site` writes from the same two variables in the build job and again in the deploy job (the committed
-  copy is the default).
+  copy is the default). `yarn om pages-site` refuses a `SITE_URL` on a host of the Pages project (a custom domain or a
+  `*.pages.dev` address) together with a `BASE_PATH` other than `/`: requests that carry the site host are never
+  redirected, so the old addresses there would answer 404.
+- **Preview before the switch.** A deployment address (`<hash>.open-mercato-modules.pages.dev`, and the project's
+  `open-mercato-modules.pages.dev`) is not redirected to production: it serves the site at `/modules/`, and its root
+  answers a 302 to `/modules/` on the same host. The `pages` summary and the `cloudflare` environment link to
+  `<deployment address>/modules/`. Links and copy commands on such a page point to the preview host (the page script,
+  `site/src/lib/here.ts`), so the new version can be checked end to end before the proxy or the variables change.
 - **302, not 301,** while the move is new: rollback is removing two variables, and a 301 cached in browsers would keep
   sending people to an address that then serves nothing. Once the new address is settled, set `MOVED_STATUS` in
   `lib/core/site-host.ts` to 301.
@@ -495,6 +506,21 @@ What the repository does with `SITE_URL=https://www.openmercato.com` and `BASE_P
   stay `https://modules.openmercato.com/schema/<name>-1.json` (`SCHEMA_ORIGIN` in `lib/core/home.ts`):
   create-mercato-template writes that address. The Pages project serves `dist/schema/` there without a redirect.
   `dist/modules/schema/` keeps a copy for the WebMCP script, which fetches `tools-1.json` from its own origin.
+
+### Fixed addresses on modules.openmercato.com
+
+Released tools have these addresses written into them, so they stay on `modules.openmercato.com` for good, answered
+with a 200 and no redirect in both layouts (`isFixedPath` and `FIXED_ROOT_FILES` in `lib/core/site-host.ts`):
+
+- `https://modules.openmercato.com/schema/<name>-1.json`: the `$id` of every published schema, written into the files
+  create-mercato-template creates.
+- `https://modules.openmercato.com/templates.json`: read by `create-mercato-app --template` in released versions.
+- `https://modules.openmercato.com/picker.json`: read by the module picker of released create-mercato-app versions.
+
+Nested, the build copies these files from `dist/modules/` to the root of `dist`, `dist/_routes.json` keeps them away
+from Functions and `hostRedirect` never moves them. The site keeps its own copies under `/modules`, which are the
+addresses for new releases. So `modules.openmercato.com` must stay a custom domain of the Pages project
+`open-mercato-modules` after the move, with its DNS record, even when nothing else is served there.
 
 ### Contract for the proxy of the main site
 
@@ -543,6 +569,9 @@ curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
 # 302 and location: https://www.openmercato.com/modules/templates
 curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'
 # "$id": "https://modules.openmercato.com/schema/modules-1.json", with a 200 and no redirect
+curl -sI https://modules.openmercato.com/templates.json | grep -iE '^(HTTP|location)'
+curl -sI https://modules.openmercato.com/picker.json | grep -iE '^(HTTP|location)'
+# HTTP/2 200 and no location, for both
 ```
 
 5. The main site: the robots.txt line, the `/templates` redirect and the sitemap in Search Console.
