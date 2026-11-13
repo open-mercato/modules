@@ -16,6 +16,7 @@ import {
   hostRedirect,
   isFixedPath,
   isNested,
+  isPreviewHost,
   MOVED_STATUS,
   otherProductionOrigins,
   pagesRedirects,
@@ -161,7 +162,6 @@ describe('hostRedirect under a base path', () => {
     expect(at('https://templates.openmercato.com/t/open-mercato/x')).toBe(
       'https://www.openmercato.com/modules/t/open-mercato/x',
     )
-    expect(at('https://abc.open-mercato-modules.pages.dev/about')).toBe('https://www.openmercato.com/modules/about')
     expect(hostRedirect('https://modules.openmercato.com/m/x', WWW)?.status).toBe(MOVED_STATUS)
     expect(MOVED_STATUS).toBe(302)
   })
@@ -177,6 +177,22 @@ describe('hostRedirect under a base path', () => {
     for (const p of ['/modules/picker.json', '/picker.json/x', '/t/acme/kiosk.json', '/templates'])
       expect(isFixedPath(p), p).toBe(false)
     expect(at('https://modules.openmercato.com/templates')).toBe('https://www.openmercato.com/modules/templates')
+  })
+
+  it('leaves a *.pages.dev deployment address on its own host: only its root leads to the base', () => {
+    expect(isPreviewHost('abc123.open-mercato-modules.pages.dev')).toBe(true)
+    expect(isPreviewHost('open-mercato-modules.pages.dev')).toBe(true)
+    expect(isPreviewHost('modules.openmercato.com')).toBe(false)
+    expect(isPreviewHost('pages.dev.evil.example')).toBe(false)
+    expect(hostRedirect('https://abc123.open-mercato-modules.pages.dev/?a=1', WWW)).toEqual({
+      location: 'https://abc123.open-mercato-modules.pages.dev/modules/?a=1',
+      status: 302,
+    })
+    for (const p of ['/about', '/m/@x/y', '/modules.json', '/templates', '//evil.example', '/modules/m/x'])
+      expect(at(`https://abc123.open-mercato-modules.pages.dev${p}`), p).toBeNull()
+    // any other host (local `wrangler pages dev`, an unknown custom domain) is not sent to production either
+    for (const u of ['http://localhost:8788/m/x', 'http://127.0.0.1:8788/', 'https://other.example/m/x'])
+      expect(at(u), u).toBeNull()
   })
 
   it('sends the templates host root to the Templates section of the site', () => {

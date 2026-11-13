@@ -8,9 +8,11 @@
 # runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
 # Move under www.openmercato.com/modules (decision of 13 Nov): with the repository variables SITE_URL and BASE_PATH set
 # (e.g. https://www.openmercato.com and /modules) the build puts the site in dist/<base>/ and keeps 404.html,
-# _routes.json, _redirects and schema/ at the root of dist; `yarn om pages-site` writes functions/site.ts from the same
-# variables in both jobs, so the Functions redirect every other path of the Pages hosts to the site. Without the
-# variables nothing changes. See docs/RUNBOOK.md, Move under www.openmercato.com/modules.
+# _routes.json, _redirects, schema/, templates.json and picker.json at the root of dist; `yarn om pages-site` writes
+# functions/site.ts from the same variables in both jobs, so the Functions redirect every other path of the production
+# hosts to the site. A `*.pages.dev` deployment address serves the site under <base>/ without redirects, and the summary
+# and the environment link there. Without the variables nothing changes. See docs/RUNBOOK.md, Move under
+# www.openmercato.com/modules.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
@@ -189,7 +191,8 @@ jobs:
     timeout-minutes: 15
     environment:
       name: cloudflare
-      url: ${{ steps.deploy.outputs.deployment-url }}
+      # the deployment address, under the base path when there is one (set by the Summary step)
+      url: ${{ steps.summary.outputs.url }}
     steps:
       - name: Check token
         # The token stays an environment secret, so the main-only rule of `cloudflare` guards it; only this job sees
@@ -256,11 +259,18 @@ jobs:
           command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true
 
       - name: Summary
+        id: summary
+        # Under a base path the deployment address (<hash>.<project>.pages.dev) serves the site at <base>/ and is not
+        # redirected to production (hostRedirect), so the link goes there: the new version can be looked at first.
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          url="$DEPLOYMENT_URL"
+          if [ -n "$url" ] && [ -n "$base" ]; then url="${url%/}/$base/"; fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
           {
             echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL}${BASE_PATH}"
             echo ""
-            echo "This deployment: ${DEPLOYMENT_URL:-see the wrangler output}"
+            echo "This deployment: ${url:-see the wrangler output}"
           } >> "$GITHUB_STEP_SUMMARY"

@@ -352,7 +352,11 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     // deploy: the only job in environment cloudflare, and only when the build says so
     expect(deploy.needs).toBe('build')
     expect(deploy.if).toBe("${{ needs.build.outputs.deploy == 'true' }}")
-    expect(deploy.environment).toEqual({ name: 'cloudflare', url: '${{ steps.deploy.outputs.deployment-url }}' })
+    // the deployment address, under the base path when there is one (a *.pages.dev address is not redirected)
+    expect(deploy.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
+    expect(deploy.steps.find((x) => x.name === 'Summary')?.env).toEqual({
+      DEPLOYMENT_URL: '${{ steps.deploy.outputs.deployment-url }}',
+    })
     expect(deploy['timeout-minutes']).toBe(15)
     const d = deploy.steps
     expect(d.map((x) => x.name)).toEqual([

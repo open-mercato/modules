@@ -6,7 +6,8 @@
 // - nested (any other base, e.g. `/modules`): the site in dist/<base>/, so the Pages project serves the prefix itself
 //   and the proxy passes /modules/* through without cutting it. The root of dist keeps only what Pages and the fixed
 //   addresses need (404.html, _routes.json, _redirects, schema/, templates.json, picker.json), and Functions send every
-//   other path of the Pages hosts (the old modules.openmercato.com/m/... links) to the same path on the site.
+//   other path of the production hosts (the old modules.openmercato.com/m/... links) to the same path on the site.
+//   A `*.pages.dev` deployment address is not redirected, so a new deployment can be looked at before the switch.
 // Functions learn the layout from functions/site.ts, which `yarn om pages-site` writes from SITE_URL and BASE_PATH.
 // Isomorphic: no Node APIs.
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from './home.ts'
@@ -112,15 +113,28 @@ export interface HostRedirect {
   status: 301 | 302
 }
 
+/** The custom domains of the Pages project. */
+export const PAGES_ORIGINS: readonly string[] = [DEFAULT_SITE_ORIGIN, `https://${TEMPLATES_HOST}`]
+
+/** Host names of PAGES_ORIGINS: the production hosts whose old addresses move to a nested site. */
+const PAGES_HOSTS: readonly string[] = PAGES_ORIGINS.map((o) => new URL(o).hostname)
+
+/** A deployment or branch address of a Pages project (`<hash>.<project>.pages.dev`, `<project>.pages.dev`). */
+export function isPreviewHost(hostname: string): boolean {
+  return /\.pages\.dev$/i.test(hostname)
+}
+
 /** Control characters, a backslash and their percent-encoded forms; a path with one is never redirected. */
 const UNSAFE = /[\u0000-\u001f\u007f\\]|%(?:[01][0-9a-f]|7f|5c)/i
 
 /**
  * Where a request to the Pages project should go, or null to serve it as a static file.
  * - Root layout: only the root of templates.openmercato.com moves (templatesRedirect, 302), as before the move.
- * - Nested layout: the root of templates.openmercato.com goes to the Templates section of the site; any other path
- *   outside the base and the fixed addresses (isFixedPath) goes to the same path under the base on the site's origin,
- *   query kept.
+ * - Nested layout, production hosts (PAGES_ORIGINS): the root of templates.openmercato.com goes to the Templates
+ *   section of the site; any other path outside the base and the fixed addresses (isFixedPath) goes to the same path
+ *   under the base on the site's origin, query kept.
+ * - Nested layout, a `*.pages.dev` address: nothing moves to production, so a deployment can be looked at before the
+ *   switch; only its root leads to the base on the same host. Any other host (local `wrangler pages dev`): nothing.
  * Never a loop: a path under the base or a fixed address is never redirected (whatever _routes.json says), and neither
  * is a request that already carries the site's host (a proxy that cut the prefix would otherwise bounce it forever).
  * Never an open redirect: the target is built from the configured origin and base and checked to stay there, and a
@@ -140,6 +154,9 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
   const path = url.pathname
   if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
   if (url.host === new URL(c.origin).host) return null
+  if (isPreviewHost(url.hostname))
+    return path === '/' ? { location: `${url.origin}${c.base}/${url.search}`, status: 302 } : null
+  if (!PAGES_HOSTS.includes(url.hostname)) return null
   if (url.hostname === TEMPLATES_HOST && path === '/')
     return { location: `${templatesTarget(siteRoot(c))}${url.search}`, status: 302 }
   if (path.startsWith('//') || UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
@@ -165,9 +182,6 @@ export function redirectResponse(r: HostRedirect): Response {
     headers: { Location: r.location, 'Access-Control-Allow-Origin': '*' },
   })
 }
-
-/** The custom domains of the Pages project. */
-export const PAGES_ORIGINS: readonly string[] = [DEFAULT_SITE_ORIGIN, `https://${TEMPLATES_HOST}`]
 
 /**
  * Origins that serve this same build in production besides the site's own: the page script (site/src/lib/here.ts)

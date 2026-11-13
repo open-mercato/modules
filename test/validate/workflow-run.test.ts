@@ -480,9 +480,12 @@ describe('pages.yml steps', () => {
     expect(runStep(stepRun('pages.yml', 'Check token'), { ...vars, HAS_TOKEN: 'true' }).code).toBe(0)
 
     rmSync(join(tmp, 'summary.md'), { force: true })
+    const out = join(tmp, 'output.txt')
+    writeFileSync(out, '')
     const ok = runStep(stepRun('pages.yml', 'Summary'), {
       ...vars,
       DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
+      GITHUB_OUTPUT: out,
     })
     expect(ok.code, ok.out).toBe(0)
     expect(ok.out).not.toContain('::warning')
@@ -490,6 +493,29 @@ describe('pages.yml steps', () => {
       'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://modules.openmercato.com/\n\n' +
         'This deployment: https://abc123.open-mercato-modules.pages.dev\n',
     )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev\n')
+
+    // under a base path the deployment address serves the site at <base>/ (move of 13 Nov)
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    const nested = runStep(stepRun('pages.yml', 'Summary'), {
+      ...vars,
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/modules',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
+      GITHUB_OUTPUT: out,
+    })
+    expect(nested.code, nested.out).toBe(0)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/modules\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/modules/\n',
+    )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/modules/\n')
+
+    // no address from wrangler: the summary says so and the environment gets no link
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Summary'), { ...vars, BASE_PATH: '/modules', DEPLOYMENT_URL: '', GITHUB_OUTPUT: out })
+    expect(readFileSync(out, 'utf8')).toBe('url=\n')
   })
 
   it('the deploy job finds .well-known in the downloaded site and stops without it', () => {
