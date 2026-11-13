@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/channel-ses",
-  "checkedAt": "2026-11-13T06:51:53Z",
+  "checkedAt": "2026-11-13T19:47:53Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/channel-ses",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8128.1.07461421a9"
+      "develop": "0.10.1-develop.8144.1.257d1a5737"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -47,7 +47,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-13T05:11:04Z",
+    "pushedAt": "2026-11-13T19:44:55Z",
     "defaultBranch": "main",
     "stars": 1929,
     "license": "MIT",
@@ -237,6 +237,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 54038,
+  "downloads30d": 53959,
   "errors": []
 }
