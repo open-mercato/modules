@@ -366,8 +366,7 @@ export function redirectPage(target: string, title: string, relative?: string): 
     `<link rel="canonical" href="${t}">` +
     `<title>${escapeXml(title)} moved</title>` +
     `<style>body{margin:0 auto;padding:48px 16px;max-width:40rem;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif;` +
-    `color:#0c0c0c;background:#fff}a{color:inherit;text-underline-offset:3px}` +
-    `@media (prefers-color-scheme:dark){body{color:#fafafa;background:#0c0c0c}}</style></head>` +
+    `color:#0c0c0c;background:#fff}a{color:inherit;text-underline-offset:3px}</style></head>` +
     `<body><p>This module was renamed. Its page is <a href="${go}">${escapeXml(title)}</a>.</p></body></html>\n`
   )
 }
