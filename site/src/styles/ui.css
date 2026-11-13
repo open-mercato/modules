@@ -22,12 +22,14 @@
     box-shadow var(--dur-2) var(--ease),
     color var(--dur-2) var(--ease);
 }
+/* the main action: dark, like Launch sandbox and Build in sandbox on openmercato.com (look of 13 Nov); the gradient
+   is no longer a button style */
 .btn--primary {
-  background: var(--grad);
-  color: #0c0c0c;
+  background: var(--cta);
+  color: var(--cta-ink);
 }
 .btn--primary:hover {
-  box-shadow: inset 0 0 0 1px #0c0c0c33;
+  background: var(--cta-hover);
 }
 .btn--secondary {
   background: var(--bg);
@@ -39,11 +41,11 @@
   border-color: var(--ink-3);
 }
 .btn--tertiary {
-  background: #1b1b1b;
-  color: #fff;
+  background: var(--cta);
+  color: var(--cta-ink);
 }
 .btn--tertiary:hover {
-  background: #1f1f1f;
+  background: var(--cta-hover);
 }
 .btn--green {
   background: var(--ok-ink);

@@ -1,6 +1,7 @@
 /* Design tokens (spec 7.2), verbatim except --paper: #F4F3EA, the receipt paper of 7.9 (17.56 / 6.00); 7.2 printed
    #FAFAFA, which is indistinguishable from the page. Light only, like openmercato.com (move of 13 Nov): there is no
-   dark theme; film, agent panels and the receipt keep their own colours.
+   dark theme; film, agent panels and the receipt keep their own colours. --cta, --foot* and --mark carry the look of
+   the main site (13 Nov): its dark buttons, its dark footer and the yellow mark under a heading word.
    Do not edit without changing the spec. Prettier keeps the layout. */
 /* prettier-ignore */
 :root {
@@ -17,6 +18,10 @@
   --lime: #B4F372; --yellow: #EEFB63; --violet: #BC9AFF;
   --grad: linear-gradient(189deg, #B4F372 12%, #EEFB63 58%, #BC9AFF 100%);
   --grad-rule: linear-gradient(90deg, #BC9AFF, #EEFB63 50%, #B4F372);
+  --cta: #1B1B1B; --cta-hover: #343632; --cta-ink: #FFFFFF;                                                /* główny przycisk: ciemny jak "Launch sandbox" na openmercato.com */
+  --cta-dark: #EEFB63; --cta-dark-hover: #E4F34E;                                                         /* główny przycisk na ciemnym (klisza, panele agenta): żółty jak w sekcji CTA */
+  --foot: #0C0C0C; --foot-line: #1F1F1F; --foot-ink: #FFFFFF; --foot-ink-2: #A3A6A0; --foot-giant: #2E2E2E; /* stopka: ciemna jak na openmercato.com */
+  --mark: #EEFB63;                                                                                      /* żółte podkreślenie słowa w nagłówku (jak "80% done") */
   --focus: #2F520B;
   --shadow-float: 0 24px 48px -12px #0000002e;
   --radius-s: 2px; --radius-m: 4px; --radius-l: 8px;

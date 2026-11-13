@@ -242,6 +242,10 @@ h3 {
   --id-ink: #bc9aff;
   --wait-ink: #eefb63;
   --bad-ink: #ff6b6b;
+  /* the main button on the film is yellow, as in the dark CTA band of openmercato.com */
+  --cta: var(--cta-dark);
+  --cta-hover: var(--cta-dark-hover);
+  --cta-ink: var(--film);
   color-scheme: dark;
 }
 /* the Hive draws its own lattice; two hex grids of different pitch would moire, so the band stays plain film */

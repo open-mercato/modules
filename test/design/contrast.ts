@@ -93,5 +93,13 @@ export function pairs(root: string): Pair[] {
     { name: 'extends stroke id-ink on bg (light)', fg: t(L, '--id-ink'), bg: t(L, '--bg'), min: 3 },
     // the green Install button of the module page (Piotr, 28 Oct)
     { name: 'Install button ok-ink on ok-fill', fg: t(L, '--ok-ink'), bg: t(L, '--ok-fill'), min: 4.5 },
+    // the look of the main site (13 Nov): the dark primary button, its hover, the dark footer, the yellow mark
+    { name: 'primary button cta-ink on cta', fg: t(L, '--cta-ink'), bg: t(L, '--cta'), min: 4.5 },
+    { name: 'primary button hover cta-ink on cta-hover', fg: t(L, '--cta-ink'), bg: t(L, '--cta-hover'), min: 4.5 },
+    { name: 'footer foot-ink on foot', fg: t(L, '--foot-ink'), bg: t(L, '--foot'), min: 4.5 },
+    { name: 'footer foot-ink-2 on foot', fg: t(L, '--foot-ink-2'), bg: t(L, '--foot'), min: 4.5 },
+    { name: 'heading ink on mark', fg: t(L, '--ink'), bg: t(L, '--mark'), min: 4.5 },
+    { name: 'primary button on the film: film on cta-dark', fg: t(L, '--film'), bg: t(L, '--cta-dark'), min: 4.5 },
+    { name: 'its hover: film on cta-dark-hover', fg: t(L, '--film'), bg: t(L, '--cta-dark-hover'), min: 4.5 },
   ]
 }

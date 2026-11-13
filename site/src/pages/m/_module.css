@@ -870,6 +870,9 @@
   --bg-2: var(--film-2);
   --bg-3: #1b1b1b;
   --focus: #b4f372;
+  --cta: var(--cta-dark);
+  --cta-hover: var(--cta-dark-hover);
+  --cta-ink: var(--film);
 }
 .agentv__bar {
   display: flex;
