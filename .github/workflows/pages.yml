@@ -6,6 +6,11 @@
 # templates.openmercato.com (decision B of 29 Oct) is a second custom domain of the same project: functions/_middleware.ts
 # redirects its root to modules.openmercato.com/templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
 # runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
+# Move under www.openmercato.com/modules (decision of 13 Nov): with the repository variables SITE_URL and BASE_PATH set
+# (e.g. https://www.openmercato.com and /modules) the build puts the site in dist/<base>/ and keeps 404.html,
+# _routes.json, _redirects and schema/ at the root of dist; `yarn om pages-site` writes functions/site.ts from the same
+# variables in both jobs, so the Functions redirect every other path of the Pages hosts to the site. Without the
+# variables nothing changes. See docs/RUNBOOK.md, Move under www.openmercato.com/modules.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
@@ -110,21 +115,31 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Write Functions config
+        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL and BASE_PATH.
+        run: yarn om pages-site
+
       - name: Check artifact contents
         run: |
+          # The site sits at the root of dist, or in dist/<base>/ when BASE_PATH is not / (lib/emit/pages-layout.ts).
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          site="dist${base:+/$base}"
           # wrangler 4.149.0 pages deploy uploads dotfiles (its walk skips only .DS_Store, .git, .wrangler, node_modules and the
           # _headers/_redirects/_routes.json/_worker.js/functions config names), so .well-known/ goes up as built.
           # The MCP server card is there only with MCP_URL (no card for a Worker that is not deployed, finding of 25 Oct).
-          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f "$site/.well-known/agent-skills/index.json" || { echo "$site/.well-known/agent-skills/index.json is missing"; exit 1; }
           if [ -n "${MCP_URL:-}" ]; then
-            test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
+            test -f "$site/.well-known/mcp/server-card.json" || { echo "$site/.well-known/mcp/server-card.json is missing"; exit 1; }
           fi
-          test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
+          test -f "$site/modules.json" || { echo "$site/modules.json is missing"; exit 1; }
           # Cloudflare Pages serves 404.html for missing paths; without it every missing path answers 200 with index.html
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
           # the Functions route list: without it every request would run functions/_middleware.ts
           test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
-          test -f dist/templates.html || { echo "dist/templates.html is missing"; exit 1; }
+          test -f "$site/templates.html" || { echo "$site/templates.html is missing"; exit 1; }
+          # the layout as a whole for SITE_URL and BASE_PATH: root files and routes, the fixed schema $id, every link
+          # of every page under the base, and functions/site.ts
+          yarn om pages-site --check dist
 
       - name: Check Pages limits
         # The walk wrangler runs before an upload (20,000 files, 25 MiB per file), offline and without the token, so a
@@ -212,12 +227,20 @@ jobs:
           name: site
           path: dist
 
+      - name: Write Functions config
+        # The same functions/site.ts the build job checked: this checkout has the committed default.
+        run: yarn om pages-site
+
       - name: Check downloaded site
-        # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip.
+        # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip, and the
+        # layout check proves the site and functions/site.ts were made for the same SITE_URL and BASE_PATH.
         run: |
-          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          site="dist${base:+/$base}"
+          test -f "$site/.well-known/agent-skills/index.json" || { echo "$site/.well-known/agent-skills/index.json is missing"; exit 1; }
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
           test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
+          yarn om pages-site --check dist
 
       - name: Deploy
         id: deploy

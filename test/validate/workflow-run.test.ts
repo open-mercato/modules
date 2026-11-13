@@ -411,6 +411,23 @@ describe('pages.yml steps', () => {
     expect(r.out).toContain('dist/_routes.json is missing')
   })
 
+  it('under a base path the site files are looked for in dist/<base>/ (move of 13 Nov)', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    runStep(stepRun('pages.yml', 'Build'), env())
+    // the flat fake build does not have the nested layout BASE_PATH asks for
+    const flat = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/modules/' })
+    expect(flat.code).not.toBe(0)
+    expect(flat.out).toContain('dist/modules/.well-known/agent-skills/index.json is missing')
+    // nested: the site under dist/modules, the Pages files at the root
+    mkdirSync(join(work, 'dist', 'modules'))
+    for (const f of ['.well-known', 'modules.json', 'templates.html'])
+      execFileSync('mv', [join(work, 'dist', f), join(work, 'dist', 'modules', f)])
+    writeFileSync(calls, '')
+    const nested = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/modules' })
+    expect(nested.code, nested.out).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe('om pages-site --check dist\n')
+  })
+
   it('a build without 404.html stops: Cloudflare Pages would answer every missing path with the home page', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
     runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_404: '0' })
