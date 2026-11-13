@@ -19,6 +19,7 @@ import {
   isPreviewHost,
   MOVED_STATUS,
   otherProductionOrigins,
+  pagesHostProblem,
   pagesRedirects,
   pagesRoutes,
   redirectResponse,
@@ -51,6 +52,20 @@ describe('siteConfig', () => {
     expect(siteConfig('https://www.openmercato.com/ignored', '//modules//')).toEqual(WWW)
     expect(siteConfig('https://x.example', '')).toEqual({ origin: 'https://x.example', base: '/' })
     expect(siteConfig('https://x.example', '/a/b-1')).toEqual({ origin: 'https://x.example', base: '/a/b-1' })
+  })
+
+  it('refuses a nested site on a host of the Pages project: its old addresses would answer 404', () => {
+    expect(pagesHostProblem(WWW)).toBeNull()
+    expect(pagesHostProblem(DEFAULT_SITE)).toBeNull()
+    for (const origin of [
+      'https://modules.openmercato.com',
+      'https://templates.openmercato.com',
+      'https://open-mercato-modules.pages.dev',
+      'https://abc123.open-mercato-modules.pages.dev',
+    ]) {
+      expect(pagesHostProblem({ origin, base: '/modules' }), origin).toMatch(/is a host of the Pages project/)
+      expect(pagesHostProblem({ origin, base: '/' }), origin).toBeNull()
+    }
   })
 
   it('refuses a base that is not plain path segments and a URL that is not http(s)', () => {
@@ -414,6 +429,14 @@ describe('the nested layout of dist', () => {
       expect(pagesSite(ctx([]))).toBe(0)
       expect(readFileSync(join(tmp, 'functions', 'site.ts'), 'utf8')).toBe(siteModule(WWW))
       expect(pagesSite(ctx(['--check', dist]))).toBe(0)
+      // a nested site on a host of the Pages project: refused, functions/site.ts left as it was
+      error.mockClear()
+      process.env.SITE_URL = 'https://modules.openmercato.com'
+      expect(pagesSite(ctx([]))).toBe(2)
+      expect(pagesSite(ctx(['--check', dist]))).toBe(2)
+      expect(error.mock.calls.flat().join('\n')).toContain('is a host of the Pages project')
+      expect(readFileSync(join(tmp, 'functions', 'site.ts'), 'utf8')).toBe(siteModule(WWW))
+      process.env.SITE_URL = 'https://www.openmercato.com'
       process.env.BASE_PATH = '/../x'
       expect(pagesSite(ctx([]))).toBe(2)
       expect(pagesSite(ctx(['--bogus']))).toBe(2)

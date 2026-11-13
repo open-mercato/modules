@@ -124,6 +124,21 @@ export function isPreviewHost(hostname: string): boolean {
   return /\.pages\.dev$/i.test(hostname)
 }
 
+/**
+ * Why a nested site cannot live at SITE_URL, or null when it can. Its origin must not be a host of the Pages project
+ * (a custom domain or a `*.pages.dev` address): hostRedirect() never moves a request that carries the site's host, so
+ * the old addresses there (modules.openmercato.com/m/...) would answer 404 instead of a redirect.
+ */
+export function pagesHostProblem(c: SiteConfig): string | null {
+  if (!isNested(c)) return null
+  const host = new URL(c.origin).hostname
+  if (!PAGES_HOSTS.includes(host) && !isPreviewHost(host)) return null
+  return (
+    `SITE_URL ${c.origin} is a host of the Pages project; under BASE_PATH ${c.base} its old addresses would answer 404 ` +
+    'instead of a redirect. Set SITE_URL to the site behind the proxy (https://www.openmercato.com), or BASE_PATH to /'
+  )
+}
+
 /** Control characters, a backslash and their percent-encoded forms; a path with one is never redirected. */
 const UNSAFE = /[\u0000-\u001f\u007f\\]|%(?:[01][0-9a-f]|7f|5c)/i
 

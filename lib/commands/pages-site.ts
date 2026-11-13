@@ -3,12 +3,14 @@
 // pages.yml runs it in the build job before the Functions bundle is checked and in the deploy job before
 // `wrangler pages deploy`, with the same variables the build used. `--check <dist>` changes nothing and fails when
 // functions/site.ts or the layout of a built dist (root files, schema `$id`, links under the base) does not match.
+// Both refuse a nested site whose SITE_URL is a host of the Pages project (pagesHostProblem): its old addresses would
+// answer 404 instead of a redirect.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
-import { siteConfig, siteModule, siteRoot, type SiteConfig } from '../core/site-host.ts'
+import { pagesHostProblem, siteConfig, siteModule, siteRoot, type SiteConfig } from '../core/site-host.ts'
 import { checkPagesLayout } from '../emit/pages-layout.ts'
 
 export const description = 'write functions/site.ts from SITE_URL and BASE_PATH; --check <dist> checks the layout'
@@ -32,6 +34,11 @@ export default function pagesSite(ctx: CommandContext): number {
     c = siteConfig(process.env.SITE_URL || DEFAULT_SITE_ORIGIN, process.env.BASE_PATH || DEFAULT_BASE_PATH)
   } catch (err) {
     console.error(`om pages-site: ${(err as Error).message}`)
+    return EXIT_ENV
+  }
+  const hostProblem = pagesHostProblem(c)
+  if (hostProblem) {
+    console.error(`om pages-site: ${hostProblem}`)
     return EXIT_ENV
   }
   const file = join(ctx.root, SITE_MODULE)
