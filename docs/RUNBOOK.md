@@ -542,9 +542,11 @@ curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'
 5. The main site: the robots.txt line, the `/templates` redirect and the sitemap in Search Console.
 6. Change the addresses that still name `modules.openmercato.com` for the site (they work through the 302, but
    `curl -s` without `-L` prints nothing): `MODULES_INDEX_URL` and `BUILTIN_INDEX_URL` in `mcp/wrangler.toml` (then
-   deploy the Worker), the `curl` lines and the module card URL in `skills/om-find-module/SKILL.md` (then
-   `yarn om plugin-sync` for the plugin copy), the `/submit` link in `.github/ISSUE_TEMPLATE/config.yml`, and the
-   site address in `README.md`, `CONTRIBUTING.md` and `docs/DEMO.md`. Leave every `/schema/` address as it is.
+   deploy the Worker), the `/submit` link in `.github/ISSUE_TEMPLATE/config.yml`, and the site address in
+   `README.md`, `CONTRIBUTING.md` and `docs/DEMO.md`. Leave every `/schema/` address as it is. The skill
+   `skills/om-find-module/SKILL.md` needs no change on the day: its `curl -sL` lines follow the 302, and it tells the
+   agent that `www.openmercato.com/modules` is the same catalog. Copies made before that change (an installed plugin,
+   and the create-mercato-app copy if it carries the same lines) keep `curl -s`: update them with the next release.
 7. Later, once settled: `MOVED_STATUS` to 301.
 
 ### Rollback
