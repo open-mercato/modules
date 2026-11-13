@@ -2,7 +2,8 @@
 // in functions/site.ts. At the domain root (the default) it moves only templates.openmercato.com/ to the Templates
 // section at its canonical address; every other request goes on to the static files untouched, and
 // site/public/_routes.json limits Functions to `/`. Under a base path (BASE_PATH `/modules`) dist/_routes.json runs
-// Functions on every path outside the base and /schema/, and each of them is redirected to the same path on the site.
+// Functions on every path outside the base and the fixed addresses (/schema/*, /templates.json, /picker.json); on the
+// production hosts each of them is redirected to the same path on the site, and a `*.pages.dev` root leads to the base.
 // `wrangler pages deploy dist` bundles this directory because the deploy job runs from the repository root
 // (.github/workflows/pages.yml), after `yarn om pages-site` wrote functions/site.ts.
 import { hostRedirect, redirectResponse } from '../lib/core/site-host.ts'
