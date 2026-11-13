@@ -12,7 +12,9 @@ import pagesSite from '../../lib/commands/pages-site.ts'
 import { schemaUrl, SCHEMA_ORIGIN } from '../../lib/core/home.ts'
 import {
   DEFAULT_SITE,
+  FIXED_ROOT_FILES,
   hostRedirect,
+  isFixedPath,
   isNested,
   MOVED_STATUS,
   otherProductionOrigins,
@@ -73,9 +75,13 @@ describe('Pages config files', () => {
     expect(pagesRedirects('/')).toBe(read('site', 'public', '_redirects'))
   })
 
-  it('under a base, Functions run on every path but the site and the schema files', () => {
+  it('under a base, Functions run on every path but the site and the fixed addresses', () => {
     const r = pagesRoutes('/modules')
-    expect(r).toEqual({ version: 1, include: ['/*'], exclude: ['/modules', '/modules/*', '/schema/*'] })
+    expect(r).toEqual({
+      version: 1,
+      include: ['/*'],
+      exclude: ['/modules', '/modules/*', '/schema/*', '/templates.json', '/picker.json'],
+    })
     // Pages limits: at least one include, at most 100 rules, each at most 100 characters
     expect(r.include.length).toBeGreaterThan(0)
     expect(r.include.length + r.exclude.length).toBeLessThanOrEqual(100)
@@ -134,7 +140,7 @@ describe('hostRedirect under a base path', () => {
 
   it('answers an old data address with a 302 a cross-origin fetch can follow (CORS on the redirect)', async () => {
     // Pages gives static files `Access-Control-Allow-Origin: *`; a browser checks CORS on the 302 itself
-    for (const p of ['/modules.json', '/picker.json', '/search-index.json', '/m/@open-mercato/gateway-tpay.json']) {
+    for (const p of ['/modules.json', '/built-in.json', '/search-index.json', '/m/@open-mercato/gateway-tpay.json']) {
       const r = hostRedirect(`https://modules.openmercato.com${p}`, WWW)
       expect(r, p).not.toBeNull()
       const res = redirectResponse(r!)
@@ -158,6 +164,19 @@ describe('hostRedirect under a base path', () => {
     expect(at('https://abc.open-mercato-modules.pages.dev/about')).toBe('https://www.openmercato.com/modules/about')
     expect(hostRedirect('https://modules.openmercato.com/m/x', WWW)?.status).toBe(MOVED_STATUS)
     expect(MOVED_STATUS).toBe(302)
+  })
+
+  it('serves the fixed addresses released create-mercato-app versions fetch, without a redirect', () => {
+    expect(FIXED_ROOT_FILES).toEqual(['templates.json', 'picker.json'])
+    for (const host of ['modules.openmercato.com', 'templates.openmercato.com'])
+      for (const p of ['/templates.json', '/picker.json', '/templates.json?x=1', '/schema/modules-1.json'])
+        expect(at(`https://${host}${p}`), `${host}${p}`).toBeNull()
+    expect(isFixedPath('/picker.json')).toBe(true)
+    expect(isFixedPath('/schema/tools-1.json')).toBe(true)
+    // only those exact paths: the site's own copies and other data files still move
+    for (const p of ['/modules/picker.json', '/picker.json/x', '/t/acme/kiosk.json', '/templates'])
+      expect(isFixedPath(p), p).toBe(false)
+    expect(at('https://modules.openmercato.com/templates')).toBe('https://www.openmercato.com/modules/templates')
   })
 
   it('sends the templates host root to the Templates section of the site', () => {
@@ -280,6 +299,8 @@ describe('the nested layout of dist', () => {
     writeFileSync(join(s, '_routes.json'), read('site', 'public', '_routes.json'))
     writeFileSync(join(s, '_redirects'), read('site', 'public', '_redirects'))
     writeFileSync(join(s, 'modules.json'), JSON.stringify({ $schema: schemaUrl('modules') }))
+    writeFileSync(join(s, 'templates.json'), '{"templates":[]}\n')
+    writeFileSync(join(s, 'picker.json'), '{"modules":[]}\n')
     for (const n of PUBLISHED_SCHEMAS)
       writeFileSync(join(s, 'schema', `${n}-1.json`), JSON.stringify({ $id: schemaUrl(n) }))
   }
@@ -295,7 +316,21 @@ describe('the nested layout of dist', () => {
     expect(readFileSync(join(dist, '_redirects'), 'utf8')).toBe(pagesRedirects('/modules'))
     expect(readFileSync(join(dist, '404.html'), 'utf8')).toBe('<a href="/modules/">home</a>')
     expect(JSON.parse(readFileSync(join(dist, 'schema', 'modules-1.json'), 'utf8')).$id).toBe(schemaUrl('modules'))
+    expect(readFileSync(join(dist, 'templates.json'), 'utf8')).toBe('{"templates":[]}\n')
+    expect(readFileSync(join(dist, 'picker.json'), 'utf8')).toBe('{"modules":[]}\n')
+    expect(readFileSync(join(dist, 'modules', 'picker.json'), 'utf8')).toBe('{"modules":[]}\n')
     expect(checkPagesLayout(dist, WWW)).toEqual([])
+  })
+
+  it('the check wants templates.json and picker.json at the root as copies of the site files', () => {
+    const dist = join(tmp, 'dist')
+    site(dist)
+    finishNestedLayout(dist, WWW)
+    rmSync(join(dist, 'templates.json'))
+    writeFileSync(join(dist, 'picker.json'), '{"modules":["stale"]}\n')
+    const problems = checkPagesLayout(dist, WWW).join('\n')
+    expect(problems).toContain('templates.json is missing (released create-mercato-app versions fetch it there)')
+    expect(problems).toMatch(/dist\/picker\.json differs from .*dist\/modules\/picker\.json/)
   })
 
   it('the check names a link outside the base, a stray root file, a wrong $id and a root layout mismatch', () => {

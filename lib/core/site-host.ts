@@ -5,8 +5,8 @@
 //   Functions run on `/` only and move just the root of templates.openmercato.com.
 // - nested (any other base, e.g. `/modules`): the site in dist/<base>/, so the Pages project serves the prefix itself
 //   and the proxy passes /modules/* through without cutting it. The root of dist keeps only what Pages and the fixed
-//   schema addresses need (404.html, _routes.json, _redirects, schema/), and Functions send every other path of the
-//   Pages hosts (the old modules.openmercato.com/m/... links) to the same path on the site.
+//   addresses need (404.html, _routes.json, _redirects, schema/, templates.json, picker.json), and Functions send every
+//   other path of the Pages hosts (the old modules.openmercato.com/m/... links) to the same path on the site.
 // Functions learn the layout from functions/site.ts, which `yarn om pages-site` writes from SITE_URL and BASE_PATH.
 // Isomorphic: no Node APIs.
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from './home.ts'
@@ -23,6 +23,17 @@ export const DEFAULT_SITE: SiteConfig = { origin: DEFAULT_SITE_ORIGIN, base: DEF
 
 /** Folder of the published JSON Schemas at the root of the Pages project, in both layouts. */
 export const SCHEMA_DIR = 'schema'
+
+/**
+ * Files that released create-mercato-app versions fetch from https://modules.openmercato.com/<file> by a fixed address.
+ * Nested, the Pages project keeps serving a copy at its root, without a redirect, as it does for schema/.
+ */
+export const FIXED_ROOT_FILES = ['templates.json', 'picker.json'] as const
+
+/** True for a path the Pages project serves from its root in both layouts: /schema/* and the FIXED_ROOT_FILES. */
+export function isFixedPath(path: string): boolean {
+  return path.startsWith(`/${SCHEMA_DIR}/`) || (FIXED_ROOT_FILES as readonly string[]).includes(path.slice(1))
+}
 
 /** A base path of one or more plain segments: it names a folder of dist and goes into _routes.json as is. */
 const BASE_RE = /^(?:\/[A-Za-z0-9][A-Za-z0-9._-]*)+$/
@@ -65,11 +76,16 @@ export interface PagesRoutes {
 
 /**
  * The Functions route list. At the root, `/` only (site/public/_routes.json). Nested, every path but the site and the
- * schema files, so a path outside the prefix reaches hostRedirect() while the site itself stays plain static files.
+ * fixed addresses (schema files, templates.json, picker.json), so a path outside the prefix reaches hostRedirect()
+ * while the site and the fixed files stay plain static files.
  */
 export function pagesRoutes(base: string): PagesRoutes {
   if (base === '/') return { version: 1, include: ['/'], exclude: [] }
-  return { version: 1, include: ['/*'], exclude: [base, `${base}/*`, `/${SCHEMA_DIR}/*`] }
+  return {
+    version: 1,
+    include: ['/*'],
+    exclude: [base, `${base}/*`, `/${SCHEMA_DIR}/*`, ...FIXED_ROOT_FILES.map((f) => `/${f}`)],
+  }
 }
 
 /**
@@ -103,9 +119,10 @@ const UNSAFE = /[\u0000-\u001f\u007f\\]|%(?:[01][0-9a-f]|7f|5c)/i
  * Where a request to the Pages project should go, or null to serve it as a static file.
  * - Root layout: only the root of templates.openmercato.com moves (templatesRedirect, 302), as before the move.
  * - Nested layout: the root of templates.openmercato.com goes to the Templates section of the site; any other path
- *   outside the base and outside /schema/ goes to the same path under the base on the site's origin, query kept.
- * Never a loop: a path under the base or in /schema/ is never redirected (whatever _routes.json says), and neither is
- * a request that already carries the site's host (a proxy that cut the prefix would otherwise bounce it forever).
+ *   outside the base and the fixed addresses (isFixedPath) goes to the same path under the base on the site's origin,
+ *   query kept.
+ * Never a loop: a path under the base or a fixed address is never redirected (whatever _routes.json says), and neither
+ * is a request that already carries the site's host (a proxy that cut the prefix would otherwise bounce it forever).
  * Never an open redirect: the target is built from the configured origin and base and checked to stay there, and a
  * path with `//` at the start, a backslash or a control character (also percent-encoded) is not redirected at all.
  */
@@ -121,7 +138,7 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
     return target ? { location: target, status: 302 } : null
   }
   const path = url.pathname
-  if (path === c.base || path.startsWith(`${c.base}/`) || path.startsWith(`/${SCHEMA_DIR}/`)) return null
+  if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
   if (url.host === new URL(c.origin).host) return null
   if (url.hostname === TEMPLATES_HOST && path === '/')
     return { location: `${templatesTarget(siteRoot(c))}${url.search}`, status: 302 }

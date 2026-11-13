@@ -2,14 +2,15 @@
 // default) nothing here runs: Astro writes the site to dist as before. Under a base path the Astro integration
 // pagesLayout() writes the site to dist/<base>/ (so the Pages project serves the prefix itself and the proxy of the main
 // site passes /modules/* through unchanged), then finishNestedLayout() leaves at the root of dist only what Pages and
-// the fixed schema addresses need: 404.html, _routes.json, _redirects and schema/. checkPagesLayout() proves a built
-// dist matches its config (`yarn om pages-site --check`, pages.yml).
+// the fixed addresses need: 404.html, _routes.json, _redirects, schema/, templates.json and picker.json.
+// checkPagesLayout() proves a built dist matches its config (`yarn om pages-site --check`, pages.yml).
 import { cpSync, existsSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import type { AstroIntegration } from 'astro'
 import { DEFAULT_SITE_ORIGIN, schemaUrl } from '../core/home.ts'
 import {
+  FIXED_ROOT_FILES,
   isNested,
   pagesRedirects,
   pagesRoutes,
@@ -29,9 +30,10 @@ const ROOT_ONLY = ['_routes.json', '_redirects'] as const
 /**
  * Lays dist out for a nested site: `root` is the upload folder (dist), the site is already in root/<base>/. Moves the
  * Pages config files to the root (rewritten for the base), copies 404.html there (Pages needs a top-level 404.html, or
- * it treats the upload as a single-page app) and copies schema/ there, so the fixed $id addresses on the Pages host
- * answer. The site keeps its own copies of 404.html and schema/ (the 404 page under the base, and the WebMCP script
- * fetching tools-1.json from its own origin).
+ * it treats the upload as a single-page app), and copies schema/, templates.json and picker.json there, so the fixed
+ * $id addresses and the addresses released create-mercato-app versions fetch answer on the Pages host. The site keeps
+ * its own copies of all of them (the 404 page under the base, the WebMCP script fetching tools-1.json from its own
+ * origin, and the data files of the site).
  */
 export function finishNestedLayout(root: string, c: SiteConfig): void {
   const site = join(root, siteDir(c))
@@ -40,6 +42,7 @@ export function finishNestedLayout(root: string, c: SiteConfig): void {
   writeFileSync(join(root, '_redirects'), pagesRedirects(c.base))
   if (existsSync(join(site, '404.html'))) cpSync(join(site, '404.html'), join(root, '404.html'))
   if (existsSync(join(site, SCHEMA_DIR))) cpSync(join(site, SCHEMA_DIR), join(root, SCHEMA_DIR), { recursive: true })
+  for (const f of FIXED_ROOT_FILES) if (existsSync(join(site, f))) cpSync(join(site, f), join(root, f))
 }
 
 /**
@@ -72,7 +75,7 @@ export function pagesLayout(): AstroIntegration {
         if (!config) return
         finishNestedLayout(root, config)
         logger.info(
-          `site in ${siteDir(config)}/; ${ROOT_FILES.join(', ')} and ${SCHEMA_DIR}/ at the root of the upload`,
+          `site in ${siteDir(config)}/; ${[...ROOT_FILES, ...FIXED_ROOT_FILES].join(', ')} and ${SCHEMA_DIR}/ at the root of the upload`,
         )
       },
     },
@@ -148,8 +151,8 @@ function readJson(file: string): unknown {
 /**
  * What in `root` (a built dist) does not match the layout of `c`, as one line per problem (at most `max`). Checks the
  * root files and their content, the fixed `$id` of every schema at the root, the site files in their folder, the
- * `$schema` of modules.json and, nested, that nothing else sits at the root and every link of every page stays under
- * the base.
+ * `$schema` of modules.json and, nested, that templates.json and picker.json sit at the root as copies of the site's,
+ * that nothing else sits at the root and every link of every page stays under the base.
  */
 export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[] {
   const problems: string[] = []
@@ -182,8 +185,15 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[
     say(`${shown(join(site, 'modules.json'))}: $schema is ${String(index.$schema)}, not ${schemaUrl('modules')}`)
 
   if (!isNested(c)) return problems
+  for (const f of FIXED_ROOT_FILES) {
+    const copy = join(root, f)
+    if (!existsSync(join(site, f))) say(`${shown(join(site, f))} is missing`)
+    if (!existsSync(copy)) say(`${shown(copy)} is missing (released create-mercato-app versions fetch it there)`)
+    else if (existsSync(join(site, f)) && !readFileSync(copy).equals(readFileSync(join(site, f))))
+      say(`${shown(copy)} differs from ${shown(join(site, f))}`)
+  }
   const top = siteDir(c).split('/')[0] as string
-  const allowed = new Set<string>([...ROOT_FILES, SCHEMA_DIR, top])
+  const allowed = new Set<string>([...ROOT_FILES, SCHEMA_DIR, ...FIXED_ROOT_FILES, top])
   for (const name of readdirSync(root)) if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
   for (const f of ROOT_ONLY) if (existsSync(join(site, f))) say(`${shown(join(site, f))} belongs at the root`)
   const pages = [...walk(site).filter((f) => f.endsWith('.html')), join(root, '404.html')].filter((f) => existsSync(f))
