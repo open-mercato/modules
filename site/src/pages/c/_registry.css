@@ -13,10 +13,23 @@
   padding-block: 72px 48px;
 }
 .mhero__h1 {
-  font-size: 56px;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  /* the scale of the openmercato.com hero (look of 13 Nov): Medium 500 from h1, tight lines, tight tracking */
+  font-size: clamp(44px, 5vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
   text-wrap: balance;
+}
+/* one word on the yellow mark, like "80% done" on openmercato.com; it repeats on each line if the word wraps */
+.mhero__mark {
+  background: linear-gradient(var(--mark), var(--mark)) 0 62% / 100% 0.8em no-repeat;
+  padding-inline: 0.06em;
+  margin-inline: -0.06em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.mhero--cat .mhero__h1 {
+  font-size: clamp(36px, 3.6vw, 48px);
+  line-height: 1.05;
 }
 .mhero__lead {
   max-width: 60ch;
@@ -644,7 +657,10 @@
     padding-block: 40px 32px;
   }
   .mhero__h1 {
-    font-size: 40px;
+    font-size: 44px;
+  }
+  .mhero--cat .mhero__h1 {
+    font-size: 34px;
   }
   .mhero__lead {
     font-size: 16px;
