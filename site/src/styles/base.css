@@ -221,8 +221,7 @@ h3 {
 .band > .sheet {
   border-bottom: 1px solid var(--rail);
 }
-/* film: dark in both themes, with the quiet Tonik hex lattice of the AnatomyFilm and the Hive, so the hero reads as
-   film and not as more page in dark mode */
+/* film: always dark on the light page, with the quiet Tonik hex lattice of the AnatomyFilm and the Hive */
 .band--film {
   background-color: var(--film);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231a1a1a' stroke-width='1'/%3E%3C/svg%3E");
@@ -244,15 +243,6 @@ h3 {
   --wait-ink: #eefb63;
   --bad-ink: #ff6b6b;
   color-scheme: dark;
-}
-/* dark theme: the film is #141414 (tokens.css), so its lattice steps up to #1F1F1F to stay a quiet texture */
-:root[data-theme='dark'] .band--film {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .band--film {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
-  }
 }
 /* the Hive draws its own lattice; two hex grids of different pitch would moire, so the band stays plain film */
 .band--film:has(.omhive) {
@@ -410,7 +400,7 @@ h3 {
 }
 
 /* without JavaScript nothing on a page is dead (review r4): every copy button (the text it copies stays on the page)
-   and every control marked data-needs-js (the theme switch) is not shown; the colour scheme of the system applies */
+   and every control marked data-needs-js is not shown */
 @media (scripting: none) {
   button[data-copy],
   [data-needs-js] {
