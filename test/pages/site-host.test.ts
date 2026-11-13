@@ -304,9 +304,22 @@ describe('links of a built page', () => {
       'https://github.com/x',
       'https://modules.openmercato.com/schema/modules-1.json',
       'https://www.openmercato.com/modules/m/z',
+      // the main site's pages that the header and the footer link on purpose
+      'https://www.openmercato.com/',
+      'https://www.openmercato.com/product',
+      'https://www.openmercato.com/terms-conditions',
     ])
       expect(linkProblem(ok, page, WWW), ok).toBeNull()
-    for (const bad of ['/m/z', '/', '../../../x', 'https://www.openmercato.com/m/z', '//www.openmercato.com/x'])
+    for (const bad of [
+      '/m/z',
+      '/',
+      '/product',
+      '../../../x',
+      'https://www.openmercato.com/m/z',
+      'https://www.openmercato.com/product/x',
+      '//www.openmercato.com/x',
+      '//www.openmercato.com/product',
+    ])
       expect(linkProblem(bad, page, WWW), bad).not.toBeNull()
     expect(linkProblem('/m/z', '/m/x', DEFAULT_SITE)).toBeNull()
   })

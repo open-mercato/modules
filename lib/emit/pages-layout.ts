@@ -9,6 +9,7 @@ import { join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import type { AstroIntegration } from 'astro'
 import { DEFAULT_SITE_ORIGIN, schemaUrl } from '../core/home.ts'
+import { isMainSiteLink } from '../core/main-site.ts'
 import {
   FIXED_ROOT_FILES,
   isNested,
@@ -154,6 +155,8 @@ export function linkProblem(ref: string, page: string, c: SiteConfig): string | 
   }
   if (ABSOLUTE.test(ref) && resolved.origin !== c.origin) return null
   if (!isNested(c)) return null
+  // the main site's own pages that the header and the footer link (Product, Blog, the logo): written out in full
+  if (/^https:\/\//.test(ref) && isMainSiteLink(ref)) return null
   if (resolved.pathname === c.base || resolved.pathname.startsWith(`${c.base}/`)) return null
   return `outside ${c.base}: ${ref}`
 }
