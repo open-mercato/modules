@@ -1,11 +1,17 @@
 ---
-// Site header (spec 7.6, 7.7 A.1): wordmark + MODULES chip, navigation, DataStamp, primary CTA.
-// 56 px, sticky, inside the sheet with rails. On phones the navigation folds into a <details> menu without JS.
+// Site header in two bars (look of 13 Nov): the catalog is a section of openmercato.com.
+// 1. The bar of the main site, as on openmercato.com (62 px): the logo to its home, Product, Developers, Enterprise,
+//    Contact, Case Studies, GitHub and the dark Launch sandbox. It scrolls away with the page.
+// 2. The bar of the catalog (spec 7.6, 7.7 A.1): the MODULES chip to the catalog home, the catalog navigation, the
+//    DataStamp and Submit a module. It stays at the top: the whole header is sticky at minus the first bar's height.
+// Below 1080 px one bar: the logo, the chip and one <details> menu without JS that holds both groups of links.
 import Wordmark from './Wordmark.astro'
 import DataStamp from './DataStamp.astro'
 import type { DataAsOf } from '../lib/freshness.ts'
 import Icon from './icons/Icon.astro'
+import github from './assets/github-mark.svg?raw'
 import { href } from '../lib/url.ts'
+import { MAIN_SITE_GITHUB, MAIN_SITE_NAV, MAIN_SITE_SANDBOX } from '../../../lib/core/main-site.ts'
 
 interface Props {
   dataAsOf: DataAsOf
@@ -22,6 +28,8 @@ const nav = [
   { label: 'Quality', path: '/quality' },
   { label: 'For agents', path: '/for-agents' },
 ]
+// the main site's navbar; Case Studies sits on the right, next to the buttons, as on openmercato.com
+const site = MAIN_SITE_NAV
 // "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in.
 // "Templates" likewise on its template pages (/t/*, Phase 1a). Every other item is active on its own path and below it.
 const isCurrent = (p: string): boolean =>
@@ -33,28 +41,35 @@ const isCurrent = (p: string): boolean =>
 ---
 
 <header class="site-header">
-  <div class="sheet hdr">
+  <div class="sheet bar bar--site">
     <Wordmark />
-    <nav class="hdr__nav" aria-label="Main">
+    <a class="hdr__chip hdr__chip--phone" href={href('/')}>Modules</a>
+    <nav class="bar__site" aria-label="Open Mercato">
       {
-        nav.map((n) => (
-          <a class="hdr__link" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
-            {n.label}
+        site.map((l) => (
+          <a class:list={['bar__link', { 'bar__link--end': l.label === 'Case Studies' }]} href={l.url}>
+            {l.label}
           </a>
         ))
       }
     </nav>
-    <div class="hdr__right">
-      <DataStamp dataAsOf={dataAsOf} />
-      <a class="btn btn--primary hdr__cta" href={href('/submit')}>Submit a module</a>
-      <details class="hdr__menu">
-        <summary class="btn btn--secondary btn--sm" aria-label="Menu">
-          <span class="hdr__mword">Menu</span> <Icon name="chevron-down" size={14} />
-        </summary>
-        <div class="hdr__sheet">
-          <nav aria-label="Main, mobile">
+    <div class="bar__end">
+      <a class="btn btn--secondary bar__btn" href={MAIN_SITE_GITHUB}>
+        <span class="bar__gh" set:html={github} />
+        GitHub
+      </a>
+      <a class="btn btn--primary bar__btn" href={MAIN_SITE_SANDBOX.url}>{MAIN_SITE_SANDBOX.label}</a>
+    </div>
+    <details class="hdr__menu">
+      <summary class="btn btn--secondary btn--sm" aria-label="Menu">
+        <span class="hdr__mword">Menu</span> <Icon name="chevron-down" size={14} />
+      </summary>
+      <div class="hdr__sheet">
+        <div class="hdr__group">
+          <p class="t-tagline hdr__mhead" id="hdr-modules">Modules</p>
+          <nav aria-labelledby="hdr-modules">
             {/* the main call to action first (finding of 25 Oct: on a phone it was the last of six links) */}
-            <a class="hdr__mlink hdr__mlink--cta" href={href('/submit')}>Submit a module</a>
+            <a class="btn btn--secondary hdr__mcta" href={href('/submit')}>Submit a module</a>
             {
               nav.map((n) => (
                 <a class="hdr__mlink" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
@@ -65,37 +80,134 @@ const isCurrent = (p: string): boolean =>
           </nav>
           <DataStamp dataAsOf={dataAsOf} variant="inline" />
         </div>
-      </details>
+        <div class="hdr__group">
+          <p class="t-tagline hdr__mhead" id="hdr-site">Open Mercato</p>
+          <nav aria-labelledby="hdr-site">
+            {
+              site.map((l) => (
+                <a class="hdr__mlink" href={l.url}>
+                  {l.label}
+                </a>
+              ))
+            }
+            <a class="hdr__mlink" href={MAIN_SITE_GITHUB}>GitHub</a>
+            <a class="btn btn--primary hdr__mcta" href={MAIN_SITE_SANDBOX.url}>{MAIN_SITE_SANDBOX.label}</a>
+          </nav>
+        </div>
+      </div>
+    </details>
+  </div>
+  <div class="sheet bar bar--cat">
+    <a class="hdr__chip" href={href('/')}>Modules</a>
+    <nav class="hdr__nav" aria-label="Modules">
+      {
+        nav.map((n) => (
+          <a class="hdr__link" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="hdr__right">
+      <DataStamp dataAsOf={dataAsOf} />
+      <a class="btn btn--secondary bar__btn" href={href('/submit')}>Submit a module</a>
     </div>
   </div>
 </header>
 
 <style>
+  /* sticky at minus the first bar: the main site's bar scrolls away, the catalog bar stays (no JS) */
   .site-header {
     position: sticky;
-    top: 0;
+    top: calc(-1 * var(--site-h));
     z-index: 40;
     background: var(--bg);
   }
-  /* the hairline stops at the rails, like the openmercato.com navbar */
-  .hdr {
+  /* the hairlines stop at the rails, like the openmercato.com navbar; no shadow */
+  .bar {
     border-bottom: 1px solid var(--rail);
-    height: var(--header-h);
     display: flex;
     align-items: center;
+    padding-inline: 24px;
+  }
+  .bar--site {
+    height: var(--site-h);
+    gap: 24px;
+  }
+  .bar--cat {
+    height: var(--bar-h);
     gap: 32px;
-    padding-inline: var(--pad);
   }
-  /* the brand takes a fixed column, so the nav starts where the footer links start (--brand-col + 32 px) */
-  @media (min-width: 992px) {
-    .hdr > :global(.wm) {
-      flex: 0 0 var(--brand-col);
-    }
+
+  /* ---------- bar 1: the main site ---------- */
+  .bar__site {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-left: 40px;
   }
-  /* 20 px between items: with the stamp, six items at 24 px were 3 px wider than the sheet */
+  .bar__link {
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    padding-block: 20px;
+    transition: color var(--dur-2) var(--ease);
+  }
+  /* as on openmercato.com: the other items fade while one is hovered */
+  .bar__site:hover .bar__link:not(:hover) {
+    color: var(--ink-3);
+  }
+  .bar__link--end {
+    margin-left: auto;
+  }
+  .bar__end {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .bar__btn {
+    min-height: 30px;
+    padding: 4px 12px;
+  }
+  .bar__gh {
+    display: flex;
+  }
+  .bar__gh :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------- the section chip: the MODULES sub-brand (spec 1), Geist Mono 11 px, lime, a 7 px chamfer ---------- */
+  .hdr__chip {
+    flex: none;
+    padding: 2px 8px 2px 9px;
+    background: var(--lime);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+  }
+  .hdr__chip:hover {
+    background: color-mix(in srgb, var(--lime) 80%, var(--ink));
+  }
+  .hdr__chip:focus-visible {
+    clip-path: none;
+  }
+  .hdr__chip--phone {
+    display: none;
+  }
+
+  /* ---------- bar 2: the catalog ---------- */
   .hdr__nav {
     display: flex;
-    gap: 20px;
+    gap: 24px;
   }
   /* one line per item: with six items "For agents" wrapped in two at 1440 px */
   .hdr__link {
@@ -104,7 +216,7 @@ const isCurrent = (p: string): boolean =>
     font-weight: 500;
     color: var(--ink-2);
     text-decoration: none;
-    padding-block: 18px;
+    padding-block: 15px;
     box-shadow: inset 0 -1px 0 transparent;
     transition:
       color var(--dur-1) var(--ease),
@@ -121,14 +233,12 @@ const isCurrent = (p: string): boolean =>
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
   }
-  .hdr__right > :global(.stamp) {
-    margin-right: 4px;
-  }
+
+  /* ---------- the menu below 1080 px ---------- */
   .hdr__menu {
     display: none;
-    position: relative;
   }
   .hdr__menu > summary {
     list-style: none;
@@ -139,77 +249,107 @@ const isCurrent = (p: string): boolean =>
   .hdr__menu[open] > summary :global(svg) {
     transform: rotate(180deg);
   }
+  /* a panel the width of the sheet under the bar, as on openmercato.com; it scrolls when it is taller than the screen */
   .hdr__sheet {
     position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    width: min(320px, calc(100vw - 2 * var(--gutter)));
-    padding: 8px;
+    left: -1px;
+    right: -1px;
+    top: 100%;
+    max-height: calc(100dvh - var(--site-h));
+    overflow-y: auto;
+    padding: 16px 24px 24px;
     background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-l);
-    box-shadow: var(--shadow-float);
+    border: 1px solid var(--rail);
+    border-top: 0;
     display: grid;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
   }
-  .hdr__sheet nav {
+  .hdr__group,
+  .hdr__group nav {
     display: grid;
+    align-content: start;
+  }
+  .hdr__group {
+    gap: 12px;
+  }
+  .hdr__mhead {
+    padding-block: 4px;
   }
   .hdr__mlink {
     display: flex;
     align-items: center;
     min-height: 44px;
-    padding: 0 12px;
-    border-radius: var(--radius-m);
+    border-bottom: 1px solid var(--line);
     font-size: 15px;
     font-weight: 500;
     text-decoration: none;
   }
-  .hdr__mlink:hover,
+  .hdr__mlink:hover {
+    color: var(--ink-2);
+  }
   .hdr__mlink[aria-current='page'] {
-    background: var(--bg-3);
+    box-shadow: inset 2px 0 0 var(--ink);
+    padding-left: 12px;
   }
-  /* the call to action of the header button, first in the sheet: the lime of the button as a left edge */
-  .hdr__mlink--cta {
-    font-weight: 600;
-    box-shadow: inset 3px 0 0 #b4f372;
+  .hdr__mcta {
+    margin-block: 4px 8px;
   }
-  .hdr__sheet > :global(.stamp) {
-    padding: 12px;
-    border-top: 1px solid var(--line);
+  .hdr__group nav > .hdr__mcta:last-child {
+    margin-block: 16px 0;
   }
-  /* six nav items (Templates, 29 Oct) need about 1230 px with the stamp and 1040 px without it: the stamp goes first,
-     then the nav folds into the menu, so the header never scrolls the page sideways (measured at 992 to 1366 px) */
+
+  /* six catalog items need about 1230 px with the stamp: the stamp goes first, then both bars fold into the menu, so
+     the header never scrolls the page sideways */
   @media (max-width: 1279px) {
     .hdr__right > :global(.stamp) {
       display: none;
     }
+    .bar__site {
+      margin-left: 16px;
+    }
   }
   @media (max-width: 1079px) {
-    .hdr__nav,
-    .hdr__cta {
+    .site-header {
+      top: 0;
+    }
+    .bar--cat,
+    .bar__site,
+    .bar__end {
       display: none;
+    }
+    .bar--site {
+      gap: 16px;
+    }
+    .hdr__chip--phone {
+      display: block;
     }
     .hdr__menu {
       display: block;
+      margin-left: auto;
     }
   }
-  /* touch targets of at least 44 px on phones (spec 7.10) */
   @media (max-width: 767px) {
+    .bar {
+      padding-inline: var(--gutter);
+    }
+    .hdr__sheet {
+      left: 0;
+      right: 0;
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline: var(--gutter);
+      border-inline: 0;
+    }
+    /* touch targets of at least 44 px on phones (spec 7.10) */
     .hdr__menu > summary {
       min-height: 44px;
       min-width: 44px;
-    }
-    .hdr__menu > summary {
       padding-inline: 14px;
     }
   }
   @media (max-width: 479px) {
-    .hdr {
-      gap: 12px;
-    }
-    .hdr__right {
-      gap: 8px;
+    .bar--site {
+      gap: 10px;
     }
   }
   /* small phones and folded screens (320-359 px): the menu is its chevron only (its name stays in aria-label) */
@@ -220,9 +360,6 @@ const isCurrent = (p: string): boolean =>
     .hdr__menu > summary {
       justify-content: center;
       padding-inline: 0;
-    }
-    .hdr__right {
-      gap: 4px;
     }
   }
 </style>

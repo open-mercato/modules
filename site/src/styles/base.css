@@ -8,7 +8,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: 72px;
+  scroll-padding-top: calc(var(--header-h) + 16px);
 }
 body {
   margin: 0;
@@ -204,9 +204,15 @@ h3 {
 :root {
   --sheet-margin: 24px;
   --pad: 40px;
-  /* width of the brand column: header and footer navigation start on the same vertical line */
-  --brand-col: 232px;
-  --header-h: 56px;
+  /* the header (Header.astro): the main site's bar, the catalog bar, and the part that stays on screen when scrolled */
+  --site-h: 62px;
+  --bar-h: 52px;
+  --header-h: var(--bar-h);
+}
+@media (max-width: 1079px) {
+  :root {
+    --header-h: var(--site-h);
+  }
 }
 @media (max-width: 991px) {
   :root {
