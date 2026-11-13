@@ -28,7 +28,7 @@ A person who builds or runs an Open Mercato app and wants a feature. They should
 
 ## Fixed for now
 
-- Brand tokens, fonts, light and dark themes, header and footer.
+- Brand tokens, fonts, the light theme (the dark theme was removed on 13 Nov), header and footer.
 - One accent color. No legends, letter codes or per-night squares on these three pages.
 - Every number comes from the data; the design must allow longer or shorter values (titles up to 80 characters, counts in the thousands).
 - English texts, short sentences, no long dashes.
