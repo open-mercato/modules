@@ -46,13 +46,22 @@ test('JS on / stays within budget through the first search, which fetches nothin
   const ctx = await themed(browser, 'light', phone(390))
   const page = await ctx.newPage()
   const rec = record(page)
+  // the visitor's first press is when the navbar asks GitHub for its star count (Header.astro), whatever is pressed.
+  // It is not a request of the search, and its answer would land at a moment the network decides, so it stays off
+  // the network here; navbar.spec.ts covers it.
+  const stars: string[] = []
+  await page.route('https://api.github.com/**', (route) => {
+    stars.push(route.request().url())
+    return route.abort()
+  })
   await page.goto(url('/'), { waitUntil: 'load' })
   await page.waitForLoadState('networkidle')
+  expect(stars, 'the star count is not asked while the page loads').toEqual([])
   const jsLoad = sum(await gzSizes(rec.list.filter(isScript)))
-  const before = rec.list.length
 
   const input = page.getByRole('search', { name: 'Search modules' }).first().locator('input')
   await input.click()
+  const before = rec.list.length
   await input.pressSequentially('ksef', { delay: 30 })
   await page.waitForLoadState('networkidle')
   const after = rec.list.slice(before)
