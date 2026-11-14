@@ -7,7 +7,7 @@
 // site/.generated ends up holding the real data.
 //   node test/e2e/build.ts                 (wrap it in a build lock on a shared machine: lockf -k /tmp/om-build.lock)
 // Env: E2E_DATA (data dir), E2E_OUT (default out/e2e), E2E_STALE_SOURCE (default test/fixtures/data),
-// E2E_ONLY=real|stale|templates. SITE_URL and BASE_PATH reach emit and astro as usual.
+// E2E_ONLY=real|stale|templates. SITE_URL, BASE_PATH and HOME_PATH reach emit and astro as usual.
 import { spawnSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
