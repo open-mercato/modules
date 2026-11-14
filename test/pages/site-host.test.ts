@@ -274,6 +274,7 @@ describe('hostRedirect under a base path', () => {
     )
     // Pages answered /index.html with a redirect to / while the site sat at the root
     expect(at('https://modules.openmercato.com/index.html')).toBe('https://www.openmercato.com/run/modules')
+    expect(at('https://templates.openmercato.com/index.html?a=1')).toBe('https://www.openmercato.com/run/templates?a=1')
     expect(hostRedirect('https://modules.openmercato.com/', WWW)?.status).toBe(MOVED_STATUS)
     expect(hostRedirect('https://modules.openmercato.com/?q=x', PLAIN)?.location).toBe(
       'https://www.openmercato.com/run/?q=x',
@@ -727,7 +728,10 @@ describe('the nested layout of dist', () => {
     const home = homePath(c)
     mkdirSync(join(s, 'schema'), { recursive: true })
     mkdirSync(join(s, 'm'), { recursive: true })
-    writeFileSync(join(s, homeFile(c)), '<a href="/run/m/x">x</a><link rel="icon" href="/run/favicon.svg">')
+    writeFileSync(
+      join(s, homeFile(c)),
+      `<link rel="canonical" href="${homeUrl(c)}"><a href="/run/m/x">x</a><link rel="icon" href="/run/favicon.svg">`,
+    )
     writeFileSync(join(s, 'm', 'x.html'), `<a href="${home}">home</a><a href="../about">about</a>`)
     writeFileSync(join(s, '404.html'), `<a href="${home}">home</a>`)
     writeFileSync(join(s, '_routes.json'), read('site', 'public', '_routes.json'))
@@ -803,13 +807,28 @@ describe('the nested layout of dist', () => {
     expect(checkPagesLayout(dist, WWW)).toEqual([])
     // a published file of a kind the rule does not know would answer a redirect on the old host
     writeFileSync(join(dist, 'run', 'export.csv'), 'a,b\n')
-    // a page whose address reads as a file would be asked from the asset server and answer 404
+    // a page is not checked: its name comes from the data (a package called y.json), and a build must not stop for it
     writeFileSync(join(dist, 'run', 'm', 'y.json.html'), '<a href="/run/modules">home</a>')
-    const problems = checkPagesLayout(dist, WWW).join('\n')
-    expect(problems).toMatch(/dist\/run\/export\.csv is not a file the old host serves \(isFilePath\)/)
-    expect(problems).toMatch(/dist\/run\/m\/y\.json\.html: the page \/m\/y\.json reads as a file on the old host/)
+    const problems = checkPagesLayout(dist, WWW)
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toMatch(/dist\/run\/export\.csv is not a file the old host serves \(isFilePath\)/)
     // the standalone layout has no such rule
     expect(checkPagesLayout(dist, DEFAULT_SITE).join('\n')).not.toContain('isFilePath')
+  })
+
+  it('the check wants the home file to be the home page, by its canonical link', () => {
+    const dist = join(tmp, 'dist')
+    site(dist)
+    finishNestedLayout(dist, WWW)
+    expect(checkPagesLayout(dist, WWW)).toEqual([])
+    // HOME_PATH named a page that exists already: the file is there, but it is that other page
+    writeFileSync(
+      join(dist, 'run', 'modules.html'),
+      '<link rel="canonical" href="https://www.openmercato.com/run/templates"><a href="/run/m/x">x</a>',
+    )
+    expect(checkPagesLayout(dist, WWW).join('\n')).toMatch(
+      /modules\.html: canonical is https:\/\/www\.openmercato\.com\/run\/templates, not the home page https:\/\/www\.openmercato\.com\/run\/modules/,
+    )
   })
 
   it('without a home path the nested layout keeps the home page at the base', () => {

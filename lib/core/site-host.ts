@@ -284,12 +284,13 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
   if (isPreviewHost(url.hostname))
     return path === '/' ? { location: `${url.origin}${homePath(c)}${url.search}`, status: 302 } : null
   if (!PAGES_HOSTS.includes(url.hostname)) return null
-  if (url.hostname === TEMPLATES_HOST && path === '/')
+  // `/index.html` is the root too: Pages answered it with a redirect to `/` while the site sat at the root
+  const root = path === '/' || path === '/index.html'
+  if (url.hostname === TEMPLATES_HOST && root)
     return { location: `${templatesTarget(siteRoot(c))}${url.search}`, status: 302 }
   if (path.startsWith('//') || UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
   if (isFilePath(path)) return null
-  // `/index.html` is the home page too: Pages answered it with a redirect to `/` while the site sat at the root
-  const location = `${c.origin}${path === '/' || path === '/index.html' ? homePath(c) : `${c.base}${path}`}${url.search}`
+  const location = `${c.origin}${root ? homePath(c) : `${c.base}${path}`}${url.search}`
   let target: URL
   try {
     target = new URL(location)

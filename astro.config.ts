@@ -6,8 +6,8 @@ import preact from '@astrojs/preact'
 import sitemap from '@astrojs/sitemap'
 import { defineConfig } from 'astro/config'
 import type { AstroIntegration } from 'astro'
-import { DEFAULT_BASE_PATH, DEFAULT_HOME_PATH, DEFAULT_SITE_ORIGIN } from './lib/core/home.ts'
-import { homeConfig } from './lib/core/site-host.ts'
+import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from './lib/core/home.ts'
+import { siteConfigFromEnv } from './lib/core/site-host.ts'
 import { pagesLayout } from './lib/emit/pages-layout.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
@@ -40,7 +40,7 @@ function devGallery(): AstroIntegration {
  * Path of the home page under the base (HOME_PATH, lib/core/site-host.ts): `/` by default, `/modules` for the Run
  * section of the main site (`/run/modules`). A value the layout cannot hold stops the build here.
  */
-const home = homeConfig(process.env.HOME_PATH ?? DEFAULT_HOME_PATH, process.env.BASE_PATH ?? DEFAULT_BASE_PATH)
+const home = siteConfigFromEnv(process.env).home
 
 /**
  * The home page (site/src/pages/_home.astro) is the one page whose address is configured, so its route is injected at

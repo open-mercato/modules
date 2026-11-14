@@ -17,6 +17,7 @@ import {
   hasHomePath,
   homeFile,
   homePath,
+  homeUrl,
   isFilePath,
   isNested,
   isSitemapPath,
@@ -199,8 +200,8 @@ function readJson(file: string): unknown {
  * root files and their content, the fixed `$id` of every schema at the root, the site files in their folder (the home
  * page at its home path and, with a home path, no index.html and no folder of that name), the `$schema` of
  * modules.json and, nested, that the FIXED_ROOT_FILES sit at the root as copies of the site's, that nothing else sits
- * at the root, every link of every page stays under the base, and the file rule of the old host (isFilePath) sorts
- * every file of the site the right way: a published file is served there, a page is redirected.
+ * at the root, every link of every page stays under the base, and the file rule of the old host (isFilePath) knows
+ * every published file of the site. The home file must carry the canonical link of the home page.
  */
 export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[] {
   const problems: string[] = []
@@ -228,6 +229,12 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[
   }
   for (const f of [homeFile(c), 'modules.json', '404.html'])
     if (!existsSync(join(site, f))) say(`${shown(join(site, f))} is missing`)
+  // the file at the home path is the home page itself, not another page that owns that name (HOME_PATH `/templates`)
+  if (existsSync(join(site, homeFile(c)))) {
+    const canonical = /<link rel="canonical" href="([^"]*)"/.exec(readFileSync(join(site, homeFile(c)), 'utf8'))?.[1]
+    if (canonical !== homeUrl(c))
+      say(`${shown(join(site, homeFile(c)))}: canonical is ${String(canonical)}, not the home page ${homeUrl(c)}`)
+  }
   if (hasHomePath(c)) {
     // the base only redirects (pagesRedirects): a page there would never be served, and a folder named as the home
     // page would make /<home> ambiguous for Pages
@@ -252,14 +259,12 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[
   for (const name of readdirSync(root)) if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
   for (const f of ROOT_ONLY) if (existsSync(join(site, f))) say(`${shown(join(site, f))} belongs at the root`)
   // the old host serves the machine-readable files itself and redirects the pages (hostFile, hostRedirect): a
-  // published file the rule does not know would answer a redirect there, a page that reads as a file a 404
+  // published file of a kind the rule does not know would answer a redirect there. Pages are not checked the other
+  // way round: their names come from the data (a package may be called `x.json`), and a build must not stop for one.
   for (const f of walk(site)) {
     const rel = toPosix(relative(site, f))
-    if (PAGE_ASSETS.some((d) => rel.startsWith(d))) continue
-    if (rel.endsWith('.html')) {
-      if (isFilePath(`/${rel.replace(/\.html$/, '')}`))
-        say(`${shown(f)}: the page /${rel.replace(/\.html$/, '')} reads as a file on the old host (isFilePath)`)
-    } else if (!isFilePath(`/${rel}`) && !isSitemapPath(`/${rel}`))
+    if (rel.endsWith('.html') || PAGE_ASSETS.some((d) => rel.startsWith(d))) continue
+    if (!isFilePath(`/${rel}`) && !isSitemapPath(`/${rel}`))
       say(`${shown(f)} is not a file the old host serves (isFilePath); its old address would answer a redirect`)
   }
   const pages = [...walk(site).filter((f) => f.endsWith('.html')), join(root, '404.html')].filter((f) => existsSync(f))

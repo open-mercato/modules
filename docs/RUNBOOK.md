@@ -509,7 +509,7 @@ What the repository does with `SITE_URL=https://www.openmercato.com`, `BASE_PATH
   its path and no page at the base, the root copies of `templates.json`, `picker.json` and `modules.json` equal to the
   site's, nothing else at the root, every link of every page under `/run` or absolute, no link to the bare base, the
   fixed schema `$id`, and the file rule of the old host: every published file of the build is one the rule serves, and
-  no page has an address the rule takes for a file. Both jobs of `pages.yml` run it.
+  the home file is the home page (by its canonical link). Both jobs of `pages.yml` run it.
 - **Old addresses.** `dist/_routes.json` runs Functions on every path but `/run`, `/run/*` and the fixed addresses.
   `functions/_middleware.ts` answers each of them on the production hosts `modules.openmercato.com` and
   `templates.openmercato.com` by one rule (`hostRedirect`, `hostFile` and `isFilePath` in `lib/core/site-host.ts`):
