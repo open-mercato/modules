@@ -204,7 +204,9 @@ const external = { target: '_blank', rel: 'noopener' }
         sync()
       })
       d.addEventListener('mouseleave', () => {
-        reset(d)
+        // a panel opened by a tap or a click (data-open) stays until a tap elsewhere, Escape or another menu: on a
+        // screen with touch and a mouse the pointer "leaves" right after the tap, back to where the mouse rests
+        d.removeAttribute('data-closed')
         setTimeout(sync, 0)
       })
       d.addEventListener('focusout', (e) => {
