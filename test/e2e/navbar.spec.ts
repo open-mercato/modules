@@ -161,14 +161,18 @@ test('the star count is asked from GitHub at the first interaction, not while th
   const count = page.locator('.navbar_content-right [data-om-star-count]')
   const built = (await count.innerText()).trim()
   expect(built).toMatch(/^[\d,]+$/)
+  // a pointer move is not an interaction: the browser reports one by itself while a page lays out
   await page.mouse.move(400, 400)
+  await page.waitForTimeout(300)
+  expect(asked).toEqual([])
+  await page.mouse.wheel(0, 200)
   await expect(count).toHaveText('4,321')
   expect(asked).toEqual(['https://api.github.com/repos/open-mercato/open-mercato'])
-  // further moves ask nothing, and the next page reads the count from the cache both sites share
-  await page.mouse.move(500, 500)
+  // further interactions ask nothing, and the next page reads the count from the cache both sites share
+  await page.keyboard.press('ArrowDown')
   await page.goto(url('/submit'), { waitUntil: 'load' })
   await expect(page.locator('.navbar_content-right [data-om-star-count]')).toHaveText('4,321')
-  await page.mouse.move(400, 400)
+  await page.mouse.wheel(0, 200)
   await page.waitForTimeout(300)
   expect(asked).toHaveLength(1)
   await ctx.close()

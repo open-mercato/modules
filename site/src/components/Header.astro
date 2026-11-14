@@ -237,9 +237,11 @@ const external = { target: '_blank', rel: 'noopener' }
     }
   })()
   // the GitHub star count, as the main site's navbar script has it (key, cache and fallback alike), with one
-  // difference: the count is asked from api.github.com at the visitor's first move, key or scroll and not while the
-  // page loads, so a page load makes no third-party request (the budget of spec 7.11, test/e2e/perf.spec.ts). Until
-  // then the button shows the cached count, or the one built into the page.
+  // difference: the count is asked from api.github.com at the visitor's first press, key, wheel or touch and not
+  // while the page loads, so a page load makes no third-party request (the budget of spec 7.11,
+  // test/e2e/perf.spec.ts). Not at a pointer move: the browser reports one by itself when the layout changes under a
+  // resting pointer, which is during the load. Until then the button shows the cached count, or the one built into
+  // the page.
   ;(() => {
     const key = 'om-github-stars-v1',
       nodes = document.querySelectorAll('[data-om-star-count]')
@@ -252,7 +254,7 @@ const external = { target: '_blank', rel: 'noopener' }
       if (saved) show(saved.n)
     } catch (e) {}
     if (saved && Date.now() - saved.at < 3600000) return
-    const events = ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart']
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart']
     const ask = () => {
       events.forEach((e) => removeEventListener(e, ask))
       fetch('https://api.github.com/repos/open-mercato/open-mercato', {
