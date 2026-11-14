@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
-  "checkedAt": "2026-11-14T06:32:40Z",
+  "checkedAt": "2026-11-14T18:11:15Z",
   "firstSeenAt": "2026-11-04T22:13:11Z",
   "npm": {
     "name": "@open-mercato/gateway-autopay",
     "distTags": {
       "latest": "0.10.1-develop.7741.1.61a2652671",
-      "develop": "0.10.1-develop.8159.1.71854b31a8"
+      "develop": "0.10.1-develop.8180.1.c6789f43f3"
     },
     "latestStable": null,
     "previousStable": null,
@@ -43,7 +43,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-14T06:05:43Z",
+    "pushedAt": "2026-11-14T18:08:53Z",
     "defaultBranch": "main",
     "stars": 1929,
     "license": "MIT",
@@ -233,6 +233,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 28823,
+  "downloads30d": 30002,
   "errors": []
 }

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/scheduler",
   "version": "0.9.0",
-  "computedAt": "2026-11-14T06:34:10Z",
+  "computedAt": "2026-11-14T18:12:47Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -168,7 +168,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.10.1-develop.8159.1.71854b31a8"
+    "next": "0.10.1-develop.8180.1.c6789f43f3"
   },
   "verdictPreset": "classic"
 }

@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/checkout",
-  "checkedAt": "2026-11-14T06:32:40Z",
+  "checkedAt": "2026-11-14T18:11:15Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/checkout",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8159.1.71854b31a8"
+      "develop": "0.10.1-develop.8180.1.c6789f43f3"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -45,7 +45,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-14T06:05:43Z",
+    "pushedAt": "2026-11-14T18:08:53Z",
     "defaultBranch": "main",
     "stars": 1929,
     "license": "MIT",
@@ -235,6 +235,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 60299,
+  "downloads30d": 62208,
   "errors": []
 }
