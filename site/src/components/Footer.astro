@@ -1,113 +1,50 @@
 ---
-// Footer (spec 7.6, 7.7 A.7), dark like the openmercato.com footer (look of 13 Nov): the catalog's links, the data
-// freshness and its provenance on top, the huge outline "Open Mercato" (the letters of the logo, 1 px non-scaling
-// stroke), then the line of the main site: the year, its links and the licence. No comparison list and no CTA band.
+// The footer of www.openmercato.com, copied (navbar of 14 Nov): the dark band, the huge "Open Mercato" (the letters
+// of the logo, a 1 px non-scaling stroke, as faint as there), the folded "Other" list of the main site's pages, then
+// its line: the year, its links and the licence. The catalog's own links live in the Run menu of the navbar, and the
+// data freshness and its provenance on the About page (DataProvenance), so nothing here is the catalog's own.
 import outline from './assets/open-mercato-outline.svg?raw'
 import github from './assets/github-mark.svg?raw'
 import discord from './assets/discord-mark.svg?raw'
-import { day, dayTime } from '../lib/format.ts'
-import { dataHref, href } from '../lib/url.ts'
-import { isPreviewData, type DataAsOf } from '../lib/freshness.ts'
-import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
-import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
-import { MAIN_SITE_FOOTER } from '../../../lib/core/main-site.ts'
-import { loadSiteData } from '../../../lib/emit/site-data.ts'
+import { MAIN_SITE_FOOTER, MAIN_SITE_FOOTER_NOTE, MAIN_SITE_FOOTER_OTHER } from '../../../lib/core/main-site.ts'
 
-interface Props {
-  dataAsOf: DataAsOf
-  repoUrl?: string
-}
-const { dataAsOf, repoUrl = CATALOG_REPO_URL } = Astro.props
-// people's links in the row; the data files for agents sit under About this data (review of 26 Oct)
-const links = [
-  { label: 'Compatibility', url: href('/compat') },
-  { label: 'Quality', url: href('/quality') },
-  { label: 'For agents', url: href('/for-agents') },
-  { label: 'Templates', url: href('/templates') },
-  { label: 'GitHub', url: repoUrl },
-  { label: 'Submit', url: href('/submit') },
-]
-const dataLinks = [
-  { label: 'modules.json', url: href('/modules.json') },
-  { label: 'llms.txt', url: href('/llms.txt') },
-  { label: 'MCP', url: href('/for-agents#connect') },
-  { label: 'Schema', url: dataHref('/schema/modules-1.json') },
-]
 // the main site's footer links; GitHub and Discord carry their marks, as there
 const marks: Record<string, string> = { GitHub: github, Discord: discord }
-const refreshed = dataAsOf.nightly ?? dataAsOf.npm
-// the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one
-// preview sentence as its title (review r6); the day without the hour, as in the header stamp
-const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
-// which catalog commit this build shows (finding of 25 Oct: a preview link served a build 40 commits behind main and
-// nothing said so); data emitted before the stamp existed has none, and the line is left out
-const { meta } = loadSiteData()
-const build = meta.build?.commit ? meta.build : null
+const external = (url: string): boolean => !url.startsWith('https://www.openmercato.com/')
 const year = new Date().getUTCFullYear()
 ---
 
 <footer class="site-footer">
   <div class="sheet ft">
-    <div class="ft__top">
-      <div class="ft__cat">
-        <a class="ft__name" href={href('/')}>Modules</a>
-        <nav class="ft__links" aria-label="Modules, data and project">
-          {links.map((l) => <a href={l.url}>{l.label}</a>)}
-        </nav>
-      </div>
-      <div class="ft__data">
-        <p>{refreshed ? <>Data refreshed {preview ? day(refreshed) : dayTime(refreshed)}.</> : <>No data yet.</>}</p>
-        {/* the provenance for developers, folded (review of 26 Oct: PREVIEW, NOT CI and a commit on every page) */}
-        <details class="ft__about">
-          <summary>About this data</summary>
-          <p>
-            Descriptions come from authors. Everything else is measured.{' '}
-            {
-              preview ? (
-                <>
-                  Sources: npm, GitHub and a preview run.{' '}
-                  <span class="chip chip--preview ft__chip" title={PREVIEW_SENTENCE}>
-                    {PREVIEW_CHIP}
-                  </span>
-                </>
-              ) : (
-                'Sources: npm, GitHub, nightly CI.'
-              )
-            }
-            {
-              build && (
-                <span class="ft__build" data-build={build.commit}>
-                  {' '}Built from <code>{build.commit}</code>
-                  {build.dirty ? ' with local changes' : ''} on {dayTime(meta.generatedAt)}.
-                </span>
-              )
-            }
-          </p>
-          <p class="ft__alinks">
-            {dataLinks.map((l, i) => (
-              <>
-                {i > 0 && ' · '}
-                <a href={l.url}>{l.label}</a>
-              </>
-            ))}
-          </p>
-        </details>
-      </div>
-    </div>
     <div class="ft__giant" set:html={outline} />
+    <details class="ft__other">
+      <summary>Other<span class="ft__plus" aria-hidden="true">+</span></summary>
+      <nav class="ft__groups" aria-label="More Open Mercato solutions">
+        {
+          MAIN_SITE_FOOTER_OTHER.map((g) => (
+            <div class="ft__group">
+              <h3>{g.label}</h3>
+              {g.links.map((l) => (
+                <a href={l.url}>{l.label}</a>
+              ))}
+            </div>
+          ))
+        }
+      </nav>
+    </details>
     <div class="ft__bottom">
       <p class="ft__small">© {year}</p>
       <nav class="ft__site" aria-label="Open Mercato">
         {
           MAIN_SITE_FOOTER.map((l) => (
-            <a href={l.url}>
+            <a href={l.url} target={external(l.url) ? '_blank' : undefined} rel={external(l.url) ? 'noopener' : undefined}>
               {marks[l.label] && <span class="ft__mark" set:html={marks[l.label]} />}
               {l.label}
             </a>
           ))
         }
       </nav>
-      <p class="ft__small ft__licence">MIT License</p>
+      <p class="ft__small ft__licence">{MAIN_SITE_FOOTER_NOTE}</p>
     </div>
   </div>
 </footer>
@@ -124,86 +61,21 @@ const year = new Date().getUTCFullYear()
     --rail: var(--foot-line);
     --line: var(--foot-line);
     --line-strong: var(--foot-line);
-    --focus: var(--lime);
+    --focus: #e7ee8c;
   }
+  /* .footer_component > .section-padding: a hairline on top, then a column 32 px apart */
   .ft {
-    padding: 48px 24px 24px;
-    overflow: hidden;
-    display: grid;
-    gap: 40px;
-  }
-  .ft__top {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 32px;
-    align-items: start;
-  }
-  .ft__cat {
-    display: grid;
-    gap: 16px;
-  }
-  .ft__name {
-    justify-self: start;
-    font-size: 20px;
-    line-height: 1.2;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    text-decoration: none;
-  }
-  .ft__links {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .ft__links a,
-  .ft__site a,
-  .ft__alinks a {
-    color: var(--foot-ink-2);
-    text-decoration: none;
-    transition: color var(--dur-1) var(--ease);
-  }
-  .ft__links a:hover,
-  .ft__site a:hover,
-  .ft__alinks a:hover,
-  .ft__name:hover {
-    color: var(--foot-ink);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-  /* prose, not a label: sentence case with periods (the DataStamp is the mono label) */
-  .ft__data {
-    justify-self: end;
-    text-align: right;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--foot-ink-2);
-  }
-  .ft__build code {
-    font-family: var(--font-mono);
-    font-size: 12px;
-  }
-  .ft__chip {
-    margin-left: 6px;
-    vertical-align: 1px;
-  }
-  .ft__about {
-    margin-top: 6px;
-  }
-  .ft__about > summary {
-    cursor: pointer;
-    color: var(--foot-ink-2);
-  }
-  .ft__about > summary:hover {
-    color: var(--foot-ink);
-  }
-  .ft__about p {
-    max-width: 44ch;
-    margin: 6px 0 0 auto;
+    flex-direction: column;
+    gap: 32px;
+    padding: 1rem var(--pad) 32px;
+    border-top: 1px solid var(--foot-line);
+    overflow: hidden;
   }
   /* the signature of openmercato.com: the letters of the logo across the sheet, a hairline on the dark */
   .ft__giant {
+    margin-top: 4rem;
+    padding-bottom: 1.5rem;
     color: var(--foot-giant);
   }
   .ft__giant :global(svg) {
@@ -211,18 +83,76 @@ const year = new Date().getUTCFullYear()
     height: auto;
     overflow: visible;
   }
+  /* "Other +": hairlines above and below, a plus that turns 45 degrees when open */
+  .ft__other {
+    margin: -4px 0;
+    border-block: 1px solid #ffffff35;
+  }
+  .ft__other > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 19px 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ft__other > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ft__plus {
+    font-size: 23px;
+    line-height: 1;
+    font-weight: 400;
+    transition: transform 0.2s;
+  }
+  .ft__other[open] .ft__plus {
+    transform: rotate(45deg);
+  }
+  .ft__groups {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+    padding: 12px 0 32px;
+  }
+  .ft__group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+  }
+  .ft__group h3 {
+    margin: 0 0 9px;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .ft__group a {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cdd2c7;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .ft__group a:hover {
+    color: #e7ee8c;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
   /* the line of openmercato.com: the year on the left, the links in the middle, the licence on the right */
   .ft__bottom {
     display: grid;
-    grid-template-columns: minmax(0, 0.5fr) auto minmax(0, 0.5fr);
-    gap: 32px;
+    grid-template-columns: 0.5fr 1fr 0.5fr;
+    gap: 2rem;
     align-items: center;
-    padding-top: 16px;
-    border-top: 1px solid var(--foot-line);
   }
   .ft__small {
     font-size: 12px;
-    color: var(--foot-ink-2);
+    line-height: 1.5;
   }
   .ft__licence {
     text-align: right;
@@ -231,15 +161,15 @@ const year = new Date().getUTCFullYear()
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px 32px;
-    font-size: 14px;
-    font-weight: 500;
+    align-items: center;
+    gap: 2rem;
   }
   .ft__site a {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     color: var(--foot-ink);
+    text-decoration: none;
   }
   .ft__mark {
     display: flex;
@@ -249,56 +179,41 @@ const year = new Date().getUTCFullYear()
     height: auto;
   }
   @media (max-width: 991px) {
+    .ft__groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 30px;
+    }
     .ft__bottom {
-      grid-template-columns: 1fr auto;
-      gap: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
     }
     .ft__site {
-      grid-column: 1 / -1;
       order: -1;
-      justify-content: flex-start;
-      gap: 8px 24px;
+    }
+    .ft__licence {
+      text-align: center;
     }
   }
   @media (max-width: 767px) {
-    .ft {
-      padding: 40px var(--gutter) 16px;
-      gap: 32px;
-    }
-    .ft__top {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    /* phones: a 3-column grid of links, even gaps, each a 44 px target (spec 7.10) */
-    .ft__links,
     .ft__site {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0 16px;
+      order: 3;
+      gap: 1.5rem;
     }
-    .ft__links a,
-    .ft__site a {
-      display: flex;
-      align-items: center;
-      min-height: 44px;
-      border-bottom: 1px solid var(--foot-line);
+  }
+  @media (max-width: 479px) {
+    .ft__groups {
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
-    .ft__name {
-      display: flex;
-      align-items: center;
-      min-height: 44px;
+    .ft__group a {
+      font-size: 14px;
     }
-    .ft__data {
-      justify-self: start;
-      text-align: left;
-    }
-    .ft__about p {
-      margin-left: 0;
-    }
-    .ft__about > summary {
-      display: flex;
-      align-items: center;
-      min-height: 44px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ft__plus {
+      transition: none;
     }
   }
 </style>

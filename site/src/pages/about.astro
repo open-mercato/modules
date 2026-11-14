@@ -2,6 +2,7 @@
 // /about (spec 7.7 K): sources and rhythm, cost, what runs where, privacy, how to report a problem, license and
 // maintainer. Schedules are read from the workflow files and the lines from the data, never typed by hand.
 import Base from '../layouts/Base.astro'
+import DataProvenance from '../components/DataProvenance.astro'
 import { loadSiteData } from '../../../lib/emit/site-data.ts'
 import { orderLines } from '../lib/status.ts'
 import { dayTime, shortVersion } from '../lib/format.ts'
@@ -41,7 +42,6 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band">
     <div class="sheet section ab-head">
       <div class="ab-copy">
-        <p class="t-tagline">// About</p>
         <h1 class="ab-title">How the catalog measures modules.</h1>
         <p class="ab-lede">
           Open Mercato Modules lists the modules you can add to an Open Mercato app. It reads the published code of each
@@ -53,6 +53,7 @@ const previewData = isPreviewData(meta.dataAsOf)
               : 'People and coding agents get the same data.'
           }
         </p>
+        <DataProvenance dataAsOf={meta.dataAsOf} />
       </div>
       <figure class="ab-lines">
         <figcaption>Release lines tested</figcaption>
@@ -81,7 +82,7 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band" aria-labelledby="ab-sources">
     <div class="sheet section ab-grid">
       <div>
-        <p class="t-tagline">// Data</p>
+        <p class="t-tagline">Data</p>
         <h2 id="ab-sources">Sources and rhythm</h2>
       </div>
       <div class="ab-body">
@@ -120,7 +121,7 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band" aria-labelledby="ab-where">
     <div class="sheet section ab-grid">
       <div>
-        <p class="t-tagline">// Execution</p>
+        <p class="t-tagline">Execution</p>
         <h2 id="ab-where">What runs where</h2>
       </div>
       <div class="ab-body">
@@ -153,7 +154,7 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band" aria-labelledby="ab-cost">
     <div class="sheet section ab-grid">
       <div>
-        <p class="t-tagline">// Cost</p>
+        <p class="t-tagline">Cost</p>
         <h2 id="ab-cost">Cost and privacy</h2>
       </div>
       <div class="ab-body">
@@ -177,7 +178,7 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band" aria-labelledby="ab-report">
     <div class="sheet section ab-grid">
       <div>
-        <p class="t-tagline">// Support</p>
+        <p class="t-tagline">Support</p>
         <h2 id="ab-report">Report a problem</h2>
       </div>
       <div class="ab-body">
@@ -202,7 +203,7 @@ const previewData = isPreviewData(meta.dataAsOf)
   <section class="band" aria-labelledby="ab-license">
     <div class="sheet section ab-grid">
       <div>
-        <p class="t-tagline">// License</p>
+        <p class="t-tagline">License</p>
         <h2 id="ab-license">License and maintainers</h2>
       </div>
       <div class="ab-body">
