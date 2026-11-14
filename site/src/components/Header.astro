@@ -58,7 +58,6 @@ const menus: Menu[] = [
     })),
   },
 ]
-const inRun = menus.some((m) => m.id === 'run' && m.rows.some((r) => r.current))
 // the main site's chevron (6x3, #1F1F1F at 30 %)
 const chevron =
   '<svg width="6" height="3" viewBox="0 0 6 3" fill="none" aria-hidden="true"><path opacity="0.3" d="M6 0L3.70001 2.2C3.30001 2.6 2.69999 2.6 2.29999 2.2L0 5.24537e-07L6 0Z" fill="#1F1F1F"/></svg>'
@@ -142,7 +141,7 @@ const external = { target: '_blank', rel: 'noopener' }
           <nav class="navbar_mobile-menu" aria-label="Open Mercato">
             {
               menus.map((m) => (
-                <details class="navbar_mobile-dropdown" open={m.id === 'run' && inRun}>
+                <details class="navbar_mobile-dropdown">
                   <summary class="navbar_dropdown-toggle">
                     <span>{m.label}</span>
                     <span class="dropdown-chevron" set:html={chevron} />
@@ -628,7 +627,8 @@ const external = { target: '_blank', rel: 'noopener' }
     .navbar_mobile[open] .menu-icon_line-bottom {
       transform: translateY(-8px) rotate(45deg);
     }
-    /* the menu under the bar, the height of the screen, as there */
+    /* the menu under the bar, the height of the screen, as there; every list starts closed, as there, so Contact and
+       Case Studies show without scrolling, and a long open list scrolls inside the menu */
     .navbar_mobile-menu {
       position: absolute;
       top: 100%;
