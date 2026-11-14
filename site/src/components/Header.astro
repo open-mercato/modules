@@ -364,6 +364,11 @@ const external = { target: '_blank', rel: 'noopener' }
     cursor: pointer;
     user-select: none;
   }
+  /* the toggle is as high as the bar, so a ring around it would be cut at the top and bottom of the header: draw it
+     inside */
+  .navbar_dropdown-toggle:focus-visible {
+    outline-offset: -2px;
+  }
   .dropdown-chevron {
     display: flex;
     justify-content: center;
