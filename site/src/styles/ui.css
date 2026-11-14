@@ -38,7 +38,6 @@
 }
 .btn--secondary:hover {
   background: var(--bg-2);
-  border-color: var(--ink-3);
 }
 .btn--tertiary {
   background: var(--cta);
@@ -85,18 +84,17 @@
 }
 
 /* ---------- chips (label-list_item, numbered) ---------- */
+/* the label of the main site (.tag, .label-list_item): 12 px Geist, the case of the text, a 4 px radius */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   height: 20px;
   padding: 0 6px;
-  border-radius: var(--radius-s);
-  font-family: var(--font-mono);
-  font-size: 11px;
+  border-radius: var(--radius-m);
+  font-size: 12px;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   vertical-align: middle;
@@ -157,7 +155,7 @@
 .chip--enterprise {
   background: #1b1b1b;
   color: #b4f372;
-  box-shadow: inset 0 0 0 1px #2a2a2a;
+  box-shadow: inset 0 0 0 1px #1f1f1f;
 }
 .chip--match {
   background: var(--id-fill);
@@ -169,7 +167,7 @@
 .band--film .chip--match {
   background: #1b1b1b;
   color: #bc9aff;
-  box-shadow: inset 0 0 0 1px #2a2a2a;
+  box-shadow: inset 0 0 0 1px #1f1f1f;
 }
 .chip__neq {
   display: inline-grid;
@@ -222,14 +220,12 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  padding: 6px 12px 9px 10px;
-  /* the brand gradient (the stops of --grad and the favicon) along the seal's own diagonal, top right to bottom
-     left as in the mark (review r4: 189 degrees over a wide, low plate read as a yellow highlighter with a strip;
-     on the diagonal lime, yellow and violet each get their share, as on the Submit button) */
-  background: linear-gradient(to bottom left, #b4f372 12%, #eefb63 58%, #bc9aff 100%);
-  color: #0c0c0c;
-  border-radius: 0;
-  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  padding: 6px 12px 8px 10px;
+  /* a plain plate with the 4 px radius of the main site, in its green pair (.blog_label-text): no chamfer and no
+     gradient (navbar of 14 Nov) */
+  background: #b4f372;
+  color: #2f520b;
+  border-radius: var(--radius-m);
 }
 .seal--quality .seal__sub {
   font-size: 10px;
@@ -241,10 +237,9 @@
   align-items: flex-start;
   gap: 2px;
   padding: 6px 12px 6px 10px;
-  border-radius: 0;
+  border-radius: var(--radius-m);
   color: var(--ink-3);
   background: var(--bg-3);
-  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
 }
 .seal--revoked .seal__main {
   text-decoration: line-through;
@@ -1017,7 +1012,6 @@
   border-radius: var(--radius-m);
   background: #0c0c0c;
   color: #fafafa;
-  box-shadow: var(--shadow-float);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.04em;

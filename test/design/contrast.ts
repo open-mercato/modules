@@ -54,7 +54,8 @@ export function pairs(root: string): Pair[] {
     { name: 'ink-2 on bg-2 (light)', fg: t(L, '--ink-2'), bg: t(L, '--bg-2'), min: 4.5, spec: 4.96 },
     { name: 'ink-3 on bg (light)', fg: t(L, '--ink-3'), bg: t(L, '--bg'), min: 4.5, spec: 4.61 },
     { name: 'film-ink-2 on film', fg: t(L, '--film-ink-2'), bg: t(L, '--film'), min: 4.5, spec: 7.3 },
-    { name: 'film-ink-2 on film-2', fg: t(L, '--film-ink-2'), bg: t(L, '--film-2'), min: 4.5, spec: 6.88 },
+    // film-2 is #1B1B1B, the dark surface of the main site, since the navbar of 14 Nov (was #141414, 6.88)
+    { name: 'film-ink-2 on film-2', fg: t(L, '--film-ink-2'), bg: t(L, '--film-2'), min: 4.5, spec: 6.43 },
     { name: 'ok-ink on ok-fill (Verified chip)', fg: t(L, '--ok-ink'), bg: t(L, '--ok-fill'), min: 4.5, spec: 6.86 },
     { name: 'ok-text on bg (light)', fg: t(L, '--ok-text'), bg: t(L, '--bg'), min: 4.5, spec: 9.0 },
     {
@@ -91,8 +92,8 @@ export function pairs(root: string): Pair[] {
     // plug diagram on light: requires and extends strokes (graphic objects)
     { name: 'requires stroke ok-ink on bg (light)', fg: t(L, '--ok-ink'), bg: t(L, '--bg'), min: 3 },
     { name: 'extends stroke id-ink on bg (light)', fg: t(L, '--id-ink'), bg: t(L, '--bg'), min: 3 },
-    // the green Install button of the module page (Piotr, 28 Oct)
-    { name: 'Install button ok-ink on ok-fill', fg: t(L, '--ok-ink'), bg: t(L, '--ok-fill'), min: 4.5 },
+    // the Install button of the module page: the dark tertiary button of the main site since the navbar of 14 Nov
+    { name: 'Install button cta-ink on cta', fg: t(L, '--cta-ink'), bg: t(L, '--cta'), min: 4.5 },
     // the look of the main site (13 Nov): the dark primary button, its hover, the dark footer, the yellow mark
     { name: 'primary button cta-ink on cta', fg: t(L, '--cta-ink'), bg: t(L, '--cta'), min: 4.5 },
     { name: 'primary button hover cta-ink on cta-hover', fg: t(L, '--cta-ink'), bg: t(L, '--cta-hover'), min: 4.5 },

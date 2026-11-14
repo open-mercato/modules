@@ -22,7 +22,6 @@ const unmaintained = index.filter((t) => t.status === 'unmaintained').length
 
 <section class="band">
   <div class="sheet section tg-head">
-    <p class="t-tagline">// Templates</p>
     <h1 class="tg-title">Start a new app from a whole app.</h1>
     <p class="tg-lede">
       An app template is a complete Open Mercato app in a GitHub repository. A module adds one feature to your app. A
@@ -129,7 +128,7 @@ const unmaintained = index.filter((t) => t.status === 'unmaintained').length
     min-height: 36px;
     padding: 0 14px;
     border: 1px solid var(--line-strong);
-    border-radius: 999px;
+    border-radius: var(--radius-m);
     background: var(--bg);
     color: var(--ink-2);
     font: inherit;
