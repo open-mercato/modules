@@ -108,10 +108,9 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   dataAsOf={meta.dataAsOf}
   webmcp
 >
-  <section class="band band--film">
+  <section class="band">
     <div class="sheet section fa-hero">
       <div class="fa-herocopy">
-        <p class="t-tagline">// For agents</p>
         <h1 class="fa-title">Ask before you build.</h1>
         <p class="fa-lede">
           Connect a coding agent, such as Claude Code, to this catalog. Before it writes a new module, it can check if
@@ -148,7 +147,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
       <section class="band" id="connect" aria-labelledby="fa-connect">
         <div class="sheet section fa-grid">
           <div>
-            <p class="t-tagline">// {num('connect')} · MCP</p>
+            <p class="t-tagline">{num('connect')} · MCP</p>
             <h2 id="fa-connect">Connect</h2>
           </div>
           <div class="fa-body">
@@ -171,7 +170,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="plugin" aria-labelledby="fa-plugin">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('plugin')} · Claude Code</p>
+        <p class="t-tagline">{num('plugin')} · Claude Code</p>
         <h2 id="fa-plugin">Plugin</h2>
       </div>
       <div class="fa-body">
@@ -185,7 +184,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="skill" aria-labelledby="fa-skill">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('skill')} · Agent Skills</p>
+        <p class="t-tagline">{num('skill')} · Agent Skills</p>
         <h2 id="fa-skill">Skill</h2>
       </div>
       <div class="fa-body">
@@ -201,7 +200,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="read" aria-labelledby="fa-read">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('read')} · Plain files</p>
+        <p class="t-tagline">{num('read')} · Plain files</p>
         <h2 id="fa-read">Read</h2>
       </div>
       <div class="fa-body">
@@ -229,7 +228,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
       <section class="band" id="connect" aria-labelledby="fa-connect">
         <div class="sheet section section--tight fa-grid">
           <div>
-            <p class="t-tagline">// {num('connect')} · MCP</p>
+            <p class="t-tagline">{num('connect')} · MCP</p>
             <h2 id="fa-connect">Connect</h2>
           </div>
           <p class="fa-later">
@@ -244,7 +243,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
 
   <section class="band" id="tools" aria-labelledby="fa-tools">
     <div class="sheet section fa-tools">
-      <p class="t-tagline">// {num('tools')} · tools@1</p>
+      <p class="t-tagline">{num('tools')} · tools@1</p>
       <h2 id="fa-tools">Tool contract</h2>
       <p class="fa-lede2">
         Rendered from <a href={dataHref('/schema/tools-1.json')}><code>tools-1.json</code></a>. Names and required fields are
@@ -302,7 +301,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
 
   <section class="band" id="policy" aria-labelledby="fa-policy">
     <div class="sheet section fa-tools">
-      <p class="t-tagline">// {num('policy')} · Agent policy</p>
+      <p class="t-tagline">{num('policy')} · Agent policy</p>
       <h2 id="fa-policy">Agent policy</h2>
       <p class="fa-lede2">
         Every entry carries a decision per line. The first matching group wins; the reasons of every matching rule
@@ -339,7 +338,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
 
   <section class="band band--film" id="demo" aria-labelledby="fa-demo">
     <div class="sheet section fa-tools">
-      <p class="t-tagline">// {num('demo')} · Demo</p>
+      <p class="t-tagline">{num('demo')} · Demo</p>
       <h2 id="fa-demo">What your agent gets</h2>
       <AgentPane client:painted="visible" omVersion={omVersion} site={site} initialRun={teaser} />
     </div>
@@ -348,7 +347,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="deeplinks" aria-labelledby="fa-deep">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('deeplinks')} · Open in</p>
+        <p class="t-tagline">{num('deeplinks')} · Open in</p>
         <h2 id="fa-deep">Deeplinks</h2>
       </div>
       <div class="fa-body">
@@ -381,7 +380,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="webmcp" aria-labelledby="fa-webmcp">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('webmcp')} · In the browser</p>
+        <p class="t-tagline">{num('webmcp')} · In the browser</p>
         <h2 id="fa-webmcp">WebMCP</h2>
       </div>
       <div class="fa-body">
@@ -401,7 +400,7 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
   <section class="band" id="rules" aria-labelledby="fa-rules">
     <div class="sheet section fa-grid">
       <div>
-        <p class="t-tagline">// {num('rules')} · Rules</p>
+        <p class="t-tagline">{num('rules')} · Rules</p>
         <h2 id="fa-rules">Rules our tools follow</h2>
       </div>
       <div class="fa-body">
@@ -435,8 +434,9 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
     margin: 0;
     padding: 16px 18px;
     border: 1px solid var(--film-line);
-    border-radius: var(--radius-l);
-    background: var(--film-2);
+    border-radius: var(--radius-m);
+    /* the one dark panel of the light hero, a code panel as on the main site (navbar of 14 Nov) */
+    background: var(--film);
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 1.5;
@@ -485,9 +485,6 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
     }
   }
   .fa-title {
-    font-size: 64px;
-    line-height: 1;
-    letter-spacing: -0.04em;
     text-wrap: balance;
   }
   .fa-lede {
@@ -760,10 +757,6 @@ const num = (id: (typeof ORDER)[number]): string => String(ORDER.indexOf(id) + 1
     }
   }
   @media (max-width: 479px) {
-    .fa-title {
-      font-size: 40px;
-      line-height: 1.05;
-    }
     .fa-tool {
       padding: 14px;
     }

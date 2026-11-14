@@ -157,17 +157,13 @@ const sameCat = builtIn.modules.filter((x) => x.category === m.category && x.id 
   path={builtInPage(m.id)}
   dataAsOf={meta.dataAsOf}
   skip={{ href: '#bi-body', label: 'Skip to module details' }}
+  trail={[
+    { label: 'Modules', href: href('/') },
+    { label: 'Built-in', href: href('/built-in') },
+  ]}
 >
   <div class="band">
     <div class="sheet bim">
-      <nav class="bim__crumbs" aria-label="Breadcrumb">
-        <a href={href('/')}>Modules</a>
-        <span aria-hidden="true">/</span>
-        <a href={href('/built-in')}>Built-in</a>
-        <span aria-hidden="true">/</span>
-        <code>{m.id}</code>
-      </nav>
-
       <header class="bim__head">
         <YMarks inset={8} />
         <div class="bim__sig"><Sigil builtIn={m} size={96} /></div>
@@ -322,29 +318,6 @@ const sameCat = builtIn.modules.filter((x) => x.category === m.category && x.id 
   }
   .bim > * + * {
     margin-top: 24px;
-  }
-  .bim__crumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-  }
-  .bim__crumbs a {
-    color: var(--ink-2);
-    text-decoration: none;
-  }
-  .bim__crumbs a:hover {
-    color: var(--ink);
-    text-decoration: underline;
-  }
-  .bim__crumbs code {
-    font: inherit;
-    letter-spacing: 0;
-    color: var(--ink);
   }
   .bim__head {
     position: relative;

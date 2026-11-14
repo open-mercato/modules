@@ -296,7 +296,7 @@ const calloutItems = (entry.anatomy?.callout ?? '').split(' · ').filter(Boolean
 
 <section class="film band--film" aria-labelledby={`film-${entry.path}`}>
   <header class="film__head">
-    <p class="t-tagline" id={`film-${entry.path}`}>// Anatomy</p>
+    <p class="t-tagline" id={`film-${entry.path}`}>Anatomy</p>
     <p class="film__src">
       {hidden ? 'Not published' : <><span class="nw">Read from <code>src/</code> ·</span> <code translate="no" set:html={wbrHtml(`${entry.npm ?? entry.github}@${version}`)} /></>}
     </p>

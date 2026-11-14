@@ -132,7 +132,7 @@ const plain: string[] = radar
   <section class="band">
     <div class="sheet section rd-head">
       <p class="t-tagline">
-        // Release radar
+        Release radar
         {
           radar ? (
             <>
@@ -274,7 +274,7 @@ const plain: string[] = radar
     surface && (
       <section class="band" aria-labelledby="rd-surface">
         <div class="sheet section rd-surface">
-          <p class="t-tagline">// Surface</p>
+          <p class="t-tagline">Surface</p>
           <h2 id="rd-surface">The parts of Open Mercato that modules from outside Open Mercato import.</h2>
           <p class="rd-lede">
             <span class="num">{surface.symbols.length}</span> symbols of Open Mercato {surface.base} are imported by the{' '}
@@ -307,7 +307,6 @@ const plain: string[] = radar
   }
   .rd-verdict a {
     color: var(--ink);
-    text-decoration-color: var(--line-strong);
   }
   .rd-head {
     display: grid;
@@ -366,18 +365,20 @@ const plain: string[] = radar
     max-width: 64ch;
     color: var(--ink-2);
   }
+  /* the folded list of the main site (its footer's "Other +"): hairlines above and below, 16 px Medium, a plus that
+     turns 45 degrees when open */
   .rd-how {
     max-width: 880px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-m);
+    border-block: 1px solid var(--line);
   }
   .rd-how > summary {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 24px;
     min-height: 40px;
-    padding: 0 14px;
-    font-size: 14px;
+    padding: 12px 0;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     list-style: none;
@@ -385,21 +386,20 @@ const plain: string[] = radar
   .rd-how > summary::-webkit-details-marker {
     display: none;
   }
-  .rd-how > summary::before {
+  .rd-how > summary::after {
     content: '+';
-    display: inline-grid;
-    place-items: center;
-    width: 16px;
-    font-family: var(--font-mono);
-    color: var(--ink-2);
+    font-size: 23px;
+    line-height: 1;
+    font-weight: 400;
+    transition: transform 0.2s;
   }
-  .rd-how[open] > summary::before {
-    content: '\2212';
+  .rd-how[open] > summary::after {
+    transform: rotate(45deg);
   }
   .rd-howbody {
     display: grid;
     gap: 16px;
-    padding: 4px 14px 16px;
+    padding: 4px 0 16px;
   }
   .rd-body {
     padding-top: 48px;

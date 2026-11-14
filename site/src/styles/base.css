@@ -59,10 +59,9 @@ strong,
 th {
   font-weight: 500;
 }
+/* links as on openmercato.com: the text colour, a plain underline */
 a {
   color: inherit;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
 }
 button,
 input,
@@ -91,10 +90,6 @@ samp {
   letter-spacing: 0;
   font-size: 0.86em;
 }
-::selection {
-  background: var(--lime);
-  color: #0c0c0c;
-}
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
@@ -103,28 +98,30 @@ samp {
   display: none !important;
 }
 
-/* ---------- type scale (spec 7.3): tight tracking, no bold headings ---------- */
-/* display, h1 and h2 in Geist Medium 500 with the tracking of openmercato.com (look of 13 Nov); there is no 600 or 700
-   file, so nothing heavier than 500 is ever asked for */
+/* ---------- type scale (spec 7.3): the heading scale of the main site's pages, Geist Regular 400 ---------- */
+/* h1 and h2 as the --_headings tokens of openmercato.com (navbar of 14 Nov): 4.75rem / 1 / -.19rem for h1, and for
+   section headings its .heading-style-h3, 2.75rem / 1.2 / -.11rem; both smaller on tablets and phones. The tracking is
+   the same -.04em at every size there, so it is written in em: a small heading with its own size keeps it in
+   proportion. Geist ships 400 and 500 only, so nothing heavier than 500 is ever asked for */
 .t-display {
-  font-size: 64px;
+  font-size: 4.75rem;
   line-height: 1;
-  letter-spacing: -0.045em;
-  font-weight: 500;
+  letter-spacing: -0.04em;
+  font-weight: 400;
 }
 .t-h1,
 h1 {
-  font-size: 44px;
-  line-height: 1.05;
+  font-size: 4.75rem;
+  line-height: 1;
   letter-spacing: -0.04em;
-  font-weight: 500;
+  font-weight: 400;
 }
 .t-h2,
 h2 {
-  font-size: 32px;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  font-weight: 500;
+  font-size: 2.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  font-weight: 400;
 }
 .t-h3,
 h3 {
@@ -141,11 +138,11 @@ h3 {
   font-size: 14px;
   line-height: 1.5;
 }
+/* the tagline of openmercato.com: Geist Mono 10 px, capitals, no extra tracking */
 .t-tagline {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.625rem;
   line-height: 1.33;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-2);
   font-weight: 400;
@@ -177,26 +174,32 @@ h3 {
 .num {
   font-variant-numeric: tabular-nums;
 }
-@media (max-width: 479px) {
-  .t-display {
-    font-size: 40px;
-    line-height: 1.05;
-  }
+@media (max-width: 991px) {
+  .t-display,
   .t-h1,
   h1 {
-    font-size: 32px;
+    font-size: 4.25rem;
   }
   .t-h2,
   h2 {
-    font-size: 24px;
-    line-height: 1.2;
+    font-size: 2.5rem;
   }
+}
+@media (max-width: 767px) {
+  .t-display,
+  .t-h1,
+  h1 {
+    font-size: 3.5rem;
+  }
+  .t-h2,
+  h2 {
+    font-size: 2rem;
+  }
+}
+@media (max-width: 479px) {
   .t-h3,
   h3 {
     font-size: 18px;
-  }
-  .t-tagline {
-    font-size: 10px;
   }
 }
 
@@ -223,11 +226,10 @@ h3 {
 .band > .sheet {
   border-bottom: 1px solid var(--rail);
 }
-/* film: always dark on the light page, with the quiet Tonik hex lattice of the AnatomyFilm and the Hive */
+/* film: always dark on the light page, a plain #0C0C0C with the #1F1F1F lines of the main site's dark sections (no
+   lattice in the background since the navbar of 14 Nov) */
 .band--film {
   background-color: var(--film);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231a1a1a' stroke-width='1'/%3E%3C/svg%3E");
-  background-position: center top;
   border-block: 1px solid var(--film-line);
   color: var(--film-ink);
   --rail: var(--film-line);
@@ -238,7 +240,7 @@ h3 {
   --ink-3: #8a8a8a;
   --bg: var(--film);
   --bg-2: var(--film-2);
-  --bg-3: color-mix(in srgb, var(--film-2) 70%, #2a2a2a);
+  --bg-3: color-mix(in srgb, var(--film-2) 70%, #1f1f1f);
   --focus: #b4f372;
   --ok-text: #b4f372;
   --id-ink: #bc9aff;
@@ -250,10 +252,6 @@ h3 {
   --cta-ink: var(--film);
   color-scheme: dark;
 }
-/* the Hive draws its own lattice; two hex grids of different pitch would moire, so the band stays plain film */
-.band--film:has(.omhive) {
-  background-image: none !important;
-}
 .band--film .sheet {
   border-inline-color: var(--film-line);
 }
@@ -263,6 +261,11 @@ h3 {
 }
 .section {
   padding: 3rem var(--pad);
+}
+/* the first section starts 1.5rem under the context line (PageContext.astro), as an h1 under the breadcrumbs of the
+   main site's pages */
+.ctx + .band > .sheet:first-child {
+  padding-top: 1.5rem;
 }
 .section--tight {
   padding-block: 32px;

@@ -7,7 +7,7 @@ import '../styles/base.css'
 import '../styles/ui.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
-import PageContext from '../components/PageContext.astro'
+import PageContext, { type TrailStep } from '../components/PageContext.astro'
 import Banner from '../components/Banner.astro'
 import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
 import { absoluteUrl, BASE, href } from '../lib/url.ts'
@@ -39,6 +39,8 @@ interface Props {
   /** Force noindex (otherwise noindex on *.github.io, D36). */
   noindex?: boolean
   bodyClass?: string
+  /** Breadcrumbs of a page deeper in a section, for the context line (PageContext.astro). */
+  trail?: TrailStep[] | false
 }
 const {
   title,
@@ -51,6 +53,7 @@ const {
   skip = { href: '#main', label: 'Skip to content' },
   noindex,
   bodyClass,
+  trail,
 } = Astro.props
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
 const canonical = path === null ? null : absoluteUrl(site, path)
@@ -77,7 +80,8 @@ const speculation = JSON.stringify({
     <meta name="description" content={description.slice(0, 155)} />
     {robotsNoindex && <meta name="robots" content="noindex" />}
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    {/* the favicon of openmercato.com (32 x 32 PNG): the catalog is a part of it (navbar of 14 Nov) */}
+    <link rel="icon" href={href('/favicon.png')} type="image/png" />
     <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
     <link rel="llms-txt" href={href('/llms.txt')} />
     {mdAlternate && <link rel="alternate" type="text/markdown" href={href(mdAlternate)} />}
@@ -85,7 +89,7 @@ const speculation = JSON.stringify({
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#FFFFFF" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Open Mercato Modules" />
+    <meta property="og:site_name" content="Open Mercato" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description.slice(0, 155)} />
     {canonical && <meta property="og:url" content={canonical} />}
@@ -119,10 +123,10 @@ const speculation = JSON.stringify({
     }
     <script is:inline set:html={STALE_CHECK_JS} />
     <main id="main" tabindex="-1">
-      <PageContext path={path} dataAsOf={dataAsOf} />
+      <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />
       <slot />
     </main>
-    <Footer dataAsOf={dataAsOf} />
+    <Footer />
     <script is:inline set:html={hereScript(absoluteUrl(site, '/'), BASE, production)} />
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
     <script>

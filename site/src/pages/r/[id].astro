@@ -134,6 +134,7 @@ const runAt = `${day(r.run.at)} ${timeUtc(r.run.at)}`
   path={receiptPage(r.id)}
   dataAsOf={data.meta.dataAsOf}
   skip={{ href: '#receipt', label: 'Skip to the receipt' }}
+  trail={false}
 >
   <div class="band">
     <div class="sheet rpage">
@@ -262,18 +263,17 @@ const runAt = `${day(r.run.at)} ${timeUtc(r.run.at)}`
   .rpage {
     padding: 24px var(--pad) 96px;
   }
+  /* the breadcrumbs of the main site's pages: 12 px Medium, the trail grey, the page black */
   .rpage__crumbs {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-2);
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-3);
   }
   .rpage__crumbs a {
-    color: var(--ink-2);
+    color: var(--ink-3);
     text-decoration: none;
   }
   .rpage__crumb-back {
@@ -284,7 +284,7 @@ const runAt = `${day(r.run.at)} ${timeUtc(r.run.at)}`
     text-decoration: underline;
   }
   .rpage__crumbs code {
-    font: inherit;
+    font-family: var(--font-mono);
     letter-spacing: 0;
     text-transform: none;
   }
