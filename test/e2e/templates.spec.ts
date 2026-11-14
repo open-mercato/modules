@@ -88,7 +88,7 @@ test.describe('templates variant', () => {
     const page = await ctx.newPage()
     for (const path of ['/templates', B2B, PRM]) {
       await page.goto(url(path, base))
-      const current = page.locator('.hdr__nav a[aria-current="page"]')
+      const current = page.locator('.navbar_menu a[aria-current="page"] .navbar_dropdown-name')
       await expect(current, path).toHaveCount(1)
       await expect(current, path).toHaveText('Templates')
     }

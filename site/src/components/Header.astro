@@ -1,365 +1,711 @@
 ---
-// Site header in two bars (look of 13 Nov): the catalog is a section of openmercato.com.
-// 1. The bar of the main site, as on openmercato.com (62 px): the logo to its home, Product, Developers, Enterprise,
-//    Contact, Case Studies, GitHub and the dark Launch sandbox. It scrolls away with the page.
-// 2. The bar of the catalog (spec 7.6, 7.7 A.1): the MODULES chip to the catalog home, the catalog navigation, the
-//    DataStamp and Submit a module. It stays at the top: the whole header is sticky at minus the first bar's height.
-// Below 1080 px one bar: the logo, the chip and one <details> menu without JS that holds both groups of links.
-import Wordmark from './Wordmark.astro'
-import DataStamp from './DataStamp.astro'
-import type { DataAsOf } from '../lib/freshness.ts'
-import Icon from './icons/Icon.astro'
-import github from './assets/github-mark.svg?raw'
+// The navbar of www.openmercato.com, copied (owner's request of 14 Nov): the catalog is a part of the main site, so it
+// carries the same navbar, not a look-alike, plus the menu the main site gets too: Run, after Enterprise, with the pages
+// of the catalog. Classes, sizes, colours and breakpoints follow the Webflow navbar (the navbar_* classes of its
+// stylesheet of 13 Nov); the menus come from lib/core/main-site.ts. Keep both in step with Webflow (docs/RUNBOOK.md).
+// Without JavaScript: the panels open on hover and on keyboard focus, the phone menu and its lists are <details>.
+// The inline script only adds what Webflow's script does on top: a tap or Enter toggles a panel, Escape closes it and
+// aria-expanded follows, the phone menu closes on Escape and above 991 px, and the GitHub button fetches its star count
+// (the main site's own script, same key and cache, so both share it on www.openmercato.com).
+import logo from './assets/open-mercato-wordmark.svg?raw'
+import githubMark from './assets/github-mark.svg?raw'
+import { navIconSvg } from './nav-icons.ts'
 import { href } from '../lib/url.ts'
-import { MAIN_SITE_GITHUB, MAIN_SITE_NAV, MAIN_SITE_SANDBOX } from '../../../lib/core/main-site.ts'
+import { isRunCurrent } from '../lib/run-section.ts'
+import {
+  MAIN_SITE_GITHUB,
+  MAIN_SITE_HOME,
+  MAIN_SITE_LINKS,
+  MAIN_SITE_MENUS,
+  MAIN_SITE_SANDBOX,
+  MAIN_SITE_STARS_FALLBACK,
+  RUN_MENU,
+} from '../../../lib/core/main-site.ts'
 
 interface Props {
-  dataAsOf: DataAsOf
-  /** Site path of the current page, for aria-current. */
+  /** Site path of the current page, for aria-current in the Run panel. */
   current?: string
 }
-const { dataAsOf, current = '' } = Astro.props
-const nav = [
-  { label: 'Modules', path: '/' },
-  // the second kind of thing to start from (decisions of 29 Oct): whole apps, next to modules
-  { label: 'Templates', path: '/templates' },
-  { label: 'Compatibility', path: '/compat' },
-  { label: 'Radar', path: '/radar' },
-  { label: 'Quality', path: '/quality' },
-  { label: 'For agents', path: '/for-agents' },
+const { current = '' } = Astro.props
+
+interface Row {
+  label: string
+  url: string
+  description: string
+  icon: Parameters<typeof navIconSvg>[0]
+  current: boolean
+}
+interface Menu {
+  id: string
+  label: string
+  rows: Row[]
+}
+const menus: Menu[] = [
+  ...MAIN_SITE_MENUS.map((m) => ({
+    id: m.label.toLowerCase(),
+    label: m.label,
+    rows: m.items.map((i) => ({ ...i, current: false })),
+  })),
+  {
+    id: 'run',
+    label: RUN_MENU.label,
+    rows: RUN_MENU.items.map((i) => ({
+      label: i.label,
+      url: href(i.path),
+      description: i.description,
+      icon: i.icon,
+      current: current !== '' && isRunCurrent(i.path, current),
+    })),
+  },
 ]
-// the main site's navbar; Case Studies sits on the right, next to the buttons, as on openmercato.com
-const site = MAIN_SITE_NAV
-// "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in.
-// "Templates" likewise on its template pages (/t/*, Phase 1a). Every other item is active on its own path and below it.
-const isCurrent = (p: string): boolean =>
-  p === '/'
-    ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')
-    : p === '/templates'
-      ? current.startsWith(p) || current.startsWith('/t/')
-      : current.startsWith(p)
+const inRun = menus.some((m) => m.id === 'run' && m.rows.some((r) => r.current))
+// the main site's chevron (6x3, #1F1F1F at 30 %)
+const chevron =
+  '<svg width="6" height="3" viewBox="0 0 6 3" fill="none" aria-hidden="true"><path opacity="0.3" d="M6 0L3.70001 2.2C3.30001 2.6 2.69999 2.6 2.29999 2.2L0 5.24537e-07L6 0Z" fill="#1F1F1F"/></svg>'
+const mark = githubMark.replace('<svg', '<svg width="16" height="16" aria-hidden="true"')
+const external = { target: '_blank', rel: 'noopener' }
 ---
 
-<header class="site-header">
-  <div class="sheet bar bar--site">
-    <Wordmark />
-    <a class="hdr__chip hdr__chip--phone" href={href('/')}>Modules</a>
-    <nav class="bar__site" aria-label="Open Mercato">
-      {
-        site.map((l) => (
-          <a class:list={['bar__link', { 'bar__link--end': l.label === 'Case Studies' }]} href={l.url}>
-            {l.label}
-          </a>
-        ))
-      }
-    </nav>
-    <div class="bar__end">
-      <a class="btn btn--secondary bar__btn" href={MAIN_SITE_GITHUB}>
-        <span class="bar__gh" set:html={github} />
-        GitHub
-      </a>
-      <a class="btn btn--primary bar__btn" href={MAIN_SITE_SANDBOX.url}>{MAIN_SITE_SANDBOX.label}</a>
-    </div>
-    <details class="hdr__menu">
-      <summary class="btn btn--secondary btn--sm" aria-label="Menu">
-        <span class="hdr__mword">Menu</span> <Icon name="chevron-down" size={14} />
-      </summary>
-      <div class="hdr__sheet">
-        <div class="hdr__group">
-          <p class="t-tagline hdr__mhead" id="hdr-modules">Modules</p>
-          <nav aria-labelledby="hdr-modules">
-            {/* the main call to action first (finding of 25 Oct: on a phone it was the last of six links) */}
-            <a class="btn btn--secondary hdr__mcta" href={href('/submit')}>Submit a module</a>
+<header class="navbar_wrapper site-header" data-navbar>
+  <div class="navbar_component">
+    <div class="navbar_container">
+      <div class="navbar_content-left">
+        <a href={MAIN_SITE_HOME} class="navbar_logo-link" aria-label="Open Mercato home">
+          <span class="navbar_logo" set:html={logo} />
+        </a>
+        <nav class="navbar_menu" aria-label="Open Mercato">
+          <div class="navbar_menu-links">
             {
-              nav.map((n) => (
-                <a class="hdr__mlink" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
-                  {n.label}
-                </a>
+              menus.map((m) => (
+                <div class="navbar_menu-dropdown" data-dropdown>
+                  <button
+                    type="button"
+                    class="navbar_dropdown-toggle"
+                    id={`nav-${m.id}-toggle`}
+                    aria-controls={`nav-${m.id}-list`}
+                  >
+                    <span>{m.label}</span>
+                    <span class="dropdown-chevron" set:html={chevron} />
+                  </button>
+                  <div class="navbar_dropdown-list" id={`nav-${m.id}-list`}>
+                    <div class="navbar_dropdown-content">
+                      <div class="navbar_dropdown-label">{m.label}</div>
+                      {m.rows.map((r) => (
+                        <a href={r.url} class="navbar_dropdown-link" aria-current={r.current ? 'page' : undefined}>
+                          <Fragment set:html={navIconSvg(r.icon)} />
+                          <span class="navbar_dropdown-name">{r.label}</span>
+                          <span class="navbar_dropdown-desc">{r.description}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))
             }
-          </nav>
-          <DataStamp dataAsOf={dataAsOf} variant="inline" />
-        </div>
-        <div class="hdr__group">
-          <p class="t-tagline hdr__mhead" id="hdr-site">Open Mercato</p>
-          <nav aria-labelledby="hdr-site">
-            {
-              site.map((l) => (
-                <a class="hdr__mlink" href={l.url}>
-                  {l.label}
-                </a>
-              ))
-            }
-            <a class="hdr__mlink" href={MAIN_SITE_GITHUB}>GitHub</a>
-            <a class="btn btn--primary hdr__mcta" href={MAIN_SITE_SANDBOX.url}>{MAIN_SITE_SANDBOX.label}</a>
-          </nav>
-        </div>
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link">{l.label}</a>)}
+          </div>
+        </nav>
       </div>
-    </details>
-  </div>
-  <div class="sheet bar bar--cat">
-    <a class="hdr__chip" href={href('/')}>Modules</a>
-    <nav class="hdr__nav" aria-label="Modules">
-      {
-        nav.map((n) => (
-          <a class="hdr__link" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
-            {n.label}
+      <div class="navbar_content-right">
+        <a href={MAIN_SITE_GITHUB} class="button is-secondary is-small is-icon" {...external}>
+          <span class="om-github-stars">
+            <Fragment set:html={mark} />
+            <span data-om-star-count>{MAIN_SITE_STARS_FALLBACK}</span>
+            <span class="om-star-sr"> GitHub stars</span>
+          </span>
+        </a>
+        <a href={MAIN_SITE_SANDBOX.url} class="button is-tertiary is-small is-sandbox" {...external}>
+          {MAIN_SITE_SANDBOX.label}
+        </a>
+      </div>
+      <div class="navbar_hamburger-wrapper">
+        <div class="navbar_hamburger-links">
+          <a href={MAIN_SITE_GITHUB} class="navbar_gh-button" {...external}>
+            <span class="om-github-stars">
+              <Fragment set:html={mark} />
+              <span data-om-star-count>{MAIN_SITE_STARS_FALLBACK}</span>
+              <span class="om-star-sr"> GitHub stars</span>
+            </span>
           </a>
-        ))
-      }
-    </nav>
-    <div class="hdr__right">
-      <DataStamp dataAsOf={dataAsOf} />
-      <a class="btn btn--secondary bar__btn" href={href('/submit')}>Submit a module</a>
+          <a href={MAIN_SITE_SANDBOX.url} class="button is-tertiary is-small hide-mobile-landscape" {...external}>
+            {MAIN_SITE_SANDBOX.label}
+          </a>
+        </div>
+        <details class="navbar_mobile" data-mobile-menu>
+          <summary class="navbar_menu-button" aria-label="Menu">
+            <span class="menu-icon" aria-hidden="true">
+              <span class="menu-icon_line-top"></span>
+              <span class="menu-icon_line-middle"></span>
+              <span class="menu-icon_line-bottom"></span>
+            </span>
+          </summary>
+          <nav class="navbar_mobile-menu" aria-label="Open Mercato">
+            {
+              menus.map((m) => (
+                <details class="navbar_mobile-dropdown" open={m.id === 'run' && inRun}>
+                  <summary class="navbar_dropdown-toggle">
+                    <span>{m.label}</span>
+                    <span class="dropdown-chevron" set:html={chevron} />
+                  </summary>
+                  <div class="navbar_mobile-list">
+                    {m.rows.map((r) => (
+                      <a href={r.url} class="navbar_dropdown-link" aria-current={r.current ? 'page' : undefined}>
+                        <Fragment set:html={navIconSvg(r.icon)} />
+                        <span class="navbar_dropdown-name">{r.label}</span>
+                        <span class="navbar_dropdown-desc">{r.description}</span>
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              ))
+            }
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link">{l.label}</a>)}
+          </nav>
+        </details>
+      </div>
     </div>
   </div>
 </header>
+<script is:inline>
+  ;(() => {
+    const nav = document.querySelector('[data-navbar]')
+    if (!nav) return
+    const drops = [...nav.querySelectorAll('[data-dropdown]')]
+    const toggle = (d) => d.querySelector('.navbar_dropdown-toggle')
+    const isOpen = (d) =>
+      !d.hasAttribute('data-closed') &&
+      (d.hasAttribute('data-open') || d.matches(':hover') || !!d.querySelector(':focus-visible'))
+    const sync = () => drops.forEach((d) => toggle(d).setAttribute('aria-expanded', String(isOpen(d))))
+    const reset = (d) => {
+      d.removeAttribute('data-open')
+      d.removeAttribute('data-closed')
+    }
+    drops.forEach((d) => {
+      const t = toggle(d)
+      t.addEventListener('click', () => {
+        const open = isOpen(d)
+        drops.forEach((o) => o !== d && reset(o))
+        reset(d)
+        d.setAttribute(open ? 'data-closed' : 'data-open', '')
+        sync()
+      })
+      d.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !isOpen(d)) return
+        reset(d)
+        d.setAttribute('data-closed', '')
+        t.focus()
+        sync()
+      })
+      d.addEventListener('mouseenter', () => {
+        drops.forEach((o) => o !== d && reset(o))
+        d.removeAttribute('data-closed')
+        sync()
+      })
+      d.addEventListener('mouseleave', () => {
+        reset(d)
+        setTimeout(sync, 0)
+      })
+      d.addEventListener('focusout', (e) => {
+        if (d.contains(e.relatedTarget)) return
+        reset(d)
+        setTimeout(sync, 0)
+      })
+      d.addEventListener('focusin', () => setTimeout(sync, 0))
+    })
+    document.addEventListener('click', (e) => {
+      if (drops.some((d) => d.contains(e.target))) return
+      drops.forEach(reset)
+      sync()
+    })
+    sync()
+    const menu = nav.querySelector('[data-mobile-menu]')
+    if (menu) {
+      menu.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !menu.open) return
+        menu.open = false
+        menu.querySelector('summary').focus()
+      })
+      const wide = matchMedia('(min-width: 992px)')
+      wide.addEventListener('change', () => {
+        if (wide.matches) menu.open = false
+      })
+    }
+  })()
+  // the GitHub star count, as the main site's navbar script has it (key, cache and fallback alike)
+  ;(() => {
+    const key = 'om-github-stars-v1',
+      nodes = document.querySelectorAll('[data-om-star-count]')
+    const show = (n) => {
+      if (Number.isInteger(n) && n >= 0) nodes.forEach((el) => (el.textContent = n.toLocaleString('en-US')))
+    }
+    let saved
+    try {
+      saved = JSON.parse(localStorage.getItem(key))
+      if (saved) show(saved.n)
+    } catch (e) {}
+    if (saved && Date.now() - saved.at < 3600000) return
+    fetch('https://api.github.com/repos/open-mercato/open-mercato', {
+      headers: { Accept: 'application/vnd.github+json' },
+      signal: AbortSignal.timeout(5000),
+    })
+      .then((r) => {
+        if (!r.ok) throw Error()
+        return r.json()
+      })
+      .then((d) => {
+        if (!Number.isInteger(d.stargazers_count)) return
+        show(d.stargazers_count)
+        try {
+          localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, at: Date.now() }))
+        } catch (e) {}
+      })
+      .catch(() => {})
+  })()
+</script>
 
 <style>
-  /* sticky at minus the first bar: the main site's bar scrolls away, the catalog bar stays (no JS) */
-  .site-header {
+  /* ---------- the bar (Webflow .navbar_wrapper.padding-global > .navbar_component) ---------- */
+  .navbar_wrapper {
     position: sticky;
-    top: calc(-1 * var(--site-h));
-    z-index: 40;
-    background: var(--bg);
+    top: 0;
+    z-index: 9999;
+    padding-inline: 5%;
+    color: #0c0c0c;
+    font-size: 1rem;
+    line-height: 1.5;
   }
-  /* the hairlines stop at the rails, like the openmercato.com navbar; no shadow */
-  .bar {
-    border-bottom: 1px solid var(--rail);
+  .navbar_wrapper a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .navbar_component {
+    position: relative;
     display: flex;
     align-items: center;
-    padding-inline: 24px;
+    width: 100%;
+    max-width: 75rem;
+    height: 3.85rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-top: 0;
   }
-  .bar--site {
-    height: var(--site-h);
-    gap: 24px;
+  .navbar_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    height: 100%;
   }
-  .bar--cat {
-    height: var(--bar-h);
-    gap: 32px;
+  .navbar_content-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4rem;
+  }
+  /* the logo at its own size, 141 x 36, as there */
+  .navbar_logo-link {
+    display: inline-flex;
+    flex: none;
+  }
+  .navbar_logo {
+    display: block;
+    width: 141px;
+    height: 36px;
+  }
+  .navbar_logo :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .navbar_menu {
+    display: flex;
+    align-items: center;
+  }
+  .navbar_menu-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .navbar_link {
+    display: inline-block;
+    padding: 1.22rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .navbar_content-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .navbar_hamburger-wrapper {
+    display: none;
   }
 
-  /* ---------- bar 1: the main site ---------- */
-  .bar__site {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-left: 40px;
-  }
-  .bar__link {
-    white-space: nowrap;
-    font-size: 14px;
+  /* ---------- a menu with a panel ---------- */
+  .navbar_menu-dropdown {
+    position: relative;
+    z-index: 900;
+    font-size: 0.875rem;
     font-weight: 500;
-    color: var(--ink);
-    text-decoration: none;
-    padding-block: 20px;
-    transition: color var(--dur-2) var(--ease);
   }
-  /* as on openmercato.com: the other items fade while one is hovered */
-  .bar__site:hover .bar__link:not(:hover) {
-    color: var(--ink-3);
-  }
-  .bar__link--end {
-    margin-left: auto;
-  }
-  .bar__end {
+  .navbar_dropdown-toggle {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 0.25rem;
+    height: 100%;
+    padding: 1.22rem 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
   }
-  .bar__btn {
-    min-height: 30px;
-    padding: 4px 12px;
-  }
-  .bar__gh {
+  .dropdown-chevron {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.3s ease;
   }
-  .bar__gh :global(svg) {
+  .dropdown-chevron :global(svg) {
+    display: block;
+  }
+  .navbar_dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: -5rem;
+    z-index: 901;
+    width: 28rem;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 0 0 0.25rem 0.25rem;
+    text-align: left;
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+  /* open on hover and on keyboard focus without JS; a tap or Enter (data-open) and Escape (data-closed) with it */
+  .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) > .navbar_dropdown-list {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 0.2s ease,
+      visibility 0s;
+  }
+  .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+  .navbar_dropdown-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  /* the label over the rows: plain 14 px text in the secondary colour (its tagline class has no rule there) */
+  .navbar_dropdown-label {
+    color: #6d6d6d;
+  }
+  .navbar_dropdown-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 1rem 1rem 1rem 52px;
+    border-radius: 0.25rem;
+    transition: background-color 0.4s;
+  }
+  .navbar_dropdown-link:hover {
+    background-color: #f6feee;
+  }
+  /* the page you are on, in the hover colour of the rows: the main site has no visible current state here */
+  .navbar_dropdown-link[aria-current='page'] {
+    background-color: #f6feee;
+  }
+  .navbar_dropdown-link :global(.navbar_icon) {
+    position: absolute;
+    left: 17px;
+    top: 18px;
+    width: 22px;
+    height: 22px;
+  }
+  .navbar_dropdown-name {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .navbar_dropdown-desc {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #6d6d6d;
+  }
+
+  /* ---------- the buttons on the right ---------- */
+  .button {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+  .button.is-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .navbar_wrapper .button.is-secondary {
+    border: 1px solid #ececec;
+    background: #fff;
+    color: #0c0c0c;
+  }
+  .navbar_wrapper .button.is-secondary:hover {
+    background-color: #fafafa;
+  }
+  .navbar_wrapper .button.is-tertiary {
+    border: 0;
+    background-color: #1b1b1b;
+    color: #fff;
+  }
+  .navbar_wrapper .button.is-tertiary:hover {
+    background-color: #1f1f1f;
+  }
+  .om-github-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    font-variant-numeric: tabular-nums;
+  }
+  .om-github-stars :global(svg) {
+    flex: none;
     width: 16px;
     height: 16px;
   }
-
-  /* ---------- the section chip: the MODULES sub-brand (spec 1), Geist Mono 11 px, lime, a 7 px chamfer ---------- */
-  .hdr__chip {
-    flex: none;
-    padding: 2px 8px 2px 9px;
-    background: var(--lime);
-    color: var(--ink);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 16px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
-  }
-  .hdr__chip:hover {
-    background: color-mix(in srgb, var(--lime) 80%, var(--ink));
-  }
-  .hdr__chip:focus-visible {
-    clip-path: none;
-  }
-  .hdr__chip--phone {
-    display: none;
-  }
-
-  /* ---------- bar 2: the catalog ---------- */
-  .hdr__nav {
-    display: flex;
-    gap: 24px;
-  }
-  /* one line per item: with six items "For agents" wrapped in two at 1440 px */
-  .hdr__link {
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink-2);
-    text-decoration: none;
-    padding-block: 15px;
-    box-shadow: inset 0 -1px 0 transparent;
-    transition:
-      color var(--dur-1) var(--ease),
-      box-shadow var(--dur-1) var(--ease);
-  }
-  .hdr__link:hover {
-    color: var(--ink);
-  }
-  .hdr__link[aria-current='page'] {
-    color: var(--ink);
-    box-shadow: inset 0 -1px 0 var(--ink);
-  }
-  .hdr__right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  /* ---------- the menu below 1080 px ---------- */
-  .hdr__menu {
-    display: none;
-  }
-  .hdr__menu > summary {
-    list-style: none;
-  }
-  .hdr__menu > summary::-webkit-details-marker {
-    display: none;
-  }
-  .hdr__menu[open] > summary :global(svg) {
-    transform: rotate(180deg);
-  }
-  /* a panel the width of the sheet under the bar, as on openmercato.com; it scrolls when it is taller than the screen */
-  .hdr__sheet {
+  .om-star-sr {
     position: absolute;
-    left: -1px;
-    right: -1px;
-    top: 100%;
-    max-height: calc(100dvh - var(--site-h));
-    overflow-y: auto;
-    padding: 16px 24px 24px;
-    background: var(--bg);
-    border: 1px solid var(--rail);
-    border-top: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 32px;
-  }
-  .hdr__group,
-  .hdr__group nav {
-    display: grid;
-    align-content: start;
-  }
-  .hdr__group {
-    gap: 12px;
-  }
-  .hdr__mhead {
-    padding-block: 4px;
-  }
-  .hdr__mlink {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    border-bottom: 1px solid var(--line);
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .hdr__mlink:hover {
-    color: var(--ink-2);
-  }
-  .hdr__mlink[aria-current='page'] {
-    box-shadow: inset 2px 0 0 var(--ink);
-    padding-left: 12px;
-  }
-  .hdr__mcta {
-    margin-block: 4px 8px;
-  }
-  .hdr__group nav > .hdr__mcta:last-child {
-    margin-block: 16px 0;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  /* six catalog items need about 1230 px with the stamp: the stamp goes first, then both bars fold into the menu, so
-     the header never scrolls the page sideways */
-  @media (max-width: 1279px) {
-    .hdr__right > :global(.stamp) {
-      display: none;
+  /* ---------- desktop (the main site's own code, 992 px and up) ---------- */
+  @media (min-width: 992px) {
+    .navbar_content-left,
+    .navbar_menu,
+    .navbar_menu-links {
+      flex: 1;
     }
-    .bar__site {
-      margin-left: 16px;
+    .navbar_menu-links > .navbar_link:last-child {
+      margin-left: auto;
+    }
+    .navbar_content-right {
+      flex: none;
+    }
+    .navbar_container {
+      column-gap: 24px;
+    }
+    .navbar_link,
+    .navbar_dropdown-toggle {
+      transition: color 0.4s ease;
+    }
+    /* the other items fade while one is hovered */
+    .navbar_menu-links:hover .navbar_link,
+    .navbar_menu-links:hover .navbar_dropdown-toggle {
+      color: #9e9e9e;
+    }
+    .navbar_menu-links:hover .navbar_link:hover,
+    .navbar_menu-links:hover .navbar_menu-dropdown:hover .navbar_dropdown-toggle {
+      color: #0c0c0c;
     }
   }
-  @media (max-width: 1079px) {
-    .site-header {
-      top: 0;
-    }
-    .bar--cat,
-    .bar__site,
-    .bar__end {
+  /* 992-1300 px: Launch sandbox goes, the logo moves closer to the menu */
+  @media (min-width: 992px) and (max-width: 1300px) {
+    .is-sandbox {
       display: none;
     }
-    .bar--site {
-      gap: 16px;
+    .navbar_content-left {
+      gap: 1.5rem;
     }
-    .hdr__chip--phone {
-      display: block;
+  }
+  /* 992-1150 px: the whole right group goes */
+  @media (min-width: 992px) and (max-width: 1150px) {
+    .navbar_content-right {
+      display: none;
     }
-    .hdr__menu {
+  }
+
+  /* ---------- tablet and phone: the hamburger (Webflow data-collapse="medium") ---------- */
+  @media (max-width: 991px) {
+    .navbar_component {
+      border-top: 1px solid #ececec;
+    }
+    .navbar_menu,
+    .navbar_content-right {
+      display: none;
+    }
+    .navbar_hamburger-wrapper {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .navbar_hamburger-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .navbar_gh-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 2rem;
+      padding: 7px 9px;
+      border: 1px solid #ececec;
+      border-radius: 0.25rem;
+    }
+    .navbar_mobile > summary {
+      list-style: none;
+    }
+    .navbar_mobile > summary::-webkit-details-marker {
+      display: none;
+    }
+    .navbar_menu-button {
       display: block;
-      margin-left: auto;
+      cursor: pointer;
+    }
+    .menu-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      margin-right: -0.5rem;
+    }
+    /* easing inOutQuint, as the hamburger of Webflow */
+    .menu-icon > span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #0c0c0c;
+      transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+    .menu-icon > .menu-icon_line-middle {
+      margin-block: 6px;
+      transition: width 0.2s cubic-bezier(0.86, 0, 0.07, 1) 0.4s;
+    }
+    /* open: the three lines become an X */
+    .navbar_mobile[open] .menu-icon_line-top {
+      transform: translateY(8px) rotate(-45deg);
+    }
+    .navbar_mobile[open] .menu-icon_line-middle {
+      width: 0;
+      transition: width 0.2s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+    .navbar_mobile[open] .menu-icon_line-bottom {
+      transform: translateY(-8px) rotate(45deg);
+    }
+    /* the menu under the bar, the height of the screen, as there */
+    .navbar_mobile-menu {
+      position: absolute;
+      top: 100%;
+      left: -1px;
+      right: -1px;
+      height: calc(100dvh - 3.85rem);
+      overflow: auto;
+      padding: 1rem 1.5rem 6.5rem;
+      background: #fff;
+      border: 1px solid #ececec;
+      border-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      animation: om-nav-open 0.4s ease;
+    }
+    .navbar_mobile-menu .navbar_link {
+      padding: 0.75rem 0;
+    }
+    .navbar_mobile-dropdown {
+      width: 100%;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .navbar_mobile-dropdown > summary {
+      list-style: none;
+      height: auto;
+      padding-block: 0.75rem;
+    }
+    .navbar_mobile-dropdown > summary::-webkit-details-marker {
+      display: none;
+    }
+    .navbar_mobile-dropdown[open] .dropdown-chevron {
+      transform: rotate(180deg);
+    }
+    .navbar_mobile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 28rem;
+      max-width: 100%;
+    }
+  }
+  @keyframes om-nav-open {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
     }
   }
   @media (max-width: 767px) {
-    .bar {
-      padding-inline: var(--gutter);
+    .navbar_component {
+      padding-inline: 0.75rem;
     }
-    .hdr__sheet {
-      left: 0;
-      right: 0;
-      grid-template-columns: minmax(0, 1fr);
-      padding-inline: var(--gutter);
-      border-inline: 0;
+    .navbar_mobile-menu {
+      padding-inline: 0.75rem;
     }
-    /* touch targets of at least 44 px on phones (spec 7.10) */
-    .hdr__menu > summary {
-      min-height: 44px;
-      min-width: 44px;
-      padding-inline: 14px;
+    .navbar_mobile-list {
+      width: 100%;
+    }
+    .hide-mobile-landscape {
+      display: none;
     }
   }
   @media (max-width: 479px) {
-    .bar--site {
-      gap: 10px;
+    .navbar_container {
+      gap: 2rem;
+    }
+    .navbar_content-left {
+      width: 100%;
     }
   }
-  /* small phones and folded screens (320-359 px): the menu is its chevron only (its name stays in aria-label) */
-  @media (max-width: 359px) {
-    .hdr__mword {
-      display: none;
-    }
-    .hdr__menu > summary {
-      justify-content: center;
-      padding-inline: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .navbar_mobile-menu {
+      animation: none;
     }
   }
 </style>

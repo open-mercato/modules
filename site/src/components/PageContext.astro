@@ -1,0 +1,59 @@
+---
+// One quiet line at the top of every catalog page (navbar of 14 Nov): where you are in the Run menu on the left, in
+// the breadcrumbs of the main site's pages ("Home / Product", 12 px Medium, the trail grey, the page black); the data
+// stamp and Submit a module on the right. It took over what the old catalog bar held besides its links. No links to
+// pages of the menu and not sticky, so it never reads as a second navbar.
+import DataStamp from './DataStamp.astro'
+import { href } from '../lib/url.ts'
+import { sectionName } from '../lib/run-section.ts'
+import type { DataAsOf } from '../lib/freshness.ts'
+
+interface Props {
+  /** Site path of the page, or null for the 404 page. */
+  path: string | null
+  dataAsOf: DataAsOf
+}
+const { path, dataAsOf } = Astro.props
+const name = sectionName(path)
+---
+
+<div class="sheet ctx">
+  <p class="ctx__where">
+    {name ? <>Run / <span class="ctx__here">{name}</span></> : <span class="ctx__here">Run</span>}
+  </p>
+  <div class="ctx__end">
+    <DataStamp dataAsOf={dataAsOf} />
+    {path !== '/submit' && <a class="ctx__submit" href={href('/submit')}>Submit a module</a>}
+  </div>
+</div>
+
+<style>
+  .ctx {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 1.5rem var(--pad) 0;
+  }
+  .ctx__where {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #9e9e9e;
+  }
+  .ctx__here {
+    color: var(--ink);
+  }
+  .ctx__end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+  }
+  .ctx__submit {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+</style>

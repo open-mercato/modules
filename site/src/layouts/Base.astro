@@ -7,6 +7,7 @@ import '../styles/base.css'
 import '../styles/ui.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import PageContext from '../components/PageContext.astro'
 import Banner from '../components/Banner.astro'
 import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
 import { absoluteUrl, BASE, href } from '../lib/url.ts'
@@ -104,7 +105,7 @@ const speculation = JSON.stringify({
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
-    <Header dataAsOf={dataAsOf} current={path ?? ''} />
+    <Header current={path ?? ''} />
     {
       /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
       !isPreviewData(dataAsOf) && (
@@ -118,6 +119,7 @@ const speculation = JSON.stringify({
     }
     <script is:inline set:html={STALE_CHECK_JS} />
     <main id="main" tabindex="-1">
+      <PageContext path={path} dataAsOf={dataAsOf} />
       <slot />
     </main>
     <Footer dataAsOf={dataAsOf} />

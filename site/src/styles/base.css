@@ -201,32 +201,20 @@ h3 {
 }
 
 /* ---------- the sheet: a 1200 px frame with 1 px rails, sections split by hairlines (openmercato.com) ---------- */
+/* as .padding-global > .container-main there: 5 % of the window on each side at every width, so the rails of the page
+   meet the rails of the navbar; the content starts 1.5rem inside them (.section-padding, .75rem on small phones) */
 :root {
-  --sheet-margin: 24px;
-  --pad: 40px;
-  /* the header (Header.astro): the main site's bar, the catalog bar, and the part that stays on screen when scrolled */
-  --site-h: 62px;
-  --bar-h: 52px;
-  --header-h: var(--bar-h);
+  --pad: 24px;
+  /* the sticky navbar of the main site (Header.astro), 3.85rem as there */
+  --header-h: 3.85rem;
 }
-@media (max-width: 1079px) {
+@media (max-width: 479px) {
   :root {
-    --header-h: var(--site-h);
-  }
-}
-@media (max-width: 991px) {
-  :root {
-    --pad: 32px;
-  }
-}
-@media (max-width: 767px) {
-  :root {
-    --sheet-margin: 0px;
-    --pad: var(--gutter);
+    --pad: 12px;
   }
 }
 .sheet {
-  width: min(var(--container), 100% - 2 * var(--sheet-margin));
+  width: min(var(--container), 90%);
   margin-inline: auto;
   border-inline: 1px solid var(--rail);
   position: relative;
@@ -274,19 +262,12 @@ h3 {
   border-bottom: 0;
 }
 .section {
-  padding: 64px var(--pad);
+  padding: 3rem var(--pad);
 }
 .section--tight {
   padding-block: 32px;
 }
-@media (max-width: 767px) {
-  .section {
-    padding-block: 40px;
-  }
-  .sheet {
-    border-inline: 0;
-  }
-}
+
 .grid-12 {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -318,7 +299,8 @@ h3 {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  z-index: 100;
+  /* over the sticky navbar (z-index 9999, as on the main site) */
+  z-index: 10000;
   background: var(--ink);
   color: var(--bg);
   padding: 8px 12px;

@@ -308,6 +308,11 @@ describe('links of a built page', () => {
       'https://www.openmercato.com/',
       'https://www.openmercato.com/product',
       'https://www.openmercato.com/terms-conditions',
+      // the rows of the navbar panels and the folded Other list of the footer
+      'https://www.openmercato.com/crm',
+      'https://www.openmercato.com/enterprise-level-support',
+      'https://www.openmercato.com/case-studies',
+      'https://www.openmercato.com/salesforce-alternative',
     ])
       expect(linkProblem(ok, page, WWW), ok).toBeNull()
     for (const bad of [
@@ -317,6 +322,8 @@ describe('links of a built page', () => {
       '../../../x',
       'https://www.openmercato.com/m/z',
       'https://www.openmercato.com/product/x',
+      'https://www.openmercato.com/crm/x',
+      '/crm',
       '//www.openmercato.com/x',
       '//www.openmercato.com/product',
     ])
