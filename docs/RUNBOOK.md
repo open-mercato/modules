@@ -432,7 +432,7 @@ At the switch to the public address (Cloudflare Pages at `modules.openmercato.co
 `templates.openmercato.com` is a second custom domain of the same Pages project, `open-mercato-modules`. Its root
 answers a 302 to `https://modules.openmercato.com/templates`, the canonical address of the section; every other path
 serves the same site as `modules.openmercato.com`, which is never redirected. The target is on the modules host
-because the wordmark, the Modules item and "Browse modules" link to `/`: on the templates host they would land on its
+because the Modules row of the Run menu and "Browse modules" link to `/`: on the templates host they would land on its
 root and come straight back to the section. The redirect ships in this repository: `functions/_middleware.ts` (logic
 in `lib/core/site-host.ts` and `lib/core/templates-host.ts`) runs on `/` only, because `site/public/_routes.json`
 limits Functions to that path, and `pages.yml` deploys it with the site. Canonical links of every page, `/templates`
@@ -506,6 +506,24 @@ What the repository does with `SITE_URL=https://www.openmercato.com` and `BASE_P
   stay `https://modules.openmercato.com/schema/<name>-1.json` (`SCHEMA_ORIGIN` in `lib/core/home.ts`):
   create-mercato-template writes that address. The Pages project serves `dist/schema/` there without a redirect.
   `dist/modules/schema/` keeps a copy for the WebMCP script, which fetches `tools-1.json` from its own origin.
+
+### Navbar and footer: a copy of the main site's (14 Nov)
+
+A visitor under `/modules` must not feel they left `www.openmercato.com`, so the catalog has no header of its own.
+`site/src/components/Header.astro` is a copy of the Webflow navbar of the main site (its `navbar_*` classes, sizes,
+colours, breakpoints and phone menu), with one menu the main site gets too: **Run**, after Enterprise, with Modules,
+Templates, Compatibility, Radar, Quality and For agents. Panels open on hover and keyboard focus without JavaScript;
+the phone menu is a `<details>`. The GitHub button runs the main site's star count script with the same
+`localStorage` key, so both share the count on one origin. `site/src/components/Footer.astro` is the main site's
+footer in the same way. The data stamp and Submit a module sit in a line at the top of each page
+(`PageContext.astro`), and the data provenance on `/about`.
+
+When the menu or the footer changes on Webflow (an item, a description, an address, an icon), change the catalog to
+match in the same week: the items, texts and addresses are in `lib/core/main-site.ts` (`MAIN_SITE_MENUS`,
+`MAIN_SITE_LINKS`, `RUN_MENU`, `MAIN_SITE_FOOTER`, `MAIN_SITE_FOOTER_OTHER`), the icons in
+`site/src/components/nav-icons.ts`. The layout check accepts exactly the main-site addresses listed there, so a link to
+a new page of the main site that is not in the file fails `yarn om pages-site --check`. The Run menu on Webflow itself
+is added by hand by whoever edits the main site, from a note with the labels, texts, addresses and icons.
 
 ### Fixed addresses on modules.openmercato.com
 

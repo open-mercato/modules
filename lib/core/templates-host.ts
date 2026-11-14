@@ -25,7 +25,7 @@ export const TEMPLATES_LINKS = {
 /**
  * The address the templates host root leads to: the section on the configured site (`site` is the site root with its
  * base path and no trailing slash, as SITE_URL and BASE_PATH give it), which is also its canonical URL. Not the same
- * host (review of 29 Oct): the wordmark, the Modules item and "Browse modules" link to the site home, so on the
+ * host (review of 29 Oct): the Modules row of the Run menu and "Browse modules" link to the site home, so on the
  * templates host they would land on its root and come straight back to the section, and the module home would be out
  * of reach. By default `https://modules.openmercato.com/templates`.
  */
