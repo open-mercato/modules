@@ -13,6 +13,8 @@ import {
   templatesTarget,
 } from '../../lib/core/templates-host.ts'
 import { findBannedChars } from '../../lib/core/text.ts'
+import { RUN_MENU } from '../../lib/core/main-site.ts'
+import { runSection } from '../../site/src/lib/run-section.ts'
 import { onRequest } from '../../functions/_middleware.ts'
 import { ROOT } from '../emit/helpers.ts'
 
@@ -82,19 +84,16 @@ describe('/templates switch (Phase 1a)', () => {
 })
 
 describe('navigation', () => {
-  it('the header lists Templates once, rendered in the desktop and the mobile menu', () => {
+  it('the Run menu lists Templates once, and the header renders it in the desktop and the phone menu', () => {
+    expect(RUN_MENU.items.filter((i) => i.path === '/templates').map((i) => i.label)).toEqual(['Templates'])
     const header = read('site', 'src', 'components', 'Header.astro')
-    expect(header).toContain("{ label: 'Templates', path: '/templates' }")
-    expect(header.match(/nav\.map\(/g)).toHaveLength(2)
-    // every item but Modules is current on its own path and below it; Templates also on the template pages
-    expect(header).toContain(': current.startsWith(p)')
-    expect(header).toContain("current.startsWith(p) || current.startsWith('/t/')")
+    expect(header.match(/menus\.map\(/g)).toHaveLength(2)
   })
 
-  it('the footer links the page', () => {
-    expect(read('site', 'src', 'components', 'Footer.astro')).toContain(
-      "{ label: 'Templates', url: href('/templates') }",
-    )
+  it('marks Templates current on /templates and on the template pages', () => {
+    for (const p of ['/templates', '/t/open-mercato/ready-app-b2b']) expect(runSection(p)?.label, p).toBe('Templates')
+    expect(runSection('/')?.label).toBe('Modules')
+    expect(runSection('/m/@x/y')?.label).toBe('Modules')
   })
 })
 
