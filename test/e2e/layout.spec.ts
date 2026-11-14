@@ -82,6 +82,19 @@ test('the Run menu links the six pages, Modules at the home page', async ({ brow
   await context.close()
 })
 
+test('a category page has one breadcrumb trail: Run / Modules / the category', async ({ browser }) => {
+  const context = await browser.newContext(DESKTOP)
+  const page = await context.newPage()
+  await page.goto(url('/c/operations'), { waitUntil: 'load' })
+  const trails = page.getByRole('navigation', { name: 'Breadcrumb' })
+  await expect(trails).toHaveCount(1)
+  const title = (await page.locator('h1').first().innerText()).trim()
+  await expect(trails).toHaveText(new RegExp(`^\\s*Run\\s*/\\s*Modules\\s*/\\s*${title}\\s*$`))
+  await expect(trails.getByRole('link', { name: 'Modules' })).toHaveAttribute('href', homePath)
+  await expect(trails.locator('[aria-current="page"]')).toHaveText(title)
+  await context.close()
+})
+
 test('a click on Browse modules lands on the home page without a redirect', async ({ browser }) => {
   const context = await browser.newContext(DESKTOP)
   const page = await context.newPage()

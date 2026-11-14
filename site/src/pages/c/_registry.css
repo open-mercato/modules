@@ -53,24 +53,6 @@
 .mhero--cat {
   padding-block: 40px 32px;
 }
-.mhero__crumbs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink);
-}
-/* the breadcrumbs of the main site: 12 px Medium, the trail grey (--ink-3 for 4.6:1), the page black */
-.mhero__crumbs a,
-.mhero__crumbs [aria-hidden='true'] {
-  color: var(--ink-3);
-  text-decoration: none;
-}
-.mhero__crumbs a:hover {
-  color: var(--ink);
-  text-decoration: underline;
-}
 .mhero__core {
   max-width: 80ch;
   font-size: 14px;
@@ -656,11 +638,6 @@
   }
   .mods select {
     height: 44px;
-  }
-  .mhero__crumbs a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
   }
   .howto__own {
     padding: 20px 16px;

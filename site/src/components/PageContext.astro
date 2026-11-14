@@ -11,7 +11,8 @@ import type { DataAsOf } from '../lib/freshness.ts'
 
 export interface TrailStep {
   label: string
-  href: string
+  /** Where the step leads; absent for the page itself, the last step of a full trail (a category page). */
+  href?: string
 }
 interface Props {
   /** Site path of the page, or null for the 404 page. */
@@ -19,7 +20,7 @@ interface Props {
   dataAsOf: DataAsOf
   /**
    * The parents of a page deeper in a section (a module page: Modules, then its category), shown after "Run /" as
-   * links; false leaves the left side empty for a page that draws its own breadcrumbs (receipts).
+   * links; a step without an address is the page itself (a category page: Modules, then the category); false leaves the left side empty for a page that draws its own breadcrumbs (receipts).
    */
   trail?: TrailStep[] | false
 }
@@ -37,7 +38,13 @@ const name = sectionName(path)
         {trail.map((t) => (
           <>
             {' / '}
-            <a href={t.href}>{t.label}</a>
+            {t.href ? (
+              <a href={t.href}>{t.label}</a>
+            ) : (
+              <span class="ctx__here" aria-current="page">
+                {t.label}
+              </span>
+            )}
           </>
         ))}
       </nav>
