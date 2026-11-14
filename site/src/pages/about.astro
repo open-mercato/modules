@@ -163,13 +163,20 @@ const previewData = isPreviewData(meta.dataAsOf)
             <strong>0 USD.</strong> GitHub Actions is free for public repositories, plus the Cloudflare Pages and Workers
             free tiers.
           </li>
-          <li><strong>No analytics and no cookies.</strong> Pages load nothing from third parties.</li>
           <li>
-            <strong>Two exceptions, on your action only:</strong> <a href={href('/submit')}>Submit a module</a> asks npm,
-            jsDelivr and GitHub about the package you typed, and the demo on{' '}
-            <a href={href('/for-agents')}>For agents</a> loads this site's own data files.
+            <strong>No analytics and no cookies.</strong> A page loads nothing from third parties while it opens.
           </li>
-          <li><strong>Your theme choice</strong> is kept in your browser's local storage, nowhere else.</li>
+          <li>
+            <strong>Exceptions, on your action only:</strong> <a href={href('/submit')}>Submit a module</a> asks npm,
+            jsDelivr and GitHub about the package you typed, and the demo on{' '}
+            <a href={href('/for-agents')}>For agents</a> loads this site's own data files. At your first click, key or
+            scroll on a page, the GitHub button in the navbar asks GitHub for the star count of Open Mercato, at most
+            once an hour.
+          </li>
+          <li>
+            <strong>Kept in your browser's local storage, nowhere else:</strong> that star count, the app folder you
+            type into an install command, and your choice of the Human or Agent view.
+          </li>
         </ul>
       </div>
     </div>
