@@ -117,9 +117,9 @@ describe('templates.openmercato.com', () => {
   })
 
   it('the target follows the configured site (SITE_URL and BASE_PATH, move of 13 Nov)', () => {
-    expect(templatesTarget('https://www.openmercato.com/modules')).toBe('https://www.openmercato.com/modules/templates')
-    expect(templatesRedirect('https://templates.openmercato.com/?a=1', 'https://www.openmercato.com/modules')).toBe(
-      'https://www.openmercato.com/modules/templates?a=1',
+    expect(templatesTarget('https://www.openmercato.com/run')).toBe('https://www.openmercato.com/run/templates')
+    expect(templatesRedirect('https://templates.openmercato.com/?a=1', 'https://www.openmercato.com/run')).toBe(
+      'https://www.openmercato.com/run/templates?a=1',
     )
   })
 
