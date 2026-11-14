@@ -8,8 +8,9 @@
 // (lib/emit/pages-layout.ts) accepts exactly these addresses on the origin of the main site and still flags any other
 // link there that misses the base path. Run items are site paths of the catalog: the header builds them with href(),
 // so `/` (Modules) is the home page wherever HOME_PATH puts it (`/run/modules`).
-// The texts are the main site's own words, copied as they stand there (two of them carry its long dash, written as
-// — so this file stays plain ASCII). Isomorphic: no Node APIs.
+// The texts are the main site's own words, copied as they stand there, except its long dash (U+2014, in two
+// descriptions), written here as " - ": the catalog bans long dashes in texts for people (AGENTS.md 7), and
+// `yarn om check-text` reads this file. Isomorphic: no Node APIs.
 
 /** Origin of the main site. */
 export const MAIN_SITE_ORIGIN = 'https://www.openmercato.com'
@@ -90,7 +91,7 @@ export const MAIN_SITE_MENUS: readonly MainSiteMenu[] = [
       {
         label: 'Foundation Framework',
         url: at('/product'),
-        description: 'Start with 80% of CRM/ERP done — modular monolith, OCP overlays, and AI-native extensibility.',
+        description: 'Start with 80% of CRM/ERP done - modular monolith, OCP overlays, and AI-native extensibility.',
         icon: 'foundation-framework',
       },
       {
@@ -103,7 +104,7 @@ export const MAIN_SITE_MENUS: readonly MainSiteMenu[] = [
       {
         label: 'Cloud Sandboxes',
         url: 'https://openmercatocloud.com/demo',
-        description: 'Boot a ready Open Mercato workspace in 30 seconds and build with AI agents — no local setup.',
+        description: 'Boot a ready Open Mercato workspace in 30 seconds and build with AI agents - no local setup.',
         icon: 'cloud-sandboxes',
       },
       {

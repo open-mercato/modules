@@ -77,6 +77,8 @@ describe('check-text', () => {
     expect(inScope('test/fixtures/README.md')).toBe(false)
     expect(inScope('site/.generated/public/llms.txt')).toBe(false)
     expect(inScope('lib/core/text.ts')).toBe(false)
+    // the menus and the footer copied from the main site are texts for people, though the file is code
+    expect(inScope('lib/core/main-site.ts')).toBe(true)
   })
 
   it('returns 1 on a banned character and 0 on a clean tree', () => {
