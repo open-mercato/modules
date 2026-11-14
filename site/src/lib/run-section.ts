@@ -18,6 +18,15 @@ export function isRunCurrent(item: string, path: string): boolean {
   return path === item || path.startsWith(`${item}/`) || below.some((p) => path.startsWith(p))
 }
 
+/**
+ * `aria-current` of the Run item at `item` on the page at `path`: `page` on the item's own page, `true` on a page
+ * below it (a module page under Modules), undefined elsewhere.
+ */
+export function runCurrent(item: string, path: string): 'page' | 'true' | undefined {
+  if (path === '' || !isRunCurrent(item, path)) return undefined
+  return path === item ? 'page' : 'true'
+}
+
 /** The Run item of the page at `path`, or null for a page outside the six (About, Submit, the 404 page). */
 export function runSection(path: string): RunMenuItem | null {
   return RUN_MENU.items.find((i) => isRunCurrent(i.path, path)) ?? null

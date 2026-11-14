@@ -56,7 +56,8 @@ test('a tap opens a panel on a wide touch screen, and a second tap closes it', a
   // a tap outside closes an open panel
   await toggle.tap()
   await expect(panel).toBeVisible()
-  await page.touchscreen.tap(640, 700)
+  // in the page margin, where no link can sit
+  await page.touchscreen.tap(10, 700)
   await expect(panel).toBeHidden()
   // a tap on another menu opens that one and closes the first
   await toggle.tap()
@@ -132,6 +133,68 @@ test('keyboard: focus opens a panel, Enter and Escape close it, and the focus ri
   await page.keyboard.press('Escape')
   await expect(panel).toBeHidden()
   await expect(toggle).toBeFocused()
+  await ctx.close()
+})
+
+test('a plain navbar link keeps its focus ring inside the header too', async ({ browser }) => {
+  const ctx = await browser.newContext({ ...DESKTOP, reducedMotion: 'reduce' })
+  const page = await ctx.newPage()
+  await page.goto(url('/about'), { waitUntil: 'load' })
+  const link = page.locator('nav.navbar_menu a.navbar_link').first()
+  // by keyboard, so :focus-visible applies: through the logo and the panels up to the first plain link
+  for (let i = 0; i < 40 && !(await link.evaluate((el) => el === document.activeElement)); i++)
+    await page.keyboard.press('Tab')
+  await expect(link).toBeFocused()
+  const ring = await link.evaluate((el) => {
+    const s = getComputedStyle(el)
+    const r = el.getBoundingClientRect()
+    const header = (el.closest('.navbar_component') as HTMLElement).getBoundingClientRect()
+    const reach = parseFloat(s.outlineOffset) + parseFloat(s.outlineWidth)
+    return { style: s.outlineStyle, top: r.top - reach, bottom: r.bottom + reach, headerBottom: header.bottom }
+  })
+  expect(ring.style).toBe('solid')
+  expect(ring.top).toBeGreaterThanOrEqual(0)
+  expect(ring.bottom).toBeLessThanOrEqual(ring.headerBottom)
+  await ctx.close()
+})
+
+test('Escape closes a panel pinned by a click, wherever the focus is', async ({ browser }) => {
+  const ctx = await browser.newContext({ ...DESKTOP, reducedMotion: 'reduce' })
+  const page = await ctx.newPage()
+  await page.goto(url('/about'), { waitUntil: 'load' })
+  const run = page.locator('nav.navbar_menu [data-dropdown]').filter({
+    has: page.getByRole('button', { name: 'Run', exact: true }),
+  })
+  const toggle = run.locator('.navbar_dropdown-toggle')
+  const panel = run.locator('.navbar_dropdown-list')
+  await toggle.click()
+  await page.mouse.move(1380, 860)
+  await expect(panel).toBeVisible()
+  // as in a browser that does not focus a button on click
+  await toggle.evaluate((el) => (el as HTMLElement).blur())
+  await page.keyboard.press('Escape')
+  await expect(panel).toBeHidden()
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  await ctx.close()
+})
+
+test('the Run row of a deeper page is the current section, not the current page', async ({ browser }) => {
+  const ctx = await browser.newContext({ ...DESKTOP, reducedMotion: 'reduce' })
+  const page = await ctx.newPage()
+  for (const [path, value] of [
+    ['/compat', 'page'],
+    ['/c/operations', 'true'],
+    ['/built-in', 'true'],
+  ] as const) {
+    await page.goto(url(path), { waitUntil: 'load' })
+    const current = page.locator('nav.navbar_menu a[aria-current]')
+    await expect(current, path).toHaveCount(1)
+    await expect(current, path).toHaveAttribute('aria-current', value)
+  }
+  // the list of built-in modules names its place under Modules
+  await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toHaveText(
+    /^\s*Run\s*\/\s*Modules\s*\/\s*Built-in\s*$/,
+  )
   await ctx.close()
 })
 

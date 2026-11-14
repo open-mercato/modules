@@ -88,9 +88,11 @@ test.describe('templates variant', () => {
     const page = await ctx.newPage()
     for (const path of ['/templates', B2B, PRM]) {
       await page.goto(url(path, base))
-      const current = page.locator('.navbar_menu a[aria-current="page"] .navbar_dropdown-name')
+      // `page` on the section's own page, `true` on a template page below it
+      const current = page.locator('.navbar_menu a[aria-current]')
       await expect(current, path).toHaveCount(1)
-      await expect(current, path).toHaveText('Templates')
+      await expect(current.locator('.navbar_dropdown-name'), path).toHaveText('Templates')
+      await expect(current, path).toHaveAttribute('aria-current', path === '/templates' ? 'page' : 'true')
     }
     await ctx.close()
   })

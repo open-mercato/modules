@@ -36,8 +36,3 @@ const BODY: Record<NavIcon, string> = {
 export function navIconSvg(name: NavIcon): string {
   return `<svg class="navbar_icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${BODY[name]}</svg>`
 }
-
-/** The same icon as a standalone SVG file with a black stroke, the form the main site keeps in its mask styles. */
-export function navIconFile(name: NavIcon): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${BODY[name]}</svg>`
-}

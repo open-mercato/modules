@@ -12,7 +12,7 @@ import logo from './assets/open-mercato-wordmark.svg?raw'
 import githubMark from './assets/github-mark.svg?raw'
 import { navIconSvg } from './nav-icons.ts'
 import { href } from '../lib/url.ts'
-import { isRunCurrent } from '../lib/run-section.ts'
+import { runCurrent } from '../lib/run-section.ts'
 import {
   MAIN_SITE_GITHUB,
   MAIN_SITE_HOME,
@@ -34,7 +34,8 @@ interface Row {
   url: string
   description: string
   icon: Parameters<typeof navIconSvg>[0]
-  current: boolean
+  /** aria-current of the row: `page` on its own page, `true` on a page below it. */
+  current: 'page' | 'true' | undefined
 }
 interface Menu {
   id: string
@@ -45,7 +46,7 @@ const menus: Menu[] = [
   ...MAIN_SITE_MENUS.map((m) => ({
     id: m.label.toLowerCase(),
     label: m.label,
-    rows: m.items.map((i) => ({ ...i, current: false })),
+    rows: m.items.map((i) => ({ ...i, current: undefined })),
   })),
   {
     id: 'run',
@@ -55,7 +56,7 @@ const menus: Menu[] = [
       url: href(i.path),
       description: i.description,
       icon: i.icon,
-      current: current !== '' && isRunCurrent(i.path, current),
+      current: runCurrent(i.path, current),
     })),
   },
 ]
@@ -91,7 +92,7 @@ const external = { target: '_blank', rel: 'noopener' }
                     <div class="navbar_dropdown-content">
                       <div class="navbar_dropdown-label">{m.label}</div>
                       {m.rows.map((r) => (
-                        <a href={r.url} class="navbar_dropdown-link" aria-current={r.current ? 'page' : undefined}>
+                        <a href={r.url} class="navbar_dropdown-link" aria-current={r.current}>
                           <Fragment set:html={navIconSvg(r.icon)} />
                           <span class="navbar_dropdown-name">{r.label}</span>
                           <span class="navbar_dropdown-desc">{r.description}</span>
@@ -149,7 +150,7 @@ const external = { target: '_blank', rel: 'noopener' }
                   </summary>
                   <div class="navbar_mobile-list">
                     {m.rows.map((r) => (
-                      <a href={r.url} class="navbar_dropdown-link" aria-current={r.current ? 'page' : undefined}>
+                      <a href={r.url} class="navbar_dropdown-link" aria-current={r.current}>
                         <Fragment set:html={navIconSvg(r.icon)} />
                         <span class="navbar_dropdown-name">{r.label}</span>
                         <span class="navbar_dropdown-desc">{r.description}</span>
@@ -194,6 +195,7 @@ const external = { target: '_blank', rel: 'noopener' }
       })
       d.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape' || !isOpen(d)) return
+        e.stopPropagation()
         reset(d)
         d.setAttribute('data-closed', '')
         t.focus()
@@ -206,8 +208,9 @@ const external = { target: '_blank', rel: 'noopener' }
       })
       d.addEventListener('mouseleave', () => {
         // a panel opened by a tap or a click (data-open) stays until a tap elsewhere, Escape or another menu: on a
-        // screen with touch and a mouse the pointer "leaves" right after the tap, back to where the mouse rests
-        d.removeAttribute('data-closed')
+        // screen with touch and a mouse the pointer "leaves" right after the tap, back to where the mouse rests.
+        // One closed from the keyboard stays closed while the focus is still in it.
+        if (!d.contains(document.activeElement)) d.removeAttribute('data-closed')
         setTimeout(sync, 0)
       })
       d.addEventListener('focusout', (e) => {
@@ -217,9 +220,16 @@ const external = { target: '_blank', rel: 'noopener' }
       })
       d.addEventListener('focusin', () => setTimeout(sync, 0))
     })
-    document.addEventListener('click', (e) => {
+    // pointerdown, not click: iOS Safari sends no click for a tap on plain text
+    document.addEventListener('pointerdown', (e) => {
       if (drops.some((d) => d.contains(e.target))) return
       drops.forEach(reset)
+      sync()
+    })
+    // Escape closes a panel pinned by a click also when the click left the focus elsewhere (Safari, Firefox on macOS)
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return
+      drops.forEach((d) => d.hasAttribute('data-open') && reset(d))
       sync()
     })
     sync()
@@ -229,6 +239,11 @@ const external = { target: '_blank', rel: 'noopener' }
         if (e.key !== 'Escape' || !menu.open) return
         menu.open = false
         menu.querySelector('summary').focus()
+      })
+      // the open menu covers the page: when the focus moves on past its last link, close it, so the focus is not
+      // left on something hidden behind it
+      menu.addEventListener('focusout', (e) => {
+        if (menu.open && e.relatedTarget && !menu.contains(e.relatedTarget)) menu.open = false
       })
       const wide = matchMedia('(min-width: 992px)')
       wide.addEventListener('change', () => {
@@ -259,7 +274,7 @@ const external = { target: '_blank', rel: 'noopener' }
       events.forEach((e) => removeEventListener(e, ask))
       fetch('https://api.github.com/repos/open-mercato/open-mercato', {
         headers: { Accept: 'application/vnd.github+json' },
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined,
       })
         .then((r) => {
           if (!r.ok) throw Error()
@@ -382,7 +397,8 @@ const external = { target: '_blank', rel: 'noopener' }
   }
   /* the toggle is as high as the bar, so a ring around it would be cut at the top and bottom of the header: draw it
      inside */
-  .navbar_dropdown-toggle:focus-visible {
+  .navbar_dropdown-toggle:focus-visible,
+  .navbar_link:focus-visible {
     outline-offset: -2px;
   }
   .dropdown-chevron {
@@ -449,7 +465,7 @@ const external = { target: '_blank', rel: 'noopener' }
     background-color: #f6feee;
   }
   /* the page you are on, in the hover colour of the rows: the main site has no visible current state here */
-  .navbar_dropdown-link[aria-current='page'] {
+  .navbar_dropdown-link[aria-current] {
     background-color: #f6feee;
   }
   .navbar_dropdown-link :global(.navbar_icon) {

@@ -23,7 +23,7 @@ const year = new Date().getUTCFullYear()
         {
           MAIN_SITE_FOOTER_OTHER.map((g) => (
             <div class="ft__group">
-              <h3>{g.label}</h3>
+              <p class="ft__label">{g.label}</p>
               {g.links.map((l) => (
                 <a href={l.url}>{l.label}</a>
               ))}
@@ -124,7 +124,7 @@ const year = new Date().getUTCFullYear()
     gap: 10px;
     min-width: 0;
   }
-  .ft__group h3 {
+  .ft__label {
     margin: 0 0 9px;
     font-size: 14px;
     line-height: 1.4;
