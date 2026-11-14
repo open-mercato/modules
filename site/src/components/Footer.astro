@@ -157,9 +157,9 @@ const year = new Date().getUTCFullYear()
   .ft__licence {
     text-align: right;
   }
+  /* one line on a wide screen: the row sets the width of its column and the side texts wrap instead, as there */
   .ft__site {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 2rem;
@@ -199,6 +199,7 @@ const year = new Date().getUTCFullYear()
   @media (max-width: 767px) {
     .ft__site {
       order: 3;
+      flex-wrap: wrap;
       gap: 1.5rem;
     }
   }
