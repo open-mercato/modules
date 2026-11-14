@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
   "version": "3.0.0",
-  "computedAt": "2026-11-13T09:57:44Z",
+  "computedAt": "2026-11-14T09:18:38Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -166,7 +166,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 13 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 14 Nov."
         }
       ],
       "until": "2026-11-16"
