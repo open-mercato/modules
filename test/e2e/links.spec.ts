@@ -103,7 +103,10 @@ test('internal and data links answer 200 without redirects', async ({ request })
       pageErrors.push(`${res.status()} ${p}`)
       return
     }
-    const html = await res.text()
+    // attributes of the page's own tags only: a template string inside a script (`<a href="${esc(h)}">`) is no link
+    const html = (await res.text())
+      .replace(/<script\b([^>]*)>[\s\S]*?<\/script\s*>/gi, '<script$1></script>')
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, '')
     for (const m of html.matchAll(ATTR)) add(toLocal(m[1] as string, p), p)
     for (const m of html.matchAll(CONTENT_URL)) add(toLocal(m[1] as string, p), p)
     for (const m of html.matchAll(SRCSET))
