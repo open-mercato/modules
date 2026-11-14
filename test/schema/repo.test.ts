@@ -74,6 +74,7 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
     // `.wp/` (review r3): the local notes and screenshots of the work packages, kept out of git by
     // .gitignore; a JSON file written there must not turn `yarn check` red
     // `.agents/`, `.claude/`, `.npm/`: untracked files the agent sandbox writes into the checkout
+    // `.ai/`: the local operator files of the agent pipeline and its task worktrees, never committed
     expect(lines).toEqual([
       'dist/',
       'out/',
@@ -84,6 +85,7 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       '.wp/',
       '.agents/',
       '.claude/',
+      '.ai/',
       '.npm/',
       // byte copies of the create-mercato-app scaffold, the modulesFromModulesTs contract (templates spec, rev. 7)
       'test/fixtures/templates/modules-from-modules-ts/scaffold-*',

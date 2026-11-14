@@ -19,6 +19,8 @@ const SKIP_DIRS = new Set([
   '.wrangler',
   'test-results',
   'playwright-report',
+  // local operator files of the agent pipeline and its task worktrees: never committed
+  '.ai',
 ])
 const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/']
 const TEXT_DIRS = [
