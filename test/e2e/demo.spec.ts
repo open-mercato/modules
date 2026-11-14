@@ -139,6 +139,8 @@ test('step: /compat, Open Mercato itself and the peer sentence', async ({ browse
   const ctx = await themed(browser, 'light', DESKTOP)
   const page = await ctx.newPage()
   await page.goto(url('/compat'))
+  // the full matrix sits in `Details for module authors`, closed until asked for (redesign of 26 Oct)
+  await page.locator('#full-matrix summary').first().click()
   // the first row of the matrix; the same words also sit in the closed `How the tests run`
   const itself = page.locator('table').getByText('Open Mercato itself').first()
   await expect(itself).toBeVisible()
