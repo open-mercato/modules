@@ -6,7 +6,8 @@
 // Without JavaScript: the panels open on hover and on keyboard focus, the phone menu and its lists are <details>.
 // The inline script only adds what Webflow's script does on top: a tap or Enter toggles a panel, Escape closes it and
 // aria-expanded follows, the phone menu closes on Escape and above 991 px, and the GitHub button fetches its star count
-// (the main site's own script, same key and cache, so both share it on www.openmercato.com).
+// (the main site's own script, same key and cache, so both share it on www.openmercato.com; fetched at the first
+// interaction, so a page load makes no third-party request).
 import logo from './assets/open-mercato-wordmark.svg?raw'
 import githubMark from './assets/github-mark.svg?raw'
 import { navIconSvg } from './nav-icons.ts'
@@ -235,7 +236,10 @@ const external = { target: '_blank', rel: 'noopener' }
       })
     }
   })()
-  // the GitHub star count, as the main site's navbar script has it (key, cache and fallback alike)
+  // the GitHub star count, as the main site's navbar script has it (key, cache and fallback alike), with one
+  // difference: the count is asked from api.github.com at the visitor's first move, key or scroll and not while the
+  // page loads, so a page load makes no third-party request (the budget of spec 7.11, test/e2e/perf.spec.ts). Until
+  // then the button shows the cached count, or the one built into the page.
   ;(() => {
     const key = 'om-github-stars-v1',
       nodes = document.querySelectorAll('[data-om-star-count]')
@@ -248,22 +252,27 @@ const external = { target: '_blank', rel: 'noopener' }
       if (saved) show(saved.n)
     } catch (e) {}
     if (saved && Date.now() - saved.at < 3600000) return
-    fetch('https://api.github.com/repos/open-mercato/open-mercato', {
-      headers: { Accept: 'application/vnd.github+json' },
-      signal: AbortSignal.timeout(5000),
-    })
-      .then((r) => {
-        if (!r.ok) throw Error()
-        return r.json()
+    const events = ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart']
+    const ask = () => {
+      events.forEach((e) => removeEventListener(e, ask))
+      fetch('https://api.github.com/repos/open-mercato/open-mercato', {
+        headers: { Accept: 'application/vnd.github+json' },
+        signal: AbortSignal.timeout(5000),
       })
-      .then((d) => {
-        if (!Number.isInteger(d.stargazers_count)) return
-        show(d.stargazers_count)
-        try {
-          localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, at: Date.now() }))
-        } catch (e) {}
-      })
-      .catch(() => {})
+        .then((r) => {
+          if (!r.ok) throw Error()
+          return r.json()
+        })
+        .then((d) => {
+          if (!Number.isInteger(d.stargazers_count)) return
+          show(d.stargazers_count)
+          try {
+            localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, at: Date.now() }))
+          } catch (e) {}
+        })
+        .catch(() => {})
+    }
+    events.forEach((e) => addEventListener(e, ask, { passive: true }))
   })()
 </script>
 
