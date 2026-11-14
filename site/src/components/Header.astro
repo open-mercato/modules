@@ -576,10 +576,21 @@ const external = { target: '_blank', rel: 'noopener' }
       align-items: center;
       gap: 0.25rem;
     }
+    /* touch targets of at least 44 px (spec 7.10): the link is 44 px high, the button drawn in it keeps the main
+       site's 32 px, and the logo link grows around its 36 px logo */
+    .navbar_logo-link {
+      align-items: center;
+      min-height: 44px;
+    }
     .navbar_gh-button {
       display: flex;
       justify-content: center;
       align-items: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .navbar_gh-button .om-github-stars {
+      box-sizing: border-box;
       height: 2rem;
       padding: 7px 9px;
       border: 1px solid #ececec;
