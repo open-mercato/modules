@@ -182,7 +182,10 @@ const external = { target: '_blank', rel: 'noopener' }
     drops.forEach((d) => {
       const t = toggle(d)
       t.addEventListener('click', () => {
-        const open = isOpen(d)
+        // not by :hover: on a touch screen the emulated hover opens the panel before this click runs, and a tap
+        // would close it at once. A click closes what a click (data-open) or keyboard focus opened.
+        const open =
+          d.hasAttribute('data-open') || (!d.hasAttribute('data-closed') && !!d.querySelector(':focus-visible'))
         drops.forEach((o) => o !== d && reset(o))
         reset(d)
         d.setAttribute(open ? 'data-closed' : 'data-open', '')
