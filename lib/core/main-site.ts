@@ -1,12 +1,13 @@
 // The navbar and the footer of the main site, https://www.openmercato.com (Webflow), copied into the catalog. The
-// catalog is served under www.openmercato.com/modules, so a visitor must not feel they left the main site: one navbar,
+// catalog is the Run section of that site, www.openmercato.com/run, so a visitor must not feel they left the main site: one navbar,
 // the same as there (Product, Developers and Enterprise open panels of icon, name and description; Contact; Case
 // Studies; the GitHub button with the star count; Launch sandbox), plus one menu the main site gets too: Run, after
 // Enterprise, with the pages of the catalog (RUN_MENU). Keep this file in step with the Webflow navbar: when the menu
 // changes there, change it here (docs/RUNBOOK.md).
 // Main-site addresses are absolute, so they hold on every host that serves the build. The layout check
 // (lib/emit/pages-layout.ts) accepts exactly these addresses on the origin of the main site and still flags any other
-// link there that misses the base path. Run items are site paths of the catalog: the header builds them with href().
+// link there that misses the base path. Run items are site paths of the catalog: the header builds them with href(),
+// so `/` (Modules) is the home page wherever HOME_PATH puts it (`/run/modules`).
 // The texts are the main site's own words, copied as they stand there (two of them carry its long dash, written as
 // — so this file stays plain ASCII). Isomorphic: no Node APIs.
 

@@ -297,6 +297,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect((w as Workflow & { env: Record<string, string> }).env).toEqual({
       SITE_URL: "${{ vars.SITE_URL || 'https://modules.openmercato.com' }}",
       BASE_PATH: "${{ vars.BASE_PATH || '/' }}",
+      HOME_PATH: "${{ vars.HOME_PATH || '/' }}",
       CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
     })
     expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)

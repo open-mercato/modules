@@ -415,15 +415,15 @@ describe('pages.yml steps', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
     runStep(stepRun('pages.yml', 'Build'), env())
     // the flat fake build does not have the nested layout BASE_PATH asks for
-    const flat = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/modules/' })
+    const flat = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/run/' })
     expect(flat.code).not.toBe(0)
-    expect(flat.out).toContain('dist/modules/.well-known/agent-skills/index.json is missing')
-    // nested: the site under dist/modules, the Pages files at the root
-    mkdirSync(join(work, 'dist', 'modules'))
+    expect(flat.out).toContain('dist/run/.well-known/agent-skills/index.json is missing')
+    // nested: the site under dist/run, the Pages files at the root
+    mkdirSync(join(work, 'dist', 'run'))
     for (const f of ['.well-known', 'modules.json', 'templates.html'])
-      execFileSync('mv', [join(work, 'dist', f), join(work, 'dist', 'modules', f)])
+      execFileSync('mv', [join(work, 'dist', f), join(work, 'dist', 'run', f)])
     writeFileSync(calls, '')
-    const nested = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/modules' })
+    const nested = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/run' })
     expect(nested.code, nested.out).toBe(0)
     expect(readFileSync(calls, 'utf8')).toBe('om pages-site --check dist\n')
   })
@@ -501,20 +501,38 @@ describe('pages.yml steps', () => {
     const nested = runStep(stepRun('pages.yml', 'Summary'), {
       ...vars,
       SITE_URL: 'https://www.openmercato.com',
-      BASE_PATH: '/modules',
+      BASE_PATH: '/run',
       DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
       GITHUB_OUTPUT: out,
     })
     expect(nested.code, nested.out).toBe(0)
     expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
-      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/modules\n\n' +
-        'This deployment: https://abc123.open-mercato-modules.pages.dev/modules/\n',
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/run/\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/\n',
     )
-    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/modules/\n')
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/run/\n')
+
+    // with a home path both links name the home page, /run/modules (14 Nov)
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    const home = runStep(stepRun('pages.yml', 'Summary'), {
+      ...vars,
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/run',
+      HOME_PATH: '/modules',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev/',
+      GITHUB_OUTPUT: out,
+    })
+    expect(home.code, home.out).toBe(0)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/run/modules\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/modules\n',
+    )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/run/modules\n')
 
     // no address from wrangler: the summary says so and the environment gets no link
     writeFileSync(out, '')
-    runStep(stepRun('pages.yml', 'Summary'), { ...vars, BASE_PATH: '/modules', DEPLOYMENT_URL: '', GITHUB_OUTPUT: out })
+    runStep(stepRun('pages.yml', 'Summary'), { ...vars, BASE_PATH: '/run', DEPLOYMENT_URL: '', GITHUB_OUTPUT: out })
     expect(readFileSync(out, 'utf8')).toBe('url=\n')
   })
 

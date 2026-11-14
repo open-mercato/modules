@@ -1,19 +1,29 @@
 // `yarn om pages-site [--check <dist>]` (move of 13 Nov, lib/core/site-host.ts): writes functions/site.ts, the layout
-// the Pages Functions read at run time, from SITE_URL and BASE_PATH (defaults: modules.openmercato.com and `/`).
+// the Pages Functions read at run time, from SITE_URL, BASE_PATH and HOME_PATH (defaults: modules.openmercato.com,
+// `/` and `/`).
 // pages.yml runs it in the build job before the Functions bundle is checked and in the deploy job before
 // `wrangler pages deploy`, with the same variables the build used. `--check <dist>` changes nothing and fails when
-// functions/site.ts or the layout of a built dist (root files, schema `$id`, links under the base) does not match.
+// functions/site.ts or the layout of a built dist (root files, the home page and the redirect of the base, schema
+// `$id`, links under the base) does not match.
 // Both refuse a nested site whose SITE_URL is a host of the Pages project (pagesHostProblem): its old addresses would
 // answer 404 instead of a redirect.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
-import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
-import { pagesHostProblem, siteConfig, siteModule, siteRoot, type SiteConfig } from '../core/site-host.ts'
+import {
+  hasHomePath,
+  homePath,
+  pagesHostProblem,
+  siteConfigFromEnv,
+  siteModule,
+  siteRoot,
+  type SiteConfig,
+} from '../core/site-host.ts'
 import { checkPagesLayout } from '../emit/pages-layout.ts'
 
-export const description = 'write functions/site.ts from SITE_URL and BASE_PATH; --check <dist> checks the layout'
+export const description =
+  'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --check <dist> checks the layout'
 
 /** The generated module, relative to the repository root. */
 export const SITE_MODULE = 'functions/site.ts'
@@ -31,7 +41,7 @@ export default function pagesSite(ctx: CommandContext): number {
   }
   let c: SiteConfig
   try {
-    c = siteConfig(process.env.SITE_URL || DEFAULT_SITE_ORIGIN, process.env.BASE_PATH || DEFAULT_BASE_PATH)
+    c = siteConfigFromEnv(process.env)
   } catch (err) {
     console.error(`om pages-site: ${(err as Error).message}`)
     return EXIT_ENV
@@ -62,6 +72,8 @@ export default function pagesSite(ctx: CommandContext): number {
     for (const p of problems) console.error(`om pages-site: ${p}`)
     return EXIT_VALIDATION
   }
-  console.log(`om pages-site: ${check} matches ${siteRoot(c)} (base ${c.base})`)
+  console.log(
+    `om pages-site: ${check} matches ${siteRoot(c)} (base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''})`,
+  )
   return EXIT_OK
 }

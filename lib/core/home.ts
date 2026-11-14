@@ -1,6 +1,6 @@
 // Where the catalog lives (orchestrator, round 13): the repository is open-mercato/modules, so every default address
 // of the site, the emitter, the MCP card, the CLI and the skill reads these constants, never a personal account.
-// SITE_URL, BASE_PATH, MCP_URL and GITHUB_REPOSITORY still override them at build and run time. Isomorphic.
+// SITE_URL, BASE_PATH, HOME_PATH, MCP_URL and GITHUB_REPOSITORY still override them at build and run time. Isomorphic.
 
 /** The catalog repository on GitHub (`owner/name`). */
 export const CATALOG_REPO = 'open-mercato/modules'
@@ -22,6 +22,9 @@ export const DEFAULT_SITE_ORIGIN = 'https://modules.openmercato.com'
 
 /** Default base path on that origin: the domain root. */
 export const DEFAULT_BASE_PATH = '/'
+
+/** Default path of the home page under the base path: the base itself (HOME_PATH, lib/core/site-host.ts). */
+export const DEFAULT_HOME_PATH = '/'
 
 /** Default site root plus base path, without a trailing slash (the origin itself while the base path is `/`). */
 export const DEFAULT_SITE_URL = DEFAULT_SITE_ORIGIN

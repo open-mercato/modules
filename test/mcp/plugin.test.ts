@@ -91,13 +91,13 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
     expect(text).toContain('https://github.com/open-mercato/modules/tree/main/modules')
   })
 
-  it('follows redirects on every catalog fetch, so the move under www.openmercato.com/modules keeps it working', () => {
+  it('follows redirects on every catalog fetch, so the move under www.openmercato.com/run keeps it working', () => {
     // after the move the Pages hosts answer every old address with a 302 and an empty body (lib/core/site-host.ts);
     // `curl -s` without -L would print nothing, and the agent would report the catalog as unreachable
     const curls = text.match(/curl [^`]*/g) ?? []
     expect(curls.length).toBeGreaterThanOrEqual(3)
     for (const c of curls) expect(c, c).toMatch(/^curl -s?L\b|^curl (?:-\S+ )*-L\b/)
-    expect(text).toContain('A redirect to `https://www.openmercato.com/modules/...` is the same catalog: follow it.')
+    expect(text).toContain('A redirect to `https://www.openmercato.com/run/...` is the same catalog: follow it.')
   })
 })
 

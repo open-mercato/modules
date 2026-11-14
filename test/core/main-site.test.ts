@@ -57,7 +57,8 @@ describe('the Run menu', () => {
       'For agents',
     ])
     for (const i of RUN_MENU.items) {
-      const file = i.path === '/' ? 'index.astro' : `${i.path.slice(1)}.astro`
+      // the home page is a route injected at the home path (astro.config.ts), so its file is not named by its address
+      const file = i.path === '/' ? '_home.astro' : `${i.path.slice(1)}.astro`
       expect(existsSync(join(PAGES, file)), i.path).toBe(true)
     }
   })

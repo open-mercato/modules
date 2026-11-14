@@ -6,13 +6,15 @@
 # templates.openmercato.com (decision B of 29 Oct) is a second custom domain of the same project: functions/_middleware.ts
 # redirects its root to modules.openmercato.com/templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
 # runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
-# Move under www.openmercato.com/modules (decision of 13 Nov): with the repository variables SITE_URL and BASE_PATH set
-# (e.g. https://www.openmercato.com and /modules) the build puts the site in dist/<base>/ and keeps 404.html,
-# _routes.json, _redirects, schema/, templates.json and picker.json at the root of dist; `yarn om pages-site` writes
-# functions/site.ts from the same variables in both jobs, so the Functions redirect every other path of the production
-# hosts to the site. A `*.pages.dev` deployment address serves the site under <base>/ without redirects, and the summary
-# and the environment link there. Without the variables nothing changes. See docs/RUNBOOK.md, Move under
-# www.openmercato.com/modules.
+# Move under www.openmercato.com/run, the Run section of the main site (decisions of 13 and 14 Nov): with the
+# repository variables SITE_URL, BASE_PATH and HOME_PATH set (https://www.openmercato.com, /run and /modules) the build
+# puts the site in dist/<base>/, the home page at <base><home> (/run/modules, with dist/_redirects sending /run and
+# /run/ there), and keeps 404.html, _routes.json, _redirects, schema/, templates.json, picker.json and modules.json at
+# the root of dist; `yarn om pages-site` writes functions/site.ts from the same variables in both jobs, so on the
+# production hosts the Functions redirect every other page to the site and serve every other machine-readable file
+# (llms.txt, m/<package>.md, badges, data files) from dist/<base>/ with a 200. A `*.pages.dev` deployment address serves
+# the site under <base>/ without redirects, and the summary and the environment link to its home page. Without the
+# variables nothing changes. See docs/RUNBOOK.md, Move under www.openmercato.com/run.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
@@ -50,6 +52,8 @@ defaults:
 env:
   SITE_URL: ${{ vars.SITE_URL || 'https://modules.openmercato.com' }}
   BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+  # the home page under the base: / (the base itself), or /modules for https://www.openmercato.com/run/modules
+  HOME_PATH: ${{ vars.HOME_PATH || '/' }}
   CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}
 
 jobs:
@@ -118,12 +122,15 @@ jobs:
         run: yarn build
 
       - name: Write Functions config
-        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL and BASE_PATH.
+        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL, BASE_PATH and
+        # HOME_PATH.
         run: yarn om pages-site
 
       - name: Check artifact contents
         run: |
           # The site sits at the root of dist, or in dist/<base>/ when BASE_PATH is not / (lib/emit/pages-layout.ts).
+          # The home page is index.html there, or <home>.html when HOME_PATH is not / (/modules: modules.html); the
+          # layout check at the end of this step looks for it.
           base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
           site="dist${base:+/$base}"
           # wrangler 4.149.0 pages deploy uploads dotfiles (its walk skips only .DS_Store, .git, .wrangler, node_modules and the
@@ -139,8 +146,8 @@ jobs:
           # the Functions route list: without it every request would run functions/_middleware.ts
           test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
           test -f "$site/templates.html" || { echo "$site/templates.html is missing"; exit 1; }
-          # the layout as a whole for SITE_URL and BASE_PATH: root files and routes, the fixed schema $id, every link
-          # of every page under the base, and functions/site.ts
+          # the layout as a whole for SITE_URL, BASE_PATH and HOME_PATH: root files, routes and redirects, the home
+          # page, the fixed schema $id, every link of every page under the base, and functions/site.ts
           yarn om pages-site --check dist
 
       - name: Check Pages limits
@@ -236,7 +243,7 @@ jobs:
 
       - name: Check downloaded site
         # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip, and the
-        # layout check proves the site and functions/site.ts were made for the same SITE_URL and BASE_PATH.
+        # layout check proves the site and functions/site.ts were made for the same SITE_URL, BASE_PATH and HOME_PATH.
         run: |
           base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
           site="dist${base:+/$base}"
@@ -261,16 +268,20 @@ jobs:
       - name: Summary
         id: summary
         # Under a base path the deployment address (<hash>.<project>.pages.dev) serves the site at <base>/ and is not
-        # redirected to production (hostRedirect), so the link goes there: the new version can be looked at first.
+        # redirected to production (hostRedirect), so the link goes to its home page there (<base>/, or <base><home>
+        # with HOME_PATH): the new version can be looked at first.
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
           base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          home="$(printf '%s' "${HOME_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          # path of the home page on any host: /, /<base>/ or /<base>/<home>
+          path="/${base:+$base/}$home"
           url="$DEPLOYMENT_URL"
-          if [ -n "$url" ] && [ -n "$base" ]; then url="${url%/}/$base/"; fi
+          if [ -n "$url" ] && [ -n "$base" ]; then url="${url%/}$path"; fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
           {
-            echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL}${BASE_PATH}"
+            echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL%/}$path"
             echo ""
             echo "This deployment: ${url:-see the wrangler output}"
           } >> "$GITHUB_STEP_SUMMARY"

@@ -163,7 +163,12 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   const recent = recentChanges(withCurrentLevels(data.changes, entries), opts.now)
   if (recent.truncated) warn('changes.json: trimmed to the 60 KB budget')
   put('changes.json', ChangesFile, recent.changes)
-  pub.set('feed.xml', buildFeed(recent.changes, entries, opts.site, opts.now, index.dataAsOf.source === 'preview'))
+  // the home page: `<site>/`, or `<site>/modules` with a home path (lib/core/site-host.ts)
+  const homePage = opts.home && opts.home !== '/' ? `${opts.site}${opts.home}` : `${opts.site}/`
+  pub.set(
+    'feed.xml',
+    buildFeed(recent.changes, entries, opts.site, opts.now, index.dataAsOf.source === 'preview', homePage),
+  )
 
   // radar and surface
   const titles = new Map(entries.map((e) => [e.locator, e.title]))

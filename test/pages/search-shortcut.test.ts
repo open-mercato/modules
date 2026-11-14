@@ -8,7 +8,7 @@ import { describe, expect, test } from 'vitest'
 import { ROOT } from '../emit/helpers.ts'
 
 const SITE = join(ROOT, 'site', 'src')
-const PAGES = ['pages/index.astro', 'pages/c/[category].astro']
+const PAGES = ['pages/_home.astro', 'pages/c/[category].astro']
 const read = (f: string) => readFileSync(f, 'utf8')
 
 /** The page and every .astro or .tsx component it imports, transitively (type imports aside). */
