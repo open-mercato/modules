@@ -10,6 +10,9 @@ const FORMS = { desktop: DESKTOP, mobile: phone(390) } as const
 for (const p of PAGES)
   for (const form of ['desktop', 'mobile'] as const)
     test(`axe ${p.name} ${form}`, async ({ browser }, info) => {
+      // axe reads every node: on /compat (two matrices, about 0.5 MB of HTML) one pass takes 41 to 45 s on the shared
+      // server with one worker, so the default 60 s runs out when two workers share the machine
+      test.setTimeout(180_000)
       const ctx = await themed(browser, 'light', FORMS[form])
       const page = await ctx.newPage()
       await page.goto(url(p.path), { waitUntil: 'load' })
