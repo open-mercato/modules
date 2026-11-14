@@ -574,7 +574,9 @@ A visitor under `/run` must not feel they left `www.openmercato.com`, so the cat
 colours, breakpoints and phone menu), with one menu the main site gets too: **Run**, after Enterprise, with Modules,
 Templates, Compatibility, Radar, Quality and For agents. Panels open on hover and keyboard focus without JavaScript;
 the phone menu is a `<details>`. The GitHub button runs the main site's star count script with the same
-`localStorage` key, so both share the count on one origin. `site/src/components/Footer.astro` is the main site's
+`localStorage` key, so both share the count on one origin, with one difference: the catalog asks `api.github.com` at
+the visitor's first press, key, wheel or touch and not while the page loads, to keep a page load free of third-party
+requests (spec 7.11). `site/src/components/Footer.astro` is the main site's
 footer in the same way. The data stamp and Submit a module sit in a line at the top of each page
 (`PageContext.astro`), and the data provenance on `/about`.
 
