@@ -55,7 +55,13 @@ const name = sectionName(path)
   }
   <div class="ctx__end">
     <DataStamp dataAsOf={dataAsOf} />
-    {path !== '/about' && <a class="ctx__link" href={href('/about')}>About this data</a>}
+    {
+      path !== '/about' && (
+        <a class="ctx__link" href={href('/about')}>
+          About<span class="ctx__more">&nbsp;this data</span>
+        </a>
+      )
+    }
     {path !== '/submit' && <a class="ctx__link" href={href('/submit')}>Submit a module</a>}
   </div>
 </div>
@@ -100,6 +106,21 @@ const name = sectionName(path)
       display: inline-flex;
       align-items: center;
       min-height: 44px;
+    }
+  }
+  /* a small phone keeps the stamp and both links on one line: "About", its name still "About this data" (a no-break
+     space, as a flex item drops a plain one at its start) */
+  @media (max-width: 479px) {
+    .ctx__end {
+      column-gap: 16px;
+    }
+    .ctx__more {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
   }
   .ctx__link {
