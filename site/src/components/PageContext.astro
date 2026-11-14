@@ -1,8 +1,9 @@
 ---
 // One quiet line at the top of every catalog page (navbar of 14 Nov): where you are in the Run menu on the left, in
 // the breadcrumbs of the main site's pages ("Home / Product", 12 px Medium, the trail grey, the page black); the data
-// stamp and Submit a module on the right. The data stamp and Submit a module had a header bar of their own before
-// (13 Nov). No links to pages of the menu and not sticky, so it never reads as a second navbar.
+// stamp, About this data and Submit a module on the right. The data stamp and Submit a module had a header bar of
+// their own before (13 Nov); since the footer is the main site's (14 Nov), About this data is the way to the
+// provenance of the data. No links to pages of the menu and not sticky, so it never reads as a second navbar.
 import DataStamp from './DataStamp.astro'
 import { href } from '../lib/url.ts'
 import { sectionName } from '../lib/run-section.ts'
@@ -54,7 +55,8 @@ const name = sectionName(path)
   }
   <div class="ctx__end">
     <DataStamp dataAsOf={dataAsOf} />
-    {path !== '/submit' && <a class="ctx__submit" href={href('/submit')}>Submit a module</a>}
+    {path !== '/about' && <a class="ctx__link" href={href('/about')}>About this data</a>}
+    {path !== '/submit' && <a class="ctx__link" href={href('/submit')}>Submit a module</a>}
   </div>
 </div>
 
@@ -94,13 +96,13 @@ const name = sectionName(path)
   /* touch targets of at least 44 px on phones (spec 7.10) */
   @media (max-width: 767px) {
     .ctx__where a,
-    .ctx__submit {
+    .ctx__link {
       display: inline-flex;
       align-items: center;
       min-height: 44px;
     }
   }
-  .ctx__submit {
+  .ctx__link {
     font-size: 0.75rem;
     font-weight: 500;
     line-height: 1.5;
