@@ -5,6 +5,6 @@ whenToUse: Use when a team needs a CRM for companies, people, deals and activiti
 whenNotToUse: Not for shops or order handling. It enables no product, sales or checkout modules.
 screenshots:
   - src: screenshots/crm-deals.png
-    alt: The deals list with pipeline value, win rate and six demo deals.
+    alt: The deals list with pipeline value, win rate and the demo deals.
 pricing: free
 slug: crm
