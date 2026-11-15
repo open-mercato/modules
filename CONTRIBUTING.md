@@ -129,9 +129,11 @@ Texts for people are English and short. Evidence over adjectives: say what the m
 
 A template is a whole Open Mercato app in a public GitHub repository that a new app starts from. A module is one part of an app. One file in `templates/` is one template entry. It holds only what an author or a curator decides. The pinned Open Mercato version, the module list, the license and the other facts are read by CI from one commit of the repository and live on the `data` branch, never in YAML.
 
+Start with [Publish your app as a template](docs/publish-a-template.md), the short guide from an app to a listed template. This section is the reference.
+
 ### Template quick start
 
-1. Save your app as a template repository with `create-mercato-template`: `prepare`, review the report, then `publish`. The tool is not on npm yet. Run it from GitHub as its [guide](https://github.com/open-mercato/create-mercato-template/blob/main/docs/guide.md#try-the-github-version) shows. A repository made by hand works too, when it passes the [checklist](#template-review-checklist).
+1. Save your app as a template repository with `create-mercato-template`: `prepare`, review the report, then `publish`. Run it with `npx create-mercato-template`. Its [guide](https://github.com/open-mercato/create-mercato-template/blob/main/docs/guide.md) lists every flag. A repository made by hand works too, when it passes the [checklist](#template-review-checklist).
 2. Run `create-mercato-template describe`. It prints the entry file and its path. A required value it could not fill is a comment that says what to pass.
 3. Add the file at that path. Run `yarn om format templates`.
 4. Open the pull request and tick `I maintain this package or have the maintainer's consent` (for a template, the repository).
