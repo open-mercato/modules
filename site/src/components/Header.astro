@@ -755,5 +755,16 @@ const external = { target: '_blank', rel: 'noopener' }
     .navbar_mobile-menu {
       animation: none;
     }
+    /* no fade, but a panel still closes 0.2 s late (base.css drops every transition here). The delay is what lets the
+       keyboard in: a Tab from a menu button takes the focus off it before the first link of the panel has it, and
+       WebKit refuses the focus to a link whose panel :has(:focus-visible) has already hidden. Nothing moves. */
+    .navbar_dropdown-list {
+      transition:
+        opacity 0s linear 0.2s,
+        visibility 0s linear 0.2s !important;
+    }
+    .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) > .navbar_dropdown-list {
+      transition: none !important;
+    }
   }
 </style>
