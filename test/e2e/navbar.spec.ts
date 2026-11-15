@@ -4,6 +4,9 @@
 import { expect, test } from '@playwright/test'
 import { DESKTOP, phone, themed, url } from './env.ts'
 
+/** A length rounded to 0.01 px: Firefox reports a 44 px box as 43.999999. */
+const px = (n: number): number => Math.round(n * 100) / 100
+
 for (const width of [360, 390])
   test(`phone navbar: the logo, the GitHub button and the menu button are at least 44 px at ${width} px`, async ({
     browser,
@@ -15,12 +18,12 @@ for (const width of [360, 390])
     for (const sel of ['.navbar_logo-link', '.navbar_gh-button', '.navbar_menu-button .menu-icon']) {
       const box = await page.locator(sel).boundingBox()
       expect(box, sel).not.toBeNull()
-      expect(box!.height, `${sel} height`).toBeGreaterThanOrEqual(44)
-      expect(box!.width, `${sel} width`).toBeGreaterThanOrEqual(44)
+      expect(px(box!.height), `${sel} height`).toBeGreaterThanOrEqual(44)
+      expect(px(box!.width), `${sel} width`).toBeGreaterThanOrEqual(44)
     }
     // the button drawn inside the GitHub link keeps the main site's 32 px, the logo its 36 px
-    expect((await page.locator('.navbar_gh-button .om-github-stars').boundingBox())!.height).toBe(32)
-    expect((await page.locator('.navbar_logo-link .navbar_logo').boundingBox())!.height).toBe(36)
+    expect(px((await page.locator('.navbar_gh-button .om-github-stars').boundingBox())!.height)).toBe(32)
+    expect(px((await page.locator('.navbar_logo-link .navbar_logo').boundingBox())!.height)).toBe(36)
     // the bar itself did not grow
     const bar = await page.locator('.navbar_component').boundingBox()
     expect(Math.round(bar!.height)).toBeLessThanOrEqual(64)
@@ -135,6 +138,38 @@ test('keyboard: focus opens a panel, Enter and Escape close it, and the focus ri
   await expect(toggle).toBeFocused()
   await ctx.close()
 })
+
+for (const reducedMotion of ['reduce', 'no-preference'] as const)
+  test(`keyboard: Tab goes from a menu button into its panel and on to the next menu (reduced motion: ${reducedMotion})`, async ({
+    browser,
+  }) => {
+    const ctx = await browser.newContext({ ...DESKTOP, reducedMotion })
+    const page = await ctx.newPage()
+    await page.goto(url('/about'), { waitUntil: 'load' })
+    const drops = page.locator('nav.navbar_menu [data-dropdown]')
+    const [first, second] = [drops.nth(0), drops.nth(1)]
+    const toggle = first.locator('.navbar_dropdown-toggle')
+    const links = first.locator('.navbar_dropdown-link')
+    for (let i = 0; i < 6 && !(await toggle.evaluate((el) => el === document.activeElement)); i++)
+      await page.keyboard.press('Tab')
+    await expect(toggle).toBeFocused()
+    // every link of the panel in turn, the panel open all the way
+    const count = await links.count()
+    expect(count).toBeGreaterThan(0)
+    for (let i = 0; i < count; i++) {
+      await page.keyboard.press('Tab')
+      await expect(links.nth(i)).toBeFocused()
+      await expect(first.locator('.navbar_dropdown-list')).toBeVisible()
+    }
+    // then the next menu, whose panel opens while the first one closes
+    await page.keyboard.press('Tab')
+    await expect(second.locator('.navbar_dropdown-toggle')).toBeFocused()
+    await expect(second.locator('.navbar_dropdown-list')).toBeVisible()
+    await expect(first.locator('.navbar_dropdown-list')).toBeHidden()
+    await page.keyboard.press('Tab')
+    await expect(second.locator('.navbar_dropdown-link').first()).toBeFocused()
+    await ctx.close()
+  })
 
 test('a plain navbar link keeps its focus ring inside the header too', async ({ browser }) => {
   const ctx = await browser.newContext({ ...DESKTOP, reducedMotion: 'reduce' })
