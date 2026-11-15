@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-14T22:30:12Z",
+  "at": "2026-11-15T06:41:48Z",
   "entries": {
     "github:Chmarusso/open-mercato-enrichment-treg": {
       "downloads30d": null,
@@ -70,67 +70,67 @@
       "stars": 0
     },
     "npm:@open-mercato/ai-assistant": {
-      "downloads30d": 87672,
+      "downloads30d": 90481,
       "stars": null
     },
     "npm:@open-mercato/carrier-inpost": {
-      "downloads30d": 40741,
+      "downloads30d": 42036,
       "stars": null
     },
     "npm:@open-mercato/channel-apns": {
-      "downloads30d": 57413,
+      "downloads30d": 59490,
       "stars": null
     },
     "npm:@open-mercato/channel-discord": {
-      "downloads30d": 55733,
+      "downloads30d": 57615,
       "stars": null
     },
     "npm:@open-mercato/channel-expo": {
-      "downloads30d": 57184,
+      "downloads30d": 59281,
       "stars": null
     },
     "npm:@open-mercato/channel-fcm": {
-      "downloads30d": 57423,
+      "downloads30d": 59545,
       "stars": null
     },
     "npm:@open-mercato/channel-gmail": {
-      "downloads30d": 64040,
+      "downloads30d": 66152,
       "stars": null
     },
     "npm:@open-mercato/channel-imap": {
-      "downloads30d": 64081,
+      "downloads30d": 66231,
       "stars": null
     },
     "npm:@open-mercato/channel-resend": {
-      "downloads30d": 60739,
+      "downloads30d": 62729,
       "stars": null
     },
     "npm:@open-mercato/channel-ses": {
-      "downloads30d": 55677,
+      "downloads30d": 57524,
       "stars": null
     },
     "npm:@open-mercato/channel-smtp": {
-      "downloads30d": 29873,
+      "downloads30d": 31270,
       "stars": null
     },
     "npm:@open-mercato/checkout": {
-      "downloads30d": 62208,
+      "downloads30d": 64413,
       "stars": null
     },
     "npm:@open-mercato/content": {
-      "downloads30d": 66163,
+      "downloads30d": 68351,
       "stars": null
     },
     "npm:@open-mercato/documents": {
-      "downloads30d": 55772,
+      "downloads30d": 57659,
       "stars": null
     },
     "npm:@open-mercato/enterprise": {
-      "downloads30d": 52219,
+      "downloads30d": 53930,
       "stars": null
     },
     "npm:@open-mercato/events": {
-      "downloads30d": 75154,
+      "downloads30d": 77691,
       "stars": null
     },
     "npm:@open-mercato/forms": {
@@ -138,7 +138,7 @@
       "stars": null
     },
     "npm:@open-mercato/gateway-autopay": {
-      "downloads30d": 30002,
+      "downloads30d": 31316,
       "stars": null
     },
     "npm:@open-mercato/gateway-payu": {
@@ -150,15 +150,15 @@
       "stars": null
     },
     "npm:@open-mercato/gateway-stripe": {
-      "downloads30d": 71518,
+      "downloads30d": 73695,
       "stars": null
     },
     "npm:@open-mercato/gateway-tpay": {
-      "downloads30d": 45763,
+      "downloads30d": 47153,
       "stars": null
     },
     "npm:@open-mercato/onboarding": {
-      "downloads30d": 63980,
+      "downloads30d": 66191,
       "stars": null
     },
     "npm:@open-mercato/pay-by-links": {
@@ -166,63 +166,63 @@
       "stars": null
     },
     "npm:@open-mercato/scheduler": {
-      "downloads30d": 67669,
+      "downloads30d": 69916,
       "stars": null
     },
     "npm:@open-mercato/search": {
-      "downloads30d": 66646,
+      "downloads30d": 68918,
       "stars": null
     },
     "npm:@open-mercato/storage-s3": {
-      "downloads30d": 50929,
+      "downloads30d": 52374,
       "stars": null
     },
     "npm:@open-mercato/sync-akeneo": {
-      "downloads30d": 67747,
+      "downloads30d": 69853,
       "stars": null
     },
     "npm:@open-mercato/telemetry": {
-      "downloads30d": 81267,
+      "downloads30d": 84107,
       "stars": null
     },
     "npm:@open-mercato/tillio": {
-      "downloads30d": 55283,
+      "downloads30d": 57436,
       "stars": null
     },
     "npm:@open-mercato/web-research": {
-      "downloads30d": 62979,
+      "downloads30d": 65266,
       "stars": null
     },
     "npm:@open-mercato/web-research-browser": {
-      "downloads30d": 45279,
+      "downloads30d": 46640,
       "stars": null
     },
     "npm:@open-mercato/web-research-exa": {
-      "downloads30d": 45494,
+      "downloads30d": 46816,
       "stars": null
     },
     "npm:@open-mercato/web-research-firecrawl": {
-      "downloads30d": 45450,
+      "downloads30d": 46832,
       "stars": null
     },
     "npm:@open-mercato/web-research-model": {
-      "downloads30d": 45430,
+      "downloads30d": 46764,
       "stars": null
     },
     "npm:@open-mercato/web-research-searxng": {
-      "downloads30d": 45290,
+      "downloads30d": 46640,
       "stars": null
     },
     "npm:@open-mercato/web-research-serp": {
-      "downloads30d": 45802,
+      "downloads30d": 47299,
       "stars": null
     },
     "npm:@open-mercato/web-research-tavily": {
-      "downloads30d": 45501,
+      "downloads30d": 47501,
       "stars": null
     },
     "npm:@open-mercato/webhooks": {
-      "downloads30d": 62570,
+      "downloads30d": 64754,
       "stars": null
     },
     "npm:@piotrkarwatka/marketing-consents": {

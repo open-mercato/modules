@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/gateway-tpay",
-  "checkedAt": "2026-11-14T22:30:12Z",
+  "checkedAt": "2026-11-15T06:41:48Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/gateway-tpay",
     "distTags": {
       "latest": "0.8.1-develop.7442.1.4c1dbf1f0e",
-      "develop": "0.10.1-develop.8181.1.91f97e988f"
+      "develop": "0.10.1-develop.8193.1.a0ebde7427"
     },
     "latestStable": null,
     "previousStable": null,
@@ -40,7 +40,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-14T22:29:08Z",
+    "pushedAt": "2026-11-15T06:40:59Z",
     "defaultBranch": "main",
     "stars": 1929,
     "license": "MIT",
@@ -230,6 +230,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 45763,
+  "downloads30d": 47153,
   "errors": []
 }

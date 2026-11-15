@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/channel-fcm",
-  "checkedAt": "2026-11-14T22:30:12Z",
+  "checkedAt": "2026-11-15T06:41:48Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/channel-fcm",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8181.1.91f97e988f"
+      "develop": "0.10.1-develop.8193.1.a0ebde7427"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -44,7 +44,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-14T22:29:08Z",
+    "pushedAt": "2026-11-15T06:40:59Z",
     "defaultBranch": "main",
     "stars": 1929,
     "license": "MIT",
@@ -234,6 +234,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 57423,
+  "downloads30d": 59545,
   "errors": []
 }
