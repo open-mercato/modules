@@ -624,7 +624,8 @@ with its DNS record, even when no page is served there. The addresses under `/ru
 
 1. Route `www.openmercato.com/run` and `www.openmercato.com/run/*` to `https://modules.openmercato.com` (or the
    project's `open-mercato-modules.pages.dev` name) with the same path and query. Do not cut `/run`: the Pages
-   project serves the site under that prefix. Do not send any other path there.
+   project serves the site under that prefix. Do not send any other path there. [docs/proxy/](proxy/README.md) holds a
+   Worker that does items 1 to 3, with a `curl` check of the result.
 2. Pass the answer through as it is: status, `Location` (the source answers redirects such as `/run` to
    `/run/modules` and `/run/sitemap.xml` to `/run/sitemap-index.xml` with paths on the same host), `Content-Type`,
    `Cache-Control`, `ETag` and `Access-Control-Allow-Origin` (the source sends `*` on every file, so other sites and
@@ -646,59 +647,94 @@ with its DNS record, even when no page is served there. The addresses under `/ru
 7. Add the Run menu to the navbar of the main site in Webflow (see Navbar and footer above), with the addresses of the
    table at the top of this section.
 
+### Preview of the /run layout (15 Nov)
+
+While production is at the root, every `pages` run on `main` also builds the nested layout with fixed values
+(`SITE_URL=https://www.openmercato.com`, `BASE_PATH=/run`, `HOME_PATH=/modules`) and deploys it to the branch
+`run-preview` of the same Pages project: the jobs `preview-build` and `preview` of `pages.yml`. Cloudflare serves the
+latest deployment of a branch at its alias, the branch name in lowercase with every character but `a-z`, `0-9` and `-`
+turned into `-`. So the preview is `https://run-preview.open-mercato-modules.pages.dev`, its home page
+`https://run-preview.open-mercato-modules.pages.dev/run/modules`. It is a `*.pages.dev` address, so nothing there is
+sent to production (Preview before the switch, above): its root answers a 302 to `/run/modules` on the same host. This
+is the upstream to test the proxy of the main site against ([docs/proxy/README.md](proxy/README.md)).
+
+- **Beside production.** `deploy` needs nothing from the preview jobs, so a red preview never fails or skips the
+  production deploy; the run shows the red job. The preview uses the same guards as production (the repository is
+  public, `CLOUDFLARE_ACCOUNT_ID` is set, environment `cloudflare` has the token) and records its deployment in
+  `cloudflare` too, linked to the preview home page. The summary of the `preview` job names both addresses.
+- **Not for search engines.** The preview jobs set `PAGES_NOINDEX=1`: the build writes `dist/_headers`, which sends
+  `X-Robots-Tag: noindex` with every static file, and a `/run/robots.txt` of `Disallow: /` without a sitemap (the
+  alias answers `/robots.txt` with it too). `yarn om pages-site --check dist` with `PAGES_NOINDEX=1` checks both files,
+  without it the check refuses a `_headers`, and a production build removes one left in `dist`. The canonical links
+  name `https://www.openmercato.com/run/...`, as production will after the switch.
+- **Off after the switch.** Both jobs are skipped once the repository variable `BASE_PATH` is set to anything but `/`:
+  production then serves the same layout. The alias keeps its last deployment.
+- **Access.** If Cloudflare Access is turned on for the preview deployments of the project, the alias asks for a login
+  and the proxy cannot read it. Keep it off for this project while the proxy is tested.
+- **Check.** `docs/proxy/check.sh https://run-preview.open-mercato-modules.pages.dev` prints pass or fail per line.
+  On a workstation: the commands of the section above with `PAGES_NOINDEX=1` added to each, then
+  `docs/proxy/check.sh http://127.0.0.1:8788`.
+
 ### Switch, in order
 
-1. The proxy of the main site goes live with the contract above. Until step 3 its `/run` paths should get the
-   404 page of the source (the root layout has no `/run/` folder); nothing links there yet.
-2. Repository variables (Settings > Secrets and variables > Actions > Variables): `SITE_URL` =
-   `https://www.openmercato.com`, `BASE_PATH` = `/run`, `HOME_PATH` = `/modules`. Set all three before the run of
-   step 3: `SITE_URL` and `BASE_PATH` without `HOME_PATH` build a working site whose home page is `/run/`.
-3. Run `pages` by hand (Actions > pages > Run workflow). `Check artifact contents` and `Check downloaded site` run
+Each step waits for the one before it to be green.
+
+1. **Preview green.** The `preview-build` and `preview` jobs of the latest `pages` run on `main` are green, and
+   `docs/proxy/check.sh https://run-preview.open-mercato-modules.pages.dev` ends with `0 failed` (Preview of the /run
+   layout, above).
+2. **Proxy against the preview.** The proxy of the main site goes live with the contract above, its upstream the
+   preview ([docs/proxy/README.md](proxy/README.md), Deploy against the preview). Then
+   `docs/proxy/check.sh https://www.openmercato.com` ends with `0 failed`. Its answers carry `noindex` while they come
+   from the preview.
+3. **Run menu.** The Run item in the Webflow navbar of the main site (item 7 of the contract, and Navbar and footer
+   above).
+4. **Repository variables and a `pages` run.** Settings > Secrets and variables > Actions > Variables: `SITE_URL` =
+   `https://www.openmercato.com`, `BASE_PATH` = `/run`, `HOME_PATH` = `/modules`. Set all three before the run:
+   `SITE_URL` and `BASE_PATH` without `HOME_PATH` build a working site whose home page is `/run/`. Then run `pages` by
+   hand (Actions > pages > Run workflow). `Check artifact contents` and `Check downloaded site` run
    `yarn om pages-site --check dist` for the new layout; the summary names `https://www.openmercato.com/run/modules`.
-4. Verify:
+   The preview jobs are skipped from this run on. Until step 5 the proxy still reads the preview, which has the same
+   layout, so nothing breaks in between.
+5. **Proxy to production.** Right after the run of step 4, the proxy's upstream becomes
+   `https://open-mercato-modules.pages.dev` ([docs/proxy/README.md](proxy/README.md), Switch day).
+   `docs/proxy/check.sh https://www.openmercato.com` ends with `0 failed` and shows no `noindex`. Then the old hosts:
 
-```sh
-curl -s https://www.openmercato.com/run/llms.txt | head -1
-# # Open Mercato Modules
-curl -s https://www.openmercato.com/run/modules | grep -o '<link rel="canonical" href="[^"]*"'
-# href="https://www.openmercato.com/run/modules"
-curl -sI https://www.openmercato.com/run | grep -iE '^(HTTP|location)'
-curl -sI https://www.openmercato.com/run/ | grep -iE '^(HTTP|location)'
-# 302 and location: /run/modules, for both, passed through by the proxy and not followed
-curl -sI https://www.openmercato.com/run/modules.json | grep -iE '^(HTTP|content-type)'
-# 200 and content-type: application/json (the data file next to the page of the same name)
-curl -sI https://modules.openmercato.com/ | grep -iE '^(HTTP|location)'
-# 302 and location: https://www.openmercato.com/run/modules
-curl -sI https://modules.openmercato.com/m/@open-mercato/gateway-tpay | grep -iE '^(HTTP|location)'
-# 302 and location: https://www.openmercato.com/run/m/@open-mercato/gateway-tpay
-curl -sI 'https://modules.openmercato.com/submit?npm=@open-mercato/gateway-tpay' | grep -iE '^(HTTP|location)'
-# 302 and location: https://www.openmercato.com/run/submit?npm=@open-mercato/gateway-tpay
-curl -sI -H 'Origin: https://example.com' https://modules.openmercato.com/compat | grep -i '^access-control'
-# access-control-allow-origin: * on the 302
-for p in llms.txt raw/modules.md m/@open-mercato/gateway-tpay.md badge/@open-mercato/gateway-tpay.svg built-in.json robots.txt; do
-  curl -s -o /dev/null -w "%{http_code} $p\n" "https://modules.openmercato.com/$p"
-done
-# 200 for each, no redirect: the old host serves the files itself
-diff <(curl -s https://modules.openmercato.com/llms.txt) <(curl -s https://www.openmercato.com/run/llms.txt) && echo same
-# same
-curl -sI https://modules.openmercato.com/sitemap-index.xml | grep -iE '^(HTTP|location)'
-# 302 and location: https://www.openmercato.com/run/sitemap-index.xml
-curl -sI -H 'Origin: https://example.com' https://www.openmercato.com/run/modules.json | grep -i '^access-control'
-# access-control-allow-origin: * through the proxy
-curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
-# 302 and location: https://www.openmercato.com/run/templates
-curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'
-# "$id": "https://modules.openmercato.com/schema/modules-1.json", with a 200 and no redirect
-curl -sI https://modules.openmercato.com/templates.json | grep -iE '^(HTTP|location)'
-curl -sI https://modules.openmercato.com/picker.json | grep -iE '^(HTTP|location)'
-curl -sI https://modules.openmercato.com/modules.json | grep -iE '^(HTTP|location)'
-# HTTP/2 200 and no location, for all three
-```
+   ```sh
+   curl -sI https://modules.openmercato.com/ | grep -iE '^(HTTP|location)'
+   # 302 and location: https://www.openmercato.com/run/modules
+   curl -sI https://modules.openmercato.com/m/@open-mercato/gateway-tpay | grep -iE '^(HTTP|location)'
+   # 302 and location: https://www.openmercato.com/run/m/@open-mercato/gateway-tpay
+   curl -sI 'https://modules.openmercato.com/submit?npm=@open-mercato/gateway-tpay' | grep -iE '^(HTTP|location)'
+   # 302 and location: https://www.openmercato.com/run/submit?npm=@open-mercato/gateway-tpay
+   curl -sI -H 'Origin: https://example.com' https://modules.openmercato.com/compat | grep -i '^access-control'
+   # access-control-allow-origin: * on the 302
+   for p in llms.txt raw/modules.md m/@open-mercato/gateway-tpay.md badge/@open-mercato/gateway-tpay.svg built-in.json robots.txt; do
+     curl -s -o /dev/null -w "%{http_code} $p\n" "https://modules.openmercato.com/$p"
+   done
+   # 200 for each, no redirect: the old host serves the files itself
+   diff <(curl -s https://modules.openmercato.com/llms.txt) <(curl -s https://www.openmercato.com/run/llms.txt) && echo same
+   # same
+   curl -sI https://modules.openmercato.com/sitemap-index.xml | grep -iE '^(HTTP|location)'
+   # 302 and location: https://www.openmercato.com/run/sitemap-index.xml
+   curl -sI -H 'Origin: https://example.com' https://www.openmercato.com/run/modules.json | grep -i '^access-control'
+   # access-control-allow-origin: * through the proxy
+   curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
+   # 302 and location: https://www.openmercato.com/run/templates
+   curl -s https://modules.openmercato.com/schema/modules-1.json | grep '"\$id"'
+   # "$id": "https://modules.openmercato.com/schema/modules-1.json", with a 200 and no redirect
+   curl -sI https://modules.openmercato.com/templates.json | grep -iE '^(HTTP|location)'
+   curl -sI https://modules.openmercato.com/picker.json | grep -iE '^(HTTP|location)'
+   curl -sI https://modules.openmercato.com/modules.json | grep -iE '^(HTTP|location)'
+   # HTTP/2 200 and no location, for all three
+   ```
 
-5. The main site: the robots.txt line, the optional `/modules` and `/templates` redirects, the Run menu in Webflow
-   and the sitemap in Search Console.
-6. Change the addresses that still name `modules.openmercato.com` for the site (pages work through the 302, files
-   are served there as before; the new addresses are the ones to publish):
+6. **The main site.** The robots.txt line (item 4 of the contract), the optional `/modules` and `/templates` redirects
+   (`SHORT_REDIRECTS` of the proxy, or zone redirect rules) and the sitemap in Search Console.
+7. **Links to `/run`.** Only now the pull requests of other repositories that point their links at
+   `https://www.openmercato.com/run/...` (the Open Mercato docs, create-mercato-app, create-mercato-module) are ready
+   to merge: before step 5 those links would reach the preview. In this repository, change the addresses that still
+   name `modules.openmercato.com` for the site (pages work through the 302, files are served there as before; the new
+   addresses are the ones to publish):
    - `mcp/wrangler.toml`: `BUILTIN_INDEX_URL` to `https://www.openmercato.com/run/built-in.json` and
      `MODULES_INDEX_URL` to `https://www.openmercato.com/run/modules.json`, then deploy the Worker. Both keep working
      before that: the old host serves both files.
@@ -712,14 +748,16 @@ curl -sI https://modules.openmercato.com/modules.json | grep -iE '^(HTTP|locatio
    - Leave every `/schema/` address as it is. The skill `skills/om-find-module/SKILL.md` needs no change on the day:
      the files it reads (`/llms.txt`, `/raw/modules.md`, `/m/<package>.md`) answer a 200 on the old host, with or
      without `-L`. The same holds for the copies inside generated apps and installed plugins, which run `curl -s`.
-7. Later, once settled: `MOVED_STATUS` to 301.
+8. Later, once settled: `MOVED_STATUS` to 301.
 
 ### Rollback
 
 Delete the repository variables `SITE_URL`, `BASE_PATH` and `HOME_PATH` and run `pages` by hand. The build returns to
 the domain root, `functions/site.ts` to the default and Functions to `/` only, so `modules.openmercato.com` serves the
 site again. The 302s were not cached. Then take the `/run` route off the proxy of the main site, or point it at a
-redirect to `https://modules.openmercato.com` with the prefix cut (and `/run/modules` to its root).
+redirect to `https://modules.openmercato.com` with the prefix cut (and `/run/modules` to its root). The preview jobs
+run again from the next `pages` run, so the proxy can also go back to the preview upstream
+([docs/proxy/README.md](proxy/README.md), Roll back).
 
 ## Triage of submissions
 
