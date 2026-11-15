@@ -536,6 +536,31 @@ describe('pages.yml steps', () => {
     expect(readFileSync(out, 'utf8')).toBe('url=\n')
   })
 
+  it('the preview job names the branch alias address of the preview and its own deployment (15 Nov)', () => {
+    const out = join(tmp, 'output.txt')
+    const vars = { ...env(), CF_PAGES_PROJECT: 'open-mercato-modules', GITHUB_OUTPUT: out }
+    writeFileSync(out, '')
+    const r = runStep(stepRun('pages.yml', 'Preview summary'), {
+      ...vars,
+      PREVIEW_BRANCH: 'run-preview',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev/',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(readFileSync(out, 'utf8')).toBe('url=https://run-preview.open-mercato-modules.pages.dev/run/modules\n')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Preview of the /run layout deployed to branch `run-preview` of Cloudflare Pages project `open-mercato-modules`: ' +
+        'https://run-preview.open-mercato-modules.pages.dev/run/modules\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/modules\n\n' +
+        'Check it, or the proxy in front of it, with docs/proxy/check.sh <base URL>.\n',
+    )
+    // the alias rule of Cloudflare Pages: lowercase, anything but a-z, 0-9 and - becomes -
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Preview summary'), { ...vars, PREVIEW_BRANCH: 'Run_Preview/2', DEPLOYMENT_URL: '' })
+    expect(readFileSync(out, 'utf8')).toBe('url=https://run-preview-2.open-mercato-modules.pages.dev/run/modules\n')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toContain('This deployment: see the wrangler output\n')
+  })
+
   it('the deploy job finds .well-known in the downloaded site and stops without it', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
     runStep(stepRun('pages.yml', 'Build'), env())

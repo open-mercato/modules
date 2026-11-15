@@ -1,0 +1,31 @@
+# Example config of the proxy of the main site for the Run section (docs/proxy/README.md). Not deployed from this
+# repository. Deploy it from this folder, on the Cloudflare account of the openmercato.com zone:
+#   npx wrangler deploy --config wrangler.toml
+name = "openmercato-run-proxy"
+main = "worker.ts"
+compatibility_date = "2026-10-01"
+
+# /run and every path under it. The pattern also catches /running and the like; the Worker passes those on to the
+# main site unchanged.
+[[routes]]
+pattern = "www.openmercato.com/run*"
+zone_name = "openmercato.com"
+
+# Only with SHORT_REDIRECTS = "on": the short addresses /modules and /templates.
+# [[routes]]
+# pattern = "www.openmercato.com/modules"
+# zone_name = "openmercato.com"
+#
+# [[routes]]
+# pattern = "www.openmercato.com/templates"
+# zone_name = "openmercato.com"
+
+[vars]
+# The Pages address the proxy reads from. The preview while the proxy is tested; on switch day the production
+# address of the project, https://open-mercato-modules.pages.dev.
+UPSTREAM = "https://run-preview.open-mercato-modules.pages.dev"
+# "on" answers /modules and /templates with a 302 to /run/modules and /run/templates (add their routes above).
+SHORT_REDIRECTS = "off"
+
+[observability]
+enabled = false

@@ -19,6 +19,8 @@
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
 # still run, then the run ends green with a warning and a summary that say the site was not deployed.
+# Two more jobs, `preview-build` and `preview` (15 Nov), deploy the nested layout with fixed values to the branch
+# alias run-preview of the same project while production is still at the root; see the comment above them.
 name: pages
 
 on:
@@ -284,4 +286,196 @@ jobs:
             echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL%/}$path"
             echo ""
             echo "This deployment: ${url:-see the wrangler output}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Preview of the /run layout (docs/RUNBOOK.md, Preview of the /run layout): the nested build with fixed values,
+  # deployed to the branch alias run-preview of the same project, https://run-preview.<project>.pages.dev, so the
+  # proxy of the main site (docs/proxy/) can be tested before the switch. Two jobs of their own, parallel to build and
+  # deploy, which need nothing from them: a failed preview never fails or skips the production deploy. The same guards
+  # as build and deploy (public repository, a successful workflow_run, CLOUDFLARE_ACCOUNT_ID, the token of environment
+  # cloudflare). Skipped once production itself is nested (the repository variable BASE_PATH is set to another
+  # value than /): production then serves the same layout. PAGES_NOINDEX=1 adds dist/_headers (X-Robots-Tag: noindex)
+  # and a robots.txt that allows nothing, for this build only.
+  preview-build:
+    name: preview build
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (vars.BASE_PATH == '' || vars.BASE_PATH == '/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      commit: ${{ steps.checkout.outputs.commit }}
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      MCP_URL: ${{ vars.MCP_URL }}
+      WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+    steps:
+      - name: Check deploy settings
+        id: settings
+        env:
+          HAS_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_ACCOUNT_ID" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        run: |
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data 2>"$err"; then
+            git worktree add --detach .data origin/data
+          elif grep -q "couldn't find remote ref" "$err"; then
+            mkdir -p .data
+            echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$err"
+            echo "::error::Cannot read the data branch; not deploying."
+            exit 1
+          fi
+
+      - name: Build
+        run: yarn build
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check preview contents
+        # the nested layout as a whole (the same check as the build job) and, with PAGES_NOINDEX, dist/_headers and
+        # the robots.txt of the preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Check Pages limits
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          yarn wrangler pages project validate dist
+          echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Check Pages Functions
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Upload preview
+        if: ${{ steps.settings.outputs.deploy == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  preview:
+    name: preview
+    needs: preview-build
+    if: ${{ needs.preview-build.outputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: cloudflare
+      url: ${{ steps.summary.outputs.url }}
+    env:
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      # the branch of the preview deployment; Cloudflare serves its latest deployment at
+      # https://<branch>.<project>.pages.dev
+      PREVIEW_BRANCH: run-preview
+    steps:
+      - name: Check token
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set but environment cloudflare has no CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preview-build.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Download preview
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: preview
+          path: dist
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check downloaded preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Deploy preview
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          # a branch other than main is a preview deployment of the project, never production
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true
+
+      - name: Preview summary
+        id: summary
+        # The branch alias keeps the latest preview: lowercase, every character but a-z, 0-9 and - becomes -.
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          alias="$(printf '%s' "$PREVIEW_BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/^-+//; s/-+$//')"
+          url="https://$alias.$CF_PAGES_PROJECT.pages.dev/run/modules"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          this="see the wrangler output"
+          if [ -n "$DEPLOYMENT_URL" ]; then this="${DEPLOYMENT_URL%/}/run/modules"; fi
+          {
+            echo "Preview of the /run layout deployed to branch \`$PREVIEW_BRANCH\` of Cloudflare Pages project \`$CF_PAGES_PROJECT\`: $url"
+            echo ""
+            echo "This deployment: $this"
+            echo ""
+            echo "Check it, or the proxy in front of it, with docs/proxy/check.sh <base URL>."
           } >> "$GITHUB_STEP_SUMMARY"
