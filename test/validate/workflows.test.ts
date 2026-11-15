@@ -301,7 +301,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
     })
     expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)
-    expect(Object.keys(w.jobs)).toEqual(['build', 'deploy'])
+    expect(Object.keys(w.jobs)).toEqual(['build', 'deploy', 'preview-build', 'preview'])
     type PagesJob = Job & { env?: Record<string, string>; outputs?: Record<string, string>; needs?: string }
     const build = w.jobs.build as PagesJob
     const deploy = w.jobs.deploy as PagesJob
@@ -391,14 +391,16 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       command: 'pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true',
     })
 
-    const run = runText(w)
+    // production alone: the preview jobs have a test of their own
+    const prod = { ...w, jobs: { build: w.jobs.build as Job, deploy: w.jobs.deploy as Job } }
+    const run = runText(prod)
     expect(run).toContain('git worktree add --detach .data origin/data')
     expect(run).toContain('yarn build')
     expect(run).toContain('$site/.well-known/agent-skills/index.json')
     expect(run).toContain('test -f dist/404.html')
     // move of 13 Nov: the site in dist/<base>/ under a base path; functions/site.ts and the layout checked in both jobs
     expect(run).toContain('site="dist${base:+/$base}"')
-    expect(steps(w).filter((x) => x.run === 'yarn om pages-site')).toHaveLength(2)
+    expect(steps(prod).filter((x) => x.run === 'yarn om pages-site')).toHaveLength(2)
     expect(run.match(/yarn om pages-site --check dist/g)).toHaveLength(2)
     expect(run).toContain('yarn wrangler pages project validate dist')
     // templates.openmercato.com (decision B of 29 Oct): the Functions bundle and its route list are checked before a deploy
@@ -410,13 +412,88 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(run).toContain('::warning title=pages not deployed::')
   })
 
+  it('pages: the preview of the /run layout, beside production and never in its way (15 Nov)', () => {
+    const w = wf('pages.yml')
+    type PagesJob = Job & { env?: Record<string, string>; outputs?: Record<string, string>; needs?: string }
+    const build = w.jobs.build as PagesJob
+    const deploy = w.jobs.deploy as PagesJob
+    const pb = w.jobs['preview-build'] as PagesJob
+    const pv = w.jobs.preview as PagesJob
+    // production needs nothing from the preview, so a failed preview cannot fail or skip it
+    expect(deploy.needs).toBe('build')
+    expect(build).not.toHaveProperty('needs')
+    expect(pb).not.toHaveProperty('needs')
+    expect(pv.needs).toBe('preview-build')
+    // the guards of build, plus: skipped once production itself is nested
+    expect(pb.if).toBe(
+      `\${{ ${(build.if ?? '').replace(/^\$\{\{\s*|\s*\}\}$/g, '')} && (vars.BASE_PATH == '' || vars.BASE_PATH == '/') }}`,
+    )
+    expect(pv.if).toBe("${{ needs.preview-build.outputs.deploy == 'true' }}")
+    // fixed values, independent of the repository variables, and noindex for this build only
+    const fixed = {
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/run',
+      HOME_PATH: '/modules',
+      PAGES_NOINDEX: '1',
+    }
+    expect(pb.env).toMatchObject(fixed)
+    expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'run-preview' })
+    expect(build.env).not.toHaveProperty('PAGES_NOINDEX')
+    expect(deploy).not.toHaveProperty('env')
+    // the environment, token and checks of the deploy job
+    expect(pv.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
+    expect(pb['timeout-minutes']).toBe(15)
+    expect(pv['timeout-minutes']).toBe(15)
+    expect(pb.outputs).toEqual(build.outputs)
+    const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
+    for (const n of [
+      'Check deploy settings',
+      'Read data branch',
+      'Build',
+      'Check Pages limits',
+      'Check Pages Functions',
+    ])
+      expect(byName(pb, n), n).toEqual(byName(build, n))
+    for (const n of ['Check token', 'Set up Node', 'Enable Corepack', 'Install', 'Write Functions config'])
+      expect(byName(pv, n), n).toEqual(byName(deploy, n))
+    expect(byName(pv, 'Checkout')?.with).toEqual({
+      ref: '${{ needs.preview-build.outputs.commit }}',
+      'persist-credentials': false,
+    })
+    expect(byName(pb, 'Upload preview')?.with).toEqual({
+      name: 'preview',
+      path: 'dist',
+      'include-hidden-files': true,
+      'if-no-files-found': 'error',
+      'retention-days': 1,
+    })
+    expect(byName(pb, 'Upload preview')?.if).toBe("${{ steps.settings.outputs.deploy == 'true' }}")
+    expect(byName(pv, 'Download preview')?.with).toEqual({ name: 'preview', path: 'dist' })
+    expect(byName(pb, 'Check preview contents')?.run).toContain('yarn om pages-site --check dist')
+    expect(byName(pv, 'Check downloaded preview')?.run).toContain('yarn om pages-site --check dist')
+    // a branch alias of the same project, never the production branch
+    const dep = byName(pv, 'Deploy preview')
+    expect(dep?.uses).toBe(byName(deploy, 'Deploy')?.uses)
+    expect(dep?.with).toEqual({
+      ...(byName(deploy, 'Deploy')?.with ?? {}),
+      command:
+        'pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true',
+    })
+    expect(JSON.stringify(pv)).not.toContain('--branch=main')
+  })
+
   it('pages and mcp-deploy read the Cloudflare account ID the same way, from the repository variable', () => {
     const accountIds = ['pages.yml', 'mcp-deploy.yml'].flatMap((f) =>
       steps(wf(f))
         .filter((s) => s.uses?.startsWith('cloudflare/wrangler-action@'))
         .map((s) => s.with?.accountId),
     )
-    expect(accountIds).toEqual(['${{ vars.CLOUDFLARE_ACCOUNT_ID }}', '${{ vars.CLOUDFLARE_ACCOUNT_ID }}'])
+    // pages.yml: the deploy and the preview; mcp-deploy.yml: the Worker
+    expect(accountIds).toEqual([
+      '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
+      '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
+      '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
+    ])
   })
 
   it('the wrangler the deploy runs uploads .well-known (its walk skips no dotfolder but .git and .wrangler)', () => {
