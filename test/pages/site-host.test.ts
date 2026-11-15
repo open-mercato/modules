@@ -30,6 +30,9 @@ import {
   isPreviewHost,
   isSitemapPath,
   MOVED_STATUS,
+  NOINDEX_HEADERS,
+  NOINDEX_ROBOTS,
+  noindexFromEnv,
   otherProductionOrigins,
   pagesHostProblem,
   pagesRedirects,
@@ -49,6 +52,7 @@ import {
   finishNestedLayout,
   htmlRefs,
   linkProblem,
+  markNoindex,
   nestedRootEntries,
   pagesLayout,
 } from '../../lib/emit/pages-layout.ts'
@@ -330,6 +334,26 @@ describe('hostRedirect under a base path', () => {
     // any other host (local `wrangler pages dev`, an unknown custom domain) is not sent to production either
     for (const u of ['http://localhost:8788/m/x', 'http://127.0.0.1:8788/', 'https://other.example/m/x'])
       expect(at(u), u).toBeNull()
+  })
+
+  it('the preview branch alias of pages.yml (run-preview) serves the nested site on its own host', () => {
+    // the address `wrangler pages deploy --branch=run-preview` gets: an alias, not a deployment hash
+    const alias = 'https://run-preview.open-mercato-modules.pages.dev'
+    expect(isPreviewHost(new URL(alias).hostname)).toBe(true)
+    // the root leads to the home page on the same host, query kept, never to production
+    expect(hostRedirect(`${alias}/?utm=x`, WWW)).toEqual({ location: `${alias}/run/modules?utm=x`, status: 302 })
+    // the site and the base are static files and _redirects; Functions leave them alone
+    for (const p of ['/run', '/run/', '/run/modules', '/run/m/@open-mercato/gateway-tpay', '/run/modules.json']) {
+      expect(hostRedirect(`${alias}${p}`, WWW), p).toBeNull()
+      expect(hostFile(`${alias}${p}`, WWW), p).toBeNull()
+    }
+    // a page of the old addresses is not sent to www.openmercato.com from the preview
+    for (const p of ['/m/@open-mercato/gateway-tpay', '/templates', '/submit?npm=x'])
+      expect(hostRedirect(`${alias}${p}`, WWW), p).toBeNull()
+    // a file of the old addresses answers from the copy under the base, robots.txt included
+    expect(hostFile(`${alias}/llms.txt`, WWW)).toBe('/run/llms.txt')
+    expect(hostFile(`${alias}/robots.txt`, WWW)).toBe('/run/robots.txt')
+    expect(hostFile(`${alias}/m/@open-mercato/gateway-tpay.md`, WWW)).toBe('/run/m/@open-mercato/gateway-tpay.md')
   })
 
   it('sends the templates host root to the Templates section of the site', () => {
@@ -764,6 +788,35 @@ describe('the nested layout of dist', () => {
     expect(checkPagesLayout(dist, WWW)).toEqual([])
   })
 
+  it('a noindex build (PAGES_NOINDEX, the preview) adds _headers and a robots.txt that allows nothing', () => {
+    expect(noindexFromEnv({ PAGES_NOINDEX: '1' })).toBe(true)
+    expect(noindexFromEnv({ PAGES_NOINDEX: 'true' })).toBe(true)
+    for (const v of [undefined, '', '0', 'false', 'no'])
+      expect(noindexFromEnv({ PAGES_NOINDEX: v }), String(v)).toBe(false)
+    expect(NOINDEX_HEADERS).toMatch(/^\/\*\n {2}X-Robots-Tag: noindex\n$/m)
+    expect(NOINDEX_ROBOTS).not.toMatch(/Allow|Sitemap/)
+    const dist = join(tmp, 'dist')
+    site(dist)
+    writeFileSync(join(dist, 'run', 'robots.txt'), 'User-agent: *\nAllow: /\n')
+    finishNestedLayout(dist, WWW, true)
+    expect(readFileSync(join(dist, '_headers'), 'utf8')).toBe(NOINDEX_HEADERS)
+    expect(readFileSync(join(dist, 'run', 'robots.txt'), 'utf8')).toBe(NOINDEX_ROBOTS)
+    expect(checkPagesLayout(dist, WWW, 50, true)).toEqual([])
+    // the same dist is not a production build: its _headers is named
+    expect(checkPagesLayout(dist, WWW).join('\n')).toMatch(/dist\/_headers is for a noindex build/)
+    // a noindex check of a build without the files names both
+    rmSync(join(dist, '_headers'))
+    writeFileSync(join(dist, 'run', 'robots.txt'), 'User-agent: *\nAllow: /\n')
+    const problems = checkPagesLayout(dist, WWW, 50, true).join('\n')
+    expect(problems).toMatch(/dist\/_headers is not NOINDEX_HEADERS/)
+    expect(problems).toMatch(/dist\/run\/robots\.txt is not NOINDEX_ROBOTS/)
+    // a production build in the same dist removes the _headers of the preview before it starts
+    markNoindex(dist, WWW)
+    expect(cleanNestedRoot(dist, WWW)).toEqual([])
+    // the base folder goes too (Astro writes it again), and nothing of the preview is left at the root
+    expect(readdirSync(dist)).toEqual([])
+  })
+
   it('the home page and the data file of the same name sit side by side: modules.html and modules.json', () => {
     const dist = join(tmp, 'dist')
     site(dist)
@@ -951,7 +1004,12 @@ describe('the nested layout of dist', () => {
   })
 
   it('yarn om pages-site writes functions/site.ts and --check compares it and the layout', () => {
-    const env = { SITE_URL: process.env.SITE_URL, BASE_PATH: process.env.BASE_PATH, HOME_PATH: process.env.HOME_PATH }
+    const env = {
+      SITE_URL: process.env.SITE_URL,
+      BASE_PATH: process.env.BASE_PATH,
+      HOME_PATH: process.env.HOME_PATH,
+      PAGES_NOINDEX: process.env.PAGES_NOINDEX,
+    }
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     try {
@@ -992,6 +1050,20 @@ describe('the nested layout of dist', () => {
       expect(error.mock.calls.flat().join('\n')).toContain('is a host of the Pages project')
       expect(readFileSync(join(tmp, 'functions', 'site.ts'), 'utf8')).toBe(siteModule(WWW))
       process.env.SITE_URL = 'https://www.openmercato.com'
+      // PAGES_NOINDEX: the check wants the noindex files, and the root layout has none
+      error.mockClear()
+      process.env.PAGES_NOINDEX = '1'
+      expect(pagesSite(ctx(['--check', dist]))).toBe(1)
+      expect(error.mock.calls.flat().join('\n')).toMatch(/_headers is not NOINDEX_HEADERS/)
+      markNoindex(dist, WWW)
+      expect(pagesSite(ctx(['--check', dist]))).toBe(0)
+      expect(log.mock.calls.flat().join('\n')).toContain('home /run/modules, noindex)')
+      process.env.BASE_PATH = '/'
+      delete process.env.HOME_PATH
+      expect(pagesSite(ctx([]))).toBe(2)
+      expect(error.mock.calls.flat().join('\n')).toContain('PAGES_NOINDEX needs a BASE_PATH other than /')
+      delete process.env.PAGES_NOINDEX
+      process.env.HOME_PATH = '/modules'
       process.env.BASE_PATH = '/../x'
       expect(pagesSite(ctx([]))).toBe(2)
       expect(pagesSite(ctx(['--bogus']))).toBe(2)

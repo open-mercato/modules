@@ -21,6 +21,9 @@ import {
   isFilePath,
   isNested,
   isSitemapPath,
+  NOINDEX_HEADERS,
+  NOINDEX_ROBOTS,
+  noindexFromEnv,
   pagesRedirects,
   pagesRoutes,
   SCHEMA_DIR,
@@ -35,6 +38,9 @@ export const ROOT_FILES = ['404.html', '_routes.json', '_redirects'] as const
 
 /** Folders of the site that hold what pages load (scripts, styles, fonts): they move with the pages. */
 const PAGE_ASSETS = ['_astro/', 'fonts/'] as const
+
+/** The root file of a noindex build only (PAGES_NOINDEX, the preview of pages.yml): `X-Robots-Tag: noindex`. */
+export const NOINDEX_ROOT_FILE = '_headers'
 
 /** Pages reads these only at the root of the upload; inside the site folder they would be stray files. */
 const ROOT_ONLY = ['_routes.json', '_redirects'] as const
@@ -55,8 +61,9 @@ export function nestedRootEntries(c: SiteConfig): string[] {
  * its own copies of all of them (the 404 page under the base, the WebMCP script fetching tools-1.json from its own
  * origin, and the data files of the site).
  */
-export function finishNestedLayout(root: string, c: SiteConfig): void {
+export function finishNestedLayout(root: string, c: SiteConfig, noindex = false): void {
   const site = join(root, siteDir(c))
+  if (noindex) markNoindex(root, c)
   for (const f of ROOT_ONLY) rmSync(join(site, f), { force: true })
   writeFileSync(join(root, '_routes.json'), `${JSON.stringify(pagesRoutes(c.base), null, 2)}\n`)
   writeFileSync(join(root, '_redirects'), pagesRedirects(c))
@@ -66,13 +73,24 @@ export function finishNestedLayout(root: string, c: SiteConfig): void {
 }
 
 /**
+ * Marks a nested build as not for search engines (PAGES_NOINDEX, the preview of pages.yml): dist/_headers sends
+ * `X-Robots-Tag: noindex` with every static file, and the site's robots.txt allows nothing and names no sitemap. On a
+ * `*.pages.dev` host `/robots.txt` answers with that file too (hostFile).
+ */
+export function markNoindex(root: string, c: SiteConfig): void {
+  writeFileSync(join(root, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
+  writeFileSync(join(root, siteDir(c), 'robots.txt'), NOINDEX_ROBOTS)
+}
+
+/**
  * Empties the root of the upload for a nested build: removes only the names nestedRootEntries() lists (Astro empties
  * only its own outDir, and a root file of an earlier build must not ship). Returns the other names it left in place,
  * which checkPagesLayout() would flag.
  */
 export function cleanNestedRoot(root: string, c: SiteConfig): string[] {
   if (!existsSync(root)) return []
-  const known = new Set(nestedRootEntries(c))
+  // the _headers of an earlier preview build goes too: a production build must not ship its noindex
+  const known = new Set([...nestedRootEntries(c), NOINDEX_ROOT_FILE])
   for (const name of known) rmSync(join(root, name), { recursive: true, force: true })
   return readdirSync(root)
     .filter((name) => !known.has(name))
@@ -89,6 +107,7 @@ export function pagesLayout(): AstroIntegration {
   let config: SiteConfig | null = null
   let root = ''
   let building = false
+  let noindex = false
   return {
     name: 'om-pages-layout',
     hooks: {
@@ -100,6 +119,7 @@ export function pagesLayout(): AstroIntegration {
           BASE_PATH: astro.base,
           HOME_PATH: process.env.HOME_PATH,
         })
+        noindex = noindexFromEnv(process.env)
         root = fileURLToPath(astro.outDir)
         const project = fileURLToPath(astro.root)
         if (resolve(project) === resolve(root) || !relative(resolve(root), resolve(project)).startsWith('..'))
@@ -115,7 +135,7 @@ export function pagesLayout(): AstroIntegration {
       },
       'astro:build:done': ({ logger }) => {
         if (!config) return
-        finishNestedLayout(root, config)
+        finishNestedLayout(root, config, noindex)
         logger.info(
           `site in ${siteDir(config)}/; ${[...ROOT_FILES, ...FIXED_ROOT_FILES].join(', ')} and ${SCHEMA_DIR}/ at the root of the upload`,
         )
@@ -203,7 +223,7 @@ function readJson(file: string): unknown {
  * at the root, every link of every page stays under the base, and the file rule of the old host (isFilePath) knows
  * every published file of the site. The home file must carry the canonical link of the home page.
  */
-export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[] {
+export function checkPagesLayout(root: string, c: SiteConfig, max = 50, noindex = false): string[] {
   const problems: string[] = []
   const say = (m: string): void => {
     if (problems.length < max) problems.push(m)
@@ -256,6 +276,18 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50): string[
       say(`${shown(copy)} differs from ${shown(join(site, f))}`)
   }
   const allowed = new Set<string>(nestedRootEntries(c))
+  if (noindex) {
+    allowed.add(NOINDEX_ROOT_FILE)
+    const headers = join(root, NOINDEX_ROOT_FILE)
+    if (!existsSync(headers) || readFileSync(headers, 'utf8') !== NOINDEX_HEADERS)
+      say(`${shown(headers)} is not NOINDEX_HEADERS; a noindex build sends X-Robots-Tag: noindex`)
+    const robots = join(site, 'robots.txt')
+    if (!existsSync(robots) || readFileSync(robots, 'utf8') !== NOINDEX_ROBOTS)
+      say(`${shown(robots)} is not NOINDEX_ROBOTS; a noindex build allows no crawling`)
+  } else if (existsSync(join(root, NOINDEX_ROOT_FILE))) {
+    say(`${shown(join(root, NOINDEX_ROOT_FILE))} is for a noindex build (PAGES_NOINDEX), and this build is not one`)
+    allowed.add(NOINDEX_ROOT_FILE)
+  }
   for (const name of readdirSync(root)) if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
   for (const f of ROOT_ONLY) if (existsSync(join(site, f))) say(`${shown(join(site, f))} belongs at the root`)
   // the old host serves the machine-readable files itself and redirects the pages (hostFile, hostRedirect): a

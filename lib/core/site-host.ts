@@ -127,6 +127,22 @@ export function siteConfigFromEnv(env: Record<string, string | undefined>): Site
   )
 }
 
+/**
+ * True when PAGES_NOINDEX asks for a build that search engines must not index: the preview of the nested layout that
+ * pages.yml deploys to a Pages branch alias next to production (docs/RUNBOOK.md, Preview of the /run layout).
+ */
+export function noindexFromEnv(env: Record<string, string | undefined>): boolean {
+  const v = (env.PAGES_NOINDEX ?? '').trim().toLowerCase()
+  return v === '1' || v === 'true'
+}
+
+/** dist/_headers of a noindex build: every static file of the upload answers with `X-Robots-Tag: noindex`. */
+export const NOINDEX_HEADERS =
+  '# A preview build (PAGES_NOINDEX): not for search engines.\n/*\n  X-Robots-Tag: noindex\n'
+
+/** robots.txt of a noindex build: nothing to crawl, and no sitemap to follow. */
+export const NOINDEX_ROBOTS = 'User-agent: *\nDisallow: /\n'
+
 /** True when the site sits under a base path, so dist holds it in dist/<base>/ (the nested layout). */
 export function isNested(c: SiteConfig): boolean {
   return c.base !== '/'

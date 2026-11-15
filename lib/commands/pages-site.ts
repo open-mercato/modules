@@ -7,6 +7,8 @@
 // `$id`, links under the base) does not match.
 // Both refuse a nested site whose SITE_URL is a host of the Pages project (pagesHostProblem): its old addresses would
 // answer 404 instead of a redirect.
+// With PAGES_NOINDEX=1 (the preview job of pages.yml) the check also wants the noindex files of the build (dist/_headers
+// and a robots.txt that allows nothing, lib/emit/pages-layout.ts markNoindex); only a nested layout has them.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -14,6 +16,8 @@ import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import {
   hasHomePath,
   homePath,
+  isNested,
+  noindexFromEnv,
   pagesHostProblem,
   siteConfigFromEnv,
   siteModule,
@@ -51,6 +55,11 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error(`om pages-site: ${hostProblem}`)
     return EXIT_ENV
   }
+  const noindex = noindexFromEnv(process.env)
+  if (noindex && !isNested(c)) {
+    console.error('om pages-site: PAGES_NOINDEX needs a BASE_PATH other than / (the preview of the nested layout)')
+    return EXIT_ENV
+  }
   const file = join(ctx.root, SITE_MODULE)
   const want = siteModule(c)
   const have = existsSync(file) ? readFileSync(file, 'utf8') : null
@@ -66,14 +75,14 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error(`om pages-site: ${check} does not exist; build first`)
     return EXIT_ENV
   }
-  const problems = checkPagesLayout(dist, c)
+  const problems = checkPagesLayout(dist, c, 50, noindex)
   if (have !== want) problems.unshift(`${SITE_MODULE} is not for ${siteRoot(c)}; run yarn om pages-site`)
   if (problems.length > 0) {
     for (const p of problems) console.error(`om pages-site: ${p}`)
     return EXIT_VALIDATION
   }
   console.log(
-    `om pages-site: ${check} matches ${siteRoot(c)} (base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''})`,
+    `om pages-site: ${check} matches ${siteRoot(c)} (base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''}${noindex ? ', noindex' : ''})`,
   )
   return EXIT_OK
 }
