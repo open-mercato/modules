@@ -95,6 +95,26 @@ test('with a mouse a panel opens on hover and closes when the pointer leaves', a
   await ctx.close()
 })
 
+test('with reduced motion a panel left for the next menu goes at once and does not show over it', async ({
+  browser,
+}) => {
+  const ctx = await browser.newContext({ ...DESKTOP, reducedMotion: 'reduce' })
+  const page = await ctx.newPage()
+  await page.goto(url('/about'), { waitUntil: 'load' })
+  const drops = page.locator('nav.navbar_menu [data-dropdown]')
+  const count = await drops.count()
+  // from the last menu to the one before it: the closing panel comes later in the page, so it would draw on top
+  const [left, right] = [drops.nth(count - 2), drops.nth(count - 1)]
+  await right.locator('.navbar_dropdown-toggle').hover()
+  await expect(right.locator('.navbar_dropdown-list')).toBeVisible()
+  await left.locator('.navbar_dropdown-toggle').hover()
+  const opacity = await right.locator('.navbar_dropdown-list').evaluate((el) => getComputedStyle(el).opacity)
+  expect(opacity).toBe('0')
+  await expect(left.locator('.navbar_dropdown-list')).toBeVisible()
+  await expect(right.locator('.navbar_dropdown-list')).toBeHidden()
+  await ctx.close()
+})
+
 test('keyboard: focus opens a panel, Enter and Escape close it, and the focus ring stays inside the header', async ({
   browser,
 }) => {
@@ -139,11 +159,15 @@ test('keyboard: focus opens a panel, Enter and Escape close it, and the focus ri
   await ctx.close()
 })
 
-for (const reducedMotion of ['reduce', 'no-preference'] as const)
-  test(`keyboard: Tab goes from a menu button into its panel and on to the next menu (reduced motion: ${reducedMotion})`, async ({
+for (const [reducedMotion, javaScriptEnabled] of [
+  ['reduce', true],
+  ['no-preference', true],
+  ['reduce', false],
+] as const)
+  test(`keyboard: Tab goes from a menu button into its panel and on to the next menu (reduced motion: ${reducedMotion}${javaScriptEnabled ? '' : ', no JavaScript'})`, async ({
     browser,
   }) => {
-    const ctx = await browser.newContext({ ...DESKTOP, reducedMotion })
+    const ctx = await browser.newContext({ ...DESKTOP, reducedMotion, javaScriptEnabled })
     const page = await ctx.newPage()
     await page.goto(url('/about'), { waitUntil: 'load' })
     const drops = page.locator('nav.navbar_menu [data-dropdown]')
