@@ -35,16 +35,16 @@ npx create-mercato-template describe --from ../my-template
 What each step does:
 
 1. `prepare` reads one pinned commit, offline and without running app code. It leaves out files that must not leave your machine, such as `.env` files and uploads. It empties the values in `.env.example` that are not stock, scans the files for secrets and writes `mercato-template.json`. The result is `<out>/tree` and `<out>/report.json` with a `snapshotId`. `--out` is a new or empty directory outside the app. On a secret or any other error, only the report is written and nothing can be published.
-2. Review `report.json`: errors, warnings, emptied env keys, images, modules and uncommitted files. Open each image and check it for personal data. Uncommitted files are not exported by default.
-3. `publish` checks that `<out>` still matches the report. Then it creates the repository, pushes the snapshot as one commit without history, marks the repository as a template and adds the topics `open-mercato-template` and `open-mercato`. Choose `--public` for the catalog. It asks before it creates anything. Add `--expect <snapshotId>` to publish without the prompt. If a GitHub step fails, the output has a `Retry:` command that continues with `--resume`.
-4. `describe` prints the catalog entry as YAML, with its path in the first line. A required value it could not fill is a comment that says which flag to pass, for example `--use-case b2b-portal --summary "..." --when-to-use "Use when ..."`. Run it again with those flags until no such comment is left. The texts are plain: no links, markdown, HTML, backticks or long dashes.
+2. Review `report.json`: errors, warnings, emptied env keys, images, modules and uncommitted files. Open each image and check it for personal data. Uncommitted files are not exported by default. Fix every `env-undocumented` warning now: write a comment line above the key in `.env.example`, commit and run `prepare` again. The catalog entry needs that description, and a published repository is not rewritten.
+3. `publish` checks that `<out>` still matches the report. Then it creates the repository, pushes the snapshot as one commit without history, marks the repository as a template and adds the topics `open-mercato-template` and `open-mercato`. Choose `--public` for the catalog. On a terminal it asks before it creates anything. Add `--expect <snapshotId>` to publish without the prompt. A script needs `--expect`. If a GitHub step fails, the output has a `Retry:` command that continues with `--resume`.
+4. `describe` prints the catalog entry as YAML, with its path in the first line. A required value it could not fill is a comment that says what to do. For `useCase`, `summary` and `whenToUse` it names a flag, for example `--use-case b2b-portal --summary "..." --when-to-use "Use when ..."`. Run it again with those flags until no such comment is left. The texts are plain: no links, markdown, HTML, backticks or long dashes.
 
 Every flag is in the tool's [guide](https://github.com/open-mercato/create-mercato-template/blob/main/docs/guide.md).
 
 ## 3. Add the entry to the catalog
 
 1. Fork https://github.com/open-mercato/modules and save the printed YAML at the printed path, `templates/<owner>/<repo>.yml`, with the owner and repository in lower case.
-2. Run `yarn om format templates` in your clone. It needs `yarn install` first.
+2. Run `yarn om format templates` in your clone, after `yarn install`. The Node.js and Yarn versions for the clone are in the [README](../README.md#development).
 3. Open the pull request and tick `I maintain this package or have the maintainer's consent`.
 4. Read the summary of the `validate` check and fix what it lists. A person reviews and merges.
 
@@ -62,7 +62,7 @@ npx create-mercato-app my-app --template <slug | owner/repo>[#ref]
 
 A slug exists only after a curator assigns one to your entry. Without it, use `owner/repo`. `#ref` is a branch, tag or commit.
 
-The CLI prints `Template: owner/repo@<sha> (<state>)` before it downloads anything. The state is `verified`, or it says why the commit is not. The CLI then renames the app in `package.json` (unless `--keep-name`), adds an `openMercatoTemplate` field and removes `mercato-template.json`.
+The CLI prints `Template: owner/repo@<sha> (<state>)` before it downloads anything. The state is `verified` or a form of `not verified`, for example `not listed, not verified` for a repository that is not in the catalog yet. The CLI then renames the app in `package.json` (unless `--keep-name`), adds an `openMercatoTemplate` field and removes `mercato-template.json`.
 
 On an older `create-mercato-app` without `--template`:
 
