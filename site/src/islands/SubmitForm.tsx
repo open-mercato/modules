@@ -1955,7 +1955,7 @@ export default function SubmitForm(props: SubmitFormProps) {
       </div>
 
       <div class="sf__right">
-        <p class="t-tagline">// Preview</p>
+        <p class="t-tagline">Preview</p>
         {t && typed && result && (ignored || states.includes('core')) ? (
           <>
             <p class="sf__ignored">

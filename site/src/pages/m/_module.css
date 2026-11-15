@@ -7,32 +7,6 @@
   padding: 24px var(--pad) 96px;
 }
 
-/* breadcrumbs: two quiet links */
-.crumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 14px;
-  color: var(--ink-2);
-}
-.crumbs li + li::before {
-  content: '/';
-  margin-right: 8px;
-  color: var(--ink-3);
-}
-.crumbs a {
-  color: var(--ink-2);
-  text-decoration: none;
-}
-.crumbs a:hover {
-  color: var(--ink);
-  text-decoration: underline;
-}
-
 .mod__banners {
   display: grid;
   gap: 8px;
@@ -61,7 +35,7 @@
   width: var(--tile, 56px);
   height: var(--tile, 56px);
   border: 1px solid var(--line-strong);
-  border-radius: 12px;
+  border-radius: var(--radius-m);
   background: var(--bg-2);
   color: var(--ink);
 }
@@ -73,7 +47,6 @@
 .mh__title {
   margin: 0;
   font-size: clamp(28px, 4vw, 40px);
-  font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
   overflow-wrap: break-word;
@@ -143,7 +116,7 @@
 .mh__chip {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-m);
   background: var(--bg-3);
   color: var(--ink);
   font-size: 13px;
@@ -232,7 +205,7 @@
   font-weight: 500;
 }
 /* the Install button (Piotr, 28 Oct): a green full-width button on top of the right column opens the steps. The green
-   is the Verified chip's pair (ok-ink on ok-fill, 6.86:1 in both themes); the edge keeps it apart from a white page */
+   is the Verified chip's pair (ok-ink on ok-fill, 6.86:1); the edge keeps it apart from a white page */
 .inst__open {
   display: block;
   min-width: 0;
@@ -244,22 +217,23 @@
   gap: 8px;
   min-height: 44px;
   padding: 10px 16px;
-  border: 1px solid color-mix(in srgb, var(--ok-ink) 30%, transparent);
+  border: 0;
   border-radius: var(--radius-m);
-  background: var(--ok-fill);
-  color: var(--ok-ink);
+  /* the dark .button.is-tertiary of the main site (navbar of 14 Nov), as Launch sandbox */
+  background: var(--cta);
+  color: var(--cta-ink);
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
   cursor: pointer;
   list-style: none;
-  transition: box-shadow var(--dur-1) var(--ease);
+  transition: background-color var(--dur-1) var(--ease);
 }
 .inst__btn::-webkit-details-marker {
   display: none;
 }
 .inst__btn:hover {
-  box-shadow: inset 0 0 0 1px var(--ok-ink);
+  background: var(--cta-hover);
 }
 .inst__btn:focus-visible {
   outline: 2px solid var(--focus);
@@ -270,7 +244,7 @@
 }
 /* failed on every tested version: the button only shows the steps, so it does not look like the way forward */
 .inst__btn--quiet {
-  border-color: var(--line-strong);
+  border: 1px solid var(--line-strong);
   background: var(--bg);
   color: var(--ink);
   font-size: 15px;
@@ -358,7 +332,7 @@
   width: 24px;
   height: 24px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: 50%;
   color: var(--ink);
   font-size: 12px;
   font-weight: 500;
@@ -636,7 +610,7 @@
   min-height: 36px;
   padding: 6px 14px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-m);
   font-size: 14px;
   color: var(--ink);
   cursor: pointer;
@@ -675,7 +649,7 @@
 .works__chip {
   padding: 4px 12px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-m);
   font-size: 14px;
 }
 
@@ -737,7 +711,7 @@
 .sb__stats dd {
   margin: 2px 0 0;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 .sb__dl {
@@ -796,7 +770,6 @@
     font-size: 16px;
   }
   /* touch targets of at least 44 px (spec 7.10) */
-  .crumbs a,
   .sb__links a,
   .tech__links a {
     display: inline-flex;
@@ -870,6 +843,9 @@
   --bg-2: var(--film-2);
   --bg-3: #1b1b1b;
   --focus: #b4f372;
+  --cta: var(--cta-dark);
+  --cta-hover: var(--cta-dark-hover);
+  --cta-ink: var(--film);
 }
 .agentv__bar {
   display: flex;
@@ -1597,7 +1573,6 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-m);
   background: var(--bg);
-  box-shadow: var(--shadow-float);
 }
 .ib__pop ul {
   display: grid;
@@ -1695,7 +1670,6 @@
   border-left: 1px solid var(--line-strong);
   background: var(--bg);
   color: var(--ink);
-  box-shadow: var(--shadow-float);
 }
 .rdrawer::backdrop {
   background: #0c0c0c66;
@@ -2370,7 +2344,6 @@ a.ssq {
 }
 .md a {
   color: var(--ink);
-  text-decoration-color: var(--line-strong);
 }
 .md hr {
   border: 0;
@@ -2462,7 +2435,7 @@ a.ssq {
 .tech__h {
   margin: 0;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .tech__chips {
   display: flex;

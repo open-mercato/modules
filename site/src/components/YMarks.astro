@@ -1,7 +1,7 @@
 ---
 // Registration marks "Y" (Tonik brand book): three 9 px arms at 120 degrees, 1 px, in the four corners of the nearest
 // positioned parent. Only on the hero and the nameplate (spec 7.3). Decorative. Colour: Tonik Grey 400 #B6B6B6 on
-// light and Grey 900 #434343 on dark, not --line-strong (1.24:1 on white, invisible; spec 7.3 amendment 23.10).
+// the page and Grey 900 #434343 on the film, not --line-strong (1.24:1 on white, invisible; spec 7.3 amendment 23.10).
 interface Props {
   inset?: number
   tone?: 'line' | 'film'
@@ -33,14 +33,8 @@ const corners = ['tl', 'tr', 'bl', 'br']
     pointer-events: none;
     color: #b6b6b6;
   }
-  :global(:root[data-theme='dark']) .ymark,
   .ymark--film {
     color: #434343;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .ymark {
-      color: #434343;
-    }
   }
   .ymark--tl {
     top: var(--y-inset);

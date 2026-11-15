@@ -65,7 +65,7 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
     ])
       expect(text).toContain(h)
     // no GitHub Pages fallback: Cloudflare Pages at modules.openmercato.com is the only place of the site (28 Oct)
-    expect(text).toContain('`curl -s https://modules.openmercato.com/raw/modules.md`')
+    expect(text).toContain('`curl -sL https://modules.openmercato.com/raw/modules.md`')
     expect(text).not.toContain('github.io')
     expect(text).toContain('yarn mercato module enable @open-mercato/core --module <id>')
     expect(text).toContain('Approved modules: <package>@<version>')
@@ -76,10 +76,10 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
   it('matches the create-mercato-app copy: ask before building, llms.txt, module info, an unreachable catalog reported', () => {
     expect(text).toContain('Ask before you build.')
     expect(text).toContain('`yarn mercato module info <package> --json` for one module')
-    expect(text).toContain('`curl -s https://modules.openmercato.com/llms.txt` for the index')
+    expect(text).toContain('`curl -sL https://modules.openmercato.com/llms.txt` for the index')
     expect(text).toContain('When no source answers')
     expect(text).toContain('When nothing fits, say so and continue with the task router')
-    expect(text).toContain('`https://modules.openmercato.com/m/<package>.md`')
+    expect(text).toContain('`curl -sL https://modules.openmercato.com/m/<package>.md`')
   })
 
   it('checks the CLI for `search` itself, and says what a 404 of the site means (audit of 29 Oct, C34)', () => {
@@ -89,6 +89,15 @@ describe('skills/om-find-module/SKILL.md (Agent Skills format)', () => {
     // modules.openmercato.com answers 404 until the Cloudflare deploy (README, docs/RUNBOOK.md)
     expect(text).toContain('answers 404 until the site is deployed')
     expect(text).toContain('https://github.com/open-mercato/modules/tree/main/modules')
+  })
+
+  it('follows redirects on every catalog fetch, so the move under www.openmercato.com/run keeps it working', () => {
+    // after the move the Pages hosts answer every old address with a 302 and an empty body (lib/core/site-host.ts);
+    // `curl -s` without -L would print nothing, and the agent would report the catalog as unreachable
+    const curls = text.match(/curl [^`]*/g) ?? []
+    expect(curls.length).toBeGreaterThanOrEqual(3)
+    for (const c of curls) expect(c, c).toMatch(/^curl -s?L\b|^curl (?:-\S+ )*-L\b/)
+    expect(text).toContain('A redirect to `https://www.openmercato.com/run/...` is the same catalog: follow it.')
   })
 })
 

@@ -4,6 +4,7 @@
 // MCP and the CLI agree. Pure: no Node APIs.
 import { buildIndexEntryWithRules, anatomySummary, withSlotConflicts, type CatalogRef } from '../core/entry.ts'
 import { judgedFacts, presetBackendRoutes } from '../core/health.ts'
+import { schemaUrl } from '../core/home.ts'
 import { lineVersion } from '../core/policy.ts'
 import { withPeerLibraries } from '../core/plan.ts'
 import {
@@ -241,7 +242,7 @@ export function buildModulesIndex(
     ? { listed: data.coverage.listed, missing: data.coverage.missing.slice(0, 50) }
     : { listed: official.length, missing: [] }
   const body: Omit<ModulesIndex, 'generatedAt' | 'dataVersion'> = {
-    $schema: `${opts.site}/schema/modules-1.json`,
+    $schema: schemaUrl('modules'),
     schemaVersion: 1,
     site: opts.site,
     dataAsOf: {
@@ -365,8 +366,7 @@ export function redirectPage(target: string, title: string, relative?: string): 
     `<link rel="canonical" href="${t}">` +
     `<title>${escapeXml(title)} moved</title>` +
     `<style>body{margin:0 auto;padding:48px 16px;max-width:40rem;font:16px/1.5 Geist,ui-sans-serif,system-ui,sans-serif;` +
-    `color:#0c0c0c;background:#fff}a{color:inherit;text-underline-offset:3px}` +
-    `@media (prefers-color-scheme:dark){body{color:#fafafa;background:#0c0c0c}}</style></head>` +
+    `color:#0c0c0c;background:#fff}a{color:inherit;text-underline-offset:3px}</style></head>` +
     `<body><p>This module was renamed. Its page is <a href="${go}">${escapeXml(title)}</a>.</p></body></html>\n`
   )
 }

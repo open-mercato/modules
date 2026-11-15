@@ -123,8 +123,13 @@ export interface EmitData {
 export interface EmitOptions {
   /** Site root plus base path, no trailing slash (e.g. https://open-mercato.github.io/modules). */
   site: string
-  /** Base path of the site (`/modules`, or `/` on the domain). */
+  /** Base path of the site (`/run`, or `/` on the domain). */
   base: string
+  /**
+   * Path of the home page under the base (HOME_PATH, lib/core/site-host.ts): `/modules` puts it at `<site>/modules`.
+   * Absent or `/`: the home page is `<site>/`.
+   */
+  home?: string
   /** Clock (IsoDateTime): `generatedAt` and the age gate. */
   now: string
   /** MCP endpoint (repo variable MCP_URL), or null before the first Worker deploy. */

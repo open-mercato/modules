@@ -199,7 +199,7 @@ const rows: { k: string; items: Item[]; tone?: 'warn' }[] = [
 <article class="iplan" aria-label="Install plan">
   <header class="iplan__head">
     <p class="iplan__tag">
-      {`// Install plan · `}<code translate="no" set:html={wbrHtml(title ?? (first ? `${first.locator.replace(/^npm:|^github:/, '')}@${first.version}` : 'nothing to install'))} />{' '}<span class="nw">→ OM <code>{omVersion}</code></span>
+      {`Install plan · `}<code translate="no" set:html={wbrHtml(title ?? (first ? `${first.locator.replace(/^npm:|^github:/, '')}@${first.version}` : 'nothing to install'))} />{' '}<span class="nw">→ OM <code>{omVersion}</code></span>
     </p>
     <p class:list={['iplan__policy', `iplan__policy--${decision}`]}>
       Agent policy: <strong>{decisionText}</strong>

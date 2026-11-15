@@ -1266,16 +1266,13 @@ const techBanners =
   webmcp
   jsonLd={jsonLd}
   skip={{ href: '#module-body', label: 'Skip to module details' }}
+  trail={[
+    { label: 'Modules', href: href('/') },
+    { label: catTitle(entry.category), href: href(categoryPage(entry.category)) },
+  ]}
 >
   <div class="band">
     <div class="sheet mod">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <ol role="list">
-          <li><a href={href('/')}>Modules</a></li>
-          <li><a href={href(categoryPage(entry.category))}>{catTitle(entry.category)}</a></li>
-        </ol>
-      </nav>
-
       <div class="mod__banners">
         {held && (
           <Banner variant="hold" link={entry.supersededBy ? { href: entry.supersededBy.startsWith('core:') ? href(builtInPage(entry.supersededBy.slice(5))) : href(modulePage(byLocator.get(entry.supersededBy)?.path ?? '')), label: entry.supersededBy.startsWith('core:') ? `Built-in ${entry.supersededBy.slice(5)}` : 'Use instead' } : undefined}>

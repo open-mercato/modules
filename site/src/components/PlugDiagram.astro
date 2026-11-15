@@ -62,7 +62,7 @@ const cols = [requires.length > 0 ? 'req' : null, 'node', ext.length > 0 ? 'ext'
     margin: 0;
     container: plug / inline-size;
     font-family: var(--font-mono);
-    /* the module node: ink block on light, a dark plate with a lime edge on dark */
+    /* the module node: an ink block on the page, a dark plate with a lime edge on the film */
     --node-fill: var(--ink);
     --node-ink: var(--bg);
     --node-stroke: transparent;
@@ -70,22 +70,12 @@ const cols = [requires.length > 0 ? 'req' : null, 'node', ext.length > 0 ? 'ext'
     --req: #2f520b;
     --ext: #6b55a0;
   }
-  :global(:root[data-theme='dark']) .plug,
   :global(.band--film) .plug {
     --node-fill: var(--film-2);
     --node-ink: var(--film-ink);
     --node-stroke: #b4f372;
     --req: #b4f372;
     --ext: #bc9aff;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .plug {
-      --node-fill: var(--film-2);
-      --node-ink: var(--film-ink);
-      --node-stroke: #b4f372;
-      --req: #b4f372;
-      --ext: #bc9aff;
-    }
   }
   .plug__in {
     display: grid;

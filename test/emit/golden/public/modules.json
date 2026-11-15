@@ -1,8 +1,8 @@
 {
-  "$schema": "https://wojciechszyjka.github.io/modules/schema/modules-1.json",
+  "$schema": "https://modules.openmercato.com/schema/modules-1.json",
   "schemaVersion": 1,
   "generatedAt": "2026-10-23T03:05:00Z",
-  "dataVersion": "1.0.0-202610230305.h2d3760",
+  "dataVersion": "1.0.0-202610230305.hafb7f9",
   "site": "https://wojciechszyjka.github.io/modules",
   "dataAsOf": {
     "nightly": "2026-10-23T02:17:00Z",

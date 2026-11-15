@@ -3,7 +3,8 @@
 Two scripts for the Open Mercato core team call (spec appendix C). Real data only: no fixture, no hand-edited
 numbers. C1 is the 60 second version from milestone M1 (no receipts needed), C2 the 2 minute version from M2.
 
-Both were rehearsed on 25 Oct 2026 in Chromium at 1440 x 900, dark theme, on a build of the receipts state of
+Both were rehearsed on 25 Oct 2026 in Chromium at 1440 x 900, dark theme (removed on 13 Nov: the site
+is light only, like openmercato.com), on a build of the receipts state of
 24 Oct (preview receipts from the local Docker runner, before the first nightly CI run). The notes under each step
 say what the screen showed then. Numbers move with the data; read them off the screen, not from this file.
 

@@ -5,7 +5,6 @@ import { basename, join } from 'node:path'
 import { Validator } from '@cfworker/json-schema'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { DEFAULT_SITE_URL } from '../../lib/core/home.ts'
 import { schemaFiles } from '../../lib/emit/schemas.ts'
 import { EnvName, ModuleId } from '../../lib/schema/common.ts'
 import { publishedJsonSchemas } from '../../lib/schema/json-schema.ts'
@@ -29,7 +28,7 @@ const MANIFESTS = join(FIXTURES, 'templates', 'manifests')
 const validEntries = walk(join(ENTRIES, 'valid')).filter((p) => p.endsWith('.yml'))
 const invalidEntries = walk(join(ENTRIES, 'invalid')).filter((p) => p.endsWith('.yml'))
 
-const schemas = publishedJsonSchemas(DEFAULT_SITE_URL)
+const schemas = publishedJsonSchemas()
 const entrySchema = new Validator(schemas.template as never, '2020-12', false)
 const manifestSchema = new Validator(schemas['mercato-template'] as never, '2020-12', false)
 
@@ -294,7 +293,7 @@ describe('template-1.json and mercato-template-1.json', () => {
   // the files the site publishes at /schema/, from the emitter itself; update with `-u` in a separate commit
   for (const name of ['template-1.json', 'mercato-template-1.json'])
     it(`publishes ${name}`, async () => {
-      const text = String(schemaFiles(DEFAULT_SITE_URL).get(`schema/${name}`))
+      const text = String(schemaFiles().get(`schema/${name}`))
       expect(JSON.parse(text).$id).toBe(`https://modules.openmercato.com/schema/${name}`)
       await expect(text).toMatchFileSnapshot(`golden/${name}`)
     })

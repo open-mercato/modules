@@ -115,7 +115,7 @@ export function injectMeta(html: string, meta: string): string {
 
 /**
  * Request path to a file under `dir`; null when outside or missing. Vite strips the base path before the
- * middlewares run (`/modules/modules.json` arrives as `/modules.json`), so a path with or without the base works.
+ * middlewares run (`/run/modules.json` arrives as `/modules.json`), so a path with or without the base works.
  */
 export function resolveDevFile(dir: string, base: string, url: string): string | null {
   let pathname: string

@@ -1,9 +1,13 @@
 // A tiny static server with the lookup order of the static host (spec 3.4, WP02 item 13), for the e2e suite (WP16).
 // `/m/@x/y` answers with `m/@x/y.html` even when the folder `m/@x/y/` sits next to it, a folder without a trailing
-// slash and with an index.html answers 301, and so does a base path without its slash (`/modules`), so the link
+// slash and with an index.html answers 301, and so does a base path without its slash (`/run`), so the link
 // check can see it; anything else answers 404 with 404.html. Serves only under the base. The base defaults to the
-// domain root, as the site is built and deployed to Cloudflare Pages since 28 Oct; pass `/modules` (or set
-// BASE_PATH) for a build made under a path.
+// domain root, as the site is built and deployed to Cloudflare Pages since 28 Oct; pass `/run` (or set
+// BASE_PATH) for a build made under a path. Such a build has the site in <dist>/<base>/ (nested layout of 13 Nov,
+// lib/emit/pages-layout.ts), which is served from there; a flat build of an older tree is served from <dist> itself.
+// The static rules of <dist>/_redirects are answered first, as Pages does: with a home path (HOME_PATH `/modules`)
+// they send `/run` and `/run/` to `/run/modules`, and the site folder has no index.html.
+// Paths outside the base answer 404 here, where Pages runs the redirect Function (lib/core/site-host.ts).
 //   node test/e2e/serve.ts <dist> [port] [base]      (defaults: out/e2e/real, 4410, BASE_PATH or /)
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs'
 import { createServer, type ServerResponse } from 'node:http'
@@ -81,10 +85,37 @@ function send(res: ServerResponse, status: number, file: string | null, head: bo
   else createReadStream(file).pipe(res)
 }
 
+/**
+ * The folder that holds the site: <dist>/<base> for a nested build, else <dist>. Told by 404.html, which every build
+ * has in its site folder (index.html is absent when the home page has a path of its own).
+ */
+export function siteFolder(dist: string, basePath: string): string {
+  const sub = basePath.replace(/^\/+|\/+$/g, '')
+  return sub && isFile(join(dist, sub, '404.html')) ? join(dist, sub) : dist
+}
+
+/** True when `dist` holds a built site for the base path. */
+export function isBuilt(dist: string, basePath: string): boolean {
+  return isFile(join(siteFolder(dist, basePath), '404.html'))
+}
+
+/** The static rules of a Pages `_redirects` file (`<from> <to> [status]`, no splats or placeholders), by path. */
+export function staticRedirects(text: string): Map<string, { to: string; status: number }> {
+  const rules = new Map<string, { to: string; status: number }>()
+  for (const line of text.split('\n')) {
+    const [from, to, status] = line.trim().split(/\s+/)
+    if (!from || !to || from.startsWith('#') || /[*:]/.test(from)) continue
+    if (!rules.has(from)) rules.set(from, { to, status: Number(status ?? 302) })
+  }
+  return rules
+}
+
 export function startServer(dist: string, port: number, basePath: string): ReturnType<typeof createServer> {
-  const root = resolve(dist)
+  const root = resolve(siteFolder(dist, basePath))
   const base = `/${basePath.replace(/^\/+|\/+$/g, '')}`.replace(/^\/$/, '')
   const notFound = join(root, '404.html')
+  const rulesFile = join(resolve(dist), '_redirects')
+  const rules = staticRedirects(isFile(rulesFile) ? readFileSync(rulesFile, 'utf8') : '')
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost')
     const head = req.method === 'HEAD'
@@ -93,7 +124,14 @@ export function startServer(dist: string, port: number, basePath: string): Retur
       send(res, 404, isFile(notFound) ? notFound : null, head, gzip)
       return
     }
-    // a base path without its slash (`/modules`) answers with a 301 to `/modules/`, as GitHub Pages did
+    // _redirects wins over a file, and Pages keeps the query of the request when the target has none
+    const rule = rules.get(url.pathname)
+    if (rule) {
+      res.writeHead(rule.status, { location: `${rule.to}${rule.to.includes('?') ? '' : url.search}` })
+      res.end()
+      return
+    }
+    // a base path without its slash (`/run`) answers with a 301 to `/run/`, as Pages does for a folder with an index
     if (base && url.pathname === base) {
       res.writeHead(301, { location: `${base}/${url.search}` })
       res.end()
@@ -120,8 +158,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const dist = process.argv[2] ?? 'out/e2e/real'
   const port = Number(process.argv[3] ?? 4410)
   const base = process.argv[4] ?? process.env.BASE_PATH ?? DEFAULT_BASE_PATH
-  if (!isFile(join(dist, 'index.html'))) {
-    console.error(`serve: ${join(dist, 'index.html')} not found; run yarn e2e:build first`)
+  if (!isBuilt(dist, base)) {
+    console.error(`serve: ${join(siteFolder(dist, base), '404.html')} not found; run yarn e2e:build first`)
     process.exit(2)
   }
   startServer(dist, port, base)

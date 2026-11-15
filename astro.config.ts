@@ -7,6 +7,8 @@ import sitemap from '@astrojs/sitemap'
 import { defineConfig } from 'astro/config'
 import type { AstroIntegration } from 'astro'
 import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from './lib/core/home.ts'
+import { siteConfigFromEnv } from './lib/core/site-host.ts'
+import { pagesLayout } from './lib/emit/pages-layout.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 const emitIntegration = new URL('./lib/emit/astro-integration.ts', import.meta.url)
@@ -29,6 +31,28 @@ function devGallery(): AstroIntegration {
       'astro:config:setup': ({ command, injectRoute }) => {
         if (command === 'dev' || process.env.OM_DEV_GALLERY === '1')
           injectRoute({ pattern: '/_dev/gallery', entrypoint: './site/src/pages/_dev/gallery.astro', prerender: true })
+      },
+    },
+  }
+}
+
+/**
+ * Path of the home page under the base (HOME_PATH, lib/core/site-host.ts): `/` by default, `/modules` for the Run
+ * section of the main site (`/run/modules`). A value the layout cannot hold stops the build here.
+ */
+const home = siteConfigFromEnv(process.env).home
+
+/**
+ * The home page (site/src/pages/_home.astro) is the one page whose address is configured, so its route is injected at
+ * the home path instead of coming from a file name: `/` by default (dist/index.html, as an index.astro gives), or
+ * `/modules` under the base. Astro then knows the real address, so the sitemap and `astro dev` have it too.
+ */
+function homeRoute(): AstroIntegration {
+  return {
+    name: 'om-home-route',
+    hooks: {
+      'astro:config:setup': ({ injectRoute }) => {
+        injectRoute({ pattern: home, entrypoint: './site/src/pages/_home.astro', prerender: true })
       },
     },
   }
@@ -63,10 +87,16 @@ export default defineConfig({
     paintedDirective(),
     sitemap({ filter: (page) => !page.includes('/_dev/') }),
     devGallery(),
+    homeRoute(),
     ...(await loadOmData()),
+    // last: under a base path the site goes to dist/<base>/ and the Pages root files are laid out after everything
+    // else has written (lib/emit/pages-layout.ts); at the domain root it does nothing
+    pagesLayout(),
   ],
   devToolbar: { enabled: false },
   vite: {
+    // href('/') of site/src/lib/url.ts reads it, in pages and islands alike
+    define: { 'import.meta.env.OM_HOME_PATH': JSON.stringify(home) },
     server: { fs: { allow: [root] } },
     // express (via the MCP SDK) hoists cookie@0.7 to the root; Astro's prerender bundle needs its own cookie@2,
     // so bundle it instead of resolving the bare import from the project root at render time.

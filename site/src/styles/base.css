@@ -8,7 +8,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: 72px;
+  scroll-padding-top: calc(var(--header-h) + 16px);
 }
 body {
   margin: 0;
@@ -53,10 +53,15 @@ ol[role='list'] {
   list-style: none;
   padding: 0;
 }
+/* Geist ships 400 and 500 only: bold text is Medium, never a browser-made bold */
+b,
+strong,
+th {
+  font-weight: 500;
+}
+/* links as on openmercato.com: the text colour, a plain underline */
 a {
   color: inherit;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
 }
 button,
 input,
@@ -85,10 +90,6 @@ samp {
   letter-spacing: 0;
   font-size: 0.86em;
 }
-::selection {
-  background: var(--lime);
-  color: #0c0c0c;
-}
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
@@ -97,25 +98,29 @@ samp {
   display: none !important;
 }
 
-/* ---------- type scale (spec 7.3): weight 400, tight tracking, no bold headings ---------- */
+/* ---------- type scale (spec 7.3): the heading scale of the main site's pages, Geist Regular 400 ---------- */
+/* h1 and h2 as the --_headings tokens of openmercato.com (navbar of 14 Nov): 4.75rem / 1 / -.19rem for h1, and for
+   section headings its .heading-style-h3, 2.75rem / 1.2 / -.11rem; both smaller on tablets and phones. The tracking is
+   the same -.04em at every size there, so it is written in em: a small heading with its own size keeps it in
+   proportion. Geist ships 400 and 500 only, so nothing heavier than 500 is ever asked for */
 .t-display {
-  font-size: 64px;
+  font-size: 4.75rem;
   line-height: 1;
   letter-spacing: -0.04em;
   font-weight: 400;
 }
 .t-h1,
 h1 {
-  font-size: 44px;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
+  font-size: 4.75rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
   font-weight: 400;
 }
 .t-h2,
 h2 {
-  font-size: 32px;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  font-size: 2.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
   font-weight: 400;
 }
 .t-h3,
@@ -133,11 +138,11 @@ h3 {
   font-size: 14px;
   line-height: 1.5;
 }
+/* the tagline of openmercato.com: Geist Mono 10 px, capitals, no extra tracking */
 .t-tagline {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.625rem;
   line-height: 1.33;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-2);
   font-weight: 400;
@@ -169,50 +174,50 @@ h3 {
 .num {
   font-variant-numeric: tabular-nums;
 }
-@media (max-width: 479px) {
-  .t-display {
-    font-size: 40px;
-    line-height: 1.05;
-  }
+@media (max-width: 991px) {
+  .t-display,
   .t-h1,
   h1 {
-    font-size: 32px;
+    font-size: 4.25rem;
   }
   .t-h2,
   h2 {
-    font-size: 24px;
-    line-height: 1.2;
+    font-size: 2.5rem;
   }
+}
+@media (max-width: 767px) {
+  .t-display,
+  .t-h1,
+  h1 {
+    font-size: 3.5rem;
+  }
+  .t-h2,
+  h2 {
+    font-size: 2rem;
+  }
+}
+@media (max-width: 479px) {
   .t-h3,
   h3 {
     font-size: 18px;
   }
-  .t-tagline {
-    font-size: 10px;
-  }
 }
 
 /* ---------- the sheet: a 1200 px frame with 1 px rails, sections split by hairlines (openmercato.com) ---------- */
+/* as .padding-global > .container-main there: 5 % of the window on each side at every width, so the rails of the page
+   meet the rails of the navbar; the content starts 1.5rem inside them (.section-padding, .75rem on small phones) */
 :root {
-  --sheet-margin: 24px;
-  --pad: 40px;
-  /* width of the brand column: header and footer navigation start on the same vertical line */
-  --brand-col: 232px;
-  --header-h: 56px;
+  --pad: 24px;
+  /* the sticky navbar of the main site (Header.astro), 3.85rem as there */
+  --header-h: 3.85rem;
 }
-@media (max-width: 991px) {
+@media (max-width: 479px) {
   :root {
-    --pad: 32px;
-  }
-}
-@media (max-width: 767px) {
-  :root {
-    --sheet-margin: 0px;
-    --pad: var(--gutter);
+    --pad: 12px;
   }
 }
 .sheet {
-  width: min(var(--container), 100% - 2 * var(--sheet-margin));
+  width: min(var(--container), 90%);
   margin-inline: auto;
   border-inline: 1px solid var(--rail);
   position: relative;
@@ -221,12 +226,10 @@ h3 {
 .band > .sheet {
   border-bottom: 1px solid var(--rail);
 }
-/* film: dark in both themes, with the quiet Tonik hex lattice of the AnatomyFilm and the Hive, so the hero reads as
-   film and not as more page in dark mode */
+/* film: always dark on the light page, a plain #0C0C0C with the #1F1F1F lines of the main site's dark sections (no
+   lattice in the background since the navbar of 14 Nov) */
 .band--film {
   background-color: var(--film);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231a1a1a' stroke-width='1'/%3E%3C/svg%3E");
-  background-position: center top;
   border-block: 1px solid var(--film-line);
   color: var(--film-ink);
   --rail: var(--film-line);
@@ -237,26 +240,17 @@ h3 {
   --ink-3: #8a8a8a;
   --bg: var(--film);
   --bg-2: var(--film-2);
-  --bg-3: color-mix(in srgb, var(--film-2) 70%, #2a2a2a);
+  --bg-3: color-mix(in srgb, var(--film-2) 70%, #1f1f1f);
   --focus: #b4f372;
   --ok-text: #b4f372;
   --id-ink: #bc9aff;
   --wait-ink: #eefb63;
   --bad-ink: #ff6b6b;
+  /* the main button on the film is yellow, as in the dark CTA band of openmercato.com */
+  --cta: var(--cta-dark);
+  --cta-hover: var(--cta-dark-hover);
+  --cta-ink: var(--film);
   color-scheme: dark;
-}
-/* dark theme: the film is #141414 (tokens.css), so its lattice steps up to #1F1F1F to stay a quiet texture */
-:root[data-theme='dark'] .band--film {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .band--film {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0v8.1L0 16.2v16.1l14 8.1 14-8.1V16.2L14 8.1M14 40.4v8.1' fill='none' stroke='%231f1f1f' stroke-width='1'/%3E%3C/svg%3E");
-  }
-}
-/* the Hive draws its own lattice; two hex grids of different pitch would moire, so the band stays plain film */
-.band--film:has(.omhive) {
-  background-image: none !important;
 }
 .band--film .sheet {
   border-inline-color: var(--film-line);
@@ -266,19 +260,17 @@ h3 {
   border-bottom: 0;
 }
 .section {
-  padding: 64px var(--pad);
+  padding: 3rem var(--pad);
+}
+/* the first section starts 1.5rem under the context line (PageContext.astro), as an h1 under the breadcrumbs of the
+   main site's pages */
+.ctx + .band > .sheet:first-child {
+  padding-top: 1.5rem;
 }
 .section--tight {
   padding-block: 32px;
 }
-@media (max-width: 767px) {
-  .section {
-    padding-block: 40px;
-  }
-  .sheet {
-    border-inline: 0;
-  }
-}
+
 .grid-12 {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -310,7 +302,8 @@ h3 {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  z-index: 100;
+  /* over the sticky navbar (z-index 9999, as on the main site) */
+  z-index: 10000;
   background: var(--ink);
   color: var(--bg);
   padding: 8px 12px;
@@ -410,7 +403,7 @@ h3 {
 }
 
 /* without JavaScript nothing on a page is dead (review r4): every copy button (the text it copies stays on the page)
-   and every control marked data-needs-js (the theme switch) is not shown; the colour scheme of the system applies */
+   and every control marked data-needs-js is not shown */
 @media (scripting: none) {
   button[data-copy],
   [data-needs-js] {

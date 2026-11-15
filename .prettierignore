@@ -7,5 +7,6 @@ quality/reviews/
 .wp/
 .agents/
 .claude/
+.ai/
 .npm/
 test/fixtures/templates/modules-from-modules-ts/scaffold-*

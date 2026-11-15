@@ -105,13 +105,15 @@ export function buildFeed(
   now: string,
   /** The receipts come from a preview run (`dataAsOf.source`): level and receipt changes say so. */
   preview = false,
+  /** Address of the home page; `<site>/` unless the site has a home path (EmitOptions.home). */
+  home: string = `${site}/`,
 ): string {
   const byLoc = new Map(entries.map((e) => [e.locator, e]))
   const updated = changes[0]?.at ?? now
   const items = changes.map((c) => {
     const e = byLoc.get(c.locator)
     const title = e?.title ?? c.locator.replace(/^(npm|github):/, '')
-    const link = e ? e.links.page : `${site}/`
+    const link = e ? e.links.page : home
     const base = changeText(c, title)
     const text = preview && PREVIEW_TYPES.has(c.type) ? `${base.replace(/\.$/, '')} (${PREVIEW_NOTE}).` : base
     const id = changeId(c, site)
@@ -132,7 +134,7 @@ export function buildFeed(
     '  <title>Open Mercato Modules changes</title>',
     `  <id>${escapeXml(`${site}/feed.xml`)}</id>`,
     `  <link rel="self" href="${escapeXml(`${site}/feed.xml`)}"/>`,
-    `  <link href="${escapeXml(`${site}/`)}"/>`,
+    `  <link href="${escapeXml(home)}"/>`,
     `  <updated>${escapeXml(updated)}</updated>`,
     '  <author><name>Open Mercato Modules</name></author>',
     ...items,

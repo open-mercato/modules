@@ -73,10 +73,12 @@ describe('check-text', () => {
     expect(inScope('modules/@x/y.yml')).toBe(true)
     expect(inScope('templates/acme/b2b-portal.yml')).toBe(true)
     expect(inScope('docs/design/registry-list/notes.json')).toBe(true)
-    expect(inScope('site/src/pages/index.astro')).toBe(true)
+    expect(inScope('site/src/pages/_home.astro')).toBe(true)
     expect(inScope('test/fixtures/README.md')).toBe(false)
     expect(inScope('site/.generated/public/llms.txt')).toBe(false)
     expect(inScope('lib/core/text.ts')).toBe(false)
+    // the menus and the footer copied from the main site are texts for people, though the file is code
+    expect(inScope('lib/core/main-site.ts')).toBe(true)
   })
 
   it('returns 1 on a banned character and 0 on a clean tree', () => {
@@ -87,6 +89,10 @@ describe('check-text', () => {
     const flags = { data: '.data', out: 'out', offline: false, json: false }
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     const err = vi.spyOn(console, 'error').mockImplementation(() => {})
+    expect(checkText({ args: [], flags, root })).toBe(0)
+    // local operator files of the agent pipeline (.ai/, never committed) are not texts of the repository
+    mkdirSync(join(root, '.ai', 'trackers'), { recursive: true })
+    writeFileSync(join(root, '.ai', 'trackers', 'github.md'), `a tracker ${EM} local\n`)
     expect(checkText({ args: [], flags, root })).toBe(0)
     writeFileSync(join(root, 'modules', '@x', 'y.yml'), `summary: fast ${EM} reliable\n`)
     expect(checkText({ args: [], flags, root })).toBe(1)

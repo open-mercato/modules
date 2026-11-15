@@ -297,6 +297,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect((w as Workflow & { env: Record<string, string> }).env).toEqual({
       SITE_URL: "${{ vars.SITE_URL || 'https://modules.openmercato.com' }}",
       BASE_PATH: "${{ vars.BASE_PATH || '/' }}",
+      HOME_PATH: "${{ vars.HOME_PATH || '/' }}",
       CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
     })
     expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)
@@ -323,6 +324,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Install',
       'Read data branch',
       'Build',
+      'Write Functions config',
       'Check artifact contents',
       'Check Pages limits',
       'Check Pages Functions',
@@ -330,7 +332,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Not deployed',
     ])
     // the build and its checks run with or without the deploy settings
-    for (const x of b.slice(0, 10)) expect(x.if, x.name).toBeUndefined()
+    for (const x of b.slice(0, 11)) expect(x.if, x.name).toBeUndefined()
     // the switch is the repository variable: a job without environment sees no environment secret, and a
     // job-level if cannot read secrets (review of 28 Oct)
     expect(b[0]?.env).toEqual({ HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}" })
@@ -351,7 +353,11 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     // deploy: the only job in environment cloudflare, and only when the build says so
     expect(deploy.needs).toBe('build')
     expect(deploy.if).toBe("${{ needs.build.outputs.deploy == 'true' }}")
-    expect(deploy.environment).toEqual({ name: 'cloudflare', url: '${{ steps.deploy.outputs.deployment-url }}' })
+    // the deployment address, under the base path when there is one (a *.pages.dev address is not redirected)
+    expect(deploy.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
+    expect(deploy.steps.find((x) => x.name === 'Summary')?.env).toEqual({
+      DEPLOYMENT_URL: '${{ steps.deploy.outputs.deployment-url }}',
+    })
     expect(deploy['timeout-minutes']).toBe(15)
     const d = deploy.steps
     expect(d.map((x) => x.name)).toEqual([
@@ -361,6 +367,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Enable Corepack',
       'Install',
       'Download site',
+      'Write Functions config',
       'Check downloaded site',
       'Deploy',
       'Summary',
@@ -387,8 +394,12 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     const run = runText(w)
     expect(run).toContain('git worktree add --detach .data origin/data')
     expect(run).toContain('yarn build')
-    expect(run).toContain('dist/.well-known/agent-skills/index.json')
+    expect(run).toContain('$site/.well-known/agent-skills/index.json')
     expect(run).toContain('test -f dist/404.html')
+    // move of 13 Nov: the site in dist/<base>/ under a base path; functions/site.ts and the layout checked in both jobs
+    expect(run).toContain('site="dist${base:+/$base}"')
+    expect(steps(w).filter((x) => x.run === 'yarn om pages-site')).toHaveLength(2)
+    expect(run.match(/yarn om pages-site --check dist/g)).toHaveLength(2)
     expect(run).toContain('yarn wrangler pages project validate dist')
     // templates.openmercato.com (decision B of 29 Oct): the Functions bundle and its route list are checked before a deploy
     expect(run).toContain('yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"')

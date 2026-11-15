@@ -1,268 +1,769 @@
 ---
-// Site header (spec 7.6, 7.7 A.1): wordmark + MODULES chip, navigation, DataStamp, theme switch, primary CTA.
-// 56 px, sticky, inside the sheet with rails. On phones the navigation folds into a <details> menu without JS.
-import Wordmark from './Wordmark.astro'
-import DataStamp from './DataStamp.astro'
-import type { DataAsOf } from '../lib/freshness.ts'
-import Icon from './icons/Icon.astro'
+// The navbar of www.openmercato.com, copied (owner's request of 14 Nov): the catalog is a part of the main site, so it
+// carries the same navbar, not a look-alike, plus the menu the main site gets too: Run, after Enterprise, with the pages
+// of the catalog. Classes, sizes, colours and breakpoints follow the Webflow navbar (the navbar_* classes of its
+// stylesheet of 13 Nov); the menus come from lib/core/main-site.ts. Keep both in step with Webflow (docs/RUNBOOK.md).
+// Without JavaScript: the panels open on hover and on keyboard focus, the phone menu and its lists are <details>.
+// The inline script only adds what Webflow's script does on top: a tap or Enter toggles a panel, Escape closes it and
+// aria-expanded follows, the phone menu closes on Escape and above 991 px, and the GitHub button fetches its star count
+// (the main site's own script, same key and cache, so both share it on www.openmercato.com; fetched at the first
+// interaction, so a page load makes no third-party request).
+import logo from './assets/open-mercato-wordmark.svg?raw'
+import githubMark from './assets/github-mark.svg?raw'
+import { navIconSvg } from './nav-icons.ts'
 import { href } from '../lib/url.ts'
+import { runCurrent } from '../lib/run-section.ts'
+import {
+  MAIN_SITE_GITHUB,
+  MAIN_SITE_HOME,
+  MAIN_SITE_LINKS,
+  MAIN_SITE_MENUS,
+  MAIN_SITE_SANDBOX,
+  MAIN_SITE_STARS_FALLBACK,
+  RUN_MENU,
+} from '../../../lib/core/main-site.ts'
 
 interface Props {
-  dataAsOf: DataAsOf
-  /** Site path of the current page, for aria-current. */
+  /** Site path of the current page, for aria-current in the Run panel. */
   current?: string
 }
-const { dataAsOf, current = '' } = Astro.props
-const nav = [
-  { label: 'Modules', path: '/' },
-  // the second kind of thing to start from (decisions of 29 Oct): whole apps, next to modules
-  { label: 'Templates', path: '/templates' },
-  { label: 'Compatibility', path: '/compat' },
-  { label: 'Radar', path: '/radar' },
-  { label: 'Quality', path: '/quality' },
-  { label: 'For agents', path: '/for-agents' },
+const { current = '' } = Astro.props
+
+interface Row {
+  label: string
+  url: string
+  description: string
+  icon: Parameters<typeof navIconSvg>[0]
+  /** aria-current of the row: `page` on its own page, `true` on a page below it. */
+  current: 'page' | 'true' | undefined
+}
+interface Menu {
+  id: string
+  label: string
+  rows: Row[]
+}
+const menus: Menu[] = [
+  ...MAIN_SITE_MENUS.map((m) => ({
+    id: m.label.toLowerCase(),
+    label: m.label,
+    rows: m.items.map((i) => ({ ...i, current: undefined })),
+  })),
+  {
+    id: 'run',
+    label: RUN_MENU.label,
+    rows: RUN_MENU.items.map((i) => ({
+      label: i.label,
+      url: href(i.path),
+      description: i.description,
+      icon: i.icon,
+      current: runCurrent(i.path, current),
+    })),
+  },
 ]
-// "Modules" is the home of the catalog: active on /, on category pages (/c/*), on module pages (/m/*) and on built-in.
-// "Templates" likewise on its template pages (/t/*, Phase 1a). Every other item is active on its own path and below it.
-const isCurrent = (p: string): boolean =>
-  p === '/'
-    ? current === '/' || current.startsWith('/m/') || current.startsWith('/c/') || current.startsWith('/built-in')
-    : p === '/templates'
-      ? current.startsWith(p) || current.startsWith('/t/')
-      : current.startsWith(p)
+// the main site's chevron (6x3, #1F1F1F at 30 %)
+const chevron =
+  '<svg width="6" height="3" viewBox="0 0 6 3" fill="none" aria-hidden="true"><path opacity="0.3" d="M6 0L3.70001 2.2C3.30001 2.6 2.69999 2.6 2.29999 2.2L0 5.24537e-07L6 0Z" fill="#1F1F1F"/></svg>'
+const mark = githubMark.replace('<svg', '<svg width="16" height="16" aria-hidden="true"')
+const external = { target: '_blank', rel: 'noopener' }
 ---
 
-<header class="site-header">
-  <div class="sheet hdr">
-    <Wordmark />
-    <nav class="hdr__nav" aria-label="Main">
-      {
-        nav.map((n) => (
-          <a class="hdr__link" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
-            {n.label}
-          </a>
-        ))
-      }
-    </nav>
-    <div class="hdr__right">
-      <DataStamp dataAsOf={dataAsOf} />
-      <button type="button" class="btn btn--ghost btn--icon tt" data-theme-toggle data-needs-js aria-label="Switch color theme">
-        <Icon name="moon" size={18} class="icon i-moon" />
-        <Icon name="sun" size={18} class="icon i-sun" />
-      </button>
-      <a class="btn btn--primary hdr__cta" href={href('/submit')}>Submit a module</a>
-      <details class="hdr__menu">
-        <summary class="btn btn--secondary btn--sm" aria-label="Menu">
-          <span class="hdr__mword">Menu</span> <Icon name="chevron-down" size={14} />
-        </summary>
-        <div class="hdr__sheet">
-          <nav aria-label="Main, mobile">
-            {/* the main call to action first (finding of 25 Oct: on a phone it was the last of six links) */}
-            <a class="hdr__mlink hdr__mlink--cta" href={href('/submit')}>Submit a module</a>
+<header class="navbar_wrapper site-header" data-navbar>
+  <div class="navbar_component">
+    <div class="navbar_container">
+      <div class="navbar_content-left">
+        <a href={MAIN_SITE_HOME} class="navbar_logo-link" aria-label="Open Mercato home">
+          <span class="navbar_logo" set:html={logo} />
+        </a>
+        <nav class="navbar_menu" aria-label="Open Mercato">
+          <div class="navbar_menu-links">
             {
-              nav.map((n) => (
-                <a class="hdr__mlink" href={href(n.path)} aria-current={isCurrent(n.path) ? 'page' : undefined}>
-                  {n.label}
-                </a>
+              menus.map((m) => (
+                <div class="navbar_menu-dropdown" data-dropdown>
+                  <button
+                    type="button"
+                    class="navbar_dropdown-toggle"
+                    id={`nav-${m.id}-toggle`}
+                    aria-controls={`nav-${m.id}-list`}
+                  >
+                    <span>{m.label}</span>
+                    <span class="dropdown-chevron" set:html={chevron} />
+                  </button>
+                  <div class="navbar_dropdown-list" id={`nav-${m.id}-list`}>
+                    <div class="navbar_dropdown-content">
+                      <div class="navbar_dropdown-label">{m.label}</div>
+                      {m.rows.map((r) => (
+                        <a href={r.url} class="navbar_dropdown-link" aria-current={r.current}>
+                          <Fragment set:html={navIconSvg(r.icon)} />
+                          <span class="navbar_dropdown-name">{r.label}</span>
+                          <span class="navbar_dropdown-desc">{r.description}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))
             }
-          </nav>
-          <DataStamp dataAsOf={dataAsOf} variant="inline" />
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link">{l.label}</a>)}
+          </div>
+        </nav>
+      </div>
+      <div class="navbar_content-right">
+        <a href={MAIN_SITE_GITHUB} class="button is-secondary is-small is-icon" {...external}>
+          <span class="om-github-stars">
+            <Fragment set:html={mark} />
+            <span data-om-star-count>{MAIN_SITE_STARS_FALLBACK}</span>
+            <span class="om-star-sr"> GitHub stars</span>
+          </span>
+        </a>
+        <a href={MAIN_SITE_SANDBOX.url} class="button is-tertiary is-small is-sandbox" {...external}>
+          {MAIN_SITE_SANDBOX.label}
+        </a>
+      </div>
+      <div class="navbar_hamburger-wrapper">
+        <div class="navbar_hamburger-links">
+          <a href={MAIN_SITE_GITHUB} class="navbar_gh-button" {...external}>
+            <span class="om-github-stars">
+              <Fragment set:html={mark} />
+              <span data-om-star-count>{MAIN_SITE_STARS_FALLBACK}</span>
+              <span class="om-star-sr"> GitHub stars</span>
+            </span>
+          </a>
+          <a href={MAIN_SITE_SANDBOX.url} class="button is-tertiary is-small hide-mobile-landscape" {...external}>
+            {MAIN_SITE_SANDBOX.label}
+          </a>
         </div>
-      </details>
+        <details class="navbar_mobile" data-mobile-menu>
+          <summary class="navbar_menu-button" aria-label="Menu">
+            <span class="menu-icon" aria-hidden="true">
+              <span class="menu-icon_line-top"></span>
+              <span class="menu-icon_line-middle"></span>
+              <span class="menu-icon_line-bottom"></span>
+            </span>
+          </summary>
+          <nav class="navbar_mobile-menu" aria-label="Open Mercato">
+            {
+              menus.map((m) => (
+                <details class="navbar_mobile-dropdown">
+                  <summary class="navbar_dropdown-toggle">
+                    <span>{m.label}</span>
+                    <span class="dropdown-chevron" set:html={chevron} />
+                  </summary>
+                  <div class="navbar_mobile-list">
+                    {m.rows.map((r) => (
+                      <a href={r.url} class="navbar_dropdown-link" aria-current={r.current}>
+                        <Fragment set:html={navIconSvg(r.icon)} />
+                        <span class="navbar_dropdown-name">{r.label}</span>
+                        <span class="navbar_dropdown-desc">{r.description}</span>
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              ))
+            }
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link">{l.label}</a>)}
+          </nav>
+        </details>
+      </div>
     </div>
   </div>
 </header>
-
-<script>
-  const KEY = 'om-theme'
-  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    btn.addEventListener('click', () => {
-      const root = document.documentElement
-      const current =
-        root.dataset.theme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      const next = current === 'dark' ? 'light' : 'dark'
-      root.dataset.theme = next
-      try {
-        localStorage.setItem(KEY, next)
-      } catch {
-        /* private mode: the choice lasts for this page only */
-      }
+<script is:inline>
+  ;(() => {
+    const nav = document.querySelector('[data-navbar]')
+    if (!nav) return
+    const drops = [...nav.querySelectorAll('[data-dropdown]')]
+    const toggle = (d) => d.querySelector('.navbar_dropdown-toggle')
+    const isOpen = (d) =>
+      !d.hasAttribute('data-closed') &&
+      (d.hasAttribute('data-open') || d.matches(':hover') || !!d.querySelector(':focus-visible'))
+    const sync = () => drops.forEach((d) => toggle(d).setAttribute('aria-expanded', String(isOpen(d))))
+    const reset = (d) => {
+      d.removeAttribute('data-open')
+      d.removeAttribute('data-closed')
+    }
+    drops.forEach((d) => {
+      const t = toggle(d)
+      t.addEventListener('click', () => {
+        // not by :hover: on a touch screen the emulated hover opens the panel before this click runs, and a tap
+        // would close it at once. A click closes what a click (data-open) or keyboard focus opened.
+        const open =
+          d.hasAttribute('data-open') || (!d.hasAttribute('data-closed') && !!d.querySelector(':focus-visible'))
+        drops.forEach((o) => o !== d && reset(o))
+        reset(d)
+        d.setAttribute(open ? 'data-closed' : 'data-open', '')
+        sync()
+      })
+      d.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !isOpen(d)) return
+        e.stopPropagation()
+        reset(d)
+        d.setAttribute('data-closed', '')
+        t.focus()
+        sync()
+      })
+      d.addEventListener('mouseenter', () => {
+        drops.forEach((o) => o !== d && reset(o))
+        d.removeAttribute('data-closed')
+        sync()
+      })
+      d.addEventListener('mouseleave', () => {
+        // a panel opened by a tap or a click (data-open) stays until a tap elsewhere, Escape or another menu: on a
+        // screen with touch and a mouse the pointer "leaves" right after the tap, back to where the mouse rests.
+        // One closed from the keyboard stays closed while the focus is still in it.
+        if (!d.contains(document.activeElement)) d.removeAttribute('data-closed')
+        setTimeout(sync, 0)
+      })
+      d.addEventListener('focusout', (e) => {
+        if (d.contains(e.relatedTarget)) return
+        reset(d)
+        setTimeout(sync, 0)
+      })
+      d.addEventListener('focusin', () => setTimeout(sync, 0))
     })
-  }
+    // pointerdown, not click: iOS Safari sends no click for a tap on plain text
+    document.addEventListener('pointerdown', (e) => {
+      if (drops.some((d) => d.contains(e.target))) return
+      drops.forEach(reset)
+      sync()
+    })
+    // Escape closes a panel pinned by a click also when the click left the focus elsewhere (Safari, Firefox on macOS)
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return
+      drops.forEach((d) => d.hasAttribute('data-open') && reset(d))
+      sync()
+    })
+    sync()
+    const menu = nav.querySelector('[data-mobile-menu]')
+    if (menu) {
+      menu.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !menu.open) return
+        menu.open = false
+        menu.querySelector('summary').focus()
+      })
+      // the open menu covers the page: when the focus moves on past its last link, close it, so the focus is not
+      // left on something hidden behind it
+      menu.addEventListener('focusout', (e) => {
+        if (menu.open && e.relatedTarget && !menu.contains(e.relatedTarget)) menu.open = false
+      })
+      const wide = matchMedia('(min-width: 992px)')
+      wide.addEventListener('change', () => {
+        if (wide.matches) menu.open = false
+      })
+    }
+  })()
+  // the GitHub star count, as the main site's navbar script has it (key, cache and fallback alike), with one
+  // difference: the count is asked from api.github.com at the visitor's first press, key, wheel or touch and not
+  // while the page loads, so a page load makes no third-party request (the budget of spec 7.11,
+  // test/e2e/perf.spec.ts). Not at a pointer move: the browser reports one by itself when the layout changes under a
+  // resting pointer, which is during the load. Until then the button shows the cached count, or the one built into
+  // the page.
+  ;(() => {
+    const key = 'om-github-stars-v1',
+      nodes = document.querySelectorAll('[data-om-star-count]')
+    const show = (n) => {
+      if (Number.isInteger(n) && n >= 0) nodes.forEach((el) => (el.textContent = n.toLocaleString('en-US')))
+    }
+    let saved
+    try {
+      saved = JSON.parse(localStorage.getItem(key))
+      if (saved) show(saved.n)
+    } catch (e) {}
+    if (saved && Date.now() - saved.at < 3600000) return
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart']
+    const ask = () => {
+      events.forEach((e) => removeEventListener(e, ask))
+      fetch('https://api.github.com/repos/open-mercato/open-mercato', {
+        headers: { Accept: 'application/vnd.github+json' },
+        signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined,
+      })
+        .then((r) => {
+          if (!r.ok) throw Error()
+          return r.json()
+        })
+        .then((d) => {
+          if (!Number.isInteger(d.stargazers_count)) return
+          show(d.stargazers_count)
+          try {
+            localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, at: Date.now() }))
+          } catch (e) {}
+        })
+        .catch(() => {})
+    }
+    events.forEach((e) => addEventListener(e, ask, { passive: true }))
+  })()
 </script>
 
 <style>
-  .site-header {
+  /* ---------- the bar (Webflow .navbar_wrapper.padding-global > .navbar_component) ---------- */
+  .navbar_wrapper {
     position: sticky;
     top: 0;
-    z-index: 40;
-    background: var(--bg);
+    z-index: 9999;
+    padding-inline: 5%;
+    color: #0c0c0c;
+    font-size: 1rem;
+    line-height: 1.5;
   }
-  /* the hairline stops at the rails, like the openmercato.com navbar */
-  .hdr {
-    border-bottom: 1px solid var(--rail);
-    height: var(--header-h);
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    padding-inline: var(--pad);
-  }
-  /* the brand takes a fixed column, so the nav starts where the footer links start (--brand-col + 32 px) */
-  @media (min-width: 992px) {
-    .hdr > :global(.wm) {
-      flex: 0 0 var(--brand-col);
-    }
-  }
-  /* 20 px between items: with the stamp, six items at 24 px were 3 px wider than the sheet */
-  .hdr__nav {
-    display: flex;
-    gap: 20px;
-  }
-  /* one line per item: with six items "For agents" wrapped in two at 1440 px */
-  .hdr__link {
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink-2);
+  .navbar_wrapper a {
+    color: inherit;
     text-decoration: none;
-    padding-block: 18px;
-    box-shadow: inset 0 -1px 0 transparent;
-    transition:
-      color var(--dur-1) var(--ease),
-      box-shadow var(--dur-1) var(--ease);
   }
-  .hdr__link:hover {
-    color: var(--ink);
-  }
-  .hdr__link[aria-current='page'] {
-    color: var(--ink);
-    box-shadow: inset 0 -1px 0 var(--ink);
-  }
-  .hdr__right {
-    margin-left: auto;
+  .navbar_component {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
+    width: 100%;
+    max-width: 75rem;
+    height: 3.85rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-top: 0;
   }
-  .hdr__right > :global(.stamp) {
-    margin-right: 4px;
+  .navbar_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    height: 100%;
   }
-  .tt :global(.i-sun) {
-    display: none;
+  .navbar_content-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4rem;
   }
-  :global(:root[data-theme='dark']) .tt :global(.i-moon) {
-    display: none;
+  /* the logo at its own size, 141 x 36, as there */
+  .navbar_logo-link {
+    display: inline-flex;
+    flex: none;
   }
-  :global(:root[data-theme='dark']) .tt :global(.i-sun) {
+  .navbar_logo {
+    display: block;
+    width: 141px;
+    height: 36px;
+  }
+  .navbar_logo :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .navbar_menu {
+    display: flex;
+    align-items: center;
+  }
+  .navbar_menu-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .navbar_link {
     display: inline-block;
+    padding: 1.22rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
   }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .tt :global(.i-moon) {
-      display: none;
-    }
-    :global(:root:not([data-theme='light'])) .tt :global(.i-sun) {
-      display: inline-block;
-    }
+  .navbar_content-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
   }
-  .hdr__menu {
+  .navbar_hamburger-wrapper {
     display: none;
+  }
+
+  /* ---------- a menu with a panel ---------- */
+  .navbar_menu-dropdown {
     position: relative;
+    z-index: 900;
+    font-size: 0.875rem;
+    font-weight: 500;
   }
-  .hdr__menu > summary {
-    list-style: none;
+  .navbar_dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 100%;
+    padding: 1.22rem 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
   }
-  .hdr__menu > summary::-webkit-details-marker {
-    display: none;
+  /* the toggle is as high as the bar, so a ring around it would be cut at the top and bottom of the header: draw it
+     inside */
+  .navbar_dropdown-toggle:focus-visible,
+  .navbar_link:focus-visible {
+    outline-offset: -2px;
   }
-  .hdr__menu[open] > summary :global(svg) {
+  .dropdown-chevron {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.3s ease;
+  }
+  .dropdown-chevron :global(svg) {
+    display: block;
+  }
+  .navbar_dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: -5rem;
+    z-index: 901;
+    width: 28rem;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 0 0 0.25rem 0.25rem;
+    text-align: left;
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+  /* open on hover and on keyboard focus without JS; a tap or Enter (data-open) and Escape (data-closed) with it */
+  .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) > .navbar_dropdown-list {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 0.2s ease,
+      visibility 0s;
+  }
+  .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) .dropdown-chevron {
     transform: rotate(180deg);
   }
-  .hdr__sheet {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    width: min(320px, calc(100vw - 2 * var(--gutter)));
-    padding: 8px;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-l);
-    box-shadow: var(--shadow-float);
-    display: grid;
-    gap: 8px;
-  }
-  .hdr__sheet nav {
-    display: grid;
-  }
-  .hdr__mlink {
+  .navbar_dropdown-content {
     display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0 12px;
-    border-radius: var(--radius-m);
-    font-size: 15px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  /* the label over the rows: plain 14 px text in the secondary colour (its tagline class has no rule there) */
+  .navbar_dropdown-label {
+    color: #6d6d6d;
+  }
+  .navbar_dropdown-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 1rem 1rem 1rem 52px;
+    border-radius: 0.25rem;
+    transition: background-color 0.4s;
+  }
+  .navbar_dropdown-link:hover {
+    background-color: #f6feee;
+  }
+  /* the page you are on, in the hover colour of the rows: the main site has no visible current state here */
+  .navbar_dropdown-link[aria-current] {
+    background-color: #f6feee;
+  }
+  .navbar_dropdown-link :global(.navbar_icon) {
+    position: absolute;
+    left: 17px;
+    top: 18px;
+    width: 22px;
+    height: 22px;
+  }
+  .navbar_dropdown-name {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .navbar_dropdown-desc {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #6d6d6d;
+  }
+
+  /* ---------- the buttons on the right ---------- */
+  .button {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    text-decoration: none;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.3s;
   }
-  .hdr__mlink:hover,
-  .hdr__mlink[aria-current='page'] {
-    background: var(--bg-3);
+  .button.is-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
   }
-  /* the call to action of the header button, first in the sheet: the lime of the button as a left edge */
-  .hdr__mlink--cta {
-    font-weight: 600;
-    box-shadow: inset 3px 0 0 #b4f372;
+  .navbar_wrapper .button.is-secondary {
+    border: 1px solid #ececec;
+    background: #fff;
+    color: #0c0c0c;
   }
-  .hdr__sheet > :global(.stamp) {
-    padding: 12px;
-    border-top: 1px solid var(--line);
+  .navbar_wrapper .button.is-secondary:hover {
+    background-color: #fafafa;
   }
-  /* six nav items (Templates, 29 Oct) need about 1230 px with the stamp and 1040 px without it: the stamp goes first,
-     then the nav folds into the menu, so the header never scrolls the page sideways (measured at 992 to 1366 px) */
-  @media (max-width: 1279px) {
-    .hdr__right > :global(.stamp) {
+  .navbar_wrapper .button.is-tertiary {
+    border: 0;
+    background-color: #1b1b1b;
+    color: #fff;
+  }
+  .navbar_wrapper .button.is-tertiary:hover {
+    background-color: #1f1f1f;
+  }
+  .om-github-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    font-variant-numeric: tabular-nums;
+  }
+  .om-github-stars :global(svg) {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+  .om-star-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------- desktop (the main site's own code, 992 px and up) ---------- */
+  @media (min-width: 992px) {
+    .navbar_content-left,
+    .navbar_menu,
+    .navbar_menu-links {
+      flex: 1;
+    }
+    .navbar_menu-links > .navbar_link:last-child {
+      margin-left: auto;
+    }
+    .navbar_content-right {
+      flex: none;
+    }
+    .navbar_container {
+      column-gap: 24px;
+    }
+    .navbar_link,
+    .navbar_dropdown-toggle {
+      transition: color 0.4s ease;
+    }
+    /* the other items fade while one is hovered */
+    .navbar_menu-links:hover .navbar_link,
+    .navbar_menu-links:hover .navbar_dropdown-toggle {
+      color: #9e9e9e;
+    }
+    .navbar_menu-links:hover .navbar_link:hover,
+    .navbar_menu-links:hover .navbar_menu-dropdown:hover .navbar_dropdown-toggle {
+      color: #0c0c0c;
+    }
+  }
+  /* 992-1300 px: Launch sandbox goes, the logo moves closer to the menu */
+  @media (min-width: 992px) and (max-width: 1300px) {
+    .is-sandbox {
+      display: none;
+    }
+    .navbar_content-left {
+      gap: 1.5rem;
+    }
+  }
+  /* 992-1150 px: the whole right group goes */
+  @media (min-width: 992px) and (max-width: 1150px) {
+    .navbar_content-right {
       display: none;
     }
   }
-  @media (max-width: 1079px) {
-    .hdr__nav,
-    .hdr__cta {
+
+  /* ---------- tablet and phone: the hamburger (Webflow data-collapse="medium") ---------- */
+  @media (max-width: 991px) {
+    .navbar_component {
+      border-top: 1px solid #ececec;
+    }
+    .navbar_menu,
+    .navbar_content-right {
       display: none;
     }
-    .hdr__menu {
-      display: block;
+    .navbar_hamburger-wrapper {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.25rem;
     }
-  }
-  /* touch targets of at least 44 px on phones (spec 7.10) */
-  @media (max-width: 767px) {
-    .hdr__menu > summary,
-    .tt {
+    .navbar_hamburger-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    /* touch targets of at least 44 px (spec 7.10): the link is 44 px high, the button drawn in it keeps the main
+       site's 32 px, and the logo link grows around its 36 px logo */
+    .navbar_logo-link {
+      align-items: center;
       min-height: 44px;
-      min-width: 44px;
     }
-    .hdr__menu > summary {
-      padding-inline: 14px;
+    .navbar_gh-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .navbar_gh-button .om-github-stars {
+      box-sizing: border-box;
+      height: 2rem;
+      padding: 7px 9px;
+      border: 1px solid #ececec;
+      border-radius: 0.25rem;
+    }
+    .navbar_mobile > summary {
+      list-style: none;
+    }
+    .navbar_mobile > summary::-webkit-details-marker {
+      display: none;
+    }
+    .navbar_menu-button {
+      display: block;
+      cursor: pointer;
+    }
+    .menu-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      margin-right: -0.5rem;
+    }
+    /* easing inOutQuint, as the hamburger of Webflow */
+    .menu-icon > span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #0c0c0c;
+      transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+    .menu-icon > .menu-icon_line-middle {
+      margin-block: 6px;
+      transition: width 0.2s cubic-bezier(0.86, 0, 0.07, 1) 0.4s;
+    }
+    /* open: the three lines become an X */
+    .navbar_mobile[open] .menu-icon_line-top {
+      transform: translateY(8px) rotate(-45deg);
+    }
+    .navbar_mobile[open] .menu-icon_line-middle {
+      width: 0;
+      transition: width 0.2s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+    .navbar_mobile[open] .menu-icon_line-bottom {
+      transform: translateY(-8px) rotate(45deg);
+    }
+    /* the menu under the bar, the height of the screen, as there; every list starts closed, as there, so Contact and
+       Case Studies show without scrolling, and a long open list scrolls inside the menu */
+    .navbar_mobile-menu {
+      position: absolute;
+      top: 100%;
+      left: -1px;
+      right: -1px;
+      height: calc(100dvh - 3.85rem);
+      overflow: auto;
+      padding: 1rem 1.5rem 6.5rem;
+      background: #fff;
+      border: 1px solid #ececec;
+      border-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      animation: om-nav-open 0.4s ease;
+    }
+    .navbar_mobile-menu .navbar_link {
+      padding: 0.75rem 0;
+    }
+    .navbar_mobile-dropdown {
+      width: 100%;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .navbar_mobile-dropdown > summary {
+      list-style: none;
+      height: auto;
+      padding-block: 0.75rem;
+    }
+    .navbar_mobile-dropdown > summary::-webkit-details-marker {
+      display: none;
+    }
+    .navbar_mobile-dropdown[open] .dropdown-chevron {
+      transform: rotate(180deg);
+    }
+    .navbar_mobile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 28rem;
+      max-width: 100%;
+    }
+  }
+  @keyframes om-nav-open {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @media (max-width: 767px) {
+    .navbar_component {
+      padding-inline: 0.75rem;
+    }
+    .navbar_mobile-menu {
+      padding-inline: 0.75rem;
+    }
+    .navbar_mobile-list {
+      width: 100%;
+    }
+    .hide-mobile-landscape {
+      display: none;
     }
   }
   @media (max-width: 479px) {
-    .hdr {
-      gap: 12px;
+    .navbar_container {
+      gap: 2rem;
     }
-    .hdr__right {
-      gap: 8px;
+    .navbar_content-left {
+      width: 100%;
     }
   }
-  /* small phones and folded screens (320-359 px): the menu is its chevron only (its name stays in aria-label) */
-  @media (max-width: 359px) {
-    .hdr__mword {
-      display: none;
+  @media (prefers-reduced-motion: reduce) {
+    .navbar_mobile-menu {
+      animation: none;
     }
-    .hdr__menu > summary {
-      justify-content: center;
-      padding-inline: 0;
+    /* no fade: a closing panel goes transparent at once, but stays visibility: visible for 0.2 s more (base.css drops
+       every transition here). The delay is what lets the keyboard in: a Tab from a menu button takes the focus off it
+       before the first link of the panel has it, and WebKit refuses the focus to a link whose panel
+       :has(:focus-visible) has already hidden. Nothing moves, and no closing panel shows over the next one. */
+    .navbar_dropdown-list {
+      transition: visibility 0s linear 0.2s !important;
     }
-    .hdr__right {
-      gap: 4px;
+    .navbar_menu-dropdown:is(:hover, :has(:focus-visible), [data-open]):not([data-closed]) > .navbar_dropdown-list {
+      transition: none !important;
     }
   }
 </style>

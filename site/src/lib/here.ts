@@ -19,7 +19,7 @@ export function rewriteSite(text: string, from: string, to: string): string {
 
 /**
  * Inline script for the end of <body>: `site` is the configured site root with its base path, no trailing slash
- * (`https://open-mercato.github.io/modules`), `base` the base path (`/modules`). It rewrites `data-copy`, `href`,
+ * (`https://www.openmercato.com/run`), `base` the base path (`/run`). It rewrites `data-copy`, `href`,
  * `title` and `aria-label`, and the text of command chips and `[data-site-text]`, now and in islands that render
  * later. `production` lists other origins that serve this same build in production, where the script does nothing.
  */

@@ -125,7 +125,8 @@ describe('published files (spec 4.6)', () => {
 
   test('modules.json carries dataVersion, dataAsOf, features.cliSearch and officialCoverage', () => {
     const m = json<ModulesIndex>(r, 'modules.json')
-    expect(m.$schema).toBe(`${SITE}/schema/modules-1.json`)
+    // the fixed schema address (decision of 13 Nov), not the fixture's site
+    expect(m.$schema).toBe('https://modules.openmercato.com/schema/modules-1.json')
     expect(valid(m.dataVersion)).toBe(m.dataVersion)
     expect(m.dataVersion).toMatch(/^1\.0\.0-202610230305\.h[0-9a-f]{6}$/)
     expect(m.dataAsOf).toEqual({ nightly: '2026-10-23T02:17:00Z', npm: '2026-10-23T00:17:00Z', source: 'ci' })

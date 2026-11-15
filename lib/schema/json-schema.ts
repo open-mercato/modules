@@ -22,6 +22,7 @@ import {
   WHEN_PATTERN,
 } from './template.ts'
 import { TOOLS } from './tools.ts'
+import { schemaUrl } from '../core/home.ts'
 
 export const JSON_SCHEMA_DIALECT = 'https://json-schema.org/draft/2020-12/schema'
 export const PUBLISHED_SCHEMAS = [
@@ -247,10 +248,10 @@ export function templateManifestJsonSchema(): JsonObject {
 }
 
 /**
- * All published JSON Schemas, keyed by name. `siteUrl` (e.g. https://open-mercato.github.io/modules)
- * sets `$id` to `<siteUrl>/schema/<name>-1.json`.
+ * All published JSON Schemas, keyed by name. `$id` is always `https://modules.openmercato.com/schema/<name>-1.json`
+ * (schemaUrl, decision of 13 Nov), whatever SITE_URL and BASE_PATH say: create-mercato-template writes that address.
  */
-export function publishedJsonSchemas(siteUrl?: string): Record<PublishedSchemaName, JsonObject> {
+export function publishedJsonSchemas(): Record<PublishedSchemaName, JsonObject> {
   const out: Record<PublishedSchemaName, JsonObject> = {
     descriptor: descriptorJsonSchema(),
     modules: z.toJSONSchema(ModulesIndex) as JsonObject,
@@ -265,7 +266,7 @@ export function publishedJsonSchemas(siteUrl?: string): Record<PublishedSchemaNa
     const s = out[name]
     out[name] = {
       $schema: JSON_SCHEMA_DIALECT,
-      ...(siteUrl ? { $id: `${siteUrl.replace(/\/$/, '')}/schema/${name}-1.json` } : {}),
+      $id: schemaUrl(name),
       ...stripDialect(s),
     }
   }
