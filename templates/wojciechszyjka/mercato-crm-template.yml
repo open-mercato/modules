@@ -1,0 +1,10 @@
+github: wojciechszyjka/mercato-crm-template
+useCase: crm
+summary: CRM starter app with companies, people, deals, a sales pipeline and email channels on the stock Open Mercato modules.
+whenToUse: Use when a team needs a CRM for companies, people, deals and activities and wants to start from the stock Open Mercato CRM preset with demo data.
+whenNotToUse: Not for shops or order handling. It enables no product, sales or checkout modules.
+screenshots:
+  - src: screenshots/crm-deals.png
+    alt: The deals list with pipeline value, win rate and the demo deals.
+pricing: free
+slug: crm
