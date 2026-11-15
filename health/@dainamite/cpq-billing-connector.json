@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
-  "version": "3.0.0",
-  "computedAt": "2026-11-15T10:29:44Z",
+  "version": "5.0.0",
+  "computedAt": "2026-11-15T18:57:07Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,16 +27,16 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "quarantine",
-      "0.8": "quarantine",
-      "next": "quarantine"
+      "0.9": "untested",
+      "0.8": "untested",
+      "next": "untested"
     },
     "fit": {
       "0.9": "ok",
       "0.8": "drift",
       "next": "drift"
     },
-    "anatomy": "partial",
+    "anatomy": "full",
     "supplyChain": {
       "status": "ok",
       "reasons": []
@@ -47,7 +47,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-11",
+      "lastRelease": "2026-11-15",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -122,7 +122,7 @@
       "reasons": [
         {
           "code": "QUARANTINE",
-          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
+          "text": "Installs from 20 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
@@ -130,17 +130,17 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): in the age gate on 12 Nov."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): 3.0.0 in the age gate on 12 Nov."
         }
       ],
-      "until": "2026-11-16"
+      "until": "2026-11-20"
     },
     "0.8": {
       "decision": "refuse",
       "reasons": [
         {
           "code": "QUARANTINE",
-          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
+          "text": "Installs from 20 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
@@ -148,17 +148,17 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): in the age gate on 15 Nov."
+          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): 3.0.0 in the age gate on 15 Nov."
         }
       ],
-      "until": "2026-11-16"
+      "until": "2026-11-20"
     },
     "next": {
       "decision": "refuse",
       "reasons": [
         {
           "code": "QUARANTINE",
-          "text": "Installs from 16 Nov (Yarn 5-day age gate)."
+          "text": "Installs from 20 Nov (Yarn 5-day age gate)."
         },
         {
           "code": "THIRD_PARTY",
@@ -166,10 +166,10 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 15 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): 3.0.0 in the age gate on 15 Nov."
         }
       ],
-      "until": "2026-11-16"
+      "until": "2026-11-20"
     }
   },
   "state": "active",
@@ -179,9 +179,9 @@
     "next": null
   },
   "evaluated": {
-    "0.9": "3.0.0",
-    "0.8": "3.0.0",
-    "next": "3.0.0"
+    "0.9": "5.0.0",
+    "0.8": "5.0.0",
+    "next": "5.0.0"
   },
   "verdictPreset": "classic"
 }
