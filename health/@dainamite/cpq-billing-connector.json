@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
   "version": "3.0.0",
-  "computedAt": "2026-11-14T09:18:38Z",
+  "computedAt": "2026-11-15T10:29:44Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -28,7 +28,7 @@
   "signals": {
     "receipt": {
       "0.9": "quarantine",
-      "0.8": "untested",
+      "0.8": "quarantine",
       "next": "quarantine"
     },
     "fit": {
@@ -148,7 +148,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "No receipt for 3.0.0 on 0.8 yet; the receipt is for 1.0.0 (broken at typecheck, 1 Nov)."
+          "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): in the age gate on 15 Nov."
         }
       ],
       "until": "2026-11-16"
@@ -166,7 +166,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 14 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 15 Nov."
         }
       ],
       "until": "2026-11-16"
