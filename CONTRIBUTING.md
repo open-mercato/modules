@@ -139,7 +139,7 @@ Start with [Publish your app as a template](docs/publish-a-template.md), the sho
 4. Open the pull request and tick `I maintain this package or have the maintainer's consent` (for a template, the repository).
 5. Read the summary of the `validate` check. Fix what it lists. A person reviews and merges.
 
-Until `create-mercato-app --template` is released, an app starts from a template repository with `npx create-mercato-app my-app --app-url https://github.com/<owner>/<repo>`.
+An app starts from a template with `npx create-mercato-app my-app --template <slug | owner/repo>`. On an older `create-mercato-app` without `--template`, use `--app-url https://github.com/<owner>/<repo>`.
 
 ### Template file structure
 
@@ -215,7 +215,7 @@ A person also checks what CI cannot:
 ### Template status
 
 - `active`: in the gallery, with the create command on its page.
-- `hold`: shown with its `reason` and without a create command. An entry moved to `hold` keeps its slug, so the planned `--template <slug>` refuses it with the reason. A new `hold` entry may have no slug. `templates/open-mercato/ready-app-oss-prm.yml` is on hold: it has no license yet and pins an old Open Mercato line.
+- `hold`: shown with its `reason` and without a create command. An entry moved to `hold` keeps its slug, so `--template <slug>` refuses it with the reason. A new `hold` entry may have no slug. `templates/open-mercato/ready-app-oss-prm.yml` is on hold: it has no license yet and pins an old Open Mercato line.
 - `unmaintained`: hidden from the gallery; its page and the create command still work and show the `reason`.
 - `delisted`: removed from `templates.json` and the site. Its slug stays reserved.
 
