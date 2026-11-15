@@ -63,12 +63,14 @@ describe('default addresses', () => {
   })
 
   it('no tracked file outside the tests and CODEOWNERS names the personal account at all', () => {
+    // A template entry names its GitHub owner by design (the path `templates/<owner>/<repo>.yml` and `github:`), so
+    // `templates/` is exempt. The address test above still reads it.
     // `git grep` exits 1 when nothing matches
     let out = ''
     try {
       out = execFileSync(
         'git',
-        ['grep', '-l', 'wojciechszyjka', '--', '.', ':!test', ':!.wp', ':!.github/CODEOWNERS'],
+        ['grep', '-l', 'wojciechszyjka', '--', '.', ':!test', ':!.wp', ':!.github/CODEOWNERS', ':!templates'],
         {
           cwd: ROOT,
           encoding: 'utf8',
