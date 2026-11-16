@@ -1,6 +1,6 @@
 {
   "locator": "npm:@piotrkarwatka/marketing-consents",
-  "checkedAt": "2026-11-09T12:54:24Z",
+  "checkedAt": "2026-11-16T12:46:41Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@piotrkarwatka/marketing-consents",
@@ -46,7 +46,7 @@
     "archived": false,
     "pushedAt": "2026-10-14T13:23:01Z",
     "defaultBranch": "main",
-    "stars": 0,
+    "stars": 1,
     "license": null,
     "topics": [],
     "ownerType": "User",
@@ -61,6 +61,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository owner pkarw is listed in policy/community.yml.",
-  "downloads30d": 85,
+  "downloads30d": 93,
   "errors": []
 }

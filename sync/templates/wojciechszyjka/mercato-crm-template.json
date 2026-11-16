@@ -1,0 +1,27 @@
+{
+  "github": "wojciechszyjka/mercato-crm-template",
+  "checkedAt": "2026-11-16T12:48:48Z",
+  "firstSeenAt": "2026-11-15T19:28:26Z",
+  "repo": {
+    "fullName": "wojciechszyjka/mercato-crm-template",
+    "private": false,
+    "archived": false,
+    "isTemplate": true,
+    "defaultBranch": "main",
+    "pushedAt": "2026-11-15T11:19:53Z",
+    "stars": 0,
+    "license": "MIT",
+    "topics": [
+      "open-mercato",
+      "open-mercato-template"
+    ],
+    "tags": []
+  },
+  "source": {
+    "ref": "main",
+    "kind": "default branch",
+    "sha": "6db226b69fb36a186d3801b7396ab603fdaef15c",
+    "syncedAt": "2026-11-16T12:48:48Z"
+  },
+  "errors": []
+}

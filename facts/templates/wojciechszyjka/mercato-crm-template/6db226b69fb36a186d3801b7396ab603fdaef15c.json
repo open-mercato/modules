@@ -1,0 +1,174 @@
+{
+  "factsVersion": 1,
+  "github": "wojciechszyjka/mercato-crm-template",
+  "sha": "6db226b69fb36a186d3801b7396ab603fdaef15c",
+  "readAt": "2026-11-16T12:48:48Z",
+  "archive": {
+    "files": 376,
+    "bytes": 21884958
+  },
+  "omVersion": "0.9.0",
+  "omLine": "0.9",
+  "linesBehind": 0,
+  "latestStable": "0.9.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "yarn@4.17.1+sha512.ccbfabf7d7b6b32075088be9386fb9a2e00bb6887ef07fa56effabc890a56d53da1ccc4128d62db24",
+  "requiresEnterprise": false,
+  "enterpriseModules": [],
+  "enterpriseDependency": true,
+  "modules": {
+    "entries": [
+      {
+        "id": "auth",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_keys",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "directory",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "configs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "entities",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "query_index",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "api_docs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "audit_logs",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "notifications",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dashboards",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "events",
+        "from": "@open-mercato/events",
+        "package": "@open-mercato/events@0.9.0"
+      },
+      {
+        "id": "search",
+        "from": "@open-mercato/search",
+        "package": "@open-mercato/search@0.9.0"
+      },
+      {
+        "id": "attachments",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "customers",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "messages",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "dictionaries",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "feature_toggles",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "currencies",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "progress",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "integrations",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "communication_channels",
+        "from": "@open-mercato/core"
+      },
+      {
+        "id": "channel_imap",
+        "from": "@open-mercato/channel-imap",
+        "package": "@open-mercato/channel-imap@0.9.0"
+      },
+      {
+        "id": "channel_gmail",
+        "from": "@open-mercato/channel-gmail",
+        "package": "@open-mercato/channel-gmail@0.9.0"
+      },
+      {
+        "id": "ai_assistant",
+        "from": "@open-mercato/ai-assistant",
+        "package": "@open-mercato/ai-assistant@0.9.0"
+      },
+      {
+        "id": "record_locks",
+        "from": "@open-mercato/enterprise",
+        "package": "@open-mercato/enterprise@0.9.0",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES"
+      },
+      {
+        "id": "system_status_overlays",
+        "from": "@open-mercato/enterprise",
+        "package": "@open-mercato/enterprise@0.9.0",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES"
+      },
+      {
+        "id": "sso",
+        "from": "@open-mercato/enterprise",
+        "package": "@open-mercato/enterprise@0.9.0",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_SSO"
+      },
+      {
+        "id": "security",
+        "from": "@open-mercato/enterprise",
+        "package": "@open-mercato/enterprise@0.9.0",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_SECURITY"
+      },
+      {
+        "id": "agent_orchestrator",
+        "from": "@open-mercato/enterprise",
+        "package": "@open-mercato/enterprise@0.9.0",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_AGENTS"
+      },
+      {
+        "id": "agent_examples",
+        "from": "@app",
+        "when": "OM_ENABLE_ENTERPRISE_MODULES && OM_ENABLE_ENTERPRISE_MODULES_AGENTS"
+      }
+    ],
+    "unparsed": []
+  },
+  "manifest": "valid",
+  "manifestEnv": [],
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "sources": {
+      "licenseFile": "MIT",
+      "packageJson": "MIT",
+      "github": "MIT"
+    }
+  },
+  "findings": []
+}

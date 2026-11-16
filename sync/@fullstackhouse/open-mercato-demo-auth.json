@@ -1,6 +1,6 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
-  "checkedAt": "2026-11-09T12:54:24Z",
+  "checkedAt": "2026-11-16T12:46:41Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@fullstackhouse/open-mercato-demo-auth",
@@ -58,6 +58,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
-  "downloads30d": 317,
+  "downloads30d": 127,
   "errors": []
 }

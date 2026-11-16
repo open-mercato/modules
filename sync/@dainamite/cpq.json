@@ -1,6 +1,6 @@
 {
   "locator": "npm:@dainamite/cpq",
-  "checkedAt": "2026-11-15T18:55:18Z",
+  "checkedAt": "2026-11-16T12:46:41Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/cpq",
@@ -51,7 +51,7 @@
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-15T17:49:23Z",
+    "pushedAt": "2026-11-16T12:25:59Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
@@ -153,6 +153,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 513,
+  "downloads30d": 819,
   "errors": []
 }
