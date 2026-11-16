@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-16T06:40:44.685Z",
+  "computedAt": "2026-11-16T22:13:53.938Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -66,6 +66,30 @@
     "npm:@dainamite/billing@0.22.0": {
       "status": "ok",
       "checked": 91,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@1.0.1": {
+      "status": "ok",
+      "checked": 100,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@1.1.0": {
+      "status": "ok",
+      "checked": 102,
       "missing": [],
       "drift": [],
       "declared": {
@@ -147,6 +171,30 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/cpq-billing-connector@5.1.0": {
+      "status": "ok",
+      "checked": 44,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@5.2.0": {
+      "status": "ok",
+      "checked": 48,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq@0.3.0": {
       "status": "ok",
       "checked": 58,
@@ -210,6 +258,30 @@
     "npm:@dainamite/cpq@0.8.0": {
       "status": "ok",
       "checked": 94,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.0.1": {
+      "status": "ok",
+      "checked": 109,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.1.0": {
+      "status": "ok",
+      "checked": 109,
       "missing": [],
       "drift": [],
       "declared": {

@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-16T22:12:03Z",
   "firstSeenAt": "2026-11-04T22:13:11Z",
   "npm": {
     "name": "@open-mercato/gateway-autopay",
     "distTags": {
       "latest": "0.10.1-develop.7741.1.61a2652671",
-      "develop": "0.10.1-develop.8217.1.e0e2d14319"
+      "develop": "0.10.1-develop.8229.1.61fb2a0f4c"
     },
     "latestStable": null,
     "previousStable": null,
@@ -43,9 +43,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-16T12:42:39Z",
+    "pushedAt": "2026-11-16T21:59:12Z",
     "defaultBranch": "main",
-    "stars": 1937,
+    "stars": 1941,
     "license": "MIT",
     "topics": [
       "crm",

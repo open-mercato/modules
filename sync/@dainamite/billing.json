@@ -1,23 +1,23 @@
 {
   "locator": "npm:@dainamite/billing",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-16T22:12:03Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/billing",
     "distTags": {
-      "latest": "0.22.0"
+      "latest": "1.1.0"
     },
-    "latestStable": "0.22.0",
-    "previousStable": "0.21.0",
+    "latestStable": "1.1.0",
+    "previousStable": "1.0.1",
     "preview": null,
     "publishedAt": {
-      "0.22.0": "2026-11-15T15:57:18Z",
-      "0.21.0": "2026-11-15T13:06:55Z"
+      "1.1.0": "2026-11-16T18:58:17Z",
+      "1.0.1": "2026-11-16T16:00:15Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": "git+https://github.com/dainamite-technologies/dainamite-core.git",
-    "gitHead": "6f853a2ba2856c927bb033f6543937c969ead53d",
+    "gitHead": "66eb48da62c461d5e5be370e0eebfabdd09ee39c",
     "keywords": [],
     "maintainers": [
       "dainamite-acc",
@@ -38,27 +38,60 @@
       "@open-mercato/shared": "^0.9.0",
       "@mikro-orm/decorators": "^7.1.14",
       "@mikro-orm/postgresql": "^7.1.14",
-      "@tanstack/react-table": "^9.0.0"
+      "@tanstack/react-table": "^9.0.0",
+      "@open-mercato/ai-assistant": "^0.9.0"
     },
     "dependencies": {
       "pdf-lib": "^1.17.1",
       "@pdf-lib/fontkit": "^1.1.1"
     },
     "installScripts": [],
-    "integrity": "sha512-8gEBl+8jczbi0MPxxYS9iqSRy0egsEnP1mTf7ARKUQar2dW9SJkdROu/an9lbBpCXqH24zBf4PXCf5l1dxPjKA==",
-    "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-0.22.0.tgz"
+    "integrity": "sha512-4Y3rdgfxYBHiaYNjZLn4KOAuLsr/ANA5VmnCN5rTiu0Q+CDZz42eWTFltKn6Ajo+ynqovpifnZu6skvEPeEmNA==",
+    "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-1.1.0.tgz"
   },
   "github": {
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-16T12:25:59Z",
+    "pushedAt": "2026-11-16T18:53:08Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
     "topics": [],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "@dainamite/cpq-billing-connector@5.2.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/cpq-billing-connector@5.1.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
+      {
+        "name": "@dainamite/cpq@1.1.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/cpq@1.0.1",
+        "sha": "34bd763d07bc6ade0821f8ab2e635b3e045de44c"
+      },
+      {
+        "name": "@dainamite/cpq@1.0.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
+      {
+        "name": "@dainamite/billing@1.1.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/billing@1.0.1",
+        "sha": "34bd763d07bc6ade0821f8ab2e635b3e045de44c"
+      },
+      {
+        "name": "@dainamite/billing@1.0.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
       {
         "name": "@dainamite/cpq-billing-connector@5.0.0",
         "sha": "69d9b2abb21c529f3202dbe6db3c2f54ce44e4ae"

@@ -1,6 +1,6 @@
 {
   "om": "0.8.0",
-  "computedAt": "2026-11-16T06:40:44.685Z",
+  "computedAt": "2026-11-16T22:13:53.938Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -109,6 +109,44 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/billing@1.0.1": {
+      "status": "drift",
+      "checked": 100,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/ui/backend/DataTable#DataTable"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@1.1.0": {
+      "status": "drift",
+      "checked": 102,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/ui/backend/DataTable#DataTable"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq-billing-connector@0.1.1": {
       "status": "drift",
       "checked": 6,
@@ -182,6 +220,44 @@
     "npm:@dainamite/cpq-billing-connector@5.0.0": {
       "status": "drift",
       "checked": 41,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/lib/commands/undo#extractUndoPayload"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@5.1.0": {
+      "status": "drift",
+      "checked": 44,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/lib/commands/undo#extractUndoPayload"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@5.2.0": {
+      "status": "drift",
+      "checked": 48,
       "missing": [],
       "drift": [
         "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
@@ -298,6 +374,52 @@
     "npm:@dainamite/cpq@0.8.0": {
       "status": "drift",
       "checked": 94,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+        "@open-mercato/core/modules/feature_toggles/lib/feature-flag-check#FeatureTogglesService",
+        "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/undo#extractUndoPayload",
+        "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+        "@open-mercato/ui/backend/DataTable#DataTable"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.0.1": {
+      "status": "drift",
+      "checked": 109,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/directory/utils/organizationScope#resolveFeatureCheckContext",
+        "@open-mercato/core/modules/feature_toggles/lib/feature-flag-check#FeatureTogglesService",
+        "@open-mercato/core/modules/sales/services/salesDocumentNumberGenerator#SalesDocumentNumberGenerator",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/undo#extractUndoPayload",
+        "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+        "@open-mercato/ui/backend/DataTable#DataTable"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.1.0": {
+      "status": "drift",
+      "checked": 109,
       "missing": [],
       "drift": [
         "@open-mercato/core/modules/auth/services/rbacService#RbacService",

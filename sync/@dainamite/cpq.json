@@ -1,23 +1,23 @@
 {
   "locator": "npm:@dainamite/cpq",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-16T22:12:03Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/cpq",
     "distTags": {
-      "latest": "0.8.0"
+      "latest": "1.1.0"
     },
-    "latestStable": "0.8.0",
-    "previousStable": "0.7.0",
+    "latestStable": "1.1.0",
+    "previousStable": "1.0.1",
     "preview": null,
     "publishedAt": {
-      "0.8.0": "2026-11-15T17:53:30Z",
-      "0.7.0": "2026-11-15T15:58:20Z"
+      "1.1.0": "2026-11-16T18:57:16Z",
+      "1.0.1": "2026-11-16T16:01:16Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": "git+https://github.com/dainamite-technologies/dainamite-core.git",
-    "gitHead": "69d9b2abb21c529f3202dbe6db3c2f54ce44e4ae",
+    "gitHead": "66eb48da62c461d5e5be370e0eebfabdd09ee39c",
     "keywords": [],
     "maintainers": [
       "dainamite-acc",
@@ -38,26 +38,59 @@
       "@open-mercato/shared": "^0.9.0",
       "@mikro-orm/decorators": "^7.1.14",
       "@mikro-orm/postgresql": "^7.1.14",
-      "@tanstack/react-table": "^9.0.0"
+      "@tanstack/react-table": "^9.0.0",
+      "@open-mercato/ai-assistant": "^0.9.0"
     },
     "dependencies": {
       "xlsx": "^0.18.0"
     },
     "installScripts": [],
-    "integrity": "sha512-NEuQgnHMv6trXf5FjPUyIW7RQthItvstdBkleHS5HPb2fW0qh8bFHULd3MSTdmLR/2pWqKSRN8ZSkf+SgB5QZg==",
-    "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-0.8.0.tgz"
+    "integrity": "sha512-JXnhF+inH+MRMRG2NvEovN9lr+PP4U0+nV4nEsH0ZgdqZbmCFw5ocpeegkE8/DovPQxb2i0AF/xdKedZZ8PTmg==",
+    "tarball": "https://registry.npmjs.org/@dainamite/cpq/-/cpq-1.1.0.tgz"
   },
   "github": {
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-16T12:25:59Z",
+    "pushedAt": "2026-11-16T18:53:08Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
     "topics": [],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "@dainamite/cpq-billing-connector@5.2.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/cpq-billing-connector@5.1.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
+      {
+        "name": "@dainamite/cpq@1.1.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/cpq@1.0.1",
+        "sha": "34bd763d07bc6ade0821f8ab2e635b3e045de44c"
+      },
+      {
+        "name": "@dainamite/cpq@1.0.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
+      {
+        "name": "@dainamite/billing@1.1.0",
+        "sha": "66eb48da62c461d5e5be370e0eebfabdd09ee39c"
+      },
+      {
+        "name": "@dainamite/billing@1.0.1",
+        "sha": "34bd763d07bc6ade0821f8ab2e635b3e045de44c"
+      },
+      {
+        "name": "@dainamite/billing@1.0.0",
+        "sha": "7da63d10a07e4592e970d8b031cc097a09381fd6"
+      },
       {
         "name": "@dainamite/cpq-billing-connector@5.0.0",
         "sha": "69d9b2abb21c529f3202dbe6db3c2f54ce44e4ae"
