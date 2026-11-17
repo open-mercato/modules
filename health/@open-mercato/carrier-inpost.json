@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-11-16T22:13:55Z",
+  "computedAt": "2026-11-17T21:01:32Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.9": "ok",
       "0.8": "ok",
-      "next": "no-fit"
+      "next": "drift"
     },
     "anatomy": "partial",
     "supplyChain": {

@@ -1,6 +1,6 @@
 {
   "locator": "npm:@open-mercato/gateway-stripe",
-  "checkedAt": "2026-11-16T22:12:03Z",
+  "checkedAt": "2026-11-17T20:59:52Z",
   "firstSeenAt": "2026-10-23T02:10:17Z",
   "npm": {
     "name": "@open-mercato/gateway-stripe",
@@ -8,7 +8,7 @@
       "legacy": "1.0.1",
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.9.0",
-      "develop": "0.10.1-develop.8229.1.61fb2a0f4c"
+      "develop": "0.10.1-develop.8257.1.g7228410734"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -49,9 +49,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-16T21:59:12Z",
+    "pushedAt": "2026-11-17T20:41:02Z",
     "defaultBranch": "main",
-    "stars": 1941,
+    "stars": 1944,
     "license": "MIT",
     "topics": [
       "crm",
@@ -239,7 +239,7 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 74048,
+  "downloads30d": 75229,
   "errors": [
     "npm: highest stable 1.0.1 is deprecated (\"published by mistake, use 0.4.x\"); latestStable skips deprecated versions"
   ]
