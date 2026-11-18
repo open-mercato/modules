@@ -1,6 +1,6 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-health",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-18T20:37:24Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@fullstackhouse/open-mercato-health",
@@ -11,7 +11,9 @@
       "latest": "0.3.0",
       "pr-6": "0.3.0-pr.6.13d7d41",
       "pr-7": "0.3.0-pr.7.71a4a55",
-      "pr-8": "0.3.0-pr.8.6049822"
+      "pr-8": "0.3.0-pr.8.6049822",
+      "pr-9": "0.3.0-pr.9.c0da1e6",
+      "pr-10": "0.3.0-pr.10.00b3084"
     },
     "latestStable": "0.3.0",
     "previousStable": "0.2.3",
@@ -49,7 +51,7 @@
     "repo": "fullstackhouse/open-mercato-health",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-10-20T22:03:43Z",
+    "pushedAt": "2026-11-18T19:13:05Z",
     "defaultBranch": "main",
     "stars": 0,
     "license": null,
@@ -71,6 +73,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
-  "downloads30d": 571,
+  "downloads30d": 585,
   "errors": []
 }

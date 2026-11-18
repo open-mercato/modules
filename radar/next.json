@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-18T10:36:43.499Z",
-  "next": "0.10.1-develop.8258.1.62a94b74a2",
+  "generatedAt": "2026-11-18T20:39:19.118Z",
+  "next": "0.10.1-develop.8278.1.f7f8e5ab1a",
   "base": "0.9.0",
   "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
@@ -155,6 +155,20 @@
       "change": "signature",
       "modules": [
         "npm:@northbound-run/sync-shopify"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
       ]
     },
     {

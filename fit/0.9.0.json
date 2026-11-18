@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-18T07:38:27.027Z",
+  "computedAt": "2026-11-18T20:39:18.029Z",
   "driftAgainst": "0.9.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -90,6 +90,18 @@
     "npm:@dainamite/billing@1.1.0": {
       "status": "ok",
       "checked": 102,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/billing@1.1.1": {
+      "status": "ok",
+      "checked": 105,
       "missing": [],
       "drift": [],
       "declared": {
@@ -280,6 +292,18 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@1.1.0": {
+      "status": "ok",
+      "checked": 109,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.2.0": {
       "status": "ok",
       "checked": 109,
       "missing": [],
