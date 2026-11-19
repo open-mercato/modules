@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq",
   "version": "1.2.0",
-  "computedAt": "2026-11-18T20:39:19Z",
+  "computedAt": "2026-11-19T11:02:29Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "untested",
+      "0.9": "quarantine",
       "0.8": "untested",
-      "next": "untested"
+      "next": "quarantine"
     },
     "fit": {
       "0.9": "ok",
@@ -132,7 +132,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): 1.1.0 in the age gate on 17 Nov."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): in the age gate on 19 Nov."
         }
       ],
       "until": "2026-11-23"
@@ -168,7 +168,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): 1.1.0 in the age gate on 18 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 19 Nov."
         }
       ],
       "until": "2026-11-23"
