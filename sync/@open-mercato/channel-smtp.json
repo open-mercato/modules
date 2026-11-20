@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/channel-smtp",
-  "checkedAt": "2026-11-19T20:43:05Z",
+  "checkedAt": "2026-11-20T07:24:20Z",
   "firstSeenAt": "2026-11-04T22:13:11Z",
   "npm": {
     "name": "@open-mercato/channel-smtp",
     "distTags": {
       "latest": "0.10.1-develop.7749.1.ea3edf75e3",
-      "develop": "0.11.1-develop.8326.1.83951b2ce4"
+      "develop": "0.11.1-develop.8344.1.80823c0c64"
     },
     "latestStable": null,
     "previousStable": null,
@@ -45,7 +45,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-19T20:42:37Z",
+    "pushedAt": "2026-11-20T07:23:52Z",
     "defaultBranch": "main",
     "stars": 1951,
     "license": "MIT",

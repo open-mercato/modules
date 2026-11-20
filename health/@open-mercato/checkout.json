@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/checkout",
   "version": "0.9.0",
-  "computedAt": "2026-11-19T20:44:43Z",
+  "computedAt": "2026-11-20T07:25:47Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -168,7 +168,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.11.1-develop.8326.1.83951b2ce4"
+    "next": "0.11.1-develop.8344.1.80823c0c64"
   },
   "verdictPreset": "classic"
 }
