@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
   "version": "5.2.0",
-  "computedAt": "2026-11-20T10:43:35Z",
+  "computedAt": "2026-11-21T07:19:02Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -136,12 +136,8 @@
       "until": "2026-11-21"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 21 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
@@ -151,7 +147,7 @@
           "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): 3.0.0 in the age gate on 15 Nov."
         }
       ],
-      "until": "2026-11-21"
+      "consentText": "Install @dainamite/cpq-billing-connector@5.2.0"
     },
     "next": {
       "decision": "refuse",

@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/web-research-searxng",
-  "checkedAt": "2026-11-20T20:27:28Z",
+  "checkedAt": "2026-11-21T07:17:20Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research-searxng",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.11.1-develop.8387.1.a7307c197d"
+      "develop": "0.11.1-develop.8409.1.9dfc601f30"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -39,7 +39,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-20T20:27:28Z",
+    "pushedAt": "2026-11-21T07:16:53Z",
     "defaultBranch": "main",
     "stars": 1952,
     "license": "MIT",

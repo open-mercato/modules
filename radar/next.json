@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-20T20:29:14.216Z",
-  "next": "0.11.1-develop.8387.1.a7307c197d",
+  "generatedAt": "2026-11-21T07:19:01.701Z",
+  "next": "0.11.1-develop.8409.1.9dfc601f30",
   "base": "0.9.0",
   "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
@@ -208,6 +208,13 @@
       "change": "signature",
       "modules": [
         "npm:@northbound-run/channel-cloudflare-email"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/data_sync/lib/start-run#startDataSyncRun",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/sync-google-sheets"
       ]
     },
     {
