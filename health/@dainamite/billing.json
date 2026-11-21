@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/billing",
   "version": "1.1.1",
-  "computedAt": "2026-11-20T10:43:35Z",
+  "computedAt": "2026-11-21T10:23:44Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -166,7 +166,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 20 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 21 Nov."
         }
       ],
       "until": "2026-11-23"
