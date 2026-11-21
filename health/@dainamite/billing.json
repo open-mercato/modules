@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/billing",
   "version": "1.1.1",
-  "computedAt": "2026-11-21T10:23:44Z",
+  "computedAt": "2026-11-21T19:23:31Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -91,7 +91,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "No installable version on 0.9."
+      "detail": "Receipt on 0.9: new release in the install age gate on 17 Nov."
     },
     {
       "id": "VER-2",
@@ -118,30 +118,22 @@
   "quality": null,
   "agentPolicy": {
     "0.9": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 23 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): in the age gate on 19 Nov."
+          "text": "Not yet tested in a new app on 0.9. In isolation (empty preset): 1.1.1 in the age gate on 19 Nov."
         }
       ],
-      "until": "2026-11-23"
+      "consentText": "Install @dainamite/billing@1.1.0"
     },
     "0.8": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 23 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
@@ -151,25 +143,21 @@
           "text": "Not yet tested in a new app on 0.8. In isolation (empty preset): 0.20.0 in the age gate on 15 Nov."
         }
       ],
-      "until": "2026-11-23"
+      "consentText": "Install @dainamite/billing@1.1.0"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "QUARANTINE",
-          "text": "Installs from 23 Nov (Yarn 5-day age gate)."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 21 Nov."
+          "text": "Not yet tested in a new app on next. In isolation (empty preset): 1.1.1 in the age gate on 21 Nov."
         }
       ],
-      "until": "2026-11-23"
+      "consentText": "Install @dainamite/billing@1.1.0"
     }
   },
   "state": "active",
@@ -179,9 +167,9 @@
     "next": null
   },
   "evaluated": {
-    "0.9": "1.1.1",
-    "0.8": "1.1.1",
-    "next": "1.1.1"
+    "0.9": "1.1.0",
+    "0.8": "1.1.0",
+    "next": "1.1.0"
   },
   "verdictPreset": "classic"
 }
