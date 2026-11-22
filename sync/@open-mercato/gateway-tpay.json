@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/gateway-tpay",
-  "checkedAt": "2026-11-22T06:57:33Z",
+  "checkedAt": "2026-11-22T19:45:32Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/gateway-tpay",
     "distTags": {
       "latest": "0.8.1-develop.7442.1.4c1dbf1f0e",
-      "develop": "0.11.1-develop.8433.1.e3ebfc0705"
+      "develop": "0.11.1-develop.8445.1.e5ea897100"
     },
     "latestStable": null,
     "previousStable": null,
@@ -40,9 +40,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-22T06:57:15Z",
+    "pushedAt": "2026-11-22T19:44:17Z",
     "defaultBranch": "main",
-    "stars": 1954,
+    "stars": 1956,
     "license": "MIT",
     "topics": [
       "crm",

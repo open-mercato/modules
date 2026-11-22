@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/channel-fcm",
-  "checkedAt": "2026-11-22T06:57:33Z",
+  "checkedAt": "2026-11-22T19:45:32Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/channel-fcm",
     "distTags": {
       "latest": "0.9.0",
-      "develop": "0.11.1-develop.8433.1.e3ebfc0705"
+      "develop": "0.11.1-develop.8445.1.e5ea897100"
     },
     "latestStable": "0.9.0",
     "previousStable": "0.8.0",
@@ -44,9 +44,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-22T06:57:15Z",
+    "pushedAt": "2026-11-22T19:44:17Z",
     "defaultBranch": "main",
-    "stars": 1954,
+    "stars": 1956,
     "license": "MIT",
     "topics": [
       "crm",
