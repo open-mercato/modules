@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-ses",
   "version": "0.9.0",
-  "computedAt": "2026-11-22T06:59:14Z",
+  "computedAt": "2026-11-22T10:51:16Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -92,8 +92,8 @@
     },
     {
       "id": "VER-1",
-      "pass": true,
-      "detail": "Receipt on 0.9: verified (0.9.0)."
+      "pass": false,
+      "detail": "Receipt on 0.9: verified 14 days ago (max 14)."
     },
     {
       "id": "VER-2",
@@ -116,7 +116,7 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "verified",
+  "tier": "listed",
   "quality": null,
   "agentPolicy": {
     "0.9": {
