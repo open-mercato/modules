@@ -1,13 +1,16 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-23T07:48:13.809Z",
-  "driftAgainst": "0.9.0",
+  "computedAt": "2026-11-23T23:59:44.568Z",
+  "driftAgainst": "0.10.0",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 20,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/authService#AuthService",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": ">=0.6.0",
         "kind": "open",
@@ -16,10 +19,20 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@0.18.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 75,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoice",
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoiceLine",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.6.0",
         "kind": "caret-0x",
@@ -28,10 +41,20 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@0.19.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 75,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoice",
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoiceLine",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.6.7",
         "kind": "caret-0x",
@@ -40,10 +63,20 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@0.20.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 75,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoice",
+        "@open-mercato/core/modules/sales/data/entities#SalesInvoiceLine",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -52,10 +85,23 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@0.21.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 90,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -64,10 +110,23 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@0.22.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 91,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -76,10 +135,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@1.0.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 100,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -88,10 +164,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@1.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 102,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -100,10 +193,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/billing@1.1.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 105,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -112,10 +222,14 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@0.1.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 6,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.0",
         "kind": "caret-0x",
@@ -124,10 +238,14 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@1.0.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 6,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.7",
         "kind": "caret-0x",
@@ -136,10 +254,14 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@2.0.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 6,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -148,10 +270,14 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@3.0.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 6,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -160,10 +286,14 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@4.0.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 6,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -172,10 +302,17 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@5.0.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 41,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -184,10 +321,19 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@5.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 44,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -196,10 +342,19 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@5.2.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 48,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -208,10 +363,18 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.3.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 58,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.0",
         "kind": "caret-0x",
@@ -220,10 +383,18 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.4.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 58,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.7",
         "kind": "caret-0x",
@@ -232,10 +403,18 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.5.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 58,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -244,10 +423,22 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.6.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 88,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -256,10 +447,22 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.7.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 89,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -268,10 +471,22 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 94,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -280,10 +495,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@1.0.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 109,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -292,10 +524,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@1.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 109,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -304,10 +553,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq@1.2.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 109,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.9.0",
         "kind": "caret-0x",
@@ -316,10 +582,13 @@
       "hostDuplicates": []
     },
     "npm:@fastwhitecat/integration-ksef-direct@0.1.7": {
-      "status": "ok",
+      "status": "drift",
       "checked": 38,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.7.0 <0.8.0",
         "kind": "bounded",
@@ -328,10 +597,13 @@
       "hostDuplicates": []
     },
     "npm:@fastwhitecat/integration-ksef-direct@0.1.8": {
-      "status": "ok",
+      "status": "drift",
       "checked": 38,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.7.0 <0.8.0",
         "kind": "bounded",
@@ -340,10 +612,19 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/shipment-tracking@0.10.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 36,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -352,10 +633,19 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/shipment-tracking@0.10.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 37,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -364,10 +654,19 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/shipment-tracking@0.7.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 36,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.6.2",
         "kind": "exact-pin",
@@ -376,10 +675,19 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/shipment-tracking@0.7.2": {
-      "status": "ok",
+      "status": "drift",
       "checked": 36,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.6.2",
         "kind": "exact-pin",
@@ -388,10 +696,19 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/shipment-tracking@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 36,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -400,10 +717,16 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/terminal-tracking@0.7.2": {
-      "status": "ok",
+      "status": "drift",
       "checked": 25,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.6.2",
         "kind": "exact-pin",
@@ -412,10 +735,16 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/terminal-tracking@0.7.3": {
-      "status": "ok",
+      "status": "drift",
       "checked": 25,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.6.2",
         "kind": "exact-pin",
@@ -424,10 +753,16 @@
       "hostDuplicates": []
     },
     "npm:@freighttech/terminal-tracking@0.7.5": {
-      "status": "ok",
+      "status": "drift",
       "checked": 26,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -496,10 +831,12 @@
       "hostDuplicates": []
     },
     "npm:@fullstackhouse/open-mercato-demo-auth@0.2.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 2,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "*",
         "kind": "star",
@@ -520,10 +857,14 @@
       "hostDuplicates": []
     },
     "npm:@fullstackhouse/open-mercato-durable-work@0.5.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 7,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.7.0 <0.8.0",
         "kind": "bounded",
@@ -532,10 +873,14 @@
       "hostDuplicates": []
     },
     "npm:@fullstackhouse/open-mercato-durable-work@0.6.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 7,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.7.0 <0.8.0",
         "kind": "bounded",
@@ -544,10 +889,12 @@
       "hostDuplicates": []
     },
     "npm:@fullstackhouse/open-mercato-health@0.2.3": {
-      "status": "ok",
+      "status": "drift",
       "checked": 4,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "*",
         "kind": "star",
@@ -556,10 +903,12 @@
       "hostDuplicates": []
     },
     "npm:@fullstackhouse/open-mercato-health@0.3.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 4,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "*",
         "kind": "star",
@@ -568,10 +917,19 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/channel-cloudflare-email@0.1.2": {
-      "status": "ok",
+      "status": "drift",
       "checked": 64,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.6.6 <0.7.0",
         "kind": "bounded",
@@ -580,10 +938,20 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/channel-cloudflare-email@0.2.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 66,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/core/modules/attachments/lib/ocrService#OcrService",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.6.6 <0.7.0",
         "kind": "bounded",
@@ -592,10 +960,14 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/search-cloudflare@0.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 19,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/search/strategies/fulltext.strategy#FullTextSearchStrategy",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": ">=0.6.0 <0.7.0",
         "kind": "bounded",
@@ -604,10 +976,14 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/search-cloudflare@0.1.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 19,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/search/strategies/fulltext.strategy#FullTextSearchStrategy",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": ">=0.6.0 <0.7.0",
         "kind": "bounded",
@@ -616,10 +992,14 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/sync-google-sheets@0.1.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 34,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.5",
         "kind": "caret-0x",
@@ -628,10 +1008,14 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/sync-google-sheets@0.2.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 34,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "^0.6.5",
         "kind": "caret-0x",
@@ -640,10 +1024,15 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/sync-shopify@0.4.9": {
-      "status": "ok",
+      "status": "drift",
       "checked": 32,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.6.6 <0.7.0",
         "kind": "bounded",
@@ -652,10 +1041,15 @@
       "hostDuplicates": []
     },
     "npm:@northbound-run/sync-shopify@0.5.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 32,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": ">=0.6.6 <0.7.0",
         "kind": "bounded",
@@ -663,11 +1057,81 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/ai-assistant@0.10.0": {
+      "status": "no-fit",
+      "checked": 184,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/ai/decision-model",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/bootstrap/next-subpath-resolve-hook",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/search",
+          "symbol": "SearchViewer",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/ui",
+          "subpath": "ai/parts/CitationsPart",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/api_keys/data/entities#ApiKey",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/notifications/lib/notificationService#NotificationService",
+        "@open-mercato/search/service#SearchService",
+        "@open-mercato/search/types#IndexableRecord",
+        "@open-mercato/search/types#SearchEntityConfig",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/ai-assistant@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 149,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/api_keys/data/entities#ApiKey",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/search/service#SearchService",
+        "@open-mercato/search/types#IndexableRecord",
+        "@open-mercato/search/types#SearchEntityConfig",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -676,10 +1140,23 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/ai-assistant@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 150,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/api_keys/data/entities#ApiKey",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/search/service#SearchService",
+        "@open-mercato/search/types#IndexableRecord",
+        "@open-mercato/search/types#SearchEntityConfig",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -687,11 +1164,31 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/carrier-inpost@0.10.0": {
+      "status": "drift",
+      "checked": 34,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/core/modules/shipping_carriers/lib/adapter#ShippingAdapter",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/carrier-inpost@0.4.6-canary-5eb138494e": {
-      "status": "ok",
+      "status": "drift",
       "checked": 8,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/shipping_carriers/lib/adapter#ShippingAdapter",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -699,11 +1196,27 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/channel-apns@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/channel-apns@0.10.0": {
+      "status": "drift",
       "checked": 45,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-apns@0.8.0": {
+      "status": "drift",
+      "checked": 45,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -712,10 +1225,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-apns@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 45,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -723,11 +1238,54 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/channel-discord@0.10.0": {
+      "status": "no-fit",
+      "checked": 116,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/messages/lib/routeHelpers",
+          "symbol": "resolveMessageReadAccess",
+          "kind": "symbol"
+        }
+      ],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/channel-discord@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 111,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -736,10 +1294,22 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-discord@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 111,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -747,11 +1317,27 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/channel-expo@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/channel-expo@0.10.0": {
+      "status": "drift",
       "checked": 39,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-expo@0.8.0": {
+      "status": "drift",
+      "checked": 39,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -760,10 +1346,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-expo@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 39,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -771,11 +1359,27 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/channel-fcm@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/channel-fcm@0.10.0": {
+      "status": "drift",
       "checked": 41,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-fcm@0.8.0": {
+      "status": "drift",
+      "checked": 41,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -784,10 +1388,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-fcm@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 41,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -795,11 +1401,45 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/channel-gmail@0.10.0": {
+      "status": "no-fit",
+      "checked": 67,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/communication_channels/lib/email-mime",
+          "symbol": "composeEmailMessage",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/communication_channels/lib/outbound-attachments",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ImportHistoryInput",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/channel-gmail@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 58,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -808,10 +1448,15 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-gmail@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 65,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ImportHistoryInput",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -819,11 +1464,47 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/channel-imap@0.10.0": {
+      "status": "no-fit",
+      "checked": 56,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/communication_channels/lib/outbound-attachments",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/host-pinning",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ImportHistoryInput",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/channel-imap@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 61,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ImportHistoryInput",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -832,10 +1513,15 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-imap@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 63,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ImportHistoryInput",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -843,11 +1529,31 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/channel-resend@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/channel-resend@0.10.0": {
+      "status": "drift",
       "checked": 31,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-resend@0.8.0": {
+      "status": "drift",
+      "checked": 31,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -856,10 +1562,14 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-resend@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 31,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -867,11 +1577,31 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/channel-ses@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/channel-ses@0.10.0": {
+      "status": "drift",
       "checked": 31,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-ses@0.8.0": {
+      "status": "drift",
+      "checked": 31,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -880,14 +1610,41 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/channel-ses@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 31,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
         "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/channel-smtp@0.10.0": {
+      "status": "no-fit",
+      "checked": 34,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/host-pinning",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
       },
       "hostDuplicates": []
     },
@@ -902,7 +1659,11 @@
           "kind": "subpath"
         }
       ],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+        "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.10.1-develop.7749.1.ea3edf75e3",
         "kind": "exact-pin",
@@ -910,11 +1671,110 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/checkout@0.10.0": {
+      "status": "no-fit",
+      "checked": 169,
+      "missing": [
+        {
+          "pkg": "@open-mercato/checkout",
+          "subpath": "modules/checkout/i18n/en.json",
+          "symbol": "default",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/currencyPrecision",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/db/exactDecimalType",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/decimal",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/number",
+          "symbol": "formatLocaleDecimalInput",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/number",
+          "symbol": "formatLocaleNumberInput",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/number",
+          "symbol": "parseLocaleDecimal",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "PaymentGatewayPayerField",
+          "kind": "symbol"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/payment_gateways/data/entities#GatewayTransaction",
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/CrudForm#CrudFormGroupComponentProps",
+        "@open-mercato/ui/backend/CrudForm#CrudFormProps",
+        "@open-mercato/ui/backend/injection/InjectionSpot#useInjectionSpotEvents",
+        "@open-mercato/ui/backend/inputs#ComboboxInput",
+        "@open-mercato/ui/utils/format#formatCurrency"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/checkout@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 156,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/payment_gateways/data/entities#GatewayTransaction",
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/CrudForm#CrudFormGroupComponentProps",
+        "@open-mercato/ui/backend/injection/InjectionSpot#useInjectionSpotEvents",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -923,10 +1783,28 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/checkout@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 159,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/payment_gateways/data/entities#GatewayTransaction",
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/CrudForm#CrudFormGroupComponentProps",
+        "@open-mercato/ui/backend/injection/InjectionSpot#useInjectionSpotEvents",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -934,11 +1812,27 @@
       },
       "hostDuplicates": []
     },
-    "npm:@open-mercato/content@0.8.0": {
-      "status": "ok",
+    "npm:@open-mercato/content@0.10.0": {
+      "status": "drift",
       "checked": 3,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/content@0.8.0": {
+      "status": "drift",
+      "checked": 3,
+      "missing": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -947,10 +1841,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/content@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 3,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -958,11 +1854,68 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/documents@0.10.0": {
+      "status": "no-fit",
+      "checked": 142,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments",
+          "symbol": "AttachmentAccessInput",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments",
+          "symbol": "AttachmentAccessResolver",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments",
+          "symbol": "ProtectedAttachmentTarget",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/ui",
+          "subpath": "theme/ContentSecurityPolicyProvider",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/query/types#QueryOptions",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/documents@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 138,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/query/types#QueryOptions",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -971,14 +1924,36 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/documents@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 138,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/lib/query/types#QueryOptions",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
         "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/enterprise@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
       },
       "hostDuplicates": []
     },
@@ -1006,11 +1981,36 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/events@0.10.0": {
+      "status": "no-fit",
+      "checked": 24,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/sse/connectionBounds",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/events@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 19,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -1019,10 +2019,13 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/events@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 22,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -1031,10 +2034,22 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/forms@0.0.0-canary.20260603190311.74d2590": {
-      "status": "ok",
+      "status": "drift",
       "checked": 124,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/charts#BarChart",
+        "@open-mercato/ui/backend/charts#LineChart"
+      ],
       "declared": {
         "range": "^0.6.0",
         "kind": "caret-0x",
@@ -1042,11 +2057,66 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/gateway-autopay@0.10.0": {
+      "status": "no-fit",
+      "checked": 40,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/decimal",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/core/modules/payment_gateways/data/entities#GatewayTransaction",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureInput",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundInput",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/gateway-autopay@0.10.1-develop.7741.1.61a2652671": {
-      "status": "ok",
+      "status": "drift",
       "checked": 40,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/core/modules/payment_gateways/data/entities#GatewayTransaction",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureInput",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundInput",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.10.1-develop.7741.1.61a2652671",
         "kind": "exact-pin",
@@ -1055,10 +2125,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/gateway-payu@0.4.6-canary-5eb138494e": {
-      "status": "ok",
+      "status": "drift",
       "checked": 4,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -1067,10 +2139,12 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/gateway-przelewy24@0.4.6-canary-5eb138494e": {
-      "status": "ok",
+      "status": "drift",
       "checked": 4,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -1078,11 +2152,64 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/gateway-stripe@0.10.0": {
+      "status": "no-fit",
+      "checked": 52,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/decimal",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureInput",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundInput",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/gateway-stripe@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 50,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureInput",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundInput",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1091,10 +2218,24 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/gateway-stripe@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 50,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureInput",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundInput",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1102,11 +2243,88 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/gateway-tpay@0.10.0": {
+      "status": "no-fit",
+      "checked": 41,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/decimal",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "WebhookHttpResponse",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "WebhookLocatorContext",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "WebhookResponseOutcome",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/payment_gateways/types",
+          "symbol": "WebhookVerificationUnavailableError",
+          "kind": "symbol"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#VerifyWebhookInput",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/payment_gateways/types#registerWebhookHandler",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/gateway-tpay@0.8.1-develop.7442.1.4c1dbf1f0e": {
-      "status": "ok",
+      "status": "drift",
       "checked": 31,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/shared/modules/payment_gateways/types#CaptureResult",
+        "@open-mercato/shared/modules/payment_gateways/types#CreateSessionInput",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayAdapter",
+        "@open-mercato/shared/modules/payment_gateways/types#GatewayPaymentStatus",
+        "@open-mercato/shared/modules/payment_gateways/types#RefundResult",
+        "@open-mercato/shared/modules/payment_gateways/types#WebhookEvent",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.1-develop.7442.1.4c1dbf1f0e",
         "kind": "exact-pin",
@@ -1114,11 +2332,31 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/onboarding@0.10.0": {
+      "status": "drift",
+      "checked": 80,
+      "missing": [],
+      "drift": [
+        "@open-mercato/search#SearchIndexer",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/onboarding@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 78,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/search#SearchIndexer",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1127,10 +2365,14 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/onboarding@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 78,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/search#SearchIndexer",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1209,7 +2451,11 @@
           "kind": "subpath"
         }
       ],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.4.9-canary-fcabd45887",
         "kind": "exact-pin",
@@ -1217,11 +2463,43 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/scheduler@0.10.0": {
+      "status": "drift",
+      "checked": 95,
+      "missing": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/inputs/ComboboxInput#ComboboxInput"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/scheduler@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 89,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/inputs/ComboboxInput#ComboboxInput"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1230,10 +2508,20 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/scheduler@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 94,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm",
+        "@open-mercato/ui/backend/inputs/ComboboxInput#ComboboxInput"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1241,11 +2529,104 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/search@0.10.0": {
+      "status": "no-fit",
+      "checked": 131,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/query_index/lib/search-scope",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/db/recordScope",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/query/overlap",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/search",
+          "symbol": "SearchIndexDocCondition",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/search",
+          "symbol": "SearchIndexDocFilter",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/search",
+          "symbol": "SearchResultVisibilityContext",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "modules/search",
+          "symbol": "SearchViewer",
+          "kind": "symbol"
+        }
+      ],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/search#SearchService",
+        "@open-mercato/search/indexer#SearchIndexer",
+        "@open-mercato/search/strategies#FullTextSearchStrategy",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#IndexableRecord",
+        "@open-mercato/shared/modules/search#SearchEntityConfig",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/search#SearchServiceOptions",
+        "@open-mercato/shared/modules/search#SearchStrategy",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/search@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 115,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/search#SearchService",
+        "@open-mercato/search/indexer#SearchIndexer",
+        "@open-mercato/search/strategies#FullTextSearchStrategy",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#IndexableRecord",
+        "@open-mercato/shared/modules/search#SearchEntityConfig",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/search#SearchServiceOptions",
+        "@open-mercato/shared/modules/search#SearchStrategy",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1254,10 +2635,23 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/search@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 118,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createQueue",
+        "@open-mercato/search#SearchService",
+        "@open-mercato/search/indexer#SearchIndexer",
+        "@open-mercato/search/strategies#FullTextSearchStrategy",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/search#IndexableRecord",
+        "@open-mercato/shared/modules/search#SearchEntityConfig",
+        "@open-mercato/shared/modules/search#SearchOptions",
+        "@open-mercato/shared/modules/search#SearchServiceOptions",
+        "@open-mercato/shared/modules/search#SearchStrategy",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1265,11 +2659,60 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/storage-s3@0.10.0": {
+      "status": "no-fit",
+      "checked": 52,
+      "missing": [
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments/lib/drivers",
+          "symbol": "AttachmentStorageValidationContext",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments/lib/drivers",
+          "symbol": "getAttachmentStoragePolicy",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/core",
+          "subpath": "modules/attachments/lib/drivers",
+          "symbol": "registerStorageDriverValidator",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/attachments/lib/drivers#registerExternalStorageDriver",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/storage-s3@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 49,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/lib/drivers#registerExternalStorageDriver",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1278,10 +2721,16 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/storage-s3@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 49,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/lib/drivers#registerExternalStorageDriver",
+        "@open-mercato/core/modules/integrations/lib/credentials-service#createCredentialsService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1289,11 +2738,53 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/sync-akeneo@0.10.0": {
+      "status": "no-fit",
+      "checked": 104,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/decimal",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/core/modules/attachments#AttachmentService",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/sync-akeneo@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 101,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1302,10 +2793,18 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/sync-akeneo@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 101,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1314,14 +2813,58 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/sync-akeneo@1.0.1": {
-      "status": "ok",
+      "status": "drift",
       "checked": 89,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
       "declared": {
         "range": "0.4.7",
         "kind": "exact-pin",
         "satisfied": false
+      },
+      "hostDuplicates": []
+    },
+    "npm:@open-mercato/telemetry@0.10.0": {
+      "status": "no-fit",
+      "checked": 17,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/telemetry/runtime",
+          "symbol": "collectTelemetryMetrics",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/telemetry/runtime",
+          "symbol": "recordTelemetryMetric",
+          "kind": "symbol"
+        },
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/telemetry/runtime",
+          "symbol": "registerTelemetryErrorReporter",
+          "kind": "symbol"
+        }
+      ],
+      "drift": [
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/lib/telemetry/runtime#TelemetryRuntime",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
       },
       "hostDuplicates": []
     },
@@ -1338,10 +2881,15 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/telemetry@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 13,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/lib/ratelimit/types#RateLimitConfig",
+        "@open-mercato/shared/lib/telemetry/runtime#TelemetryRuntime",
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": null,
         "kind": "missing",
@@ -1349,11 +2897,44 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/tillio@0.10.0": {
+      "status": "no-fit",
+      "checked": 72,
+      "missing": [
+        {
+          "pkg": "@open-mercato/shared",
+          "subpath": "lib/cli/parseModuleCliOptions",
+          "symbol": null,
+          "kind": "subpath"
+        }
+      ],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/primitives/date-range-picker#DateRangePicker"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/tillio@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 72,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/primitives/date-range-picker#DateRangePicker"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1362,16 +2943,41 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/tillio@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 72,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/primitives/date-range-picker#DateRangePicker"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
         "satisfied": true
       },
       "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-browser@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
     },
     "npm:@open-mercato/web-research-browser@0.8.0": {
       "status": "ok",
@@ -1397,6 +3003,24 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/web-research-exa@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/web-research-exa@0.8.0": {
       "status": "ok",
       "checked": 0,
@@ -1420,6 +3044,24 @@
         "satisfied": false
       },
       "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-firecrawl@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
     },
     "npm:@open-mercato/web-research-firecrawl@0.8.0": {
       "status": "ok",
@@ -1445,6 +3087,24 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/web-research-model@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/web-research-model@0.8.0": {
       "status": "ok",
       "checked": 0,
@@ -1468,6 +3128,24 @@
         "satisfied": false
       },
       "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-searxng@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
     },
     "npm:@open-mercato/web-research-searxng@0.8.0": {
       "status": "ok",
@@ -1493,6 +3171,24 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/web-research-serp@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/web-research-serp@0.8.0": {
       "status": "ok",
       "checked": 0,
@@ -1516,6 +3212,24 @@
         "satisfied": false
       },
       "hostDuplicates": []
+    },
+    "npm:@open-mercato/web-research-tavily@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": "^0.6.0",
+        "kind": "caret-0x",
+        "satisfied": false
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
     },
     "npm:@open-mercato/web-research-tavily@0.8.0": {
       "status": "ok",
@@ -1541,6 +3255,24 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/web-research@0.10.0": {
+      "status": "ok",
+      "checked": 0,
+      "missing": [],
+      "drift": [],
+      "declared": {
+        "range": null,
+        "kind": "missing",
+        "satisfied": true
+      },
+      "hostDuplicates": [
+        {
+          "name": "zod",
+          "moduleRange": "^4.6.6",
+          "appVersion": "4.4.3"
+        }
+      ]
+    },
     "npm:@open-mercato/web-research@0.8.0": {
       "status": "ok",
       "checked": 0,
@@ -1565,11 +3297,39 @@
       },
       "hostDuplicates": []
     },
+    "npm:@open-mercato/webhooks@0.10.0": {
+      "status": "drift",
+      "checked": 120,
+      "missing": [],
+      "drift": [
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/notifications/lib/notificationService#NotificationService",
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
+      "declared": {
+        "range": "0.10.0",
+        "kind": "exact-pin",
+        "satisfied": false
+      },
+      "hostDuplicates": []
+    },
     "npm:@open-mercato/webhooks@0.8.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 109,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",
@@ -1578,10 +3338,17 @@
       "hostDuplicates": []
     },
     "npm:@open-mercato/webhooks@0.9.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 112,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/queue#createModuleQueue",
+        "@open-mercato/shared/lib/ratelimit/service#RateLimiterService",
+        "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1590,10 +3357,17 @@
       "hostDuplicates": []
     },
     "npm:@piotrkarwatka/marketing-consents@0.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 54,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/CrudForm#CrudForm"
+      ],
       "declared": {
         "range": "0.9.0",
         "kind": "exact-pin",
@@ -1613,10 +3387,12 @@
       ]
     },
     "npm:@piotrkarwatka/visits@0.1.0": {
-      "status": "ok",
+      "status": "drift",
       "checked": 18,
       "missing": [],
-      "drift": [],
+      "drift": [
+        "@open-mercato/shared/modules/registry#ModuleInfo"
+      ],
       "declared": {
         "range": "0.8.0",
         "kind": "exact-pin",

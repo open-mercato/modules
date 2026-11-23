@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/pay-by-links",
   "version": "0.4.9-canary-fcabd45887",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,13 +27,13 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "skipped",
       "0.9": "skipped",
-      "0.8": "skipped",
       "next": "broken"
     },
     "fit": {
+      "0.10": "no-fit",
       "0.9": "no-fit",
-      "0.8": "no-fit",
       "next": "no-fit"
     },
     "anatomy": "full",
@@ -91,12 +91,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Receipt on 0.9: skipped."
+      "detail": "Receipt on 0.10: skipped."
     },
     {
       "id": "VER-2",
       "pass": false,
-      "detail": "Fits statically on 0.9: no-fit."
+      "detail": "Fits statically on 0.10: no-fit."
     },
     {
       "id": "VER-3",
@@ -117,7 +117,7 @@
   "tier": null,
   "quality": null,
   "agentPolicy": {
-    "0.9": {
+    "0.10": {
       "decision": "refuse",
       "reasons": [
         {
@@ -134,7 +134,7 @@
         }
       ]
     },
-    "0.8": {
+    "0.9": {
       "decision": "refuse",
       "reasons": [
         {
@@ -171,13 +171,13 @@
   },
   "state": "hold",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": "0.4.9-canary-fcabd45887",
     "0.9": "0.4.9-canary-fcabd45887",
-    "0.8": "0.4.9-canary-fcabd45887",
     "next": "0.4.9-canary-fcabd45887"
   },
   "verdictPreset": "classic"

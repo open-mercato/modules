@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/forms",
   "version": "0.0.0-canary.20260603190311.74d2590",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,13 +27,13 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "skipped",
       "0.9": "skipped",
-      "0.8": "skipped",
       "next": "untested"
     },
     "fit": {
-      "0.9": "ok",
-      "0.8": "drift",
+      "0.10": "ok",
+      "0.9": "drift",
       "next": "drift"
     },
     "anatomy": "full",
@@ -92,12 +92,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Receipt on 0.9: skipped."
+      "detail": "Receipt on 0.10: skipped."
     },
     {
       "id": "VER-2",
       "pass": true,
-      "detail": "Fits statically on 0.9: ok."
+      "detail": "Fits statically on 0.10: ok."
     },
     {
       "id": "VER-3",
@@ -118,7 +118,7 @@
   "tier": null,
   "quality": null,
   "agentPolicy": {
-    "0.9": {
+    "0.10": {
       "decision": "refuse",
       "reasons": [
         {
@@ -139,7 +139,7 @@
         }
       ]
     },
-    "0.8": {
+    "0.9": {
       "decision": "refuse",
       "reasons": [
         {
@@ -184,13 +184,13 @@
   },
   "state": "hold",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": "0.0.0-canary.20260603190311.74d2590",
     "0.9": "0.0.0-canary.20260603190311.74d2590",
-    "0.8": "0.0.0-canary.20260603190311.74d2590",
     "next": "0.0.0-canary.20260603190311.74d2590"
   },
   "verdictPreset": "classic"

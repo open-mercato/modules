@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/shipment-tracking",
   "version": "0.10.1",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -27,13 +27,13 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "untested",
       "0.9": "broken",
-      "0.8": "broken",
       "next": "broken"
     },
     "fit": {
-      "0.9": "ok",
-      "0.8": "drift",
+      "0.10": "ok",
+      "0.9": "drift",
       "next": "drift"
     },
     "anatomy": "full",
@@ -96,12 +96,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at add on 0.9 since 11 Nov."
+      "detail": "Not yet tested in a new app on 0.10."
     },
     {
       "id": "VER-2",
       "pass": true,
-      "detail": "Fits statically on 0.9: ok."
+      "detail": "Fits statically on 0.10: ok."
     },
     {
       "id": "VER-3",
@@ -122,25 +122,26 @@
   "tier": "listed",
   "quality": null,
   "agentPolicy": {
+    "0.10": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.10."
+        }
+      ],
+      "consentText": "Install @freighttech/shipment-tracking@0.10.0"
+    },
     "0.9": {
       "decision": "refuse",
       "reasons": [
         {
           "code": "BROKEN",
           "text": "Broken at add on 0.9 since 11 Nov."
-        },
-        {
-          "code": "THIRD_PARTY",
-          "text": "Third-party code runs with access to all tenants' data."
-        }
-      ]
-    },
-    "0.8": {
-      "decision": "refuse",
-      "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at add on 0.8 since 15 Nov."
         },
         {
           "code": "THIRD_PARTY",
@@ -164,13 +165,13 @@
   },
   "state": "active",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": "0.10.0",
     "0.9": "0.10.1",
-    "0.8": "0.10.1",
     "next": "0.10.1"
   },
   "verdictPreset": "classic"

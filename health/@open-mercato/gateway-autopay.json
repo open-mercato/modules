@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
   "version": "0.10.0",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,23 +27,25 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "untested",
       "0.9": "untested",
-      "0.8": "untested",
       "next": "untested"
     },
     "fit": {
-      "0.9": "unknown",
-      "0.8": "unknown",
-      "next": "unknown"
+      "0.10": "ok",
+      "0.9": "no-fit",
+      "next": "drift"
     },
-    "anatomy": "none",
+    "anatomy": "full",
     "supplyChain": {
       "status": "ok",
       "reasons": []
     },
     "hygiene": {
-      "status": "ok",
-      "failing": []
+      "status": "warn",
+      "failing": [
+        "peer-exact-pin"
+      ]
     },
     "maintenance": {
       "status": "current",
@@ -51,8 +53,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.10; verified on no line."
+      ]
     }
   },
   "rules": [
@@ -68,8 +72,8 @@
     },
     {
       "id": "LST-3",
-      "pass": false,
-      "detail": "Kind not confirmed: no facts yet."
+      "pass": true,
+      "detail": "src/modules and dist/modules pair found."
     },
     {
       "id": "LST-4",
@@ -89,12 +93,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "detail": "Not yet tested in a new app on 0.10."
     },
     {
       "id": "VER-2",
-      "pass": false,
-      "detail": "Fits statically on 0.9: unknown."
+      "pass": true,
+      "detail": "Fits statically on 0.10: ok."
     },
     {
       "id": "VER-3",
@@ -112,25 +116,25 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": null,
+  "tier": "listed",
   "quality": null,
   "agentPolicy": {
+    "0.10": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.10."
+        }
+      ],
+      "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
+    },
     "0.9": {
       "decision": "ask",
       "reasons": [
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
-        }
-      ],
-      "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
-    },
-    "0.8": {
-      "decision": "ask",
-      "reasons": [
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
         }
       ],
       "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
@@ -148,13 +152,13 @@
   },
   "state": "active",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": "0.10.0",
     "0.9": "0.10.0",
-    "0.8": "0.10.0",
     "next": "0.10.0"
   },
   "verdictPreset": "classic"

@@ -1,0 +1,53 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 1
+  },
+  "package": {
+    "locator": "npm:@open-mercato/web-research-searxng",
+    "name": "@open-mercato/web-research-searxng",
+    "version": "0.10.0",
+    "integrity": "sha512-szAlkArFOO/n+CW8D1gB0EZtI+nkEd0re7KjVHhvaWy79+4PWTSaKxoURiAu5ESorz/0BU6EEO1dNeHUbjDu9A==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "provider",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/web-research": "^0.6.0"
+  },
+  "dependencies": {
+    "zod": "^4.6.6"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [],
+  "packageCode": {
+    "env": [],
+    "hosts": []
+  },
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

@@ -50,3 +50,16 @@
 {"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/channel-smtp","from":"listed","to":"none"}
 {"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/gateway-autopay","from":"listed","to":"none"}
 {"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/gateway-tpay","from":"listed","to":"none"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@fastwhitecat/integration-ksef-direct","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@fullstackhouse/open-mercato-data-sync-durable","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@fullstackhouse/open-mercato-durable-work","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@northbound-run/channel-cloudflare-email","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@northbound-run/search-cloudflare","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@northbound-run/sync-google-sheets","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@northbound-run/sync-shopify","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/ai-assistant","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/channel-apns","from":"verified","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/channel-smtp","from":"none","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/gateway-autopay","from":"none","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/gateway-tpay","from":"none","to":"listed"}
+{"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/storage-s3","from":"verified","to":"listed"}

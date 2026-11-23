@@ -1,7 +1,7 @@
 {
   "locator": "github:fullstackhouse/open-mercato-client-auth",
   "version": "0.4.0",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
@@ -27,13 +27,13 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "untested",
       "0.9": "untested",
-      "0.8": "untested",
       "next": "untested"
     },
     "fit": {
-      "0.9": "ok",
-      "0.8": "drift",
+      "0.10": "ok",
+      "0.9": "drift",
       "next": "drift"
     },
     "anatomy": "full",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.8, 0.9, next; verified on no line."
+        "Built for 0.9, 0.10, next; verified on no line."
       ]
     }
   },
@@ -93,12 +93,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.9."
+      "detail": "Not yet tested in a new app on 0.10."
     },
     {
       "id": "VER-2",
       "pass": true,
-      "detail": "Fits statically on 0.9: ok."
+      "detail": "Fits statically on 0.10: ok."
     },
     {
       "id": "VER-3",
@@ -119,6 +119,23 @@
   "tier": null,
   "quality": null,
   "agentPolicy": {
+    "0.10": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "NOT_INSTALLABLE",
+          "text": "Package has no src/modules and dist/modules pair."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.10."
+        }
+      ]
+    },
     "0.9": {
       "decision": "refuse",
       "reasons": [
@@ -133,23 +150,6 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
-        }
-      ]
-    },
-    "0.8": {
-      "decision": "refuse",
-      "reasons": [
-        {
-          "code": "NOT_INSTALLABLE",
-          "text": "Package has no src/modules and dist/modules pair."
-        },
-        {
-          "code": "THIRD_PARTY",
-          "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
         }
       ]
     },
@@ -173,13 +173,13 @@
   },
   "state": "active",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": "0.4.0",
     "0.9": "0.4.0",
-    "0.8": "0.4.0",
     "next": "0.4.0"
   },
   "verdictPreset": "classic"

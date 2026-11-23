@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.10.0",
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,14 +27,14 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "untested",
       "0.9": "verified",
-      "0.8": "verified",
       "next": "untested"
     },
     "fit": {
-      "0.9": "ok",
-      "0.8": "drift",
-      "next": "unknown"
+      "0.10": "ok",
+      "0.9": "drift",
+      "next": "drift"
     },
     "anatomy": "full",
     "supplyChain": {
@@ -53,8 +53,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.9, 0.10; verified on 0.9."
+      ]
     }
   },
   "rules": [
@@ -90,13 +92,13 @@
     },
     {
       "id": "VER-1",
-      "pass": true,
-      "detail": "Receipt on 0.9: verified (0.9.0)."
+      "pass": false,
+      "detail": "Not yet tested in a new app on 0.10."
     },
     {
       "id": "VER-2",
       "pass": true,
-      "detail": "Fits statically on 0.9: ok."
+      "detail": "Fits statically on 0.10: ok."
     },
     {
       "id": "VER-3",
@@ -114,24 +116,25 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "verified",
+  "tier": "listed",
   "quality": null,
   "agentPolicy": {
+    "0.10": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.10."
+        }
+      ],
+      "consentText": "Install @open-mercato/storage-s3@0.10.0"
+    },
     "0.9": {
       "decision": "allow",
       "reasons": [
         {
           "code": "OFFICIAL_VERIFIED",
           "text": "Official, verified on 0.9."
-        }
-      ]
-    },
-    "0.8": {
-      "decision": "allow",
-      "reasons": [
-        {
-          "code": "OFFICIAL_VERIFIED",
-          "text": "Official, verified on 0.8."
         }
       ]
     },
@@ -148,13 +151,13 @@
   },
   "state": "active",
   "recommended": {
+    "0.10": null,
     "0.9": "0.9.0",
-    "0.8": "0.8.0",
     "next": null
   },
   "evaluated": {
+    "0.10": "0.10.0",
     "0.9": "0.9.0",
-    "0.8": "0.8.0",
     "next": "0.10.0"
   },
   "verdictPreset": "classic"

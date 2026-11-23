@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T11:23:11.941Z",
-  "next": "0.11.1-develop.8454.1.bb49b3bae5",
-  "base": "0.9.0",
-  "summary": "16 of 16 modules outside the @open-mercato scope use APIs that changed since 0.9.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
+  "generatedAt": "2026-11-23T23:59:45.287Z",
+  "next": "0.11.1-develop.8491.1.27e725b0f7",
+  "base": "0.10.0",
+  "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.10.0. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/lib/di/container#createRequestContainer",
@@ -27,175 +27,12 @@
       ]
     },
     {
-      "symbol": "@open-mercato/shared/modules/registry#ModuleInfo",
-      "change": "signature",
-      "modules": [
-        "github:fullstackhouse/open-mercato-client-auth",
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@freighttech/terminal-tracking",
-        "npm:@fullstackhouse/open-mercato-durable-work",
-        "npm:@fullstackhouse/open-mercato-health",
-        "npm:@northbound-run/channel-cloudflare-email",
-        "npm:@northbound-run/search-cloudflare",
-        "npm:@piotrkarwatka/marketing-consents",
-        "npm:@piotrkarwatka/visits"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/modules/setup#ModuleSetupConfig",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector",
-        "npm:@fastwhitecat/integration-ksef-direct",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@freighttech/terminal-tracking",
-        "npm:@fullstackhouse/open-mercato-durable-work",
-        "npm:@northbound-run/channel-cloudflare-email",
-        "npm:@northbound-run/sync-google-sheets",
-        "npm:@northbound-run/sync-shopify",
-        "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands#CommandBus",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@freighttech/terminal-tracking",
-        "npm:@northbound-run/sync-google-sheets",
-        "npm:@northbound-run/sync-shopify",
-        "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands#CommandRuntimeContext",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@freighttech/terminal-tracking",
-        "npm:@northbound-run/sync-google-sheets",
-        "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands#CommandHandler",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@freighttech/terminal-tracking",
-        "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/modules/registry#ModuleCli",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@freighttech/shipment-tracking",
-        "npm:@fullstackhouse/open-mercato-durable-work",
-        "npm:@northbound-run/search-cloudflare"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq",
-        "npm:@dainamite/cpq-billing-connector"
-      ]
-    },
-    {
       "symbol": "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
       "change": "signature",
       "modules": [
         "github:fullstackhouse/open-mercato-client-auth",
         "npm:@dainamite/cpq",
         "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/attachments/data/entities#Attachment",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/data/engine#DataEngine",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing",
-        "npm:@northbound-run/sync-shopify"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/attachments/lib/ocrService#OcrService",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/audit_logs/data/entities#ActionLog",
-      "change": "signature",
-      "modules": [
-        "npm:@freighttech/shipment-tracking"
       ]
     },
     {
@@ -206,143 +43,10 @@
       ]
     },
     {
-      "symbol": "@open-mercato/core/modules/auth/services/rbacService#RbacService",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/catalog/data/entities#CatalogProductPrice",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/sync-shopify"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedAttachment",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#NormalizedInboundMessage",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/channel-cloudflare-email"
-      ]
-    },
-    {
       "symbol": "@open-mercato/core/modules/data_sync/lib/start-run#startDataSyncRun",
       "change": "signature",
       "modules": [
         "npm:@northbound-run/sync-google-sheets"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesOrder",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesQuote",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/queue#createModuleQueue",
-      "change": "signature",
-      "modules": [
-        "npm:@fastwhitecat/integration-ksef-direct"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/search/strategies/fulltext.strategy#FullTextSearchStrategy",
-      "change": "signature",
-      "modules": [
-        "npm:@northbound-run/search-cloudflare"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands/command-bus#CommandBus",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq-billing-connector"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/cpq"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands/types#CommandHandler",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/shared/modules/notifications/types#NotificationTypeDefinition",
-      "change": "signature",
-      "modules": [
-        "npm:@freighttech/shipment-tracking"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ui/backend/CrudForm#CrudForm",
-      "change": "signature",
-      "modules": [
-        "npm:@piotrkarwatka/marketing-consents"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ui/backend/DataTable#DataTableProps",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing"
-      ]
-    },
-    {
-      "symbol": "@open-mercato/ui/backend/inputs#ComboboxInput",
-      "change": "signature",
-      "modules": [
-        "npm:@dainamite/billing"
       ]
     },
     {

@@ -1,7 +1,7 @@
 {
   "locator": "github:Chmarusso/open-mercato-enrichment-treg",
   "version": null,
-  "computedAt": "2026-11-23T14:43:29Z",
+  "computedAt": "2026-11-23T23:59:45Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner Chmarusso is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,13 +27,13 @@
   },
   "signals": {
     "receipt": {
+      "0.10": "untested",
       "0.9": "untested",
-      "0.8": "untested",
       "next": "untested"
     },
     "fit": {
+      "0.10": "unknown",
       "0.9": "unknown",
-      "0.8": "unknown",
       "next": "unknown"
     },
     "anatomy": "none",
@@ -89,12 +89,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "No installable version on 0.9."
+      "detail": "No installable version on 0.10."
     },
     {
       "id": "VER-2",
       "pass": false,
-      "detail": "Fits statically on 0.9: unknown."
+      "detail": "Fits statically on 0.10: unknown."
     },
     {
       "id": "VER-3",
@@ -115,6 +115,23 @@
   "tier": "listed",
   "quality": null,
   "agentPolicy": {
+    "0.10": {
+      "decision": "refuse",
+      "reasons": [
+        {
+          "code": "UNPINNED_GIT",
+          "text": "GitHub source without a pinned tag."
+        },
+        {
+          "code": "THIRD_PARTY",
+          "text": "Third-party code runs with access to all tenants' data."
+        },
+        {
+          "code": "NOT_VERIFIED",
+          "text": "Not yet tested in a new app on 0.10."
+        }
+      ]
+    },
     "0.9": {
       "decision": "refuse",
       "reasons": [
@@ -129,23 +146,6 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
-        }
-      ]
-    },
-    "0.8": {
-      "decision": "refuse",
-      "reasons": [
-        {
-          "code": "UNPINNED_GIT",
-          "text": "GitHub source without a pinned tag."
-        },
-        {
-          "code": "THIRD_PARTY",
-          "text": "Third-party code runs with access to all tenants' data."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.8."
         }
       ]
     },
@@ -169,13 +169,13 @@
   },
   "state": "active",
   "recommended": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "evaluated": {
+    "0.10": null,
     "0.9": null,
-    "0.8": null,
     "next": null
   },
   "verdictPreset": "classic"
