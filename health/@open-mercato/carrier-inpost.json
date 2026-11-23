@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
-  "version": "0.4.6-canary-5eb138494e",
-  "computedAt": "2026-11-20T07:25:47Z",
+  "version": "0.10.0",
+  "computedAt": "2026-11-23T14:43:29Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -9,12 +9,12 @@
     "license": {
       "spdx": "MIT",
       "kind": "osi",
-      "mismatch": true
+      "mismatch": false
     },
     "builtFrom": {
-      "status": "none",
-      "repo": null,
-      "commit": null,
+      "status": "verified",
+      "repo": "open-mercato/open-mercato",
+      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
       "workflow": null
     },
     "claimed": {
@@ -27,36 +27,32 @@
   },
   "signals": {
     "receipt": {
-      "0.9": "skipped",
-      "0.8": "skipped",
-      "next": "broken"
+      "0.9": "untested",
+      "0.8": "untested",
+      "next": "untested"
     },
     "fit": {
-      "0.9": "ok",
-      "0.8": "ok",
-      "next": "drift"
+      "0.9": "unknown",
+      "0.8": "unknown",
+      "next": "unknown"
     },
-    "anatomy": "partial",
+    "anatomy": "none",
     "supplyChain": {
       "status": "ok",
       "reasons": []
     },
     "hygiene": {
-      "status": "warn",
-      "failing": [
-        "license-mismatch"
-      ]
+      "status": "ok",
+      "failing": []
     },
     "maintenance": {
-      "status": "behind",
-      "lastRelease": "2026-03-05",
+      "status": "current",
+      "lastRelease": "2026-11-23",
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "No Open Mercato peer range; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -68,17 +64,17 @@
     {
       "id": "LST-2",
       "pass": true,
-      "detail": "Official package with a preview only."
+      "detail": "Stable version exists and is not deprecated."
     },
     {
       "id": "LST-3",
-      "pass": true,
-      "detail": "src/modules and dist/modules pair found."
+      "pass": false,
+      "detail": "Kind not confirmed: no facts yet."
     },
     {
       "id": "LST-4",
       "pass": true,
-      "detail": "License: MIT (sources differ)."
+      "detail": "License: MIT."
     },
     {
       "id": "LST-5",
@@ -93,12 +89,12 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Receipt on 0.9: skipped."
+      "detail": "Not yet tested in a new app on 0.9."
     },
     {
       "id": "VER-2",
-      "pass": true,
-      "detail": "Fits statically on 0.9: ok."
+      "pass": false,
+      "detail": "Fits statically on 0.9: unknown."
     },
     {
       "id": "VER-3",
@@ -112,8 +108,8 @@
     },
     {
       "id": "VER-5",
-      "pass": false,
-      "detail": "Not checked: neither the descriptor nor the tarball names a repository."
+      "pass": true,
+      "detail": "No repository in the descriptor to compare."
     }
   ],
   "tier": null,
@@ -128,7 +124,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "No stable release for this line yet. Only preview builds are published."
+          "text": "Not yet tested in a new app on 0.9."
         }
       ]
     },
@@ -141,7 +137,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "No stable release for this line yet. Only preview builds are published."
+          "text": "Not yet tested in a new app on 0.8."
         }
       ]
     },
@@ -153,8 +149,8 @@
           "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
-          "code": "BROKEN",
-          "text": "Broken at add on next since 30 Oct."
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 0.10.0 on next yet; the receipt is for 0.4.6-canary-5eb138494e (broken at add, 23 Nov)."
         }
       ]
     }
@@ -166,9 +162,9 @@
     "next": null
   },
   "evaluated": {
-    "0.9": "0.4.6-canary-5eb138494e",
-    "0.8": "0.4.6-canary-5eb138494e",
-    "next": "0.4.6-canary-5eb138494e"
+    "0.9": "0.10.0",
+    "0.8": "0.10.0",
+    "next": "0.10.0"
   },
   "verdictPreset": "classic"
 }

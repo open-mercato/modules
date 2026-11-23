@@ -1,7 +1,7 @@
 {
   "locator": "github:fullstackhouse/open-mercato-client-auth",
   "version": "0.4.0",
-  "computedAt": "2026-11-20T07:25:47Z",
+  "computedAt": "2026-11-23T14:43:29Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
@@ -49,7 +49,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-02",
+      "lastRelease": "2026-11-20",
       "catchUpDays": null
     },
     "declaredVsObserved": {

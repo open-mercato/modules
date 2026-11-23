@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
-  "version": "0.9.0",
-  "computedAt": "2026-11-20T07:25:47Z",
+  "version": "0.10.0",
+  "computedAt": "2026-11-23T14:43:29Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -14,7 +14,7 @@
     "builtFrom": {
       "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
       "workflow": null
     },
     "claimed": {
@@ -29,12 +29,12 @@
     "receipt": {
       "0.9": "verified",
       "0.8": "verified",
-      "next": "broken"
+      "next": "untested"
     },
     "fit": {
       "0.9": "ok",
       "0.8": "drift",
-      "next": "drift"
+      "next": "unknown"
     },
     "anatomy": "full",
     "supplyChain": {
@@ -49,7 +49,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-09",
+      "lastRelease": "2026-11-23",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -136,13 +136,14 @@
       ]
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at add on next since 31 Oct."
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 0.10.0 on next yet; the receipt is for 0.9.0 (broken at add, 22 Nov)."
         }
-      ]
+      ],
+      "consentText": "Install @open-mercato/storage-s3@0.10.0"
     }
   },
   "state": "active",
@@ -154,7 +155,7 @@
   "evaluated": {
     "0.9": "0.9.0",
     "0.8": "0.8.0",
-    "next": "0.9.0"
+    "next": "0.10.0"
   },
   "verdictPreset": "classic"
 }

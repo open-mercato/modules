@@ -1,6 +1,6 @@
 {
   "locator": "npm:@northbound-run/sync-google-sheets",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@northbound-run/sync-google-sheets",
@@ -74,6 +74,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 210,
+  "downloads30d": 209,
   "errors": []
 }

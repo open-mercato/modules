@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-23T07:46:33Z",
+  "at": "2026-11-23T14:41:33Z",
   "entries": {
     "github:Chmarusso/open-mercato-enrichment-treg": {
       "downloads30d": null,
@@ -10,63 +10,63 @@
       "stars": 0
     },
     "npm:@dainamite/billing": {
-      "downloads30d": 1168,
+      "downloads30d": 1414,
       "stars": 1
     },
     "npm:@dainamite/cpq": {
-      "downloads30d": 1367,
+      "downloads30d": 1625,
       "stars": 1
     },
     "npm:@dainamite/cpq-billing-connector": {
-      "downloads30d": 919,
+      "downloads30d": 1370,
       "stars": 1
     },
     "npm:@fastwhitecat/integration-ksef-direct": {
-      "downloads30d": 213,
-      "stars": 1
+      "downloads30d": 180,
+      "stars": 2
     },
     "npm:@freighttech/shipment-tracking": {
-      "downloads30d": 1235,
+      "downloads30d": 1276,
       "stars": 2
     },
     "npm:@freighttech/terminal-tracking": {
-      "downloads30d": 329,
+      "downloads30d": 351,
       "stars": 2
     },
     "npm:@freighttech/ui": {
-      "downloads30d": 164,
+      "downloads30d": 176,
       "stars": 2
     },
     "npm:@fullstackhouse/open-mercato-data-sync-durable": {
-      "downloads30d": 120,
+      "downloads30d": 127,
       "stars": null
     },
     "npm:@fullstackhouse/open-mercato-demo-auth": {
-      "downloads30d": 127,
+      "downloads30d": 136,
       "stars": 0
     },
     "npm:@fullstackhouse/open-mercato-durable-work": {
-      "downloads30d": 199,
+      "downloads30d": 239,
       "stars": null
     },
     "npm:@fullstackhouse/open-mercato-health": {
-      "downloads30d": 908,
+      "downloads30d": 991,
       "stars": 0
     },
     "npm:@northbound-run/channel-cloudflare-email": {
-      "downloads30d": 77,
+      "downloads30d": 73,
       "stars": 0
     },
     "npm:@northbound-run/search-cloudflare": {
-      "downloads30d": 79,
+      "downloads30d": 73,
       "stars": 0
     },
     "npm:@northbound-run/sync-google-sheets": {
-      "downloads30d": 210,
+      "downloads30d": 209,
       "stars": 0
     },
     "npm:@northbound-run/sync-shopify": {
-      "downloads30d": 263,
+      "downloads30d": 282,
       "stars": 0
     },
     "npm:@open-mercato/ai-assistant": {
@@ -134,7 +134,7 @@
       "stars": null
     },
     "npm:@open-mercato/forms": {
-      "downloads30d": 126,
+      "downloads30d": 132,
       "stars": null
     },
     "npm:@open-mercato/gateway-autopay": {
@@ -142,11 +142,11 @@
       "stars": null
     },
     "npm:@open-mercato/gateway-payu": {
-      "downloads30d": 53,
+      "downloads30d": 46,
       "stars": null
     },
     "npm:@open-mercato/gateway-przelewy24": {
-      "downloads30d": 49,
+      "downloads30d": 41,
       "stars": null
     },
     "npm:@open-mercato/gateway-stripe": {
@@ -162,7 +162,7 @@
       "stars": null
     },
     "npm:@open-mercato/pay-by-links": {
-      "downloads30d": 81,
+      "downloads30d": 93,
       "stars": null
     },
     "npm:@open-mercato/scheduler": {
@@ -226,23 +226,23 @@
       "stars": null
     },
     "npm:@piotrkarwatka/marketing-consents": {
-      "downloads30d": 93,
+      "downloads30d": 54,
       "stars": 1
     },
     "npm:@piotrkarwatka/visits": {
-      "downloads30d": 100,
+      "downloads30d": 83,
       "stars": null
     },
     "npm:create-mercato-module": {
-      "downloads30d": 389,
+      "downloads30d": 356,
       "stars": null
     },
     "npm:mercato-readiness-scanner": {
-      "downloads30d": 883,
+      "downloads30d": 165,
       "stars": null
     },
     "npm:open-mercato-generator": {
-      "downloads30d": 22,
+      "downloads30d": 19,
       "stars": 2
     }
   }

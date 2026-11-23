@@ -1,21 +1,21 @@
 {
   "locator": "npm:@open-mercato/gateway-stripe",
-  "checkedAt": "2026-11-23T07:46:33Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:10:17Z",
   "npm": {
     "name": "@open-mercato/gateway-stripe",
     "distTags": {
       "legacy": "1.0.1",
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.9.0",
-      "develop": "0.11.1-develop.8454.1.bb49b3bae5"
+      "latest": "0.10.0",
+      "develop": "0.11.1-develop.8464.1.b5786bcf1c"
     },
-    "latestStable": "0.9.0",
-    "previousStable": "0.8.0",
+    "latestStable": "0.10.0",
+    "previousStable": "0.9.0",
     "preview": null,
     "publishedAt": {
-      "0.9.0": "2026-10-09T19:25:40Z",
-      "0.8.0": "2026-09-18T11:35:43Z"
+      "0.10.0": "2026-11-23T08:30:14Z",
+      "0.9.0": "2026-10-09T19:25:40Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -29,27 +29,29 @@
     ],
     "peerDependencies": {
       "react": "^19.0.0",
+      "react-is": ">=18.0.0",
       "react-dom": "^19.0.0",
-      "@open-mercato/shared": "0.9.0",
-      "@mikro-orm/postgresql": "^7.0.14"
+      "@open-mercato/shared": "0.10.0",
+      "@mikro-orm/postgresql": "^7.0.14",
+      "@open-mercato/ai-assistant": "0.10.0"
     },
     "dependencies": {
       "stripe": "^22.3.1",
-      "@open-mercato/ui": "0.9.0",
+      "@open-mercato/ui": "0.10.0",
       "@stripe/stripe-js": "^9.14.0",
-      "@open-mercato/core": "0.9.0",
-      "@open-mercato/queue": "0.9.0",
+      "@open-mercato/core": "0.10.0",
+      "@open-mercato/queue": "0.10.0",
       "@stripe/react-stripe-js": "^6.8.2"
     },
     "installScripts": [],
-    "integrity": "sha512-U/tlIjnj/V5AuSB+fEEIh4Ta9Uftzrzr5iUb6nSWLcd7W8W7mzPHd6Ngg3ZYPH9g98cSUayH1e6nOga2E3Iqag==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.9.0.tgz"
+    "integrity": "sha512-ptA6jGO7YJ22tM5aY6Yk2oFOQ9cKXp9tSeg7QDrhY8sOZaFFiZ1j8T+UYsfz4lKK9ASeZVIUD+NSeFDkiE44aw==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.10.0.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-23T07:46:23Z",
+    "pushedAt": "2026-11-23T14:39:31Z",
     "defaultBranch": "main",
     "stars": 1957,
     "license": "MIT",
@@ -68,6 +70,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.0",
+        "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
+      },
       {
         "name": "v0.9.0",
         "sha": "f451ce4c390087f90d5314e002e9d009d5339e08"
@@ -233,7 +239,7 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
     "workflow": null
   },
   "advisories": [],

@@ -1,6 +1,6 @@
 {
   "locator": "npm:@dainamite/billing",
-  "checkedAt": "2026-11-18T20:37:24Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/billing",
@@ -53,7 +53,7 @@
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-18T17:44:35Z",
+    "pushedAt": "2026-11-23T14:09:51Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
@@ -195,6 +195,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 1168,
+  "downloads30d": 1414,
   "errors": []
 }

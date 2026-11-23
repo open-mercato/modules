@@ -47,3 +47,6 @@
 {"at":"2026-11-22T10:51:16Z","type":"tier-change","locator":"npm:@open-mercato/search","from":"verified","to":"listed"}
 {"at":"2026-11-22T10:51:16Z","type":"tier-change","locator":"npm:@open-mercato/sync-akeneo","from":"verified","to":"listed"}
 {"at":"2026-11-22T10:51:16Z","type":"tier-change","locator":"npm:@open-mercato/telemetry","from":"verified","to":"listed"}
+{"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/channel-smtp","from":"listed","to":"none"}
+{"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/gateway-autopay","from":"listed","to":"none"}
+{"at":"2026-11-23T14:43:29Z","type":"tier-change","locator":"npm:@open-mercato/gateway-tpay","from":"listed","to":"none"}

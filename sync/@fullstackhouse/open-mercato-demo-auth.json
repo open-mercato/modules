@@ -1,6 +1,6 @@
 {
   "locator": "npm:@fullstackhouse/open-mercato-demo-auth",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@fullstackhouse/open-mercato-demo-auth",
@@ -41,7 +41,7 @@
     "repo": "fullstackhouse/open-mercato-demo-auth",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-04-24T13:05:09Z",
+    "pushedAt": "2026-11-18T19:08:53Z",
     "defaultBranch": "main",
     "stars": 0,
     "license": "MIT",
@@ -58,6 +58,6 @@
   "advisories": [],
   "type": "community",
   "typeReason": "Repository owner fullstackhouse is the GitHub org of certified partner Full Stack House (policy/community.yml).",
-  "downloads30d": 127,
+  "downloads30d": 136,
   "errors": []
 }

@@ -1,6 +1,6 @@
 {
   "locator": "npm:@open-mercato/gateway-przelewy24",
-  "checkedAt": "2026-11-16T12:46:41Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/gateway-przelewy24",
@@ -41,6 +41,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 49,
+  "downloads30d": 41,
   "errors": []
 }

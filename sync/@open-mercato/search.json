@@ -1,20 +1,20 @@
 {
   "locator": "npm:@open-mercato/search",
-  "checkedAt": "2026-11-23T07:46:33Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/search",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.9.0",
-      "develop": "0.11.1-develop.8454.1.bb49b3bae5"
+      "latest": "0.10.0",
+      "develop": "0.11.1-develop.8464.1.b5786bcf1c"
     },
-    "latestStable": "0.9.0",
-    "previousStable": "0.8.0",
+    "latestStable": "0.10.0",
+    "previousStable": "0.9.0",
     "preview": null,
     "publishedAt": {
-      "0.9.0": "2026-10-09T19:26:36Z",
-      "0.8.0": "2026-09-18T11:37:29Z"
+      "0.10.0": "2026-11-23T08:33:10Z",
+      "0.9.0": "2026-10-09T19:26:36Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -27,14 +27,14 @@
       "piotrkarwatka"
     ],
     "peerDependencies": {
-      "@open-mercato/core": "0.9.0",
-      "@open-mercato/queue": "0.9.0",
-      "@open-mercato/shared": "0.9.0"
+      "@open-mercato/core": "0.10.0",
+      "@open-mercato/queue": "0.10.0",
+      "@open-mercato/shared": "0.10.0"
     },
     "dependencies": {
       "ai": "^7.0.83",
       "pg": "8.23.0",
-      "zod": "^4.4.3",
+      "zod": "^4.6.6",
       "meilisearch": "^0.60.0",
       "ai-sdk-ollama": "4.1.0",
       "@ai-sdk/cohere": "^4.0.14",
@@ -44,14 +44,14 @@
       "@ai-sdk/amazon-bedrock": "^5.0.2"
     },
     "installScripts": [],
-    "integrity": "sha512-8hX4T9mkGgTY9pCCYU6igYrLbFc9h4gN0ddkb6ULCeso/z08C7a98XG59WWiLQXWYcyI8FUf3tcjJi/dZyEfdg==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/search/-/search-0.9.0.tgz"
+    "integrity": "sha512-Wkokm6x6WQyZYv3h2P+f6jpMM3DUPME1gO2eXUupxz05VbUNpD9aCdrdToJFPuNjRBBooSIPWmAe2S9jJ4TIDg==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/search/-/search-0.10.0.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-23T07:46:23Z",
+    "pushedAt": "2026-11-23T14:39:31Z",
     "defaultBranch": "main",
     "stars": 1957,
     "license": "MIT",
@@ -70,6 +70,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.0",
+        "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
+      },
       {
         "name": "v0.9.0",
         "sha": "f451ce4c390087f90d5314e002e9d009d5339e08"
@@ -235,7 +239,7 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
     "workflow": null
   },
   "advisories": [],

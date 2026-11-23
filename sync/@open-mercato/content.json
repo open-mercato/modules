@@ -1,20 +1,20 @@
 {
   "locator": "npm:@open-mercato/content",
-  "checkedAt": "2026-11-23T07:46:33Z",
+  "checkedAt": "2026-11-23T14:41:33Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/content",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.9.0",
-      "develop": "0.11.1-develop.8454.1.bb49b3bae5"
+      "latest": "0.10.0",
+      "develop": "0.11.1-develop.8464.1.b5786bcf1c"
     },
-    "latestStable": "0.9.0",
-    "previousStable": "0.8.0",
+    "latestStable": "0.10.0",
+    "previousStable": "0.9.0",
     "preview": null,
     "publishedAt": {
-      "0.9.0": "2026-10-09T19:24:45Z",
-      "0.8.0": "2026-09-18T11:37:07Z"
+      "0.10.0": "2026-11-23T08:29:03Z",
+      "0.9.0": "2026-10-09T19:24:45Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -27,18 +27,18 @@
       "piotrkarwatka"
     ],
     "peerDependencies": {
-      "@open-mercato/shared": "0.9.0"
+      "@open-mercato/shared": "0.10.0"
     },
     "dependencies": {},
     "installScripts": [],
-    "integrity": "sha512-EPswjQOYm7h1CJiJANwcOed1lw6LZYfiTDLdStgygubMoeSm1S5j5FV3sqirniRkI9Ha/pAxYujuFR87GK8S2g==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/content/-/content-0.9.0.tgz"
+    "integrity": "sha512-w9nADVc4eBZPWC0N7xABQO5sxd7z4167jnbuQ2QsOFiUppHsIABp4DrogK7T6kSeWd2K8156tRF9d6MlLobBPw==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/content/-/content-0.10.0.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-23T07:46:23Z",
+    "pushedAt": "2026-11-23T14:39:31Z",
     "defaultBranch": "main",
     "stars": 1957,
     "license": "MIT",
@@ -57,6 +57,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.0",
+        "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
+      },
       {
         "name": "v0.9.0",
         "sha": "f451ce4c390087f90d5314e002e9d009d5339e08"
@@ -222,7 +226,7 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
     "workflow": null
   },
   "advisories": [],

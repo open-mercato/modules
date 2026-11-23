@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/web-research-browser",
-  "version": "0.9.0",
-  "computedAt": "2026-11-16T12:48:52Z",
+  "version": "0.10.0",
+  "computedAt": "2026-11-23T14:43:29Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -14,7 +14,7 @@
     "builtFrom": {
       "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
       "workflow": null
     },
     "claimed": {
@@ -33,8 +33,8 @@
     },
     "fit": {
       "0.9": "ok",
-      "0.8": "ok",
-      "next": "ok"
+      "0.8": "unknown",
+      "next": "unknown"
     },
     "anatomy": "partial",
     "supplyChain": {
@@ -47,7 +47,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-09",
+      "lastRelease": "2026-11-23",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -133,7 +133,7 @@
           "text": "Not installed by the catalog: the nightly run installs modules, not providers."
         }
       ],
-      "consentText": "Install @open-mercato/web-research-browser@0.8.0"
+      "consentText": "Install @open-mercato/web-research-browser@0.10.0"
     },
     "next": {
       "decision": "ask",
@@ -143,7 +143,7 @@
           "text": "Not installed by the catalog: the nightly run installs modules, not providers."
         }
       ],
-      "consentText": "Install @open-mercato/web-research-browser@0.9.0"
+      "consentText": "Install @open-mercato/web-research-browser@0.10.0"
     }
   },
   "state": "active",
@@ -154,8 +154,8 @@
   },
   "evaluated": {
     "0.9": "0.9.0",
-    "0.8": "0.8.0",
-    "next": "0.9.0"
+    "0.8": "0.10.0",
+    "next": "0.10.0"
   },
   "verdictPreset": "classic"
 }

@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-imap",
-  "version": "0.9.0",
-  "computedAt": "2026-11-23T11:23:12Z",
+  "version": "0.10.0",
+  "computedAt": "2026-11-23T14:43:29Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -14,7 +14,7 @@
     "builtFrom": {
       "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": "f451ce4c390087f90d5314e002e9d009d5339e08",
+      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
       "workflow": null
     },
     "claimed": {
@@ -49,7 +49,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-10-09",
+      "lastRelease": "2026-11-23",
       "catchUpDays": null
     },
     "declaredVsObserved": {
