@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-expo",
   "version": "0.10.0",
-  "computedAt": "2026-11-23T23:59:45Z",
+  "computedAt": "2026-11-24T10:01:38Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -165,7 +165,7 @@
   "evaluated": {
     "0.10": "0.10.0",
     "0.9": "0.9.0",
-    "next": "0.11.1-develop.8491.1.27e725b0f7"
+    "next": "0.11.1-develop.8497.1.2033c3605c"
   },
   "verdictPreset": "classic"
 }

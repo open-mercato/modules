@@ -1,12 +1,12 @@
 {
   "locator": "npm:@open-mercato/web-research",
-  "checkedAt": "2026-11-23T23:58:14Z",
+  "checkedAt": "2026-11-24T09:59:43Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research",
     "distTags": {
       "latest": "0.10.0",
-      "develop": "0.11.1-develop.8491.1.27e725b0f7"
+      "develop": "0.11.1-develop.8497.1.2033c3605c"
     },
     "latestStable": "0.10.0",
     "previousStable": "0.9.0",
@@ -37,9 +37,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-23T23:54:09Z",
+    "pushedAt": "2026-11-24T09:59:19Z",
     "defaultBranch": "main",
-    "stars": 1958,
+    "stars": 1959,
     "license": "MIT",
     "topics": [
       "crm",
