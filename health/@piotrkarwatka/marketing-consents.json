@@ -1,7 +1,7 @@
 {
   "locator": "npm:@piotrkarwatka/marketing-consents",
   "version": "0.1.0",
-  "computedAt": "2026-11-23T23:59:45Z",
+  "computedAt": "2026-11-24T22:32:33Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository owner pkarw is listed in policy/community.yml.",
@@ -34,7 +34,7 @@
     "fit": {
       "0.10": "ok",
       "0.9": "drift",
-      "next": "drift"
+      "next": "no-fit"
     },
     "anatomy": "full",
     "supplyChain": {
