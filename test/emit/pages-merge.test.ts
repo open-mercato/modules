@@ -30,6 +30,7 @@ import {
   REDIRECT_CHECK,
   redirectProblems,
   redirectRules,
+  servesPath,
   sitemapIndexXml,
   sitemapLocs,
 } from '../../lib/emit/pages-merge.ts'
@@ -109,10 +110,44 @@ describe('the merged layout (pages-site --merge)', () => {
     for (const f of ['_routes.json', 'modules.json', 'templates.json', 'picker.json', 'schema/modules-1.json'])
       expect(existsSync(join(dirs.out, f)), f).toBe(true)
     expect(existsSync(join(dirs.out, '_headers'))).toBe(false)
-    const check = checkMergedLayout(dirs.out, WWW)
-    expect(check.problems).toEqual([])
+    // a production upload: every main site page the header links must be in the build (Pages answers it, not Webflow)
+    const before = checkMergedLayout(dirs.out, WWW)
+    expect(before.pending).toEqual([])
+    expect(before.problems).toHaveLength(2)
+    expect(before.problems[0]).toMatch(
+      /dist\/run\/modules\.html: not a page or a file of this build: https:\/\/www\.openmercato\.com\/product$/,
+    )
+    expect(before.problems[1]).toMatch(
+      /dist\/index\.html: https:\/\/www\.openmercato\.com\/product is not a page or a file of this build$/,
+    )
+    put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
+    mergePagesSite(dirs, WWW)
+    expect(checkMergedLayout(dirs.out, WWW)).toEqual({ problems: [], pending: [] })
+  })
+
+  it('a noindex preview may link main site pages Webflow still serves, and lists them', () => {
+    runBuild(dirs.run, true)
+    wwwBuild(dirs.www)
+    mergePagesSite(dirs, WWW, true)
     // the header's link to a page Webflow still serves; the home page is in this build
-    expect(check.pending).toEqual([`${ORIGIN}/product`])
+    expect(checkMergedLayout(dirs.out, WWW, 50, true)).toEqual({ problems: [], pending: [`${ORIGIN}/product`] })
+    // a link that no header or footer of lib/core/main-site.ts names is a problem even in a preview
+    put(join(dirs.www, 'team.html'), `<a href="${ORIGIN}/not-on-webflow">x</a>`)
+    mergePagesSite(dirs, WWW, true)
+    expect(checkMergedLayout(dirs.out, WWW, 50, true).problems.join('\n')).toMatch(/\/not-on-webflow is not a page/)
+  })
+
+  it('refuses a catalog build made for the other kind of upload (PAGES_NOINDEX)', () => {
+    runBuild(dirs.run, true)
+    wwwBuild(dirs.www)
+    expect(() => mergePagesSite(dirs, WWW)).toThrow(
+      /dist-run is a noindex build \(PAGES_NOINDEX\), and this merge is not one/,
+    )
+    rmSync(dirs.run, { recursive: true })
+    runBuild(dirs.run)
+    expect(() => mergePagesSite(dirs, WWW, true)).toThrow(
+      /dist-run is not a noindex build \(PAGES_NOINDEX\), and this merge is one/,
+    )
   })
 
   it('a noindex preview gets _headers and a robots.txt that allows nothing at the root', () => {
@@ -167,6 +202,7 @@ describe('the merged layout (pages-site --merge)', () => {
   it('checks links from /run to the main site against the routes the main site build wrote', () => {
     runBuild(dirs.run)
     wwwBuild(dirs.www)
+    put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
     // a root-relative link from a catalog page reaches this deployment: only a page the main site built answers
     put(join(dirs.run, 'run', 'about.html'), '<a href="/blog">Blog</a><a href="/sitemap.xml">sitemap</a>')
     mergePagesSite(dirs, WWW)
@@ -182,14 +218,18 @@ describe('the merged layout (pages-site --merge)', () => {
     runBuild(dirs.run)
     wwwBuild(dirs.www)
     put(join(dirs.www, 'team.html'), '<a href="/nowhere">x</a><a href="/run/missing">y</a><img src="/media/a.png">')
-    put(join(dirs.www, 'blog-posts.html'), '<a href="/">home</a>')
+    put(join(dirs.www, 'docs.html'), '<a href="/">home</a>')
+    // a collection's list page and its detail pages (spec, Routing) are pages
+    put(join(dirs.www, 'case-studies.html'), '<a href="/case-studies/acme">Acme</a>')
+    put(join(dirs.www, 'case-studies', 'acme.html'), '<a href="/case-studies">all</a>')
     put(join(dirs.www, 'index.html'), '<link rel="canonical" href="https://www.openmercato.com/home">')
     mergePagesSite(dirs, WWW)
     const problems = checkMergedLayout(dirs.out, WWW).problems.join('\n')
     expect(problems).toMatch(/team\.html: \/nowhere is not a page or a file of this build/)
     expect(problems).toMatch(/team\.html: \/run\/missing is not a page or a file of this build/)
     expect(problems).toMatch(/team\.html: \/media\/a\.png is not a page or a file of this build/)
-    expect(problems).toMatch(/blog-posts\.html: \/blog-posts is a reserved path of the main site/)
+    expect(problems).toMatch(/docs\.html: \/docs is not a page of the main site/)
+    expect(problems).not.toMatch(/case-studies/)
     expect(problems).toMatch(/index\.html: canonical is https:\/\/www\.openmercato\.com\/home, not https:\/\/www/)
   })
 
@@ -229,6 +269,19 @@ describe('the merged layout (pages-site --merge)', () => {
     expect(redirectProblems('/a /b 301\n/a /c 301\n')).toEqual(['the redirect from /a is given twice'])
   })
 
+  it('serves a path as Pages does: files, pages with or without the trailing slash, and redirect sources', () => {
+    put(join(tmp, 'blog.html'), 'x')
+    put(join(tmp, 'careers', 'index.html'), 'x')
+    put(join(tmp, 'media', 'a.png'), 'x')
+    const rules = redirectRules(
+      '/sitemap.xml /sitemap-index.xml 301\n/docs/* https://docs.openmercato.com/ 301\n/p/:id /q 301\n',
+    )
+    for (const p of ['/blog', '/blog/', '/careers', '/careers/', '/media/a.png', '/sitemap.xml', '/docs/x/y', '/p/1'])
+      expect(servesPath(tmp, p, rules), p).toBe(true)
+    for (const p of ['/nope', '/media/b.png', '/docs', '/p/1/2', '/../etc/passwd', '/%E0%A4%A'])
+      expect(servesPath(tmp, p, rules), p).toBe(false)
+  })
+
   it('writes the sitemap index in the shape @astrojs/sitemap does and reads it back', () => {
     const text = sitemapIndexXml([`${ORIGIN}/sitemap-0.xml`, `${ORIGIN}/a&b.xml`])
     expect(text).toBe(
@@ -252,10 +305,10 @@ describe('the merged layout (pages-site --merge)', () => {
     })
     try {
       mkdirSync(join(tmp, 'functions'))
-      Object.assign(process.env, { SITE_URL: ORIGIN, BASE_PATH: '/run', HOME_PATH: '/modules' })
-      delete process.env.PAGES_NOINDEX
+      // the www-preview job: a noindex preview, where the header may still link Webflow
+      Object.assign(process.env, { SITE_URL: ORIGIN, BASE_PATH: '/run', HOME_PATH: '/modules', PAGES_NOINDEX: '1' })
       delete process.env.PAGES_MERGED
-      runBuild(dirs.run)
+      runBuild(dirs.run, true)
       wwwBuild(dirs.www)
       expect(pagesSite(ctx(['--merge']))).toBe(2)
       expect(error.mock.calls.flat().join('\n')).toContain('--merge needs PAGES_MERGED=1')
@@ -270,7 +323,7 @@ describe('the merged layout (pages-site --merge)', () => {
       log.mockClear()
       expect(pagesSite(ctx(['--check', dirs.out]))).toBe(0)
       const out = log.mock.calls.flat().join('\n')
-      expect(out).toContain('(merged, base /run, home /run/modules)')
+      expect(out).toContain('(merged, base /run, home /run/modules, noindex)')
       expect(out).toContain(
         'main site addresses linked but not in this build yet (Webflow serves them until the switch): 1',
       )
@@ -321,8 +374,9 @@ describe('the Functions in the merged layout (until Phase 1c)', () => {
     expect(siteModule(WWW)).toContain("home: '/modules', merged: true }")
     expect(siteModule({ ...WWW, merged: undefined })).toContain("home: '/modules' }")
     expect(mergedFromEnv({ PAGES_MERGED: '1' })).toBe(true)
-    expect(mergedFromEnv({ PAGES_MERGED: 'true' })).toBe(true)
-    for (const v of [undefined, '', '0', 'no']) expect(mergedFromEnv({ PAGES_MERGED: v })).toBe(false)
+    expect(mergedFromEnv({ PAGES_MERGED: ' 1 ' })).toBe(true)
+    // only the value the steps of pages.yml test for
+    for (const v of [undefined, '', '0', 'no', 'true']) expect(mergedFromEnv({ PAGES_MERGED: v })).toBe(false)
   })
 
   it('the main site links the catalog where the build nests it, else at /run/modules', () => {

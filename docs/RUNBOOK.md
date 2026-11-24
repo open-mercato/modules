@@ -690,8 +690,9 @@ merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build
   catalog's `_routes.json`, `schema/` and fixed root files stay until its Functions leave (Phase 1c of the spec).
   `yarn om pages-site` writes `merged: true` into `functions/site.ts`, so a `*.pages.dev` address serves every path
   as a static file; the old hosts are moved as before. `yarn om pages-site --check dist` with `PAGES_MERGED=1` proves
-  the merged layout and checks every link of every page against what this build serves; it prints how many main site
-  addresses the pages link that only Webflow serves yet.
+  the merged layout and checks every link of every page against what this build serves. In the noindex preview a
+  header or footer link to a page only Webflow serves yet is allowed and counted; in a production upload it fails the
+  check, so `PAGES_MERGED=1` cannot reach production before the main site has every page the menus link.
 
 Every `pages` run on `main` deploys the merged layout to the branch `www-preview` of the same project (jobs
 `www-preview-build` and `www-preview`), `https://www-preview.open-mercato-modules.pages.dev/`, with `PAGES_NOINDEX=1`

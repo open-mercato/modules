@@ -143,11 +143,11 @@ export function noindexFromEnv(env: Record<string, string | undefined>): boolean
 
 /**
  * True when PAGES_MERGED asks for the merged layout: the main site (dist-www/) at the root of the upload and the
- * catalog (dist-run/) under its base, composed by `yarn om pages-site --merge` (lib/emit/pages-merge.ts).
+ * catalog (dist-run/) under its base, composed by `yarn om pages-site --merge` (lib/emit/pages-merge.ts). Only `1`,
+ * the one value the steps of pages.yml test for, so the workflow and this command never read it differently.
  */
 export function mergedFromEnv(env: Record<string, string | undefined>): boolean {
-  const v = (env.PAGES_MERGED ?? '').trim().toLowerCase()
-  return v === '1' || v === 'true'
+  return (env.PAGES_MERGED ?? '').trim() === '1'
 }
 
 /** Where the main site links the catalog when the build does not nest it: https://www.openmercato.com/run/modules. */

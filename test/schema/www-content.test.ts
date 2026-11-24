@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   CTA_EVENT_MAX,
   Cta,
+  entryFileProblems,
+  fileEntries,
   EMPLOYMENT_TYPE_LABELS,
   EMPLOYMENT_TYPES,
   Image,
@@ -193,6 +195,9 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
     expect(UtcDate.parse('2026-11-24').toISOString()).toBe('2026-11-24T00:00:00.000Z')
     expect(UtcDate.parse(new Date('2026-11-24T10:00:00Z')).toISOString()).toBe('2026-11-24T10:00:00.000Z')
     expect(UtcDate.safeParse('2026-13-45').success).toBe(false)
+    // a day the calendar does not have would roll over into March
+    expect(UtcDate.safeParse('2026-02-30').success).toBe(false)
+    expect(UtcDate.safeParse('2028-02-29T08:00:00Z').success).toBe(true)
   })
 
   it('passes references through the reference builder it is given', () => {
@@ -266,6 +271,33 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
     })
     it('keeps the home slug for the home page', () => {
       expect(routeNamespaceProblems([], ['home'])).toEqual(['landings/home: the slug of the home page'])
+    })
+  })
+
+  describe('the files of a collection', () => {
+    it('takes a file name as the id only when it is a slug with the collection extension', () => {
+      expect(entryFileProblems('landings', ['hubspot-alternative.yaml', '.gitkeep'])).toEqual([])
+      expect(entryFileProblems('blog', ['Release Notes.md', 'post.yaml', 'ok.md'])).toEqual([
+        'blog/Release Notes.md: the name is not a slug',
+        'blog/post.yaml: not a .md file',
+      ])
+      expect(entryFileProblems('authors', [])).toEqual(['authors is not a collection of one file per entry'])
+    })
+
+    it('reads a dictionary keyed by slug, and an empty file as no entries', () => {
+      expect(fileEntries('authors', { 'jane-doe': { name: 'Jane Doe' } })).toEqual({ 'jane-doe': { name: 'Jane Doe' } })
+      expect(fileEntries('authors', null)).toEqual({})
+      expect(() => fileEntries('authors', { 'Jane Doe': { name: 'x' } })).toThrow(/Jane Doe is not a slug/)
+      expect(() => fileEntries('authors', [{ name: 'x' }])).toThrow(/a map of slug to entry is expected/)
+      expect(() => fileEntries('blog', {})).toThrow(/not a collection of one file/)
+    })
+
+    it('reads redirects.yaml as a list keyed by its from paths, and refuses one given twice', () => {
+      const rule = { from: '/docs', to: 'https://docs.openmercato.com/', status: 301, source: 'docs-map' }
+      expect(fileEntries('redirects', [rule])).toEqual({ '/docs': rule })
+      expect(fileEntries('redirects', undefined)).toEqual({})
+      expect(() => fileEntries('redirects', [rule, rule])).toThrow(/\/docs is given twice/)
+      expect(() => fileEntries('redirects', { '/docs': rule })).toThrow(/a list of rules is expected/)
     })
   })
 })

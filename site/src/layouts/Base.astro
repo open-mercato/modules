@@ -117,7 +117,8 @@ const speculation = JSON.stringify({
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
-    <Header current={path ?? ''} />
+    {/* the Run menu marks a catalog page only: on the main site no row of it is the current page */}
+    <Header current={run ? (path ?? '') : ''} />
     {
       /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
       dataAsOf && !isPreviewData(dataAsOf) && (

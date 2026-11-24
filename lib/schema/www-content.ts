@@ -34,12 +34,20 @@ export const HexColor = z.string().regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?(?:Z|[+-]\d{2}:\d{2}))?$/
 
+/** True when `day` (`YYYY-MM-DD`) is a day of the calendar, not one Date would roll over (2026-02-30). */
+function isCalendarDay(day: string): boolean {
+  const d = new Date(`${day}T00:00:00Z`)
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === day
+}
+
 /**
  * A date in ISO 8601 (`2026-11-24` or `2026-11-24T10:00:00Z`), or the Date a YAML parser already made of it. The site
  * formats dates in UTC.
  */
 export const UtcDate = z
   .union([z.date(), z.string().regex(ISO_DATE)])
+  // a calendar day that does not exist (2026-02-30) would roll over into the next month
+  .refine((v) => typeof v !== 'string' || isCalendarDay(v.slice(0, 10)), 'not a calendar day')
   .transform((v) => (typeof v === 'string' ? new Date(v) : v))
   .refine((d) => !Number.isNaN(d.getTime()), 'not a valid date')
 
@@ -454,6 +462,23 @@ export const RESERVED_SEGMENTS = [
   '404',
 ] as const
 
+/**
+ * First segments the main site's build never writes as a page of its own: the catalog, the redirected docs, the
+ * folders of files and the root files. The list pages of the collections (`/case-studies`, `/certified-partners`) are
+ * pages, so only RESERVED_SEGMENTS, which also keeps their names from `pages` and `landings`, holds them.
+ */
+export const NON_PAGE_SEGMENTS = [
+  'run',
+  'docs',
+  'documentation',
+  'media',
+  'files',
+  '_astro',
+  'sitemap-index',
+  'sitemap-0',
+  'robots',
+] as const
+
 /** The pages entry routed at `/`. */
 export const HOME_PAGE_SLUG = 'home'
 
@@ -474,4 +499,48 @@ export function routeNamespaceProblems(pages: readonly string[], landings: reado
   for (const id of landings) if (pageSet.has(id)) problems.push(`pages/${id} and landings/${id} both route to /${id}`)
   if (landings.includes(HOME_PAGE_SLUG)) problems.push(`landings/${HOME_PAGE_SLUG}: the slug of the home page`)
   return problems
+}
+
+/**
+ * Why the file names of a one-file-per-entry collection (WWW_SOURCES kind `entries`) cannot be its ids: each name
+ * without its extension is the entry's slug, kept exactly (D3), so it must match SLUG_RE, and only files with the
+ * collection's extension belong there.
+ */
+export function entryFileProblems(collection: WwwCollection, names: readonly string[]): string[] {
+  const s = WWW_SOURCES[collection]
+  if (s.kind !== 'entries') return [`${collection} is not a collection of one file per entry`]
+  const problems: string[] = []
+  for (const name of names) {
+    if (name.startsWith('.')) continue
+    if (!name.endsWith(`.${s.ext}`)) problems.push(`${s.dir}/${name}: not a .${s.ext} file`)
+    else if (!SLUG_RE.test(name.slice(0, -s.ext.length - 1))) problems.push(`${s.dir}/${name}: the name is not a slug`)
+  }
+  return problems
+}
+
+/**
+ * The entries of a one-file collection as the Astro file loader takes them (an object keyed by id), from the parsed
+ * file: a dictionary maps slugs to entries; redirects.yaml is a list of rules, each keyed by its `from` path. An empty
+ * file is an empty collection. Throws on a key that is not a slug, a `from` given twice, or a file of another shape.
+ */
+export function fileEntries(collection: WwwCollection, data: unknown): Record<string, Record<string, unknown>> {
+  const s = WWW_SOURCES[collection]
+  if (s.kind !== 'file') throw new Error(`${collection} is not a collection of one file`)
+  if (data === null || data === undefined) return {}
+  const entries: Record<string, Record<string, unknown>> = {}
+  if (collection === 'redirects') {
+    if (!Array.isArray(data)) throw new Error(`${s.file}: a list of rules is expected`)
+    for (const rule of data as { from?: unknown }[]) {
+      const from = String(rule?.from)
+      if (from in entries) throw new Error(`${s.file}: ${from} is given twice`)
+      entries[from] = rule as Record<string, unknown>
+    }
+    return entries
+  }
+  if (typeof data !== 'object' || Array.isArray(data)) throw new Error(`${s.file}: a map of slug to entry is expected`)
+  for (const [id, entry] of Object.entries(data as Record<string, unknown>)) {
+    if (!SLUG_RE.test(id)) throw new Error(`${s.file}: ${id} is not a slug`)
+    entries[id] = entry as Record<string, unknown>
+  }
+  return entries
 }

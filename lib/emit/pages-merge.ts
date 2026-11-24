@@ -17,7 +17,7 @@ import {
   siteDir,
   type SiteConfig,
 } from '../core/site-host.ts'
-import { RESERVED_SEGMENTS } from '../schema/www-content.ts'
+import { NON_PAGE_SEGMENTS } from '../schema/www-content.ts'
 import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from './pages-layout.ts'
 
 /** The folders of the two builds and of the upload, relative to the repository root (package.json `build`). */
@@ -179,6 +179,11 @@ export function mergePagesSite(
   const clash = readdirSync(www).filter((n) => taken.has(n))
   if (clash.length > 0)
     throw new Error(`${dirs.www} writes ${clash.join(', ')}, which the catalog or the merge owns at the root`)
+  // a catalog built for the other kind of upload: its /run/robots.txt would contradict the root files
+  if (existsSync(join(run, NOINDEX_ROOT_FILE)) !== noindex)
+    throw new Error(
+      `${dirs.run} is ${noindex ? 'not ' : ''}a noindex build (PAGES_NOINDEX), and this merge is ${noindex ? '' : 'not '}one`,
+    )
 
   rmSync(out, { recursive: true, force: true })
   cpSync(run, out, { recursive: true })
@@ -199,25 +204,35 @@ export function mergePagesSite(
   return { wwwFiles: walk(www).length, runFiles: walk(run).length, sitemaps }
 }
 
+/** A _redirects source as a pattern: `*` matches the rest of the path, `:name` one segment. */
+export function redirectSourcePattern(from: string): RegExp {
+  const body = from
+    .split(/(\*|:[A-Za-z][A-Za-z0-9_]*)/)
+    .map((part) => (part === '*' ? '.*' : part.startsWith(':') ? '[^/]+' : part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')))
+    .join('')
+  return new RegExp(`^${body}$`)
+}
+
 /**
- * Whether `pathname` (a path of the origin) answers in the upload `root`: a file, a page (`/x` as x.html, `/x/` as
- * x/index.html) or the source of a static redirect.
+ * Whether `pathname` (a path of the origin) answers in the upload `root`: a file, a page as Pages serves HTML files
+ * (`/x` as x.html or x/index.html, `/x/` as x/index.html or x.html, the last two through the redirect Pages adds),
+ * or the source of a rule of _redirects (`rules`, static and dynamic).
  */
-export function servesPath(root: string, pathname: string, redirects: ReadonlySet<string>): boolean {
+export function servesPath(root: string, pathname: string, rules: readonly { from: string }[]): boolean {
   let p: string
   try {
     p = decodeURIComponent(pathname)
   } catch {
     return false
   }
-  if (redirects.has(p)) return true
+  if (rules.some((r) => r.from === p || redirectSourcePattern(r.from).test(p))) return true
   if (p.split('/').includes('..')) return false
   const at = (rel: string): boolean => {
     const f = join(root, rel)
     return existsSync(f) && statSync(f).isFile()
   }
-  if (p.endsWith('/')) return at(`${p}index.html`)
-  return at(p) || at(`${p}.html`)
+  if (p.endsWith('/')) return at(`${p}index.html`) || (p.length > 1 && at(`${p.slice(0, -1)}.html`))
+  return at(p) || at(`${p}.html`) || at(`${p}/index.html`)
 }
 
 /** Path of a page of the main site on its origin: `index.html` is `/`, other pages lose `.html`. */
@@ -232,7 +247,8 @@ export interface MergedCheck {
   problems: string[]
   /**
    * Main site addresses the pages link that this build does not serve yet: the header and footer links of
-   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec).
+   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec). Only a noindex preview may
+   * have any; in a production upload each is a problem, since there Pages and not Webflow answers them.
    */
   pending: string[]
 }
@@ -240,9 +256,10 @@ export interface MergedCheck {
 /**
  * What in `root` (a merged upload) does not match the merged layout of `c`, at most `max` problems. The catalog part
  * as checkPagesLayout() checks a nested build, except that its links to the main site must name a page or a file this
- * build serves (or a header or footer link of lib/core/main-site.ts still on Webflow, listed in `pending`); then the
- * merged root files (_redirects with the Pages limits, robots.txt, the sitemap index naming every sitemap file and no
- * index, the home page's canonical), the root namespace of the main site (RESERVED_SEGMENTS) and every link of its pages.
+ * build serves (or, in a noindex preview only, a header or footer link of lib/core/main-site.ts still on Webflow,
+ * listed in `pending`); then the merged root files (_redirects with the Pages limits, robots.txt, the sitemap index
+ * naming every sitemap file and no index, the home page's canonical), the pages the main site must not write
+ * (NON_PAGE_SEGMENTS) and every link of its pages.
  */
 export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex = false): MergedCheck {
   const problems: string[] = []
@@ -257,15 +274,11 @@ export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex
   const read = (f: string): string | null => (existsSync(join(root, f)) ? readFileSync(join(root, f), 'utf8') : null)
 
   const redirectsText = read('_redirects')
-  const redirectSources = new Set(
-    redirectRules(redirectsText ?? '')
-      .filter((r) => !r.dynamic)
-      .map((r) => r.from),
-  )
-  const serves = (pathname: string): boolean => servesPath(root, pathname, redirectSources)
+  const rules = redirectRules(redirectsText ?? '')
+  const serves = (pathname: string): boolean => servesPath(root, pathname, rules)
   const onMainSite = (ref: string, url: URL): boolean => {
     if (serves(url.pathname)) return true
-    if (/^https:\/\//.test(ref) && isMainSiteLink(ref)) {
+    if (noindex && /^https:\/\//.test(ref) && isMainSiteLink(ref)) {
       pending.add(`${url.origin}${url.pathname}`)
       return true
     }
@@ -310,12 +323,12 @@ export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex
 
   // the main site's pages: everything at the root but the catalog's names
   const runNames = new Set(runRootNames(c))
-  const reserved = new Set<string>(RESERVED_SEGMENTS.filter((s) => s !== '404'))
+  const reserved = new Set<string>(NON_PAGE_SEGMENTS)
   const pages: string[] = []
   for (const name of readdirSync(root)) {
     if (runNames.has(name)) continue
     if (name.endsWith('.html') && reserved.has(name.slice(0, -5)))
-      say(`${shown(join(root, name))}: /${name.slice(0, -5)} is a reserved path of the main site`)
+      say(`${shown(join(root, name))}: /${name.slice(0, -5)} is not a page of the main site`)
     const p = join(root, name)
     if (statSync(p).isDirectory()) pages.push(...walk(p).filter((f) => f.endsWith('.html')))
     else if (name.endsWith('.html')) pages.push(p)
