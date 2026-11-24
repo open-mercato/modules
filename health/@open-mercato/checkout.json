@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/checkout",
   "version": "0.10.0",
-  "computedAt": "2026-11-24T10:01:38Z",
+  "computedAt": "2026-11-24T12:54:12Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -32,7 +32,7 @@
       "next": "untested"
     },
     "fit": {
-      "0.10": "ok",
+      "0.10": "no-fit",
       "0.9": "drift",
       "next": "unknown"
     },
@@ -53,8 +53,10 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "match",
-      "notes": []
+      "status": "mismatch",
+      "notes": [
+        "Built for 0.9, 0.10; verified on 0.9."
+      ]
     }
   },
   "rules": [
@@ -95,8 +97,8 @@
     },
     {
       "id": "VER-2",
-      "pass": true,
-      "detail": "Fits statically on 0.10: ok."
+      "pass": false,
+      "detail": "Fits statically on 0.10: no-fit."
     },
     {
       "id": "VER-3",
@@ -123,9 +125,12 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.10."
+        },
+        {
+          "code": "IN_PRESET",
+          "text": "Nothing to install: a new app already registers checkout in src/modules.ts."
         }
-      ],
-      "consentText": "Install @open-mercato/checkout@0.9.0"
+      ]
     },
     "0.9": {
       "decision": "allow",
@@ -161,7 +166,7 @@
     "next": null
   },
   "evaluated": {
-    "0.10": "0.9.0",
+    "0.10": "0.10.0",
     "0.9": "0.9.0",
     "next": "0.11.1-develop.8497.1.2033c3605c"
   },
