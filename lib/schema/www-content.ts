@@ -42,7 +42,9 @@ function isCalendarDay(day: string): boolean {
 
 /**
  * A date in ISO 8601 (`2026-11-24` or `2026-11-24T10:00:00Z`), or the Date a YAML parser already made of it. The site
- * formats dates in UTC.
+ * formats dates in UTC. A day the calendar does not have is refused as a string only: Astro's frontmatter parser turns
+ * an unquoted `2026-02-30` into a Date of 2 March before the schema sees it, so the importer (Phase 2) writes dates
+ * quoted.
  */
 export const UtcDate = z
   .union([z.date(), z.string().regex(ISO_DATE)])
