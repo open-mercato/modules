@@ -2,6 +2,9 @@
 // Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, self-hosted fonts, header,
 // stale-data banner, footer, copy handler with a polite live region, Speculation Rules, and WebMCP on pages that
 // ask for it (site/src/scripts/webmcp.ts, WP14, loaded through import.meta.glob so a missing file is fine).
+// The main site (www/, section `main`) uses the same shell with the same header, footer, fonts and styles, without
+// what belongs to the catalog: its data stamp and context line, the stale banner, llms.txt, the module prefetch and
+// the page script for its other hosts; the canonical address is the page's path on the main site's origin.
 import '../styles/tokens.css'
 import '../styles/base.css'
 import '../styles/ui.css'
@@ -27,7 +30,10 @@ interface Props {
    * 404 page, live review of 30 Oct): no canonical and no og:url, since it has no address of its own.
    */
   path: string | null
-  dataAsOf: DataAsOf
+  /** As of when the data of the page is (catalog pages only). */
+  dataAsOf?: DataAsOf
+  /** Which site the page belongs to: the catalog under its base (`run`, the default) or the main site (`main`). */
+  section?: 'run' | 'main'
   /** Markdown twin of the page (module pages). */
   mdAlternate?: string
   /** Register the WebMCP tools (/, /m/*, /for-agents). */
@@ -54,16 +60,18 @@ const {
   noindex,
   bodyClass,
   trail,
+  section = 'run',
 } = Astro.props
+const run = section === 'run'
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
-const canonical = path === null ? null : absoluteUrl(site, path)
+const canonical = path === null ? null : run ? absoluteUrl(site, path) : new URL(path, site).toString()
 const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
 const ogImage = absoluteUrl(site, '/og-default.png')
 // the other hosts of the Pages project serve this build too: the page script leaves their links alone (move of 13 Nov)
 const production = otherProductionOrigins(siteConfig(site, BASE || '/', HOME))
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
 const stale =
-  dataAsOf.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
+  dataAsOf?.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
 const speculation = JSON.stringify({
   prefetch: [{ where: { href_matches: `${BASE}/m/*` }, eagerness: 'moderate' }],
 })
@@ -83,7 +91,7 @@ const speculation = JSON.stringify({
     {/* the favicon of openmercato.com (32 x 32 PNG): the catalog is a part of it (navbar of 14 Nov) */}
     <link rel="icon" href={href('/favicon.png')} type="image/png" />
     <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
-    <link rel="llms-txt" href={href('/llms.txt')} />
+    {run && <link rel="llms-txt" href={href('/llms.txt')} />}
     {mdAlternate && <link rel="alternate" type="text/markdown" href={href(mdAlternate)} />}
     {/* light only, like openmercato.com (move of 13 Nov): no dark theme, whatever the system asks for */}
     <meta name="color-scheme" content="light" />
@@ -101,7 +109,7 @@ const speculation = JSON.stringify({
         dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
         new page's first style pass could run without it; inline: 96 of 96 flights land in headless Chromium) */}
     <style is:inline set:html={`${fontFaceCss()}@view-transition{navigation:auto}`}></style>
-    <script type="speculationrules" is:inline set:html={speculation} />
+    {run && <script type="speculationrules" is:inline set:html={speculation} />}
     {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLdText(jsonLd)} />}
     <slot name="head" />
     <Fragment set:html={EMAIL_ON} />
@@ -112,7 +120,7 @@ const speculation = JSON.stringify({
     <Header current={path ?? ''} />
     {
       /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
-      !isPreviewData(dataAsOf) && (
+      dataAsOf && !isPreviewData(dataAsOf) && (
         <div class="sheet stale-wrap" id="stale-banner" hidden={!stale}>
           <Banner variant="stale-data">
             Data from <span data-stale-day>{dataAsOf.nightly ? day(dataAsOf.nightly) : ''}</span>. The nightly run did
@@ -121,13 +129,13 @@ const speculation = JSON.stringify({
         </div>
       )
     }
-    <script is:inline set:html={STALE_CHECK_JS} />
+    {dataAsOf && <script is:inline set:html={STALE_CHECK_JS} />}
     <main id="main" tabindex="-1">
-      <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />
+      {dataAsOf && <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />}
       <slot />
     </main>
     <Footer />
-    <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production)} />
+    {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production)} />}
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
     <script>
       const toast = document.getElementById('om-toast')

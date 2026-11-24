@@ -1,4 +1,6 @@
 dist/
+dist-run/
+dist-www/
 out/
 .data/
 site/.generated/

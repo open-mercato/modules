@@ -52,9 +52,13 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
 
   it('has the scripts of spec 3.4', () => {
     expect(pkg.scripts.om).toBe('node lib/cli.ts')
+    // the main site (www site migration, Phase 1a): its own astro check, and `build` writes both builds
     expect(pkg.scripts.check).toBe(
-      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && prettier --check . && node lib/cli.ts check-text',
+      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text',
     )
+    expect(pkg.scripts.build).toBe('yarn build:run && yarn build:www')
+    expect(pkg.scripts['build:run']).toBe('node lib/cli.ts emit --data .data && astro build --outDir dist-run')
+    expect(pkg.scripts['build:www']).toBe('astro build --root www')
     expect(pkg.scripts.test).toBe('vitest run')
   })
 
@@ -75,8 +79,11 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
     // .gitignore; a JSON file written there must not turn `yarn check` red
     // `.agents/`, `.claude/`, `.npm/`: untracked files the agent sandbox writes into the checkout
     // `.ai/`: the local operator files of the agent pipeline and its task worktrees, never committed
+    // `dist-run/`, `dist-www/`: the two builds the merged layout composes dist/ from (lib/emit/pages-merge.ts)
     expect(lines).toEqual([
       'dist/',
+      'dist-run/',
+      'dist-www/',
       'out/',
       '.data/',
       'site/.generated/',

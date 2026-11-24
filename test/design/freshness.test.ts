@@ -130,7 +130,8 @@ describe('stale-data check in the browser', () => {
 
     it('the layout never renders the banner on preview data, whatever the build clock', () => {
       const base = readFileSync('site/src/layouts/Base.astro', 'utf8')
-      expect(base).toMatch(/dataAsOf\.nightly && !isPreviewData\(dataAsOf\)/)
+      // dataAsOf is optional: the main site's pages (www/) have no data
+      expect(base).toMatch(/dataAsOf\?\.nightly && !isPreviewData\(dataAsOf\)/)
       // and the banner itself is left out of a preview build
       expect(base).toMatch(/!isPreviewData\(dataAsOf\) && \(\s*<div class="sheet stale-wrap" id="stale-banner"/)
     })
