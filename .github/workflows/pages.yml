@@ -21,6 +21,12 @@
 # still run, then the run ends green with a warning and a summary that say the site was not deployed.
 # Two more jobs, `preview-build` and `preview` (15 Nov), deploy the nested layout with fixed values to the branch
 # alias run-preview of the same project while production is still at the root; see the comment above them.
+# The main site (www site migration spec, Phase 1a, docs/specs/2026-11-24-www-site-migration.md): `yarn build` writes
+# the catalog to dist-run/ and the main site (www/) to dist-www/. Production uploads the catalog alone, dist-run/ moved
+# to dist/ as it is, until the repository variable PAGES_MERGED is set to 1 at the switch (step C8 of the spec); then
+# `yarn om pages-site --merge` composes dist/ from both (the main site at the root, the catalog under /run) and the
+# checks follow the merged layout. Two jobs, `www-preview-build` and `www-preview`, deploy the merged layout to the
+# branch alias www-preview with PAGES_NOINDEX=1 meanwhile.
 name: pages
 
 on:
@@ -57,6 +63,8 @@ env:
   # the home page under the base: / (the base itself), or /modules for https://www.openmercato.com/run/modules
   HOME_PATH: ${{ vars.HOME_PATH || '/' }}
   CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}
+  # 1: production deploys the merged layout (the main site at the root, the catalog under BASE_PATH); off by default
+  PAGES_MERGED: ${{ vars.PAGES_MERGED || '' }}
 
 jobs:
   build:
@@ -121,11 +129,19 @@ jobs:
           fi
 
       - name: Build
-        run: yarn build
+        # the catalog to dist-run/, and with PAGES_MERGED the main site to dist-www/ too
+        run: |
+          if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi
+
+      - name: Lay out the upload
+        # catalog only (the default): dist-run/ is the upload as it is. Merged: both builds composed into dist/.
+        run: |
+          rm -rf dist
+          if [ "$PAGES_MERGED" = "1" ]; then yarn om pages-site --merge; else mv dist-run dist; fi
 
       - name: Write Functions config
-        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL, BASE_PATH and
-        # HOME_PATH.
+        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL, BASE_PATH,
+        # HOME_PATH and PAGES_MERGED.
         run: yarn om pages-site
 
       - name: Check artifact contents
@@ -312,6 +328,8 @@ jobs:
       BASE_PATH: /run
       HOME_PATH: /modules
       PAGES_NOINDEX: "1"
+      # the catalog alone, whatever production deploys
+      PAGES_MERGED: ""
     steps:
       - name: Check deploy settings
         id: settings
@@ -357,7 +375,15 @@ jobs:
           fi
 
       - name: Build
-        run: yarn build
+        # the catalog to dist-run/, and with PAGES_MERGED the main site to dist-www/ too
+        run: |
+          if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi
+
+      - name: Lay out the upload
+        # catalog only (the default): dist-run/ is the upload as it is. Merged: both builds composed into dist/.
+        run: |
+          rm -rf dist
+          if [ "$PAGES_MERGED" = "1" ]; then yarn om pages-site --merge; else mv dist-run dist; fi
 
       - name: Write Functions config
         run: yarn om pages-site
@@ -405,6 +431,7 @@ jobs:
       BASE_PATH: /run
       HOME_PATH: /modules
       PAGES_NOINDEX: "1"
+      PAGES_MERGED: ""
       # the branch of the preview deployment; Cloudflare serves its latest deployment at
       # https://<branch>.<project>.pages.dev
       PREVIEW_BRANCH: run-preview
@@ -478,4 +505,196 @@ jobs:
             echo "This deployment: $this"
             echo ""
             echo "Check it, or the proxy in front of it, with docs/proxy/check.sh <base URL>."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Preview of the merged layout (www site migration spec, Phase 1a): the main site (www/, a placeholder until its
+  # content arrives) at the root and the catalog under /run, built, merged and checked with fixed values and deployed
+  # to the branch alias www-preview of the same project, https://www-preview.<project>.pages.dev. Parallel to the
+  # other jobs and needing nothing from them, with the same guards; never production (step C8 of the spec switches
+  # production with the repository variable PAGES_MERGED). PAGES_NOINDEX=1: dist/_headers and a robots.txt that
+  # allows nothing, at the root and under /run. The Functions stay in the upload until Phase 1c; with PAGES_MERGED they
+  # leave every request to a *.pages.dev address alone (lib/core/site-host.ts).
+  www-preview-build:
+    name: www preview build
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      commit: ${{ steps.checkout.outputs.commit }}
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      MCP_URL: ${{ vars.MCP_URL }}
+      WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      PAGES_MERGED: "1"
+    steps:
+      - name: Check deploy settings
+        id: settings
+        env:
+          HAS_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_ACCOUNT_ID" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        run: |
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data 2>"$err"; then
+            git worktree add --detach .data origin/data
+          elif grep -q "couldn't find remote ref" "$err"; then
+            mkdir -p .data
+            echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$err"
+            echo "::error::Cannot read the data branch; not deploying."
+            exit 1
+          fi
+
+      - name: Build
+        # the catalog to dist-run/, the main site to dist-www/
+        run: yarn build
+
+      - name: Merge
+        run: yarn om pages-site --merge
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check merged contents
+        # the merged layout as a whole: the catalog's nested checks, the root files, the sitemap index, the links of
+        # every page against the routes this build wrote, and the noindex files
+        run: |
+          test -f dist/index.html || { echo "dist/index.html is missing"; exit 1; }
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Check Pages limits
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          yarn wrangler pages project validate dist
+          echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Check Pages Functions
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Upload preview
+        if: ${{ steps.settings.outputs.deploy == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: www-preview
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  www-preview:
+    name: www preview
+    needs: www-preview-build
+    if: ${{ needs.www-preview-build.outputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: cloudflare
+      url: ${{ steps.summary.outputs.url }}
+    env:
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      PAGES_MERGED: "1"
+      PREVIEW_BRANCH: www-preview
+    steps:
+      - name: Check token
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set but environment cloudflare has no CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.www-preview-build.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Download preview
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: www-preview
+          path: dist
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check downloaded preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Deploy preview
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          # a branch other than main is a preview deployment of the project, never production
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true
+
+      - name: Preview summary
+        id: summary
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          alias="$(printf '%s' "$PREVIEW_BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/^-+//; s/-+$//')"
+          url="https://$alias.$CF_PAGES_PROJECT.pages.dev/"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "Preview of the merged layout deployed to branch \`$PREVIEW_BRANCH\` of Cloudflare Pages project \`$CF_PAGES_PROJECT\`: $url (the catalog at ${url}run/modules)"
+            echo ""
+            echo "This deployment: ${DEPLOYMENT_URL:-see the wrangler output}"
           } >> "$GITHUB_STEP_SUMMARY"

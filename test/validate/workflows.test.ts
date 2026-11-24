@@ -299,9 +299,18 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       BASE_PATH: "${{ vars.BASE_PATH || '/' }}",
       HOME_PATH: "${{ vars.HOME_PATH || '/' }}",
       CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
+      // the merged layout of the www site migration: off until the switch (step C8 of its spec)
+      PAGES_MERGED: "${{ vars.PAGES_MERGED || '' }}",
     })
     expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)
-    expect(Object.keys(w.jobs)).toEqual(['build', 'deploy', 'preview-build', 'preview'])
+    expect(Object.keys(w.jobs)).toEqual([
+      'build',
+      'deploy',
+      'preview-build',
+      'preview',
+      'www-preview-build',
+      'www-preview',
+    ])
     type PagesJob = Job & { env?: Record<string, string>; outputs?: Record<string, string>; needs?: string }
     const build = w.jobs.build as PagesJob
     const deploy = w.jobs.deploy as PagesJob
@@ -324,6 +333,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Install',
       'Read data branch',
       'Build',
+      'Lay out the upload',
       'Write Functions config',
       'Check artifact contents',
       'Check Pages limits',
@@ -332,7 +342,14 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Not deployed',
     ])
     // the build and its checks run with or without the deploy settings
-    for (const x of b.slice(0, 11)) expect(x.if, x.name).toBeUndefined()
+    for (const x of b.slice(0, 12)) expect(x.if, x.name).toBeUndefined()
+    // the catalog alone unless PAGES_MERGED: dist-run/ becomes the upload as it is
+    expect(b.find((x) => x.name === 'Build')?.run).toBe(
+      'if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi\n',
+    )
+    expect(b.find((x) => x.name === 'Lay out the upload')?.run).toBe(
+      'rm -rf dist\nif [ "$PAGES_MERGED" = "1" ]; then yarn om pages-site --merge; else mv dist-run dist; fi\n',
+    )
     // the switch is the repository variable: a job without environment sees no environment secret, and a
     // job-level if cannot read secrets (review of 28 Oct)
     expect(b[0]?.env).toEqual({ HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}" })
@@ -436,8 +453,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       HOME_PATH: '/modules',
       PAGES_NOINDEX: '1',
     }
-    expect(pb.env).toMatchObject(fixed)
-    expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'run-preview' })
+    // the catalog alone, even once production is merged
+    expect(pb.env).toMatchObject({ ...fixed, PAGES_MERGED: '' })
+    expect(pv.env).toEqual({ ...fixed, PAGES_MERGED: '', PREVIEW_BRANCH: 'run-preview' })
     expect(build.env).not.toHaveProperty('PAGES_NOINDEX')
     expect(deploy).not.toHaveProperty('env')
     // the environment, token and checks of the deploy job
@@ -450,6 +468,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Check deploy settings',
       'Read data branch',
       'Build',
+      'Lay out the upload',
       'Check Pages limits',
       'Check Pages Functions',
     ])
@@ -482,14 +501,73 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(JSON.stringify(pv)).not.toContain('--branch=main')
   })
 
+  it('pages: the preview of the merged layout of the www site migration, on its own alias and never production', () => {
+    const w = wf('pages.yml')
+    type PagesJob = Job & { env?: Record<string, string>; outputs?: Record<string, string>; needs?: string }
+    const build = w.jobs.build as PagesJob
+    const deploy = w.jobs.deploy as PagesJob
+    const pb = w.jobs['www-preview-build'] as PagesJob
+    const pv = w.jobs['www-preview'] as PagesJob
+    expect(pb).not.toHaveProperty('needs')
+    expect(pv.needs).toBe('www-preview-build')
+    // the guards of build, whatever production deploys
+    expect(pb.if).toBe(build.if)
+    expect(pv.if).toBe("${{ needs.www-preview-build.outputs.deploy == 'true' }}")
+    const fixed = {
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/run',
+      HOME_PATH: '/modules',
+      PAGES_NOINDEX: '1',
+      PAGES_MERGED: '1',
+    }
+    expect(pb.env).toMatchObject(fixed)
+    expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'www-preview' })
+    expect(pv.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
+    expect(pb.outputs).toEqual(build.outputs)
+    const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
+    expect(pb.steps.map((x) => x.name)).toEqual([
+      'Check deploy settings',
+      'Checkout',
+      'Set up Node',
+      'Enable Corepack',
+      'Install',
+      'Read data branch',
+      'Build',
+      'Merge',
+      'Write Functions config',
+      'Check merged contents',
+      'Check Pages limits',
+      'Check Pages Functions',
+      'Upload preview',
+    ])
+    for (const n of ['Check deploy settings', 'Read data branch', 'Check Pages limits', 'Check Pages Functions'])
+      expect(byName(pb, n), n).toEqual(byName(build, n))
+    expect(byName(pb, 'Build')?.run).toBe('yarn build')
+    expect(byName(pb, 'Merge')?.run).toBe('yarn om pages-site --merge')
+    expect(byName(pb, 'Check merged contents')?.run).toContain('yarn om pages-site --check dist')
+    for (const n of ['Check token', 'Set up Node', 'Enable Corepack', 'Install', 'Write Functions config'])
+      expect(byName(pv, n), n).toEqual(byName(deploy, n))
+    expect(byName(pb, 'Upload preview')?.with).toMatchObject({ name: 'www-preview', path: 'dist' })
+    expect(byName(pv, 'Download preview')?.with).toEqual({ name: 'www-preview', path: 'dist' })
+    expect(byName(pv, 'Check downloaded preview')?.run).toContain('yarn om pages-site --check dist')
+    const dep = byName(pv, 'Deploy preview')
+    expect(dep?.with).toEqual({
+      ...(byName(deploy, 'Deploy')?.with ?? {}),
+      command:
+        'pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true',
+    })
+    expect(JSON.stringify(pv)).not.toContain('--branch=main')
+  })
+
   it('pages and mcp-deploy read the Cloudflare account ID the same way, from the repository variable', () => {
     const accountIds = ['pages.yml', 'mcp-deploy.yml'].flatMap((f) =>
       steps(wf(f))
         .filter((s) => s.uses?.startsWith('cloudflare/wrangler-action@'))
         .map((s) => s.with?.accountId),
     )
-    // pages.yml: the deploy and the preview; mcp-deploy.yml: the Worker
+    // pages.yml: the deploy and the two previews; mcp-deploy.yml: the Worker
     expect(accountIds).toEqual([
+      '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
       '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
       '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
       '${{ vars.CLOUDFLARE_ACCOUNT_ID }}',
