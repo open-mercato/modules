@@ -182,7 +182,12 @@ const ABSOLUTE = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i
  * (`/run/m/@x/y`). A link is fine when it is absolute to another origin, or when it resolves under the base. With a
  * home path the base itself is no page (it only redirects), so a link to it is a problem too.
  */
-export function linkProblem(ref: string, page: string, c: SiteConfig): string | null {
+export function linkProblem(
+  ref: string,
+  page: string,
+  c: SiteConfig,
+  mainSite?: MergedLayout['mainSite'],
+): string | null {
   if (NOT_A_PAGE.test(ref)) return null
   let resolved: URL
   try {
@@ -192,6 +197,9 @@ export function linkProblem(ref: string, page: string, c: SiteConfig): string | 
   }
   if (ABSOLUTE.test(ref) && resolved.origin !== c.origin) return null
   if (!isNested(c)) return null
+  const under = resolved.pathname === c.base || resolved.pathname.startsWith(`${c.base}/`)
+  // merged with the main site: a link outside the base names one of its pages or files
+  if (mainSite && !under) return mainSite(ref, resolved) ? null : `not a page or a file of this build: ${ref}`
   // the main site's own pages that the header and the footer link (Product, Blog, the logo): written out in full
   if (/^https:\/\//.test(ref) && isMainSiteLink(ref)) return null
   if (hasHomePath(c) && (resolved.pathname === c.base || resolved.pathname === `${c.base}/`))
@@ -216,6 +224,16 @@ function readJson(file: string): unknown {
 }
 
 /**
+ * The merged layout (lib/emit/pages-merge.ts): the main site at the root of the upload around the nested catalog.
+ * `redirects` is the _redirects the root must hold; `mainSite` tells whether a link of a catalog page outside the
+ * base reaches the main site (a page or a file it serves).
+ */
+export interface MergedLayout {
+  redirects: string
+  mainSite: (ref: string, url: URL) => boolean
+}
+
+/**
  * What in `root` (a built dist) does not match the layout of `c`, as one line per problem (at most `max`). Checks the
  * root files and their content, the fixed `$id` of every schema at the root, the site files in their folder (the home
  * page at its home path and, with a home path, no index.html and no folder of that name), the `$schema` of
@@ -223,7 +241,13 @@ function readJson(file: string): unknown {
  * at the root, every link of every page stays under the base, and the file rule of the old host (isFilePath) knows
  * every published file of the site. The home file must carry the canonical link of the home page.
  */
-export function checkPagesLayout(root: string, c: SiteConfig, max = 50, noindex = false): string[] {
+export function checkPagesLayout(
+  root: string,
+  c: SiteConfig,
+  max = 50,
+  noindex = false,
+  merged?: MergedLayout,
+): string[] {
   const problems: string[] = []
   const say = (m: string): void => {
     if (problems.length < max) problems.push(m)
@@ -236,8 +260,13 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50, noindex 
   const routes = readJson(join(root, '_routes.json'))
   if (routes !== undefined && JSON.stringify(routes) !== JSON.stringify(pagesRoutes(c.base)))
     say(`${shown(join(root, '_routes.json'))} is not ${JSON.stringify(pagesRoutes(c.base))}`)
-  if (existsSync(join(root, '_redirects')) && readFileSync(join(root, '_redirects'), 'utf8') !== pagesRedirects(c))
-    say(`${shown(join(root, '_redirects'))} differs from pagesRedirects() for base ${c.base} and home ${c.home}`)
+  if (
+    existsSync(join(root, '_redirects')) &&
+    readFileSync(join(root, '_redirects'), 'utf8') !== (merged?.redirects ?? pagesRedirects(c))
+  )
+    say(
+      `${shown(join(root, '_redirects'))} differs from ${merged ? 'mergedRedirects()' : 'pagesRedirects()'} for base ${c.base} and home ${c.home}`,
+    )
   for (const name of PUBLISHED_SCHEMAS) {
     const file = join(root, SCHEMA_DIR, `${name}-1.json`)
     if (!existsSync(file)) {
@@ -288,7 +317,10 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50, noindex 
     say(`${shown(join(root, NOINDEX_ROOT_FILE))} is for a noindex build (PAGES_NOINDEX), and this build is not one`)
     allowed.add(NOINDEX_ROOT_FILE)
   }
-  for (const name of readdirSync(root)) if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
+  // merged, the rest of the root is the main site's (checkMergedLayout)
+  if (!merged)
+    for (const name of readdirSync(root))
+      if (!allowed.has(name)) say(`${shown(join(root, name))} sits outside the site`)
   for (const f of ROOT_ONLY) if (existsSync(join(site, f))) say(`${shown(join(site, f))} belongs at the root`)
   // the old host serves the machine-readable files itself and redirects the pages (hostFile, hostRedirect): a
   // published file of a kind the rule does not know would answer a redirect there. Pages are not checked the other
@@ -299,11 +331,14 @@ export function checkPagesLayout(root: string, c: SiteConfig, max = 50, noindex 
     if (!isFilePath(`/${rel}`) && !isSitemapPath(`/${rel}`))
       say(`${shown(f)} is not a file the old host serves (isFilePath); its old address would answer a redirect`)
   }
-  const pages = [...walk(site).filter((f) => f.endsWith('.html')), join(root, '404.html')].filter((f) => existsSync(f))
+  // merged, the root 404.html is the main site's page
+  const pages = [...walk(site).filter((f) => f.endsWith('.html')), ...(merged ? [] : [join(root, '404.html')])].filter(
+    (f) => existsSync(f),
+  )
   for (const f of pages) {
     const page = f === join(root, '404.html') ? '/404' : pagePath(toPosix(relative(site, f)), c)
     for (const ref of htmlRefs(readFileSync(f, 'utf8'))) {
-      const p = linkProblem(ref, page, c)
+      const p = linkProblem(ref, page, c, merged?.mainSite)
       if (p) say(`${shown(f)}: ${p}`)
     }
   }

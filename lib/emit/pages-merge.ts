@@ -1,0 +1,339 @@
+// The merged layout of the Pages upload (www site migration spec, Option B, Phase 1a): the main site's build
+// (dist-www/, www/astro.config.ts) at the root of dist/, the catalog's nested build (dist-run/, BASE_PATH `/run`)
+// under its base, and the root files composed from both. `yarn om pages-site --merge` writes it (mergePagesSite) and
+// `yarn om pages-site --check dist` with PAGES_MERGED=1 proves it (checkMergedLayout).
+// Until Phase 1c the catalog's Functions and their _routes.json stay in the upload for the old hosts; on a
+// `*.pages.dev` address they leave the main site alone (SiteConfig.merged, lib/core/site-host.ts).
+import { cpSync, existsSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { join, relative, resolve, sep } from 'node:path'
+import { isMainSiteLink, MAIN_SITE_ORIGIN } from '../core/main-site.ts'
+import {
+  FIXED_ROOT_FILES,
+  isNested,
+  NOINDEX_HEADERS,
+  NOINDEX_ROBOTS,
+  pagesRedirects,
+  SCHEMA_DIR,
+  siteDir,
+  type SiteConfig,
+} from '../core/site-host.ts'
+import { RESERVED_SEGMENTS } from '../schema/www-content.ts'
+import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from './pages-layout.ts'
+
+/** The folders of the two builds and of the upload, relative to the repository root (package.json `build`). */
+export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
+
+/** Root files the merge writes itself: a build that brings its own would be overwritten without notice. */
+export const MERGE_ROOT_FILES = ['_redirects', NOINDEX_ROOT_FILE, 'robots.txt', 'sitemap-index.xml'] as const
+
+/** Cloudflare Pages limits of _redirects (2,000 static and 100 dynamic rules) and the check's margin below them. */
+export const REDIRECT_LIMITS = { static: 2000, dynamic: 100 } as const
+export const REDIRECT_CHECK = { static: 1800, dynamic: 90 } as const
+
+/** Names at the root of the upload that belong to the catalog in both layouts: the base folder and the fixed files. */
+export function runRootNames(c: SiteConfig): string[] {
+  return [siteDir(c).split('/')[0] as string, '_routes.json', SCHEMA_DIR, ...FIXED_ROOT_FILES]
+}
+
+/** Why `c` cannot be merged, or null: the catalog must be nested and live on the main site's origin. */
+export function mergeConfigProblem(c: SiteConfig): string | null {
+  if (!isNested(c)) return `the merged layout needs the catalog under a base path; BASE_PATH is ${c.base}`
+  if (c.origin !== MAIN_SITE_ORIGIN) return `the merged layout serves ${MAIN_SITE_ORIGIN}; SITE_URL is ${c.origin}`
+  return null
+}
+
+/**
+ * dist/_redirects of the merged layout: the main site's /sitemap.xml, then the catalog's own rules (pagesRedirects).
+ * The docs map and the Webflow 301 list join in Phase 8 (content/redirects.yaml).
+ */
+export function mergedRedirects(c: Pick<SiteConfig, 'base' | 'home'>): string {
+  return [
+    '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
+    '/sitemap.xml /sitemap-index.xml 301',
+    pagesRedirects(c),
+  ].join('\n')
+}
+
+/** robots.txt at the root of the merged layout: all allowed and one sitemap, or nothing for a noindex preview. */
+export function mergedRobots(c: Pick<SiteConfig, 'origin'>, noindex: boolean): string {
+  return noindex ? NOINDEX_ROBOTS : `User-agent: *\nAllow: /\n\nSitemap: ${c.origin}/sitemap-index.xml\n`
+}
+
+const xml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+const unxml = (s: string): string =>
+  s
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&')
+
+/** A sitemap index listing `locs` in order, in the shape @astrojs/sitemap writes. */
+export function sitemapIndexXml(locs: readonly string[]): string {
+  const items = locs.map((l) => `<sitemap><loc>${xml(l)}</loc></sitemap>`).join('')
+  return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${items}</sitemapindex>`
+}
+
+/** The `<loc>` addresses of a sitemap or a sitemap index. */
+export function sitemapLocs(text: string): string[] {
+  return [...text.matchAll(/<loc>\s*([^<]*?)\s*<\/loc>/g)].map((m) => unxml(m[1] ?? ''))
+}
+
+/**
+ * The sitemap index of the merged layout: the main site's sitemap files, then the catalog's (a sitemap index cannot
+ * list another index, so the catalog's files and not its index), as their locs say.
+ */
+export function mergedSitemapLocs(wwwIndex: string, runIndex: string): string[] {
+  return [...sitemapLocs(wwwIndex), ...sitemapLocs(runIndex)]
+}
+
+/** One rule of _redirects: its source, and whether Pages counts it as dynamic (a splat or a placeholder). */
+export function redirectRules(text: string): { from: string; dynamic: boolean }[] {
+  const rules: { from: string; dynamic: boolean }[] = []
+  for (const raw of text.split('\n')) {
+    const line = raw.trim()
+    if (line === '' || line.startsWith('#')) continue
+    const from = line.split(/\s+/)[0] as string
+    rules.push({ from, dynamic: from.includes('*') || /\/:[A-Za-z]/.test(from) })
+  }
+  return rules
+}
+
+/** Why a _redirects text breaks the Pages limits with the check's margin, or a source is given twice. */
+export function redirectProblems(text: string): string[] {
+  const rules = redirectRules(text)
+  const problems: string[] = []
+  const stat = rules.filter((r) => !r.dynamic).length
+  const dyn = rules.length - stat
+  if (stat > REDIRECT_CHECK.static)
+    problems.push(
+      `${stat} static redirects; the check allows ${REDIRECT_CHECK.static} (Pages ${REDIRECT_LIMITS.static})`,
+    )
+  if (dyn > REDIRECT_CHECK.dynamic)
+    problems.push(
+      `${dyn} dynamic redirects; the check allows ${REDIRECT_CHECK.dynamic} (Pages ${REDIRECT_LIMITS.dynamic})`,
+    )
+  const seen = new Set<string>()
+  for (const r of rules) {
+    if (seen.has(r.from)) problems.push(`the redirect from ${r.from} is given twice`)
+    seen.add(r.from)
+  }
+  return problems
+}
+
+function walk(dir: string, acc: string[] = []): string[] {
+  if (!existsSync(dir)) return acc
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name)
+    if (statSync(p).isDirectory()) walk(p, acc)
+    else acc.push(p)
+  }
+  return acc
+}
+
+const toPosix = (p: string): string => p.split(sep).join('/')
+
+export interface MergeResult {
+  /** Files of the main site's build laid at the root. */
+  wwwFiles: number
+  /** Files of the catalog's build. */
+  runFiles: number
+  /** Addresses of the merged sitemap index. */
+  sitemaps: string[]
+}
+
+/**
+ * Composes `out` from the two builds: the catalog's nested build `run` as it is, then every file of `www` at the root
+ * (its 404.html replaces the catalog's root copy, which keeps its own under the base), then the merged root files
+ * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build). Throws, before touching `out`, on
+ * a config mergeConfigProblem() refuses, a missing build, a catalog build that is not nested, or a name the main site
+ * would take from the catalog or from the merge.
+ */
+export function mergePagesSite(
+  dirs: { www: string; run: string; out: string },
+  c: SiteConfig,
+  noindex = false,
+): MergeResult {
+  const problem = mergeConfigProblem(c)
+  if (problem) throw new Error(problem)
+  const www = resolve(dirs.www)
+  const run = resolve(dirs.run)
+  const out = resolve(dirs.out)
+  for (const [name, dir] of [
+    ['the main site build', www],
+    ['the catalog build', run],
+  ] as const)
+    if (!existsSync(dir))
+      throw new Error(`${name} ${dirs[name === 'the catalog build' ? 'run' : 'www']} does not exist`)
+  for (const d of [www, run])
+    if (out === d || !relative(out, d).startsWith('..'))
+      throw new Error(`the upload folder ${dirs.out} holds a build; refusing to empty it`)
+  for (const f of ['index.html', '404.html'])
+    if (!existsSync(join(www, f))) throw new Error(`${dirs.www}/${f} is missing`)
+  if (!existsSync(join(run, siteDir(c))))
+    throw new Error(`${dirs.run}/${siteDir(c)} is missing; build the catalog with BASE_PATH ${c.base}`)
+  const runAllowed = new Set([...nestedRootEntries(c), NOINDEX_ROOT_FILE])
+  const stray = readdirSync(run).filter((n) => !runAllowed.has(n))
+  if (stray.length > 0) throw new Error(`${dirs.run} holds ${stray.join(', ')} outside the nested layout`)
+  const taken = new Set<string>([...runRootNames(c), ...MERGE_ROOT_FILES.filter((f) => f !== 'sitemap-index.xml')])
+  const clash = readdirSync(www).filter((n) => taken.has(n))
+  if (clash.length > 0)
+    throw new Error(`${dirs.www} writes ${clash.join(', ')}, which the catalog or the merge owns at the root`)
+
+  rmSync(out, { recursive: true, force: true })
+  cpSync(run, out, { recursive: true })
+  for (const name of readdirSync(www)) {
+    if (name === 'sitemap-index.xml') continue
+    cpSync(join(www, name), join(out, name), { recursive: true, force: true })
+  }
+  const read = (f: string): string => (existsSync(f) ? readFileSync(f, 'utf8') : '')
+  const sitemaps = mergedSitemapLocs(
+    read(join(www, 'sitemap-index.xml')),
+    read(join(run, siteDir(c), 'sitemap-index.xml')),
+  )
+  writeFileSync(join(out, 'sitemap-index.xml'), sitemapIndexXml(sitemaps))
+  writeFileSync(join(out, '_redirects'), mergedRedirects(c))
+  writeFileSync(join(out, 'robots.txt'), mergedRobots(c, noindex))
+  if (noindex) writeFileSync(join(out, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
+  else rmSync(join(out, NOINDEX_ROOT_FILE), { force: true })
+  return { wwwFiles: walk(www).length, runFiles: walk(run).length, sitemaps }
+}
+
+/**
+ * Whether `pathname` (a path of the origin) answers in the upload `root`: a file, a page (`/x` as x.html, `/x/` as
+ * x/index.html) or the source of a static redirect.
+ */
+export function servesPath(root: string, pathname: string, redirects: ReadonlySet<string>): boolean {
+  let p: string
+  try {
+    p = decodeURIComponent(pathname)
+  } catch {
+    return false
+  }
+  if (redirects.has(p)) return true
+  if (p.split('/').includes('..')) return false
+  const at = (rel: string): boolean => {
+    const f = join(root, rel)
+    return existsSync(f) && statSync(f).isFile()
+  }
+  if (p.endsWith('/')) return at(`${p}index.html`)
+  return at(p) || at(`${p}.html`)
+}
+
+/** Path of a page of the main site on its origin: `index.html` is `/`, other pages lose `.html`. */
+function wwwPagePath(rel: string): string {
+  if (rel === 'index.html') return '/'
+  return `/${rel.replace(/(?:^|\/)index\.html$/, '/').replace(/\.html$/, '')}`
+}
+
+const NOT_A_PAGE = /^(?:#|mailto:|tel:|data:|javascript:|about:)/i
+
+export interface MergedCheck {
+  problems: string[]
+  /**
+   * Main site addresses the pages link that this build does not serve yet: the header and footer links of
+   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec).
+   */
+  pending: string[]
+}
+
+/**
+ * What in `root` (a merged upload) does not match the merged layout of `c`, at most `max` problems. The catalog part
+ * as checkPagesLayout() checks a nested build, except that its links to the main site must name a page or a file this
+ * build serves (or a header or footer link of lib/core/main-site.ts still on Webflow, listed in `pending`); then the
+ * merged root files (_redirects with the Pages limits, robots.txt, the sitemap index naming every sitemap file and no
+ * index, the home page's canonical), the root namespace of the main site (RESERVED_SEGMENTS) and every link of its pages.
+ */
+export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex = false): MergedCheck {
+  const problems: string[] = []
+  const pending = new Set<string>()
+  const say = (m: string): void => {
+    if (problems.length < max) problems.push(m)
+  }
+  const configProblem = mergeConfigProblem(c)
+  if (configProblem) return { problems: [configProblem], pending: [] }
+  if (!existsSync(root)) return { problems: [`${root} does not exist`], pending: [] }
+  const shown = (f: string): string => toPosix(relative(process.cwd(), f)) || '.'
+  const read = (f: string): string | null => (existsSync(join(root, f)) ? readFileSync(join(root, f), 'utf8') : null)
+
+  const redirectsText = read('_redirects')
+  const redirectSources = new Set(
+    redirectRules(redirectsText ?? '')
+      .filter((r) => !r.dynamic)
+      .map((r) => r.from),
+  )
+  const serves = (pathname: string): boolean => servesPath(root, pathname, redirectSources)
+  const onMainSite = (ref: string, url: URL): boolean => {
+    if (serves(url.pathname)) return true
+    if (/^https:\/\//.test(ref) && isMainSiteLink(ref)) {
+      pending.add(`${url.origin}${url.pathname}`)
+      return true
+    }
+    return false
+  }
+
+  for (const p of checkPagesLayout(root, c, max, noindex, {
+    redirects: mergedRedirects(c),
+    mainSite: (ref, url) => onMainSite(ref, url),
+  }))
+    say(p)
+
+  for (const f of ['index.html', '404.html', '_redirects', 'robots.txt', 'sitemap-index.xml'])
+    if (!existsSync(join(root, f))) say(`${shown(join(root, f))} is missing`)
+  if (redirectsText !== null)
+    for (const p of redirectProblems(redirectsText)) say(`${shown(join(root, '_redirects'))}: ${p}`)
+  const robots = read('robots.txt')
+  if (robots !== null && robots !== mergedRobots(c, noindex))
+    say(`${shown(join(root, 'robots.txt'))} is not mergedRobots()${noindex ? ' of a noindex build' : ''}`)
+
+  const index = read('sitemap-index.xml')
+  if (index !== null) {
+    const locs = sitemapLocs(index)
+    const want = new Set<string>()
+    for (const name of readdirSync(root)) if (/^sitemap-\d+\.xml$/.test(name)) want.add(`${c.origin}/${name}`)
+    const runIndex = read(`${siteDir(c)}/sitemap-index.xml`)
+    for (const l of sitemapLocs(runIndex ?? '')) want.add(l)
+    for (const l of locs) {
+      const u = new URL(l)
+      if (u.origin !== c.origin) say(`${shown(join(root, 'sitemap-index.xml'))}: ${l} is not on ${c.origin}`)
+      else if (/sitemap-index\.xml$/.test(u.pathname))
+        say(`${shown(join(root, 'sitemap-index.xml'))}: lists the index ${l}; a sitemap index cannot list one`)
+      else if (!serves(u.pathname)) say(`${shown(join(root, 'sitemap-index.xml'))}: ${l} is not in the build`)
+    }
+    for (const l of want) if (!locs.includes(l)) say(`${shown(join(root, 'sitemap-index.xml'))} does not list ${l}`)
+  }
+
+  const home = read('index.html')
+  const canonical = home === null ? null : /<link rel="canonical" href="([^"]*)"/.exec(home)?.[1]
+  if (home !== null && canonical !== `${c.origin}/`)
+    say(`${shown(join(root, 'index.html'))}: canonical is ${String(canonical)}, not ${c.origin}/`)
+
+  // the main site's pages: everything at the root but the catalog's names
+  const runNames = new Set(runRootNames(c))
+  const reserved = new Set<string>(RESERVED_SEGMENTS.filter((s) => s !== '404'))
+  const pages: string[] = []
+  for (const name of readdirSync(root)) {
+    if (runNames.has(name)) continue
+    if (name.endsWith('.html') && reserved.has(name.slice(0, -5)))
+      say(`${shown(join(root, name))}: /${name.slice(0, -5)} is a reserved path of the main site`)
+    const p = join(root, name)
+    if (statSync(p).isDirectory()) pages.push(...walk(p).filter((f) => f.endsWith('.html')))
+    else if (name.endsWith('.html')) pages.push(p)
+  }
+  for (const f of pages.sort()) {
+    const page = wwwPagePath(toPosix(relative(root, f)))
+    for (const ref of htmlRefs(readFileSync(f, 'utf8'))) {
+      if (NOT_A_PAGE.test(ref)) continue
+      let url: URL
+      try {
+        url = new URL(ref, `${c.origin}${page}`)
+      } catch {
+        say(`${shown(f)}: not a URL: ${ref}`)
+        continue
+      }
+      if (url.origin !== c.origin) continue
+      if (!onMainSite(ref, url)) say(`${shown(f)}: ${ref} is not a page or a file of this build`)
+    }
+  }
+  return { problems, pending: [...pending].sort() }
+}
