@@ -10,12 +10,3 @@ body.wf-agencies .section.om-agencies-math {
 body.wf-agencies .section.om-agencies-margin {
   padding-top: 0;
 }
-/*
- * A Webflow rule of the live stylesheet that site.css loses: there its `max-width: 991px` block of the table comes after
- * the `max-width: 479px` one, so `.table_column { width: 20rem }` wins on a phone; live the column is 16rem wide.
- */
-@media screen and (max-width: 479px) {
-  body.wf-agencies .table_column {
-    width: 16rem;
-  }
-}
