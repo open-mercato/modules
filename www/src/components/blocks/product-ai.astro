@@ -1,0 +1,60 @@
+---
+// "AI-Assisted Module Development" of /product as live has it: the heading beside the lead, then three cards, each
+// with its icon beside the title, and the body.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Icon from './product-icon.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex">
+        <div class="header_content max-width-26rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        {
+          block.lead && (
+            <div class="max-width-33rem">
+              <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+            </div>
+          )
+        }
+      </div>
+      <div class="spacer-large"></div>
+      <div class="bg-grid_component is-3-col">
+        {
+          block.items.map((item) => (
+            <div class="bg-grid_card">
+              <div class="bg-grid_card-content">
+                <div class="bg-grid_heading-wrapper">
+                  {item.icon && (
+                    <div class="icon-embed-small w-embed">
+                      <Icon icon={item.icon} />
+                    </div>
+                  )}
+                  {item.title && <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>}
+                </div>
+                <div class="spacer-1rem" />
+                {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Wrap>

@@ -1,0 +1,61 @@
+---
+// "Open Mercato modules are not static plugins" of /product as live has it: the heading and lead stay in view on the
+// left while the numbered groups scroll on the right, each with its number (eyebrow, coloured in turn violet, yellow,
+// green and dark green), title and body (a lead and a list).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline, markdownHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const COLORS = ['is-violet', 'is-yellow', 'is-green', 'is-dark-green']
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="border-grid_component is-2-col is-unequal">
+      <div class="border-grid_card is-right-padding-3rem">
+        <div class="border-grid_card-content is-sticky">
+          <div class="header_content">
+            {
+              block.eyebrow && (
+                <div class="label_component">
+                  <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+                </div>
+              )
+            }
+            {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+            {
+              block.lead && (
+                <>
+                  <div class="spacer-small" />
+                  <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+                </>
+              )
+            }
+          </div>
+        </div>
+        <div class="border-grid_line"></div>
+      </div>
+      <div class="border-grid_card is-unequal-content">
+        {
+          block.items.map((item, i) => (
+            <div class="border-grid_card-content is-unequal">
+              {item.eyebrow && (
+                <div class="label-list_list">
+                  <div class:list={['label-list_item', COLORS[i % COLORS.length]]}>{t(item.eyebrow)}</div>
+                </div>
+              )}
+              {item.title && <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>}
+              {item.body && (
+                <div class="text-rich-text text-color-secondary w-richtext" set:html={markdownHtml(t(item.body))} />
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Wrap>
