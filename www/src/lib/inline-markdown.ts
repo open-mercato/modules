@@ -1,7 +1,7 @@
 // A short Markdown field of the frontmatter (a case study's technology stack) as HTML: paragraphs and bullet lists,
 // with inline code, bold, italics and links. Every other character is text, escaped. Each link goes through `link`
-// (the link rules of bodies, linkAction() of body-html.ts): kept, pointed elsewhere, or rendered as its text. A Markdown body goes through
-// Astro's processor instead; this is for the few fields the schemas type as Markdown inside YAML. Isomorphic.
+// (linkAction() of body-html.ts): kept, pointed elsewhere, or rendered as text. A Markdown body goes through Astro's
+// processor instead; this is for the few fields the schemas type as Markdown inside YAML. Isomorphic.
 
 const escape = (s: string): string =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')

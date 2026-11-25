@@ -4,7 +4,7 @@
 // is the partner list, inlined into the page as JSON at build (the island's props). The server renders every published
 // partner and no controls, so the page is complete without JavaScript; once hydrated the controls appear, the query
 // string selects, and the number of partners shown is announced in a polite live region.
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useRef, useState } from 'preact/hooks'
 import PartnerCard from '../components/partners/PartnerCard.tsx'
 import {
   emptySelection,
@@ -37,6 +37,7 @@ export default function PartnerFilter({ partners, options }: Props) {
   const known = Object.fromEntries(FACETS.map((f) => [f, options[f].map((o) => o.value)])) as unknown as FacetOptions
   const [selected, setSelected] = useState<Selection>(emptySelection())
   const [ready, setReady] = useState(false)
+  const controls = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const read = (): void => setSelected(readSelection(window.location.search, known))
@@ -57,7 +58,7 @@ export default function PartnerFilter({ partners, options }: Props) {
   const facets = FACETS.filter((f) => options[f].length > 0)
   return (
     <div class="partner-filter">
-      <div class="partner-filter__controls" hidden={!ready}>
+      <div class="partner-filter__controls" hidden={!ready} ref={controls}>
         {facets.map((f) => (
           <fieldset key={f} class="partner-filter__facet">
             <legend class="partner-filter__legend">{FACET_LABELS[f]}</legend>
@@ -91,7 +92,15 @@ export default function PartnerFilter({ partners, options }: Props) {
         {shown.length === 0 && (
           <p class="partner-filter__empty">
             No partner matches every filter.
-            <button type="button" class="btn btn--sm btn--secondary" onClick={() => choose(emptySelection())}>
+            <button
+              type="button"
+              class="btn btn--sm btn--secondary"
+              onClick={() => {
+                choose(emptySelection())
+                // the button goes with the empty result: focus stays in the filter
+                controls.current?.querySelector('input')?.focus()
+              }}
+            >
               Clear filters
             </button>
           </p>

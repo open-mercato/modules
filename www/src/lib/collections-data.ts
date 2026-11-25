@@ -1,6 +1,9 @@
 // The Phase 4 collections as the pages read them (astro:content): published case studies, partners and jobs, and the
 // dictionaries they reference. Build only; the selection rules live in case-studies.ts, partners.ts and jobs.ts.
 import { getCollection } from 'astro:content'
+import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
+import { servesFixed } from '../../body-links.ts'
+import type { LinkRules } from './body-html.ts'
 import { publishedCaseStudies, type CaseStudyEntry, type PartnerIndex } from './case-studies.ts'
 import { publishedJobs, type JobEntry } from './jobs.ts'
 import { publishedPartners, type Dictionaries, type Dictionary, type PartnerEntry } from './partners.ts'
@@ -49,6 +52,29 @@ export async function partnerData(): Promise<PartnerData> {
       languages: await dictionary('partnerLanguages'),
       services: await dictionary('partnerServices'),
     },
+  }
+}
+
+/**
+ * The link rules of Markdown bodies (body-html.ts) for a Markdown field a page renders itself (a case study's
+ * technology stack), from the collections this build routes: the rules www/body-links.ts gives Astro's Markdown
+ * processor, without reading files.
+ */
+export async function linkRules(): Promise<LinkRules> {
+  const posts = (await getCollection('blog')) as unknown as { id: string; data: { draft: boolean } }[]
+  const cases = await caseStudyData()
+  const partners = await partnerData()
+  const jobs = await jobData()
+  const ids = (xs: { id: string }[]): Set<string> => new Set(xs.map((x) => x.id))
+  return {
+    origin: MAIN_SITE_ORIGIN,
+    details: new Map([
+      ['blog-posts', ids(posts.filter((p) => !p.data.draft))],
+      ['case-studies', ids(cases.published)],
+      ['certified-partners', ids(partners.published)],
+      ['careers-jobs', ids(jobs)],
+    ]),
+    serves: servesFixed,
   }
 }
 
