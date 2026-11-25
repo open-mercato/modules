@@ -22,17 +22,19 @@ const ICONS = [
     proof.map((claim, i) => (
       <span class="omlp-benefit">
         {ICONS[i] && <img src={ICONS[i]} loading="lazy" alt="" class="omlp-benefit-icon" />}
-        {tokenParts(claim, counts).map((p) =>
-          'text' in p ? (
-            p.text
-          ) : p.token === 'githubStars' ? (
-            <span data-om-star-count class={p.value === null ? 'omlp-star-slot' : undefined}>
-              {p.value ?? ''}
-            </span>
-          ) : (
-            (p.value ?? '')
-          ),
-        )}
+        <span>
+          {tokenParts(claim, counts).map((p) =>
+            'text' in p ? (
+              p.text
+            ) : p.token === 'githubStars' ? (
+              <span data-om-star-count class={p.value === null ? 'omlp-star-slot' : undefined}>
+                {p.value ?? ''}
+              </span>
+            ) : (
+              (p.value ?? '')
+            ),
+          )}
+        </span>
       </span>
     ))
   }

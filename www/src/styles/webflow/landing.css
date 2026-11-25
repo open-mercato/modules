@@ -1561,3 +1561,10 @@ body:has(.omlp) .site-footer .ft__giant {
 body:has(.omlp) .site-footer .ft__other {
   margin: 28px 0;
 }
+
+/* The proof line's star count (ProofBadges.astro): an empty slot until the navbar's count fills it, then a space
+   before "stars on GitHub", as the live text reads. */
+.omlp-star-slot:not(:empty)::after {
+  content: ' ';
+  white-space: pre;
+}
