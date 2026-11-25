@@ -807,6 +807,8 @@ export function landingEntry(
       : undefined,
     draft: page.draft || undefined,
   })
+  const embeds = nodes.filter((n) => n.type === 'html-embed').length
+  if (embeds > 0) t.note(`${embeds} embed(s) (the landing animation) left to the template, Phase 5 (Q4)`)
   const entry = validate(ctx, { collection: 'landings', id: slug, webflowId: page.id, draft: page.draft, data })
   t.commit()
   ctx.report.crossChecked.push(slug)
