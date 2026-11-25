@@ -969,11 +969,13 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
    ```
 
    If Cloudflare > zone `openmercato.com` > Rules > Redirect Rules has no rule for the apex, the 301 comes from
-   Webflow and stops with the switch. A Cloudflare rule runs only on a proxied record: first make sure the apex
-   records (DNS, name `openmercato.com`) are proxied (orange cloud); if they point at Webflow DNS only, point them at
-   a proxied placeholder (`192.0.2.1`, proxied) in the same change. Then add a single redirect rule before C8: hostname equals `openmercato.com`,
-   dynamic target `concat("https://www.openmercato.com", http.request.uri.path)`, status 301, preserve the query
-   string. Pass: the apex line of the C6 report reads `pass` (run C6 again after a change).
+   Webflow and stops with the switch. Then, before C8 and in this order: (1) add a single redirect rule: hostname
+   equals `openmercato.com`, dynamic target `concat("https://www.openmercato.com", http.request.uri.path)`, status
+   301, preserve the query string; (2) a Cloudflare rule runs only on a proxied record, so if the apex records (DNS,
+   name `openmercato.com`) point at Webflow DNS only, replace them with one proxied placeholder `A 192.0.2.1`; with
+   the rule already in place the apex keeps answering the 301. Check with
+   `curl -sI https://openmercato.com/ | grep -iE '^(HTTP|location)'`. Pass: the apex line of the C6 report reads
+   `pass` (run C6 again after a change).
 
 8. **C8 Switch.** In order:
    1. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`. Run `pages` by hand. The

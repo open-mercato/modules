@@ -16,6 +16,7 @@ import {
   kindOf,
   mergeTargets,
   reportMarkdown,
+  sampleTarget,
   sitemapTargets,
   type Report,
   type Target,
@@ -156,6 +157,7 @@ beforeAll(async () => {
     '/docs/platform-overview': { status: 200, html: livePage(page) },
     '/old-pricing': { status: 301, location: '/product' },
     '/apex': { status: 301, location: 'https://www.openmercato.com/' },
+    '/old-home': { status: 301, location: 'https://www.openmercato.com/' },
     '/old-blog/compare-live-sample': {
       status: 301,
       location: 'https://www.openmercato.com/blog-posts/compare-live-sample',
@@ -370,6 +372,11 @@ describe('compareLive against two servers', () => {
 })
 
 describe('rules of redirects.yaml with a splat or an absolute target', () => {
+  it('samples the splat and placeholders of a target path, never its query', () => {
+    expect(sampleTarget('/blog-posts/:splat')).toBe('/blog-posts/compare-live-sample')
+    expect(sampleTarget('/p/:id/x?q=a:b')).toBe('/p/sample/x?q=a:b')
+  })
+
   it('expects the splat sample in the target, and an absolute target on the candidate as a path', async () => {
     const r = await compareLive({
       live: live.origin,
@@ -385,10 +392,8 @@ describe('rules of redirects.yaml with a splat or an absolute target', () => {
     })
     expect(r.urls.map((u) => [u.path, u.kind, u.result])).toEqual([
       ['/old-blog/compare-live-sample', 'redirect', 'pass'],
-      ['/old-home', 'redirect', 'fail'],
+      ['/old-home', 'redirect', 'pass'],
     ])
-    // the live site answers 404 for /old-home: the status class differs, the target does not
-    expect(r.urls[1]!.failures.map((d) => d.field)).toEqual(['status'])
   })
 })
 

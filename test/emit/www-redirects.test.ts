@@ -111,9 +111,14 @@ describe('loops and chains', () => {
 
   it('fails a splat whose target prefix holds a fixed source', () => {
     expect(redirectChainProblems('/a/* /b/:splat 301\n/b/c /d 301\n', ORIGIN)).toEqual([
-      'the redirect from /a/* is a chain of 2 hops for paths under /b/: /a/* -> /b/c; point it at the last target',
+      'the redirect from /a/* is a chain of 2 hops: /a/* -> /b/c; point it at the last target',
     ])
     expect(redirectChainProblems('/a/* /b/:splat 301\n/c/d /e 301\n', ORIGIN)).toEqual([])
+    // a placeholder names one segment, and the rest of the target must match too
+    expect(redirectChainProblems('/a/:id /b/:id/c 301\n/b/z /d 301\n', ORIGIN)).toEqual([])
+    expect(redirectChainProblems('/a/:id /b/:id/c 301\n/b/z/c /d 301\n', ORIGIN)).toHaveLength(1)
+    // a folder dropped (`/:splat`) reaches every fixed rule; the merge's own rules do not block it
+    expect(redirectChainProblems(`${mergedRedirects(WWW)}/en/* /:splat 301\n`, ORIGIN)).toEqual([])
   })
 
   it('fails a loop, itself included', () => {

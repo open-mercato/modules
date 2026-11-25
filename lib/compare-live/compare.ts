@@ -149,7 +149,10 @@ export function samplePath(from: string): string {
 
 /** A rule's target as Pages sends it for samplePath(): the splat and each placeholder take the same samples. */
 export function sampleTarget(to: string): string {
-  return to.replace(/:splat/g, 'compare-live-sample').replace(/:[A-Za-z][A-Za-z0-9_]*/g, 'sample')
+  // only the path takes samples; a query keeps its colons
+  const q = to.indexOf('?')
+  const [path, query] = q < 0 ? [to, ''] : [to.slice(0, q), to.slice(q)]
+  return path.replace(/:splat/g, 'compare-live-sample').replace(/\/:[A-Za-z][A-Za-z0-9_]*/g, '/sample') + query
 }
 
 /** The targets of the sitemap and of redirects.yaml together, each path once, sitemap order first. */

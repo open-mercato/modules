@@ -103,6 +103,20 @@ export function ruleTargetPath(rule: PagesRule, origin: string): string | null {
   return url.origin === origin ? url.pathname : null
 }
 
+/** A _redirects target that takes the splat or a placeholder of its source. */
+export const DYNAMIC_TO = /:splat|\/:[A-Za-z]/
+
+/** The paths a target with the splat or placeholders can name: `:splat` any rest, `:name` one segment. */
+function targetPattern(path: string): RegExp {
+  const body = path
+    .split(/(:splat|:[A-Za-z][A-Za-z0-9_]*)/)
+    .map((part) =>
+      part === ':splat' ? '.*' : part.startsWith(':') ? '[^/]+' : part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'),
+    )
+    .join('')
+  return new RegExp(`^${body}$`)
+}
+
 /**
  * Loops and chains of a _redirects text on `origin`: a rule whose target is the source of a rule (itself included)
  * makes a visitor follow two redirects or more, and a loop never ends. Pages applies the first rule that matches, so
@@ -130,16 +144,15 @@ export function redirectChainProblems(text: string, origin: string): string[] {
       seen.push(next)
       at = rules[next]!
     }
-    // a target with the splat reaches every path under its fixed prefix: a fixed source there is a second hop too
-    if (!loop && seen.length === 1 && /:splat|\/:[A-Za-z]/.test(rule.to)) {
-      const prefix = ruleTargetPath(
-        { ...rule, to: rule.to.replace(/(?::splat|:[A-Za-z][A-Za-z0-9_]*).*$/, '') },
-        origin,
-      )
-      const under = prefix === null ? undefined : rules.find((r) => !/[*:]/.test(r.from) && r.from.startsWith(prefix))
+    // a target with the splat or a placeholder names many paths: a fixed source among them is a second hop too. A
+    // target that is all splat (`/:splat`, a folder dropped) is left out: it reaches every fixed rule of the site.
+    if (!loop && seen.length === 1 && DYNAMIC_TO.test(rule.to)) {
+      const target = ruleTargetPath(rule, origin) === null ? null : new URL(rule.to, `${origin}/`).pathname
+      const pattern = target === null || /^\/:splat/.test(target) ? null : targetPattern(target)
+      const under = pattern === null ? undefined : rules.find((r) => !/[*:]/.test(r.from) && pattern.test(r.from))
       if (under) {
         problems.push(
-          `the redirect from ${rule.from} is a chain of 2 hops for paths under ${prefix}: ${rule.from} -> ${under.from}; point it at the last target`,
+          `the redirect from ${rule.from} is a chain of 2 hops: ${rule.from} -> ${under.from}; point it at the last target`,
         )
         continue
       }
