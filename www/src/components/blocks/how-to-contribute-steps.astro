@@ -1,0 +1,61 @@
+---
+// "Your First 15 Minutes" of /how-to-contribute, the page's HowTo steps: the sticky heading on the left, the numbered
+// cards on the right (the live label colours in order), each line of a card's body on a line of its own.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'steps'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const tones = ['is-violet', 'is-yellow', 'is-green', 'is-dark-green']
+const lines = (s: string): string =>
+  t(s)
+    .split(/\r?\n/)
+    .map((l) => inline(l))
+    .join('<br />')
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-grid is-fast-track">
+        <div class="header_content-wrapper">
+          <div class="header_content is-sticky">
+            {
+              block.eyebrow && (
+                <div class="label_component">
+                  <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+                </div>
+              )
+            }
+            <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />
+            <div class="spacer-small"></div>
+            {block.lead && <p class="text-color-secondary" set:html={inline(t(block.lead))} />}
+          </div>
+        </div>
+        <div class="bg-grid_component is-gap-3rem">
+          {
+            block.items.map((item, i) => (
+              <div class="bg-grid_card-wrapper">
+                {item.eyebrow && <div class:list={['label-list_item', tones[i % tones.length]]}>{t(item.eyebrow)}</div>}
+                <div class="bg-grid_card">
+                  <div class="bg-grid_card-content">
+                    {item.title && (
+                      <div class="bg-grid_heading-wrapper">
+                        <h3 class="text-size-large">{t(item.title)}</h3>
+                      </div>
+                    )}
+                    <div class="spacer-1rem" />
+                    {item.body && <p class="text-color-secondary" set:html={lines(item.body)} />}
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

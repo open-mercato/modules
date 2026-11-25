@@ -1,0 +1,58 @@
+---
+// "What AI-assisted engineering requires from you" of /learn-ai-engineering: the heading (42rem), then one wide card
+// with the text and its arrow link.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import arrow from './learn-ai-engineering-arrow.svg?raw'
+
+type Props = BlockProps<'cta'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          <div class="max-width-42rem">
+            <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />
+          </div>
+        </div>
+      </div>
+      <div class="spacer-large"></div>
+      <div class="bg-grid_component">
+        <div class="bg-grid_card">
+          <div class="bg-grid_card-content is-honesty">
+            {
+              block.body && (
+                <div class="max-width-42rem">
+                  <p class="text-color-secondary" set:html={inline(t(block.body))} />
+                </div>
+              )
+            }
+            {
+              block.primary && (
+                <div class="bg-grid_link-wrapper is-horizontal is-no-grow">
+                  <a href={block.primary.href} target="_blank" class="button is-arrow no-padding w-inline-block">
+                    <div>{t(block.primary.label)}</div>
+                    <div class="button_icon is-arrow w-embed" set:html={arrow} />
+                  </a>
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

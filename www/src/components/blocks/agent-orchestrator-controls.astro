@@ -1,0 +1,76 @@
+---
+// "Two controls make it production-grade" of /agent-orchestrator: the heading beside a two-column grid of cards (an
+// icon, a title, its labels, the text); a card with text only spans both columns (the live grid cell
+// #w-node-b2531f73..., site.css). The screenshot follows.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import icon1 from './agent-orchestrator-controls-1.svg?raw'
+import icon2 from './agent-orchestrator-controls-2.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const icons = [icon1, icon2]
+---
+
+<Wrap>
+  <div class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-grid is-agent">
+        <div class="header_content">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        <div class="bg-grid_component is-2-col">
+          {
+            block.items.map((item, i) =>
+              item.title ? (
+                <div class="bg-grid_card">
+                  <div class="bg-grid_card-content">
+                    <div class="bg-grid_heading-wrapper is-vertical">
+                      {icons[i] && <div class="icon-embed-small w-embed" set:html={icons[i]} />}
+                      <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>
+                      {item.points && (
+                        <div class="label-list_list">
+                          {item.points.map((p) => (
+                            <div class="label-list_item" set:html={inline(t(p))} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div class="spacer-medium" />
+                    {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+                  </div>
+                </div>
+              ) : (
+                <div id="w-node-b2531f73-e3b7-bb55-d42d-8827094d90c6-9ed10ca9" class="bg-grid_card">
+                  <div class="bg-grid_card-content">
+                    {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+                  </div>
+                </div>
+              ),
+            )
+          }
+        </div>
+      </div>
+      {
+        block.image && (
+          <>
+            <div class="spacer-large" />
+            <div class="asset_component">
+              <img src={block.image.src} loading="lazy" alt={block.image.alt} class="asset_image" />
+            </div>
+          </>
+        )
+      }
+    </div>
+  </div>
+</Wrap>

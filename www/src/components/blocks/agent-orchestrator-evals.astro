@@ -1,0 +1,65 @@
+---
+// "Stop guessing whether your agent is any good" of /agent-orchestrator: the heading, then two bordered cards, each an
+// icon and title, its labels, the text and its screenshot.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import icon1 from './agent-orchestrator-evals-1.svg?raw'
+import icon2 from './agent-orchestrator-evals-2.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const icons = [icon1, icon2]
+---
+
+<Wrap>
+  <section class="section no-bottom-border no-bottom-padding" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-2-col">
+      {
+        block.items.map((item, i) => (
+          <div class="border-grid_card is-image-asset">
+            <div class="border-grid_card-content">
+              <div class="bg-grid_heading-wrapper">
+                {icons[i] && <div class="icon-embed-small w-embed" set:html={icons[i]} />}
+                {item.title && <h3 class="text-size-large">{t(item.title)}</h3>}
+              </div>
+              <div class="spacer-1rem" />
+              {item.points && (
+                <div class="label-list_list">
+                  {item.points.map((p) => (
+                    <div class="label-list_item" set:html={inline(t(p))} />
+                  ))}
+                </div>
+              )}
+              <div class="spacer-1rem" />
+              {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+            </div>
+            {i < block.items.length - 1 && <div class="border-grid_line" />}
+            {item.image && (
+              <div class="asset_component">
+                <img src={item.image.src} loading="lazy" alt={item.image.alt} class="asset_image" />
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>
