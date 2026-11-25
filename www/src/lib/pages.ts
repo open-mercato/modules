@@ -133,3 +133,23 @@ export function listPageCopy(
     throw new Error(`www/content/pages/${slug}.yaml: a list page holds exactly one hero block`)
   return { seo: e.data.seo, hero }
 }
+
+/**
+ * The items of a block, each with the fields a layout needs (optional in the schema, which every layout shares). A
+ * missing one stops the build naming the page, the layout and the item, instead of a bare TypeError or a link to
+ * `undefined`.
+ */
+export function itemsWith<I extends object, K extends keyof I>(
+  where: { page: string; layout?: string },
+  items: readonly I[],
+  fields: readonly K[],
+): (I & Required<Pick<I, K>>)[] {
+  items.forEach((item, i) => {
+    const missing = fields.filter((f) => item[f] === undefined)
+    if (missing.length > 0)
+      throw new Error(
+        `www/content/pages/${where.page}.yaml ${where.layout ?? 'block'} items.${i}: needs ${missing.join(', ')}`,
+      )
+  })
+  return items as (I & Required<Pick<I, K>>)[]
+}

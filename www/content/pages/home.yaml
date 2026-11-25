@@ -6,12 +6,11 @@ seo:
 jsonLd:
   type: WebPage
 blocks:
-  # the hero: `eyebrow` is the release badge (the browser shows the latest release of GitHub, as live), `label` the
-  # line beside it, `primary` and `secondary` the first two buttons, `note` the third (one link); `items` the
-  # assistants it works with, by name (the component draws their marks)
+  # the hero: the release badge shows the core version of the catalog's data (the browser then shows the latest
+  # release of GitHub, as live), `label` is the line beside it, `primary` and `secondary` the first two buttons, `note`
+  # the third (one link); `items` the assistants it works with, by name (the component draws their marks)
   - type: hero
     layout: home-hero
-    eyebrow: v0.9.0
     label: Open source · MIT licensed
     title: Start with *80% done*
     lead: The open-source framework for building business apps. Create your CRM, warehouse system, or whole ERP with AI. Safer and faster than building from scratch.

@@ -5,6 +5,7 @@ import { wwwSchemas } from '../../lib/schema/www-content.ts'
 import { headingHtml, proseHtml } from '../../www/src/lib/inline-markdown.ts'
 import {
   blockComponent,
+  itemsWith,
   listPageCopy,
   pageEntry,
   pageJsonLd,
@@ -121,6 +122,16 @@ describe('the Markdown of unique pages', () => {
     expect(proseHtml(md)).toBe(
       '<h2>Privacy</h2><p>We <strong>care</strong>.</p><h4>Form</h4><ol><li>One</li><li>Two continued</li></ol>' +
         '<ol start="3"><li>Three</li></ol><ul><li>a</li><li><a href="mailto:x@y.z">b</a></li></ul>',
+    )
+  })
+})
+
+describe('the fields a layout needs', () => {
+  it('passes items that have them, and names the page, layout and item of one that does not', () => {
+    const items = [{ title: 'A', video: 'dQw4w9WgXcQ' }, { title: 'B' }] as { title?: string; video?: string }[]
+    expect(itemsWith({ page: 'home', layout: 'home-academy' }, items.slice(0, 1), ['title', 'video'])).toHaveLength(1)
+    expect(() => itemsWith({ page: 'home', layout: 'home-academy' }, items, ['title', 'video'])).toThrow(
+      'www/content/pages/home.yaml home-academy items.1: needs video',
     )
   })
 })

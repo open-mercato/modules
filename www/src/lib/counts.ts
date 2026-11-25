@@ -5,7 +5,7 @@
 // the badge in the browser. A build without the catalog's output prints no count at all: never a typed number.
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { moduleCountOf, type CountValues } from '../../../lib/core/www-tokens.ts'
+import { coreVersionOf, moduleCountOf, type CountValues } from '../../../lib/core/www-tokens.ts'
 
 const MODULES_JSON = fileURLToPath(new URL('../../../site/.generated/public/modules.json', import.meta.url))
 
@@ -20,4 +20,9 @@ export function countValues(): CountValues {
   }
   cached = values
   return values
+}
+
+/** The core version of the catalog's modules.json of this build (coreVersionOf), or undefined without the file. */
+export function coreVersion(): string | undefined {
+  return existsSync(MODULES_JSON) ? coreVersionOf(JSON.parse(readFileSync(MODULES_JSON, 'utf8'))) : undefined
 }
