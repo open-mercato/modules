@@ -1,0 +1,17 @@
+---
+// The video carousel of the main site, the live home slider (www/src/lib/carousel.ts: markup and checks;
+// www/src/styles/webflow/carousel.css: look; www/src/scripts/carousel.ts: behavior). For the home page of Phase 6:
+//   <Carousel label="Customer videos" noun="customer video" placement="stories" items={[{ video, title, thumbnail }]} />
+// A bad item (no YouTube id, a poster that is not a site file) stops the build.
+import '../styles/webflow/carousel.css'
+import { carouselHtml, type CarouselProps } from '../lib/carousel.ts'
+
+type Props = CarouselProps
+const html = carouselHtml(Astro.props)
+---
+
+<Fragment set:html={html} />
+
+<script>
+  import '../scripts/carousel.ts'
+</script>
