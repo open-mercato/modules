@@ -685,8 +685,8 @@ merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build
 
 - **Catalog only** (production today, and the `run-preview` jobs): `dist-run/` moved to `dist/` as it is.
 - **Merged** (`PAGES_MERGED=1`): `yarn om pages-site --merge` lays `dist-www/` at the root of `dist/` and the catalog's
-  nested build under `/run`, and writes the root `_redirects` (the main site's `/sitemap.xml`, then the catalog's
-  rules), `robots.txt` and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. The
+  nested build under `/run`, and writes the root `_redirects` (the main site's `/sitemap.xml`, the catalog's
+  rules, then the main site's `www/content/redirects.yaml`), `robots.txt` and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. The
   catalog's `_routes.json`, `schema/` and fixed root files stay until its Functions leave (Phase 1c of the spec).
   `yarn om pages-site` writes `merged: true` into `functions/site.ts`, so a `*.pages.dev` address serves every path
   as a static file; the old hosts are moved as before. `yarn om pages-site --check dist` with `PAGES_MERGED=1` proves
@@ -861,6 +861,166 @@ the Pages project) merges only after these pass.
 **Rollback.** Workers & Pages > `openmercato-old-hosts` > Settings > Domains & Routes: remove both routes (or
 `yarn wrangler delete --name openmercato-old-hosts`). Until Phase 1c the Functions answer again from the next request.
 After Phase 1c, first revert that pull request and run `pages`, then remove the routes.
+
+## Main site switch (www migration, steps C1 to C10)
+
+www.openmercato.com moves from Webflow to the merged layout of the Pages project `open-mercato-modules` (spec
+[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), Cutover). Each step waits for
+the one before it. Webflow stays published and paid for 30 days after C8, so C10 can undo the switch.
+
+**Tools.** `yarn om compare-live` requests every URL of a sitemap and every rule of `www/content/redirects.yaml` on a
+reference and a candidate, without following redirects, at most 4 requests at a time, and compares the status class,
+the redirect target, `<title>`, meta description, `h1`, the main text (navbar and footer removed, word similarity at
+least 0.97), the image count, and canonical, `og:title`, `og:image` and JSON-LD on the candidate. A docs URL
+(`/docs`, `/docs/*`, `/documentation`) must answer a 301 to docs.openmercato.com on the candidate, the target of the
+docs map when it names one. It also checks that `https://openmercato.com/` answers a 301 to
+`https://www.openmercato.com/`. It writes `out/compare-live/report.md` (counts per kind, every failure with its field,
+every URL) and `out/compare-live/report.json` (a later run's `--baseline`), and exits 1 on any fail. `--planned <file>`
+lists intended differences, a YAML list of `{ url, field, note }` (`url` a path, a trailing `*` matches a prefix;
+`field` one of `status`, `redirect`, `title`, `description`, `h1`, `text`, `images`, `canonical`, `og:title`,
+`og:image`, `json-ld`); any other difference fails.
+
+**Redirects.** `www/content/redirects.yaml` holds the main site's 301s: the Webflow panel list (`source:
+webflow-panel`, empty until C4), then the docs map (`source: docs-map`, written by
+`yarn om import-webflow --only redirects`, with the `/docs/*` catch-all last). The www build validates the file and
+writes its rules to `dist-www/_redirects`; `yarn om pages-site --merge` appends them to the root `_redirects` after the
+merge's own rules (`/sitemap.xml`, the catalog's `/run` rules) and refuses a loop, a chain longer than one hop or a
+source given twice. `yarn om pages-site --check dist` with `PAGES_MERGED=1` wants the root rules equal to the yaml of
+the checkout, no loop or chain, no rule that hides a file of the upload, every target on the site a page or a file of
+the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and 100).
+
+1. **C1 Freeze.** The team stops editing Webflow. From here every content change is a pull request on
+   `www/content/**`, reviewed and merged by the owner of the main site's content (spec, D10). A post that must publish
+   during the freeze is written in the repository.
+2. **C2 The `/run` switch is done and stable** (Switch, in order, above, all 8 steps), and the old hosts run on their
+   Worker with no Functions in the Pages project (Old hosts on a Worker, above, and Phase 1c of the spec). Check:
+
+   ```sh
+   docs/proxy/check.sh https://www.openmercato.com
+   # 0 failed
+   docs/proxy/check.sh https://modules.openmercato.com
+   # 0 failed
+   ```
+
+3. **C3 Final export and delta (owner, on a workstation).** With the read-only token in `WEBFLOW_TOKEN`:
+
+   ```sh
+   yarn om webflow-export --dir ~/webflow-export-final
+   yarn om import-webflow --export ~/webflow-export-final
+   ```
+
+   The export never enters the repository. `out/import-webflow/report.md` lists conflicts (files edited since the
+   first import, kept unless `--force <path>` names them) and items gone from the export. Open one pull request with
+   the changed files and the report's summary; it shows only what changed since the first import.
+
+4. **C4 The Webflow 301 list (D8).** In Webflow, Site settings > Publishing > 301 redirects: copy every rule. Add each
+   one to `www/content/redirects.yaml` right below the comment that marks `source: webflow-panel`, before the docs
+   map, as:
+
+   ```yaml
+   - from: /old-path
+     to: /new-path
+     status: 301
+     source: webflow-panel
+   ```
+
+   `to` is a path of the site or an `https://` address. A Webflow rule written with a trailing slash or a wildcard is
+   written as Pages reads it (`/x/*` for a folder). Then, on a workstation:
+
+   ```sh
+   export SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules PAGES_MERGED=1 PAGES_NOINDEX=1
+   yarn build && yarn om pages-site --merge && yarn om pages-site && yarn om pages-site --check dist
+   git checkout functions/site.ts
+   ```
+
+   The merge names every loop and every chain (a target that is itself redirected: point the rule at the last
+   target); the check names every target that is not a page of the build. Open a pull request with the file.
+   `yarn om import-webflow` keeps these rules on every later run.
+
+5. **C5 Preview.** The `pages` run of that merge deploys `https://www-preview.open-mercato-modules.pages.dev/`. Check
+   that it is not indexed:
+
+   ```sh
+   curl -sI https://www-preview.open-mercato-modules.pages.dev/ | grep -i '^x-robots-tag'
+   # x-robots-tag: noindex
+   ```
+
+6. **C6 Compare.** Keep the Webflow sitemap (after C8 `/sitemap.xml` redirects to the new index), then compare:
+
+   ```sh
+   curl -s https://www.openmercato.com/sitemap.xml -o ~/webflow-sitemap.xml
+   yarn om compare-live --live https://www.openmercato.com \
+     --candidate https://www-preview.open-mercato-modules.pages.dev \
+     --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned ~/planned.yaml
+   cp out/compare-live/report.json ~/compare-live-c6.json
+   ```
+
+   Pass: `0 failed`. Each intended difference (the four new descriptions, token-filled numbers, replaced dashes) is
+   in `~/planned.yaml` with its URL and field; anything else is fixed in a pull request and C6 runs again. Keep
+   `~/compare-live-c6.json` for C8. Then a person compares every page template side by side on desktop and phone: one
+   landing per kind, the Polish landing, each unique page, one detail page per collection, the lists with their
+   filters, and the 404. The designer signs off the design.
+
+7. **C7 Apex.** Find out who answers `https://openmercato.com/` today:
+
+   ```sh
+   curl -sI https://openmercato.com/ | grep -iE '^(HTTP|location|server)'
+   ```
+
+   If Cloudflare > zone `openmercato.com` > Rules > Redirect Rules has no rule for the apex, the 301 comes from
+   Webflow and stops with the switch. Then add a single redirect rule before C8: hostname equals `openmercato.com`,
+   dynamic target `concat("https://www.openmercato.com", http.request.uri.path)`, status 301, preserve the query
+   string. Pass: the apex line of the C6 report reads `pass` (run C6 again after a change).
+
+8. **C8 Switch.** In order:
+   1. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`. Run `pages` by hand. The
+      production checks run `yarn om pages-site --check dist` on the merged layout, where every page the menus link
+      must be in the build. Then `https://open-mercato-modules.pages.dev/` is the main site and
+      `https://open-mercato-modules.pages.dev/run/modules` the catalog; www still shows Webflow.
+   2. Write down the current `www` record (Cloudflare > zone `openmercato.com` > DNS, its type and target) for C10.
+   3. Workers & Pages > `open-mercato-modules` > Custom domains > Set up a custom domain: `www.openmercato.com`.
+      Cloudflare repoints the `www` record from Webflow to the project. Wait until the domain shows Active.
+   4. Remove the Worker route `www.openmercato.com/run*` of the `/run` proxy (Workers & Pages >
+      `openmercato-run-proxy` > Settings > Domains & Routes). Until it is removed it proxies `/run` to the same
+      project, so the order is safe.
+   5. Compare against the C6 snapshot of the preview, then the checks of the old hosts and of `/run`:
+
+      ```sh
+      yarn om compare-live --baseline ~/compare-live-c6.json --candidate https://www.openmercato.com \
+        --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned ~/planned.yaml
+      docs/proxy/check.sh https://www.openmercato.com
+      curl -sI https://www.openmercato.com/ | grep -i '^x-robots-tag'
+      # nothing: production is indexed
+      curl -s https://www.openmercato.com/robots.txt
+      # User-agent: *, Allow: / and Sitemap: https://www.openmercato.com/sitemap-index.xml
+      ```
+
+      and the commands of step 5 of Switch, in order, above. Pass: `0 failed` and every result as named. Note the
+      date and time: C10 lists the pull requests merged since.
+9. **C9 After.** Search Console, property www.openmercato.com: submit `https://www.openmercato.com/sitemap-index.xml`.
+   The owner of the automation that writes docs into the Webflow `docs` collection turns it off (spec, Q1). Webflow
+   stays published and paid for 30 days. For 14 days, daily: Search Console, Pages, the counts of "Not found (404)" and
+   "Page with redirect". Roll back (C10) when more than 10 new 404s are not in `~/webflow-sitemap.xml`, or the indexed
+   pages fall by more than 10% against the day before C8.
+
+**C10 Rollback** (within the 30 days; target 30 minutes):
+
+1. Workers & Pages > `open-mercato-modules` > Custom domains: remove `www.openmercato.com`.
+2. Cloudflare > zone `openmercato.com` > DNS: point the `www` record back to the Webflow target written down at C8.
+   The domain stays attached in Webflow for the 30 days, so Webflow answers again.
+3. Restore the Worker route `www.openmercato.com/run*` of the `/run` proxy, its upstream
+   `https://open-mercato-modules.pages.dev` ([docs/proxy/README.md](proxy/README.md), Switch day).
+4. Check: `docs/proxy/check.sh https://www.openmercato.com` ends with `0 failed`, and
+   `curl -sI https://www.openmercato.com/ | grep -iE '^(HTTP|server)'` names Webflow again.
+
+The old hosts are not affected: their Worker reads the `pages.dev` address. `PAGES_MERGED` can stay `1`; nothing
+serves the root of the project then. Webflow has no docs map, so `/docs/*` answers as before the switch. Content and
+redirects merged in the repository since C8 are copied to Webflow by hand; list them with:
+
+```sh
+gh pr list --state merged --search "merged:>=YYYY-MM-DD" --json number,title,files \
+  --jq '.[] | select(any(.files[]; .path | startswith("www/content/"))) | "#\(.number) \(.title)"'
+```
 
 ## Triage of submissions
 
