@@ -48,7 +48,7 @@ describe('validate --offline on the seed descriptors', () => {
     expect(code).toBe(0)
     const report = JSON.parse(readFileSync(join(out, 'validate.json'), 'utf8')) as {
       entries: { status: string; findings: { severity: string }[] }[]
-      global: { severity: string; code: string }[]
+      global: { severity: string; code: string; message: string }[]
     }
     expect(report.entries).toHaveLength(59)
     expect(report.entries.filter((e) => e.status !== 'pass')).toEqual([])
