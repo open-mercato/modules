@@ -47,7 +47,8 @@ describe('the built behavior of the main site', () => {
   })
 
   describe.skipIf(!built)('dist-www', () => {
-    const pages = htmlFiles(DIST)
+    // a skipped describe still runs its body at collection, so read dist-www only when it is built
+    const pages = built ? htmlFiles(DIST) : []
 
     it('every page loads GA4 in its head, with no Consent Mode call, the CTA tracker and the cookie banner', () => {
       expect(pages.length).toBeGreaterThan(50)
