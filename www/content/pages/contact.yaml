@@ -1,0 +1,66 @@
+webflowId: 69af3df2d63be60b559a974d
+seo:
+  title: Contact | Open Mercato
+  description: Get in touch with Open Mercato for enterprise inquiries, implementation partnerships, or questions. Email info@openmercato.com or join our community.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: ContactPage
+blocks:
+  - type: hero
+    layout: contact-header
+    eyebrow: Contact
+    title: Get in touch
+    lead: Whether you're exploring Open Mercato for your enterprise, want to become an Implementation Partner, or just have a question - we'd love to hear from you.
+    primary:
+      label: info@openmercato.com
+      href: mailto:info@openmercato.com
+    note: By contacting us or using this website you agree to our [Terms & Conditions / Privacy Policy](/terms-conditions).
+    items:
+      - title: Social Media
+        points:
+          - "[LinkedIn](https://www.linkedin.com/company/open-mercato/)"
+          - "[X](https://x.com/OpenMercato)"
+          - "[Discord](https://discord.gg/f4qwPtJ3qA)"
+          - "[Github](https://github.com/open-mercato/open-mercato)"
+  - type: team
+    layout: contact-team
+    id: contact-team
+    title: Meet the people behind *Open Mercato*
+    members:
+      - name: Tomasz Karwatka
+        role: CEO & Co-Founder
+        url: https://www.linkedin.com/in/tkarwatka/
+        photo:
+          src: /media/pages/6aab8968d8d698564577b3f1-tomasz-karwatka-2026.png
+          alt: Tomasz Karwatka
+        bio: Co-founder of Divante and Callstack, both scaled to enterprise clients across Europe and the US and exited. Investor at Catch The Tornado, now all-in on Open Mercato.
+      - name: Piotr Karwatka
+        role: CTO & Founder
+        url: https://www.linkedin.com/in/piotrkarwatka/
+        photo:
+          src: /media/pages/6aab84a929384ef36bc35d30-piotr-karwatka-2026.png
+          alt: Piotr Karwatka
+        bio: Creator of Vue Storefront and co-founder of Alokai (Y Combinator, $40M Series A). Now focused on AI-native business software.
+      - name: Patryk Lewczuk
+        role: Co-Founder & Core Developer
+        url: https://www.linkedin.com/in/patryk-lewczuk-poland/
+        photo:
+          src: /media/pages/6aab8968fbccf4771786b62e-patryk-lewczuk-2026.png
+          alt: Patryk Lewczuk
+        bio: Core Developer and Forward Deployed Engineer, earlier Development Lead and Solution Architect building B2B e-commerce systems. At Open Mercato responsible for Cezar, Agent Orchestrator and customer success.
+      - name: Maciej Gren
+        role: Co-Founder & Partnership Manager
+        url: https://www.linkedin.com/in/maciejgren/
+        photo:
+          src: /media/pages/6aab8969d97d6b56a612ce27-maciej-gren-2026.png
+          alt: Maciej Gren
+        bio: Building and growing the Open Mercato Partner Network, connecting software agencies, freelancers, and strategic partners with the framework. Together with Patryk, responsible for customer success.
+  - type: features
+    layout: contact-details
+    items:
+      - title: Address
+        body: |-
+          Open Mercato Sp. z o.o.\
+          Wyspa Słodowa 7, 50-266 Wrocław, Poland, REGON 545230330, NIP 8982336029, KRS 0001253104, share capital 5000 PLN.
+      - title: Brand Kit
+        body: "[Download logo & brand media kit](https://drive.google.com/file/d/1bKtrT6O_qGyoAYrWoo4vbF0oV607Wk7Q/view?usp=sharing)"

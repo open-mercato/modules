@@ -1,0 +1,72 @@
+---
+// The header section of /contact as live: the breadcrumb, the heading, the lead, the e-mail address (`primary`, with
+// the envelope mark), the `note` under it, and each item as the list of links beside it (its title is in the markup and
+// hidden by the page's code, www/src/styles/webflow/pages/contact.css). The address is a plain mailto: link; live
+// Webflow hides it behind Cloudflare's e-mail protection, which this site does not use.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Crumbs from '../Crumbs.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import { pagePath, type BlockProps } from '../../lib/pages.ts'
+import { richInline } from './about-rich.ts'
+import envelope from './contact-email.svg?raw'
+
+type Props = BlockProps<'hero'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component max-width-50rem">
+        <div class="header_content">
+          {block.eyebrow && <Crumbs current={{ name: t(block.eyebrow), href: pagePath(page) }} />}
+          <div class="max-width-33rem"><h1 set:html={headingHtml(t(block.title))} /></div>
+          {block.lead && <div class="spacer-small" />}
+          {
+            block.lead && (
+              <div class="max-width-42rem">
+                <p class="text-color-secondary" set:html={richInline(t(block.lead), false)} />
+              </div>
+            )
+          }
+          <div class="spacer-medium" />
+          <div class="button-group is-contact">
+            {
+              block.primary && (
+                <a href={block.primary.href} class="bg-grid_heading-wrapper w-inline-block">
+                  <div class="border-grid_icon-wrapepr">
+                    <div class="border-grid_icon w-embed" set:html={envelope} />
+                  </div>
+                  <div>{t(block.primary.label)}</div>
+                </a>
+              )
+            }
+            {block.note && <div class="text-size-small text-color-secondary" set:html={richInline(t(block.note), false)} />}
+          </div>
+          {
+            block.items?.map((item) => (
+              <div class="border-grid_card">
+                <div class="border-grid_card-content">
+                  {item.title && <h3 class="text-size-large">{t(item.title)}</h3>}
+                  <div class="spacer-large" />
+                  {item.points && (
+                    <div class="text-rich-text text-color-secondary w-richtext">
+                      <ul role="list">
+                        {item.points.map((p) => (
+                          <li set:html={richInline(t(p), false)} />
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                <div class="border-grid_line" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

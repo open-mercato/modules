@@ -1,0 +1,64 @@
+---
+// "What your team gets" of /agencies as live: the eyebrow and heading with the body beside them, then a bordered grid
+// of three columns, one card per item: its icon, title and body (the grid's lines as Webflow draws them).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import { richInline } from './about-rich.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const rows = Math.ceil(block.items.length / 3)
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex">
+        <div class="header_content max-width-26rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        {
+          block.body && (
+            <div class="max-width-26rem">
+              <p class="text-color-secondary" set:html={richInline(t(block.body), false)} />
+            </div>
+          )
+        }
+      </div>
+    </div>
+    <div class="spacer-large" />
+    <div class="border-grid_component is-3-col">
+      {
+        block.items.map((item, i) => (
+          <div class="border-grid_card">
+            <div class="border-grid_card-content">
+              {item.icon && (
+                <div class="border-grid_icon-wrapepr">
+                  <div class="border-grid_icon w-embed">
+                    <img src={item.icon.src} alt={item.icon.alt} width="20" height="20" />
+                  </div>
+                </div>
+              )}
+              <div class="spacer-1rem" />
+              {item.title && <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>}
+              <div class="spacer-1rem" />
+              {item.body && <p class="text-color-secondary" set:html={richInline(t(item.body), false)} />}
+            </div>
+            {i % 3 !== 2 && <div class="border-grid_line" />}
+            {Math.floor(i / 3) < rows - 1 && <div class="border-grid_line is-bottom hide-tablet" />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>
