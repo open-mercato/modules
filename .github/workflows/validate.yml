@@ -185,3 +185,6 @@ jobs:
           yarn build:www
           # the built blog: every published post routed with its canonical and JSON-LD, no draft routed or in the sitemap
           WWW_BUILD=1 yarn vitest run test/www/blog-build.test.ts
+          # the built case studies, partners and jobs: every published entry routed, no draft routed, listed, linked or in
+          # the sitemap, the partner list complete without JavaScript
+          WWW_BUILD=1 yarn vitest run test/www/collections-build.test.ts

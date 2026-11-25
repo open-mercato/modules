@@ -1,0 +1,27 @@
+---
+// The screenshots of a case study. Plain images: every one is reachable without JavaScript; a carousel is Phase 7's.
+// The alt text describes each image (Webflow has no separate caption).
+import type { PostImage } from '../../lib/blog.ts'
+
+interface Props {
+  images: PostImage[]
+}
+const { images } = Astro.props
+---
+
+{
+  images.length > 0 && (
+    <section class="gallery" aria-labelledby="screenshots">
+      <h2 class="t-h2" id="screenshots">
+        Screenshots
+      </h2>
+      <ul class="gallery__grid">
+        {images.map((img) => (
+          <li>
+            <img src={img.src} alt={img.decorative ? '' : img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

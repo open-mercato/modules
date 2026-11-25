@@ -1,0 +1,29 @@
+---
+// A list of case study cards under a heading.
+import CaseStudyCard from './CaseStudyCard.astro'
+import type { CaseStudyCardData } from '../../lib/case-studies.ts'
+
+interface Props {
+  heading: string
+  id: string
+  items: CaseStudyCardData[]
+}
+const { heading, id, items } = Astro.props
+---
+
+{
+  items.length > 0 && (
+    <section class="post-list" aria-labelledby={id}>
+      <h2 class="t-h2" id={id}>
+        {heading}
+      </h2>
+      <ul class="post-grid">
+        {items.map((cs) => (
+          <li>
+            <CaseStudyCard cs={cs} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

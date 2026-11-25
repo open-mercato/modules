@@ -1,0 +1,35 @@
+---
+// /certified-partners (spec, Routing and UI/UX): every published partner with the PartnerFilter island. Drafts are
+// never listed (D6). Complete without JavaScript: the island's server render lists every published partner; the list
+// and the facet options reach the browser as the island's props, JSON inlined into the page at build. The heading and
+// the lead are the Webflow page's (it has no description, so the lead is the description); they move to the `pages`
+// collection with the unique pages (Phase 6).
+import Base from '../../../site/src/layouts/Base.astro'
+import PartnerFilter from '../islands/PartnerFilter.tsx'
+import { TITLE_SUFFIX } from '../lib/blog.ts'
+import { partnerData } from '../lib/collections-data.ts'
+import { facetOptions, partnerCard, PARTNERS_PATH } from '../lib/partners.ts'
+import '../styles/blog.css'
+import '../styles/collections.css'
+
+const data = await partnerData()
+const partners = data.published.map((p) => partnerCard(p, data.dict))
+const options = facetOptions(data.published, data.dict)
+const lead =
+  "Find an agency to help with your next project. Tell us what you need and we'll match you with the best Certified Partner for the job, or browse the partner list for yourself."
+---
+
+<Base section="main" path={PARTNERS_PATH} title={`Certified Partners${TITLE_SUFFIX}`} description={lead}>
+  <div class="band">
+    <div class="sheet blog-page">
+      <header class="post-head">
+        <h1 class="t-h1 post-head__title">Hire a Certified Open Mercato Partner</h1>
+        <p class="post-head__lead">{lead}</p>
+      </header>
+      <section aria-labelledby="partners">
+        <h2 class="sr-only" id="partners">Partners</h2>
+        <PartnerFilter client:painted partners={partners} options={options} />
+      </section>
+    </div>
+  </div>
+</Base>

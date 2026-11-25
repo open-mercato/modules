@@ -66,7 +66,7 @@ describe('which posts the blog shows', () => {
     for (let i = 1; i < published.length; i++)
       expect(published[i - 1]!.data.date.getTime()).toBeGreaterThanOrEqual(published[i]!.data.date.getTime())
     // the link rules of the bodies agree with the routes
-    expect([...bodyLinkRules(CONTENT).posts].sort()).toEqual(published.map((p) => p.id).sort())
+    expect([...bodyLinkRules(CONTENT).details.get('blog-posts')!].sort()).toEqual(published.map((p) => p.id).sort())
     expect(publishedIds(`${CONTENT}/blog`)).toEqual(published.map((p) => p.id).sort())
   })
 
@@ -224,7 +224,11 @@ describe('SEO of every published post', () => {
 })
 
 describe('the HTML of a Markdown body', () => {
-  const rules: LinkRules = { origin: ORIGIN, posts: new Set(['live-post']), serves: servesFixed }
+  const rules: LinkRules = {
+    origin: ORIGIN,
+    details: new Map([['blog-posts', new Set(['live-post'])]]),
+    serves: servesFixed,
+  }
 
   it('keeps links to published posts and pages this build serves', () => {
     for (const href of [
@@ -242,14 +246,14 @@ describe('the HTML of a Markdown body', () => {
 
   it('renders a link to a draft or a missing post as text', () => {
     for (const d of [...drafts.slice(0, 3), 'no-such-post'])
-      expect(linkAction(`/blog-posts/${d}`, { ...rules, posts: bodyLinkRules(CONTENT).posts }).kind).toBe('text')
+      expect(linkAction(`/blog-posts/${d}`, { ...rules, details: bodyLinkRules(CONTENT).details }).kind).toBe('text')
   })
 
   it('points a link to a page still on Webflow at the live site', () => {
     expect(linkAction('/contact', rules)).toEqual({ kind: 'live', href: `${ORIGIN}/contact` })
-    expect(linkAction('/case-studies/arvo-configurator?x=1', rules)).toEqual({
+    expect(linkAction('/hubspot-alternative?x=1', rules)).toEqual({
       kind: 'live',
-      href: `${ORIGIN}/case-studies/arvo-configurator?x=1`,
+      href: `${ORIGIN}/hubspot-alternative?x=1`,
     })
   })
 

@@ -1,0 +1,17 @@
+---
+// The breadcrumb of a detail page: Home, the section, the page. The JSON-LD BreadcrumbList of the page names the same
+// trail.
+interface Props {
+  section: { name: string; href: string }
+  current: string
+}
+const { section, current } = Astro.props
+---
+
+<nav aria-label="Breadcrumb">
+  <ol class="crumbs t-small">
+    <li><a href="/">Home</a></li>
+    <li><a href={section.href}>{section.name}</a></li>
+    <li aria-current="page">{current}</li>
+  </ol>
+</nav>

@@ -1,0 +1,100 @@
+---
+// /case-studies/<slug> (spec, Routing, UI/UX and SEO): one page per published case study, never one for a draft (D6).
+// Title `<title> | Open Mercato`, canonical, og:type article with the thumbnail as og:image, Article and BreadcrumbList
+// JSON-LD, all from the entry. A partner that delivered it is linked when published, named without a link when a
+// draft (with a build warning).
+import { render } from 'astro:content'
+import Base from '../../../../site/src/layouts/Base.astro'
+import Crumbs from '../../components/Crumbs.astro'
+import Prose from '../../components/blog/Prose.astro'
+import VideoEmbed from '../../components/blog/VideoEmbed.astro'
+import CaseOverview from '../../components/case-studies/CaseOverview.astro'
+import CaseStudyList from '../../components/case-studies/CaseStudyList.astro'
+import ScreenshotGallery from '../../components/case-studies/ScreenshotGallery.astro'
+import StatTriplet from '../../components/case-studies/StatTriplet.astro'
+import { refId } from '../../lib/blog.ts'
+import {
+  CASE_STUDIES_PATH,
+  caseStudyCard,
+  caseStudyJsonLd,
+  caseStudyPath,
+  caseStudySeo,
+  deliveredBy,
+  relatedCaseStudies,
+  type CaseStudyEntry,
+} from '../../lib/case-studies.ts'
+import { caseStudyData } from '../../lib/collections-data.ts'
+import '../../styles/collections.css'
+
+export async function getStaticPaths() {
+  const data = await caseStudyData()
+  return data.published.map((cs) => ({ params: { slug: cs.id }, props: { cs } }))
+}
+
+const { cs } = Astro.props as { cs: CaseStudyEntry }
+const data = await caseStudyData()
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const seo = caseStudySeo(cs, site)
+const delivered = deliveredBy(cs, data.partners, (m) => console.warn(`[om-www] ${m}`))
+const categories = cs.data.categories.flatMap((c) => {
+  const name = data.categories.get(refId(c) ?? '')
+  return name ? [name] : []
+})
+const related = relatedCaseStudies(cs, data.published).map((r) => caseStudyCard(r, data.categories))
+const { Content } = await render(cs as never)
+---
+
+<Base
+  section="main"
+  path={caseStudyPath(cs.id)}
+  title={seo.title}
+  description={seo.description}
+  ogType="article"
+  ogImage={seo.ogImage}
+  jsonLd={caseStudyJsonLd(cs, site, delivered, categories)}
+>
+  <div class="band">
+    <div class="sheet blog-page">
+      <article class="case-study">
+        <header class="post-head">
+          <Crumbs section={{ name: 'Case Studies', href: CASE_STUDIES_PATH }} current={cs.data.title} />
+          {
+            categories.length > 0 && (
+              <ul class="chips">
+                {categories.map((c) => (
+                  <li class="chip chip--line">{c}</li>
+                ))}
+              </ul>
+            )
+          }
+          <h1 class="t-h1 post-head__title">{cs.data.heading}</h1>
+          <p class="post-head__lead">{cs.data.description}</p>
+        </header>
+        <StatTriplet stats={cs.data.stats} />
+        {cs.data.heroVideo && <VideoEmbed id={cs.data.heroVideo} title={cs.data.title} />}
+        {
+          !cs.data.heroVideo && cs.data.thumbnail && (
+            <img
+              class="post-head__img"
+              src={cs.data.thumbnail.src}
+              alt={cs.data.thumbnail.decorative ? '' : cs.data.thumbnail.alt}
+              width={cs.data.thumbnail.width}
+              height={cs.data.thumbnail.height}
+              decoding="async"
+            />
+          )
+        }
+        <div class="case-study__columns">
+          <Prose><Content /></Prose>
+          <CaseOverview overview={cs.data.overview} delivered={delivered} />
+        </div>
+        <ScreenshotGallery images={cs.data.screenshots} />
+      </article>
+      <CaseStudyList heading="Related case studies" id="related" items={related} />
+    </div>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/video-embed.ts'
+</script>

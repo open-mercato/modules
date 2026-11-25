@@ -1,0 +1,64 @@
+---
+// /certified-partners/<slug> (spec, Routing, UI/UX and SEO): one page per published partner, never one for a draft
+// (D6). Title `<name> | Open Mercato`, canonical, the logo as og:image, BreadcrumbList JSON-LD; the bio as Prose and
+// the published case studies the partner delivered.
+import { render } from 'astro:content'
+import Base from '../../../../site/src/layouts/Base.astro'
+import Prose from '../../components/blog/Prose.astro'
+import CaseStudyList from '../../components/case-studies/CaseStudyList.astro'
+import PartnerProfile from '../../components/partners/PartnerProfile.astro'
+import { refId } from '../../lib/blog.ts'
+import { caseStudyCard } from '../../lib/case-studies.ts'
+import { caseStudyData, partnerData } from '../../lib/collections-data.ts'
+import {
+  partnerFacts,
+  partnerJsonLd,
+  partnerPath,
+  partnerSeo,
+  partnerValues,
+  type PartnerEntry,
+} from '../../lib/partners.ts'
+import '../../styles/collections.css'
+
+export async function getStaticPaths() {
+  const data = await partnerData()
+  return data.published.map((partner) => ({ params: { slug: partner.id }, props: { partner } }))
+}
+
+const { partner } = Astro.props as { partner: PartnerEntry }
+const data = await partnerData()
+const cases = await caseStudyData()
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const seo = partnerSeo(partner, site)
+const tierId = partnerValues(partner).tier[0]!
+const delivered = cases.published
+  .filter((cs) => refId(cs.data.deliveredBy) === partner.id)
+  .map((cs) => caseStudyCard(cs, cases.categories))
+const { Content } = await render(partner as never)
+---
+
+<Base
+  section="main"
+  path={partnerPath(partner.id)}
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  jsonLd={partnerJsonLd(partner, site)}
+>
+  <div class="band">
+    <div class="sheet blog-page">
+      <article class="case-study">
+        <PartnerProfile
+          name={partner.data.name}
+          description={partner.data.description}
+          tier={data.dict.tiers.get(tierId)?.name ?? tierId}
+          logo={partner.data.logo}
+          website={partner.data.website}
+          facts={partnerFacts(partner, data.dict).filter((f) => f.facet !== 'tier')}
+        />
+        <Prose><Content /></Prose>
+      </article>
+      <CaseStudyList heading="Case studies" id="case-studies" items={delivered} />
+    </div>
+  </div>
+</Base>

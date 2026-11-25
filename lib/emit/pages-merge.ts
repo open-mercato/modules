@@ -24,11 +24,12 @@ import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from
 export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
 
 /**
- * Detail pages of the Webflow collections the main site has not imported yet (case studies, certified partners and
- * jobs come in Phase 4 of the spec): a post may link one, and the www build points such a link at the live site
- * (www/src/lib/body-html.ts). A noindex preview lists them as pending, as the header's links; production fails on them.
+ * Pages of the main site that Webflow serves until their phase and that the www pages link on purpose: /careers, the
+ * list of jobs, a unique page of Phase 6, which each job page's breadcrumb links on the live site. A noindex preview
+ * lists them as pending, as the header's links; production fails on them. The detail pages of the collections (blog
+ * posts, case studies, partners, jobs) are built since Phase 4, so a link to one must name a built page.
  */
-export const PENDING_DETAIL = /^\/(?:case-studies|certified-partners|careers-jobs)\/[a-z0-9]+(?:-[a-z0-9]+)*$/
+export const PENDING_PAGE = /^\/careers$/
 
 /** Root files the merge writes itself: a build that brings its own would be overwritten without notice. */
 export const MERGE_ROOT_FILES = ['_redirects', NOINDEX_ROOT_FILE, 'robots.txt', 'sitemap-index.xml'] as const
@@ -254,8 +255,8 @@ export interface MergedCheck {
   problems: string[]
   /**
    * Main site addresses the pages link that this build does not serve yet: the header and footer links of
-   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec), and detail pages of the
-   * collections not imported yet (PENDING_DETAIL). Only a noindex preview may
+   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec), and the unique pages the www
+   * pages link before their phase (PENDING_PAGE). Only a noindex preview may
    * have any; in a production upload each is a problem, since there Pages and not Webflow answers them.
    */
   pending: string[]
@@ -286,7 +287,7 @@ export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex
   const serves = (pathname: string): boolean => servesPath(root, pathname, rules)
   const onMainSite = (ref: string, url: URL): boolean => {
     if (serves(url.pathname)) return true
-    if (noindex && /^https:\/\//.test(ref) && (isMainSiteLink(ref) || PENDING_DETAIL.test(url.pathname))) {
+    if (noindex && /^https:\/\//.test(ref) && (isMainSiteLink(ref) || PENDING_PAGE.test(url.pathname))) {
       pending.add(`${url.origin}${url.pathname}`)
       return true
     }

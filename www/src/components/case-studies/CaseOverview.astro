@@ -1,0 +1,56 @@
+---
+// The facts of a case study: who delivered it (DeliveredBy), client, industry, timeline, type and the technology stack.
+// A partner that is a draft is named without a link.
+import { linkAction } from '../../lib/body-html.ts'
+import { linkRules } from '../../lib/collections-data.ts'
+import { markdownHtml, type LinkFn } from '../../lib/inline-markdown.ts'
+import type { DeliveredBy } from '../../lib/case-studies.ts'
+
+interface Props {
+  overview: { client?: string; industry?: string; timeline?: string; type?: string; stack?: string }
+  delivered?: DeliveredBy
+}
+const { overview, delivered } = Astro.props
+const facts = [
+  ['Client', overview.client],
+  ['Industry', overview.industry],
+  ['Timeline', overview.timeline],
+  ['Type', overview.type],
+].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
+// a link in the stack follows the rules of a body: a draft is never linked, a page still on Webflow points there
+const rules = await linkRules()
+const link: LinkFn = (href) => {
+  const a = linkAction(href, rules)
+  if (a.kind === 'text') console.warn(`[om-www] technology stack: ${a.why}; the link renders as text`)
+  return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
+}
+---
+
+<aside class="facts" aria-label="Project overview">
+  <dl class="facts__list">
+    {
+      delivered && (
+        <div>
+          <dt>Delivered by</dt>
+          <dd class="delivered-by">{delivered.href ? <a href={delivered.href}>{delivered.name}</a> : delivered.name}</dd>
+        </div>
+      )
+    }
+    {
+      facts.map(([label, value]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))
+    }
+    {
+      overview.stack && (
+        <div>
+          <dt>Technology stack</dt>
+          <dd class="prose facts__stack" set:html={markdownHtml(overview.stack, link)} />
+        </div>
+      )
+    }
+  </dl>
+</aside>
