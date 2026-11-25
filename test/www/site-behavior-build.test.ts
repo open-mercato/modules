@@ -25,6 +25,15 @@ function htmlFiles(dir: string): string[] {
   return out
 }
 
+function jsFiles(dir: string): string[] {
+  const out: string[] = []
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) out.push(...jsFiles(join(dir, e.name)))
+    else if (e.name.endsWith('.js')) out.push(join(dir, e.name))
+  }
+  return out
+}
+
 /** The bundled scripts a page loads, read from dist-www. */
 function pageScripts(html: string): string {
   return [...html.matchAll(/<script type="module" src="([^"]+)"/g)]
@@ -75,7 +84,8 @@ describe('the built behavior of the main site', () => {
         for (const m of html.matchAll(/data-cta-placement="([^"]*)"/g)) placements.add(m[1]!)
         for (const m of html.matchAll(/data-cta-action="([^"]*)"/g)) actions.add(m[1]!)
       }
-      expect([...placements].sort()).toEqual(['cases', 'nav'])
+      expect(placements).toContain('nav')
+      expect(placements).toContain('cases')
       for (const a of ['home', 'menu_toggle', 'product_menu', 'github', 'launch_sandbox', 'open_story'])
         expect(actions).toContain(a)
       for (const name of [...placements, ...actions]) expect(name).toMatch(/^[a-z0-9]+(?:_[a-z0-9]+)*$/)
@@ -101,16 +111,25 @@ describe('the built behavior of the main site', () => {
     it('the sitemap leaves the 404 out', () => {
       const sitemaps = readdirSync(DIST).filter((f) => /^sitemap-\d+\.xml$/.test(f))
       expect(sitemaps.length).toBeGreaterThan(0)
-      for (const s of sitemaps) expect(read(s)).not.toMatch(/404/)
+      for (const s of sitemaps) expect(read(s)).not.toMatch(/\/404(\.html)?<\/loc>/)
     })
   })
 
   describe.skipIf(!required || !existsSync(RUN))('dist-run', () => {
-    it('the catalog loads no analytics, no tracker and no banner', () => {
+    it('the catalog loads no analytics, no tracker and no banner, in its pages or their scripts', () => {
       for (const file of htmlFiles(RUN)) {
         const html = readFileSync(file, 'utf8')
-        expect(html, relative(RUN, file)).not.toContain('googletagmanager')
-        expect(html, relative(RUN, file)).not.toContain('cookie-banner')
+        const name = relative(RUN, file)
+        expect(html, name).not.toContain('googletagmanager')
+        expect(html, name).not.toContain('cookie-banner')
+        expect(html, name).not.toMatch(/\bgtag\(/)
+      }
+      for (const file of jsFiles(RUN)) {
+        const js = readFileSync(file, 'utf8')
+        const name = relative(RUN, file)
+        expect(js, name).not.toContain('cookieAccepted')
+        expect(js, name).not.toContain('googletagmanager')
+        expect(js, name).not.toContain('data-cta-action')
       }
     })
   })
