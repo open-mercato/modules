@@ -282,7 +282,8 @@ describe('SEO of the detail pages', () => {
   it.each(publishedCs.map((c) => [c.id, c] as const))('case study %s', (_, c) => {
     const seo = caseStudySeo(c, ORIGIN)
     const url = `${ORIGIN}${caseStudyPath(c.id)}`
-    expect(seo.title).toBe(`${c.data.title} | Open Mercato`)
+    // the Webflow template: `{main-heading} | Open Mercato Case Study` (the heading field, not the name)
+    expect(seo.title).toBe(`${c.data.heading} | Open Mercato Case Study`)
     expect(seo.canonical).toBe(url)
     expect(seo.description).toBe(c.data.description)
     const graph = caseStudyJsonLd(c, ORIGIN)['@graph'] as Record<string, unknown>[]
@@ -295,6 +296,12 @@ describe('SEO of the detail pages', () => {
     ])
     const card = caseStudyCard(c, csCategories)
     expect(card.categories.length).toBe(c.data.categories.length)
+  })
+
+  it('a case study title is its heading, as live, where the heading and the name differ', () => {
+    const creativa = publishedCs.find((c) => c.id === 'creativaos-law-firm-client-history')!
+    expect(creativa.data.heading).not.toBe(creativa.data.title)
+    expect(caseStudySeo(creativa, ORIGIN).title).toBe('Why did we agree to that clause? | Open Mercato Case Study')
   })
 
   it('the Article names who delivered it', () => {
@@ -311,7 +318,8 @@ describe('SEO of the detail pages', () => {
   it.each(publishedP.map((p) => [p.id, p] as const))('partner %s', (_, p) => {
     const seo = partnerSeo(p, ORIGIN)
     const url = `${ORIGIN}${partnerPath(p.id)}`
-    expect(seo.title).toBe(`${p.data.name} | Open Mercato`)
+    // the Webflow template: `{name}  | Open Mercato Agency`, two spaces as the live pages have them
+    expect(seo.title).toBe(`${p.data.name}  | Open Mercato Agency`)
     expect(seo.canonical).toBe(url)
     const graph = partnerJsonLd(p, ORIGIN)['@graph'] as Record<string, unknown>[]
     expect(graph.map((g) => g['@type'])).toEqual(['BreadcrumbList'])
@@ -331,7 +339,8 @@ describe('SEO of the detail pages', () => {
     const job = publishedJobs(jobs)[0]!
     const url = `${ORIGIN}${jobPath(job.id)}`
     expect(jobSeo(job, ORIGIN)).toEqual({
-      title: `${job.data.title} | Open Mercato`,
+      // the Webflow template `{name} | Careers <long dash> Open Mercato`, the dash written `-` (spec A5)
+      title: `${job.data.title} | Careers - Open Mercato`,
       description: job.data.description,
       canonical: url,
     })

@@ -35,6 +35,14 @@ function jsonLd(html: string): { '@graph': Record<string, unknown>[] } {
   return JSON.parse(m[1]!) as { '@graph': Record<string, unknown>[] }
 }
 
+const decode = (s: string): string =>
+  s
+    .replace(/&#39;|&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+
 const meta = (html: string, property: string): string | undefined =>
   new RegExp(`<meta property="${property}" content="([^"]*)"`).exec(html)?.[1]
 
@@ -70,6 +78,7 @@ describe('the build of the blog', () => {
       const linked = new Set([...html.matchAll(/href="\/blog-posts\/([^"#?]+)"/g)].map((m) => m[1]!))
       expect([...linked].sort()).toEqual([...published].sort())
       expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/blog">`)
+      expect(/<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1]).toBe('Open Mercato Blog')
       // the filter's controls wait for JavaScript; the server render lists every post
       expect(html).toMatch(/<div class="category-filter__controls" role="group"[^>]* hidden/)
       expect(html).toContain(`Showing all ${published.length} posts.`)
@@ -91,6 +100,11 @@ describe('the build of the blog', () => {
       expect(meta(html, 'og:url')).toBe(url)
       expect(meta(html, 'og:type')).toBe('article')
       expect(meta(html, 'og:title')).toMatch(/ \| Open Mercato$/)
+      // the description whole, as Webflow has it (decision of 25 Nov 2026: the main site does not cut it)
+      const post = entries.find((e) => e.id === slug)!
+      const whole = decode(/<meta name="description" content="([^"]*)"/.exec(html)![1]!)
+      expect(whole).toBe(post.data.seo?.description ?? post.data.description)
+      expect(decode(meta(html, 'og:description')!)).toBe(whole)
       expect(meta(html, 'og:image')).toMatch(/^https:\/\/www\.openmercato\.com\//)
       expect(meta(html, 'article:published_time')).toMatch(/^\d{4}-\d{2}-\d{2}T/)
       const graph = jsonLd(html)['@graph']
