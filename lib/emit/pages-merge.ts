@@ -23,6 +23,13 @@ import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from
 /** The folders of the two builds and of the upload, relative to the repository root (package.json `build`). */
 export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
 
+/**
+ * Detail pages of the Webflow collections the main site has not imported yet (case studies, certified partners and
+ * jobs come in Phase 4 of the spec): a post may link one, and the www build points such a link at the live site
+ * (www/src/lib/body-html.ts). A noindex preview lists them as pending, as the header's links; production fails on them.
+ */
+export const PENDING_DETAIL = /^\/(?:case-studies|certified-partners|careers-jobs)\/[a-z0-9]+(?:-[a-z0-9]+)*$/
+
 /** Root files the merge writes itself: a build that brings its own would be overwritten without notice. */
 export const MERGE_ROOT_FILES = ['_redirects', NOINDEX_ROOT_FILE, 'robots.txt', 'sitemap-index.xml'] as const
 
@@ -247,7 +254,8 @@ export interface MergedCheck {
   problems: string[]
   /**
    * Main site addresses the pages link that this build does not serve yet: the header and footer links of
-   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec). Only a noindex preview may
+   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec), and detail pages of the
+   * collections not imported yet (PENDING_DETAIL). Only a noindex preview may
    * have any; in a production upload each is a problem, since there Pages and not Webflow answers them.
    */
   pending: string[]
@@ -278,7 +286,7 @@ export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex
   const serves = (pathname: string): boolean => servesPath(root, pathname, rules)
   const onMainSite = (ref: string, url: URL): boolean => {
     if (serves(url.pathname)) return true
-    if (noindex && /^https:\/\//.test(ref) && isMainSiteLink(ref)) {
+    if (noindex && /^https:\/\//.test(ref) && (isMainSiteLink(ref) || PENDING_DETAIL.test(url.pathname))) {
       pending.add(`${url.origin}${url.pathname}`)
       return true
     }
