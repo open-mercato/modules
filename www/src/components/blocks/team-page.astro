@@ -1,0 +1,55 @@
+---
+// The /team page as the live one is: its own column (`om-team-page`, styled by www/src/styles/webflow/pages/team.css,
+// the page's embedded code), the heading (its *emphasis* the live highlight) and one card per member: photo, name,
+// role and the LinkedIn mark linking the member's profile, then the bio.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import linkedin from './team-linkedin.svg?raw'
+
+type Props = BlockProps<'team'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<div class="om-team-page">
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex">
+        <div class="header_content">
+          {block.title && <h1 set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-4-col">
+      {
+        block.members.map((m, i) => (
+          <div class:list={['border-grid_card', i === 0 && 'is-team']}>
+            <a href={m.url} target="_blank" class="border-grid_team-card w-inline-block">
+              <div class="border-grid_team-image-wrapper">
+                {m.photo && (
+                  <img
+                    src={m.photo.src}
+                    loading="lazy"
+                    width={m.photo.width}
+                    alt={m.photo.alt}
+                    class="border-grid_team-image"
+                  />
+                )}
+              </div>
+              <div class="border-grid_team-content">
+                <h3 class="text-size-regular text-weight-medium">{t(m.name)}</h3>
+                <div class="text-color-secondary">{t(m.role)}</div>
+                <div class="spacer-xxsmall" />
+                <div class="icon-embed-xxsmall w-embed" set:html={linkedin} />
+              </div>
+            </a>
+            <div class="spacer-small" />
+            {m.bio && <p set:html={inline(t(m.bio))} />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</div>
