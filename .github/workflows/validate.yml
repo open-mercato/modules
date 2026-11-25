@@ -176,7 +176,7 @@ jobs:
         id: site
         if: ${{ !cancelled() }}
         run: |
-          if git diff --quiet origin/main...HEAD -- site www lib/emit lib/schema/www-content.ts astro.config.ts; then
+          if git diff --quiet origin/main...HEAD -- site www lib/emit lib/core lib/schema/www-content.ts astro.config.ts; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -197,3 +197,9 @@ jobs:
           # the built landings: each one routed with its canonical and language, a 1200 by 630 OG image, FAQPage JSON-LD
           # equal to its faq, hreflang where the live page has it
           WWW_BUILD=1 yarn vitest run test/www/landings-build.test.ts
+          # the main site's behavior: GA4, the CTA tracker and the cookie banner on every page, the site-wide JSON-LD, the
+          # live 404; the catalog's pages (dist/ here) load none of it
+          WWW_BUILD=1 RUN_DIST=dist yarn vitest run test/www/site-behavior-build.test.ts
+          # the banner, CTA tracker and carousel scripts driven in Chromium on a fixture page
+          yarn playwright install --with-deps chromium
+          WWW_BROWSER=1 yarn vitest run test/www/site-behavior-browser.test.ts

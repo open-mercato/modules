@@ -3,6 +3,7 @@
 // to Astro. A reference to another collection is a slug here; the Astro config passes its own `reference()` instead
 // (WwwRef), so the same schemas validate a sample in a unit test and a file in a build. Isomorphic: no Node APIs.
 import { z } from 'zod'
+import { CTA_EVENT_LENGTH } from '../core/cta.ts'
 
 /** A slug: lowercase words joined by `-`, the Webflow slug kept exactly (D3). Every entry's id is its slug. */
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -78,8 +79,8 @@ export const Image = z
 /** One part of a CTA event name `cta_<placement>_<action>` (Analytics, spec UI/UX). */
 const EventPart = z.string().regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/)
 
-/** The longest CTA event name GA4 reports keep (`cta_<placement>_<action>`). */
-export const CTA_EVENT_MAX = 40
+/** The longest CTA event name the tracker sends whole (`cta_<placement>_<action>`, lib/core/cta.ts). */
+export const CTA_EVENT_MAX = CTA_EVENT_LENGTH
 
 /** Name of the analytics event of a CTA. */
 export function ctaEventName(t: { placement: string; action: string }): string {

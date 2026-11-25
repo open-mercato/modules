@@ -1,0 +1,252 @@
+/* The video carousel of www.openmercato.com (www/src/lib/carousel.ts).
+   Origin: the custom code embedded in the live home page of Webflow (its `.omr` style blocks), read on 25 Nov 2026.
+   Kept: the rules of the carousel (omr-carousel, omr-window, omr-track, omr-slide, omr-media, omr-play, omr-play-icon,
+   omr-arrow, omr-prev, omr-next, omr-counter), in their order; the `.omr` parent rules the carousel needs are scoped to
+   .omr-carousel, since the section around it is the page's (Phase 6). Added: the fallback without JavaScript (the
+   last block), where every slide is shown and the track scrolls sideways.
+   The visual pass of the designer (D7) replaces this file. */
+
+.omr-carousel,
+.omr-carousel * {
+  box-sizing: border-box;
+}
+.omr-carousel {
+  --line: #deded8;
+  --ink: #242723;
+  color: var(--ink);
+}
+.omr-carousel button,
+.omr-carousel a {
+  font: inherit;
+}
+.omr-carousel button {
+  cursor: pointer;
+}
+.omr-carousel button:focus-visible,
+.omr-carousel a:focus-visible {
+  outline: 2px solid #27826c;
+  outline-offset: 5px;
+}
+.omr-carousel {
+  position: relative;
+  width: 78%;
+  margin: 0 auto;
+}
+.omr-window {
+  overflow: hidden;
+  border: 1px solid #d9dbd2;
+  background: #fff;
+  box-shadow: 0 14px 35px #24272308;
+}
+.omr-track {
+  display: flex;
+  transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.omr-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+.omr-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #171a16;
+  overflow: hidden;
+}
+.omr-media iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.omr-play {
+  display: block;
+  border: 0;
+  background: #171a16;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.omr-play img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s;
+  opacity: 0.9;
+}
+.omr-play:hover img {
+  transform: scale(1.025);
+  opacity: 1;
+}
+.omr-play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #ffffffec;
+  color: #252922;
+  box-shadow: 0 7px 30px #0003;
+}
+.omr-play-icon svg {
+  width: 21px;
+  height: 21px;
+  margin-left: 4px;
+}
+.omr-arrow {
+  position: absolute;
+  top: calc(50% - 38px);
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 1px solid #d4d8cd;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  color: #59624f;
+}
+.omr-arrow:hover {
+  background: #eff2e8;
+  border-color: #aeb7a3;
+}
+.omr-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+.omr-prev {
+  left: -65px;
+}
+.omr-next {
+  right: -65px;
+}
+.omr-counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 25px 0 0;
+  font:
+    11px ui-monospace,
+    monospace;
+  color: #858a7e;
+}
+.omr-counter-line {
+  width: 40px;
+  height: 1px;
+  background: #cbd0c2;
+}
+.omr-carousel [hidden] {
+  display: none !important;
+}
+@media (max-width: 991px) {
+  .omr-carousel {
+    width: 80%;
+  }
+  .omr-prev {
+    left: -54px;
+  }
+  .omr-next {
+    right: -54px;
+  }
+}
+@media (max-width: 650px) {
+  .omr-carousel {
+    width: 100%;
+  }
+  .omr-arrow {
+    top: auto;
+    bottom: -64px;
+    width: 38px;
+    height: 38px;
+  }
+  .omr-prev {
+    left: 0;
+  }
+  .omr-next {
+    right: 0;
+  }
+  .omr-counter {
+    margin-top: 28px;
+    min-height: 30px;
+  }
+}
+.omr-window {
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.omr-track {
+  gap: 24px;
+}
+.omr-slide {
+  border: 1px solid #d9dbd2;
+  transition:
+    opacity 0.38s,
+    filter 0.38s;
+  opacity: 0.24;
+  filter: saturate(0.25);
+}
+.omr-slide.is-active {
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 14px 35px #2427230b;
+}
+.omr-slide:not(.is-active) .omr-play-icon {
+  display: none;
+}
+.omr-arrow {
+  z-index: 2;
+}
+.omr-carousel {
+  touch-action: pan-y;
+}
+@media (max-width: 650px) {
+  .omr-carousel {
+    width: 88%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .omr-track,
+  .omr-play img {
+    transition: none;
+  }
+}
+@media (max-width: 650px) {
+  .omr-carousel .omr-arrow {
+    top: auto;
+    bottom: 0;
+  }
+  .omr-carousel .omr-counter {
+    min-height: 38px;
+  }
+}
+
+/* Without JavaScript (no data-ready): every slide at full strength in a track that scrolls sideways and snaps; the
+   arrows and the counter, which need the script, are left out. */
+.omr-carousel:not([data-ready]) .omr-window {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.omr-carousel:not([data-ready]) .omr-slide {
+  opacity: 1;
+  filter: none;
+  scroll-snap-align: start;
+}
+.omr-carousel:not([data-ready]) .omr-play-icon {
+  display: grid;
+}
+.omr-carousel:not([data-ready]) .omr-arrow,
+.omr-carousel:not([data-ready]) .omr-counter {
+  display: none;
+}

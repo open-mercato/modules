@@ -1,0 +1,108 @@
+/* The 404 page of www.openmercato.com (www/src/pages/404.astro): a bare page, no navbar and no footer.
+   Origin: the Webflow stylesheet of the live site, openmercato-dev.webflow.shared.aa54cdb44.min.css on
+   cdn.prod.website-files.com, and the font smoothing style in the head of its pages, read on 25 Nov 2026. Kept: the
+   rules of html, body, *, img, h3 and a, then w-button, w-form, utility_*, padding-xxsmall and button the page uses,
+   in their order, with the Webflow variables they read resolved to their values.
+   The visual pass of the designer (D7) replaces this file. */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  margin: 0;
+  background-color: #fff;
+  font-family: Geist, Arial, sans-serif;
+  color: #0c0c0c;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+  max-width: 100%;
+  display: inline-block;
+}
+h3 {
+  font-family: Geist, Arial, sans-serif;
+  font-size: 2.75rem;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.11rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+a {
+  background-color: #0000;
+  color: #0c0c0c;
+  text-decoration: underline;
+}
+.w-button {
+  color: #fff;
+  line-height: inherit;
+  cursor: pointer;
+  background-color: #3898ec;
+  border: 0;
+  border-radius: 0;
+  padding: 9px 15px;
+  text-decoration: none;
+  display: inline-block;
+}
+.w-form {
+  margin: 0 0 15px;
+}
+.utility_component {
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  max-width: 100%;
+  height: 100vh;
+  max-height: 100%;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  display: flex;
+}
+.utility_form-block {
+  text-align: center;
+  flex-direction: column;
+  max-width: 20rem;
+  display: flex;
+}
+.utility_image {
+  margin-bottom: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.padding-xxsmall {
+  padding: 0.5rem;
+}
+.button {
+  color: #0c0c0c;
+  text-align: center;
+  background-color: #0000;
+  background-image: linear-gradient(189deg, #b4f372 12%, #eefb63 58%, #bc9aff);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+@media screen and (max-width: 991px) {
+  h3 {
+    font-size: 2.5rem;
+    letter-spacing: -0.1rem;
+  }
+}
+@media screen and (max-width: 767px) {
+  h3 {
+    font-size: 2rem;
+    letter-spacing: -0.08rem;
+  }
+}
