@@ -5,6 +5,7 @@ import {
   cdnFile,
   emptyTally,
   formatProseDate,
+  isSafeHref,
   mediaFileName,
   parseProseDate,
   replaceCounts,
@@ -28,13 +29,26 @@ describe('lib/import-webflow/text.ts (Text, Links, Dates)', () => {
     const t = emptyTally()
     expect(replaceCounts('1,928 stars on GitHub', t)).toBe('{githubStars} stars on GitHub')
     expect(replaceCounts('50+ plugins', t)).toBe('{moduleCount} plugins')
-    expect(replaceCounts('12 modules and 3 people', t)).toBe('{moduleCount} modules and 3 people')
+    expect(replaceCounts('Over 1,200+ modules', t)).toBe('Over {moduleCount} modules')
+    // a count without a plus is not the catalog's, and a version is not a count
+    expect(replaceCounts('Install 2 modules first', t)).toBe('Install 2 modules first')
     expect(replaceCounts('Version 2026 is out', t)).toBe('Version 2026 is out')
     expect(t.tokens).toEqual([
       { token: '{githubStars}', from: '1,928' },
       { token: '{moduleCount}', from: '50+' },
-      { token: '{moduleCount}', from: '12' },
+      { token: '{moduleCount}', from: '1,200+' },
     ])
+  })
+
+  it('refuses link schemes the site does not write and survives a malformed escape', () => {
+    expect(isSafeHref('javascript:alert(1)')).toBe(false)
+    expect(isSafeHref(' JavaScript:x')).toBe(false)
+    expect(isSafeHref('data:text/html,x')).toBe(false)
+    for (const ok of ['https://x.com', 'mailto:a@b.c', 'tel:+48', '/path', '#top', '//cdn.x/y', 'page'])
+      expect(isSafeHref(ok), ok).toBe(true)
+    expect(cdnFile('https://cdn.prod.website-files.com/69a9/6a4f6d510584689e00a9be3b_bad%E0%A4%A.png')?.fileId).toBe(
+      '6a4f6d510584689e00a9be3b',
+    )
   })
 
   it('rewrites site links to paths, docs links to the docs map, and reports webflow.io', () => {

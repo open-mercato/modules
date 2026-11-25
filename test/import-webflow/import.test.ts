@@ -300,6 +300,42 @@ describe('the ownership manifest', () => {
     }
   })
 
+  it('--only on a dictionary leaves the media of its folder alone', async () => {
+    const target = tempDir('only-dict')
+    const cache = tempDir('only-dict-cache')
+    try {
+      await importFixture({ target, mediaCache: cache })
+      const r = await importFixture({ target, mediaCache: cache, offline: true, only: new Set(['blogCategories']) })
+      expect(r.plan!.gone).toEqual([])
+      expect(r.exitCode).toBe(0)
+    } finally {
+      rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
+  it('keeps the redirect rules of other sources and owns only the docs map', async () => {
+    const target = tempDir('redirects')
+    const cache = tempDir('redirects-cache')
+    try {
+      await importFixture({ target, mediaCache: cache })
+      const file = join(target, 'www/content/redirects.yaml')
+      const panel = '- from: /old-pricing\n  to: /product\n  status: 301\n  source: webflow-panel\n'
+      writeFileSync(file, panel + readFileSync(file, 'utf8'))
+      const r = await importFixture({ target, mediaCache: cache, offline: true })
+      expect(r.plan!.actions.some((a) => a.kind === 'conflict')).toBe(false)
+      const rules = parseYaml(readFileSync(file, 'utf8')) as { from: string; source: string }[]
+      expect(rules[0]).toMatchObject({ from: '/old-pricing', source: 'webflow-panel' })
+      expect(rules.filter((x) => x.source === 'docs-map')).toHaveLength(6)
+      expect(rules[rules.length - 1]!.from).toBe('/docs/*')
+      const check = await importFixture({ target, mediaCache: cache, offline: true, check: true })
+      expect(check.exitCode).toBe(0)
+    } finally {
+      rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
   it('--only writes the named collections and carries the others in the manifest', async () => {
     const target = tempDir('only')
     const cache = tempDir('only-cache')
@@ -336,6 +372,45 @@ describe('media failures', () => {
       expect(offline.exitCode).toBe(1)
     } finally {
       rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
+  it('--check exits 1 when an item stops, even when nothing would change', async () => {
+    const target = tempDir('check-stop')
+    const cache = tempDir('check-stop-cache')
+    try {
+      const fail = fakeCdn((u) => u.includes('10clouds-logo'))
+      await importFixture({ target, mediaCache: cache, fetch: fail })
+      const r = await importFixture({ target, mediaCache: cache, fetch: fail, check: true })
+      expect(r.differs).toBe(false)
+      expect(r.report.stopped.length).toBe(1)
+      expect(r.exitCode).toBe(1)
+    } finally {
+      rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
+  it('refuses a file above the 25 MiB Pages limit', async () => {
+    const cache = tempDir('big-cache')
+    try {
+      const big = (async (input: string | URL | Request) =>
+        new Response('x', {
+          headers: {
+            'content-type': /\.svg$/.test(String(input))
+              ? 'image/svg+xml'
+              : /\.png$/.test(String(input))
+                ? 'image/png'
+                : 'image/jpeg',
+            'content-length': String(26 * 1024 * 1024),
+          },
+        })) as typeof fetch
+      const r = await importFixture({ target: tmp('big'), mediaCache: cache, fetch: big })
+      expect(r.media.errors.length).toBeGreaterThan(0)
+      expect(r.media.errors.filter((e) => e.endsWith('above the 25 MiB Pages limit')).length).toBeGreaterThan(0)
+      expect(r.media.errors.every((e) => /above the 25 MiB Pages limit$|content type/.test(e))).toBe(true)
+    } finally {
       rmSync(cache, { recursive: true, force: true })
     }
   })

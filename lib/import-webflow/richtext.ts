@@ -108,6 +108,19 @@ export function inlineHtmlToMarkdown(html: string, hooks: ConvertHooks = {}, mod
   return mdastToMarkdown({ type: 'root', children: [{ type: 'paragraph', children: nodes }] })
 }
 
+/** Plain texts as Markdown paragraphs, escaped so a `#`, `*` or `<` stays text. */
+export function textParagraphs(texts: readonly string[]): string {
+  return mdastToMarkdown({
+    type: 'root',
+    children: texts.map((value) => ({ type: 'paragraph', children: [{ type: 'text', value }] })),
+  })
+}
+
+/** One Markdown image, its alt text escaped. */
+export function imageMarkdown(url: string, alt: string): string {
+  return mdastToMarkdown({ type: 'root', children: [{ type: 'paragraph', children: [{ type: 'image', url, alt }] }] })
+}
+
 /** Writes an mdast tree with the options of this repository: `-` bullets, `_` emphasis, fenced code, GFM tables. */
 export function mdastToMarkdown(tree: MdRoot): string {
   return toMarkdown(tree, {

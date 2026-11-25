@@ -92,6 +92,19 @@ describe('lib/import-webflow/landing.ts (Landings)', () => {
     ])
   })
 
+  it('opens a group after a row without a theirs note when the title is known as a group title', () => {
+    const head = ['Label', 'TAG', 'Ours', 'Ours note', 'Theirs', 'Theirs note']
+    const lines = [...head, 'Group A', 'Row1', '✓', '×', 'Group B', 'Row2', '✓', 'note2', '×', 'tnote']
+    // without knowing "Group B" the two lines read as a note and the next label
+    expect(parseMatrix(lines).groups.map((g) => g.title)).toEqual(['Group A'])
+    const m = parseMatrix(lines, new Set(['Group B']))
+    expect(m.groups.map((g) => g.title)).toEqual(['Group A', 'Group B'])
+    expect(m.groups[0]!.rows).toEqual([{ label: 'Row1', ours: 'yes', theirs: 'no' }])
+    // a title the same matrix shows elsewhere without doubt counts too
+    const twice = [...head, 'Group B', 'Row0', '✓', '✓', 'n0', 'Group A', 'Row1', '✓', '×', 'Group B', 'Row2', '✓', '✓']
+    expect(parseMatrix(twice).groups.map((g) => g.title)).toEqual(['Group B', 'Group A', 'Group B'])
+  })
+
   it('refuses a matrix header it does not know', () => {
     expect(() => parseMatrix(['Label', 'Group', 'Row', '✓', '✓'])).toThrow(/header has 1 lines/)
   })

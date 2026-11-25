@@ -41,11 +41,10 @@ export const COUNT_TOKENS = ['{githubStars}', '{moduleCount}'] as const
  * landing and page copy is tokenized; a dated blog post keeps the number it was written with.
  */
 const TOKEN_RULES: readonly { re: RegExp; token: (typeof COUNT_TOKENS)[number] }[] = [
-  {
-    re: /\b\d{1,3}(?:,\d{3})+\+?(?= (?:stars on GitHub|GitHub stars|stars)\b)|\b\d+\+?(?= (?:stars on GitHub|GitHub stars)\b)/g,
-    token: '{githubStars}',
-  },
-  { re: /\b\d+\+?(?= (?:plugins|modules)\b)/g, token: '{moduleCount}' },
+  // a star count: "1,928 stars on GitHub", "1914 GitHub stars"
+  { re: /(?<![\d,.])(?:\d{1,3}(?:,\d{3})+|\d+)\+?(?= (?:stars on GitHub|GitHub stars)\b)/g, token: '{githubStars}' },
+  // a catalog count is written with a plus ("50+ plugins"); "install 2 modules" is not a count of the catalog
+  { re: /(?<![\d,.])(?:\d{1,3}(?:,\d{3})+|\d+)\+(?= (?:plugins|modules)\b)/g, token: '{moduleCount}' },
 ]
 
 export function replaceCounts(value: string, tally?: TextTally): string {
@@ -57,6 +56,14 @@ export function replaceCounts(value: string, tally?: TextTally): string {
     })
   }
   return out
+}
+
+/** Link targets the site writes: http(s), mailto, tel, a path or an anchor; anything else (`javascript:`) is refused. */
+export function isSafeHref(href: string): boolean {
+  const h = href.trim()
+  if (h.startsWith('//')) return true
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(h)?.[1]?.toLowerCase()
+  return scheme === undefined || ['http', 'https', 'mailto', 'tel'].includes(scheme)
 }
 
 /** Hosts of the main site: a link to them becomes a site path. */
@@ -156,7 +163,13 @@ export function cdnFile(url: string): { fileId: string; name: string } | undefin
     return undefined
   }
   if (!isWebflowCdn(u)) return undefined
-  const last = decodeURIComponent(u.pathname.split('/').pop() ?? '')
+  let last: string
+  try {
+    last = decodeURIComponent(u.pathname.split('/').pop() ?? '')
+  } catch {
+    // a malformed percent escape: keep the name as written
+    last = u.pathname.split('/').pop() ?? ''
+  }
   const m = /^([0-9a-f]{24})_(.+)$/.exec(last)
   return m ? { fileId: m[1]!, name: m[2]! } : undefined
 }

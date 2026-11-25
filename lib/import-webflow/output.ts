@@ -18,6 +18,11 @@ export interface OutFile {
   bytes: Uint8Array
   /** The Webflow item, page, collection or file id the file came from. */
   webflowId: string
+  /**
+   * The file already holds what others wrote, merged in by the run (redirects.yaml keeps its rules of other
+   * sources), so an edit is not a conflict: the importer rewrites only its own part.
+   */
+  merged?: boolean
 }
 
 export interface ManifestEntry {
@@ -136,8 +141,9 @@ export async function planOutput(
       continue
     }
     const current = sha256(new Uint8Array(readFileSync(target)))
-    const edited =
-      known === undefined
+    const edited = file.merged
+      ? null
+      : known === undefined
         ? 'the importer did not write it'
         : current !== known.sha256
           ? 'edited since the import'

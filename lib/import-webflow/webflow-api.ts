@@ -2,7 +2,7 @@
 // importer reads: webflow-raw/ (collections, items, pages, DOM, assets, sitemap) and strony/ (the visible text of each
 // static page, from its public HTML). Read-only token (`cms:read`, `pages:read`, `assets:read`); the token is sent in
 // the Authorization header only and never written, logged or put in an error message.
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { documentTextNodes } from './richtext.ts'
 
@@ -87,11 +87,22 @@ interface PageInfo {
   seo?: { title: string | null; description: string | null } | null
 }
 
+/** A Webflow slug used in a file name: letters, digits, `-` and `_` (collection templates are `detail_<slug>`). */
+const FILE_SLUG_RE = /^[A-Za-z0-9_-]{1,120}$/
+
+function fileSlug(slug: string, what: string): string {
+  if (!FILE_SLUG_RE.test(slug)) throw new WebflowApiError(`${what} slug "${slug.slice(0, 40)}" cannot name a file`)
+  return slug
+}
+
 /** Writes the export; returns what it wrote, for the summary. */
 export async function exportSite(
   opts: ExportOptions,
 ): Promise<{ collections: number; items: number; pages: number; assets: number }> {
   const log = opts.log ?? (() => {})
+  // a fresh directory only: files of an earlier export would survive and be read as part of this one
+  if (existsSync(opts.dir) && readdirSync(opts.dir).length > 0)
+    throw new WebflowApiError(`${opts.dir} is not empty; give a new directory for each export`)
   const raw = join(opts.dir, 'webflow-raw')
   const site = encodeURIComponent(opts.siteId)
 
@@ -100,9 +111,9 @@ export async function exportSite(
   let items = 0
   for (const c of collections) {
     const id = encodeURIComponent(c.id)
-    write(raw, `col_${c.slug}.json`, await api(opts, `/collections/${id}`))
+    write(raw, `col_${fileSlug(c.slug, 'collection')}.json`, await api(opts, `/collections/${id}`))
     const { list } = await all(opts, `/collections/${id}/items`, 'items')
-    write(raw, `items_${c.slug}.json`, list)
+    write(raw, `items_${fileSlug(c.slug, 'collection')}.json`, list)
     items += list.length
     log(`collection ${c.slug}: ${list.length} items`)
   }
@@ -111,7 +122,7 @@ export async function exportSite(
   write(raw, 'pages.json', pages)
   for (const p of pages) {
     const { list: nodes, total } = await all(opts, `/pages/${encodeURIComponent(p.id)}/dom`, 'nodes')
-    write(raw, `dom/${p.slug || 'home'}_${p.id}.json`, {
+    write(raw, `dom/${fileSlug(p.slug || 'home', 'page')}_${fileSlug(p.id, 'page id')}.json`, {
       pageId: p.id,
       nodes,
       pagination: { total, fetched: nodes.length },
@@ -138,7 +149,11 @@ export async function exportSite(
         log(`text of ${url}: HTTP ${res.status}, skipped`)
         continue
       }
-      const slug = p.slug || 'home'
+      const slug = fileSlug(p.slug || 'home', 'page')
+      if (crawled.some((x) => x.slug === slug)) {
+        log(`text of ${url}: another page has the slug ${slug}, skipped`)
+        continue
+      }
       write(opts.dir, `strony/${slug}.txt`, visibleText(await res.text()))
       crawled.push({ url, slug, title: p.seo?.title ?? p.title, description: p.seo?.description ?? null })
     }

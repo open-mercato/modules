@@ -4,12 +4,21 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import pLimit from 'p-limit'
-import { WWW_COLLECTIONS, WWW_SOURCES, wwwSchemas, type WwwCollection } from '../schema/www-content.ts'
+import { parse as parseYaml } from 'yaml'
+import {
+  redirectSchema,
+  RESERVED_SEGMENTS,
+  SLUG_RE,
+  WWW_COLLECTIONS,
+  WWW_SOURCES,
+  wwwSchemas,
+  type WwwCollection,
+} from '../schema/www-content.ts'
 import { collectionEntries, WEBFLOW_COLLECTIONS } from './collections.ts'
-import { emptyReport, guard, type Entry, type Report, type RunCtx } from './context.ts'
+import { emptyReport, guard, ItemText, type Entry, type Report, type RunCtx } from './context.ts'
 import { buildDocsMap, DOCS_SITEMAP_URL, sitemapPaths, type DocsMap } from './docs-map.ts'
-import { readExport, type WebflowExport } from './export.ts'
-import { chromeOf, contentLines, isLandingDom, landingEntry } from './landing.ts'
+import { readExport, type WebflowExport, type WfPage } from './export.ts'
+import { align, chromeOf, contentLines, isLandingDom, landingEntry, parseLanding } from './landing.ts'
 import { loadMedia, MAX_TOTAL_BYTES, MediaError, MediaRegistry } from './media.ts'
 import {
   applyPlan,
@@ -91,12 +100,20 @@ export async function runImport(opts: ImportOptions): Promise<ImportResult> {
   let docs: DocsMap | undefined
   const docsItems = exp.collections.get('docs')?.items ?? []
   if (docsItems.length > 0) docs = buildDocsMap(docsItems, sitemapPaths(await docsSitemap(opts)))
-  const ctx: RunCtx = { exp, media, docs: docs?.targets ?? new Map(), report, schemas: wwwSchemas() }
+  const ctx: RunCtx = {
+    exp,
+    media,
+    docs: docs?.targets ?? new Map(),
+    report,
+    schemas: wwwSchemas(),
+    matrixTitles: new Set(),
+  }
 
   const entries: Entry[] = []
   // pages and landings first: their media keep the folder of the first use either way, but a page is the natural home
   const { chrome } = pageTexts(exp)
   const landings: { entry: Entry; competitor?: string }[] = []
+  if (wants(opts, 'landings')) collectMatrixTitles(ctx, chrome)
   for (const page of exp.pages) {
     const slug = pageSlug(page)
     const nodes = exp.dom.get(page.id)
@@ -110,6 +127,11 @@ export async function runImport(opts: ImportOptions): Promise<ImportResult> {
     if (isLandingDom(nodes)) {
       if (!wants(opts, 'landings')) continue
       const name = `landings/${slug}`
+      const skip = landingSkipReason(page, slug)
+      if (skip) {
+        report.notes.push({ item: name, note: `not imported: ${skip}` })
+        continue
+      }
       if (!lines) {
         report.stopped.push({ item: name, why: `no strony/${slug}.txt to cross-check the text with` })
         continue
@@ -193,6 +215,8 @@ export async function runImport(opts: ImportOptions): Promise<ImportResult> {
       report.stopped.push({ item: u, why: `media ${f.message}` })
     }
   }
+  // an item stopped for any reason (converter, schema, media) writes no media of its own
+  for (const st of report.stopped) stoppedItems.add(st.item)
   const kept = entries.filter((e) => !stoppedItems.has(`${e.collection}/${e.id}`))
   for (const e of entries) {
     if (kept.includes(e)) continue
@@ -219,15 +243,48 @@ export async function runImport(opts: ImportOptions): Promise<ImportResult> {
     }
   }
 
-  files.push(...(await serialize(kept, exp, docs, opts.repoRoot)))
+  files.push(...(await serialize(kept, exp, docs, opts.repoRoot, opts.target, report)))
   const ownedDirs = ownedPrefixes(opts.only)
   const owned = (e: ManifestEntry) => ownedDirs === undefined || ownedDirs.some((p) => e.path.startsWith(p))
   const plan = await planOutput(opts.target, opts.repoRoot, files, owned, opts.force)
   const differs = plan.manifestChanged || plan.actions.some((a) => a.kind !== 'unchanged')
   if (!opts.check) applyPlan(opts.target, plan)
   const problems = report.stopped.length > 0 || plan.actions.some((a) => a.kind === 'conflict')
-  const exitCode = opts.check ? (differs ? 1 : 0) : problems ? 1 : 0
+  // --check also fails on stopped items: a stopped item is missing from the output, not a difference of it
+  const exitCode = (opts.check ? differs || report.stopped.length > 0 : problems) ? 1 : 0
   return { report, plan, media: mediaResult, docs, differs, exitCode }
+}
+
+function landingSkipReason(page: WfPage, slug: string): string | undefined {
+  if (page.archived) return 'archived in Webflow'
+  if (page.draft) return 'a draft page in Webflow'
+  if (!SLUG_RE.test(slug)) return `the slug "${slug}" is not a slug`
+  if ((RESERVED_SEGMENTS as readonly string[]).includes(slug)) return `/${slug} is a reserved route`
+  return undefined
+}
+
+/**
+ * The group titles of every landing's capability matrix, read where the matrix shows them without doubt, so that
+ * parseMatrix can tell a new group from a row's note (a dry run: nothing is registered or reported).
+ */
+function collectMatrixTitles(ctx: RunCtx, chrome: { prefix: number; suffix: number }): void {
+  const dry: RunCtx = { ...ctx, media: new MediaRegistry(), report: emptyReport(), matrixTitles: new Set() }
+  for (const page of ctx.exp.pages) {
+    const slug = pageSlug(page)
+    const nodes = ctx.exp.dom.get(page.id)
+    const lines = ctx.exp.text.get(slug)
+    if (page.collectionId || !nodes || !lines || !isLandingDom(nodes) || landingSkipReason(page, slug)) continue
+    try {
+      const l = parseLanding(
+        align(nodes, contentLines(lines, chrome)),
+        new ItemText(dry, slug, 'landings', false),
+        slug,
+      )
+      for (const g of l.capabilities?.matrix.groups ?? []) ctx.matrixTitles.add(g.title)
+    } catch {
+      // the real pass reports why this landing stops
+    }
+  }
 }
 
 /** SEO notes (spec Data Model, Seo): titles over 70 and descriptions outside 50..170 characters, reported only. */
@@ -252,10 +309,29 @@ function ownedPrefixes(only: ReadonlySet<WwwCollection> | undefined): string[] |
     const s = WWW_SOURCES[c]
     out.push(s.kind === 'entries' ? `www/content/${s.dir}/` : `www/content/${s.file}`)
   }
-  const mediaDirs: Partial<Record<WwwCollection, string>> = { landings: 'landings', pages: 'pages' }
-  for (const v of Object.values(WEBFLOW_COLLECTIONS)) mediaDirs[v.collection] ??= v.media
-  for (const c of only) if (mediaDirs[c]) out.push(`www/public/media/${mediaDirs[c]}/`)
+  // media are not owned by --only: a folder is shared (blog-categories and blog), so a partial run carries every media
+  // entry it does not write and never reports one as gone
   return out
+}
+
+/** The rules of redirects.yaml whose source is not the docs map, as the file holds them. */
+function otherRedirects(file: string, report: Report): unknown[] {
+  if (!existsSync(file)) return []
+  const data = parseYaml(readFileSync(file, 'utf8')) as unknown
+  if (!Array.isArray(data)) {
+    report.notes.push({ item: 'redirects', note: 'redirects.yaml is not a list; its other rules are not kept' })
+    return []
+  }
+  const schema = redirectSchema()
+  return data.filter((r) => {
+    if ((r as { source?: unknown })?.source === 'docs-map') return false
+    if (!schema.safeParse(r).success)
+      report.notes.push({
+        item: 'redirects',
+        note: `a rule of another source does not validate: ${JSON.stringify(r).slice(0, 120)}`,
+      })
+    return true
+  })
 }
 
 async function serialize(
@@ -263,6 +339,8 @@ async function serialize(
   exp: WebflowExport,
   docs: DocsMap | undefined,
   repoRoot: string,
+  target: string,
+  report: Report,
 ): Promise<OutFile[]> {
   const out: OutFile[] = []
   const grouped = new Map<WwwCollection, Entry[]>()
@@ -282,15 +360,20 @@ async function serialize(
     const path = `www/content/${source.file}`
     let value: unknown
     let webflowId: string
+    let merged = false
     if (collection === 'redirects') {
-      value = docs?.rules ?? []
+      // the importer owns the docs-map rules only: rules of other sources (the Webflow panel list of D8, manual ones)
+      // stay, first, so they match before the docs catch-all
+      const others = otherRedirects(join(target, path), report)
+      value = [...others, ...(docs?.rules ?? [])]
+      merged = others.length > 0
       webflowId = list[0]!.webflowId
     } else {
       value = Object.fromEntries(list.map((e) => [e.id, e.data]))
       const wf = Object.entries(WEBFLOW_COLLECTIONS).find(([, v]) => v.collection === collection)?.[0]
       webflowId = (wf ? exp.collections.get(wf)?.schema.id : undefined) ?? collection
     }
-    out.push({ path, webflowId, bytes: utf8(await format(toYaml(value), path, repoRoot)) })
+    out.push({ path, webflowId, merged, bytes: utf8(await format(toYaml(value), path, repoRoot)) })
   }
   return out
 }

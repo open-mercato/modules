@@ -5,7 +5,7 @@ import { RESERVED_SEGMENTS, SLUG_RE } from '../schema/www-content.ts'
 import { compact, ItemStop, ItemText, validate, type Entry, type RunCtx } from './context.ts'
 import type { WfNode, WfPage } from './export.ts'
 import { words } from './landing.ts'
-import { ConvertError, htmlTextNodes, htmlToText, parseFragment } from './richtext.ts'
+import { ConvertError, htmlTextNodes, htmlToText, imageMarkdown, parseFragment, textParagraphs } from './richtext.ts'
 
 /** The slug of a static page; Webflow's home page has none. */
 export function pageSlug(page: WfPage): string {
@@ -80,9 +80,7 @@ export function pageEntry(
       } catch (err) {
         if (!(err instanceof ConvertError)) throw err
         // the copy block keeps the text; the structure is Phase 6's job
-        md = htmlTextNodes(html)
-          .map((x) => t.text(x))
-          .join('\n\n')
+        md = textParagraphs(htmlTextNodes(html).map((x) => t.text(x)))
         t.note(`node ${n.id}: ${err.message}; kept as plain text`)
       }
       plain.push(htmlToText(html))
@@ -95,14 +93,14 @@ export function pageEntry(
         continue
       }
       const alt = img.alt && img.alt !== WF_INHERIT ? img.alt : (asset.altText ?? '')
-      push(n.id, `![${escapeAlt(t.text(alt))}](${t.media(asset.hostedUrl)})`, false)
+      push(n.id, imageMarkdown(t.media(asset.hostedUrl), t.text(alt)), false)
     } else if (n.type === 'html-embed') {
       // a legacy embed (Q4): its visible text is kept, its markup and scripts are left to Phase 6
       const html = String((n as { html: string }).html)
       const text = htmlTextNodes(html)
       embeds++
       if (text.length > 0) {
-        push(n.id, text.map((x) => t.text(x)).join('\n\n'), false)
+        push(n.id, textParagraphs(text.map((x) => t.text(x))), false)
         plain.push(text.join(' '))
       }
     }
@@ -125,8 +123,4 @@ export function pageEntry(
   const entry = validate(ctx, { collection: 'pages', id: slug, webflowId: page.id, draft: false, data })
   t.commit()
   return entry
-}
-
-function escapeAlt(s: string): string {
-  return s.replace(/[[\]\\]/g, (c) => `\\${c}`)
 }

@@ -326,13 +326,26 @@ interface CapRow {
   theirsNote?: string
 }
 
-/** The matrix text: a 6-line header (label, tagline, our name and note, their name and note), then groups of rows. */
-export function parseMatrix(lines: readonly string[]): {
+type Matrix = {
   label: string
   tagline: string
   columns: [{ name: string; note: string }, { name: string; note: string }]
   groups: { title: string; rows: CapRow[] }[]
-} {
+}
+
+/**
+ * The matrix text: a 6-line header (label, tagline, our name and note, their name and note), then groups of rows. Two
+ * lines between a row's last mark and the next label are either the row's theirs note and the next label, or a new
+ * group's title and its first label; the lines alone cannot tell. A line known as a group title (`titles`: the titles
+ * this matrix and the export's other landings show where no doubt exists) opens a group; anything else is a note.
+ */
+export function parseMatrix(lines: readonly string[], titles: ReadonlySet<string> = new Set()): Matrix {
+  const first = parseMatrixWith(lines, titles)
+  const own = new Set([...titles, ...first.groups.map((g) => g.title)])
+  return own.size > titles.size ? parseMatrixWith(lines, own) : first
+}
+
+function parseMatrixWith(lines: readonly string[], titles: ReadonlySet<string>): Matrix {
   const firstMark = lines.findIndex(isMark)
   if (firstMark < 0) throw new ItemStop('the capability matrix has no marks')
   const header = lines.slice(0, firstMark - 2)
@@ -368,7 +381,10 @@ export function parseMatrix(lines: readonly string[]): {
       else if (k > 1) throw new ItemStop(`the capability matrix ends with ${k} lines after its last row`)
       break
     }
-    if (k === 2) row.theirsNote = lines[i++]
+    if (k === 2 && titles.has(lines[i]!)) {
+      group = { title: lines[i++]!, rows: [] }
+      groups.push(group)
+    } else if (k === 2) row.theirsNote = lines[i++]
     else if (k === 3) {
       row.theirsNote = lines[i++]
       group = { title: lines[i++]!, rows: [] }
@@ -491,7 +507,7 @@ export function parseLanding(parts: Part[], t: ItemText, slug: string): RawLandi
     const capLead =
       c.isNode('p') && !c.isNode('p', 'omfm-scope') ? rich(t, c.node('p', undefined, 'capabilities')) : undefined
     if (c.peek()?.kind === 'gap' && c.isNode('div', 'omfm-legend', 1)) {
-      const matrix = parseMatrix(c.gap('capability matrix'))
+      const matrix = parseMatrix(c.gap('capability matrix'), t.ctx.matrixTitles)
       const legend = legendOf(c.node('div', 'omfm-legend', 'capabilities').el)
       const note = rich(t, c.node('p', 'omfm-scope', 'capabilities'))
       const src = c.node('p', 'omfm-sources', 'capabilities')
@@ -697,6 +713,9 @@ export function landingEntry(
   if (diff) throw new ItemStop(`the text cross-check failed at ${diff}`)
 
   const t = new ItemText(ctx, item, 'landings', true)
+  // the raw pass already replaced the dashes of the Markdown fields: count them with this item (A5)
+  t.tally.dashes += raw.tally.dashes
+  t.tally.invisible += raw.tally.invisible
   const tx = (s: string | undefined) => (s === undefined ? undefined : t.text(s))
   // Markdown fields convert again with the text rules on (the raw pass converted them without)
   const md = (r: Rich | undefined) => (r === undefined ? undefined : t.text(r.md))

@@ -11,7 +11,7 @@ import {
   type ConvertHooks,
   type ConvertMode,
 } from './richtext.ts'
-import { emptyTally, replaceCounts, replaceDashes, rewriteLink, type TextTally } from './text.ts'
+import { emptyTally, isSafeHref, replaceCounts, replaceDashes, rewriteLink, type TextTally } from './text.ts'
 
 /** One entry the run writes: a YAML file, a Markdown file with frontmatter, or one entry of a one-file collection. */
 export interface Entry {
@@ -61,6 +61,8 @@ export interface RunCtx {
   docs: ReadonlyMap<string, string>
   report: Report
   schemas: ReturnType<typeof wwwSchemas>
+  /** Group titles of the capability matrices across the export's landings (parseMatrix). */
+  matrixTitles: Set<string>
 }
 
 /** The text and link rules for one item, counting what they change into the report under `item`. */
@@ -85,6 +87,7 @@ export class ItemText {
   }
 
   link(href: string): string {
+    if (!isSafeHref(href)) throw new ItemStop(`the link "${href.slice(0, 60)}" has a scheme the site does not write`)
     return rewriteLink(href, {
       docs: this.ctx.docs,
       report: (h, why) => this.note(`${why}: ${h}`),

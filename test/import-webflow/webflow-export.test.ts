@@ -152,6 +152,26 @@ describe('yarn om webflow-export (spec API Contracts)', () => {
     }
   })
 
+  it('refuses a directory that already holds files', async () => {
+    const api = fakeWebflow()
+    await exportSite({ token: TOKEN, siteId: SITE, dir, text: false, fetch: api.fetch, sleep: async () => {} })
+    await expect(
+      exportSite({ token: TOKEN, siteId: SITE, dir, text: false, fetch: api.fetch, sleep: async () => {} }),
+    ).rejects.toThrow(/is not empty/)
+  })
+
+  it('refuses a slug that cannot name a file', async () => {
+    const api = fakeWebflow({
+      [`/sites/${SITE}/collections`]: () =>
+        new Response(JSON.stringify({ collections: [{ id: 'c1', slug: '../escape' }] }), {
+          headers: { 'content-type': 'application/json' },
+        }),
+    })
+    await expect(
+      exportSite({ token: TOKEN, siteId: SITE, dir, text: false, fetch: api.fetch, sleep: async () => {} }),
+    ).rejects.toThrow(/cannot name a file/)
+  })
+
   it('reads the visible text of a page as one text node per line', () => {
     expect(
       visibleText('<html><body><nav><a>Docs</a><span>1,914</span></nav><p>Hi <em>there</em></p></body></html>'),
