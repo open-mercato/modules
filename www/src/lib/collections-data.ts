@@ -2,8 +2,7 @@
 // dictionaries they reference. Build only; the selection rules live in case-studies.ts, partners.ts and jobs.ts.
 import { getCollection } from 'astro:content'
 import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
-import { fileURLToPath } from 'node:url'
-import { servesSite } from '../../body-links.ts'
+import { servesFixed } from '../../body-links.ts'
 import type { LinkRules } from './body-html.ts'
 import { newestFirst, publishedCaseStudies, type CaseStudyEntry, type PartnerIndex } from './case-studies.ts'
 import { publishedJobs, type JobEntry } from './jobs.ts'
@@ -91,7 +90,7 @@ export async function linkRules(): Promise<LinkRules> {
       ['certified-partners', ids(partners.published)],
       ['careers-jobs', ids(jobs)],
     ]),
-    serves: servesSite(fileURLToPath(new URL('../../content/', import.meta.url))),
+    serves: servesFixed,
   }
 }
 

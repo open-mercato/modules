@@ -21,7 +21,7 @@ blocks:
     secondary:
       label: Clone repo
       href: https://github.com/open-mercato/open-mercato
-    note: "[Academy](/learn-ai-engineering)"
+    note: "[Academy](https://www.openmercato.com/learn-ai-engineering)"
     items:
       - title: Codex
       - title: Claude
@@ -221,7 +221,7 @@ blocks:
     title: Learn *AI Engineering* with us.
     primary:
       label: Explore Mercato Academy
-      href: /learn-ai-engineering
+      href: https://www.openmercato.com/learn-ai-engineering
     items:
       - title: AI Assisted Engineering with Open Mercato
         eyebrow: "40:15"

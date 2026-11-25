@@ -1,8 +1,8 @@
 ---
 // A call to action of a landing in the live markup: the green button (`omlp-primary`) with its arrow, the underlined
 // link (`omlp-secondary`) or the arrow link of the demo (`omlp-proof-link`). A contact link carries its `interest` as
-// `data-om-intent`, as on the live site.
-import { intentOf } from '../../lib/landings.ts'
+// `data-om-intent`, as on the live site. A link to a unique page still on Webflow points to the live site (siteHref).
+import { intentOf, siteHref } from '../../lib/landings.ts'
 
 interface Props {
   cta: { label: string; href: string }
@@ -10,7 +10,7 @@ interface Props {
 }
 const { cta, variant } = Astro.props
 const intent = intentOf(cta.href)
-const href = cta.href
+const href = siteHref(cta.href)
 ---
 
 {
