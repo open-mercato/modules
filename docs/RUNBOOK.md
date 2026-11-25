@@ -141,10 +141,12 @@ is byte for byte the 0.9.0 one. The agent_examples directory is the same in both
 3. Narrow patches the new line no longer needs (for example `api-keys` stays `>=0.9.0 <0.10.0`).
 4. Bump `@open-mercato/cli` in `package.json` (PR, WP01), run the Rentgen golden tests and
    `yarn om scan --builtin <new>`. Core modules that the generator put in `operations` with a warning go into
-   `policy/builtin-categories.yml` (`ecommerce` is already there, and listed in `policy/builtin-upcoming.yml` so emit and
-   scan do not call it unknown; once a released core ships it, they ask to remove it from that file). Check
-   `data/presets.json` of the new line: a change of
-   the empty preset changes which modules get `in preset` (D10: `add` is then `yarn add` only).
+   `policy/builtin-categories.yml`. A module seen only on the develop line goes there ahead of time and into
+   `policy/builtin-upcoming.yml`, so emit and scan do not call it unknown; once a released core ships it, they ask to
+   remove it from that file (0.10: `cart` and `promotions` were added, `ecommerce` left the upcoming file). The `checks`
+   job does not read the `data` branch, so run `yarn test` once with the `data` branch checked out as `.data`: the
+   validate test then fails on a core module of the new line without a category. Check `data/presets.json` of the new
+   line: a change of the empty preset changes which modules get `in preset` (D10: `add` is then `yarn add` only).
 5. Check `/radar` for the new line and any `sameFailure`.
 
 Budget: one minor costs about half a day.
