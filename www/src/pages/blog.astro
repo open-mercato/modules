@@ -1,0 +1,43 @@
+---
+// /blog (spec, Routing and UI/UX): featured posts, then every published post with the category filter island. Drafts
+// are never listed (D6). Complete without JavaScript: the island's server render lists every post.
+import Base from '../../../site/src/layouts/Base.astro'
+import PostList from '../components/blog/PostList.astro'
+import CategoryFilter from '../islands/CategoryFilter.tsx'
+import { BLOG_PATH, featuredPosts, refId, TITLE_SUFFIX } from '../lib/blog.ts'
+import { blogData } from '../lib/blog-data.ts'
+import '../styles/blog.css'
+
+const data = await blogData()
+const posts = data.published.map((p) => data.card(p))
+const featured = featuredPosts(data.published).map((p) => data.card(p))
+const counts = new Map<string, number>()
+for (const p of data.published) {
+  const c = refId(p.data.category)
+  if (c !== undefined) counts.set(c, (counts.get(c) ?? 0) + 1)
+}
+// the categories that have a published post, in their Webflow order
+const categories = [...data.categories]
+  .filter(([id]) => counts.has(id))
+  .sort(([, a], [, b]) => a.order - b.order || a.name.localeCompare(b.name))
+  .map(([id, c]) => ({ id, name: c.name, count: counts.get(id)! }))
+// Webflow has no description for /blog (spec, Problem Statement); until its content PR writes one (Phase 6), it is
+// made of the category names, so no word of it is typed by hand
+const description = `Posts from the Open Mercato team about ${categories
+  .map((c) => c.name)
+  .join(', ')
+  .replace(/, ([^,]*)$/, ' and $1')}.`
+---
+
+<Base section="main" path={BLOG_PATH} title={`Blog${TITLE_SUFFIX}`} description={description}>
+  <div class="band">
+    <div class="sheet blog-page">
+      <h1 class="t-h1">Blog</h1>
+      <PostList heading="Featured" id="featured" posts={featured} />
+      <section aria-labelledby="all-posts">
+        <h2 class="t-h2" id="all-posts">All posts</h2>
+        <CategoryFilter client:painted="idle" posts={posts} categories={categories} />
+      </section>
+    </div>
+  </div>
+</Base>

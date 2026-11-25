@@ -1,0 +1,62 @@
+---
+// /blog-posts/<slug> (spec, Routing and SEO): one page per published post, never one for a draft (D6). Title
+// `<title> | Open Mercato`, canonical, og:type article with the thumbnail as og:image, BlogPosting and BreadcrumbList
+// JSON-LD, all from the entry.
+import { render } from 'astro:content'
+import Base from '../../../../site/src/layouts/Base.astro'
+import PostHeader from '../../components/blog/PostHeader.astro'
+import PostList from '../../components/blog/PostList.astro'
+import Prose from '../../components/blog/Prose.astro'
+import { postJsonLd, postPath, postSeo, relatedPosts, type PostEntry } from '../../lib/blog.ts'
+import { blogData, postNames } from '../../lib/blog-data.ts'
+
+export async function getStaticPaths() {
+  const data = await blogData()
+  return data.published.map((post) => ({ params: { slug: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props as { post: PostEntry }
+const data = await blogData()
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const seo = postSeo(post, site)
+const names = postNames(post, data)
+const related = relatedPosts(post, data.published).map((p) => data.card(p))
+const { Content } = await render(post as never)
+---
+
+<Base
+  section="main"
+  path={postPath(post.id)}
+  title={seo.title}
+  description={seo.description}
+  ogType="article"
+  ogImage={seo.ogImage}
+  noindex={seo.noindex || undefined}
+  jsonLd={postJsonLd(post, site, names)}
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={post.data.date.toISOString()} />
+    {post.data.updated && <meta property="article:modified_time" content={post.data.updated.toISOString()} />}
+  </Fragment>
+  <div class="band">
+    <div class="sheet blog-page">
+      <article class="post">
+        <PostHeader
+          title={post.data.title}
+          description={post.data.description}
+          category={names.category}
+          author={names.author}
+          date={post.data.date}
+          updated={post.data.updated}
+          thumbnail={post.data.thumbnail}
+        />
+        <Prose><Content /></Prose>
+      </article>
+      <PostList heading="Related posts" id="related" posts={related} />
+    </div>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/video-embed.ts'
+</script>

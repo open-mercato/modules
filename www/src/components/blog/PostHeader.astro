@@ -1,0 +1,42 @@
+---
+// The head of a post: breadcrumb, category, title, description, byline and thumbnail.
+import AuthorByline from './AuthorByline.astro'
+import { BLOG_PATH, type PostImage } from '../../lib/blog.ts'
+
+interface Props {
+  title: string
+  description: string
+  category?: string
+  author?: string
+  date: Date
+  updated?: Date
+  thumbnail?: PostImage
+}
+const { title, description, category, author, date, updated, thumbnail } = Astro.props
+---
+
+<header class="post-head">
+  <nav aria-label="Breadcrumb">
+    <ol class="crumbs t-small">
+      <li><a href="/">Home</a></li>
+      <li><a href={BLOG_PATH}>Blog</a></li>
+      <li aria-current="page">{title}</li>
+    </ol>
+  </nav>
+  {category && <span class="chip chip--line">{category}</span>}
+  <h1 class="t-h1 post-head__title">{title}</h1>
+  <p class="post-head__lead">{description}</p>
+  <AuthorByline author={author} date={date} updated={updated} />
+  {
+    thumbnail && (
+      <img
+        class="post-head__img"
+        src={thumbnail.src}
+        alt={thumbnail.decorative ? '' : thumbnail.alt}
+        width={thumbnail.width}
+        height={thumbnail.height}
+        decoding="async"
+      />
+    )
+  }
+</header>

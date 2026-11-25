@@ -1,0 +1,29 @@
+---
+// A list of post cards under a heading (featured posts, related posts).
+import PostCard from './PostCard.tsx'
+import type { PostCardData } from '../../lib/blog.ts'
+
+interface Props {
+  heading: string
+  posts: PostCardData[]
+  id: string
+}
+const { heading, posts, id } = Astro.props
+---
+
+{
+  posts.length > 0 && (
+    <section class="post-list" aria-labelledby={id}>
+      <h2 class="t-h2" id={id}>
+        {heading}
+      </h2>
+      <ul class="post-grid">
+        {posts.map((p) => (
+          <li>
+            <PostCard post={p} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
