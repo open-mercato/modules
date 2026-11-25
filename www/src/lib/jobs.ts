@@ -2,7 +2,7 @@
 // /careers-jobs/<slug> and the SEO of a job page, with `JobPosting` JSON-LD for an open job. The list of jobs is part of
 // /careers, a unique page of the `pages` collection (Phase 6), still served by Webflow until then. A draft is validated
 // but never routed, linked or put in a sitemap (D6). Isomorphic.
-import { canonicalUrl, SITE_NAME, TITLE_SUFFIX } from './blog.ts'
+import { canonicalUrl, SITE_NAME } from './blog.ts'
 import { breadcrumbJsonLd, publishedEntries } from './entries.ts'
 
 export type EmploymentTypeKey = 'full-time' | 'part-time' | 'contract' | 'internship'
@@ -56,9 +56,17 @@ export interface JobSeo {
   canonical: string
 }
 
+/**
+ * The title suffix of a job page as the Webflow template writes it (`seo.title` of the template page:
+ * `{name} | Careers <long dash> Open Mercato`), with the long dash written `-` as every migrated text (spec A5,
+ * AGENTS.md rule 7; the `--planned` file of compare-live lists the difference). The live titles are the rule (owner's
+ * decision of 25 Nov 2026), not the spec's `<title> | Open Mercato`.
+ */
+export const JOB_TITLE_SUFFIX = ' | Careers - Open Mercato'
+
 export function jobSeo(job: JobEntry, origin: string): JobSeo {
   return {
-    title: `${job.data.title}${TITLE_SUFFIX}`,
+    title: `${job.data.title}${JOB_TITLE_SUFFIX}`,
     description: job.data.description,
     canonical: canonicalUrl(origin, jobPath(job.id)),
   }

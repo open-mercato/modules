@@ -14,6 +14,9 @@ const data = await caseStudyData()
 const cards = data.published.map((cs) => caseStudyCard(cs, data.categories))
 const description =
   'Explore customer stories and product builds on Open Mercato, from connected devices and manufacturing to education, care operations and travel.'
+// the lead under the heading is the Webflow page's own text, not its description (its long dash written `-`, A5)
+const lead =
+  "Real projects built on the framework - from logistics ERPs to B2B SaaS platforms. See what's possible when you start with 80% done."
 ---
 
 <Base section="main" path={CASE_STUDIES_PATH} title={`Case Studies${TITLE_SUFFIX}`} description={description}>
@@ -21,7 +24,7 @@ const description =
     <div class="sheet blog-page">
       <header class="post-head">
         <h1 class="t-h1 post-head__title">What teams ship with Open Mercato</h1>
-        <p class="post-head__lead">{description}</p>
+        <p class="post-head__lead">{lead}</p>
       </header>
       <h2 class="sr-only">All case studies</h2>
       <ul class="post-grid">

@@ -60,6 +60,25 @@ function jsonLd(html: string): { '@graph': Record<string, unknown>[] } {
 const meta = (html: string, property: string): string | undefined =>
   new RegExp(`<meta property="${property}" content="([^"]*)"`).exec(html)?.[1]
 
+/** The text of a tag of the page (its first one), entities of the build decoded. */
+const decode = (s: string): string =>
+  s
+    .replace(/&#39;|&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+const tag = (html: string, re: RegExp): string | undefined => {
+  const m = re.exec(html)?.[1]
+  return m === undefined ? undefined : decode(m.replace(/<[^>]+>/g, '').trim())
+}
+const title = (html: string): string | undefined => tag(html, /<title>([\s\S]*?)<\/title>/)
+const h1 = (html: string): string | undefined => tag(html, /<h1[^>]*>([\s\S]*?)<\/h1>/)
+const description = (html: string): string | undefined => {
+  const m = /<meta name="description" content="([^"]*)"/.exec(html)?.[1]
+  return m === undefined ? undefined : decode(m)
+}
+
 const linked = (html: string, dir: string): string[] =>
   [...new Set([...html.matchAll(new RegExp(`href="/${dir}/([^"#?]+)"`, 'g'))].map((m) => m[1]!))].sort()
 
@@ -104,6 +123,8 @@ describe('the build of case studies, partners and jobs', () => {
     it('lists every published case study on /case-studies', () => {
       const html = read('case-studies.html')
       expect(linked(html, 'case-studies')).toEqual([...routes[0]!.published].sort())
+      expect(title(html)).toBe('Case Studies | Open Mercato')
+      expect(h1(html)).toBe('What teams ship with Open Mercato')
       expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/case-studies">`)
     })
 
@@ -111,6 +132,8 @@ describe('the build of case studies, partners and jobs', () => {
       const html = read('certified-partners.html')
       const partners = routes[1]!.published
       expect(linked(html, 'certified-partners')).toEqual([...partners].sort())
+      expect(title(html)).toBe('Certified Partners | Open Mercato')
+      expect(h1(html)).toBe('Hire a Certified Open Mercato Partner')
       expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/certified-partners">`)
       // the controls wait for JavaScript; the server render lists every partner and says so in the live region
       expect(html).toMatch(/<div class="partner-filter__controls" hidden/)
@@ -131,7 +154,14 @@ describe('the build of case studies, partners and jobs', () => {
       expect(html).toContain(`<link rel="canonical" href="${url}">`)
       expect(meta(html, 'og:url')).toBe(url)
       expect(meta(html, 'og:type')).toBe('article')
-      expect(meta(html, 'og:title')).toMatch(/ \| Open Mercato$/)
+      // as the live page (decision of 25 Nov 2026): <title> from the heading with the template's suffix, h1 the name,
+      // the description whole
+      const cs = caseStudies.find((c) => c.id === slug)!
+      expect(title(html)).toBe(`${cs.data.heading} | Open Mercato Case Study`)
+      expect(decode(meta(html, 'og:title')!)).toBe(title(html))
+      expect(h1(html)).toBe(cs.data.title)
+      expect(description(html)).toBe(cs.data.description)
+      expect(decode(meta(html, 'og:description')!)).toBe(cs.data.description)
       expect(meta(html, 'og:image')).toMatch(/^https:\/\/www\.openmercato\.com\//)
       const graph = jsonLd(html)['@graph']
       expect(graph.map((g) => g['@type'])).toEqual(['Article', 'BreadcrumbList'])
@@ -163,7 +193,9 @@ describe('the build of case studies, partners and jobs', () => {
       const url = `${ORIGIN}${partnerPath(slug)}`
       expect(html).toContain(`<link rel="canonical" href="${url}">`)
       expect(meta(html, 'og:url')).toBe(url)
-      expect(meta(html, 'og:title')).toMatch(/ \| Open Mercato$/)
+      const partner = partners.find((p) => p.id === slug)!
+      expect(title(html)).toBe(`${partner.data.name}  | Open Mercato Agency`)
+      expect(description(html)).toBe(partner.data.description)
       expect(jsonLd(html)['@graph'].map((g) => g['@type'])).toEqual(['BreadcrumbList'])
     })
 
@@ -173,6 +205,8 @@ describe('the build of case studies, partners and jobs', () => {
       const job = jobs.find((j) => j.id === slug)!
       expect(html).toContain(`<link rel="canonical" href="${url}">`)
       expect(meta(html, 'og:url')).toBe(url)
+      expect(title(html)).toBe(`${job.data.title} | Careers - Open Mercato`)
+      expect(description(html)).toBe(job.data.description)
       const graph = jsonLd(html)['@graph']
       expect(graph.map((g) => g['@type'])).toEqual(
         job.data.open ? ['JobPosting', 'BreadcrumbList'] : ['BreadcrumbList'],

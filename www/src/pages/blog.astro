@@ -32,7 +32,13 @@ const description = `Posts from the Open Mercato team about ${categories
 <Base section="main" path={BLOG_PATH} title={`Blog${TITLE_SUFFIX}`} description={description}>
   <div class="band">
     <div class="sheet blog-page">
-      <h1 class="t-h1">Blog</h1>
+      {/* the heading and the lead of the Webflow page, as live; they move to the `pages` collection in Phase 6 */}
+      <header class="post-head">
+        <h1 class="t-h1 post-head__title">Open Mercato Blog</h1>
+        <p class="post-head__lead">
+          Practical guides, deep dives, and lessons learned from building production-ready AI systems.
+        </p>
+      </header>
       <PostList heading="Featured" id="featured" posts={featured} />
       <section aria-labelledby="all-posts">
         <h2 class="t-h2" id="all-posts">All posts</h2>

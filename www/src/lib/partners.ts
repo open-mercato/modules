@@ -8,7 +8,7 @@ import {
   PARTNER_BUDGET_LABELS,
   PARTNER_BUDGETS,
 } from '../../../lib/schema/www-content.ts'
-import { canonicalUrl, refId, TITLE_SUFFIX, type PostImage, type Ref } from './blog.ts'
+import { canonicalUrl, refId, type PostImage, type Ref } from './blog.ts'
 import { breadcrumbJsonLd, publishedEntries } from './entries.ts'
 import {
   FACET_LABELS,
@@ -169,9 +169,16 @@ export interface PartnerSeo {
   ogImage?: string
 }
 
+/**
+ * The title suffix of a partner page as the Webflow template writes it (`seo.title` of the template page:
+ * `{name}  | Open Mercato Agency`, two spaces included, as the live pages have them). The live titles are the rule
+ * (owner's decision of 25 Nov 2026), not the spec's `<title> | Open Mercato`.
+ */
+export const PARTNER_TITLE_SUFFIX = '  | Open Mercato Agency'
+
 export function partnerSeo(p: PartnerEntry, origin: string): PartnerSeo {
   return {
-    title: `${p.data.name}${TITLE_SUFFIX}`,
+    title: `${p.data.name}${PARTNER_TITLE_SUFFIX}`,
     description: p.data.description,
     canonical: canonicalUrl(origin, partnerPath(p.id)),
     // social crawlers read png, jpeg and webp only; an SVG or AVIF logo leaves the site's default image

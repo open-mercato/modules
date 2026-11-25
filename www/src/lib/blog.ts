@@ -36,7 +36,11 @@ export const BLOG_PATH = '/blog'
 export const POST_PREFIX = '/blog-posts/'
 /** The query parameter of the category filter: `/blog?category=architecture&category=security`. */
 export const CATEGORY_PARAM = 'category'
-/** The suffix of a collection page's title (spec, SEO: `<title> | Open Mercato`). */
+/**
+ * The suffix of a page title (spec, SEO: `<title> | Open Mercato`): the blog posts and the list pages. The detail pages
+ * of the other collections use the suffix of their Webflow template (owner's decision of 25 Nov 2026: every migrated
+ * title equals the live one); the Webflow template of a post is `{name} | Open Mercato`, this suffix.
+ */
 export const TITLE_SUFFIX = ' | Open Mercato'
 export const SITE_NAME = 'Open Mercato'
 

@@ -2,7 +2,7 @@
 // shows and in what order, who delivered one (a link to a published partner, a partner's name without a link when the
 // partner is a draft, or an outside address), and the SEO of a case study (Article and BreadcrumbList JSON-LD). A draft
 // is validated by the content config but never routed, listed, linked or put in a sitemap (D6). Isomorphic.
-import { canonicalUrl, refId, SITE_NAME, TITLE_SUFFIX, type PostImage, type Ref } from './blog.ts'
+import { canonicalUrl, refId, SITE_NAME, type PostImage, type Ref } from './blog.ts'
 import { breadcrumbJsonLd, publishedEntries } from './entries.ts'
 import { partnerPath } from './partners.ts'
 
@@ -91,9 +91,16 @@ export interface CaseStudySeo {
   ogImage?: string
 }
 
+/**
+ * The title of a case study as the Webflow template writes it (`seo.title` of the template page:
+ * `{main-heading} | Open Mercato Case Study`): the heading field, not the name, with the template's own suffix. The
+ * live titles are the rule (owner's decision of 25 Nov 2026), not the spec's `<title> | Open Mercato`.
+ */
+export const CASE_STUDY_TITLE_SUFFIX = ' | Open Mercato Case Study'
+
 export function caseStudySeo(cs: CaseStudyEntry, origin: string): CaseStudySeo {
   return {
-    title: `${cs.data.title}${TITLE_SUFFIX}`,
+    title: `${cs.data.heading}${CASE_STUDY_TITLE_SUFFIX}`,
     description: cs.data.description,
     canonical: canonicalUrl(origin, caseStudyPath(cs.id)),
     ogImage: cs.data.thumbnail?.src,

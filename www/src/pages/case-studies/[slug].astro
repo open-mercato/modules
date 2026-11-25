@@ -1,8 +1,8 @@
 ---
 // /case-studies/<slug> (spec, Routing, UI/UX and SEO): one page per published case study, never one for a draft (D6).
-// Title `<title> | Open Mercato`, canonical, og:type article with the thumbnail as og:image, Article and BreadcrumbList
-// JSON-LD, all from the entry. A partner that delivered it is linked when published, named without a link when a
-// draft (with a build warning).
+// Title `<heading> | Open Mercato Case Study` and h1 `<title>`, as the live pages (Webflow template); canonical,
+// og:type article with the thumbnail as og:image, Article and BreadcrumbList JSON-LD, all from the entry. A partner
+// that delivered it is linked when published, named without a link when a draft (with a build warning).
 import { render } from 'astro:content'
 import Base from '../../../../site/src/layouts/Base.astro'
 import Crumbs from '../../components/Crumbs.astro'
@@ -67,7 +67,8 @@ const { Content } = await render(cs as never)
               </ul>
             )
           }
-          <h1 class="t-h1 post-head__title">{cs.data.heading}</h1>
+          {/* the live page's h1 is the name, its <title> the heading field (Webflow template, decision of 25 Nov 2026) */}
+          <h1 class="t-h1 post-head__title">{cs.data.title}</h1>
           <p class="post-head__lead">{cs.data.description}</p>
         </header>
         <StatTriplet stats={cs.data.stats} />
