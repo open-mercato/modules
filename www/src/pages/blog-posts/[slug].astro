@@ -1,14 +1,19 @@
 ---
-// /blog-posts/<slug> (spec, Routing and SEO): one page per published post, never one for a draft (D6). Title
-// `<title> | Open Mercato`, canonical, og:type article with the thumbnail as og:image, BlogPosting and BreadcrumbList
-// JSON-LD, all from the entry.
+// /blog-posts/<slug> (spec, Routing and SEO): one page per published post, never one for a draft (D6), in the live
+// Webflow markup (`blog-post_component`). Title `<title> | Open Mercato`, canonical, og:type article with the thumbnail
+// as og:image, BlogPosting and BreadcrumbList JSON-LD, all from the entry. The sidebar (the CTA and the table of
+// contents, built here from the post's h2 headings) is in the markup as live and hidden by the live reader style
+// (www/src/styles/webflow/pages.css).
 import { render } from 'astro:content'
-import Base from '../../../../site/src/layouts/Base.astro'
+import Main from '../../layouts/Main.astro'
 import PostHeader from '../../components/blog/PostHeader.astro'
-import PostList from '../../components/blog/PostList.astro'
 import Prose from '../../components/blog/Prose.astro'
-import { postJsonLd, postPath, postSeo, relatedPosts, type PostEntry } from '../../lib/blog.ts'
+import { MAIN_SITE_GITHUB } from '../../../../lib/core/main-site.ts'
+import { postJsonLd, postPath, postSeo, readingMinutes, refId, type PostEntry } from '../../lib/blog.ts'
 import { blogData, postNames } from '../../lib/blog-data.ts'
+import { GITHUB_ICON } from '../../lib/webflow-icons.ts'
+import pagesCss from '../../styles/webflow/pages.css?url'
+import blogCss from '../../styles/blog.css?url'
 
 export async function getStaticPaths() {
   const data = await blogData()
@@ -20,12 +25,13 @@ const data = await blogData()
 const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
 const seo = postSeo(post, site)
 const names = postNames(post, data)
-const related = relatedPosts(post, data.published).map((p) => data.card(p))
-const { Content } = await render(post as never)
+const { Content, headings } = await render(post as never)
+const html = (post as unknown as { rendered?: { html?: string } }).rendered?.html ?? ''
+const minutes = readingMinutes(html.replace(/<[^>]+>/g, ' '))
+const toc = headings.filter((h) => h.depth === 2)
 ---
 
-<Base
-  section="main"
+<Main
   path={postPath(post.id)}
   title={seo.title}
   description={seo.description}
@@ -33,29 +39,64 @@ const { Content } = await render(post as never)
   ogImage={seo.ogImage}
   noindex={seo.noindex || undefined}
   jsonLd={postJsonLd(post, site, names)}
+  bodyClass="wf-blog-post"
+  styles={[pagesCss, blogCss]}
 >
   <Fragment slot="head">
     <meta property="article:published_time" content={post.data.date.toISOString()} />
     {post.data.updated && <meta property="article:modified_time" content={post.data.updated.toISOString()} />}
   </Fragment>
-  <div class="band">
-    <div class="sheet blog-page">
-      <article class="post">
-        <PostHeader
-          title={post.data.title}
-          description={post.data.description}
-          category={names.category}
-          author={names.author}
-          date={post.data.date}
-          updated={post.data.updated}
-          thumbnail={post.data.thumbnail}
-        />
-        <Prose><Content /></Prose>
-      </article>
-      <PostList heading="Related posts" id="related" posts={related} />
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <PostHeader
+        title={post.data.title}
+        description={post.data.description}
+        href={postPath(post.id)}
+        category={data.categories.get(refId(post.data.category) ?? '')}
+        author={names.author}
+        date={post.data.date}
+        minutes={minutes}
+      />
+      <section class="section is-no-padding">
+        <div class="section-padding">
+          <div class="blog-post_component">
+            <div class="blog-post_sticky-wrapper">
+              <div class="blog-post_cta">
+                <div class="blog-post_cta-top">
+                  <div class="heading-style-h5">Software is about to be built completely differently</div>
+                  <div class="button-group">
+                    <a href={MAIN_SITE_GITHUB} class="button is-icon w-inline-block">
+                      <div class="button_icon" aria-hidden="true" set:html={GITHUB_ICON} />
+                      <div>Clone the Repo</div>
+                    </a>
+                  </div>
+                </div>
+                {
+                  toc.length > 0 && (
+                    <div class="blog-post_cta-bottom">
+                      <div class="text-size-small text-color-secondary">Table of contents</div>
+                      <nav class="blog-post_toc" aria-label="Table of contents">
+                        {toc.map((h) => (
+                          <a href={`#${h.slug}`} class="blog-post_toc-link w-inline-block">
+                            <div class="blog-post_toc-dot" />
+                            <div class="text-size-small">{h.text}</div>
+                          </a>
+                        ))}
+                      </nav>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+            <div class="blog-post_content">
+              <Prose><Content /></Prose>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
-</Base>
+</Main>
 
 <script>
   import '../../scripts/video-embed.ts'

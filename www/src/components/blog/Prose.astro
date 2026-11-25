@@ -1,7 +1,11 @@
 ---
-// The body of a post (spec, UI/UX): Markdown rendered as HTML, on the type scale and colours of the design system. The
-// look is Oliwia's (D7, Phase 5); this keeps the text readable and wide tables inside their own scroll region.
-import '../../styles/blog.css'
+// A Markdown body (spec, UI/UX) in the rich text block of the live Webflow templates: `text-blog-rich-text` for posts,
+// case studies and partners, `text-rich-text` for a job. Webflow's rich text styles apply (www/src/styles/webflow/);
+// www/src/styles/blog.css adds what Webflow has no style for (wide tables in their own scroll region, videos).
+interface Props {
+  variant?: 'blog' | 'plain'
+}
+const { variant = 'blog' } = Astro.props
 ---
 
-<div class="prose"><slot /></div>
+<div class={variant === 'blog' ? 'text-blog-rich-text w-richtext' : 'text-rich-text w-richtext'}><slot /></div>
