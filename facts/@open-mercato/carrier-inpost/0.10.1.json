@@ -1,0 +1,339 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 39
+  },
+  "package": {
+    "locator": "npm:@open-mercato/carrier-inpost",
+    "name": "@open-mercato/carrier-inpost",
+    "version": "0.10.1",
+    "integrity": "sha512-BB+4qEhrSnbqq3x87tce1EOKjJzaC5h/1MF66Xl/o0fpO9PME3ib5KOVaH9r+2e1izIQAGW9Th86wEQjXEBe8Q==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "carrier_inpost",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.10.1",
+    "@open-mercato/shared": "0.10.1"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.10.1",
+    "@open-mercato/ui": "0.10.1",
+    "ts-pattern": "^5.0.0"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "carrier_inpost",
+      "title": "InPost Carrier",
+      "description": "Ship parcels via InPost lockers (Paczkomat) and courier delivery with tracking and webhook updates.",
+      "requires": [],
+      "ejectable": true,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "carrier_inpost.view",
+          "carrier_inpost.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 2,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [],
+        "cli": []
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "apiToken",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "organizationId",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "apiBaseUrl",
+            "type": "url",
+            "required": false
+          },
+          {
+            "key": "apiPointsBaseUrl",
+            "type": "url",
+            "required": false
+          },
+          {
+            "key": "webhookSecret",
+            "type": "secret",
+            "required": false
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_INTEGRATION_INPOST_API_TOKEN",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 46
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_ORGANIZATION_ID",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 47
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_API_BASE_URL",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 48
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_API_POINTS_BASE_URL",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 49
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 50
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 81
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_INPOST_ENABLED",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/preset.ts",
+              "line": 82
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "api-shipx-pl.easypack24.net",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/client.ts",
+              "line": 6
+            },
+            "confidence": "high"
+          },
+          {
+            "host": "api.inpost.pl",
+            "src": {
+              "file": "src/modules/carrier_inpost/lib/client.ts",
+              "line": 10
+            },
+            "confidence": "high"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:carrier_inpost"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "shipping:inpost"
+        },
+        {
+          "kind": "widget",
+          "target": "detail:sales.order:shipping"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService",
+            "createCredentialsService"
+          ],
+          "modules/integrations/lib/log-service": [
+            "IntegrationLogService",
+            "createIntegrationLogService"
+          ],
+          "modules/integrations/lib/state-service": [
+            "IntegrationStateService",
+            "createIntegrationStateService"
+          ],
+          "modules/shipping_carriers/lib/adapter": [
+            "Address",
+            "CreateShipmentInput",
+            "CreateShipmentResult",
+            "DropOffPoint",
+            "SearchDropOffPointsInput",
+            "ShippingAdapter",
+            "ShippingRate",
+            "ShippingWebhookEvent",
+            "TrackingResult",
+            "UnifiedShipmentStatus"
+          ],
+          "modules/shipping_carriers/lib/adapter-registry": [
+            "registerShippingAdapter"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/di/container": [
+            "AppContainer"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/telemetry/runtime": [
+            "getTelemetryRuntime"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationCredentialWebhookHelp",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/registry": [
+            "ModuleInfo"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "backend/utils/apiCall": [
+            "apiCall"
+          ],
+          "primitives/button": [
+            "Button"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "carrier_inpost",
+        "tables": [],
+        "aclFeatures": [
+          "carrier_inpost.view",
+          "carrier_inpost.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0020002",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.10.1 and 1 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.10.1.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/carrier_inpost/integration.ts",
+            "line": 6
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

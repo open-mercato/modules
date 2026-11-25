@@ -1,13 +1,13 @@
 {
-  "resolvedAt": "2026-11-25T08:43:15Z",
-  "coreLatest": "0.10.0",
+  "resolvedAt": "2026-11-25T14:27:42Z",
+  "coreLatest": "0.10.1",
   "keepaliveAt": "2026-11-24T22:30:49Z",
   "lines": [
     {
       "key": "0.10",
-      "version": "0.10.0",
+      "version": "0.10.1",
       "source": "latest",
-      "createApp": "create-mercato-app@0.10.0",
+      "createApp": "create-mercato-app@0.10.1",
       "cadence": "nightly",
       "preapproved": [
         "@open-mercato/*"
@@ -527,9 +527,9 @@
     },
     {
       "key": "next",
-      "version": "0.11.1-develop.8521.1.204f384ec3",
+      "version": "0.11.1-develop.8531.1.9c9f5e2b21",
       "source": "develop",
-      "createApp": "create-mercato-app@0.11.1-develop.8521.1.204f384ec3",
+      "createApp": "create-mercato-app@0.11.1-develop.8531.1.9c9f5e2b21",
       "cadence": "nightly",
       "preapproved": [
         "@open-mercato/*"

@@ -1,20 +1,20 @@
 {
   "locator": "npm:@open-mercato/content",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/content",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:29:03Z",
-      "0.9.0": "2026-10-09T19:24:45Z"
+      "0.10.1": "2026-11-25T12:49:05Z",
+      "0.10.0": "2026-11-23T08:29:03Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -27,18 +27,18 @@
       "piotrkarwatka"
     ],
     "peerDependencies": {
-      "@open-mercato/shared": "0.10.0"
+      "@open-mercato/shared": "0.10.1"
     },
     "dependencies": {},
     "installScripts": [],
-    "integrity": "sha512-w9nADVc4eBZPWC0N7xABQO5sxd7z4167jnbuQ2QsOFiUppHsIABp4DrogK7T6kSeWd2K8156tRF9d6MlLobBPw==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/content/-/content-0.10.0.tgz"
+    "integrity": "sha512-UPWUMgB4CbrQVJVOUDl6ONUh16Ojo4EfWdvVL0pTIvOoEwX+n1R1KYWNUQ2i40uez0+Ki7ec0e/s2A2HzPmkmg==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/content/-/content-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -57,6 +57,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -226,12 +230,12 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 80618,
+  "downloads30d": 81452,
   "errors": []
 }

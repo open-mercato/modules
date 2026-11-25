@@ -1,20 +1,20 @@
 {
   "locator": "npm:@open-mercato/sync-akeneo",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/sync-akeneo",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:35:33Z",
-      "0.9.0": "2026-10-09T19:28:57Z"
+      "0.10.1": "2026-11-25T12:51:17Z",
+      "0.10.0": "2026-11-23T08:35:33Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -30,24 +30,24 @@
       "react": "^19.0.0",
       "react-is": ">=18.0.0",
       "react-dom": "^19.0.0",
-      "@open-mercato/shared": "0.10.0",
+      "@open-mercato/shared": "0.10.1",
       "@mikro-orm/postgresql": "^7.0.14",
-      "@open-mercato/ai-assistant": "0.10.0"
+      "@open-mercato/ai-assistant": "0.10.1"
     },
     "dependencies": {
-      "@open-mercato/ui": "0.10.0",
-      "@open-mercato/core": "0.10.0",
+      "@open-mercato/ui": "0.10.1",
+      "@open-mercato/core": "0.10.1",
       "node-html-markdown": "^2.0.0"
     },
     "installScripts": [],
-    "integrity": "sha512-C9lJ5FK1D1KiT0+6exGF3n44BDZH3rOLXm8/pxQiAyJJBhZmki2uvp/FBSWcf0BDYzMK4Jalna/vUo+Ic5Itww==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/sync-akeneo/-/sync-akeneo-0.10.0.tgz"
+    "integrity": "sha512-K8mb0DCG8Q8lMdPLswXG9STToHD8Eus72LqIES0ZBpbFgYBIGsycKuOsIsD+Z1KJRoXSdoXXitLbyEerJyX4WQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/sync-akeneo/-/sync-akeneo-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -66,6 +66,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -235,14 +239,14 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 81209,
+  "downloads30d": 81958,
   "errors": [
-    "npm: stable 1.0.1 is above dist-tags.latest 0.10.0; latestStable follows the latest tag"
+    "npm: stable 1.0.1 is above dist-tags.latest 0.10.1; latestStable follows the latest tag"
   ]
 }

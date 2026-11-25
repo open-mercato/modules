@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/telemetry",
-  "version": "0.10.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "version": "0.10.1",
+  "computedAt": "2026-11-25T14:29:54Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -14,7 +14,7 @@
     "builtFrom": {
       "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+      "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
       "workflow": null
     },
     "claimed": {
@@ -47,7 +47,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-23",
+      "lastRelease": "2026-11-25",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -164,9 +164,9 @@
     "next": null
   },
   "evaluated": {
-    "0.10": "0.10.0",
+    "0.10": "0.10.1",
     "0.9": "0.9.0",
-    "next": "0.11.1-develop.8521.1.204f384ec3"
+    "next": "0.11.1-develop.8531.1.9c9f5e2b21"
   },
   "verdictPreset": "classic"
 }

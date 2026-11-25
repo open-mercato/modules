@@ -1,19 +1,19 @@
 {
   "locator": "npm:@open-mercato/web-research-tavily",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research-tavily",
     "distTags": {
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:33:21Z",
-      "0.9.0": "2026-10-09T19:27:42Z"
+      "0.10.1": "2026-11-25T12:50:24Z",
+      "0.10.0": "2026-11-23T08:33:21Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -32,14 +32,14 @@
       "zod": "^4.6.6"
     },
     "installScripts": [],
-    "integrity": "sha512-UirRoo4d+xWVam1YHStMq+G/z3vd0khPKnSb08jQIGrHsW2mbRCDgLHXbnTg2RD4qjjw445M2v6p646WfFFUrA==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/web-research-tavily/-/web-research-tavily-0.10.0.tgz"
+    "integrity": "sha512-rPWiYhQ6u02wdY4xVnWCbnON/rZUGY7zfT+eSkD71itHwMEjvuKvbDwQc/hpORZXmnCi+vC4L2tv1TqY+q/YGQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/web-research-tavily/-/web-research-tavily-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -58,6 +58,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -225,14 +229,14 @@
     ]
   },
   "provenance": {
-    "status": "verified",
+    "status": "lost",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": null,
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 58643,
+  "downloads30d": 58796,
   "errors": []
 }

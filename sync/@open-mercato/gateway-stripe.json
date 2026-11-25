@@ -1,21 +1,21 @@
 {
   "locator": "npm:@open-mercato/gateway-stripe",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:10:17Z",
   "npm": {
     "name": "@open-mercato/gateway-stripe",
     "distTags": {
       "legacy": "1.0.1",
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:30:14Z",
-      "0.9.0": "2026-10-09T19:25:40Z"
+      "0.10.1": "2026-11-25T12:49:21Z",
+      "0.10.0": "2026-11-23T08:30:14Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -31,27 +31,27 @@
       "react": "^19.0.0",
       "react-is": ">=18.0.0",
       "react-dom": "^19.0.0",
-      "@open-mercato/shared": "0.10.0",
+      "@open-mercato/shared": "0.10.1",
       "@mikro-orm/postgresql": "^7.0.14",
-      "@open-mercato/ai-assistant": "0.10.0"
+      "@open-mercato/ai-assistant": "0.10.1"
     },
     "dependencies": {
       "stripe": "^22.3.1",
-      "@open-mercato/ui": "0.10.0",
+      "@open-mercato/ui": "0.10.1",
       "@stripe/stripe-js": "^9.14.0",
-      "@open-mercato/core": "0.10.0",
-      "@open-mercato/queue": "0.10.0",
+      "@open-mercato/core": "0.10.1",
+      "@open-mercato/queue": "0.10.1",
       "@stripe/react-stripe-js": "^6.8.2"
     },
     "installScripts": [],
-    "integrity": "sha512-ptA6jGO7YJ22tM5aY6Yk2oFOQ9cKXp9tSeg7QDrhY8sOZaFFiZ1j8T+UYsfz4lKK9ASeZVIUD+NSeFDkiE44aw==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.10.0.tgz"
+    "integrity": "sha512-kh9AqXKQKiqCOyrfX79zKlIWIwBPcLaPDizmBgejwNSAdL8qSSXdzgZT2/eHFU3Q0WtX9avWA/lrmrMG6gxeDw==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/gateway-stripe/-/gateway-stripe-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -70,6 +70,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -237,15 +241,15 @@
     ]
   },
   "provenance": {
-    "status": "verified",
+    "status": "lost",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": null,
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 85280,
+  "downloads30d": 84418,
   "errors": [
     "npm: highest stable 1.0.1 is deprecated (\"published by mistake, use 0.4.x\"); latestStable skips deprecated versions"
   ]

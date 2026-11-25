@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
-  "version": "0.10.0",
-  "computedAt": "2026-11-25T11:45:37Z",
+  "version": "0.10.1",
+  "computedAt": "2026-11-25T14:29:54Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "verified",
+      "status": "lost",
       "repo": "open-mercato/open-mercato",
-      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+      "commit": null,
       "workflow": null
     },
     "claimed": {
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "broken",
+      "0.10": "untested",
       "0.9": "untested",
       "next": "verified"
     },
@@ -38,8 +38,10 @@
     },
     "anatomy": "full",
     "supplyChain": {
-      "status": "ok",
-      "reasons": []
+      "status": "warn",
+      "reasons": [
+        "Provenance lost: the previous release had it."
+      ]
     },
     "hygiene": {
       "status": "warn",
@@ -49,7 +51,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-23",
+      "lastRelease": "2026-11-25",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -93,7 +95,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at add on 0.10 since 24 Nov."
+      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
     },
     {
       "id": "VER-2",
@@ -102,8 +104,8 @@
     },
     {
       "id": "VER-3",
-      "pass": true,
-      "detail": "Supply chain: ok."
+      "pass": false,
+      "detail": "Supply chain: warn."
     },
     {
       "id": "VER-4",
@@ -120,13 +122,18 @@
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 24 Nov."
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
+        },
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         }
-      ]
+      ],
+      "consentText": "Install @open-mercato/gateway-autopay@0.10.1"
     },
     "0.9": {
       "decision": "ask",
@@ -134,18 +141,23 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
+        },
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
+        }
+      ],
+      "consentText": "Install @open-mercato/gateway-autopay@0.10.1"
+    },
+    "next": {
+      "decision": "ask",
+      "reasons": [
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         }
       ],
       "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
-    },
-    "next": {
-      "decision": "allow",
-      "reasons": [
-        {
-          "code": "OFFICIAL_VERIFIED",
-          "text": "Official, verified on next."
-        }
-      ]
     }
   },
   "state": "active",
@@ -155,8 +167,8 @@
     "next": "0.10.0"
   },
   "evaluated": {
-    "0.10": "0.10.0",
-    "0.9": "0.10.0",
+    "0.10": "0.10.1",
+    "0.9": "0.10.1",
     "next": "0.10.0"
   },
   "verdictPreset": "classic"

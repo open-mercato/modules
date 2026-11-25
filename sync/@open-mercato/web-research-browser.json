@@ -1,19 +1,19 @@
 {
   "locator": "npm:@open-mercato/web-research-browser",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/web-research-browser",
     "distTags": {
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:30:06Z",
-      "0.9.0": "2026-10-09T19:28:27Z"
+      "0.10.1": "2026-11-25T12:50:15Z",
+      "0.10.0": "2026-11-23T08:30:06Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -31,17 +31,17 @@
     "dependencies": {
       "zod": "^4.6.6",
       "playwright": "^1.40.0",
-      "@open-mercato/web-research-serp": "0.10.0"
+      "@open-mercato/web-research-serp": "0.10.1"
     },
     "installScripts": [],
-    "integrity": "sha512-NrB6OYDkjjAqR7kfnf1siMhtNlRC9fCtkWbT6FEka6IESzMFTs9q9+aqrt50RasCIB9t2P/TlN5qsOU4OsY1tQ==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/web-research-browser/-/web-research-browser-0.10.0.tgz"
+    "integrity": "sha512-TPJsPshbz4AZA7z98K4w+l7x4WJlzFBfyQgJZX5pSkfunaBXoeu59/5ZaVxx5ltSfl/wLHiztxcfEcTtJBUGVQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/web-research-browser/-/web-research-browser-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -60,6 +60,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -229,12 +233,12 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 58043,
+  "downloads30d": 58269,
   "errors": []
 }

@@ -1,0 +1,63 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 15
+  },
+  "package": {
+    "locator": "npm:@open-mercato/web-research-browser",
+    "name": "@open-mercato/web-research-browser",
+    "version": "0.10.1",
+    "integrity": "sha512-TPJsPshbz4AZA7z98K4w+l7x4WJlzFBfyQgJZX5pSkfunaBXoeu59/5ZaVxx5ltSfl/wLHiztxcfEcTtJBUGVQ==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "provider",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/web-research": "^0.6.0"
+  },
+  "dependencies": {
+    "@open-mercato/web-research-serp": "0.10.1",
+    "playwright": "^1.40.0",
+    "zod": "^4.6.6"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [],
+  "packageCode": {
+    "env": [
+      {
+        "name": "OM_WEB_RESEARCH_SIDECAR_TEST",
+        "src": {
+          "file": "src/sidecar.ts",
+          "line": 108
+        }
+      }
+    ],
+    "hosts": []
+  },
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

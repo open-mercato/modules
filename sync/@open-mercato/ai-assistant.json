@@ -1,20 +1,20 @@
 {
   "locator": "npm:@open-mercato/ai-assistant",
-  "checkedAt": "2026-11-25T08:43:20Z",
+  "checkedAt": "2026-11-25T14:27:49Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/ai-assistant",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
-      "latest": "0.10.0",
-      "develop": "0.11.1-develop.8521.1.204f384ec3"
+      "develop": "0.11.1-develop.8531.1.9c9f5e2b21",
+      "latest": "0.10.1"
     },
-    "latestStable": "0.10.0",
-    "previousStable": "0.9.0",
+    "latestStable": "0.10.1",
+    "previousStable": "0.10.0",
     "preview": null,
     "publishedAt": {
-      "0.10.0": "2026-11-23T08:31:32Z",
-      "0.9.0": "2026-10-09T19:24:18Z"
+      "0.10.1": "2026-11-25T12:49:49Z",
+      "0.10.0": "2026-11-23T08:31:32Z"
     },
     "deprecated": null,
     "license": "MIT",
@@ -30,8 +30,8 @@
       "zod": ">=3.23.0",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
-      "@open-mercato/ui": "0.10.0",
-      "@open-mercato/shared": "0.10.0"
+      "@open-mercato/ui": "0.10.1",
+      "@open-mercato/shared": "0.10.1"
     },
     "dependencies": {
       "ai": "^7.0.83",
@@ -48,14 +48,14 @@
       "@modelcontextprotocol/sdk": "^1.32.0"
     },
     "installScripts": [],
-    "integrity": "sha512-q+kTsXDqzhL68pdIjT8Wa2310C/GgeQahEe+cRLqMCfOZeJhQwvppHH/Dw57DvekV7hEoTNgdoDXbqZegI9r7Q==",
-    "tarball": "https://registry.npmjs.org/@open-mercato/ai-assistant/-/ai-assistant-0.10.0.tgz"
+    "integrity": "sha512-yXXbGuREq65oJuOdcu7GMneHZElaMvSuSb5wp/ayXNTBg7BsT57RvfWqQ5Ps69CGlyvHhWevgf5kvXfIOfOzbQ==",
+    "tarball": "https://registry.npmjs.org/@open-mercato/ai-assistant/-/ai-assistant-0.10.1.tgz"
   },
   "github": {
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T08:42:26Z",
+    "pushedAt": "2026-11-25T14:27:28Z",
     "defaultBranch": "main",
     "stars": 1964,
     "license": "MIT",
@@ -74,6 +74,10 @@
     ],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "v0.10.1",
+        "sha": "cafc9dec247e197830224e4ee8fd025a2c9171c7"
+      },
       {
         "name": "v0.10.0",
         "sha": "30267337770b2aaa85e2652bbfe411942a2a84a8"
@@ -243,12 +247,12 @@
   "provenance": {
     "status": "verified",
     "sourceRepo": "open-mercato/open-mercato",
-    "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+    "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
     "workflow": null
   },
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 107453,
+  "downloads30d": 108310,
   "errors": []
 }

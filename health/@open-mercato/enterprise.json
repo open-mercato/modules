@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/enterprise",
-  "version": "0.10.0",
-  "computedAt": "2026-11-23T23:59:45Z",
+  "version": "0.10.1",
+  "computedAt": "2026-11-25T14:29:54Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "verified",
+      "status": "lost",
       "repo": "open-mercato/open-mercato",
-      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+      "commit": null,
       "workflow": null
     },
     "claimed": {
@@ -38,8 +38,10 @@
     },
     "anatomy": "hidden",
     "supplyChain": {
-      "status": "ok",
-      "reasons": []
+      "status": "warn",
+      "reasons": [
+        "Provenance lost: the previous release had it."
+      ]
     },
     "hygiene": {
       "status": "ok",
@@ -47,7 +49,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-23",
+      "lastRelease": "2026-11-25",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -98,8 +100,8 @@
     },
     {
       "id": "VER-3",
-      "pass": true,
-      "detail": "Supply chain: ok."
+      "pass": false,
+      "detail": "Supply chain: warn."
     },
     {
       "id": "VER-4",
@@ -125,9 +127,13 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
+        },
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         }
       ],
-      "consentText": "Install @open-mercato/enterprise@0.10.0"
+      "consentText": "Install @open-mercato/enterprise@0.10.1"
     },
     "0.9": {
       "decision": "ask",
@@ -139,9 +145,13 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
+        },
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         }
       ],
-      "consentText": "Install @open-mercato/enterprise@0.9.0"
+      "consentText": "Install @open-mercato/enterprise@0.10.1"
     },
     "next": {
       "decision": "ask",
@@ -153,9 +163,13 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
+        },
+        {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         }
       ],
-      "consentText": "Install @open-mercato/enterprise@0.10.0"
+      "consentText": "Install @open-mercato/enterprise@0.10.1"
     }
   },
   "state": "active",
@@ -165,9 +179,9 @@
     "next": null
   },
   "evaluated": {
-    "0.10": "0.10.0",
-    "0.9": "0.9.0",
-    "next": "0.10.0"
+    "0.10": "0.10.1",
+    "0.9": "0.10.1",
+    "next": "0.10.1"
   },
   "verdictPreset": "classic"
 }

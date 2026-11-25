@@ -1,0 +1,482 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 31
+  },
+  "package": {
+    "locator": "npm:@open-mercato/gateway-stripe",
+    "name": "@open-mercato/gateway-stripe",
+    "version": "0.10.1",
+    "integrity": "sha512-kh9AqXKQKiqCOyrfX79zKlIWIwBPcLaPDizmBgejwNSAdL8qSSXdzgZT2/eHFU3Q0WtX9avWA/lrmrMG6gxeDw==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": true,
+    "needsModuleFlag": false,
+    "reason": null,
+    "modules": [
+      {
+        "id": "gateway_stripe",
+        "src": true,
+        "dist": true
+      }
+    ]
+  },
+  "kind": "module",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": "MIT"
+    }
+  },
+  "omPeers": {
+    "@open-mercato/ai-assistant": "0.10.1",
+    "@open-mercato/shared": "0.10.1"
+  },
+  "dependencies": {
+    "@open-mercato/core": "0.10.1",
+    "@open-mercato/queue": "0.10.1",
+    "@open-mercato/ui": "0.10.1",
+    "@stripe/react-stripe-js": "^6.8.2",
+    "@stripe/stripe-js": "^9.14.0",
+    "stripe": "^22.3.1"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [
+    {
+      "id": "gateway_stripe",
+      "title": "Stripe Payment Gateway",
+      "description": "Accept card payments, Apple Pay, Google Pay, and bank transfers via Stripe.",
+      "requires": [],
+      "ejectable": null,
+      "data": {
+        "entities": [],
+        "migrations": {
+          "count": 0,
+          "first": null,
+          "last": null
+        },
+        "customEntities": 0
+      },
+      "http": {
+        "routes": [],
+        "legacyRouteFiles": 0,
+        "authResolved": 1
+      },
+      "security": {
+        "aclFeatures": [
+          "gateway_stripe.view",
+          "gateway_stripe.configure"
+        ],
+        "setupDefaultRoleFeatures": true
+      },
+      "events": {
+        "emits": [],
+        "subscribes": []
+      },
+      "ui": {
+        "backendPages": [],
+        "frontendPages": [],
+        "widgets": 1,
+        "extensionHosts": 0
+      },
+      "background": {
+        "workers": [
+          {
+            "queue": "stripe-webhook"
+          }
+        ],
+        "cli": [
+          "configure-from-env",
+          "help"
+        ]
+      },
+      "ai": {
+        "tools": [],
+        "agents": []
+      },
+      "config": {
+        "credentials": [
+          {
+            "key": "publishableKey",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "secretKey",
+            "type": "secret",
+            "required": true
+          },
+          {
+            "key": "webhookSecret",
+            "type": "secret",
+            "required": true
+          }
+        ],
+        "env": [
+          {
+            "name": "OM_INTEGRATION_STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 60
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 61
+            }
+          },
+          {
+            "name": "STRIPE_PUBLISHABLE_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 62
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 65
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 66
+            }
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 67
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 70
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 71
+            }
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 72
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 92
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 93
+            }
+          },
+          {
+            "name": "STRIPE_API_VERSION",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 94
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 104
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 105
+            }
+          },
+          {
+            "name": "STRIPE_FORCE_PRECONFIGURE",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 106
+            }
+          },
+          {
+            "name": "OM_INTEGRATION_STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 109
+            }
+          },
+          {
+            "name": "OPENMERCATO_STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 110
+            }
+          },
+          {
+            "name": "STRIPE_ENABLED",
+            "src": {
+              "file": "src/modules/gateway_stripe/lib/preset.ts",
+              "line": 111
+            }
+          }
+        ]
+      },
+      "network": {
+        "hosts": [
+          {
+            "host": "*.js.stripe.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 2
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "*.link.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 3
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "api.stripe.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 3
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "hooks.stripe.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 4
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "js.stripe.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 2
+            },
+            "confidence": "low"
+          },
+          {
+            "host": "link.com",
+            "src": {
+              "file": "src/contentSecurityPolicy.ts",
+              "line": 3
+            },
+            "confidence": "low"
+          }
+        ],
+        "undeclared": []
+      },
+      "extends": [
+        {
+          "kind": "specialized-registry",
+          "target": "integration:gateway_stripe"
+        },
+        {
+          "kind": "specialized-registry",
+          "target": "payment:stripe"
+        }
+      ],
+      "omImports": {
+        "@open-mercato/core": {
+          "modules/integrations/lib/credentials-service": [
+            "CredentialsService",
+            "createCredentialsService"
+          ],
+          "modules/integrations/lib/log-service": [
+            "IntegrationLogService",
+            "createIntegrationLogService"
+          ],
+          "modules/integrations/lib/state-service": [
+            "IntegrationStateService",
+            "createIntegrationStateService"
+          ],
+          "modules/payment_gateways/lib/gateway-service": [
+            "PaymentGatewayService"
+          ],
+          "modules/payment_gateways/lib/webhook-utils": [
+            "claimWebhookProcessing",
+            "releaseWebhookClaim"
+          ]
+        },
+        "@open-mercato/queue": {
+          ".": [
+            "JobContext",
+            "QueuedJob",
+            "WorkerMeta"
+          ]
+        },
+        "@open-mercato/shared": {
+          "lib/boolean": [
+            "parseBooleanToken"
+          ],
+          "lib/cli/parseModuleCliOptions": [
+            "parseModuleCliOptions"
+          ],
+          "lib/decimal": [
+            "decimalToNumber",
+            "decimalToString",
+            "divideDecimals",
+            "roundDecimal",
+            "toDecimal"
+          ],
+          "lib/di/container": [
+            "AppContainer",
+            "createRequestContainer"
+          ],
+          "lib/i18n/context": [
+            "useT"
+          ],
+          "lib/logger": [
+            "createLogger"
+          ],
+          "lib/queue/dispatchOrigin": [
+            "isTrustedWebhookDispatch"
+          ],
+          "lib/webhooks": [
+            "DEFAULT_WEBHOOK_BODY_LIMIT_BYTES",
+            "resolveWebhookBodyLimitBytes"
+          ],
+          "modules/integrations/types": [
+            "IntegrationBundle",
+            "IntegrationCredentialWebhookHelp",
+            "IntegrationDefinition",
+            "IntegrationScope",
+            "buildIntegrationDetailWidgetSpotId"
+          ],
+          "modules/payment_gateways/client": [
+            "EmbeddedPaymentGatewayRendererProps",
+            "registerEmbeddedPaymentGatewayRenderer"
+          ],
+          "modules/payment_gateways/types": [
+            "CancelInput",
+            "CancelResult",
+            "CaptureInput",
+            "CaptureResult",
+            "CreateSessionInput",
+            "CreateSessionResult",
+            "GatewayAdapter",
+            "GatewayPaymentStatus",
+            "GetStatusInput",
+            "PaymentGatewayPresentationRequest",
+            "RefundInput",
+            "RefundResult",
+            "UnifiedPaymentStatus",
+            "VerifyWebhookInput",
+            "WebhookEvent",
+            "registerGatewayAdapter",
+            "registerPaymentGatewayDescriptor",
+            "registerWebhookHandler"
+          ],
+          "modules/registry": [
+            "ModuleCli"
+          ],
+          "modules/setup": [
+            "ModuleSetupConfig"
+          ],
+          "modules/widgets/injection": [
+            "InjectionWidgetComponentProps",
+            "InjectionWidgetModule",
+            "ModuleInjectionTable"
+          ]
+        },
+        "@open-mercato/ui": {
+          "primitives/button": [
+            "Button"
+          ],
+          "primitives/spinner": [
+            "Spinner"
+          ]
+        }
+      },
+      "collisionKeys": {
+        "moduleId": "gateway_stripe",
+        "tables": [],
+        "aclFeatures": [
+          "gateway_stripe.view",
+          "gateway_stripe.configure"
+        ],
+        "eventIds": [],
+        "backendRoutes": []
+      },
+      "publicRoutes": 0,
+      "glyph": "0010202",
+      "lint": [
+        {
+          "code": "peer-exact-pin",
+          "severity": "warn",
+          "message": "Peer dependencies pin Open Mercato exactly (@open-mercato/ai-assistant 0.10.1 and 1 more), so an app on any other release of Open Mercato gets a Yarn peer warning.",
+          "anchor": "i2 §1.4",
+          "src": null
+        },
+        {
+          "code": "no-agents-md",
+          "severity": "info",
+          "message": "No AGENTS.md in the package.",
+          "anchor": "g3 §3",
+          "src": null
+        },
+        {
+          "code": "ships-tests",
+          "severity": "info",
+          "message": "The tarball ships test files.",
+          "anchor": null,
+          "src": null
+        },
+        {
+          "code": "version-drift",
+          "severity": "info",
+          "message": "integration.ts says 1.0.0, package.json says 0.10.1.",
+          "anchor": null,
+          "src": {
+            "file": "src/modules/gateway_stripe/integration.ts",
+            "line": 6
+          }
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "expanded"
+  },
+  "diagnostics": []
+}

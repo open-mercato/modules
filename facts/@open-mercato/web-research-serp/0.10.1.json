@@ -1,0 +1,70 @@
+{
+  "factsVersion": 1,
+  "extractor": {
+    "engine": "@open-mercato/cli@0.9.0 extractModuleFacts",
+    "factsContractVersion": 2,
+    "catalog": "om-modules rentgen 5",
+    "durationMs": 3
+  },
+  "package": {
+    "locator": "npm:@open-mercato/web-research-serp",
+    "name": "@open-mercato/web-research-serp",
+    "version": "0.10.1",
+    "integrity": "sha512-GQH0OuI1v9XG9kPXBkqEZs64PyMmv4Qb/0Gc5jgO/kr9OJEFjNWwiQrGvzVzCPc2zJ8/QThx6UxCgXcTxwbNxA==",
+    "source": "npm-tarball",
+    "gitRef": null
+  },
+  "gate": {
+    "installable": false,
+    "needsModuleFlag": false,
+    "reason": "Package has no src/modules and dist/modules pair.",
+    "modules": []
+  },
+  "kind": "provider",
+  "license": {
+    "value": "MIT",
+    "kind": "osi",
+    "mismatch": false,
+    "sources": {
+      "packageJson": "MIT",
+      "licenseFile": null,
+      "moduleInfo": null,
+      "integrationTs": null
+    }
+  },
+  "omPeers": {
+    "@open-mercato/web-research": "^0.6.0"
+  },
+  "dependencies": {
+    "zod": "^4.6.6"
+  },
+  "agentsMd": false,
+  "readmeExcerpt": null,
+  "modules": [],
+  "packageCode": {
+    "env": [],
+    "hosts": [
+      {
+        "host": "html.duckduckgo.com",
+        "src": {
+          "file": "src/profiles.ts",
+          "line": 55
+        },
+        "confidence": "high"
+      },
+      {
+        "host": "lite.duckduckgo.com",
+        "src": {
+          "file": "src/profiles.ts",
+          "line": 62
+        },
+        "confidence": "high"
+      }
+    ]
+  },
+  "coverage": {
+    "routesAuthResolved": 1,
+    "integrationTs": "absent"
+  },
+  "diagnostics": []
+}

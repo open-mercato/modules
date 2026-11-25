@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
-  "version": "0.10.0",
-  "computedAt": "2026-11-25T11:45:37Z",
+  "version": "0.10.1",
+  "computedAt": "2026-11-25T14:29:54Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -14,7 +14,7 @@
     "builtFrom": {
       "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+      "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
       "workflow": null
     },
     "claimed": {
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "broken",
+      "0.10": "untested",
       "0.9": "untested",
       "next": "verified"
     },
@@ -49,7 +49,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-23",
+      "lastRelease": "2026-11-25",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -93,7 +93,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at add on 0.10 since 24 Nov."
+      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
     },
     {
       "id": "VER-2",
@@ -127,8 +127,8 @@
           "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
         },
         {
-          "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 24 Nov."
+          "code": "NOT_VERIFIED",
+          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
         }
       ]
     },
@@ -162,8 +162,8 @@
     "next": "0.10.0"
   },
   "evaluated": {
-    "0.10": "0.10.0",
-    "0.9": "0.10.0",
+    "0.10": "0.10.1",
+    "0.9": "0.10.1",
     "next": "0.10.0"
   },
   "verdictPreset": "classic"

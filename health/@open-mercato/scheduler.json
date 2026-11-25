@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/scheduler",
-  "version": "0.10.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "version": "0.10.1",
+  "computedAt": "2026-11-25T14:29:54Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "verified",
+      "status": "lost",
       "repo": "open-mercato/open-mercato",
-      "commit": "30267337770b2aaa85e2652bbfe411942a2a84a8",
+      "commit": null,
       "workflow": null
     },
     "claimed": {
@@ -38,8 +38,10 @@
     },
     "anatomy": "full",
     "supplyChain": {
-      "status": "ok",
-      "reasons": []
+      "status": "warn",
+      "reasons": [
+        "Provenance lost: the previous release had it."
+      ]
     },
     "hygiene": {
       "status": "warn",
@@ -49,7 +51,7 @@
     },
     "maintenance": {
       "status": "current",
-      "lastRelease": "2026-11-23",
+      "lastRelease": "2026-11-25",
       "catchUpDays": null
     },
     "declaredVsObserved": {
@@ -102,8 +104,8 @@
     },
     {
       "id": "VER-3",
-      "pass": true,
-      "detail": "Supply chain: ok."
+      "pass": false,
+      "detail": "Supply chain: warn."
     },
     {
       "id": "VER-4",
@@ -127,17 +129,21 @@
           "text": "Not yet tested in a new app on 0.10."
         },
         {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
+        },
+        {
           "code": "IN_PRESET",
           "text": "Nothing to install: a new app already registers scheduler in src/modules.ts."
         }
       ]
     },
     "0.9": {
-      "decision": "allow",
+      "decision": "ask",
       "reasons": [
         {
-          "code": "OFFICIAL_VERIFIED",
-          "text": "Official, verified on 0.9."
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
         },
         {
           "code": "IN_PRESET",
@@ -153,6 +159,10 @@
           "text": "Not yet tested in a new app on next."
         },
         {
+          "code": "SUPPLY_CHAIN",
+          "text": "Provenance lost: the previous release had it."
+        },
+        {
           "code": "IN_PRESET",
           "text": "Nothing to install: a new app already registers scheduler in src/modules.ts."
         }
@@ -166,9 +176,9 @@
     "next": null
   },
   "evaluated": {
-    "0.10": "0.10.0",
+    "0.10": "0.10.1",
     "0.9": "0.9.0",
-    "next": "0.11.1-develop.8521.1.204f384ec3"
+    "next": "0.11.1-develop.8531.1.9c9f5e2b21"
   },
   "verdictPreset": "classic"
 }
