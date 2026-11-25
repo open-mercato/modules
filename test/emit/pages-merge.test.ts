@@ -199,7 +199,7 @@ describe('the merged layout (pages-site --merge)', () => {
     runBuild(dirs.run)
     wwwBuild(dirs.www)
     put(join(dirs.out, 'keep.txt'), 'kept')
-    for (const name of ['run/x.html', 'modules.json', 'schema/x.json', '_routes.json', '_redirects', 'robots.txt']) {
+    for (const name of ['run/x.html', 'modules.json', 'schema/x.json', '_routes.json', 'robots.txt']) {
       put(join(dirs.www, name), 'x')
       expect(() => mergePagesSite(dirs, WWW), name).toThrow(/the catalog or the merge owns at the root/)
       rmSync(join(dirs.www, name.split('/')[0] as string), { recursive: true })
@@ -261,7 +261,7 @@ describe('the merged layout (pages-site --merge)', () => {
       sitemapIndexXml([`${ORIGIN}/run/sitemap-index.xml`, 'https://example.com/sitemap-0.xml', `${ORIGIN}/x.xml`]),
     )
     const problems = checkMergedLayout(dirs.out, WWW).problems.join('\n')
-    expect(problems).toMatch(/_redirects differs from mergedRedirects\(\)/)
+    expect(problems).toMatch(/_redirects: the main site's rules does not begin with/)
     expect(problems).toMatch(/robots\.txt is not mergedRobots\(\)/)
     expect(problems).toMatch(/lists the index https:\/\/www\.openmercato\.com\/run\/sitemap-index\.xml/)
     expect(problems).toMatch(/https:\/\/example\.com\/sitemap-0\.xml is not on https:\/\/www/)

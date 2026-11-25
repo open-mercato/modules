@@ -4,6 +4,7 @@
 // catalog's Base layout, header, footer, fonts and styles (site/src/), which link the catalog under its base: the
 // same BASE_PATH and HOME_PATH the catalog is built with when they nest it, else `/run` and `/modules`
 // (mainSiteRun()), through the om-run-base plugin (www/run-base.ts).
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import preact from '@astrojs/preact'
 import sitemap from '@astrojs/sitemap'
@@ -11,6 +12,7 @@ import type { AstroIntegration } from 'astro'
 import { defineConfig } from 'astro/config'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
 import { mainSiteRun } from '../lib/core/site-host.ts'
+import { parseWwwRedirects, WWW_REDIRECTS_FILE, wwwRedirectsText } from '../lib/emit/www-redirects.ts'
 import { bodyLinkRules, noindexPostPaths } from './body-links.ts'
 import { runBasePlugin } from './run-base.ts'
 import { bodyHtmlPlugin } from './src/lib/body-html.ts'
@@ -55,6 +57,26 @@ function bodyHtml(): AstroIntegration {
   }
 }
 
+/**
+ * The main site's redirects (www/content/redirects.yaml, lib/emit/www-redirects.ts): read and validated when the
+ * config loads, so a bad rule stops the build before any page, and written in file order to dist-www/_redirects when
+ * the build is done; `yarn om pages-site --merge` moves them into the root _redirects of the merged layout.
+ */
+function redirectsFile(): AstroIntegration {
+  const yaml = `${content}redirects.yaml`
+  const rules = existsSync(yaml) ? parseWwwRedirects(readFileSync(yaml, 'utf8'), yaml) : []
+  return {
+    name: 'om-www-redirects',
+    hooks: {
+      'astro:build:done': ({ dir, logger }) => {
+        if (rules.length === 0) return
+        writeFileSync(new URL(WWW_REDIRECTS_FILE, dir), wwwRedirectsText(rules))
+        logger.info(`${WWW_REDIRECTS_FILE}: ${rules.length} redirects of www/content/redirects.yaml`)
+      },
+    },
+  }
+}
+
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   srcDir: './src',
@@ -69,6 +91,7 @@ export default defineConfig({
     preact(),
     paintedDirective(),
     bodyHtml(),
+    redirectsFile(),
     sitemap({ filter: (page) => !/\/404\/?$/.test(page) && !noindex.has(new URL(page).pathname) }),
   ],
   devToolbar: { enabled: false },

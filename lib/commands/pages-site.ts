@@ -12,7 +12,10 @@
 // With PAGES_MERGED=1 (the www-preview jobs of pages.yml, and production once the repository variable PAGES_MERGED
 // is on) the layout is the merged one of lib/emit/pages-merge.ts: `--merge` composes dist/ from dist-www/ (the main
 // site) and dist-run/ (the catalog, nested), functions/site.ts carries `merged: true`, and `--check` proves the
-// merged layout, listing the main site addresses the pages link that Webflow still serves.
+// merged layout, listing the main site addresses the pages link that Webflow still serves. The root _redirects of the
+// merged layout ends with the rules of www/content/redirects.yaml (lib/emit/www-redirects.ts): `--merge` takes them
+// from dist-www/_redirects, which the www build writes, and `--check` wants them equal to the yaml of this checkout,
+// with no loop, no chain longer than one hop and within the Pages limits.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -31,6 +34,10 @@ import {
 } from '../core/site-host.ts'
 import { checkPagesLayout } from '../emit/pages-layout.ts'
 import { checkMergedLayout, MERGE_DIRS, mergeConfigProblem, mergePagesSite } from '../emit/pages-merge.ts'
+import { parseWwwRedirects, wwwRedirectsText } from '../emit/www-redirects.ts'
+
+/** The main site's redirects, relative to the repository root. */
+export const WWW_REDIRECTS_YAML = 'www/content/redirects.yaml'
 
 export const description =
   'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --merge composes dist/; --check <dist> checks the layout'
@@ -96,7 +103,7 @@ export default function pagesSite(ctx: CommandContext): number {
         noindex,
       )
       console.log(
-        `om pages-site: ${MERGE_DIRS.out}/ merged from ${MERGE_DIRS.www}/ (${r.wwwFiles} files) and ${MERGE_DIRS.run}/ (${r.runFiles} files), ${r.sitemaps.length} sitemaps${noindex ? ', noindex' : ''}`,
+        `om pages-site: ${MERGE_DIRS.out}/ merged from ${MERGE_DIRS.www}/ (${r.wwwFiles} files) and ${MERGE_DIRS.run}/ (${r.runFiles} files), ${r.sitemaps.length} sitemaps, ${r.redirects} main site redirects${noindex ? ', noindex' : ''}`,
       )
       return EXIT_OK
     } catch (err) {
@@ -119,8 +126,18 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error(`om pages-site: ${check} does not exist; build first`)
     return EXIT_ENV
   }
+  let wwwRedirects: string | undefined
+  if (merged) {
+    const yaml = join(ctx.root, WWW_REDIRECTS_YAML)
+    try {
+      wwwRedirects = wwwRedirectsText(existsSync(yaml) ? parseWwwRedirects(readFileSync(yaml, 'utf8'), yaml) : [])
+    } catch (err) {
+      console.error(`om pages-site: ${(err as Error).message}`)
+      return EXIT_VALIDATION
+    }
+  }
   const result = merged
-    ? checkMergedLayout(dist, c, 50, noindex)
+    ? checkMergedLayout(dist, c, 50, noindex, wwwRedirects)
     : { problems: checkPagesLayout(dist, c, 50, noindex), pending: [] }
   const problems = result.problems
   if (have !== want) problems.unshift(`${SITE_MODULE} is not for ${siteRoot(c)}; run yarn om pages-site`)
