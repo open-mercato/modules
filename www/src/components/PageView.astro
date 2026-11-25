@@ -1,0 +1,36 @@
+---
+// A unique page of the main site (spec, Phase 6), from its `pages` entry: the SEO of `seo`, the JSON-LD computed from
+// its content (www/src/lib/pages.ts pageJsonLd), its blocks in order (blocks/Blocks.astro), the shared closing call to
+// action unless the page has its own (`siteCta`), and the page's own stylesheet when it has one: the mirror of the
+// live page's embedded code, www/src/styles/webflow/pages/<slug>.css, with the body class `wf-<slug>` that stands for
+// the live page's `html[data-wf-page]`.
+import Main from '../layouts/Main.astro'
+import Blocks from './blocks/Blocks.astro'
+import { countValues } from '../lib/counts.ts'
+import { pageJsonLd, pagePath, type PageEntry } from '../lib/pages.ts'
+import pagesCss from '../styles/webflow/pages.css?url'
+
+interface Props {
+  entry: PageEntry
+}
+const { entry } = Astro.props
+const d = entry.data
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const counts = countValues()
+const own = import.meta.glob<string>('../styles/webflow/pages/*.css', { query: '?url', import: 'default', eager: true })
+const pageCss = own[`../styles/webflow/pages/${entry.id}.css`]
+---
+
+<Main
+  cta={d.siteCta}
+  styles={[pagesCss, ...(pageCss ? [pageCss] : [])]}
+  path={pagePath(entry.id)}
+  title={d.seo.title}
+  description={d.seo.description}
+  ogImage={d.seo.ogImage}
+  noindex={d.seo.noindex || undefined}
+  jsonLd={pageJsonLd(entry, site, counts)}
+  bodyClass={`wf-${entry.id}`}
+>
+  <Blocks blocks={d.blocks} counts={counts} page={entry.id} />
+</Main>

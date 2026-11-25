@@ -1,0 +1,26 @@
+---
+// Longer copy of a unique page (the legal text of /terms-conditions) in the live rich text style
+// (`text-legal-rich-text w-richtext`), 50rem wide, in the live band.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, proseHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'prose'>
+const { block, counts } = Astro.props
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content">
+          {block.title && <h2 set:html={headingHtml(fillCounts(block.title, counts))} />}
+          <div class="max-width-50rem">
+            <div class="text-legal-rich-text w-richtext" set:html={proseHtml(fillCounts(block.markdown, counts))} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

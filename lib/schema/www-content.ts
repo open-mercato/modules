@@ -448,11 +448,36 @@ export type PageBlockData = z.infer<typeof PageBlock>
  * the copy of the list routes). A published page holds typed blocks only: a `copy` block, the importer's raw text, is
  * refused unless the page is a draft (spec Phase 6), so no page ships unmapped text.
  */
+export const PAGE_JSON_LD_TYPES = [
+  'WebPage',
+  'AboutPage',
+  'ContactPage',
+  'TechArticle',
+  'HowTo',
+  'SoftwareApplication',
+] as const
+
 export function pageSchema() {
   return z
     .strictObject({
       webflowId: WebflowId.optional(),
       seo: Seo,
+      /**
+       * The JSON-LD of the page, computed from its content (spec SEO): the page's own type (its name and description
+       * from `seo`; a HowTo's steps from its first `steps` block), plus FAQPage from its `faq` blocks and from `faq`
+       * here, the questions the live page's head code names without showing them.
+       */
+      jsonLd: z
+        .strictObject({
+          type: z.enum(PAGE_JSON_LD_TYPES),
+          faq: z
+            .array(z.strictObject({ question: Text, answer: Markdown }))
+            .min(1)
+            .optional(),
+        })
+        .optional(),
+      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm). */
+      siteCta: z.boolean().default(true),
       blocks: z.array(PageBlock),
       draft,
     })

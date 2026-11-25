@@ -1,30 +1,11 @@
 ---
-// Placeholder home page of the main site (Phase 1a): proves the shared shell (Base layout, header, footer, fonts and
-// styles of site/src/) in the www build. The real home page is mapped from the Webflow export in Phase 6.
-import Base from '../../../site/src/layouts/Base.astro'
-import { href } from '../../../site/src/lib/url.ts'
+// The home page of the main site: the `pages` entry `home` (spec, Routing), rendered by PageView.
+import { getCollection } from 'astro:content'
+import PageView from '../components/PageView.astro'
+import { HOME_PAGE_SLUG } from '../../../lib/schema/www-content.ts'
+import { pageEntry, type PageEntry } from '../lib/pages.ts'
+
+const entry = pageEntry((await getCollection('pages')) as unknown as PageEntry[], HOME_PAGE_SLUG)
 ---
 
-<Base
-  section="main"
-  path="/"
-  title="Open Mercato"
-  description="The main site of Open Mercato, built from the open-mercato/modules repository. A preview of its skeleton."
->
-  <section class="band">
-    <div class="sheet www-home">
-      <h1 class="t-h1">Open Mercato</h1>
-      <p>
-        This is the skeleton of the main site, built from this repository. Its pages move here from Webflow in the next
-        phases.
-      </p>
-      <p><a href={href('/')}>Open the Run section</a></p>
-    </div>
-  </section>
-</Base>
-
-<style>
-  .www-home {
-    padding-block: 64px;
-  }
-</style>
+<PageView entry={entry} />

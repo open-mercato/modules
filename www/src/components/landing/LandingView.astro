@@ -1,0 +1,80 @@
+---
+// One SEO landing (spec docs/specs/2026-11-24-www-site-migration.md, Phase 5), routed at /<slug> by
+// www/src/pages/[slug].astro: one template for the 32 of www/content/landings, in the live landings' markup and CSS
+// (www/src/styles/webflow/landing.css) until the designer's pass (D7). SEO from the entry: its title and description,
+// canonical, an OG image (its own or the card drawn at build, /og/<slug>.png), FAQPage JSON-LD equal to its `faq`,
+// `<html lang>` from `locale`, and hreflang between a landing and its translation.
+import Main from '../../layouts/Main.astro'
+import landingCss from '../../styles/webflow/landing.css?url'
+import CapabilityMatrix from './CapabilityMatrix.astro'
+import CtaBand from './CtaBand.astro'
+import DemoBlock from './DemoBlock.astro'
+import Faq from './Faq.astro'
+import FeatureGrid from './FeatureGrid.astro'
+import LandingHero from './LandingHero.astro'
+import PainList from './PainList.astro'
+import RelatedLandings from './RelatedLandings.astro'
+import SectionNav from './SectionNav.astro'
+import SourceList from './SourceList.astro'
+import StepList from './StepList.astro'
+import { refId } from '../../lib/blog.ts'
+import { countValues } from '../../lib/counts.ts'
+import {
+  alternatesOf,
+  faqJsonLd,
+  landingOgImage,
+  landingOgImageSize,
+  landingPath,
+  publishedLandings,
+  templateText,
+  type LandingEntry,
+} from '../../lib/landings.ts'
+
+interface Props {
+  landing: LandingEntry
+  all: LandingEntry[]
+}
+const { landing, all } = Astro.props
+const d = landing.data
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const counts = countValues()
+const tpl = templateText(d.locale)
+const byId = new Map(publishedLandings(all).map((l) => [l.id, l]))
+const related = d.related
+  .map((r) => byId.get(refId(r) ?? ''))
+  .filter((l): l is LandingEntry => l !== undefined)
+  .map((l) => ({ id: l.id, title: l.data.hero.title, eyebrow: l.data.hero.eyebrow }))---
+
+<Main
+  cta={false}
+  styles={[landingCss]}
+  lang={d.locale}
+  path={landingPath(landing.id)}
+  title={d.seo.title}
+  description={d.seo.description}
+  ogImage={landingOgImage(landing)}
+  ogImageSize={landingOgImageSize(landing)}
+  noindex={d.seo.noindex || undefined}
+  jsonLd={faqJsonLd(landing, site, counts)}
+>
+  <Fragment slot="head">
+    {alternatesOf(landing, all, site).map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+  </Fragment>
+  <div class="omlp">
+    <LandingHero hero={d.hero} counts={counts} />
+    <SectionNav items={d.sectionNav} label={tpl.navLabel} />
+    {d.pains && <PainList pains={d.pains} counts={counts} />}
+    {d.features && <FeatureGrid features={d.features} counts={counts} />}
+    {
+      d.capabilities && (
+        <CapabilityMatrix capabilities={d.capabilities} comparison={d.comparison} locale={d.locale} counts={counts} />
+      )
+    }
+    {d.demo && <DemoBlock demo={d.demo} counts={counts} />}
+    {d.steps && <StepList steps={d.steps} counts={counts} />}
+    <Faq faq={d.faq} counts={counts} />
+    <CtaBand cta={d.cta} counts={counts} />
+    {d.sources && <SourceList sources={d.sources} locale={d.locale} />}
+    <RelatedLandings items={related} title={tpl.relatedTitle} />
+  </div>
+</Main>

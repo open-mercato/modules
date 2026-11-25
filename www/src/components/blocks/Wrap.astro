@@ -1,0 +1,19 @@
+---
+// The page band a live section sits in: `main` (main-wrapper, the page's light band), `dark` (dark-section-wrapper) or
+// `white` (white-section-wrapper), each with the bordered column container-main. The wrappers carry no spacing of
+// their own, so consecutive blocks in one band look as one live band does.
+interface Props {
+  tone?: 'main' | 'dark' | 'white'
+  /** Extra classes of container-main. */
+  class?: string
+}
+const { tone = 'main', class: extra } = Astro.props
+const wrapper = { main: 'main-wrapper', dark: 'dark-section-wrapper', white: 'white-section-wrapper' }[tone]
+const container = ['container-main', tone === 'dark' && 'is-dark', extra].filter(Boolean).join(' ')
+---
+
+<div class={`${wrapper} padding-global`}>
+  <div class={container}>
+    <slot />
+  </div>
+</div>
