@@ -1,0 +1,126 @@
+webflowId: 69aeaa431d8afbbf67023bfd
+seo:
+  title: How to contribute | Open Mercato
+  description: Install Open Mercato and run a working environment in minutes. Contribute to the AI-native, modular monolith framework and help shape the future.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: HowTo
+blocks:
+  # a third button, the arrow link, is the hero's one item
+  - type: hero
+    layout: how-to-contribute-hero
+    eyebrow: How to contribute
+    title: How to contribute
+    lead: Open Mercato is a community-driven organization. Whether you are an AI enthusiast, a security expert, or a frontend wizard, your contributions help eliminate "commodity coding" for everyone.
+    primary:
+      label: Clone the Repo
+      href: https://github.com/open-mercato/open-mercato
+    secondary:
+      label: See Live Demo
+      href: https://openmercatocloud.com/demo
+    items:
+      - title: Documentation
+        cta:
+          label: Documentation
+          href: https://docs.openmercato.com/
+  - type: features
+    layout: how-to-contribute-why
+    eyebrow: The Vision
+    title: Why Contribute?
+    lead: We are building a future where developers focus on solving unique business problems while the framework handles the "boring" infrastructure.
+    items:
+      - title: Influence the Standard
+        body: Help shape the AGENTS.MD protocols that define how AI interacts with enterprise code.
+      - title: Showcase Your Expertise
+        body: High-quality modules contribute to your professional standing and can lead to becoming a certified Implementation Partner.
+      - title: Built to Last
+        body: Backed by Catch The Tornado, we are committed to a long-term, stable roadmap.
+  # the HowTo steps of the page's JSON-LD; each line of a body is a line of the card (the no-break space before `#` is
+  # live's)
+  - type: steps
+    layout: how-to-contribute-steps
+    eyebrow: Fast Track
+    title: Your First 15 Minutes
+    lead: Before you write code, get the environment running to see the "Modular Monolith" in action.
+    items:
+      - eyebrow: "01"
+        title: Clone the repository
+        body: |-
+          git clone https://github.com/open-mercato/open-mercato.git
+          cd open-mercato
+      - eyebrow: "02"
+        title: Install dependencies (Yarn 4+)
+        body: yarn install
+      - eyebrow: "03"
+        title: Configure environment
+        body: |-
+          cp apps/mercato/.env.example apps/mercato/.env
+          # edit apps/mercato/.env
+      - eyebrow: "04"
+        title: Generate + initialize + run
+        body: |-
+          yarn generate
+          yarn initialize  # or: yarn reinstall
+          yarn dev
+  - type: features
+    layout: how-to-contribute-areas
+    eyebrow: Areas of Contribution
+    title: We categorize contributions into four high-impact streams
+    items:
+      - title: Core Framework (The Engine)
+        body: Improving the DI container (Awilix), refining the Overlay System, or optimizing the MikroORM integration.
+      - title: Community Modules
+        body: Building new "Vertical" modules like Logistics, Healthcare Patient Portal, or Advanced Billing.
+      - title: AI Engineering (Prompt Libraries)
+        body: Open Mercato is AI-native. We need contributors to refine our System Prompts for Claude, Cursor, and Copilot to ensure they generate "Open-Closed" compliant code.
+      - title: Security & Compliance
+        body: Hardening our Encrypted Vault and expanding our field-level encryption strategies (KMS/HashiCorp Vault).
+  - type: features
+    layout: how-to-contribute-workflow
+    label: start with 80%
+    eyebrow: AI WORKFLOW
+    title: The "AI-Native" Contribution Workflow
+    lead: "We encourage using AI (Claude, Cursor, Copilot) to help write your contributions, provided you follow our architectural guardrails:"
+    items:
+      - title: Reference AGENTS.MD
+        body: Always feed our architecture rules to your AI before generating code.
+      - title: Playwright Testing
+        body: Every new feature must include E2E tests to prevent regressions.
+  - type: features
+    layout: how-to-contribute-guidelines
+    eyebrow: The Rules of the Road
+    title: Contribution Guidelines
+    lead: "To maintain enterprise-grade quality, we follow a strict PR process:"
+    items:
+      - eyebrow: "01"
+        title: Branching
+        body: Use feat/ for new features, fix/ for bug fixes, and docs/ for documentation updates.
+      - eyebrow: "02"
+        title: Intellectual Honesty
+        body: If you are introducing a breaking change, highlight it clearly. We prefer modularity over "clever" hacks.
+      - eyebrow: "03"
+        title: Documentation
+        body: Every new module or core change must include an update to its respective AGENTS.MD file so the AI community can use it immediately.
+  # live links Roadmap to `#` (nowhere); an anchor of this page stands for it
+  - type: features
+    layout: how-to-contribute-connect
+    eyebrow: contribute
+    title: Where to Connect
+    items:
+      - title: For bug reports and technical proposals.
+        cta:
+          label: GitHub
+          href: https://github.com/open-mercato/open-mercato
+      - title: Real-time architectural discussions and "Show & Tell."
+        cta:
+          label: Discord
+          href: https://discord.gg/f4qwPtJ3qA
+      - title: Check our public roadmap to see if your idea aligns with our upcoming milestones (e.g., Vector Search integration or Advanced CPQ).
+        cta:
+          label: Roadmap
+          href: "#roadmap"
+  - type: prose
+    layout: how-to-contribute-note
+    eyebrow: NOTE
+    title: MIT License
+    markdown: Open Mercato is and will remain Open Source under the MIT License. You own the code you write, and the community benefits from the foundation we build together.

@@ -14,5 +14,4 @@ blocks:
       href: "#partners"
     secondary:
       label: Learn how to become a partner
-      # /agencies is built in this phase; until its page lands the link points to the live site
-      href: https://www.openmercato.com/agencies
+      href: /agencies

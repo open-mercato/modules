@@ -1,0 +1,42 @@
+webflowId: 6af227949211ec310e336ee3
+seo:
+  # the live page has no title of its own (Webflow prints the site's name) and no description; the description is one
+  # of the four the spec asks for (SEO table)
+  title: Open Mercato
+  description: Meet the people behind Open Mercato, the founders and core developers, and what each of them built before.
+blocks:
+  - type: team
+    layout: team-page
+    title: Meet the people behind *Open Mercato*
+    members:
+      - name: Tomasz Karwatka
+        role: CEO & Co-Founder
+        url: https://www.linkedin.com/in/tkarwatka/
+        photo:
+          src: /media/pages/6aab8968d8d698564577b3f1-tomasz-karwatka-2026.png
+          alt: Tomasz Karwatka
+        bio: Co-founder of Divante and Callstack, both scaled to enterprise clients across Europe and the US and exited. Investor at Catch The Tornado, now all-in on Open Mercato.
+      - name: Piotr Karwatka
+        role: CTO & Founder
+        url: https://www.linkedin.com/in/piotrkarwatka/
+        photo:
+          src: /media/pages/6aab84a929384ef36bc35d30-piotr-karwatka-2026.png
+          alt: Piotr Karwatka
+          width: 84
+        bio: Creator of Vue Storefront and co-founder of Alokai (Y Combinator, $40M Series A). Now focused on AI-native business software.
+      - name: Patryk Lewczuk
+        role: Co-Founder & Core Developer
+        url: https://www.linkedin.com/in/patryk-lewczuk-poland/
+        photo:
+          src: /media/pages/6aab8968fbccf4771786b62e-patryk-lewczuk-2026.png
+          alt: Patryk Lewczuk
+          width: 84
+        bio: Core Developer and Forward Deployed Engineer, earlier Development Lead and Solution Architect building B2B e-commerce systems. At Open Mercato responsible for Cezar, Agent Orchestrator and customer success.
+      - name: Maciej Gren
+        role: Co-Founder & Partnership Manager
+        url: https://www.linkedin.com/in/maciejgren/
+        photo:
+          src: /media/pages/6aab8969d97d6b56a612ce27-maciej-gren-2026.png
+          alt: Maciej Gren
+          width: 84
+        bio: Building and growing the Open Mercato Partner Network, connecting software agencies, freelancers, and strategic partners with the framework. Together with Patryk, responsible for customer success.
