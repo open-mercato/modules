@@ -4,11 +4,7 @@
 import type { z } from 'zod'
 import { fillCounts, type CountValues } from '../../../lib/core/www-tokens.ts'
 import { formatProseDate } from '../../../lib/import-webflow/text.ts'
-import {
-  LANDING_TEMPLATE_TEXT,
-  type LandingLocale,
-  type landingSchema,
-} from '../../../lib/schema/www-content.ts'
+import { LANDING_TEMPLATE_TEXT, type LandingLocale, type landingSchema } from '../../../lib/schema/www-content.ts'
 import { refId, type Ref } from './blog.ts'
 
 type Parsed = z.output<ReturnType<typeof landingSchema>>
