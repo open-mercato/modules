@@ -26,7 +26,8 @@ const lead =
         <h1 class="t-h1 post-head__title">Hire a Certified Open Mercato Partner</h1>
         <p class="post-head__lead">{lead}</p>
       </header>
-      <section aria-label="Partners">
+      <section aria-labelledby="partners">
+        <h2 class="sr-only" id="partners">Partners</h2>
         <PartnerFilter client:painted partners={partners} options={options} />
       </section>
     </div>

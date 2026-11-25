@@ -88,6 +88,14 @@ export default function PartnerFilter({ partners, options }: Props) {
         <p class="category-filter__count t-small t-muted" role="status" aria-live="polite">
           {partnersShownText(shown.length, partners.length)}
         </p>
+        {shown.length === 0 && (
+          <p class="partner-filter__empty">
+            No partner matches every filter.
+            <button type="button" class="btn btn--sm btn--secondary" onClick={() => choose(emptySelection())}>
+              Clear filters
+            </button>
+          </p>
+        )}
         <ul class="post-grid">
           {shown.map((p) => (
             <li key={p.slug}>

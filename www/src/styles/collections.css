@@ -93,19 +93,11 @@
   padding: 0;
   list-style: none;
 }
-.gallery__grid figure {
-  margin: 0;
-}
 .gallery__grid img {
   width: 100%;
   height: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
-}
-.gallery__grid figcaption {
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--ink-2);
 }
 
 .partner-card {
@@ -145,6 +137,10 @@
   .partner-filter {
     grid-template-columns: 16rem minmax(0, 1fr);
     align-items: start;
+  }
+  /* the results keep their column while the controls wait for JavaScript (or for good without it) */
+  .partner-filter__results {
+    grid-column: 2;
   }
 }
 .partner-filter__controls {
@@ -187,4 +183,11 @@
 }
 .partner-filter__results .category-filter__count {
   margin: 0;
+}
+.partner-filter__empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 0;
 }

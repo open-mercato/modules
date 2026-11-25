@@ -1,7 +1,10 @@
 ---
 // The facts of a case study: who delivered it (DeliveredBy), client, industry, timeline, type and the technology stack.
 // A partner that is a draft is named without a link.
-import { markdownHtml } from '../../lib/inline-markdown.ts'
+import { fileURLToPath } from 'node:url'
+import { bodyLinkRules } from '../../../body-links.ts'
+import { linkAction } from '../../lib/body-html.ts'
+import { markdownHtml, type LinkFn } from '../../lib/inline-markdown.ts'
 import type { DeliveredBy } from '../../lib/case-studies.ts'
 
 interface Props {
@@ -15,6 +18,13 @@ const facts = [
   ['Timeline', overview.timeline],
   ['Type', overview.type],
 ].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
+// a link in the stack follows the rules of a body: a draft is never linked, a page still on Webflow points there
+const rules = bodyLinkRules(fileURLToPath(new URL('../../../content/', import.meta.url)))
+const link: LinkFn = (href) => {
+  const a = linkAction(href, rules)
+  if (a.kind === 'text') console.warn(`[om-www] technology stack: ${a.why}; the link renders as text`)
+  return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
+}
 ---
 
 <aside class="facts" aria-label="Project overview">
@@ -39,7 +49,7 @@ const facts = [
       overview.stack && (
         <div>
           <dt>Technology stack</dt>
-          <dd class="prose facts__stack" set:html={markdownHtml(overview.stack)} />
+          <dd class="prose facts__stack" set:html={markdownHtml(overview.stack, link)} />
         </div>
       )
     }

@@ -82,7 +82,7 @@ export function jobJsonLd(job: JobEntry, origin: string, bodyHtml?: string): Rec
       url: seo.canonical,
       datePosted: d.datePosted.toISOString(),
       employmentType: JOB_POSTING_EMPLOYMENT[d.employmentType],
-      hiringOrganization: { '@type': 'Organization', name: SITE_NAME, sameAs: canonicalUrl(origin, '/') },
+      hiringOrganization: { '@type': 'Organization', name: SITE_NAME, url: canonicalUrl(origin, '/') },
       jobLocation: { '@type': 'Place', name: d.location },
       directApply: false,
     }

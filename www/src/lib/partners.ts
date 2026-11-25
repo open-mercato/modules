@@ -174,7 +174,8 @@ export function partnerSeo(p: PartnerEntry, origin: string): PartnerSeo {
     title: `${p.data.name}${TITLE_SUFFIX}`,
     description: p.data.description,
     canonical: canonicalUrl(origin, partnerPath(p.id)),
-    ogImage: p.data.logo?.src,
+    // social crawlers read png, jpeg and webp only; an SVG or AVIF logo leaves the site's default image
+    ogImage: p.data.logo && /\.(?:png|jpe?g|webp)$/i.test(p.data.logo.src) ? p.data.logo.src : undefined,
   }
 }
 

@@ -1,6 +1,6 @@
 ---
-// The screenshots of a case study, each with its alt text as the caption. Plain figures: every image is reachable
-// without JavaScript; a carousel is Phase 7's.
+// The screenshots of a case study. Plain images: every one is reachable without JavaScript; a carousel is Phase 7's.
+// The alt text describes each image (Webflow has no separate caption).
 import type { PostImage } from '../../lib/blog.ts'
 
 interface Props {
@@ -18,10 +18,7 @@ const { images } = Astro.props
       <ul class="gallery__grid">
         {images.map((img) => (
           <li>
-            <figure>
-              <img src={img.src} alt={img.decorative ? '' : img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" />
-              {!img.decorative && img.alt && <figcaption>{img.alt}</figcaption>}
-            </figure>
+            <img src={img.src} alt={img.decorative ? '' : img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" />
           </li>
         ))}
       </ul>

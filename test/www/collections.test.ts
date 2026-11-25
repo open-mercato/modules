@@ -318,6 +318,15 @@ describe('SEO of the detail pages', () => {
     expect(partnerFacts(p, dict).map((f) => f.facet)[0]).toBe('tier')
   })
 
+  it('a partner page uses the logo as og:image only in a format social crawlers read', () => {
+    const p = publishedP[0]!
+    const withLogo = (src: string) => ({ ...p, data: { ...p.data, logo: { src, alt: 'x' } } })
+    expect(partnerSeo(withLogo('/media/partners/a.png'), ORIGIN).ogImage).toBe('/media/partners/a.png')
+    expect(partnerSeo(withLogo('/media/partners/a.webp'), ORIGIN).ogImage).toBe('/media/partners/a.webp')
+    expect(partnerSeo(withLogo('/media/partners/a.svg'), ORIGIN).ogImage).toBeUndefined()
+    expect(partnerSeo(withLogo('/media/partners/a.avif'), ORIGIN).ogImage).toBeUndefined()
+  })
+
   it('an open job has JobPosting and a breadcrumb to /careers; a closed one only the breadcrumb', () => {
     const job = publishedJobs(jobs)[0]!
     const url = `${ORIGIN}${jobPath(job.id)}`
@@ -412,6 +421,18 @@ describe('a Markdown field of the frontmatter', () => {
   it('renders bullet lists and paragraphs, escaping the rest', () => {
     expect(markdownHtml('- One `a<b>`\n- **Two** and [x](https://e.x)\n\nText *it* <i>')).toBe(
       '<ul><li>One <code>a&lt;b&gt;</code></li><li><strong>Two</strong> and <a href="https://e.x">x</a></li></ul><p>Text <em>it</em> &lt;i&gt;</p>',
+    )
+  })
+
+  it('sends each link through the link rules: kept, pointed elsewhere, or text', () => {
+    const rules = bodyLinkRules(CONTENT)
+    const link = (href: string): string | undefined => {
+      const a = linkAction(href, rules)
+      return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
+    }
+    const draft = caseStudies.find((c) => c.data.draft)!
+    expect(markdownHtml(`- [d](${caseStudyPath(draft.id)}) and [c](/careers) and [p](/certified-partners)`, link)).toBe(
+      `<ul><li>d and <a href="${ORIGIN}/careers">c</a> and <a href="/certified-partners">p</a></li></ul>`,
     )
   })
 
