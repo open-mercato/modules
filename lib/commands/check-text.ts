@@ -1,6 +1,6 @@
 // `yarn om check-text`: no U+2014, U+2013 or control characters in human texts (spec 0.7, 3.5).
 // Scope: site/src/**, www/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/**,
-// lib/core/main-site.ts (the texts of the navbar and the footer) and every *.md, except test/fixtures/** and generated or vendored directories. Optional args restrict the check to given
+// lib/core/main-site.ts (the texts of the navbar and the footer) and every *.md, except test/fixtures/**, www/public/media/** and generated or vendored directories. Optional args restrict the check to given
 // files.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
@@ -24,7 +24,9 @@ const SKIP_DIRS = new Set([
   // local operator files of the agent pipeline and its task worktrees: never committed
   '.ai',
 ])
-const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/']
+// www/public/media/: CMS media the Webflow importer copies byte for byte from the CDN (an SVG chart may carry a long
+// dash in its labels); the import manifest pins their hashes, so they are files of the authors, not texts we write
+const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/', 'www/public/media/']
 const TEXT_DIRS = [
   'site/src/',
   'www/',

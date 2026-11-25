@@ -1,0 +1,24 @@
+---
+// A YouTube video that loads on a click (spec, UI/UX): the same markup as a lite-video of a Markdown body
+// (videoEmbedNode() of www/src/lib/body-html.ts); www/src/scripts/video-embed.ts swaps the link for the
+// youtube-nocookie.com player. Without JavaScript the link opens the video on YouTube.
+import { videoLabel, videoWatchUrl } from '../../lib/body-html.ts'
+
+interface Props {
+  /** The YouTube video id. */
+  id: string
+  title?: string
+}
+const { id, title } = Astro.props
+---
+
+<figure class="video-embed" data-video-id={id} data-video-title={title ?? ''}>
+  <a class="video-embed__link" href={videoWatchUrl(id)}>
+    <span class="video-embed__icon" aria-hidden="true"></span>
+    <span class="video-embed__label">{videoLabel(title)}</span>
+  </a>
+</figure>
+
+<script>
+  import '../../scripts/video-embed.ts'
+</script>

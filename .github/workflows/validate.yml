@@ -183,3 +183,5 @@ jobs:
           yarn astro build
           # the main site (www/, www site migration spec): its own build, on the shared Base layout and header
           yarn build:www
+          # the built blog: every published post routed with its canonical and JSON-LD, no draft routed or in the sitemap
+          WWW_BUILD=1 yarn vitest run test/www/blog-build.test.ts

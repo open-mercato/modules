@@ -5,14 +5,55 @@
 // same BASE_PATH and HOME_PATH the catalog is built with when they nest it, else `/run` and `/modules`
 // (mainSiteRun()), through the om-run-base plugin (www/run-base.ts).
 import { fileURLToPath } from 'node:url'
+import preact from '@astrojs/preact'
 import sitemap from '@astrojs/sitemap'
+import type { AstroIntegration } from 'astro'
 import { defineConfig } from 'astro/config'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
 import { mainSiteRun } from '../lib/core/site-host.ts'
+import { bodyLinkRules, noindexPostPaths } from './body-links.ts'
 import { runBasePlugin } from './run-base.ts'
+import { bodyHtmlPlugin } from './src/lib/body-html.ts'
 
 const repo = fileURLToPath(new URL('..', import.meta.url))
+const content = fileURLToPath(new URL('./content/', import.meta.url))
+// a post that asks for noindex is no sitemap entry either (a draft is never routed, so it never reaches the sitemap)
+const noindex = noindexPostPaths(content)
 const run = mainSiteRun(process.env)
+
+/** client:painted of the catalog (site/src/directives/painted.ts): islands hydrate after the first paint. */
+function paintedDirective(): AstroIntegration {
+  return {
+    name: 'om-client-painted',
+    hooks: {
+      'astro:config:setup': ({ addClientDirective }) => {
+        addClientDirective({
+          name: 'painted',
+          entrypoint: fileURLToPath(new URL('../site/src/directives/painted.ts', import.meta.url)),
+        })
+      },
+    },
+  }
+}
+
+/**
+ * The hast plugin of Markdown bodies (www/src/lib/body-html.ts: video embeds, links to drafts and to pages still on
+ * Webflow, tables), added to Astro's Markdown processor (satteri), whose options integrations may extend.
+ */
+function bodyHtml(): AstroIntegration {
+  return {
+    name: 'om-www-body',
+    hooks: {
+      'astro:config:setup': ({ config, logger }) => {
+        const processor = config.markdown.processor as { name: string; options: { hastPlugins?: unknown[] } }
+        if (processor.name !== 'satteri' || !Array.isArray(processor.options.hastPlugins))
+          throw new Error(`om-www-body: the Markdown processor is ${processor.name}, not satteri with hastPlugins`)
+        const rules = bodyLinkRules(content)
+        processor.options.hastPlugins.push(bodyHtmlPlugin(rules, (m) => logger.warn(m)))
+      },
+    },
+  }
+}
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
@@ -24,7 +65,12 @@ export default defineConfig({
   base: '/',
   trailingSlash: 'never',
   build: { format: 'file' },
-  integrations: [sitemap({ filter: (page) => !/\/404\/?$/.test(page) })],
+  integrations: [
+    preact(),
+    paintedDirective(),
+    bodyHtml(),
+    sitemap({ filter: (page) => !/\/404\/?$/.test(page) && !noindex.has(new URL(page).pathname) }),
+  ],
   devToolbar: { enabled: false },
   vite: {
     // href('/') of site/src/lib/url.ts: the catalog's home page under its base (/run/modules)

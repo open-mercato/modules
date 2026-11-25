@@ -131,6 +131,15 @@ describe('the merged layout (pages-site --merge)', () => {
     mergePagesSite(dirs, WWW, true)
     // the header's link to a page Webflow still serves; the home page is in this build
     expect(checkMergedLayout(dirs.out, WWW, 50, true)).toEqual({ problems: [], pending: [`${ORIGIN}/product`] })
+    // a post's link to a case study, a collection the main site imports in a later phase, is pending too
+    put(join(dirs.www, 'blog-posts', 'p.html'), `<a href="${ORIGIN}/case-studies/acme-erp">x</a>`)
+    mergePagesSite(dirs, WWW, true)
+    expect(checkMergedLayout(dirs.out, WWW, 50, true)).toEqual({
+      problems: [],
+      pending: [`${ORIGIN}/case-studies/acme-erp`, `${ORIGIN}/product`],
+    })
+    // production answers it with Pages, not Webflow: a problem there
+    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/\/case-studies\/acme-erp is not a page/)
     // a link that no header or footer of lib/core/main-site.ts names is a problem even in a preview
     put(join(dirs.www, 'team.html'), `<a href="${ORIGIN}/not-on-webflow">x</a>`)
     mergePagesSite(dirs, WWW, true)

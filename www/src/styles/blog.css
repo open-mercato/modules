@@ -1,0 +1,284 @@
+/* The blog of the main site (Phase 3): plain layout on the tokens of the design system (site/src/styles/tokens.css).
+   The look is Oliwia's and comes in Phase 5 (D7); nothing here is a new visual language. */
+
+.blog-page {
+  padding: 48px var(--pad) 64px;
+}
+.blog-page > * + * {
+  margin-top: 40px;
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: var(--col-gap);
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--bg);
+  overflow: hidden;
+}
+.post-card__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--bg-3);
+}
+.post-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+.post-card__cat {
+  align-self: flex-start;
+}
+.post-card__title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.post-card__title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.post-card__title a:hover {
+  text-decoration: underline;
+}
+.post-card__desc {
+  margin: 0;
+  color: var(--ink-2);
+}
+.post-card__meta {
+  margin: 0;
+}
+
+.category-filter__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.category-filter__controls [aria-pressed='true'] {
+  background: var(--cta);
+  border-color: var(--cta);
+  color: var(--cta-ink);
+}
+.category-filter__n {
+  color: var(--ink-2);
+}
+.category-filter__controls [aria-pressed='true'] .category-filter__n {
+  color: var(--film-ink-2);
+}
+.category-filter__count {
+  margin: 12px 0 0;
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+}
+.crumbs li + li::before {
+  content: '/';
+  margin-right: 8px;
+  color: var(--ink-3);
+}
+.crumbs a {
+  color: inherit;
+}
+
+.post {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+.post-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.post-head__title {
+  margin: 0;
+}
+.post-head__lead {
+  margin: 0;
+  font-size: 18px;
+  color: var(--ink-2);
+}
+.post-head__img {
+  width: 100%;
+  height: auto;
+  margin-top: 8px;
+  border-radius: var(--radius-l);
+}
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+.prose {
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+.prose > :first-child {
+  margin-top: 0;
+}
+.prose :is(h2, h3, h4) {
+  margin: 2em 0 0.6em;
+  line-height: 1.3;
+}
+.prose h2 {
+  font-size: 26px;
+}
+.prose h3 {
+  font-size: 21px;
+}
+.prose h4 {
+  font-size: 18px;
+}
+.prose :is(p, ul, ol, blockquote, pre, figure, .prose-table, .video-embed) {
+  margin: 0 0 1.2em;
+}
+.prose :is(ul, ol) {
+  padding-left: 1.4em;
+}
+.prose li + li {
+  margin-top: 0.3em;
+}
+.prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-m);
+}
+.prose figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.prose blockquote {
+  padding-left: 16px;
+  border-left: 3px solid var(--line);
+  color: var(--ink-2);
+}
+.prose :not(pre) > code {
+  padding: 1px 4px;
+  border-radius: var(--radius-s);
+  background: var(--bg-3);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+.prose pre {
+  padding: 16px;
+  border-radius: var(--radius-m);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.prose hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.prose-table {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+}
+.prose-table:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.prose :is(th, td) {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  min-width: 8rem;
+}
+.prose th {
+  background: var(--bg-2);
+  font-weight: 600;
+}
+.prose tr:last-child td {
+  border-bottom: 0;
+}
+
+.video-embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-l);
+  background: var(--film);
+  overflow: hidden;
+}
+.video-embed__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  color: var(--film-ink);
+  text-align: center;
+  text-decoration: none;
+}
+.prose .video-embed__link {
+  color: var(--film-ink);
+  text-decoration: none;
+}
+.video-embed__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--cta-dark);
+  /* a play triangle cut out of the disc */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 38% 28%, 38% 72%, 74% 50%, 38% 28%);
+}
+.video-embed__link:hover .video-embed__icon {
+  background: var(--cta-dark-hover);
+}
+.video-embed__link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
+}
+.video-embed__label {
+  font-size: 15px;
+}
+.video-embed__player {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

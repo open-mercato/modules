@@ -40,6 +40,10 @@ interface Props {
   webmcp?: boolean
   /** Extra JSON-LD object. */
   jsonLd?: Record<string, unknown>
+  /** og:type: `article` for a post of the main site; `website` otherwise. */
+  ogType?: 'website' | 'article'
+  /** The page's own og:image, a site path or an absolute URL; else the default 1200 x 630 card. */
+  ogImage?: string
   /** Skip link target and text (spec 7.9). */
   skip?: { href: string; label: string }
   /** Force noindex (otherwise noindex on *.github.io, D36). */
@@ -61,12 +65,15 @@ const {
   bodyClass,
   trail,
   section = 'run',
+  ogType = 'website',
+  ogImage: pageOgImage,
 } = Astro.props
 const run = section === 'run'
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
 const canonical = path === null ? null : run ? absoluteUrl(site, path) : new URL(path, site).toString()
 const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
-const ogImage = absoluteUrl(site, '/og-default.png')
+// a page's own image is a file of its own site (www/public/media), not under the catalog's base
+const ogImage = pageOgImage ? new URL(pageOgImage, site).toString() : absoluteUrl(site, '/og-default.png')
 // the other hosts of the Pages project serve this build too: the page script leaves their links alone (move of 13 Nov)
 const production = otherProductionOrigins(siteConfig(site, BASE || '/', HOME))
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
@@ -96,14 +103,15 @@ const speculation = JSON.stringify({
     {/* light only, like openmercato.com (move of 13 Nov): no dark theme, whatever the system asks for */}
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#FFFFFF" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Open Mercato" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description.slice(0, 155)} />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    {/* the size is known for the default card only */}
+    {!pageOgImage && <meta property="og:image:width" content="1200" />}
+    {!pageOgImage && <meta property="og:image:height" content="630" />}
     <meta name="twitter:card" content="summary_large_image" />
     {/* the view-transition opt-in is inline in the head (review r4: the flight from a query to a module page was
         dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
