@@ -5,7 +5,7 @@
 import Crumbs from '../Crumbs.astro'
 import { ARROW_ICON } from '../../lib/webflow-icons.ts'
 import { PARTNER_LOGO_PLACEHOLDER, PROFILE_HEADINGS, type Facet } from '../../lib/partner-filter.ts'
-import { PARTNER_BADGE, PARTNER_CONTACT, PARTNERS_PATH } from '../../lib/partners.ts'
+import { PARTNER_BADGE, PARTNER_CONTACT, PARTNERS_CRUMB, PARTNERS_PATH } from '../../lib/partners.ts'
 import type { PostImage } from '../../lib/blog.ts'
 
 interface Props {
@@ -27,7 +27,7 @@ const listed = new Set<Facet>(['industry', 'language', 'service'])
   <div class="section-padding">
     <div class="header_component is-flex is-partner-hero">
       <div class="header_content max-width-47rem">
-        <Crumbs trail={[{ name: 'Agencies', href: PARTNERS_PATH }]} current={{ name, href }} />
+        <Crumbs trail={[{ name: PARTNERS_CRUMB, href: PARTNERS_PATH }]} current={{ name, href }} />
         <div class="spacer-medium"></div>
         {/* without a logo, the live page shows Webflow's default image of the field, the site's logo */}
         <div class="agency_logo-wrapper">

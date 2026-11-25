@@ -38,6 +38,9 @@ const { items, label } = Astro.props
         block: 'start',
       })
       history.replaceState(null, '', hash)
+      // the default jump moves focus to the section; keep that for keyboard users
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      target.focus({ preventScroll: true })
     },
     true,
   )

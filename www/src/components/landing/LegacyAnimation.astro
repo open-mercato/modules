@@ -4,8 +4,9 @@
 // own (www/src/components/landing/legacy/crm-animation.txt, kept as text so no formatter touches it; its fonts and its logo point to www/public/files/), sized
 // by the message it posts, paused while the visitor prefers reduced motion. Replace it when its source is found.
 // Unlike the live embed, the frame keeps the page's origin (allow-same-origin): its fonts are files of this site, and
-// Pages sends no CORS header a frame of an opaque origin would need to load them. The document is ours and committed;
-// the sandbox still blocks forms, pop-ups and top navigation.
+// Pages sends no CORS header a frame of an opaque origin would need to load them. With scripts and the same origin
+// the sandbox is no security boundary (the frame could reach the page and lift it): it is trusted as the page's own
+// code is, because the document is ours and committed.
 import doc from './legacy/crm-animation.txt?raw'
 ---
 

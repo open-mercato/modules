@@ -111,3 +111,26 @@ export function faqJsonLd(entry: LandingEntry, site: string, counts: CountValues
 export function landingOgImage(entry: LandingEntry): string {
   return entry.data.seo.ogImage ?? `/og/${entry.id}.png`
 }
+
+/** The size of a landing's OG image when the build draws it (1200 by 630); unknown for an image of its own. */
+export function landingOgImageSize(entry: LandingEntry): { width: number; height: number } | undefined {
+  return entry.data.seo.ogImage === undefined ? { width: 1200, height: 630 } : undefined
+}
+
+/**
+ * The ids of the sections a landing renders, as the template names them (the live landings' ids): the targets its
+ * section navigation may link.
+ */
+export function sectionIds(d: LandingData): string[] {
+  const ids: [unknown, string][] = [
+    [d.pains, 'needs'],
+    [d.features, 'capabilities'],
+    [d.capabilities, 'comparison'],
+    [d.demo, 'proof'],
+    [d.steps, 'migration'],
+    [d.faq, 'questions'],
+    [d.cta, 'start'],
+    [d.related.length > 0 ? d.related : undefined, 'related'],
+  ]
+  return ids.filter(([v]) => v !== undefined).map(([, id]) => id)
+}

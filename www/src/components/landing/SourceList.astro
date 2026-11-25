@@ -19,7 +19,7 @@ const tpl = templateText(locale)
         sources.items.map((s) => (
           <li>
             <a href={s.url} rel="noopener noreferrer">
-              {s.label} ↗
+              {s.label} <span aria-hidden="true">↗</span>
             </a>
           </li>
         ))

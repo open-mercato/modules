@@ -12,7 +12,7 @@ export type CountValues = Partial<Record<CountToken, number>>
 /** A part of a text with tokens: plain text, or a token with its value formatted (null when the build has none). */
 export type TokenPart = { text: string } | { token: CountToken; value: string | null }
 
-const TOKEN_RE = /\{(githubStars|moduleCount)\}/g
+const TOKEN_RE = new RegExp(`\\{(${COUNT_TOKEN_NAMES.join('|')})\\}`, 'g')
 
 /** A count as the site prints it: digits grouped with commas, as the navbar does ("1,928"). */
 export function formatCount(n: number): string {
@@ -53,7 +53,7 @@ export function fillCounts(text: string, values: CountValues): string {
 
 /** True when `text` holds a count token. */
 export function hasCountToken(text: string): boolean {
-  return /\{(?:githubStars|moduleCount)\}/.test(text)
+  return text.match(TOKEN_RE) !== null
 }
 
 /**

@@ -213,14 +213,20 @@ export function partnerSeo(p: PartnerEntry, origin: string): PartnerSeo {
   }
 }
 
-/** `BreadcrumbList` (Home, Certified Partners, the partner) of a partner page, as a JSON-LD graph. */
+/**
+ * The name of the partner list in a breadcrumb: "Agencies", as the live breadcrumbs of the list and of each partner
+ * name it (the page's title is "Certified Partners").
+ */
+export const PARTNERS_CRUMB = 'Agencies'
+
+/** `BreadcrumbList` (Home, Agencies, the partner) of a partner page, as a JSON-LD graph: the visible trail. */
 export function partnerJsonLd(p: PartnerEntry, origin: string): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@graph': [
       breadcrumbJsonLd(origin, [
         { name: 'Home', path: '/' },
-        { name: 'Certified Partners', path: PARTNERS_PATH },
+        { name: PARTNERS_CRUMB, path: PARTNERS_PATH },
         { name: p.data.name, path: partnerPath(p.id) },
       ]),
     ],

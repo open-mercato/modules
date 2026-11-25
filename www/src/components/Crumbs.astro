@@ -2,7 +2,9 @@
 // The breadcrumb of the main site's pages in the live Webflow markup (`label_component`, `label_breadcrumbs`): Home, the
 // section, the page, separated by `/`. The JSON-LD BreadcrumbList of the page names the same trail. `limit` cuts a
 // long current name to one line, as the live templates of posts (20ch) and case studies (30ch) do
-// (www/src/styles/webflow/pages.css).
+// (www/src/styles/webflow/pages.css). A `div`, as on the live site, not a `nav` landmark: compare-live leaves a `nav`
+// out of the main text, and the trail is part of the live page's text. The designer's pass (D7) can restore the
+// landmark.
 interface Props {
   /** The steps between Home and the current page. */
   trail?: { name: string; href: string }[]

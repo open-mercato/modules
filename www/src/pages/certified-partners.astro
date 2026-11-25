@@ -10,7 +10,7 @@ import PartnerFilter from '../islands/PartnerFilter.tsx'
 import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
 import { TITLE_SUFFIX } from '../lib/blog.ts'
 import { partnerData } from '../lib/collections-data.ts'
-import { AGENCIES_PATH, facetOptions, partnerCard, PARTNERS_PATH } from '../lib/partners.ts'
+import { AGENCIES_PATH, facetOptions, partnerCard, PARTNERS_CRUMB, PARTNERS_PATH } from '../lib/partners.ts'
 import pagesCss from '../styles/webflow/pages.css?url'
 
 const data = await partnerData()
@@ -33,7 +33,7 @@ const lead =
         <div class="section-padding">
           <div class="header_component">
             <div class="header_content max-width-39rem">
-              <Crumbs current={{ name: 'Agencies', href: PARTNERS_PATH }} />
+              <Crumbs current={{ name: PARTNERS_CRUMB, href: PARTNERS_PATH }} />
               <h1 class="heading-style-h2">Hire a Certified Open Mercato Partner</h1>
               <div class="spacer-small"></div>
               <p class="text-color-secondary">{lead}</p>

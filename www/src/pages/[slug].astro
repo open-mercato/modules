@@ -24,6 +24,7 @@ import {
   alternatesOf,
   faqJsonLd,
   landingOgImage,
+  landingOgImageSize,
   landingPath,
   publishedLandings,
   templateText,
@@ -55,6 +56,7 @@ const related = d.related
   title={d.seo.title}
   description={d.seo.description}
   ogImage={landingOgImage(landing)}
+  ogImageSize={landingOgImageSize(landing)}
   noindex={d.seo.noindex || undefined}
   jsonLd={faqJsonLd(landing, site, counts)}
 >

@@ -40,12 +40,11 @@ const MARK = { yes: '✓', no: '×', build: '↗' } as const
             </th>
           </tr>
         </thead>
-        <tbody>
-          {
-            k.groups.map((g) => (
-              <Fragment>
+        {
+          k.groups.map((g) => (
+            <tbody>
                 <tr class="omfm-group">
-                  <th scope="colgroup" colspan="3">
+                  <th scope="rowgroup" colspan="3">
                     {g.title}
                   </th>
                 </tr>
@@ -66,10 +65,9 @@ const MARK = { yes: '✓', no: '×', build: '↗' } as const
                     </td>
                   </tr>
                 ))}
-              </Fragment>
-            ))
-          }
-        </tbody>
+            </tbody>
+          ))
+        }
       </table>
     </div>
     <div class="omfm-legend">
