@@ -1,0 +1,61 @@
+---
+// The /architecture video section as the live one is: the tagline (`eyebrow`) and heading, the lead and the numbered
+// points (items: `eyebrow` the number, `title` the text, each number in the next colour of the live labels), then the
+// video, loaded on a click (blog/VideoEmbed.astro) in the live video box, its poster the block's image.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import VideoEmbed from '../blog/VideoEmbed.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'hero'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const tones = ['is-violet', 'is-yellow', 'is-green']
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-grid">
+        <div class="header_content-wrapper">
+          <div class="header_content">
+            {
+              block.eyebrow && (
+                <div class="label_component">
+                  <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+                </div>
+              )
+            }
+            <h2 class="heading-style-h4" set:html={headingHtml(t(block.title))} />
+          </div>
+          <div class="header_content">
+            {block.lead && <p class="text-color-secondary" set:html={inline(t(block.lead))} />}
+            {
+              block.items?.map((i, n) => (
+                <>
+                  <div class={n === 0 ? 'spacer-small' : 'spacer-1rem'} />
+                  <div class="bg-grid_heading-wrapper">
+                    {i.eyebrow && <div class={`label-list_item ${tones[n % tones.length]}`}>{t(i.eyebrow)}</div>}
+                    {i.title && <div class="text-color-secondary">{t(i.title)}</div>}
+                  </div>
+                </>
+              ))
+            }
+          </div>
+        </div>
+        {
+          block.video && (
+            <div class="bg-grid_component">
+              <div class="video_component-embed w-embed">
+                <div class="video_component">
+                  <VideoEmbed id={block.video} title={t(block.title)} poster={block.image?.src} />
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Wrap>

@@ -1,0 +1,9 @@
+---
+// legacy (spec Q4): /crm, the AI section with its illustrative workflows. One of the page's 12 embeds of compiled Astro output whose source is unknown,
+// ported as it is (its data-astro-cid-* classes kept) from https://www.openmercato.com/crm on 25 Nov 2026: the markup is
+// ./crm-ai.txt, kept as text so no formatter touches it; its CSS is www/src/styles/webflow/pages/crm.css. Replace it
+// when its source is found.
+import html from './crm-ai.txt?raw'
+---
+
+<div class="w-embed" set:html={html} />

@@ -1,0 +1,69 @@
+---
+// The /architecture header as the live one is: the breadcrumb (Home / the block's `eyebrow`), the heading, the tags
+// (the block's items), the lead and the two buttons, the first with the GitHub mark.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Crumbs from '../Crumbs.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import { pagePath, type BlockProps } from '../../lib/pages.ts'
+import github from './architecture-github.svg?raw'
+
+type Props = BlockProps<'hero'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-47rem">
+          {block.eyebrow && <Crumbs current={{ name: t(block.eyebrow), href: pagePath(page) }} />}
+          <h1 set:html={headingHtml(t(block.title))} />
+          {
+            block.items && (
+              <>
+                <div class="spacer-small" />
+                <div class="label-list_list">
+                  {block.items.map((i) => (
+                    <div class="label-list_item">{t(i.title ?? i.eyebrow ?? '')}</div>
+                  ))}
+                </div>
+              </>
+            )
+          }
+          {
+            block.lead && (
+              <>
+                <div class="spacer-small" />
+                <div class="max-width-47rem">
+                  <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+                </div>
+              </>
+            )
+          }
+          {
+            (block.primary || block.secondary) && (
+              <>
+                <div class="spacer-medium" />
+                <div class="button-group">
+                  {block.primary && (
+                    <a href={block.primary.href} target="_blank" class="button is-icon w-inline-block">
+                      <div class="button_icon w-embed" set:html={github} />
+                      <div>{t(block.primary.label)}</div>
+                    </a>
+                  )}
+                  {block.secondary && (
+                    <a href={block.secondary.href} target="_blank" class="button is-secondary w-inline-block">
+                      <div>{t(block.secondary.label)}</div>
+                    </a>
+                  )}
+                </div>
+              </>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>
