@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { findBannedChars } from '../../lib/core/text.ts'
+import { REDIRECTS_HEADER } from '../../lib/import-webflow/docs-map.ts'
 import { MANIFEST_PATH } from '../../lib/import-webflow/output.ts'
 import { renderReport } from '../../lib/import-webflow/report.ts'
 import type { ImportResult } from '../../lib/import-webflow/run.ts'
@@ -205,6 +206,14 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
     expect(froms[froms.length - 1]).toBe('/docs/*')
     expect(rules.find((r) => r.from === '/docs/agent-orchestrator-overview')!.to).toBe('https://docs.openmercato.com/')
     expect(rules.find((r) => r.from === '/docs/cli-overview')!.to).toBe('https://docs.openmercato.com/cli/overview')
+  })
+
+  it('heads redirects.yaml with the marked, empty place of the Webflow panel list (D8)', () => {
+    const text = files.get('www/content/redirects.yaml')!.toString('utf8')
+    expect(text.startsWith(REDIRECTS_HEADER)).toBe(true)
+    expect(text).toContain('# source: webflow-panel.')
+    const rules = parseYaml(text) as { source: string }[]
+    expect(rules.some((r) => r.source === 'webflow-panel')).toBe(false)
   })
 
   it('writes each media file once under /media/<collection>/<fileId>-<name> and records it in the manifest', () => {

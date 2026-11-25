@@ -74,6 +74,11 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     owner: 'www',
     description: 'write a Webflow export directory from the API (WEBFLOW_TOKEN, read-only; owner only)',
   },
+  {
+    name: 'compare-live',
+    owner: 'www',
+    description: 'compare every sitemap and redirect URL of the live main site with a candidate; read-only',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))

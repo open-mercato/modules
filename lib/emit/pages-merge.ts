@@ -19,6 +19,15 @@ import {
 } from '../core/site-host.ts'
 import { NON_PAGE_SEGMENTS } from '../schema/www-content.ts'
 import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from './pages-layout.ts'
+import {
+  DYNAMIC_TO,
+  pagesRules,
+  redirectChainProblems,
+  ruleTargetPath,
+  sourcePattern,
+  WWW_REDIRECTS_FILE,
+  wwwRedirectsTextProblems,
+} from './www-redirects.ts'
 
 /** The folders of the two builds and of the upload, relative to the repository root (package.json `build`). */
 export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
@@ -31,8 +40,14 @@ export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as c
  */
 export const PENDING_PAGE = /^\/careers$/
 
-/** Root files the merge writes itself: a build that brings its own would be overwritten without notice. */
+/**
+ * Root files the merge writes itself: a build that brings its own would be overwritten without notice. The main site's
+ * _redirects (its redirects.yaml, lib/emit/www-redirects.ts) and sitemap-index.xml are read and merged instead.
+ */
 export const MERGE_ROOT_FILES = ['_redirects', NOINDEX_ROOT_FILE, 'robots.txt', 'sitemap-index.xml'] as const
+
+/** Root files of the main site's build that the merge reads and composes instead of copying. */
+const WWW_MERGED_FILES = new Set<string>([WWW_REDIRECTS_FILE, 'sitemap-index.xml'])
 
 /** Cloudflare Pages limits of _redirects (2,000 static and 100 dynamic rules) and the check's margin below them. */
 export const REDIRECT_LIMITS = { static: 2000, dynamic: 100 } as const
@@ -51,15 +66,19 @@ export function mergeConfigProblem(c: SiteConfig): string | null {
 }
 
 /**
- * dist/_redirects of the merged layout: the main site's /sitemap.xml, then the catalog's own rules (pagesRedirects).
- * The docs map and the Webflow 301 list join in Phase 8 (content/redirects.yaml).
+ * dist/_redirects of the merged layout: the main site's /sitemap.xml, the catalog's own rules (pagesRedirects), then
+ * the rules of the main site's www/content/redirects.yaml as its build wrote them to dist-www/_redirects (`www`, the
+ * Webflow 301 list of D8, the docs map with its catch-all last). The fixed rules come first, so no content rule can
+ * take a catalog address; a source given twice fails the check (redirectProblems).
  */
-export function mergedRedirects(c: Pick<SiteConfig, 'base' | 'home'>): string {
-  return [
-    '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
-    '/sitemap.xml /sitemap-index.xml 301',
-    pagesRedirects(c),
-  ].join('\n')
+export function mergedRedirects(c: Pick<SiteConfig, 'base' | 'home'>, www = ''): string {
+  return (
+    [
+      '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
+      '/sitemap.xml /sitemap-index.xml 301',
+      pagesRedirects(c),
+    ].join('\n') + www
+  )
 }
 
 /** robots.txt at the root of the merged layout: all allowed and one sitemap, or nothing for a noindex preview. */
@@ -148,6 +167,8 @@ export interface MergeResult {
   runFiles: number
   /** Addresses of the merged sitemap index. */
   sitemaps: string[]
+  /** Rules of the main site's redirects.yaml in the root _redirects. */
+  redirects: number
 }
 
 /**
@@ -183,7 +204,7 @@ export function mergePagesSite(
   const runAllowed = new Set([...nestedRootEntries(c), NOINDEX_ROOT_FILE])
   const stray = readdirSync(run).filter((n) => !runAllowed.has(n))
   if (stray.length > 0) throw new Error(`${dirs.run} holds ${stray.join(', ')} outside the nested layout`)
-  const taken = new Set<string>([...runRootNames(c), ...MERGE_ROOT_FILES.filter((f) => f !== 'sitemap-index.xml')])
+  const taken = new Set<string>([...runRootNames(c), ...MERGE_ROOT_FILES.filter((f) => !WWW_MERGED_FILES.has(f))])
   const clash = readdirSync(www).filter((n) => taken.has(n))
   if (clash.length > 0)
     throw new Error(`${dirs.www} writes ${clash.join(', ')}, which the catalog or the merge owns at the root`)
@@ -193,33 +214,39 @@ export function mergePagesSite(
       `${dirs.run} is ${noindex ? 'not ' : ''}a noindex build (PAGES_NOINDEX), and this merge is ${noindex ? '' : 'not '}one`,
     )
 
+  const read = (f: string): string => (existsSync(f) ? readFileSync(f, 'utf8') : '')
+  const wwwRedirects = read(join(www, WWW_REDIRECTS_FILE))
+  const bad = wwwRedirectsTextProblems(wwwRedirects)
+  if (bad.length > 0) throw new Error(`${dirs.www}/${WWW_REDIRECTS_FILE} ${bad.join('; ')}`)
+  const redirects = mergedRedirects(c, wwwRedirects)
+  const redirectsBad = [...redirectProblems(redirects), ...redirectChainProblems(redirects, c.origin)]
+  if (redirectsBad.length > 0) throw new Error(`the merged _redirects: ${redirectsBad.join('; ')}`)
+
   rmSync(out, { recursive: true, force: true })
   cpSync(run, out, { recursive: true })
   for (const name of readdirSync(www)) {
-    if (name === 'sitemap-index.xml') continue
+    if (WWW_MERGED_FILES.has(name)) continue
     cpSync(join(www, name), join(out, name), { recursive: true, force: true })
   }
-  const read = (f: string): string => (existsSync(f) ? readFileSync(f, 'utf8') : '')
   const sitemaps = mergedSitemapLocs(
     read(join(www, 'sitemap-index.xml')),
     read(join(run, siteDir(c), 'sitemap-index.xml')),
   )
   writeFileSync(join(out, 'sitemap-index.xml'), sitemapIndexXml(sitemaps))
-  writeFileSync(join(out, '_redirects'), mergedRedirects(c))
+  writeFileSync(join(out, '_redirects'), redirects)
   writeFileSync(join(out, 'robots.txt'), mergedRobots(c, noindex))
   if (noindex) writeFileSync(join(out, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
   else rmSync(join(out, NOINDEX_ROOT_FILE), { force: true })
-  return { wwwFiles: walk(www).length, runFiles: walk(run).length, sitemaps }
+  return {
+    wwwFiles: walk(www).length,
+    runFiles: walk(run).length,
+    sitemaps,
+    redirects: pagesRules(wwwRedirects).length,
+  }
 }
 
 /** A _redirects source as a pattern: `*` matches the rest of the path, `:name` one segment. */
-export function redirectSourcePattern(from: string): RegExp {
-  const body = from
-    .split(/(\*|:[A-Za-z][A-Za-z0-9_]*)/)
-    .map((part) => (part === '*' ? '.*' : part.startsWith(':') ? '[^/]+' : part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')))
-    .join('')
-  return new RegExp(`^${body}$`)
-}
+export const redirectSourcePattern = sourcePattern
 
 /**
  * Whether `pathname` (a path of the origin) answers in the upload `root`: a file, a page as Pages serves HTML files
@@ -269,8 +296,17 @@ export interface MergedCheck {
  * listed in `pending`); then the merged root files (_redirects with the Pages limits, robots.txt, the sitemap index
  * naming every sitemap file and no index, the home page's canonical), the pages the main site must not write
  * (NON_PAGE_SEGMENTS) and every link of its pages.
+ * The main site's part of _redirects (after mergedRedirects(c)) must be a dist-www/_redirects text, equal to
+ * `wwwRedirects` when given (wwwRedirectsText() of www/content/redirects.yaml), with no loop, no chain longer than one
+ * hop, no source that hides a file of the upload, and every target on this origin a page or a file of it.
  */
-export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex = false): MergedCheck {
+export function checkMergedLayout(
+  root: string,
+  c: SiteConfig,
+  max = 50,
+  noindex = false,
+  wwwRedirects?: string,
+): MergedCheck {
   const problems: string[] = []
   const pending = new Set<string>()
   const say = (m: string): void => {
@@ -294,16 +330,34 @@ export function checkMergedLayout(root: string, c: SiteConfig, max = 50, noindex
     return false
   }
 
+  // the fixed rules of the merge, then the main site's: checkPagesLayout() wants the whole text, so the main site's part
+  // is taken from the upload when the fixed part matches and checked on its own below
+  const fixed = mergedRedirects(c)
+  const wwwPart = redirectsText !== null && redirectsText.startsWith(fixed) ? redirectsText.slice(fixed.length) : ''
   for (const p of checkPagesLayout(root, c, max, noindex, {
-    redirects: mergedRedirects(c),
+    redirects: fixed + wwwPart,
     mainSite: (ref, url) => onMainSite(ref, url),
   }))
     say(p)
 
   for (const f of ['index.html', '404.html', '_redirects', 'robots.txt', 'sitemap-index.xml'])
     if (!existsSync(join(root, f))) say(`${shown(join(root, f))} is missing`)
-  if (redirectsText !== null)
-    for (const p of redirectProblems(redirectsText)) say(`${shown(join(root, '_redirects'))}: ${p}`)
+  if (redirectsText !== null) {
+    const at = shown(join(root, '_redirects'))
+    for (const p of redirectProblems(redirectsText)) say(`${at}: ${p}`)
+    for (const p of wwwRedirectsTextProblems(wwwPart)) say(`${at}: the main site's rules ${p}`)
+    if (wwwRedirects !== undefined && wwwPart !== wwwRedirects)
+      say(`${at}: the main site's rules differ from www/content/redirects.yaml; build www and merge again`)
+    for (const p of redirectChainProblems(redirectsText, c.origin)) say(`${at}: ${p}`)
+    for (const r of pagesRules(wwwPart)) {
+      if (!/[*:]/.test(r.from) && servesPath(root, r.from, []))
+        say(`${at}: the redirect from ${r.from} hides the file of the upload it would serve`)
+      // a target with the splat or a placeholder names many pages: only a fixed target can be looked up
+      const target = DYNAMIC_TO.test(r.to) ? null : ruleTargetPath(r, c.origin)
+      if (target !== null && !onMainSite(r.to, new URL(target, c.origin)))
+        say(`${at}: the redirect from ${r.from} sends to ${r.to}, which is not a page or a file of this build`)
+    }
+  }
   const robots = read('robots.txt')
   if (robots !== null && robots !== mergedRobots(c, noindex))
     say(`${shown(join(root, 'robots.txt'))} is not mergedRobots()${noindex ? ' of a noindex build' : ''}`)

@@ -16,7 +16,7 @@ import {
 } from '../schema/www-content.ts'
 import { collectionEntries, WEBFLOW_COLLECTIONS } from './collections.ts'
 import { emptyReport, guard, ItemText, type Entry, type Report, type RunCtx } from './context.ts'
-import { buildDocsMap, DOCS_SITEMAP_URL, sitemapPaths, type DocsMap } from './docs-map.ts'
+import { buildDocsMap, DOCS_SITEMAP_URL, REDIRECTS_HEADER, sitemapPaths, type DocsMap } from './docs-map.ts'
 import { readExport, type WebflowExport, type WfPage } from './export.ts'
 import { align, chromeOf, contentLines, isLandingDom, landingEntry, parseLanding } from './landing.ts'
 import { loadMedia, MAX_TOTAL_BYTES, MediaError, MediaRegistry } from './media.ts'
@@ -373,7 +373,8 @@ async function serialize(
       const wf = Object.entries(WEBFLOW_COLLECTIONS).find(([, v]) => v.collection === collection)?.[0]
       webflowId = (wf ? exp.collections.get(wf)?.schema.id : undefined) ?? collection
     }
-    out.push({ path, webflowId, merged, bytes: utf8(await format(toYaml(value), path, repoRoot)) })
+    const text = collection === 'redirects' ? `${REDIRECTS_HEADER}${toYaml(value)}` : toYaml(value)
+    out.push({ path, webflowId, merged, bytes: utf8(await format(text, path, repoRoot)) })
   }
   return out
 }
