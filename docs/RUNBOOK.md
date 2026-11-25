@@ -952,12 +952,13 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
    curl -s https://www.openmercato.com/sitemap.xml -o ~/webflow-sitemap.xml
    yarn om compare-live --live https://www.openmercato.com \
      --candidate https://www-preview.open-mercato-modules.pages.dev \
-     --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned ~/planned.yaml
+     --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned www/compare-live-planned.yaml
    cp out/compare-live/report.json ~/compare-live-c6.json
    ```
 
-   Pass: `0 failed`. Each intended difference (the four new descriptions, token-filled numbers, replaced dashes) is
-   in `~/planned.yaml` with its URL and field; anything else is fixed in a pull request and C6 runs again. Keep
+   Pass: `0 failed`. Each intended difference (the four new descriptions, token-filled numbers, replaced dashes, and
+   the template parts decided in Phase 5 with the designer) is in `www/compare-live-planned.yaml`, committed, one entry
+   per URL and field with its reason; anything else is fixed in a pull request and C6 runs again. Keep
    `~/compare-live-c6.json` for C8. Then a person compares every page template side by side on desktop and phone: one
    landing per kind, the Polish landing, each unique page, one detail page per collection, the lists with their
    filters, and the 404. The designer signs off the design.
@@ -992,7 +993,7 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
 
       ```sh
       yarn om compare-live --baseline ~/compare-live-c6.json --candidate https://www.openmercato.com \
-        --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned ~/planned.yaml
+        --urls ~/webflow-sitemap.xml --redirects www/content/redirects.yaml --planned www/compare-live-planned.yaml
       docs/proxy/check.sh https://www.openmercato.com
       curl -sI https://www.openmercato.com/ | grep -i '^x-robots-tag'
       # nothing: production is indexed
