@@ -57,9 +57,10 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
 
   it('has the scripts of spec 3.4', () => {
     expect(pkg.scripts.om).toBe('node lib/cli.ts')
-    // the main site (www site migration, Phase 1a): its own astro check, and `build` writes both builds
+    // the main site (www site migration, Phase 1a): its own astro check, and `build` writes both builds; the Worker for
+    // the old hosts (Phase 1b): its own tsc with the Workers types
     expect(pkg.scripts.check).toBe(
-      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text',
+      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && tsc -p workers/old-hosts/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text',
     )
     expect(pkg.scripts.build).toBe('yarn build:run && yarn build:www')
     expect(pkg.scripts['build:run']).toBe('node lib/cli.ts emit --data .data && astro build --outDir dist-run')
