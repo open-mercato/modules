@@ -1,7 +1,7 @@
 ---
 // The landings a landing names in `related` (none of the 32 live landings has any yet): a heading and links in the
 // card look of the steps.
-import { landingPath } from '../../lib/landings.ts'
+import { landingPath, LANDING_SECTION_IDS } from '../../lib/landings.ts'
 
 interface Props {
   items: { id: string; title: string; eyebrow: string }[]
@@ -12,7 +12,7 @@ const { items, title } = Astro.props
 
 {
   items.length > 0 && (
-    <section id="related" class="omlp-section">
+    <section id={LANDING_SECTION_IDS.related} class="omlp-section">
       <div class="omlp-wrap">
         <div class="omlp-heading">
           <h2>{title}</h2>

@@ -1,7 +1,7 @@
 ---
 // The implementation steps of a landing (`#migration`, `omlp-steps`): a heading and a numbered list.
 import type { CountValues } from '../../../../lib/core/www-tokens.ts'
-import type { LandingData } from '../../lib/landings.ts'
+import { LANDING_SECTION_IDS, type LandingData } from '../../lib/landings.ts'
 import Heading from './Heading.astro'
 import Rich from './Rich.astro'
 
@@ -12,7 +12,7 @@ interface Props {
 const { steps, counts } = Astro.props
 ---
 
-<section id="migration" class="omlp-section">
+<section id={LANDING_SECTION_IDS.steps} class="omlp-section">
   <div class="omlp-wrap">
     <Heading eyebrow={steps.eyebrow} title={steps.title} counts={counts} />
     <ol role="list" class="omlp-steps">

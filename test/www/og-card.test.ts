@@ -17,8 +17,9 @@ describe('www/src/lib/og-card.ts (Phase 5)', () => {
   })
 
   it('has a glyph for every Polish letter', async () => {
-    const missing = Buffer.from(await ogCardPng({ eyebrow: 'x', title: '' }))
-    for (const letter of [...'ąćęłńóśźżĄĆĘŁŃÓŚŹŻ']) {
+    const missing = Buffer.from(await ogCardPng({ eyebrow: 'x', title: String.fromCodePoint(0xe000) }))
+    // ó is in every Latin-1 font: it differs from the box with either family name, so the loop cannot pass trivially
+    for (const letter of [...'óąćęłńśźżĄĆĘŁŃÓŚŹŻ']) {
       const png = Buffer.from(await ogCardPng({ eyebrow: 'x', title: letter }))
       expect(png.equals(missing), letter).toBe(false)
     }

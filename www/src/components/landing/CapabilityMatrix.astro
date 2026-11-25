@@ -4,7 +4,7 @@
 // (ComparisonTable), as on the live landings.
 import type { CountValues } from '../../../../lib/core/www-tokens.ts'
 import { matrixLabel, type LandingLocale } from '../../../../lib/schema/www-content.ts'
-import { reviewedDay, templateText, type LandingData } from '../../lib/landings.ts'
+import { LANDING_SECTION_IDS, reviewedDay, templateText, type LandingData } from '../../lib/landings.ts'
 import ComparisonTable from './ComparisonTable.astro'
 import Heading from './Heading.astro'
 import Rich from './Rich.astro'
@@ -21,7 +21,7 @@ const [ours, theirs] = k.columns
 const MARK = { yes: '✓', no: '×', build: '↗' } as const
 ---
 
-<section id="comparison" class="omlp-section">
+<section id={LANDING_SECTION_IDS.capabilities} class="omlp-section">
   <div class="omlp-wrap">
     <Heading eyebrow={k.eyebrow} title={k.title} lead={k.lead} counts={counts} />
     <div class="omfm-frame">

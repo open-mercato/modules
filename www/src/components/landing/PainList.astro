@@ -1,7 +1,7 @@
 ---
 // The pains of a landing (`#needs`, `omlp-pains`): a heading and cards of a title, a body and the card's illustration.
 import type { CountValues } from '../../../../lib/core/www-tokens.ts'
-import type { LandingData } from '../../lib/landings.ts'
+import { LANDING_SECTION_IDS, type LandingData } from '../../lib/landings.ts'
 import CardArt from './CardArt.astro'
 import Heading from './Heading.astro'
 import Rich from './Rich.astro'
@@ -13,7 +13,7 @@ interface Props {
 const { pains, counts } = Astro.props
 ---
 
-<section id="needs" class="omlp-section">
+<section id={LANDING_SECTION_IDS.pains} class="omlp-section">
   <div class="omlp-wrap">
     <Heading eyebrow={pains.eyebrow} title={pains.title} counts={counts} />
     <div class="omlp-pains">

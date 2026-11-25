@@ -117,20 +117,33 @@ export function landingOgImageSize(entry: LandingEntry): { width: number; height
   return entry.data.seo.ogImage === undefined ? { width: 1200, height: 630 } : undefined
 }
 
+/** The id of each section of the landing template, as the live landings name them; the components render these. */
+export const LANDING_SECTION_IDS = {
+  pains: 'needs',
+  features: 'capabilities',
+  capabilities: 'comparison',
+  demo: 'proof',
+  steps: 'migration',
+  faq: 'questions',
+  cta: 'start',
+  related: 'related',
+} as const
+
 /**
- * The ids of the sections a landing renders, as the template names them (the live landings' ids): the targets its
+ * The ids of the sections a landing renders (`relatedShown`: the related landings that resolve to published ones), as the template names them (the live landings' ids): the targets its
  * section navigation may link.
  */
-export function sectionIds(d: LandingData): string[] {
+export function sectionIds(d: LandingData, relatedShown = d.related.length): string[] {
+  const S = LANDING_SECTION_IDS
   const ids: [unknown, string][] = [
-    [d.pains, 'needs'],
-    [d.features, 'capabilities'],
-    [d.capabilities, 'comparison'],
-    [d.demo, 'proof'],
-    [d.steps, 'migration'],
-    [d.faq, 'questions'],
-    [d.cta, 'start'],
-    [d.related.length > 0 ? d.related : undefined, 'related'],
+    [d.pains, S.pains],
+    [d.features, S.features],
+    [d.capabilities, S.capabilities],
+    [d.demo, S.demo],
+    [d.steps, S.steps],
+    [d.faq, S.faq],
+    [d.cta, S.cta],
+    [relatedShown > 0 ? d.related : undefined, S.related],
   ]
   return ids.filter(([v]) => v !== undefined).map(([, id]) => id)
 }
