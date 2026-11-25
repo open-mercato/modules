@@ -16,6 +16,7 @@ import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
 import { absoluteUrl, BASE, HOME, href, siteRootUrl } from '../lib/url.ts'
 import { hereScript } from '../lib/here.ts'
 import { jsonLdText } from '../lib/json-ld.ts'
+import { metaDescription } from '../lib/meta-description.ts'
 import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
@@ -79,9 +80,8 @@ const production = otherProductionOrigins(siteConfig(site, BASE || '/', HOME))
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
 const stale =
   dataAsOf?.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
-// the catalog cuts its description at 155 characters; the main site keeps Webflow's text whole, as the live pages have
-// it (owner's decision of 25 Nov 2026, compare-live parity)
-const metaDescription = run ? description.slice(0, 155) : description
+// cut at 155 characters on the catalog, whole on the main site (lib/meta-description.ts)
+const shownDescription = metaDescription(description, section)
 const speculation = JSON.stringify({
   prefetch: [{ where: { href_matches: `${BASE}/m/*` }, eagerness: 'moderate' }],
 })
@@ -95,7 +95,7 @@ const speculation = JSON.stringify({
     <Fragment set:html={EMAIL_OFF} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={metaDescription} />
+    <meta name="description" content={shownDescription} />
     {robotsNoindex && <meta name="robots" content="noindex" />}
     {canonical && <link rel="canonical" href={canonical} />}
     {/* the favicon of openmercato.com (32 x 32 PNG): the catalog is a part of it (navbar of 14 Nov) */}
@@ -109,7 +109,7 @@ const speculation = JSON.stringify({
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Open Mercato" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={metaDescription} />
+    <meta property="og:description" content={shownDescription} />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     {/* the size is known for the default card only */}

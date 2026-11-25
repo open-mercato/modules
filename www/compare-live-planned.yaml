@@ -653,3 +653,9 @@
 - url: /careers-jobs/senior-ai-engineering
   field: text
   note: "Template, decided in Phase 5 with the designer: live has the all open roles link, the apply button and the site CTA; the preview has the job facts and its lead. The body is word for word the same."
+- url: /blog-posts/erpnext-alternative-what-to-replace
+  field: text
+  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
+- url: /blog-posts/erpnext-alternative-what-to-replace
+  field: images
+  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
