@@ -1,56 +1,59 @@
 ---
-// The facts of a case study: who delivered it (DeliveredBy), client, industry, timeline, type and the technology stack.
-// A partner that is a draft is named without a link.
-import { linkAction } from '../../lib/body-html.ts'
-import { linkRules } from '../../lib/collections-data.ts'
-import { markdownHtml, type LinkFn } from '../../lib/inline-markdown.ts'
+// The sidebar of a case study in the live Webflow markup (`case-post_sticky-wrapper`, `case_summary`): who delivered it
+// (a link to a published partner or an outside address, a draft partner by name only), client, industry and timeline,
+// then the call to action. The type and the technology stack are not in the live summary: the stack is a panel under
+// the body (CaseStack.astro).
+import { MAIN_SITE_GITHUB } from '../../../../lib/core/main-site.ts'
+import { ARROW_ICON, GITHUB_ICON } from '../../lib/webflow-icons.ts'
 import type { DeliveredBy } from '../../lib/case-studies.ts'
 
 interface Props {
-  overview: { client?: string; industry?: string; timeline?: string; type?: string; stack?: string }
+  overview: { client?: string; industry?: string; timeline?: string }
   delivered?: DeliveredBy
 }
 const { overview, delivered } = Astro.props
 const facts = [
   ['Client', overview.client],
-  ['Industry', overview.industry],
-  ['Timeline', overview.timeline],
-  ['Type', overview.type],
+  ['INDUSTRY', overview.industry],
+  ['TIMELINE', overview.timeline],
 ].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
-// a link in the stack follows the rules of a body: a draft is never linked, a page still on Webflow points there
-const rules = await linkRules()
-const link: LinkFn = (href) => {
-  const a = linkAction(href, rules)
-  if (a.kind === 'text') console.warn(`[om-www] technology stack: ${a.why}; the link renders as text`)
-  return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
-}
 ---
 
-<aside class="facts" aria-label="Project overview">
-  <dl class="facts__list">
-    {
-      delivered && (
-        <div>
-          <dt>Delivered by</dt>
-          <dd class="delivered-by">{delivered.href ? <a href={delivered.href}>{delivered.name}</a> : delivered.name}</dd>
-        </div>
-      )
-    }
-    {
-      facts.map(([label, value]) => (
-        <div>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
-        </div>
-      ))
-    }
-    {
-      overview.stack && (
-        <div>
-          <dt>Technology stack</dt>
-          <dd class="prose facts__stack" set:html={markdownHtml(overview.stack, link)} />
-        </div>
-      )
-    }
-  </dl>
-</aside>
+<div class="case-post_sticky-wrapper">
+  <div class="case_summary">
+    <div class="case_summary-content">
+      {
+        delivered && (
+          <div class="case_summary-item">
+            <div class="text-style-tagline text-color-secondary">DELIVERED BY</div>
+            {delivered.href ? (
+              <a href={delivered.href} class="case_summary-link w-inline-block delivered-by">
+                <div>{delivered.name}</div>
+                <div class="code-embed" aria-hidden="true" set:html={ARROW_ICON} />
+              </a>
+            ) : (
+              <div class="delivered-by">{delivered.name}</div>
+            )}
+          </div>
+        )
+      }
+      {
+        facts.map(([label, value]) => (
+          <div class="case_summary-item">
+            <div class="text-style-tagline text-color-secondary">{label}</div>
+            <div>{value}</div>
+          </div>
+        ))
+      }
+    </div>
+    <div class="blog-post_cta-top is-case">
+      <div class="heading-style-h5">Want to build something similar? Start with Open Mercato.</div>
+      <div class="button-group">
+        <a href={MAIN_SITE_GITHUB} class="button is-icon w-inline-block">
+          <div class="button_icon" aria-hidden="true" set:html={GITHUB_ICON} />
+          <div>Clone the Repo</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

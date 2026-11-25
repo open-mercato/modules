@@ -1,6 +1,7 @@
 ---
-// The screenshots of a case study. Plain images: every one is reachable without JavaScript; a carousel is Phase 7's.
-// The alt text describes each image (Webflow has no separate caption).
+// The screenshots of a case study in the live Webflow markup (`case-post_gallery`). Each opens the full image: the live
+// page's lightbox needs Webflow's script; a link needs none and works without JavaScript. The alt text describes each
+// image (Webflow has no separate caption).
 import type { PostImage } from '../../lib/blog.ts'
 
 interface Props {
@@ -11,17 +12,32 @@ const { images } = Astro.props
 
 {
   images.length > 0 && (
-    <section class="gallery" aria-labelledby="screenshots">
-      <h2 class="t-h2" id="screenshots">
-        Screenshots
-      </h2>
-      <ul class="gallery__grid">
-        {images.map((img) => (
-          <li>
-            <img src={img.src} alt={img.decorative ? '' : img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" />
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div class="section">
+      <div class="section-padding">
+        <div class="text-style-tagline text-color-secondary">Screenshots</div>
+        <div class="spacer-small" />
+        <div class="case-post_gallery">
+          <div class="case-post_gallery-colection-list-wrapper">
+            <div role="list" class="case-post_gallery-colection-list">
+              {images.map((img) => (
+                <div role="listitem" class="case-post_gallery-colection-item">
+                  <a href={img.src} class="case-post_gallery-lightbox w-inline-block">
+                    <img
+                      class="case-post_gallery-lightbox-image"
+                      src={img.src}
+                      alt={img.decorative ? '' : img.alt}
+                      width={img.width}
+                      height={img.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

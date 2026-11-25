@@ -120,8 +120,23 @@ describe('the build of case studies, partners and jobs', () => {
           expect(published.get(m[1]!)!.has(m[2]!), `${f}: /${m[1]}/${m[2]}`).toBe(true)
     })
 
+    it('the carousel of a case study links every other published case study, in list order', () => {
+      const all = routes[0]!.published
+      for (const slug of all) {
+        const html = read('case-studies', `${slug}.html`)
+        const slider = html.slice(html.indexOf('data-case-slider'))
+        const linked = [...slider.matchAll(/href="\/case-studies\/([^"]+)" class="case-list_card-link/g)].map(
+          (m) => m[1]!,
+        )
+        expect(linked, slug).toEqual(all.filter((s) => s !== slug))
+      }
+    })
+
     it('lists every published case study on /case-studies', () => {
       const html = read('case-studies.html')
+      // the filter's controls wait for JavaScript; the server render lists every case study
+      expect(html).toMatch(/<div class="blog-filters_component no-scrollbar" hidden/)
+      expect(html).toContain(`Showing all ${routes[0]!.published.length} case studies.`)
       expect(linked(html, 'case-studies')).toEqual([...routes[0]!.published].sort())
       expect(title(html)).toBe('Case Studies | Open Mercato')
       expect(h1(html)).toBe('What teams ship with Open Mercato')
@@ -136,7 +151,7 @@ describe('the build of case studies, partners and jobs', () => {
       expect(h1(html)).toBe('Hire a Certified Open Mercato Partner')
       expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/certified-partners">`)
       // the controls wait for JavaScript; the server render lists every partner and says so in the live region
-      expect(html).toMatch(/<div class="partner-filter__controls" hidden/)
+      expect(html).toMatch(/<div class="agencies_filters-column" hidden/)
       expect(html).toMatch(/role="status" aria-live="polite">Showing all \d+ partners\./)
       expect(html).toContain(`Showing all ${partners.length} partners.`)
       // the island's props: the partner list and the facet options, as JSON in the page
@@ -183,8 +198,11 @@ describe('the build of case studies, partners and jobs', () => {
       for (const c of caseStudies.filter((x) => !x.data.draft && typeof x.data.deliveredBy === 'string')) {
         const id = c.data.deliveredBy as string
         const html = read('case-studies', `${c.id}.html`)
-        if (published.has(id)) expect(html, c.id).toContain(`<dd class="delivered-by"><a href="${partnerPath(id)}">`)
-        else expect(html, c.id).toMatch(/<dd class="delivered-by">[^<]/)
+        if (published.has(id))
+          expect(html, c.id).toContain(
+            `<a href="${partnerPath(id)}" class="case_summary-link w-inline-block delivered-by">`,
+          )
+        else expect(html, c.id).toMatch(/<div class="delivered-by">[^<]/)
       }
     })
 
