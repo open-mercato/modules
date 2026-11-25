@@ -7103,3 +7103,16 @@
     padding-top: 48px;
   }
 }
+
+/*
+ * The footer of /crm: live has no closing call to action on this page, so its Webflow footer sits outside the dark band
+ * and shows dark text on white (computed on live, 25 Nov 2026: background #fff, text #0c0c0c, hairline #1f1f1f). The
+ * shared footer (site/src/components/Footer.astro) takes the same colours through its own variables.
+ */
+body.wf-crm .site-footer {
+  --foot: #fff;
+  --foot-ink: #0c0c0c;
+  --foot-ink-2: #0c0c0c;
+  --foot-line: #1f1f1f;
+  color-scheme: light;
+}
