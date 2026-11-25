@@ -1,0 +1,19 @@
+---
+// The shell of every page of the main site: the shared Base layout (header, footer, fonts, head metadata) with the
+// main site's stylesheet, a mirror of openmercato.com (www/src/styles/webflow/site.css), loaded after the catalog's
+// styles so that its rules win where both style an element. `cta` adds the closing call to action of the live pages
+// (SiteCta) between the page and the footer; the landings have their own.
+import type { ComponentProps } from 'astro/types'
+import Base from '../../../site/src/layouts/Base.astro'
+import '../styles/webflow/site.css'
+import SiteCta from '../components/site/SiteCta.astro'
+
+type Props = Omit<ComponentProps<typeof Base>, 'section'> & { cta?: boolean }
+const { cta = true, ...props } = Astro.props
+---
+
+<Base section="main" {...props}>
+  <slot name="head" slot="head" />
+  <slot />
+  {cta && <SiteCta slot="after-main" />}
+</Base>

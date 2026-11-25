@@ -52,6 +52,8 @@ interface Props {
   bodyClass?: string
   /** Breadcrumbs of a page deeper in a section, for the context line (PageContext.astro). */
   trail?: TrailStep[] | false
+  /** The language of the page (`<html lang>`): `en` but on a main-site page in another language (a landing in Polish). */
+  lang?: string
 }
 const {
   title,
@@ -68,6 +70,7 @@ const {
   section = 'run',
   ogType = 'website',
   ogImage: pageOgImage,
+  lang = 'en',
 } = Astro.props
 const run = section === 'run'
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
@@ -88,7 +91,7 @@ const speculation = JSON.stringify({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     {/* package@version reads as an e-mail address to Cloudflare (live review of 30 Oct): head and body are kept apart */}
@@ -146,6 +149,9 @@ const speculation = JSON.stringify({
       {dataAsOf && <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />}
       <slot />
     </main>
+    {/* what the main site shows between the page and the footer, outside <main> as on openmercato.com (its closing call
+        to action) */}
+    <slot name="after-main" />
     <Footer />
     {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production)} />}
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>

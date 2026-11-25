@@ -1,0 +1,35 @@
+---
+// The closing call to action of every page of openmercato.com but the landings ("Build fast. On foundations you can
+// trust."), mirrored from the live markup and its Webflow classes (www/src/styles/webflow/site.css). It sits between
+// the page and the footer, outside <main>, as on the live site.
+import { MAIN_SITE_GITHUB, MAIN_SITE_SANDBOX } from '../../../../lib/core/main-site.ts'
+import logo from './cta-logo.svg?raw'
+import githubMark from './github-mark.svg?raw'
+---
+
+<div class="dark-section-wrapper padding-global">
+  <div class="container-main is-dark">
+    <section class="section_cta">
+      <div class="section-padding">
+        <div class="container-small">
+          <div class="cta_component">
+            <div class="cta_logo" aria-hidden="true"><Fragment set:html={logo} /></div>
+            <div class="spacer-small"></div>
+            <h2>Build fast. On foundations you can trust.</h2>
+            <div class="spacer-medium"></div>
+            <div class="text-size-large text-color-additional">Start with 80% done.</div>
+            <div class="spacer-medium"></div>
+            <div class="om-final-actions">
+              <a class="om-final-primary" href={MAIN_SITE_SANDBOX.url}
+                >Build with sandbox <span aria-hidden="true">↗</span></a
+              >
+              <a class="om-final-secondary" href={MAIN_SITE_GITHUB}
+                ><span aria-hidden="true"><Fragment set:html={githubMark} /></span><span>Steal this code (legally)</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
