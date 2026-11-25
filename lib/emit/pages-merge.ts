@@ -17,7 +17,7 @@ import {
   siteDir,
   type SiteConfig,
 } from '../core/site-host.ts'
-import { NON_PAGE_SEGMENTS, PENDING_UNIQUE_PAGES } from '../schema/www-content.ts'
+import { NON_PAGE_SEGMENTS } from '../schema/www-content.ts'
 import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from './pages-layout.ts'
 import {
   DYNAMIC_TO,
@@ -31,15 +31,6 @@ import {
 
 /** The folders of the two builds and of the upload, relative to the repository root (package.json `build`). */
 export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
-
-/**
- * Pages of the main site that Webflow serves until their phase and that the www pages link on purpose
- * (PENDING_UNIQUE_PAGES of lib/schema/www-content.ts: /careers, the list of jobs each job page's breadcrumb links, and
- * /contact and /crm, which the landings' calls to action link). A noindex preview lists them as pending, as the header's
- * links; production fails on them. The detail pages of the collections (blog posts, case studies, partners, jobs) are
- * built since Phase 4, so a link to one must name a built page.
- */
-export const PENDING_PAGE = new RegExp(`^/(?:${PENDING_UNIQUE_PAGES.join('|')})$`)
 
 /**
  * Root files the merge writes itself: a build that brings its own would be overwritten without notice. The main site's
@@ -283,8 +274,7 @@ export interface MergedCheck {
   problems: string[]
   /**
    * Main site addresses the pages link that this build does not serve yet: the header and footer links of
-   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec), and the unique pages the www
-   * pages link before their phase (PENDING_PAGE). Only a noindex preview may
+   * lib/core/main-site.ts that Webflow serves until the switch (step C8 of the spec). Only a noindex preview may
    * have any; in a production upload each is a problem, since there Pages and not Webflow answers them.
    */
   pending: string[]
@@ -324,7 +314,7 @@ export function checkMergedLayout(
   const serves = (pathname: string): boolean => servesPath(root, pathname, rules)
   const onMainSite = (ref: string, url: URL): boolean => {
     if (serves(url.pathname)) return true
-    if (noindex && /^https:\/\//.test(ref) && (isMainSiteLink(ref) || PENDING_PAGE.test(url.pathname))) {
+    if (noindex && /^https:\/\//.test(ref) && isMainSiteLink(ref)) {
       pending.add(`${url.origin}${url.pathname}`)
       return true
     }

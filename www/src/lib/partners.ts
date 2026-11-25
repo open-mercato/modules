@@ -46,7 +46,7 @@ export interface PartnerEntry {
 
 export const PARTNERS_PATH = '/certified-partners'
 export const PARTNER_PREFIX = '/certified-partners/'
-/** How to become a partner: a unique page of the `pages` collection (Phase 6), still on Webflow until then. */
+/** How to become a partner: a unique page of the `pages` collection (Phase 6). */
 export const AGENCIES_PATH = '/agencies'
 /** Where "Contact agency" of a partner page writes to: the live template's address, the same for every partner. */
 export const PARTNER_CONTACT = 'mailto:info@openmercato.com'

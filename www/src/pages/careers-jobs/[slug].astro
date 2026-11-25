@@ -1,11 +1,9 @@
 ---
 // /careers-jobs/<slug> (spec, Routing and SEO): one page per job that is not a draft (D6), in the live Webflow markup
 // (JobDetail.astro). Title `<title> | Careers - Open Mercato`, canonical, JobPosting JSON-LD while the job is open (its
-// body as the description) and BreadcrumbList. The list of jobs is /careers, a unique page still on Webflow until
-// Phase 6, so "All open roles" points there.
+// body as the description) and BreadcrumbList. "All open roles" points to /careers, the list of jobs.
 import { render } from 'astro:content'
 import Main from '../../layouts/Main.astro'
-import { MAIN_SITE_ORIGIN } from '../../../../lib/core/main-site.ts'
 import Prose from '../../components/blog/Prose.astro'
 import JobDetail from '../../components/jobs/JobDetail.astro'
 import { jobData } from '../../lib/collections-data.ts'
@@ -36,7 +34,7 @@ const html = (job as unknown as { rendered?: { html?: string } }).rendered?.html
   {/* the live job template wraps its page in `white-section-wrapper`, not `main-wrapper` */}
   <div class="white-section-wrapper padding-global">
     <div class="container-main">
-      <JobDetail job={job} careersHref={`${MAIN_SITE_ORIGIN}${CAREERS_PATH}`}>
+      <JobDetail job={job} careersHref={CAREERS_PATH}>
         <Prose variant="plain"><Content /></Prose>
       </JobDetail>
     </div>

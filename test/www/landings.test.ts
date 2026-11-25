@@ -2,7 +2,6 @@
 // routes, hreflang, the FAQPage JSON-LD and the template's helpers, without a build.
 import { describe, expect, it } from 'vitest'
 import { fillCounts } from '../../lib/core/www-tokens.ts'
-import { PENDING_PAGE } from '../../lib/emit/pages-merge.ts'
 import { LANDING_TEMPLATE_TEXT } from '../../lib/schema/www-content.ts'
 import {
   alternatesOf,
@@ -13,7 +12,6 @@ import {
   publishedLandings,
   reviewedDay,
   sectionIds,
-  siteHref,
 } from '../../www/src/lib/landings.ts'
 import { landingEntries } from './landings-content.ts'
 
@@ -68,15 +66,6 @@ describe('www/src/lib/landings.ts (Phase 5)', () => {
     expect(intentOf('/contact?interest=hubspot-alternative')).toBe('hubspot-alternative')
     expect(intentOf('#comparison')).toBeUndefined()
     expect(intentOf('https://example.com/?interest=x')).toBeUndefined()
-  })
-
-  it('points links to unique pages still on Webflow to the live site, the merge check lists them as pending', () => {
-    expect(siteHref('/contact?interest=hubspot-alternative')).toBe(`${ORIGIN}/contact?interest=hubspot-alternative`)
-    expect(siteHref('/crm')).toBe(`${ORIGIN}/crm`)
-    expect(siteHref('/case-studies/tracecore')).toBe('/case-studies/tracecore')
-    expect(siteHref('#comparison')).toBe('#comparison')
-    for (const p of ['/careers', '/contact', '/crm']) expect(PENDING_PAGE.test(p), p).toBe(true)
-    expect(PENDING_PAGE.test('/contact/x')).toBe(false)
   })
 
   it('prints review dates in the landing’s language, as the live pages do', () => {

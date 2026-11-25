@@ -53,7 +53,7 @@ import {
   publishedPartners,
   tierStyle,
 } from '../../www/src/lib/partners.ts'
-import { bodyLinkRules, detailIds, publishedIds, servesFixed } from '../../www/body-links.ts'
+import { bodyLinkRules, detailIds, publishedIds, rootPagePaths, servesFixed } from '../../www/body-links.ts'
 import { partnersShownText } from '../../www/src/islands/PartnerFilter.tsx'
 import { CONTENT, names } from './blog-content.ts'
 import { caseStudyEntries, dictionaries, jobEntries, partnerEntries } from './collections-content.ts'
@@ -485,8 +485,11 @@ describe('links of bodies to the Phase 4 routes', () => {
     for (const href of drafts) expect(linkAction(href, rules).kind, href).toBe('text')
   })
 
-  it('still points a link to /careers, a page on Webflow until Phase 6, at the live site', () => {
-    expect(linkAction('/careers', rules)).toEqual({ kind: 'live', href: `${ORIGIN}/careers` })
+  it('keeps a link to a unique page or a landing on the site (Phase 6), and points any other main-site path at live', () => {
+    for (const p of ['/careers', '/contact', '/crm', '/', '/hubspot-alternative'])
+      expect(linkAction(p, rules), p).toEqual({ kind: 'keep' })
+    expect(rootPagePaths(CONTENT).has('/careers')).toBe(true)
+    expect(linkAction('/style-guide', rules)).toEqual({ kind: 'live', href: `${ORIGIN}/style-guide` })
   })
 })
 
@@ -504,9 +507,9 @@ describe('a Markdown field of the frontmatter', () => {
       return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
     }
     const draft = caseStudies.find((c) => c.data.draft)!
-    expect(markdownHtml(`- [d](${caseStudyPath(draft.id)}) and [c](/careers) and [p](/certified-partners)`, link)).toBe(
-      `<ul><li>d and <a href="${ORIGIN}/careers">c</a> and <a href="/certified-partners">p</a></li></ul>`,
-    )
+    expect(
+      markdownHtml(`- [d](${caseStudyPath(draft.id)}) and [s](/style-guide) and [p](/certified-partners)`, link),
+    ).toBe(`<ul><li>d and <a href="${ORIGIN}/style-guide">s</a> and <a href="/certified-partners">p</a></li></ul>`)
   })
 
   it('every technology stack of a published case study renders as a list', () => {
