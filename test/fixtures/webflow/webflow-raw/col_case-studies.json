@@ -1,0 +1,292 @@
+{
+  "id": "6a2ad78f29be48c42ccda7a0",
+  "displayName": "Case Studies / Posts",
+  "singularName": "Case Studies / Post",
+  "slug": "case-studies",
+  "createdOn": "2026-06-11T15:43:11.852Z",
+  "lastUpdated": "2026-07-08T17:48:33.099Z",
+  "fields": [
+    {
+      "id": "09e1985d57f06d415ea879aa44cd498a",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "MultiReference",
+      "slug": "category",
+      "displayName": "Category",
+      "helpText": "Pick relevant category from the list or create a new one",
+      "validations": {
+        "collectionId": "6a2ad7d71ab5ae226a820bfd"
+      }
+    },
+    {
+      "id": "da439e5d59878e3f4959fa4db29ff564",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Switch",
+      "slug": "featured-on-agencies-page",
+      "displayName": "Featured on Agencies page",
+      "helpText": "Turn on if case study should be featured in \"What teams ship\" section on /agencies page",
+      "validations": null
+    },
+    {
+      "id": "9678b4142e50abbeb6e3213b90922f2a",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "display-order",
+      "displayName": "Display Order",
+      "helpText": "Number used for sorting",
+      "validations": {
+        "format": "integer",
+        "precision": 1,
+        "allowNegative": false
+      }
+    },
+    {
+      "id": "0f80a9547941503bd1a2a4887b4c5ecd",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "main-heading",
+      "displayName": "Main heading",
+      "helpText": "Main displayed case study heading",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "e75e238526cc009d31048b7493a8a6ca",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "short-description",
+      "displayName": "Short description",
+      "helpText": "Displayed on the case post card and in post hero",
+      "validations": {
+        "singleLine": false
+      }
+    },
+    {
+      "id": "b06681563ae59820522b3f2b2b866b3e",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Image",
+      "slug": "thumbnail",
+      "displayName": "Thumbnail",
+      "helpText": "Ratio 1.54:1",
+      "validations": null
+    },
+    {
+      "id": "524d8e18dbdd7a675a75a6d3d277b6aa",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "VideoLink",
+      "slug": "hero-video",
+      "displayName": "Hero Video",
+      "helpText": "Paste video URL if relevant. When URL is added than video is visible in hero",
+      "validations": null
+    },
+    {
+      "id": "d3b2e289e6dd1fb9d5e19f54193d891c",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Reference",
+      "slug": "delivered-by",
+      "displayName": "Delivered by",
+      "helpText": "If relevant pick agency",
+      "validations": {
+        "collectionId": "6a2b03cd5e12536d31880f20"
+      }
+    },
+    {
+      "id": "3cb8aa2805f64f5f430fce70850c3edf",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "overview-client",
+      "displayName": "[Overview] Client",
+      "helpText": "e.g. Amazon",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "ad4fe566e54e3f3e9127072f5ce62968",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "overview-industry",
+      "displayName": "[Overview] Industry",
+      "helpText": "e.g. Air & Ocean Logistics",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "ce453ed0d08b0017ad195e0d1b8ae806",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "overview-timeline",
+      "displayName": "[Overview] Timeline",
+      "helpText": "e.g. 6 weeks",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "fc2e332665be434a100f2c75b241e2e3",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "overview-type",
+      "displayName": "[Overview] Type",
+      "helpText": "e.g. Custom ERP",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "43dae099be431e7895ef2cc7dd8a85f8",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "overview-stack",
+      "displayName": "[Overview] Stack",
+      "helpText": "List main stack with bullets",
+      "validations": null
+    },
+    {
+      "id": "08433d82c6fac55984b82ad3e52c5ea1",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-1-title",
+      "displayName": "[Stat #1] Title",
+      "helpText": "e.g. 6 weeks",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "0f01ad571711ab2e8eb5024b621abc88",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-1-description",
+      "displayName": "[Stat #1] Description",
+      "helpText": "e.g. From kickoff to production",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "f31e2b0e828064f68ab02e2013c53099",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-2-title",
+      "displayName": "[Stat #2] Title",
+      "helpText": "e.g. €0",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "c771273cf7ebd4f43ce2bd48c382e5f0",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-2-description",
+      "displayName": "[Stat #2] Description",
+      "helpText": "e.g. In ongoing license fees",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "134e44f793ba683e7cd72f371497b8c1",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-3-title",
+      "displayName": "[Stat #3] Title",
+      "helpText": "e.g. 1 platform",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "b4e74b0125d8657bba1498b95e245bc6",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "stat-3-description",
+      "displayName": "[Stat #3] Description",
+      "helpText": "e.g. Replaced 3 separate tools",
+      "validations": {
+        "singleLine": true
+      }
+    },
+    {
+      "id": "e567aee01e97c66e6f8369a1039f9a84",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "case-content",
+      "displayName": "Content",
+      "helpText": "Main case post content",
+      "validations": null
+    },
+    {
+      "id": "1c3d0714474fc2900a5f621e1c1bc251",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "MultiImage",
+      "slug": "screenshots",
+      "displayName": "Screenshots",
+      "helpText": "Optional. Product / UI screenshots. Add multiple images.",
+      "validations": null
+    },
+    {
+      "id": "339b285ddb9feca3d6534ccba760fb8c",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Link",
+      "slug": "delivered-by-url",
+      "displayName": "Delivered by URL",
+      "helpText": "Internal openmercato.com partner profile link (workaround until Delivered-by can bind to its own collection page)",
+      "validations": null
+    },
+    {
+      "id": "2579297f110c91244f06c2532dd85a93",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Internal case study name",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "0e18495a838a972dde925517e6f5e619",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "URL-friendly title (e.g. \"logistics-erp-in-6-weeks)",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

@@ -41,9 +41,11 @@ const VALID: Record<WwwCollection, unknown> = {
     hero: { eyebrow: 'Alternative', title: 'Own your CRM', lead: 'Open source.', primary: cta, proof: ['MIT'] },
     sectionNav: [{ label: 'FAQ', anchor: 'faq' }],
     capabilities: {
-      columns: ['Open Mercato', 'HubSpot'],
-      groups: [{ title: 'Data', rows: [{ label: 'Self-hosting', ours: 'yes', theirs: 'No' }] }],
-      legend: 'Yes means built in.',
+      title: 'Feature by feature',
+      label: 'What your team gets',
+      columns: [{ name: 'Open Mercato', note: 'Core CRM' }, { name: 'HubSpot' }],
+      groups: [{ title: 'Data', rows: [{ label: 'Self-hosting', ours: 'yes', theirs: 'no', theirsNote: 'Hosted' }] }],
+      legend: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
       note: 'Checked on the vendor site.',
       reviewed: '2026-11-01',
       sources: [{ label: 'Pricing', url: 'https://example.com/pricing' }],
@@ -124,6 +126,16 @@ const INVALID: Record<WwwCollection, [string, (v: Record<string, unknown>) => un
     ['a locale other than en or pl', (v) => ({ ...v, locale: 'de' })],
     ['an empty description', (v) => ({ ...v, seo: { ...seo, description: '' } })],
     ['a related landing that is not a slug', (v) => ({ ...v, related: ['Not A Slug'] })],
+    [
+      'a capability mark that is not one',
+      (v) => {
+        const c = v.capabilities as { groups: { title: string; rows: object[] }[] }
+        return {
+          ...v,
+          capabilities: { ...c, groups: [{ title: 'Data', rows: [{ label: 'x', ours: 'yes', theirs: 'No' }] }] },
+        }
+      },
+    ],
   ],
   pages: [
     ['a block of an unknown type', (v) => ({ ...v, blocks: [{ type: 'hero', title: 'x' }] })],
@@ -245,6 +257,16 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
     expect(Seo.safeParse({ title: 'x' }).success).toBe(false)
   })
 
+  it('labels the partner budgets exactly as Webflow names its options (parity)', () => {
+    expect(Object.values(PARTNER_BUDGET_LABELS)).toEqual([
+      'Under $10,000',
+      '$10,000 - $20,000',
+      '$20,000 - $50,000',
+      '$50,000 - $100,000',
+      '$100,000+',
+    ])
+  })
+
   it('has a label for every option key, in plain text', () => {
     expect(Object.keys(PARTNER_BUDGET_LABELS)).toEqual([...PARTNER_BUDGETS])
     expect(Object.keys(PARTNER_AVAILABILITY_LABELS)).toEqual([...PARTNER_AVAILABILITY])
@@ -259,7 +281,7 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
 
   describe('routeNamespaceProblems', () => {
     it('accepts pages and landings with their own slugs', () => {
-      expect(routeNamespaceProblems(['home', 'product', 'careers'], ['hubspot-alternative'])).toEqual([])
+      expect(routeNamespaceProblems(['home', 'product', 'about'], ['hubspot-alternative'])).toEqual([])
     })
     it('refuses a slug in both collections', () => {
       expect(routeNamespaceProblems(['crm'], ['crm'])).toEqual(['pages/crm and landings/crm both route to /crm'])
@@ -268,6 +290,11 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
       for (const seg of RESERVED_SEGMENTS)
         expect(routeNamespaceProblems([], [seg])).toEqual([`landings/${seg}: /${seg} is a reserved path`])
       expect(routeNamespaceProblems(['run'], [])).toEqual(['pages/run: /run is a reserved path'])
+    })
+    it('keeps the list routes of the collections for their collections', () => {
+      // /blog and /careers are list routes like /case-studies and /certified-partners, not pages entries
+      for (const seg of ['blog', 'careers', 'case-studies', 'certified-partners'])
+        expect(routeNamespaceProblems([seg], [])).toEqual([`pages/${seg}: /${seg} is a reserved path`])
     })
     it('keeps the home slug for the home page', () => {
       expect(routeNamespaceProblems([], ['home'])).toEqual(['landings/home: the slug of the home page'])

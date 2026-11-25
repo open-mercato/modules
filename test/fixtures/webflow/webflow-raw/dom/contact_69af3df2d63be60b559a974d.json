@@ -1,0 +1,311 @@
+{
+  "pageId": "69af3df2d63be60b559a974d",
+  "branchId": null,
+  "nodes": [
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdc1",
+      "type": "component-instance",
+      "componentId": "5ffad809-50c0-31dd-2ebc-e3eb71f28b9b",
+      "propertyOverrides": []
+    },
+    {
+      "id": "d093bdc2-d2f5-cff5-0678-52302b5f2bf3",
+      "type": "component-instance",
+      "componentId": "a4a86da8-5153-46f7-3524-75fa8a050a61",
+      "propertyOverrides": []
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdc2",
+      "type": "component-instance",
+      "componentId": "0a6631b9-2a3e-f4ae-46ed-9743a9b2f26d",
+      "propertyOverrides": []
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdcb",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"text-size-tiny text-weight-medium text-color-additional\" data-wf-link-page-id=\"69a97e33d587824eef365d5f\">Home</a>",
+        "text": "Home"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdcd",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-size-tiny text-weight-medium text-color-additional\">/ </div>",
+        "text": "/ "
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdcf",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"text-size-tiny text-weight-medium\" data-wf-link-page-id=\"69af3df2d63be60b559a974d\">Contact</a>",
+        "text": "Contact"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdd2",
+      "type": "text",
+      "text": {
+        "html": "<h1>Get in touch</h1>",
+        "text": "Get in touch"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fdd6",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"text-color-secondary\">Whether you're exploring Open Mercato for your enterprise, want to become an Implementation Partner, or just have a question — we'd love to hear from you.</p>",
+        "text": "Whether you're exploring Open Mercato for your enterprise, want to become an Implementation Partner, or just have a question — we'd love to hear from you."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "32c95173-b454-5fc0-8308-95fc7f8faf59",
+      "type": "html-embed",
+      "html": "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M4.375 5.625H15.625V14.375H4.375V5.625Z\" stroke=\"black\" stroke-width=\"1.5\"/>\n<path d=\"M4.375 5.625L10 10L15.625 5.625\" stroke=\"black\" stroke-width=\"1.5\"/>\n</svg>",
+      "attributes": {}
+    },
+    {
+      "id": "8fdf289f-139e-3c2a-6a60-3770b9206111",
+      "type": "text",
+      "text": {
+        "html": "<div>info@openmercato.com</div>",
+        "text": "info@openmercato.com"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "d79f9f74-3c75-c194-5706-7eb2355abcc4",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-size-small text-color-secondary\">By contacting us or using this website you agree to our <a data-wf-link-page-id=\"69c273e892caeeafc3381e55\" data-w-id=\"5c106015-417f-b305-5907-e0306df2a9ce\">Terms &amp; Conditions / Privacy Policy</a>.</div>",
+        "text": "By contacting us or using this website you agree to our Terms & Conditions / Privacy Policy."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0013727c-a947-2922-6611-c0376eb85d22",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-large\">Social&nbsp;Media</h3>",
+        "text": "Social Media"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "38c1b263-73c7-78d7-d67d-1f05775e8790",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-rich-text text-color-secondary\"><ul data-w-id=\"0a2fc3e2-044f-b5af-5e94-ef460a1c500b\"><li data-w-id=\"0a2fc3e2-044f-b5af-5e94-ef460a1c500c\"><a href=\"https://www.linkedin.com/company/open-mercato/\" target=\"_blank\" data-w-id=\"7559de0f-5f33-8aeb-75ca-a433459d2004\">LinkedIn</a></li><li data-w-id=\"d4870080-7d27-03b9-11fa-df99f4149691\"><a href=\"https://x.com/OpenMercato\" target=\"_blank\" data-w-id=\"72ee9db8-3060-fd84-f496-2655bd78008a\">X</a></li><li data-w-id=\"2ecddef1-747c-4360-a13d-26a7854325f9\"><a href=\"https://discord.gg/f4qwPtJ3qA\" target=\"_blank\" data-w-id=\"d7e7b459-5a33-f98a-3f42-1ad4605cc10a\">Discord</a></li><li data-w-id=\"b60983e4-9297-bb78-8d98-ae35a394d4b7\"><a href=\"https://github.com/open-mercato/open-mercato\" target=\"_blank\" data-w-id=\"fe1f57af-c7f9-7bbc-d182-e85c8ef82d40\">Github</a></li></ul></div>",
+        "text": null
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee52e",
+      "type": "text",
+      "text": {
+        "html": "<h2>Meet the people behind <span data-w-id=\"e455a3ef-3e0b-f25c-f2f5-9290d9cee52d\">Open Mercato</span></h2>",
+        "text": "Meet the people behind Open Mercato"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "636cb798-b277-1763-820e-f7602657aaeb",
+      "type": "image",
+      "image": {
+        "alt": "Tomasz Karwatka",
+        "assetId": "6aab8968d8d698564577b3f1"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee537",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-regular text-weight-medium\">Tomasz Karwatka</h3>",
+        "text": "Tomasz Karwatka"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee53b",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-color-secondary\">CEO &amp; Co-Founder</div>",
+        "text": "CEO & Co-Founder"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee547",
+      "type": "text",
+      "text": {
+        "html": "<p>Co-founder of Divante and Callstack, both scaled to enterprise clients across Europe and the US and exited. Investor at Catch The Tornado, now all-in on Open Mercato.</p>",
+        "text": "Co-founder of Divante and Callstack, both scaled to enterprise clients across Europe and the US and exited. Investor at Catch The Tornado, now all-in on Open Mercato."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "1e38de02-ed1e-2a3f-a920-a689c2a75d51",
+      "type": "image",
+      "image": {
+        "alt": "Piotr Karwatka",
+        "assetId": "6aab84a929384ef36bc35d30"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee54d",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-regular text-weight-medium\">Piotr Karwatka</h3>",
+        "text": "Piotr Karwatka"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee551",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-color-secondary\">CTO &amp; Founder</div>",
+        "text": "CTO & Founder"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee55c",
+      "type": "text",
+      "text": {
+        "html": "<p>Creator of Vue Storefront and co-founder of Alokai (Y Combinator, $40M Series A). Now focused on AI-native business software.</p>",
+        "text": "Creator of Vue Storefront and co-founder of Alokai (Y Combinator, $40M Series A). Now focused on AI-native business software."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "8079514f-418b-82c6-1605-71b89f24c7ae",
+      "type": "image",
+      "image": {
+        "alt": "Patryk Lewczuk",
+        "assetId": "6aab8968fbccf4771786b62e"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee562",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-regular text-weight-medium\">Patryk Lewczuk</h3>",
+        "text": "Patryk Lewczuk"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee566",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-color-secondary\">Co-Founder &amp; Core Developer</div>",
+        "text": "Co-Founder & Core Developer"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee572",
+      "type": "text",
+      "text": {
+        "html": "<p>Core Developer and Forward Deployed Engineer, earlier Development Lead and Solution Architect building B2B e-commerce systems. At Open Mercato responsible for Cezar, Agent Orchestrator and customer success.</p>",
+        "text": "Core Developer and Forward Deployed Engineer, earlier Development Lead and Solution Architect building B2B e-commerce systems. At Open Mercato responsible for Cezar, Agent Orchestrator and customer success."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "25c4905c-7e02-d336-f699-2a4f85dc0916",
+      "type": "image",
+      "image": {
+        "alt": "Maciej Gren",
+        "assetId": "6aab8969d97d6b56a612ce27"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee578",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-regular text-weight-medium\">Maciej Gren</h3>",
+        "text": "Maciej Gren"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee57c",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-color-secondary\">Co-Founder &amp; Partnership Manager</div>",
+        "text": "Co-Founder & Partnership Manager"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "e455a3ef-3e0b-f25c-f2f5-9290d9cee588",
+      "type": "text",
+      "text": {
+        "html": "<p>Building and growing the Open Mercato Partner Network, connecting software agencies, freelancers, and strategic partners with the framework. Together with Patryk, responsible for customer success.</p>",
+        "text": "Building and growing the Open Mercato Partner Network, connecting software agencies, freelancers, and strategic partners with the framework. Together with Patryk, responsible for customer success."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0013727c-a947-2922-6611-c0376eb85d17",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-large\">Address</h3>",
+        "text": "Address"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0013727c-a947-2922-6611-c0376eb85d1a",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"text-color-secondary\">Open Mercato Sp. z o.o.<br data-w-id=\"6595b0eb-b4ce-c4a7-f16a-50f662f5b6ce\">Wyspa Słodowa 7, 50-266 Wrocław, Poland, REGON 545230330, NIP 8982336029, KRS 0001253104, share capital 5000 PLN.</p>",
+        "text": "Open Mercato Sp. z o.o.\nWyspa Słodowa 7, 50-266 Wrocław, Poland, REGON 545230330, NIP 8982336029, KRS 0001253104, share capital 5000 PLN."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0013727c-a947-2922-6611-c0376eb85d2d",
+      "type": "text",
+      "text": {
+        "html": "<h3 class=\"text-size-large\">Brand Kit</h3>",
+        "text": "Brand Kit"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0013727c-a947-2922-6611-c0376eb85d30",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"text-color-secondary\"><a href=\"https://drive.google.com/file/d/1bKtrT6O_qGyoAYrWoo4vbF0oV607Wk7Q/view?usp=sharing \" data-w-id=\"4f61ec34-aba3-9c28-a504-13ff59d950ef\">Download logo &amp;&nbsp;brand media kit</a></p>",
+        "text": "Download logo & brand media kit"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0cef5eb6-3362-113c-3a98-c42d44d0fea8",
+      "type": "component-instance",
+      "componentId": "d3fc2d2d-53bb-99df-d3d0-fe9d4c6e8026",
+      "propertyOverrides": []
+    }
+  ],
+  "pagination": {
+    "total": 35,
+    "fetched": 35
+  },
+  "lastUpdated": "2026-11-10T12:24:01.984Z"
+}

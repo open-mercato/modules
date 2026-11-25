@@ -1,0 +1,82 @@
+[
+  {
+    "id": "69f1ca04c17c6d9f1b22e3a0",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-04-29T17:15:27.550Z",
+    "lastUpdated": "2026-04-29T09:49:01.814Z",
+    "createdOn": "2026-04-29T09:06:12.420Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": null,
+      "label-color": "#2f520b",
+      "text-color": "#b4f372",
+      "name": "AI-Engineering Foundation Framework",
+      "slug": "ai-engineering-foundation-framework"
+    }
+  },
+  {
+    "id": "69ced9b370468a8c84cf5d99",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-04-03T18:55:41.438Z",
+    "lastUpdated": "2026-04-03T18:06:42.204Z",
+    "createdOn": "2026-04-02T21:03:47.920Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 3,
+      "label-color": "#2f520b",
+      "text-color": "#b4f372",
+      "name": "Product Updates",
+      "slug": "product-updates"
+    }
+  },
+  {
+    "id": "69ced9ac9a88037c4da938ba",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-04-03T18:55:41.438Z",
+    "lastUpdated": "2026-04-03T18:06:42.217Z",
+    "createdOn": "2026-04-02T21:03:40.541Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 4,
+      "label-color": "#eefb63",
+      "text-color": "#0c0c0c",
+      "name": "Security",
+      "slug": "security"
+    }
+  },
+  {
+    "id": "69ced9a6276f2db33ef97fc0",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-04-03T18:55:41.438Z",
+    "lastUpdated": "2026-04-03T18:06:42.167Z",
+    "createdOn": "2026-04-02T21:03:34.108Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 2,
+      "label-color": "#846cb3",
+      "text-color": "#efe7ff",
+      "name": "Architecture",
+      "slug": "architecture"
+    }
+  },
+  {
+    "id": "69ced9a1ebdf8d9bf68d5720",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-04-03T18:55:41.438Z",
+    "lastUpdated": "2026-04-03T18:06:42.164Z",
+    "createdOn": "2026-04-02T21:03:29.264Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 1,
+      "label-color": "#b4f372",
+      "text-color": "#0c0c0c",
+      "name": "AI Engineering",
+      "slug": "ai-engineering"
+    }
+  }
+]

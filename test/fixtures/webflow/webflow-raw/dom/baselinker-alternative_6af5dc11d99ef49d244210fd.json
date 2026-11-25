@@ -1,0 +1,718 @@
+{
+  "pageId": "6af5dc11d99ef49d244210fd",
+  "branchId": null,
+  "nodes": [
+    {
+      "id": "ef46799b-f178-8857-312f-31b16f661cf0",
+      "type": "component-instance",
+      "componentId": "e238b16f-7aed-a196-5f5f-cada7684a530",
+      "propertyOverrides": []
+    },
+    {
+      "id": "fb4aa576-f45a-0027-99f6-3c65ea44f580",
+      "type": "component-instance",
+      "componentId": "5ffad809-50c0-31dd-2ebc-e3eb71f28b9b",
+      "propertyOverrides": []
+    },
+    {
+      "id": "47e4a502-40a2-0916-22ff-4cd20a7c0e2a",
+      "type": "component-instance",
+      "componentId": "a4a86da8-5153-46f7-3524-75fa8a050a61",
+      "propertyOverrides": []
+    },
+    {
+      "id": "f42aada4-dab5-deb9-86f3-531d4b2c8d73",
+      "type": "component-instance",
+      "componentId": "0a6631b9-2a3e-f4ae-46ed-9743a9b2f26d",
+      "propertyOverrides": []
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8df",
+      "type": "text",
+      "text": {
+        "html": "<h1 id=\"landing-title\">Build an order system around your fulfilment rules.</h1>",
+        "text": "Build an order system around your fulfilment rules."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8e1",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"omlp-intro\">Build an owned order-management workspace when standard ecommerce flows no longer fit. Open Mercato brings customer, catalog, order and shipment records together as the foundation for your custom operation.</p>",
+        "text": "Build an owned order-management workspace when standard ecommerce flows no longer fit. Open Mercato brings customer, catalog, order and shipment records together as the foundation for your custom operation."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8e5",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"omlp-primary\" href=\"/contact?interest=baselinker-alternative\">Discuss your Base migration<span data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661ea8e4\">↗</span></a>",
+        "text": "Discuss your Base migration↗"
+      },
+      "attributes": {
+        "data-om-intent": "baselinker-alternative",
+        "href": "/contact?interest=baselinker-alternative"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8e7",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"omlp-secondary\" href=\"#comparison\">Compare the capabilities</a>",
+        "text": "Compare the capabilities"
+      },
+      "attributes": {
+        "href": "#comparison"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8fa",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"omlp-benefits\"><span class=\"omlp-benefit\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661ea8f1\"><img src=\"https://s3.amazonaws.com/webflow-prod-assets/69a97e33d587824eef365d83/6af5f54d10cc62e6aa2105fe_om-lp-icon-source.svg\" loading=\"lazy\" width=\"auto\" height=\"auto\" alt=\"__wf_reserved_inherit\" class=\"omlp-benefit-icon\" data-w-id=\"808108cd-0b38-db38-c9da-7ef2535532c9\">MIT open source</span><span class=\"omlp-benefit\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661ea8f5\"><img src=\"https://s3.amazonaws.com/webflow-prod-assets/69a97e33d587824eef365d83/6af5f54d52c9c7154c72755d_om-lp-icon-community.svg\" loading=\"lazy\" width=\"auto\" height=\"auto\" alt=\"__wf_reserved_inherit\" class=\"omlp-benefit-icon\" data-w-id=\"5ecd2887-e3ea-6219-46e6-d894f4beb483\">1,928 stars on GitHub</span><span class=\"omlp-benefit\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661ea8f9\"><img src=\"https://s3.amazonaws.com/webflow-prod-assets/69a97e33d587824eef365d83/6af5f54e1bf05ce9b9aa9d57_om-lp-icon-flexible.svg\" loading=\"lazy\" width=\"auto\" height=\"auto\" alt=\"__wf_reserved_inherit\" class=\"omlp-benefit-icon\" data-w-id=\"0d8b814b-04da-cda6-394f-754b7fe7d8bb\">50+ plugins</span></div>",
+        "text": "MIT open source1,928 stars on GitHub50+ plugins"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "808108cd-0b38-db38-c9da-7ef2535532c9",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af61698fb82740ce38a08ba"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "5ecd2887-e3ea-6219-46e6-d894f4beb483",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54d52c9c7154c72755d"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "0d8b814b-04da-cda6-394f-754b7fe7d8bb",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54e1bf05ce9b9aa9d57"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8fd",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"#needs\">Your workflow</a>",
+        "text": "Your workflow"
+      },
+      "attributes": {
+        "href": "#needs"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea8ff",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"#comparison\">Comparison</a>",
+        "text": "Comparison"
+      },
+      "attributes": {
+        "href": "#comparison"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea901",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"#proof\">See it in practice</a>",
+        "text": "See it in practice"
+      },
+      "attributes": {
+        "href": "#proof"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea903",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"#migration\">Implementation</a>",
+        "text": "Implementation"
+      },
+      "attributes": {
+        "href": "#migration"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea905",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"#questions\">Questions</a>",
+        "text": "Questions"
+      },
+      "attributes": {
+        "href": "#questions"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea909",
+      "type": "text",
+      "text": {
+        "html": "<h2>Compare order-volume costs, custom rules and connector coverage.</h2>",
+        "text": "Compare order-volume costs, custom rules and connector coverage."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea90c",
+      "type": "text",
+      "text": {
+        "html": "<h3>Your order volume changes the software bill</h3>",
+        "text": "Your order volume changes the software bill"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea90e",
+      "type": "text",
+      "text": {
+        "html": "<p>Base combines subscription and order-volume pricing, with a separate Enterprise offer. Compare your actual account costs with the implementation, hosting and maintenance of an owned application.</p>",
+        "text": "Base combines subscription and order-volume pricing, with a separate Enterprise offer. Compare your actual account costs with the implementation, hosting and maintenance of an owned application."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "17b25f84-bd88-c3dd-bd15-5cd7a7125b25",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54a987f197223f70d6d"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea913",
+      "type": "text",
+      "text": {
+        "html": "<h3>The exceptions become the daily process</h3>",
+        "text": "The exceptions become the daily process"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea915",
+      "type": "text",
+      "text": {
+        "html": "<p>B2B approvals, custom fulfilment rules and unusual ERP handoffs need more than another manual step. Implement the rules around your own order and customer data in Open Mercato.</p>",
+        "text": "B2B approvals, custom fulfilment rules and unusual ERP handoffs need more than another manual step. Implement the rules around your own order and customer data in Open Mercato."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "5a2eaa81-4a60-1c55-6845-7744b8ea95a1",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54ced23f8851fb179ef"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea91a",
+      "type": "text",
+      "text": {
+        "html": "<h3>You cannot afford to lose a working connector</h3>",
+        "text": "You cannot afford to lose a working connector"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea91c",
+      "type": "text",
+      "text": {
+        "html": "<p>Base has a large ready-made integration catalog. List every marketplace, store, carrier and ERP flow before a migration. Open Mercato integrations are explicitly assessed and built for the project.</p>",
+        "text": "Base has a large ready-made integration catalog. List every marketplace, store, carrier and ERP flow before a migration. Open Mercato integrations are explicitly assessed and built for the project."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "cf458d0f-73c2-7dfe-b9df-4e73dd6ceff2",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54b1b98315466ed31c0"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea924",
+      "type": "text",
+      "text": {
+        "html": "<h2>Build on the operational records your team needs.</h2>",
+        "text": "Build on the operational records your team needs."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea927",
+      "type": "text",
+      "text": {
+        "html": "<h3>Customer and order context</h3>",
+        "text": "Customer and order context"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea929",
+      "type": "text",
+      "text": {
+        "html": "<p>Connect people and companies with sales documents, addresses and activity history.</p>",
+        "text": "Connect people and companies with sales documents, addresses and activity history."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "89b0df5f-f0ac-ceb8-f885-2bdfd2423f8d",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54bc76a29afdf67a3ca"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea92f",
+      "type": "text",
+      "text": {
+        "html": "<h3>Products, variants and pricing</h3>",
+        "text": "Products, variants and pricing"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea931",
+      "type": "text",
+      "text": {
+        "html": "<p>Use catalog and sales-channel modules as the basis for your product and pricing model.</p>",
+        "text": "Use catalog and sales-channel modules as the basis for your product and pricing model."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "d26f505e-1278-b3a4-af1a-2ed39986bde6",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54ca716baf24131cd6a"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea937",
+      "type": "text",
+      "text": {
+        "html": "<h3>Orders, payments and shipments</h3>",
+        "text": "Orders, payments and shipments"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea939",
+      "type": "text",
+      "text": {
+        "html": "<p>Work with order records, sales adjustments, payments and shipment information in the sales modules.</p>",
+        "text": "Work with order records, sales adjustments, payments and shipment information in the sales modules."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "d463208f-38ba-ed25-566a-027dacc07576",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54b80a055a87fa948c5"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea93f",
+      "type": "text",
+      "text": {
+        "html": "<h3>Your fulfilment logic</h3>",
+        "text": "Your fulfilment logic"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea941",
+      "type": "text",
+      "text": {
+        "html": "<p>Implement approvals, routing and ERP exchanges with workflows and APIs. Channel synchronization, labels and provider connections are scoped integration work.</p>",
+        "text": "Implement approvals, routing and ERP exchanges with workflows and APIs. Channel synchronization, labels and provider connections are scoped integration work."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "4c666caf-4f5c-e33e-42b8-a2f86e2754d0",
+      "type": "image",
+      "image": {
+        "alt": "__wf_reserved_inherit",
+        "assetId": "6af5f54d0e00f12bff84c20b"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea94c",
+      "type": "text",
+      "text": {
+        "html": "<h2>Order essentials, with control over the rules behind them.</h2>",
+        "text": "Order essentials, with control over the rules behind them."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661ea94e",
+      "type": "text",
+      "text": {
+        "html": "<p>Compare the operational foundation and the integration work required. Base has a ready-made connector ecosystem; Open Mercato is built for a scoped custom implementation.</p>",
+        "text": "Compare the operational foundation and the integration work required. Base has a ready-made connector ecosystem; Open Mercato is built for a scoped custom implementation."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa1f",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"omfm-legend\"><span data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa16\"><span class=\"omfm-status omfm-yes\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa14\">✓</span> Available in the stated scope</span><span data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa1a\"><span class=\"omfm-status omfm-no\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa18\">×</span> Not included in this model</span><span data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa1e\"><span class=\"omfm-status omfm-build\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa1c\">↗</span> Requires implementation</span></div>",
+        "text": "✓ Available in the stated scope× Not included in this model↗ Requires implementation"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa21",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"omfm-scope\">This compares order-management scope, not full ecommerce feature parity. Stock synchronization, marketplace listings, carrier labels, invoicing and country-specific requirements need separate validation. Open Mercato hosting, integrations and maintenance are paid delivery/operating work.</p>",
+        "text": "This compares order-management scope, not full ecommerce feature parity. Stock synchronization, marketplace listings, carrier labels, invoicing and country-specific requirements need separate validation. Open Mercato hosting, integrations and maintenance are paid delivery/operating work."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa2e",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"omfm-sources\">Reviewed 12 November 2026. Sources: <a href=\"https://base.com/en-US/pricing/\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa24\">Base pricing and capabilities</a> · <a href=\"https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa27\">Base ERP integrations</a> · <a href=\"https://github.com/open-mercato/open-mercato\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa2a\">Open Mercato core</a> · <a href=\"https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx\" data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaa2d\">Customer records</a></p>",
+        "text": "Reviewed 12 November 2026. Sources: Base pricing and capabilities · Base ERP integrations · Open Mercato core · Customer records"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa82",
+      "type": "text",
+      "text": {
+        "html": "<h2>See an example of custom shipping automation.</h2>",
+        "text": "See an example of custom shipping automation."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa84",
+      "type": "text",
+      "text": {
+        "html": "<p>The MDM NT case study describes a custom shipping implementation connected to business systems. It illustrates the delivery approach; it is not a claim that every Base connector is available out of the box.</p>",
+        "text": "The MDM NT case study describes a custom shipping implementation connected to business systems. It illustrates the delivery approach; it is not a claim that every Base connector is available out of the box."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa86",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"omlp-proof-link\" href=\"/case-studies/mdm-nt-shipping-automation\">Read the MDM NT story ↗</a>",
+        "text": "Read the MDM NT story ↗"
+      },
+      "attributes": {
+        "href": "/case-studies/mdm-nt-shipping-automation"
+      }
+    },
+    {
+      "id": "853f2abb-6356-c3b2-b3e6-6aa78511d49d",
+      "type": "image",
+      "image": {
+        "alt": "Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.",
+        "assetId": "6af5bb329b98d27ae6a88d6e"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa92",
+      "type": "text",
+      "text": {
+        "html": "<h2>Migrate the order flow without breaking fulfilment.</h2>",
+        "text": "Migrate the order flow without breaking fulfilment."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa95",
+      "type": "text",
+      "text": {
+        "html": "<h3>Inventory the working connections</h3>",
+        "text": "Inventory the working connections"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa97",
+      "type": "text",
+      "text": {
+        "html": "<p>List marketplaces, stores, carriers, ERP systems, warehouses, currencies and every automatic action. Identify which connections can stay during a phased rollout.</p>",
+        "text": "List marketplaces, stores, carriers, ERP systems, warehouses, currencies and every automatic action. Identify which connections can stay during a phased rollout."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa9a",
+      "type": "text",
+      "text": {
+        "html": "<h3>Map the operational data</h3>",
+        "text": "Map the operational data"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa9c",
+      "type": "text",
+      "text": {
+        "html": "<p>Preserve SKU and offer identifiers, order statuses, addresses, payments and shipment references. Assign the system of record for stock and prices.</p>",
+        "text": "Preserve SKU and offer identifiers, order statuses, addresses, payments and shipment references. Assign the system of record for stock and prices."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaa9f",
+      "type": "text",
+      "text": {
+        "html": "<h3>Pilot one channel end to end</h3>",
+        "text": "Pilot one channel end to end"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaaa1",
+      "type": "text",
+      "text": {
+        "html": "<p>Test order intake, updates, stock behavior, cancellations, payment reconciliation, labels and tracking. Include retries, duplicate prevention and failure alerts.</p>",
+        "text": "Test order intake, updates, stock behavior, cancellations, payment reconciliation, labels and tracking. Include retries, duplicate prevention and failure alerts."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaaa4",
+      "type": "text",
+      "text": {
+        "html": "<h3>Reconcile and switch carefully</h3>",
+        "text": "Reconcile and switch carefully"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaaa6",
+      "type": "text",
+      "text": {
+        "html": "<p>Set a data freeze and final synchronization plan, reconcile open orders, train operators and retain a tested rollback path.</p>",
+        "text": "Set a data freeze and final synchronization plan, reconcile open orders, train operators and retain a tested rollback path."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaaac",
+      "type": "text",
+      "text": {
+        "html": "<h2>Questions before you take the next step.</h2>",
+        "text": "Questions before you take the next step."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaab1",
+      "type": "text",
+      "text": {
+        "html": "<p>No. Base provides a large catalog of ready-made ecommerce integrations. Open Mercato is a custom application foundation. The required marketplace, carrier and ERP connections must be assessed and implemented before switching.</p>",
+        "text": "No. Base provides a large catalog of ready-made ecommerce integrations. Open Mercato is a custom application foundation. The required marketplace, carrier and ERP connections must be assessed and implemented before switching."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaab8",
+      "type": "text",
+      "text": {
+        "html": "<p>The MIT-licensed core has no per-order licence fee. Hosting, implementation, maintenance, support and external-provider usage still contribute to total cost.</p>",
+        "text": "The MIT-licensed core has no per-order licence fee. Hosting, implementation, maintenance, support and external-provider usage still contribute to total cost."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaabf",
+      "type": "text",
+      "text": {
+        "html": "<p>A hybrid architecture can be scoped with Base handling selected channels and Open Mercato owning customer or operational processes. Define record ownership, synchronization and error handling before implementing it.</p>",
+        "text": "A hybrid architecture can be scoped with Base handling selected channels and Open Mercato owning customer or operational processes. Define record ownership, synchronization and error handling before implementing it."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaac6",
+      "type": "text",
+      "text": {
+        "html": "<p>When a distinctive operational workflow, code ownership or long-term application control justifies a custom implementation. A standard connector-led shop may be better served by a ready-made ecommerce platform.</p>",
+        "text": "When a distinctive operational workflow, code ownership or long-term application control justifies a custom implementation. A standard connector-led shop may be better served by a ready-made ecommerce platform."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaacd",
+      "type": "text",
+      "text": {
+        "html": "<h2>Bring the order exceptions your current setup cannot handle cleanly.</h2>",
+        "text": "Bring the order exceptions your current setup cannot handle cleanly."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaacf",
+      "type": "text",
+      "text": {
+        "html": "<p>Start with your channels, monthly order range, ERP and fulfilment rules. Scope a practical pilot before committing to a full migration.</p>",
+        "text": "Start with your channels, monthly order range, ERP and fulfilment rules. Scope a practical pilot before committing to a full migration."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaad4",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"omlp-primary\" href=\"/contact?interest=baselinker-alternative\">Discuss your Base migration<span data-w-id=\"71f648a9-a80d-b4af-9ae4-2b2f661eaad3\">↗</span></a>",
+        "text": "Discuss your Base migration↗"
+      },
+      "attributes": {
+        "data-om-intent": "baselinker-alternative",
+        "href": "/contact?interest=baselinker-alternative"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eaad6",
+      "type": "text",
+      "text": {
+        "html": "<p>Talk through your process, integrations and implementation needs with the Open Mercato team.</p>",
+        "text": "Talk through your process, integrations and implementation needs with the Open Mercato team."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab20",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://base.com/en-US/pricing/\">Base official pricing ↗</a>",
+        "text": "Base official pricing ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://base.com/en-US/pricing/"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab23",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/\">Base integrations and ERP connections ↗</a>",
+        "text": "Base integrations and ERP connections ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab26",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://pl.trustpilot.com/review/baselinker.com\">Base / BaseLinker user reviews ↗</a>",
+        "text": "Base / BaseLinker user reviews ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://pl.trustpilot.com/review/baselinker.com"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab29",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx\">Open Mercato order and quote documentation ↗</a>",
+        "text": "Open Mercato order and quote documentation ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab2c",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx\">Open Mercato catalog and pricing documentation ↗</a>",
+        "text": "Open Mercato catalog and pricing documentation ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab2f",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx\">Open Mercato shipment documentation ↗</a>",
+        "text": "Open Mercato shipment documentation ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx"
+      }
+    },
+    {
+      "id": "71f648a9-a80d-b4af-9ae4-2b2f661eab32",
+      "type": "text",
+      "text": {
+        "html": "<a href=\"https://www.openmercato.com/case-studies/mdm-nt-shipping-automation\">MDM NT shipping automation case study ↗</a>",
+        "text": "MDM NT shipping automation case study ↗"
+      },
+      "attributes": {
+        "rel": "noopener noreferrer",
+        "href": "https://www.openmercato.com/case-studies/mdm-nt-shipping-automation"
+      }
+    },
+    {
+      "id": "31aa827e-9f77-12c7-2739-6dc2f2fb5a3b",
+      "type": "html-embed",
+      "html": "<script>/* the landing animation embed, cut from the fixture */</script>",
+      "attributes": {}
+    },
+    {
+      "id": "87162e33-dc61-401e-044a-56e2d9ceddd5",
+      "type": "component-instance",
+      "componentId": "afe6d4c3-b2fd-0907-2fd4-c331d739b746",
+      "propertyOverrides": []
+    }
+  ],
+  "pagination": {
+    "total": 76,
+    "fetched": 76
+  },
+  "lastUpdated": "2026-11-13T07:28:55.749Z"
+}

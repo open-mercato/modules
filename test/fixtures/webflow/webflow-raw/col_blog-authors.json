@@ -1,0 +1,40 @@
+{
+  "id": "69ced930474469d745265300",
+  "displayName": "Blog / Authors",
+  "singularName": "Blog / Author",
+  "slug": "blog-authors",
+  "createdOn": "2026-04-02T21:01:36.200Z",
+  "lastUpdated": "2026-04-02T21:34:04.595Z",
+  "fields": [
+    {
+      "id": "619e106bae89be7d3bd16afc468c0aad",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Author's name e.g. John Smith",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "31f448f7257e2172543f2b6511caaf2b",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

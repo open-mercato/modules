@@ -1,0 +1,40 @@
+{
+  "id": "6a2d49e5278a501ddae4abec",
+  "displayName": "Partners / Locations",
+  "singularName": "Partners / Location",
+  "slug": "partners-location",
+  "createdOn": "2026-06-13T12:15:33.215Z",
+  "lastUpdated": "2026-06-18T06:25:13.663Z",
+  "fields": [
+    {
+      "id": "2312e1f25c3e4b737922b120bf717f27",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Country",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "aaf69396d6314baa56134deec523ab42",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

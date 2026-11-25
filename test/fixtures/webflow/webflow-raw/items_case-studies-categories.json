@@ -1,0 +1,106 @@
+[
+  {
+    "id": "6abb98868b85972807195ac5",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-10-19T07:39:58.660Z",
+    "lastUpdated": "2026-09-29T10:55:10.930Z",
+    "createdOn": "2026-09-29T10:52:54.206Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "EdTech",
+      "slug": "edtech"
+    }
+  },
+  {
+    "id": "6aa17c0e7e24478aefaeb84e",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-09-10T07:54:28.239Z",
+    "lastUpdated": "2026-09-09T15:42:24.069Z",
+    "createdOn": "2026-09-09T15:32:30.733Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Fintech",
+      "slug": "fintech"
+    }
+  },
+  {
+    "id": "6a2b04876a4a51e59b4eb71b",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.058Z",
+    "createdOn": "2026-06-11T18:55:03.532Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Track & Trace",
+      "slug": "track-trace"
+    }
+  },
+  {
+    "id": "6a2b047e3b52c2ab59fe3938",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.057Z",
+    "createdOn": "2026-06-11T18:54:54.775Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Multi-tenancy",
+      "slug": "multi-tenancy"
+    }
+  },
+  {
+    "id": "6a2b03e82d2858542859a553",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.056Z",
+    "createdOn": "2026-06-11T18:52:24.745Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Enterprise",
+      "slug": "enterprise"
+    }
+  },
+  {
+    "id": "6a2b03e46a4a51e59b4e8f5d",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.055Z",
+    "createdOn": "2026-06-11T18:52:20.556Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Software House",
+      "slug": "software-house"
+    }
+  },
+  {
+    "id": "6a2b03e03b52c2ab59fdfe07",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.053Z",
+    "createdOn": "2026-06-11T18:52:16.158Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "CRM",
+      "slug": "crm"
+    }
+  },
+  {
+    "id": "6a2b03dcdae0237648965a32",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-11T20:22:16.264Z",
+    "lastUpdated": "2026-06-11T18:56:57.052Z",
+    "createdOn": "2026-06-11T18:52:12.286Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "ERP",
+      "slug": "erp"
+    }
+  }
+]

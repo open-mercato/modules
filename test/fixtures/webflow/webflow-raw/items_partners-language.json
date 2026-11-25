@@ -1,0 +1,379 @@
+[
+  {
+    "id": "6a2d4e5a9673844eab46b93e",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.118Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Norwegian",
+      "slug": "norwegian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b93c",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.185Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Thai",
+      "slug": "thai"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b93a",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.150Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Indonesian",
+      "slug": "indonesian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b938",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.107Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Croatian",
+      "slug": "croatian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b936",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.187Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Greek",
+      "slug": "greek"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b934",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.189Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Turkish",
+      "slug": "turkish"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b932",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.253Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Ukrainian",
+      "slug": "ukrainian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b930",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.196Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Latvian",
+      "slug": "latvian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b92e",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.183Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Estonian",
+      "slug": "estonian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b92c",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.193Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Slovenian",
+      "slug": "slovenian"
+    }
+  },
+  {
+    "id": "6a2d4e5a9673844eab46b92a",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:34:39.109Z",
+    "createdOn": "2026-06-13T12:34:34.889Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Slovak",
+      "slug": "slovak"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcca1",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.471Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Hindi",
+      "slug": "hindi"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc9f",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.478Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Korean",
+      "slug": "korean"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc9d",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.467Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Chinese",
+      "slug": "chinese"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc9b",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.465Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Japanese",
+      "slug": "japanese"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc99",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.473Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Arabic",
+      "slug": "arabic"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc97",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.450Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Romanian",
+      "slug": "romanian"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc95",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.443Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Czech",
+      "slug": "czech"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc93",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.456Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Finnish",
+      "slug": "finnish"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc91",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.441Z",
+    "createdOn": "2026-06-13T12:31:35.135Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Danish",
+      "slug": "danish"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc8f",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.445Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Swedish",
+      "slug": "swedish"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc8d",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.454Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Portuguese",
+      "slug": "portuguese"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc8b",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.431Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Dutch",
+      "slug": "dutch"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc89",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.439Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Italian",
+      "slug": "italian"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc87",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.437Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Spanish",
+      "slug": "spanish"
+    }
+  },
+  {
+    "id": "6a2d4da73c44a0b4ee7dcc85",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:31:50.452Z",
+    "createdOn": "2026-06-13T12:31:35.134Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "French",
+      "slug": "french"
+    }
+  },
+  {
+    "id": "6a2d4892de45e959f399f477",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:21:06.192Z",
+    "createdOn": "2026-06-13T12:09:54.564Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "German",
+      "slug": "german"
+    }
+  },
+  {
+    "id": "6a2d48873f9feeabc2d903b3",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:21:06.191Z",
+    "createdOn": "2026-06-13T12:09:43.779Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "English",
+      "slug": "english"
+    }
+  },
+  {
+    "id": "6a2d4880e285fce50d33468c",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:21:06.189Z",
+    "createdOn": "2026-06-13T12:09:36.720Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "name": "Polish",
+      "slug": "polish"
+    }
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "id": "6a4f6d510584689e00a9be52",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-07-09T09:46:26.075Z",
+    "lastUpdated": "2026-07-09T09:43:55.939Z",
+    "createdOn": "2026-07-09T09:43:45.959Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "logo": {
+        "fileId": "6a4f6d510584689e00a9be3b",
+        "url": "https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6a4f6d510584689e00a9be3b_6a4f6cebd1988bc5b4ea4980_10clouds-logo-dark.png",
+        "alt": "10Clouds logo"
+      },
+      "tier-2": "6a3395528bca900549dfa54d",
+      "industry": ["6a2d47c3de45e959f399d531", "6a2d47afb835d8b669528625"],
+      "location-2": "6a2d49f31b9f9ccce2bb7c92",
+      "language": ["6a2d48873f9feeabc2d903b3", "6a2d4880e285fce50d33468c"],
+      "services": [
+        "6a2d48b51f174bbdee4e32ba",
+        "6a2d48a2b8ecd18fab42157d",
+        "6a2d48ad0cc80afc04e2b09d",
+        "6a2d48aa4b1c2550e5f50c63"
+      ],
+      "budget": null,
+      "availability": "00dc9181291a10b4f0132486e9d7e26c",
+      "projects-in-portfolio": "b90e5f9dcaebf601adf9aad3ed77910f",
+      "website-url": "https://10clouds.com/",
+      "short-description": "AI development and consulting for financial institutions — the team behind AIConsole, an enterprise platform for orchestrating AI agents and workflows, with deployments across banking, payments, insurance, factoring, and leasing.",
+      "bio": "<h2>About</h2><p>10Clouds (Warsaw, Poland) is an AI development and consulting company working with financial institutions. The Open Mercato partner entity is 10Clouds Financial Institutions Sp. z o.o., led by CEO Karol Stępień. Rated 4.9/5.0 by 90+ clients on Clutch.</p><h2>What we do</h2><p>AI-powered operations for banks, payment providers, insurers, factoring and leasing companies: AIConsole, an enterprise platform for orchestrating AI agents and workflows across enterprise systems; Company GPT, secure internal assistants built on enterprise data; and AI implementation covering integrations, governance, security, and compliance.</p><h2>Our specializations</h2><ul><li>AI agent orchestration (AIConsole platform)</li><li>Automation of business workflows in operations, finance, and customer processes</li><li>Secure internal AI assistants on enterprise data (Company GPT)</li><li>Agentic commerce for retail and e-commerce, including MCP integrations and conversational discovery</li><li>Enterprise blockchain, smart contracts, and DeFi platforms</li></ul><h2>Who we work with</h2><p>Enterprises and scaleups in regulated financial environments. Public references include PZU, Samsara, Forbes, ETS, Asmodee, Qenta, Trust Stamp, and Aleph Zero.</p><h2>Industries we serve</h2><p>Banking, payments, insurance, factoring, leasing, fintech, and e-commerce.</p><h2>How we work</h2><p>Product delivery from idea to launch with an agile playbook, plus an AI Labs track for testing AI against concrete business problems. Client intellectual property remains the client's; work runs under non-disclosure agreements and documented data-handling procedures.</p>",
+      "name": "10Clouds",
+      "slug": "10clouds"
+    }
+  },
+  {
+    "id": "6a4e83f5ae6cec34d193364b",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-11-23T21:27:19.842Z",
+    "lastUpdated": "2026-11-23T09:27:13.792Z",
+    "createdOn": "2026-07-08T17:08:05.425Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "logo": {
+        "fileId": "6a4e83f5ae6cec34d1933641",
+        "url": "https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6a4e83f5ae6cec34d1933641_6a4e83d38d032bfeb19ca39c_the-good-code-logo.webp",
+        "alt": "The Good Code logo"
+      },
+      "tier-2": "6a3395528bca900549dfa54d",
+      "industry": [
+        "6a2d47a0a589b9cdd008e9da",
+        "6a2d47a6172fd222e5fa2ef2",
+        "6a2d47d15377018dfd010617",
+        "6a4e83e65546d6cbbfa0a458",
+        "6a2d47d7588a87e9b160b47e"
+      ],
+      "location-2": "6a2d49f31b9f9ccce2bb7c92",
+      "language": ["6a2d48873f9feeabc2d903b3", "6a2d4880e285fce50d33468c"],
+      "services": [
+        "6a2d48a2b8ecd18fab42157d",
+        "6a2d48aa4b1c2550e5f50c63",
+        "6a2d48ad0cc80afc04e2b09d",
+        "6a2d48b51f174bbdee4e32ba"
+      ],
+      "budget": "7dcc6753da16383207c484b809557334",
+      "availability": "00dc9181291a10b4f0132486e9d7e26c",
+      "projects-in-portfolio": "64efd2c45b8309231bed53f5b93bed6e",
+      "website-url": "https://thegoodcode.io",
+      "short-description": "Open Mercato implementation partner for AI-native CRM, ERP, CPQ, and custom operations systems. We help manufacturers, regulated operators, and scale-ups turn complex workflows into production software, with senior delivery, business advisory, integrations, and no vendor lock-in.",
+      "bio": "<h2>About</h2><p>the.good.code; is an Open Mercato implementation partner for companies with real operational complexity: manufacturers, regulated operators, healthcare and senior care operations, logistics teams, and enterprise software companies. Founded in 2021, we are a senior team of 25+ across Poland and Portugal. We work as advisors and builders: we understand the business process first, then decide what should be built, configured, integrated, or left alone.</p><h2>What we do</h2><p>We advise on, build, and implement AI-native CRM and ERP systems on Open Mercato, CPQ and product configuration workflows, custom modules, and LLM-based workflows. Most of our work sits in the hard, specific part: business logic, approvals, permissions, integrations, edge cases, and process-specific interfaces. As an open-source contributor to Open Mercato, we help shape the platform itself and know its internals deep enough to extend the core when a client's process demands it.</p><h2>Our specializations</h2><ul><li>Open Mercato CRM and ERP implementation: vertical operations systems, custom modules, workflows, approvals, permissions, and integrations built around how the business actually runs</li><li>CPQ and product configuration for manufacturers: quoting workflows, configurators, BOM logic, product rules, and ERP/PLM integrations</li><li>Legacy ERP and CRM modernization: flexible operational layers next to rigid systems such as SAP, Salesforce, Odoo, or internal tools</li><li>AI-native workflows and technical strategy advisory: LLM integrations, internal automation, and operational systems that reach production</li></ul><h2>Who we work with</h2><p>We work best with companies that have outgrown off-the-shelf CRM or ERP, or run critical operations across spreadsheets, email, legacy software, and disconnected tools. Typical clients come to us when they need clearer ownership, faster delivery, and a partner who can make a technical call before they commit to a build.</p><h2>Industries we serve</h2><p>Manufacturing, including agricultural machinery, industrial equipment, and robotics; freight and logistics; healthcare and senior care operations; telecom and enterprise software; and regulated sectors such as identity verification, gaming, and finance-related operations.</p><h2>How we work</h2><p>We start from the business problem. The founders stay close to important decisions, and the senior engineers who scope the problem are the ones who build it. We move from discovery to working software on real processes and real data. The custom code we write for you is yours, along with the architecture, documentation, and a clear handover path. Where the system includes open-source or licensed components, the terms are transparent from day one. No vendor lock-in. After go-live, we stay on through monthly development capacity so the system keeps improving instead of being handed off and left.</p>",
+      "name": "thegoodcode",
+      "slug": "the-good-code"
+    }
+  }
+]

@@ -39,6 +39,11 @@ const SPEC_3_3: Record<string, string> = {
   '@axe-core/playwright': '4.13.0',
   prettier: '3.9.9',
   '@types/node': '24.19.1',
+  // www site migration (docs/specs/2026-11-24-www-site-migration.md, Risks, Dependencies): the importer's HTML parser
+  // and Markdown writer, dev only
+  'hast-util-from-html': '2.1.0',
+  'mdast-util-to-markdown': '2.2.3',
+  'mdast-util-gfm-table': '2.0.1',
 }
 
 describe('repo configuration (spec 3.3, 3.4)', () => {

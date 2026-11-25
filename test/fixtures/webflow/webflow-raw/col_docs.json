@@ -1,0 +1,70 @@
+{
+  "id": "6b04d5d918d7d77f974d156a",
+  "displayName": "Documentation",
+  "singularName": "Documentation page",
+  "slug": "docs",
+  "createdOn": "2026-11-24T00:10:01.315Z",
+  "lastUpdated": "2026-11-24T00:16:12.990Z",
+  "fields": [
+    {
+      "id": "f62b1877c7dcea52af31122c4aa353cf",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "article-body",
+      "displayName": "Article body",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "befeb5bd5395e47e91cd0d5fb97ae331",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "description",
+      "displayName": "Description",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "bce9c530def51fa51a28614e15cb5f11",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "section",
+      "displayName": "Section",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "c6f7d76b37d438ebd1852db598644673",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "4084ead02a76e329d2ba455629b1eba2",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}
