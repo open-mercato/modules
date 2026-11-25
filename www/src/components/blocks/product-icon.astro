@@ -1,0 +1,20 @@
+---
+// The icon of a /product card, drawn inline as live has it: the SVG of www/public/media/pages/ the item's icon names
+// (a build stops on any other file). Used by the product layouts, not a layout itself.
+import type { z } from 'zod'
+import type { Image } from '../../../../lib/schema/www-content.ts'
+
+interface Props {
+  icon: z.infer<typeof Image>
+}
+const { icon } = Astro.props
+const files = import.meta.glob<string>('../../../public/media/pages/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+})
+const svg = files[`../../../public${icon.src}`]
+if (!svg) throw new Error(`${icon.src} is not an SVG of /media/pages`)
+---
+
+<Fragment set:html={svg.trim()} />

@@ -1,0 +1,90 @@
+---
+// "Learn AI Engineering with us" of the home page as live has it (`omr-academy` in `omr`, styled by
+// www/src/styles/webflow/pages/home.css): the heading (its *emphasis* the live <mark>), one course per item (its video
+// and poster, title and length as eyebrow), and the link to the academy (`primary`). A course plays in place: its
+// link to YouTube becomes the youtube-nocookie.com player on a click (below), so nothing loads from YouTube before
+// it. CTA events as the live map names them: academy/play_video, academy/explore.
+import { ctaAttrs } from '../../../../lib/core/cta.ts'
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const title = block.title ? headingHtml(t(block.title)).replace(/span>/g, 'mark>') : ''
+for (const [i, item] of block.items.entries())
+  if (!item.video || !item.image || !item.title)
+    throw new Error(`www/content/pages/${page}.yaml ${block.layout} items.${i}: a course needs a title, a video and an image`)
+const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>'
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="omr omr-academy-standalone">
+      <section class="omr-academy" aria-labelledby="omr-academy-title" id={block.id} data-cta-placement="academy">
+        <div class="omr-heading"><h2 id="omr-academy-title" set:html={title} /></div>
+        <div class="omr-academy-grid">
+          {
+            block.items.map((item) => (
+              <article class="omr-course">
+                <div class="omr-media" data-video={item.video}>
+                  <a
+                    class="omr-play"
+                    href={`https://www.youtube.com/watch?v=${item.video}`}
+                    aria-label={`Play: ${t(item.title!)}`}
+                    {...ctaAttrs('play_video')}
+                  >
+                    <img
+                      src={item.image!.src}
+                      alt={item.image!.alt}
+                      loading="lazy"
+                      width={item.image!.width}
+                      height={item.image!.height}
+                    />
+                    <span class="omr-play-icon" set:html={PLAY_ICON} />
+                  </a>
+                </div>
+                <div class="omr-course-copy">
+                  <h3>{t(item.title!)}</h3>
+                  {item.eyebrow && <time>{t(item.eyebrow)}</time>}
+                </div>
+              </article>
+            ))
+          }
+        </div>
+        {
+          block.primary && (
+            <a class="omr-academy-link" href={block.primary.href} {...ctaAttrs('explore')}>
+              {t(block.primary.label)} <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // A click on a course swaps its link for the player, as the live page's script does; a modified click (a new tab)
+  // opens the video on YouTube.
+  import { carouselPlayerSrc } from '../../lib/carousel.ts'
+
+  const grid = document.querySelector<HTMLElement>('.omr-academy-grid')
+  grid?.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    const play = (e.target as Element | null)?.closest<HTMLAnchorElement>('.omr-play')
+    const media = play?.closest<HTMLElement>('.omr-media')
+    if (!play || !media?.dataset.video) return
+    e.preventDefault()
+    const frame = document.createElement('iframe')
+    frame.src = carouselPlayerSrc(media.dataset.video)
+    frame.title = (play.getAttribute('aria-label') ?? '').replace(/^Play: /, '')
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'
+    frame.allowFullscreen = true
+    frame.referrerPolicy = 'strict-origin-when-cross-origin'
+    play.hidden = true
+    media.append(frame)
+    frame.focus()
+  })
+</script>

@@ -1,0 +1,95 @@
+---
+// "Skip the commodity work" of the home page as live has it (`omr-comparison` in `omr`, styled by
+// www/src/styles/webflow/pages/home.css): the heading (its *emphasis* the live <mark>) and lead, then the table. The
+// first item is the header row, its points the two columns (building from scratch, then Open Mercato); every other
+// item a row, its title the row's name and its points the two cells, each row with its mark (ROW_ICONS, in order). A
+// text `Desktop text | Phone text` reads differently on a phone, as live.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const title = block.title ? headingHtml(t(block.title)).replace(/span>/g, 'mark>') : ''
+
+const stroke = 'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"'
+/** The mark of each row: time, security, AI agents, modules. */
+const ROW_ICONS = [
+  `<svg viewBox="0 0 24 24" ${stroke} aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+  `<svg viewBox="0 0 24 24" ${stroke} aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></svg>`,
+  `<svg viewBox="0 0 24 24" ${stroke} aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="3"/><path d="M12 3v4M2 11v5M22 11v5M9 16h6"/><circle cx="9" cy="11" r=".8"/><circle cx="15" cy="11" r=".8"/></svg>`,
+  `<svg viewBox="0 0 24 24" ${stroke} aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9M7 5.8l9 5"/></svg>`,
+]
+const NO =
+  '<svg class="omr-col-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'
+const YES =
+  '<svg class="omr-col-yes" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor"/><path d="m7 12 3.5 3.5L17 9" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+
+const [head, ...rows] = block.items
+const fail = (what: string): never => {
+  throw new Error(`www/content/pages/${page}.yaml ${block.layout}: ${what}`)
+}
+if (!head || head.title !== undefined || head.points?.length !== 2) fail('the first item is the header row: two points')
+if (rows.length > ROW_ICONS.length) fail(`at most ${ROW_ICONS.length} rows, one per mark`)
+for (const [i, r] of rows.entries()) if (!r.title || r.points?.length !== 2) fail(`items.${i + 1}: a title and two points`)
+
+/** A text's desktop and phone versions, or one text for both. */
+const versions = (s: string): [string, string] | string => {
+  const parts = t(s).split(' | ')
+  return parts.length === 2 ? [inline(parts[0]!), inline(parts[1]!)] : inline(t(s))
+}
+const label = (s: string): string => {
+  const v = versions(s)
+  return typeof v === 'string'
+    ? v
+    : `<span class="omr-desktop-label">${v[0]}</span><span class="omr-mobile-label">${v[1]}</span>`
+}
+/** A cell or row name with two versions is wrapped in one more span, as live. */
+const text = (s: string): string => (typeof versions(s) === 'string' ? label(s) : `<span>${label(s)}</span>`)
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="omr">
+      <section class="omr-comparison" aria-labelledby="omr-compare-title" id={block.id}>
+        <div class="omr-heading">
+          <h2 id="omr-compare-title" set:html={title} />
+          {block.lead && <p set:html={inline(t(block.lead))} />}
+        </div>
+        <div class="omr-compare-scroll" role="region" aria-label="Development comparison" tabindex="0">
+          <table class="omr-table">
+            <thead>
+              <tr>
+                <td aria-hidden="true"></td>
+                {head!.points!.map((p) => <th scope="col" set:html={label(p)} />)}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                rows.map((r, i) => (
+                  <tr>
+                    <th scope="row">
+                      <span class="omr-row-label">
+                        <Fragment set:html={ROW_ICONS[i]} />
+                        <Fragment set:html={text(r.title!)} />
+                      </span>
+                    </th>
+                    {r.points!.map((p, j) => (
+                      <td>
+                        <span class="omr-col-label">
+                          <Fragment set:html={j === 0 ? NO : YES} />
+                          <span set:html={label(p)} />
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
