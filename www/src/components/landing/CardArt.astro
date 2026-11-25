@@ -1,0 +1,9 @@
+---
+// The illustration of a pain or feature card (`omlp-card-art`), decorative.
+interface Props {
+  art: { src: string; alt: string; width?: number; height?: number }
+}
+const { art } = Astro.props
+---
+
+<img src={art.src} loading="lazy" alt={art.alt} width={art.width} height={art.height} class="omlp-card-art" />

@@ -130,6 +130,9 @@ const speculation = JSON.stringify({
   </head>
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
+    {/* the main site's own stylesheets (www/src/layouts/Main.astro): after every stylesheet of the head, so its rules
+        win where they and the catalog's style the same element, as on openmercato.com */}
+    <slot name="body-start" />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
     {/* the Run menu marks a catalog page only: on the main site no row of it is the current page */}
     <Header current={run ? (path ?? '') : ''} />

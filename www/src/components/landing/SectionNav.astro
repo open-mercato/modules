@@ -1,0 +1,95 @@
+---
+// The section navigation of a landing (`omlp-jump`): it docks under the header while the page scrolls and marks the
+// section in view (`aria-current`), as the live landings' script does; links scroll smoothly unless the visitor
+// prefers reduced motion.
+interface Props {
+  items: { label: string; anchor: string }[]
+  label: string
+}
+const { items, label } = Astro.props
+---
+
+{
+  items.length > 0 && (
+    <nav aria-label={label} class="omlp-jump">
+      <div class="omlp-wrap omlp-jump-inner">
+        {items.map((i) => (
+          <a href={`#${i.anchor}`}>{i.label}</a>
+        ))}
+      </div>
+    </nav>
+  )
+}
+
+<script>
+  // the live landings' section script, without its staging-only parts (the header keeps Webflow's navbar classes)
+  document.addEventListener(
+    'click',
+    (event) => {
+      const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('.omlp a[href^="#"]')
+      const hash = link?.getAttribute('href') ?? ''
+      if (hash.length < 2) return
+      const target = document.getElementById(hash.slice(1))
+      if (!target) return
+      event.preventDefault()
+      event.stopImmediatePropagation()
+      target.scrollIntoView({
+        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      })
+      history.replaceState(null, '', hash)
+    },
+    true,
+  )
+  const bar = document.querySelector<HTMLElement>('.omlp-jump')
+  const rail = bar?.querySelector<HTMLElement>('.omlp-jump-inner')
+  const header = document.querySelector<HTMLElement>('.navbar_component')
+  const wrapper = document.querySelector<HTMLElement>('.navbar_wrapper')
+  if (bar && rail && header && wrapper) {
+    const links = [...rail.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')]
+    const sections = links.map((l) => document.getElementById(l.hash.slice(1)))
+    const root = document.documentElement
+    const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches
+    let active = -1
+    let queued = false
+    const reveal = (link: HTMLElement | undefined) => {
+      if (!link || rail.scrollWidth <= rail.clientWidth) return
+      const left = link.offsetLeft - (rail.clientWidth - link.offsetWidth) / 2
+      rail.scrollTo({ left: Math.max(0, left), behavior: reduced() ? 'auto' : 'smooth' })
+    }
+    const update = () => {
+      queued = false
+      const height = wrapper.getBoundingClientRect().height
+      root.style.setProperty('--omlp-header-height', `${height}px`)
+      document.body.classList.toggle('omlp-nav-docked', bar.getBoundingClientRect().top <= height + 1)
+      root.style.setProperty('--omlp-header-width', `${header.getBoundingClientRect().width}px`)
+      const threshold = height + bar.offsetHeight + 40
+      let next = 0
+      sections.forEach((s, i) => {
+        if (s && s.getBoundingClientRect().top <= threshold) next = i
+      })
+      if (next !== active) {
+        active = next
+        links.forEach((l, i) => (i === active ? l.setAttribute('aria-current', 'location') : l.removeAttribute('aria-current')))
+        reveal(links[active])
+      }
+    }
+    const schedule = () => {
+      if (!queued) {
+        queued = true
+        requestAnimationFrame(update)
+      }
+    }
+    addEventListener('scroll', schedule, { passive: true })
+    addEventListener(
+      'resize',
+      () => {
+        active = -1
+        schedule()
+      },
+      { passive: true },
+    )
+    new ResizeObserver(schedule).observe(wrapper)
+    update()
+  }
+</script>

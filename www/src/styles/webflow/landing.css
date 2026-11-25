@@ -1537,3 +1537,27 @@ body.omlp-nav-docked .omlp .omlp-jump {
     flex-basis: 21px;
   }
 }
+
+/*
+ * The landing rules above style Webflow's footer (`.footer_component`); the main site's footer is the catalog's
+ * (site/src/components/Footer.astro). The same result on it, measured on the live landings at 1440 and 390 wide on
+ * 25 Nov 2026: 35 px above and below, the frame 1280 px wide at most (18 px from each edge below that) with 24 px
+ * inside and no side rails, the wordmark collapsed to its 48 px line, "Other" 28 px clear of what is above and below it.
+ */
+body:has(.omlp) .site-footer .ft {
+  width: min(1280px, calc(100% - 36px));
+  max-width: none;
+  margin-inline: auto;
+  padding: 35px 24px;
+  border: 0;
+}
+body:has(.omlp) .site-footer .ft__giant {
+  height: 48px;
+  margin-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+body:has(.omlp) .site-footer .ft__other {
+  margin: 28px 0;
+}

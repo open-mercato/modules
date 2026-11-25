@@ -1,0 +1,36 @@
+---
+// legacy (spec Q4): the animated CRM workflow every live landing shows in its hero, ported as it is from the Webflow
+// embed (compiled output, source unknown). It needs no Webflow code: a sandboxed iframe whose document is the embed's
+// own (www/src/components/landing/legacy/crm-animation.txt, kept as text so no formatter touches it; its fonts and its logo point to www/public/files/), sized
+// by the message it posts, paused while the visitor prefers reduced motion. Replace it when its source is found.
+// Unlike the live embed, the frame keeps the page's origin (allow-same-origin): its fonts are files of this site, and
+// Pages sends no CORS header a frame of an opaque origin would need to load them. The document is ours and committed;
+// the sandbox still blocks forms, pop-ups and top navigation.
+import doc from './legacy/crm-animation.txt?raw'
+---
+
+<div class="omlp-animation-slot" data-legacy="crm-animation">
+  <iframe
+    class="omlp-animation-frame"
+    title="Animated Open Mercato CRM workflow"
+    sandbox="allow-scripts allow-same-origin"
+    srcdoc={doc}
+    loading="lazy"></iframe>
+</div>
+
+<script>
+  // the embed's host script: the frame's height from its messages, and the visitor's motion preference passed in
+  const frames = document.querySelectorAll<HTMLIFrameElement>('.omlp-animation-frame')
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  addEventListener('message', (event) => {
+    for (const frame of frames) {
+      const data = event.data as { type?: string; height?: number } | null
+      if (event.source === frame.contentWindow && data?.type === 'om-crm-size' && Number.isFinite(data.height))
+        frame.style.height = `${Math.min(1000, Math.max(400, data.height ?? 0))}px`
+    }
+  })
+  const sync = (frame: HTMLIFrameElement) =>
+    frame.contentWindow?.postMessage({ type: 'om-crm-motion', paused: motion.matches }, '*')
+  for (const frame of frames) frame.addEventListener('load', () => sync(frame))
+  motion.addEventListener('change', () => frames.forEach(sync))
+</script>

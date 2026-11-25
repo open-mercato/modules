@@ -179,16 +179,48 @@ export const LANDING_LOCALES = ['en', 'pl'] as const
 export type LandingLocale = (typeof LANDING_LOCALES)[number]
 
 /**
- * Words the landing template writes around data, per locale (the review lines of the capability matrix and of the
- * source list). The template renders `{reviewedPrefix} <date>. {sourcesLabel}` and `<title> · {reviewedInline} <date>`,
- * with the date in the locale's long form ("12 November 2026", "12 listopada 2026").
+ * Words the landing template writes around data, per locale, as the live landings print them (25 Nov 2026): the review
+ * lines of the capability matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and
+ * `<title> · {reviewedInline} <date>`, the date in the locale's long form, "12 November 2026", "12 listopada 2026"),
+ * the label of the section navigation, the summary of the comparison's details when the comparison has no title, the
+ * heading of the related landings, and what each mark of the matrix reads as to a screen reader. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
+ * comparison` on every live landing, the Polish one too.
  */
 export const LANDING_TEMPLATE_TEXT: Record<
   LandingLocale,
-  { reviewedPrefix: string; sourcesLabel: string; reviewedInline: string }
+  {
+    reviewedPrefix: string
+    sourcesLabel: string
+    reviewedInline: string
+    navLabel: string
+    detailsSummary: string
+    relatedTitle: string
+    marks: Record<(typeof CAPABILITY_MARKS)[number], string>
+  }
 > = {
-  en: { reviewedPrefix: 'Reviewed', sourcesLabel: 'Sources:', reviewedInline: 'reviewed' },
-  pl: { reviewedPrefix: 'Sprawdzono', sourcesLabel: 'Źródła:', reviewedInline: 'sprawdzono' },
+  en: {
+    reviewedPrefix: 'Reviewed',
+    sourcesLabel: 'Sources:',
+    reviewedInline: 'reviewed',
+    navLabel: 'On this page',
+    detailsSummary: 'Explore implementation and commercial details',
+    relatedTitle: 'Related pages',
+    marks: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
+  },
+  pl: {
+    reviewedPrefix: 'Sprawdzono',
+    sourcesLabel: 'Źródła:',
+    reviewedInline: 'sprawdzono',
+    navLabel: 'Na tej stronie',
+    detailsSummary: 'Zobacz szczegóły wdrożenia i kosztów',
+    relatedTitle: 'Powiązane strony',
+    marks: { yes: 'Available', no: 'Not included', build: 'Wymaga wdrożenia' },
+  },
+}
+
+/** The accessible name of a landing's capability matrix, as the live landings write it in every locale. */
+export function matrixLabel(ours: string, theirs: string): string {
+  return `${ours} and ${theirs} feature comparison`
 }
 
 /**
@@ -617,6 +649,7 @@ export const RESERVED_SEGMENTS = [
   'sitemap-0',
   'robots',
   '404',
+  'og',
 ] as const
 
 /**
@@ -634,6 +667,7 @@ export const NON_PAGE_SEGMENTS = [
   'sitemap-index',
   'sitemap-0',
   'robots',
+  'og',
 ] as const
 
 /** The pages entry routed at `/`. */

@@ -1,0 +1,28 @@
+---
+// The closing call to action of a landing (`#start`, `omlp-close`): title and body beside the button and its note.
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import type { LandingData } from '../../lib/landings.ts'
+import Cta from './Cta.astro'
+import Rich from './Rich.astro'
+
+interface Props {
+  cta: LandingData['cta']
+  counts: CountValues
+}
+const { cta, counts } = Astro.props
+---
+
+<section id="start" class="omlp-section">
+  <div class="omlp-wrap">
+    <div class="omlp-close">
+      <div>
+        <h2>{cta.title}</h2>
+        <p><Rich md={cta.body} counts={counts} /></p>
+      </div>
+      <div class="omlp-close-action">
+        <Cta cta={cta.primary} variant="primary" />
+        {cta.note && <p>{cta.note}</p>}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,39 @@
+---
+// The comparison of a landing (`omlp-table`): topics with their answer and ours, in the details under the capability
+// matrix, whose summary is the comparison's title (the template's words when it has none). On a narrow screen each
+// cell shows its column's name (`data-label`).
+import type { LandingData } from '../../lib/landings.ts'
+
+interface Props {
+  comparison: NonNullable<LandingData['comparison']>
+  summary: string
+}
+const { comparison: c, summary } = Astro.props
+const [theirs, ours] = c.columns
+---
+
+<details class="omfm-details">
+  <summary>{c.title ?? summary}</summary>
+  <div class="omlp-comparison">
+    <table class="omlp-table">
+      <thead>
+        <tr>
+          <th scope="col">{c.label}</th>
+          <th scope="col">{theirs}</th>
+          <th scope="col">{ours}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          c.rows.map((r) => (
+            <tr>
+              <th scope="row">{r.topic}</th>
+              <td data-label={theirs}>{r.theirs}</td>
+              <td data-label={ours}>{r.ours}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</details>
