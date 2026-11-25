@@ -1,0 +1,37 @@
+---
+// /case-studies (spec, Routing and UI/UX): every published case study, in the order of the live list. Drafts are never
+// listed (D6). Title, description and heading are the Webflow page's; they move to the `pages` collection with the
+// unique pages (Phase 6).
+import Base from '../../../site/src/layouts/Base.astro'
+import CaseStudyCard from '../components/case-studies/CaseStudyCard.astro'
+import { TITLE_SUFFIX } from '../lib/blog.ts'
+import { CASE_STUDIES_PATH, caseStudyCard } from '../lib/case-studies.ts'
+import { caseStudyData } from '../lib/collections-data.ts'
+import '../styles/blog.css'
+import '../styles/collections.css'
+
+const data = await caseStudyData()
+const cards = data.published.map((cs) => caseStudyCard(cs, data.categories))
+const description =
+  'Explore customer stories and product builds on Open Mercato, from connected devices and manufacturing to education, care operations and travel.'
+---
+
+<Base section="main" path={CASE_STUDIES_PATH} title={`Case Studies${TITLE_SUFFIX}`} description={description}>
+  <div class="band">
+    <div class="sheet blog-page">
+      <header class="post-head">
+        <h1 class="t-h1 post-head__title">What teams ship with Open Mercato</h1>
+        <p class="post-head__lead">{description}</p>
+      </header>
+      <ul class="post-grid" aria-label="Case studies">
+        {
+          cards.map((cs) => (
+            <li>
+              <CaseStudyCard cs={cs} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,41 @@
+---
+// /careers-jobs/<slug> (spec, Routing and SEO): one page per job that is not a draft (D6). Title `<title> | Open
+// Mercato`, canonical, JobPosting JSON-LD while the job is open (its body as the description) and BreadcrumbList. The
+// list of jobs is /careers, a unique page still on Webflow until Phase 6, so the breadcrumb points there.
+import { render } from 'astro:content'
+import Base from '../../../../site/src/layouts/Base.astro'
+import { MAIN_SITE_ORIGIN } from '../../../../lib/core/main-site.ts'
+import Prose from '../../components/blog/Prose.astro'
+import JobDetail from '../../components/jobs/JobDetail.astro'
+import { jobData } from '../../lib/collections-data.ts'
+import { CAREERS_PATH, jobJsonLd, jobPath, jobSeo, type JobEntry } from '../../lib/jobs.ts'
+import '../../styles/collections.css'
+
+export async function getStaticPaths() {
+  const jobs = await jobData()
+  return jobs.map((job) => ({ params: { slug: job.id }, props: { job } }))
+}
+
+const { job } = Astro.props as { job: JobEntry }
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const seo = jobSeo(job, site)
+const { Content } = await render(job as never)
+const html = (job as unknown as { rendered?: { html?: string } }).rendered?.html
+---
+
+<Base
+  section="main"
+  path={jobPath(job.id)}
+  title={seo.title}
+  description={seo.description}
+  jsonLd={jobJsonLd(job, site, html)}
+>
+  <div class="band">
+    <div class="sheet blog-page">
+      <article class="case-study">
+        <JobDetail job={job} careersHref={`${MAIN_SITE_ORIGIN}${CAREERS_PATH}`} />
+        <Prose><Content /></Prose>
+      </article>
+    </div>
+  </div>
+</Base>

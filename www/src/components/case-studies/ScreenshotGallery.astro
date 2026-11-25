@@ -1,0 +1,30 @@
+---
+// The screenshots of a case study, each with its alt text as the caption. Plain figures: every image is reachable
+// without JavaScript; a carousel is Phase 7's.
+import type { PostImage } from '../../lib/blog.ts'
+
+interface Props {
+  images: PostImage[]
+}
+const { images } = Astro.props
+---
+
+{
+  images.length > 0 && (
+    <section class="gallery" aria-labelledby="screenshots">
+      <h2 class="t-h2" id="screenshots">
+        Screenshots
+      </h2>
+      <ul class="gallery__grid">
+        {images.map((img) => (
+          <li>
+            <figure>
+              <img src={img.src} alt={img.decorative ? '' : img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" />
+              {!img.decorative && img.alt && <figcaption>{img.alt}</figcaption>}
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

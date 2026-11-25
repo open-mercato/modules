@@ -1,0 +1,49 @@
+---
+// The head and facts of a job page: breadcrumb, department, title, description, the facts (location, employment type,
+// salary, technology) and how to apply. A closed job says so and offers no application.
+import Crumbs from '../Crumbs.astro'
+import { EMPLOYMENT_TYPE_LABELS } from '../../../../lib/schema/www-content.ts'
+import type { JobEntry } from '../../lib/jobs.ts'
+
+interface Props {
+  job: JobEntry
+  /** Where the breadcrumb's Careers points: /careers is still on Webflow until Phase 6. */
+  careersHref: string
+}
+const { job, careersHref } = Astro.props
+const d = job.data
+const facts = [
+  ['Location', d.location],
+  ['Employment', EMPLOYMENT_TYPE_LABELS[d.employmentType]],
+  ['Salary', d.salary],
+  ['Technology', d.techStack],
+].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
+---
+
+<header class="post-head">
+  <Crumbs section={{ name: 'Careers', href: careersHref }} current={d.title} />
+  {d.department && <span class="chip chip--line">{d.department}</span>}
+  <h1 class="t-h1 post-head__title">{d.title}</h1>
+  <p class="post-head__lead">{d.description}</p>
+</header>
+<aside class="facts" aria-label="Job details">
+  <dl class="facts__list">
+    {
+      facts.map(([label, value]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  {
+    d.open ? (
+      <a class="btn btn--primary" href={d.applyUrl}>
+        Apply
+      </a>
+    ) : (
+      <p class="t-muted">This position is closed.</p>
+    )
+  }
+</aside>

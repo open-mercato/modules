@@ -1,0 +1,20 @@
+---
+// The three results of a case study, when it has them.
+interface Props {
+  stats: { title: string; description: string }[]
+}
+const { stats } = Astro.props
+---
+
+{
+  stats.length > 0 && (
+    <dl class="stats">
+      {stats.map((s) => (
+        <div class="stats__item">
+          <dt class="stats__title">{s.title}</dt>
+          <dd class="stats__desc">{s.description}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}

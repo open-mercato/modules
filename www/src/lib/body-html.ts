@@ -4,8 +4,8 @@
 // - a `<lite-video id title>` the importer wrote for a YouTube iframe becomes the VideoEmbed markup: a link to the
 //   video that works without JavaScript, which www/src/scripts/video-embed.ts turns into a youtube-nocookie.com player
 //   on click, so nothing loads from YouTube before the reader asks for it;
-// - a link to a post that is a draft or does not exist renders as its text (D6: a draft is never linked) with a build
-//   warning;
+// - a link to a post, case study, partner or job that is a draft or does not exist renders as its text (D6: a draft is
+//   never linked) with a build warning;
 // - a link to a page of the main site this build does not serve yet (it is still on Webflow until the switch, step C8)
 //   points at the live site, https://www.openmercato.com/<path>, instead of a 404 of the preview;
 // - a table sits in a scrollable, focusable region, so a wide one never widens the page;
@@ -103,10 +103,21 @@ function decodeEntities(s: string): string {
 export interface LinkRules {
   /** The origin of the main site, https://www.openmercato.com. */
   origin: string
-  /** Slugs of the published posts: the only posts a body may link. */
-  posts: ReadonlySet<string>
-  /** Whether this build serves a site path (other than a post's). */
+  /**
+   * The detail routes this build serves, by their first path segment (`blog-posts`, `case-studies`,
+   * `certified-partners`, `careers-jobs`): the slugs of the published entries, the only ones a body may link.
+   */
+  details: ReadonlyMap<string, ReadonlySet<string>>
+  /** Whether this build serves a site path (other than a detail page). */
   serves(path: string): boolean
+}
+
+/** What an entry of each detail route is called in a build warning. */
+const DETAIL_NOUNS: Record<string, string> = {
+  'blog-posts': 'post',
+  'case-studies': 'case study',
+  'certified-partners': 'partner',
+  'careers-jobs': 'job',
 }
 
 export type LinkAction = { kind: 'keep' } | { kind: 'live'; href: string } | { kind: 'text'; why: string }
@@ -115,10 +126,11 @@ export type LinkAction = { kind: 'keep' } | { kind: 'live'; href: string } | { k
 export function linkAction(href: string, rules: LinkRules): LinkAction {
   if (!href.startsWith('/') || href.startsWith('//')) return { kind: 'keep' }
   const path = href.replace(/[?#].*$/, '').replace(/(?<=.)\/$/, '')
-  const post = /^\/blog-posts\/([^/]+)$/.exec(path)
-  if (post) {
-    if (rules.posts.has(post[1]!)) return { kind: 'keep' }
-    return { kind: 'text', why: `${href} is not a published post` }
+  const detail = /^\/([^/]+)\/([^/]+)$/.exec(path)
+  const published = detail ? rules.details.get(detail[1]!) : undefined
+  if (detail && published) {
+    if (published.has(detail[2]!)) return { kind: 'keep' }
+    return { kind: 'text', why: `${href} is not a published ${DETAIL_NOUNS[detail[1]!] ?? 'entry'}` }
   }
   if (rules.serves(path)) return { kind: 'keep' }
   return { kind: 'live', href: `${rules.origin}${href}` }

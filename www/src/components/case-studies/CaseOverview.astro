@@ -1,0 +1,47 @@
+---
+// The facts of a case study: who delivered it (DeliveredBy), client, industry, timeline, type and the technology stack.
+// A partner that is a draft is named without a link.
+import { markdownHtml } from '../../lib/inline-markdown.ts'
+import type { DeliveredBy } from '../../lib/case-studies.ts'
+
+interface Props {
+  overview: { client?: string; industry?: string; timeline?: string; type?: string; stack?: string }
+  delivered?: DeliveredBy
+}
+const { overview, delivered } = Astro.props
+const facts = [
+  ['Client', overview.client],
+  ['Industry', overview.industry],
+  ['Timeline', overview.timeline],
+  ['Type', overview.type],
+].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
+---
+
+<aside class="facts" aria-label="Project overview">
+  <dl class="facts__list">
+    {
+      delivered && (
+        <div>
+          <dt>Delivered by</dt>
+          <dd class="delivered-by">{delivered.href ? <a href={delivered.href}>{delivered.name}</a> : delivered.name}</dd>
+        </div>
+      )
+    }
+    {
+      facts.map(([label, value]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))
+    }
+    {
+      overview.stack && (
+        <div>
+          <dt>Technology stack</dt>
+          <dd class="prose facts__stack" set:html={markdownHtml(overview.stack)} />
+        </div>
+      )
+    }
+  </dl>
+</aside>

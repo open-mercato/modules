@@ -1,0 +1,52 @@
+---
+// The head and facts of a partner page: breadcrumb, logo, tier (TierBadge), name, description, the facts of every
+// facet and the partner's website.
+import Crumbs from '../Crumbs.astro'
+import { PARTNERS_PATH } from '../../lib/partners.ts'
+import type { PostImage } from '../../lib/blog.ts'
+
+interface Props {
+  name: string
+  description: string
+  tier: string
+  logo?: PostImage
+  website: string
+  facts: { facet: string; label: string; values: string[] }[]
+}
+const { name, description, tier, logo, website, facts } = Astro.props
+---
+
+<header class="post-head">
+  <Crumbs section={{ name: 'Certified Partners', href: PARTNERS_PATH }} current={name} />
+  {
+    logo && (
+      <img
+        class="partner-card__logo partner-head__logo"
+        src={logo.src}
+        alt={logo.decorative ? '' : logo.alt || `${name} logo`}
+        width={logo.width}
+        height={logo.height}
+        decoding="async"
+      />
+    )
+  }
+  <span class="chip chip--line tier-badge">{tier}</span>
+  <h1 class="t-h1 post-head__title">{name}</h1>
+  <p class="post-head__lead">{description}</p>
+</header>
+<aside class="facts" aria-label="Partner details">
+  <dl class="facts__list">
+    {
+      facts.map((f) => (
+        <div>
+          <dt>{f.label}</dt>
+          <dd>{f.values.join(', ')}</dd>
+        </div>
+      ))
+    }
+    <div>
+      <dt>Website</dt>
+      <dd><a href={website} rel="noopener">{new URL(website).hostname.replace(/^www\./, '')}</a></dd>
+    </div>
+  </dl>
+</aside>
