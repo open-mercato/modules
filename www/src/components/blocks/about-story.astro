@@ -106,7 +106,7 @@ const boxText = box?.body ? boxBody(box.body) : undefined
                       {box.title && <h3 class="heading-style-h4 text-color-dark-green">{t(box.title)}</h3>}
                     </div>
                     <div class="button-group">
-                      {links.map((c, i) =>
+                      {links.map((c) =>
                         links.length === 1 ? (
                           <a href={c.href} target={target(c.href)} class="button is-tertiary is-green w-inline-block">
                             <div>{t(c.label)}</div>
