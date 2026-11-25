@@ -7,7 +7,7 @@
 import { ctaAttrs } from '../../../../lib/core/cta.ts'
 import { fillCounts } from '../../../../lib/core/www-tokens.ts'
 import { headingHtml } from '../../lib/inline-markdown.ts'
-import type { BlockProps } from '../../lib/pages.ts'
+import { itemsWith, type BlockProps } from '../../lib/pages.ts'
 
 type Props = BlockProps<'features'>
 const { block, counts, page } = Astro.props
@@ -17,6 +17,7 @@ for (const [i, item] of block.items.entries())
   if (!item.video || !item.image || !item.title)
     throw new Error(`www/content/pages/${page}.yaml ${block.layout} items.${i}: a course needs a title, a video and an image`)
 const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>'
+const courses = itemsWith({ page, layout: block.layout }, block.items, ['title', 'image', 'video'])
 ---
 
 <div class="main-wrapper padding-global">
@@ -26,27 +27,27 @@ const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="tru
         <div class="omr-heading"><h2 id="omr-academy-title" set:html={title} /></div>
         <div class="omr-academy-grid">
           {
-            block.items.map((item) => (
+            courses.map((item) => (
               <article class="omr-course">
                 <div class="omr-media" data-video={item.video}>
                   <a
                     class="omr-play"
                     href={`https://www.youtube.com/watch?v=${item.video}`}
-                    aria-label={`Play: ${t(item.title!)}`}
+                    aria-label={`Play: ${t(item.title)}`}
                     {...ctaAttrs('play_video')}
                   >
                     <img
-                      src={item.image!.src}
-                      alt={item.image!.alt}
+                      src={item.image.src}
+                      alt={item.image.alt}
                       loading="lazy"
-                      width={item.image!.width}
-                      height={item.image!.height}
+                      width={item.image.width}
+                      height={item.image.height}
                     />
                     <span class="omr-play-icon" set:html={PLAY_ICON} />
                   </a>
                 </div>
                 <div class="omr-course-copy">
-                  <h3>{t(item.title!)}</h3>
+                  <h3>{t(item.title)}</h3>
                   {item.eyebrow && <time>{t(item.eyebrow)}</time>}
                 </div>
               </article>

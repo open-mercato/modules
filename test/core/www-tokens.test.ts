@@ -5,6 +5,7 @@ import {
   fillCounts,
   formatCount,
   hasCountToken,
+  coreVersionOf,
   moduleCountOf,
   tokenParts,
 } from '../../lib/core/www-tokens.ts'
@@ -46,5 +47,11 @@ describe('lib/core/www-tokens.ts (www site migration, A6)', () => {
     expect(moduleCountOf({ counts: { modules: 38, builtIn: 46 } })).toBe(84)
     expect(moduleCountOf({ counts: { modules: 38 } })).toBeUndefined()
     expect(moduleCountOf(null)).toBeUndefined()
+  })
+
+  it('reads the core version of modules.json for the release badge, and nothing of another shape', () => {
+    expect(coreVersionOf({ builtIn: { coreVersion: '0.10.1', count: 49 } })).toBe('0.10.1')
+    for (const bad of [{}, null, { builtIn: { coreVersion: 10 } }, { builtIn: { coreVersion: '0.10.1-rc.1' } }])
+      expect(coreVersionOf(bad), JSON.stringify(bad)).toBeUndefined()
   })
 })

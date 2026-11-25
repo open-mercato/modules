@@ -43,7 +43,8 @@ const byId = new Map(publishedLandings(all).map((l) => [l.id, l]))
 const related = d.related
   .map((r) => byId.get(refId(r) ?? ''))
   .filter((l): l is LandingEntry => l !== undefined)
-  .map((l) => ({ id: l.id, title: l.data.hero.title, eyebrow: l.data.hero.eyebrow }))---
+  .map((l) => ({ id: l.id, title: l.data.hero.title, eyebrow: l.data.hero.eyebrow }))
+---
 
 <Main
   cta={false}

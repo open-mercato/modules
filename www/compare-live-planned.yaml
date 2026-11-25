@@ -201,7 +201,7 @@
   note: "Live's script (om-customer-implementation-partner) adds the implementation partner video to the stories in the browser; the page renders it, so one more image (its poster)."
 - url: /
   field: text
-  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026); the release badge shows the core version of the catalog''s data where live''s HTML types v0.9.0 (AGENTS.md rule 8; the browser shows the latest release on both).'
 - url: /agile-crm-alternative
   field: text
   note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'

@@ -67,3 +67,13 @@ export function moduleCountOf(modulesJson: unknown): number | undefined {
   if (typeof modules !== 'number' || typeof builtIn !== 'number') return undefined
   return modules + builtIn
 }
+
+/**
+ * The version of the Open Mercato core the catalog's modules.json of the same build describes (`builtIn.coreVersion`),
+ * for the home page's release badge: the build prints it instead of a typed number (AGENTS.md rule 8) and the browser
+ * then shows the latest release, as the live site does. Undefined for a file of another shape.
+ */
+export function coreVersionOf(modulesJson: unknown): string | undefined {
+  const v = (modulesJson as { builtIn?: { coreVersion?: unknown } } | null)?.builtIn?.coreVersion
+  return typeof v === 'string' && /^\d+\.\d+\.\d+$/.test(v) ? v : undefined
+}

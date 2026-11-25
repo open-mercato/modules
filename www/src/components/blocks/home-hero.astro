@@ -1,6 +1,6 @@
 ---
 // The hero of the home page as live has it (`om-new-hero` in `om-home-refresh`, styled by
-// www/src/styles/webflow/pages/home.css): the release badge (`eyebrow`, replaced in the browser by the latest release
+// www/src/styles/webflow/pages/home.css): the release badge (the core version of this build's catalog data, replaced in the browser by the latest release
 // of the repository, as live) with its line (`label`), the heading (its *emphasis* the live highlight), the lead, three
 // buttons (`primary`, `secondary` and the one link of `note`), the marks of the assistants named by `items`, and the
 // growing mosaic of business modules beside them, animated by the live script (below, ported without jQuery).
@@ -11,6 +11,7 @@ import { fillCounts } from '../../../../lib/core/www-tokens.ts'
 import { headingHtml } from '../../lib/inline-markdown.ts'
 import type { BlockProps } from '../../lib/pages.ts'
 import arrow from './home-release-arrow.svg?raw'
+import { coreVersion } from '../../lib/counts.ts'
 import stack from './home-hero-stack.svg?raw'
 import claude from './home-tool-claude.svg?raw'
 import codex from './home-tool-codex.svg?raw'
@@ -59,6 +60,9 @@ const heroAction = (href: string, label: string): string =>
       : ctaSlug(label)
 
 const title = headingHtml(t(block.title)).replace(/<span>/g, '<span class="om-business-highlight">')
+// the release badge: the core version of the catalog's data of this build, never a typed number (AGENTS.md rule 8);
+// the script below shows the latest release of GitHub in the browser, as live
+const version = coreVersion()
 ---
 
 <div class="main-wrapper padding-global">
@@ -69,15 +73,11 @@ const title = headingHtml(t(block.title)).replace(/<span>/g, '<span class="om-bu
           <div class="om-hero-copy">
             <div class="om-release-label">
               <a href={MAIN_SITE_GITHUB} target="_blank" class="label_combo w-inline-block" {...ctaAttrs('release', 'hero')}>
-                {
-                  block.eyebrow && (
-                    <div class="label_combo-badge">
-                      <div id="om-version" class="text-style-tagline">
-                        {t(block.eyebrow)}
-                      </div>
-                    </div>
-                  )
-                }
+                <div class="label_combo-badge">
+                  <div id="om-version" class="text-style-tagline">
+                    {version ? `v${version}` : ''}
+                  </div>
+                </div>
                 {block.label && <div class="text-size-tiny text-weight-medium">{t(block.label)}</div>}
                 <div class="icon-embed-xxsmall w-embed" set:html={arrow} />
               </a>
