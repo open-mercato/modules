@@ -1,16 +1,17 @@
 ---
-// /certified-partners (spec, Routing and UI/UX): every published partner with the PartnerFilter island. Drafts are
-// never listed (D6). Complete without JavaScript: the island's server render lists every published partner; the list
-// and the facet options reach the browser as the island's props, JSON inlined into the page at build. The heading and
-// the lead are the Webflow page's (it has no description, so the lead is the description); they move to the `pages`
-// collection with the unique pages (Phase 6).
-import Base from '../../../site/src/layouts/Base.astro'
+// /certified-partners (spec, Routing and UI/UX), in the live Webflow markup: the header with its two buttons, then the
+// PartnerFilter island (`agencies_component`). Drafts are never listed (D6). Complete without JavaScript: the island's
+// server render lists every published partner; the list and the facet options reach the browser as the island's props,
+// JSON inlined into the page at build. The heading and the lead are the Webflow page's (it has no description, so the
+// lead is the description); they move to the `pages` collection with the unique pages (Phase 6).
+import Main from '../layouts/Main.astro'
+import Crumbs from '../components/Crumbs.astro'
 import PartnerFilter from '../islands/PartnerFilter.tsx'
+import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
 import { TITLE_SUFFIX } from '../lib/blog.ts'
 import { partnerData } from '../lib/collections-data.ts'
-import { facetOptions, partnerCard, PARTNERS_PATH } from '../lib/partners.ts'
-import '../styles/blog.css'
-import '../styles/collections.css'
+import { AGENCIES_PATH, facetOptions, partnerCard, PARTNERS_PATH } from '../lib/partners.ts'
+import pagesCss from '../styles/webflow/pages.css?url'
 
 const data = await partnerData()
 const partners = data.published.map((p) => partnerCard(p, data.dict))
@@ -19,17 +20,40 @@ const lead =
   "Find an agency to help with your next project. Tell us what you need and we'll match you with the best Certified Partner for the job, or browse the partner list for yourself."
 ---
 
-<Base section="main" path={PARTNERS_PATH} title={`Certified Partners${TITLE_SUFFIX}`} description={lead}>
-  <div class="band">
-    <div class="sheet blog-page">
-      <header class="post-head">
-        <h1 class="t-h1 post-head__title">Hire a Certified Open Mercato Partner</h1>
-        <p class="post-head__lead">{lead}</p>
-      </header>
-      <section aria-labelledby="partners">
-        <h2 class="sr-only" id="partners">Partners</h2>
-        <PartnerFilter client:painted partners={partners} options={options} />
-      </section>
+<Main
+  path={PARTNERS_PATH}
+  title={`Certified Partners${TITLE_SUFFIX}`}
+  description={lead}
+  bodyClass="wf-partners"
+  styles={[pagesCss]}
+>
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <div class="section no-bottom-border no-bottom-padding">
+        <div class="section-padding">
+          <div class="header_component">
+            <div class="header_content max-width-39rem">
+              <Crumbs current={{ name: 'Agencies', href: PARTNERS_PATH }} />
+              <h1 class="heading-style-h2">Hire a Certified Open Mercato Partner</h1>
+              <div class="spacer-small"></div>
+              <p class="text-color-secondary">{lead}</p>
+              <div class="spacer-medium"></div>
+              <div class="button-group">
+                <a href="#partners" class="button is-tertiary w-button">Explore partners</a>
+                {/* /agencies is a unique page, still on Webflow until Phase 6 */}
+                <a href={`${MAIN_SITE_ORIGIN}${AGENCIES_PATH}`} class="button is-secondary w-inline-block">
+                  <div>Learn how to become a partner</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="agencies-list_section-wrapper">
+        <section id="partners" class="section is-agencies-list" aria-label="Partners">
+          <PartnerFilter client:painted partners={partners} options={options} />
+        </section>
+      </div>
     </div>
   </div>
-</Base>
+</Main>
