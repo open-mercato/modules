@@ -793,6 +793,75 @@ redirect to `https://modules.openmercato.com` with the prefix cut (and `/run/mod
 run again from the next `pages` run, so the proxy can also go back to the preview upstream
 ([docs/proxy/README.md](proxy/README.md), Roll back).
 
+### Old hosts on a Worker (www migration Phase 1b)
+
+Once the main site sits at the root of the Pages project, the root `/` of the project cannot be both the main home
+page and the 302 of `modules.openmercato.com`, so the old hosts leave the Functions for a Worker of their own (spec
+[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), Option B). `workers/old-hosts/`
+is that Worker, ready to deploy, not deployed from this repository. It runs the rules of `lib/core/site-host.ts` that
+the Functions run today (Old addresses, above), on the routes `modules.openmercato.com/*` and
+`templates.openmercato.com/*`:
+
+- A page answers a 302 to the same path and query under `https://www.openmercato.com/run`, the roots to
+  `/run/modules` and `/run/templates`, with `Access-Control-Allow-Origin: *`.
+- A machine-readable file answers a 200 with the bytes of `/run<path>` of the upstream, its status, `ETag`, cache
+  headers and 304 as they come, plus the CORS header.
+- The fixed addresses (`/schema/*`, `/templates.json`, `/picker.json`, `/modules.json`) answer the same way from
+  `/run/...`, so Phase 1c can drop their root copies. Every `$id` stays `https://modules.openmercato.com/schema/...`.
+- A path under `/run` is passed to the upstream as it is, redirects not followed. A path with `//` at the start, a
+  backslash or a control character, and any other host, answer a 404 and fetch nothing.
+- The upstream is the project's own address, `https://open-mercato-modules.pages.dev`, never `www`, so a rollback of
+  the `www` record cannot break the old hosts. The Worker refuses an upstream on an old host or on `www` with a 502.
+
+`test/workers/old-hosts.test.ts` checks every case of step 5 of Switch, in order, and of `docs/proxy/check.sh` on an
+old host, and gives the same answer as `functions/_middleware.ts` path by path. The `checks` job of `validate` bundles
+it with `wrangler deploy --dry-run`. This step removes nothing: the Functions, `_routes.json` and the fixed root
+copies stay until Phase 1c, and answer again as soon as the Worker routes are gone.
+
+**When.** After step 5 of Switch, in order, is green with the Functions: production serves `/run`, so the upstream
+holds every file under `/run/`. Not before: at the domain root the upstream has no `/run/`.
+
+**Before the deploy: the request count.** The Worker counts every request to the old hosts, the fixed files included,
+which cost no invocation today. In the Cloudflare dashboard, zone `openmercato.com` > Analytics & Logs > HTTP Traffic,
+last 30 days, filter Host equals `modules.openmercato.com`, then `templates.openmercato.com`: note the highest daily
+count of each and add them. Workers & Pages > Plans shows the plan. On Workers Free the limit is 100,000 requests a day
+for the whole account, shared with the other Workers and Pages Functions of the account (the `/run` proxy, the MCP
+Worker): their highest day plus the old hosts' highest day must stay under 50,000 (a margin of 50%), else move to
+Workers Paid before Phase 1c. Workers Paid has no daily limit.
+
+**Deploy (owner).** On a workstation logged in to the Cloudflare account of the `openmercato.com` zone, from the
+repository root:
+
+```sh
+yarn wrangler deploy --config workers/old-hosts/wrangler.toml
+```
+
+This creates the Worker `openmercato-old-hosts` with the two routes and four variables, all in
+`workers/old-hosts/wrangler.toml`: `UPSTREAM` (`https://open-mercato-modules.pages.dev`), `SITE_URL`, `BASE_PATH` and
+`HOME_PATH` (the values of the repository variables after the move). No secret, no DNS record: the routes run on the
+existing records of the two hosts, which stay custom domains of the Pages project. No `*.workers.dev` address. On
+Workers Free, set the request limit failure mode of both routes to Fail open (zone `openmercato.com` > Workers Routes,
+edit each route): a request over the limit then reaches the Pages project directly. The limit is the same for the
+Functions, so only static files answer there: `/run/*` and, until Phase 1c, the fixed root copies. Old page addresses
+do not move and other files answer 404, and after Phase 1c the root is the main site's. Workers Paid is the protection,
+not Fail open.
+
+**Check.** The commands of step 5 of Switch, in order, each with the result it names, then:
+
+```sh
+docs/proxy/check.sh https://modules.openmercato.com
+# 0 failed: /run on the old host passes through as before
+curl -s https://modules.openmercato.com//x
+# Not found. (the Worker's 404; the Functions answered the Pages 404 page)
+```
+
+A route change takes effect in seconds, so a failed check is undone by the rollback below. Phase 1c (no Functions in
+the Pages project) merges only after these pass.
+
+**Rollback.** Workers & Pages > `openmercato-old-hosts` > Settings > Domains & Routes: remove both routes (or
+`yarn wrangler delete --name openmercato-old-hosts`). Until Phase 1c the Functions answer again from the next request.
+After Phase 1c, first revert that pull request and run `pages`, then remove the routes.
+
 ## Triage of submissions
 
 `yarn om triage` lists every open PR that is labelled `new-entry` or changes `modules/**` (a fork and the `/submit`
