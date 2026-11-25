@@ -1,0 +1,81 @@
+---
+// /<slug>: the SEO landings (spec docs/specs/2026-11-24-www-site-migration.md, Phase 5), one template for the 32 of
+// www/content/landings, in the live landings' markup and CSS (www/src/styles/webflow/landing.css) until the designer's
+// pass (D7). SEO from the entry: its title and description, canonical, an OG image (its own or the card drawn at build,
+// /og/<slug>.png), FAQPage JSON-LD equal to its `faq`, `<html lang>` from `locale`, and hreflang between a landing and
+// its translation. A draft is never routed (D6). The unique pages share this namespace in Phase 6.
+import { getCollection } from 'astro:content'
+import Main from '../layouts/Main.astro'
+import landingCss from '../styles/webflow/landing.css?url'
+import CapabilityMatrix from '../components/landing/CapabilityMatrix.astro'
+import CtaBand from '../components/landing/CtaBand.astro'
+import DemoBlock from '../components/landing/DemoBlock.astro'
+import Faq from '../components/landing/Faq.astro'
+import FeatureGrid from '../components/landing/FeatureGrid.astro'
+import LandingHero from '../components/landing/LandingHero.astro'
+import PainList from '../components/landing/PainList.astro'
+import RelatedLandings from '../components/landing/RelatedLandings.astro'
+import SectionNav from '../components/landing/SectionNav.astro'
+import SourceList from '../components/landing/SourceList.astro'
+import StepList from '../components/landing/StepList.astro'
+import { refId } from '../lib/blog.ts'
+import { countValues } from '../lib/counts.ts'
+import {
+  alternatesOf,
+  faqJsonLd,
+  landingOgImage,
+  landingPath,
+  publishedLandings,
+  templateText,
+  type LandingEntry,
+} from '../lib/landings.ts'
+
+export async function getStaticPaths() {
+  const all = (await getCollection('landings')) as unknown as LandingEntry[]
+  return publishedLandings(all).map((landing) => ({ params: { slug: landing.id }, props: { landing, all } }))
+}
+
+const { landing, all } = Astro.props as { landing: LandingEntry; all: LandingEntry[] }
+const d = landing.data
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+const counts = countValues()
+const tpl = templateText(d.locale)
+const byId = new Map(publishedLandings(all).map((l) => [l.id, l]))
+const related = d.related
+  .map((r) => byId.get(refId(r) ?? ''))
+  .filter((l): l is LandingEntry => l !== undefined)
+  .map((l) => ({ id: l.id, title: l.data.hero.title, eyebrow: l.data.hero.eyebrow }))
+---
+
+<Main
+  cta={false}
+  styles={[landingCss]}
+  lang={d.locale}
+  path={landingPath(landing.id)}
+  title={d.seo.title}
+  description={d.seo.description}
+  ogImage={landingOgImage(landing)}
+  noindex={d.seo.noindex || undefined}
+  jsonLd={faqJsonLd(landing, site, counts)}
+>
+  <Fragment slot="head">
+    {alternatesOf(landing, all, site).map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+  </Fragment>
+  <div class="omlp">
+    <LandingHero hero={d.hero} counts={counts} />
+    <SectionNav items={d.sectionNav} label={tpl.navLabel} />
+    {d.pains && <PainList pains={d.pains} counts={counts} />}
+    {d.features && <FeatureGrid features={d.features} counts={counts} />}
+    {
+      d.capabilities && (
+        <CapabilityMatrix capabilities={d.capabilities} comparison={d.comparison} locale={d.locale} counts={counts} />
+      )
+    }
+    {d.demo && <DemoBlock demo={d.demo} counts={counts} />}
+    {d.steps && <StepList steps={d.steps} counts={counts} />}
+    <Faq faq={d.faq} counts={counts} />
+    <CtaBand cta={d.cta} counts={counts} />
+    {d.sources && <SourceList sources={d.sources} locale={d.locale} />}
+    <RelatedLandings items={related} title={tpl.relatedTitle} />
+  </div>
+</Main>
