@@ -4,7 +4,8 @@
 # (markup, Webflow classes, breadcrumb, sidebar CTA, table of contents, carousels), so a template part differs only
 # where a note says why. Body text and content images were compared block by block (Webflow rich text against the
 # preview's): the same, apart from what a note names.
-# Landings and unique pages (Phases 5 and 6) are not listed: they fail until they are migrated.
+# The landings (Phase 5) mirror the live template; one differs, on purpose, as its note says. Unique pages (Phase 6)
+# are not listed: they fail until they are migrated.
 - url: /blog
   field: description
   note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), final text with the unique pages (Phase 6)."
@@ -192,5 +193,8 @@
   field: text
   note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /careers-jobs/senior-ai-engineering
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /baselinker-alternatywa
   field: title
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
