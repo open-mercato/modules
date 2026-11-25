@@ -1,7 +1,9 @@
-# Core module ID -> category (spec 4.4): the 46 modules of @open-mercato/core 0.9.0 plus ecommerce (0.10, listed in
-# builtin-upcoming.yml until a released core ships it).
-# widgets is not a module (core 0.9.0 has only src/modules/widgets/lib/injection.ts). The built-in generator
-# puts a core module missing here in operations and warns; validate fails on it only in a PR.
+# Core module ID -> category (spec 4.4): the 49 modules of @open-mercato/core 0.10.0 and 0.10.1, the 46 of 0.9.0
+# plus cart, ecommerce and promotions (checked in the published tarballs, 25 Nov 2026).
+# widgets is not a module (core 0.9.0 to 0.10.1 have only src/modules/widgets/lib/injection.ts). The built-in
+# generator puts a core module missing here in operations and warns; validate fails on it only in a PR.
+# promotions (rules, benefits, promotional codes) goes to marketing-loyalty: list prices stay in catalog and the cart
+# only applies its benefits.
 
 api_docs: devtools
 api_keys: auth-security
@@ -10,6 +12,7 @@ audit_logs: auth-security
 auth: auth-security
 availability: operations
 business_rules: ai-automation
+cart: orders-checkout
 catalog: catalog-pricing
 communication_channels: communication
 configs: storage-infrastructure
@@ -38,6 +41,7 @@ phone_calls: communication
 planner: operations
 portal: content-portal
 progress: storage-infrastructure
+promotions: marketing-loyalty
 push_notifications: communication
 query_index: search-analytics
 resources: operations

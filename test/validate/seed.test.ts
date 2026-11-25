@@ -307,9 +307,10 @@ describe('policy/ignore.yml (spec 11.3)', () => {
 describe('policy/builtin-categories.yml (spec 4.4, 11.2)', () => {
   const map = BuiltinCategoriesFile.parse(parse(readFileSync(join(ROOT, 'policy/builtin-categories.yml'), 'utf8')))
 
-  it('equals the spec 4.4 map: 46 core modules plus ecommerce, no widgets', () => {
-    expect(map).toEqual(SPEC_4_4)
-    expect(Object.keys(map)).toHaveLength(47)
+  // core 0.10.0 added cart and promotions (25 Nov 2026); the spec 4.4 map keeps its categories
+  it('equals the spec 4.4 map plus cart and promotions of core 0.10, no widgets', () => {
+    expect(map).toEqual({ ...SPEC_4_4, cart: 'orders-checkout', promotions: 'marketing-loyalty' })
+    expect(Object.keys(map)).toHaveLength(49)
     expect(map).not.toHaveProperty('widgets')
   })
 
@@ -325,7 +326,7 @@ describe('policy/builtin-categories.yml (spec 4.4, 11.2)', () => {
       .map(([id]) => id)
     expect(core).toHaveLength(46)
     expect(Object.values(all).every((m) => m.coreVersion === '0.9.0')).toBe(true)
-    expect(Object.keys(map).sort()).toEqual([...core, 'ecommerce'].sort())
+    expect(Object.keys(map).sort()).toEqual([...core, 'cart', 'ecommerce', 'promotions'].sort())
   })
 })
 
