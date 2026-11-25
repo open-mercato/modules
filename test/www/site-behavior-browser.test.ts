@@ -162,6 +162,7 @@ describe.skipIf(!required)('the behavior scripts in Chromium', () => {
     const box = (await p.locator('.omr-slide').first().boundingBox())!
     await p.mouse.click(box.x + box.width - 60, box.y + box.height / 2)
     expect(await counter(p)).toBe('03')
+    expect(await p.evaluate(() => !!document.activeElement?.closest('[aria-hidden="true"]'))).toBe(false)
   })
 
   it('loads the video from youtube-nocookie.com only on a click, and stops it on a move', async () => {

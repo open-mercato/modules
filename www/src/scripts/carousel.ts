@@ -110,6 +110,8 @@ function setUp(carousel: HTMLElement): void {
     if (!play || !slide || !media) return
     e.preventDefault()
     if (!slide.classList.contains('is-active')) {
+      // the click focused a slide that is hidden from assistive technology (a neighbour or a clone)
+      carousel.focus()
       show(slides.indexOf(slide))
       return
     }
