@@ -91,7 +91,9 @@ export async function linkRules(): Promise<LinkRules> {
       ['certified-partners', ids(partners.published)],
       ['careers-jobs', ids(jobs)],
     ]),
-    serves: servesSite(fileURLToPath(new URL('../../content/', import.meta.url))),
+    // from the repository root, as counts.ts reads the catalog's output: the same path from the source file and from
+    // the bundled chunk of the build (dist-www/.prerender/chunks/)
+    serves: servesSite(fileURLToPath(new URL('../../../www/content/', import.meta.url))),
   }
 }
 

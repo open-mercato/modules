@@ -2,6 +2,9 @@
 // the partner filter's facet logic and query string contract, who delivered a case study (a draft partner is never
 // linked), the SEO and JSON-LD of each detail page, and the link rules of bodies now that these routes exist. On the
 // real content of www/content/; the built pages themselves are checked by test/www/collections-build.test.ts.
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { PARTNER_AVAILABILITY_LABELS, PARTNER_BUDGET_LABELS } from '../../lib/schema/www-content.ts'
 import { linkAction, type LinkRules } from '../../www/src/lib/body-html.ts'
@@ -490,6 +493,19 @@ describe('links of bodies to the Phase 4 routes', () => {
       expect(linkAction(p, rules), p).toEqual({ kind: 'keep' })
     expect(rootPagePaths(CONTENT).has('/careers')).toBe(true)
     expect(linkAction('/style-guide', rules)).toEqual({ kind: 'live', href: `${ORIGIN}/style-guide` })
+  })
+
+  it('leaves a draft page out of the root pages, and refuses a folder that is not the www content', () => {
+    const tmp = mkdtempSync(join(tmpdir(), 'om-root-pages-'))
+    try {
+      mkdirSync(join(tmp, 'pages'))
+      writeFileSync(join(tmp, 'pages', 'home.yaml'), 'blocks: []\n')
+      writeFileSync(join(tmp, 'pages', 'about.yaml'), 'draft: true\nblocks: []\n')
+      expect([...rootPagePaths(tmp)]).toEqual(['/'])
+      expect(() => rootPagePaths(join(tmp, 'pages'))).toThrow('no pages folder')
+    } finally {
+      rmSync(tmp, { recursive: true, force: true })
+    }
   })
 })
 

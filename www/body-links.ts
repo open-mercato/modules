@@ -88,6 +88,8 @@ export function publishedYamlIds(dir: string): string[] {
 
 /** Site paths of the root namespace this build writes: the published landings and pages entries (`home` is `/`). */
 export function rootPagePaths(content: string): Set<string> {
+  // without the pages folder every link to a unique page would quietly point at the live site
+  if (!existsSync(join(content, 'pages'))) throw new Error(`${content}: no pages folder; is this the www content?`)
   const ids = [...publishedYamlIds(join(content, 'landings')), ...publishedYamlIds(join(content, 'pages'))]
   return new Set(ids.map((id) => (id === HOME_PAGE_SLUG ? '/' : `/${id}`)))
 }
