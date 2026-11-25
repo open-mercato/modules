@@ -1,8 +1,8 @@
 /* The 404 page of www.openmercato.com (www/src/pages/404.astro): a bare page, no navbar and no footer.
    Origin: the Webflow stylesheet of the live site, openmercato-dev.webflow.shared.aa54cdb44.min.css on
    cdn.prod.website-files.com, and the font smoothing style in the head of its pages, read on 25 Nov 2026. Kept: the
-   rules of html, body, *, img, h3 and a, then utility_*, padding-xxsmall, button and w-button the page uses, in their
-   order, with the Webflow variables they read resolved to their values.
+   rules of html, body, *, img, h3 and a, then w-button, w-form, utility_*, padding-xxsmall and button the page uses,
+   in their order, with the Webflow variables they read resolved to their values.
    The visual pass of the designer (D7) replaces this file. */
 
 * {
@@ -54,6 +54,9 @@ a {
   padding: 9px 15px;
   text-decoration: none;
   display: inline-block;
+}
+.w-form {
+  margin: 0 0 15px;
 }
 .utility_component {
   justify-content: center;

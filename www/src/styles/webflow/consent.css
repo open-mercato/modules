@@ -3,7 +3,8 @@
    cdn.prod.website-files.com, read on 25 Nov 2026. Kept: the rules of cookie-banner_*, text-color-alternate, button,
    is-secondary, is-small and w-inline-block the banner uses, in their order, with the Webflow variables they read
    resolved to their values. Each rule is scoped to .cookie-banner_component so it leaves the shared navbar's own
-   .button rules alone; the first rule restates what the banner inherits from the Webflow body (Geist, 1.5).
+   .button rules alone; the first rule restates what the banner inherits from the Webflow body (Geist, 1.5). The
+   Privacy link is not underlined, as it shows on the live page.
    The visual pass of the designer (D7) replaces this file. */
 
 .cookie-banner_component {
@@ -43,7 +44,7 @@
 }
 .cookie-banner_component .text-color-alternate {
   color: #fff;
-  text-decoration: underline;
+  text-decoration: none;
 }
 .cookie-banner_content {
   grid-column-gap: 2rem;
