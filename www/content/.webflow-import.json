@@ -557,6 +557,11 @@
       "sha256": "aa3f98af34cda754e4e29ce7e60cd798f51d82719b93f9c17183f17d320f9144"
     },
     {
+      "path": "www/content/redirects.yaml",
+      "webflowId": "6b04d5d918d7d77f974d156a",
+      "sha256": "0fb6ea05a1bfb0a87cd86d7c607ef4e54ce398cdf65cb734fb14fdb428816162"
+    },
+    {
       "path": "www/public/media/blog/69cee6b0b200584dc4783f1e-placeholder-1.jpg",
       "webflowId": "69cee6b0b200584dc4783f1e",
       "sha256": "8e2d65afe5b3323bc987f49d6d40685affdac1ca87e074327bbadeccf0e5a752"

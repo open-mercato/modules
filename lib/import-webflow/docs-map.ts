@@ -8,6 +8,21 @@ export const DOCS_ORIGIN = 'https://docs.openmercato.com'
 export const DOCS_HOME = `${DOCS_ORIGIN}/`
 export const DOCS_SITEMAP_URL = `${DOCS_ORIGIN}/sitemap.xml`
 
+/**
+ * The comment heading www/content/redirects.yaml. It marks the place of the Webflow 301 list (D8), which nobody can
+ * read through the API and which is copied from the Webflow panel at cutover step C4 (docs/RUNBOOK.md, Main site
+ * switch): those rules go first, before the docs map, so they match before the docs catch-all.
+ */
+export const REDIRECTS_HEADER = `# Redirects of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Data Model, redirects).
+# yarn om pages-site --merge writes them into the root _redirects in this order; the first matching rule wins.
+#
+# source: webflow-panel. The 301 list of Webflow (Site settings, Publishing, 301 redirects; decision D8), copied by
+# hand at cutover step C4 (docs/RUNBOOK.md, Main site switch). Empty until then. Its rules go right below this
+# comment, before the docs map. The importer keeps every rule whose source is not docs-map.
+#
+# source: docs-map. Written by yarn om import-webflow --only redirects; a re-run replaces these rules only.
+`
+
 export interface RedirectRule {
   from: string
   to: string
