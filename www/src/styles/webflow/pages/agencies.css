@@ -1,0 +1,21 @@
+/*
+ * /agencies, a mirror of the live page (owner's decision of 25 Nov 2026, until the designer's pass, D7, replaces it).
+ * Origin: https://www.openmercato.com/agencies, 25 Nov 2026. The live page has no embedded code of its own.
+ * Not live: live, the "3× the margin." box closes the section of the table; here it is a block of its own
+ * (blocks/agencies-margin.astro), so the section's bottom padding moves under the box.
+ */
+body.wf-agencies .section.om-agencies-math {
+  padding-bottom: 0;
+}
+body.wf-agencies .section.om-agencies-margin {
+  padding-top: 0;
+}
+/*
+ * A Webflow rule of the live stylesheet that site.css loses: there its `max-width: 991px` block of the table comes after
+ * the `max-width: 479px` one, so `.table_column { width: 20rem }` wins on a phone; live the column is 16rem wide.
+ */
+@media screen and (max-width: 479px) {
+  body.wf-agencies .table_column {
+    width: 16rem;
+  }
+}
