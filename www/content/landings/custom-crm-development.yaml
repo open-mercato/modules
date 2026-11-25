@@ -1,0 +1,223 @@
+webflowId: 6af5bb0dc82a4a4ddfdc5c3b
+locale: en
+kind: industry
+seo:
+  title: Custom CRM Development on an Open Foundation | Open Mercato
+  description: Scope a custom CRM with an Open Mercato implementation partner. Start with customer records, pipelines and permissions, then build your distinctive workflows.
+hero:
+  eyebrow: Custom CRM development
+  title: Build a custom CRM on working customer and sales modules.
+  lead: Start with customer records, deal pipelines, permissions and a modular application core. Put your delivery effort into the workflows, screens and integrations that make your business work.
+  primary:
+    label: Scope your CRM project
+    href: /contact?interest=custom-crm-development
+  secondary:
+    label: Explore implementation partners
+    href: /certified-partners
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Scope the build and the team who will maintain it.
+  items:
+    - title: The estimate starts with platform plumbing
+      body: Authentication, permissions, CRUD screens and common customer records take time to build. Reuse the Open Mercato foundation and make the business-specific scope visible in the estimate.
+      art:
+        src: /media/landings/6af5f54c44a15bad8e0b9549-om-lp-access-v3.svg
+        alt: ""
+        decorative: true
+    - title: The prototype misses the difficult cases
+      body: Permissions, data migration, integrations and exception handling determine whether the CRM works in production. Put representative transactions and acceptance tests into the pilot.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+    - title: The original developer becomes the operating plan
+      body: Buyers worry about maintenance and continuity. Agree source ownership, documentation, deployment access and support responsibilities as delivery milestones.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Reuse the CRM, permissions and application infrastructure.
+  items:
+    - title: Core CRM behavior
+      body: Reuse people, companies, deals, notes and activity workflows.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Application infrastructure
+      body: Build on authentication, organization scope, feature permissions and a consistent data-access architecture.
+      art:
+        src: /media/landings/6af5f54c44a15bad8e0b9549-om-lp-access-v3.svg
+        alt: ""
+        decorative: true
+    - title: Custom business behavior
+      body: Create entities, screens, integrations and automation around your operating process.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Engineering continuity
+      body: Use a public TypeScript foundation with documented module conventions and a network of implementation partners.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Put the first sprint into your business workflow.
+  lead: Compare the starting points before custom development begins. Open Mercato brings working business modules and application foundations into the project.
+  label: What your team gets
+  tagline: START WITH THE CORE READY
+  columns:
+    - name: Open Mercato
+      note: Ready modules + an extensible core
+    - name: Build from scratch
+      note: Blank application, before development
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Company and contact management
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Deal pipeline and stages
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Notes and customer activities
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Quotes and sales orders
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Authentication and role permissions
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build or integrate
+        - label: Organization-scoped data access
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Custom-field and entity extension framework
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build required
+        - label: Workflow engine and module conventions
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Build or integrate
+    - title: Capabilities available in both
+      rows:
+        - label: Choose your deployment infrastructure
+          ours: "yes"
+          theirs: "yes"
+        - label: Develop business-specific screens and rules
+          ours: "yes"
+          oursNote: Custom development
+          theirs: "yes"
+          theirsNote: Custom development
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: "Comparison of starting points: a cross means the blank application does not include that capability yet. Both approaches involve development, integration, testing and ongoing operation."
+  reviewed: "2026-11-12"
+  sources:
+    - label: Open Mercato framework and licence
+      url: https://github.com/open-mercato/open-mercato
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Delivery question
+    - Open Mercato
+  rows:
+    - topic: Customer model
+      theirs: Which relationships and records are already covered?
+      ours: Companies, people and deals provide a starting model to extend.
+    - topic: Business rules
+      theirs: What needs configuration and what needs development?
+      ours: List required fields, workflows, screens and integrations explicitly.
+    - topic: Migration
+      theirs: How will history and relationships be validated?
+      ours: Agree source mapping, sample imports and reconciliation criteria.
+    - topic: Production readiness
+      theirs: Who is responsible for hosting, access and recovery?
+      ours: Assign those responsibilities and test the operating procedures.
+    - topic: Handover
+      theirs: Can another team maintain the system later?
+      ours: Deliver source, documentation, deployment access and a support agreement.
+demo:
+  eyebrow: Covo · custom application on Open Mercato
+  title: See how a team extended the foundation into a distinct product.
+  body: Covo's team built a travel wallet, eSIM lifecycle and operator back office on Open Mercato. The case shows how domain-specific records and workflows can be delivered on the same application foundation.
+  cta:
+    label: Read the Covo story
+    href: /case-studies/covo-travel-esim-wallet
+  image:
+    src: /media/landings/6af2d0077efaf61368e70f1b-covo-travel-esim-wallet-1-gradient-clean.jpg
+    alt: See how a team extended the foundation into a distinct product.
+steps:
+  title: Turn a broad CRM request into a testable delivery scope.
+  items:
+    - title: Map the work
+      body: Describe users, records, decisions and handoffs. Bring examples of the cases the current tools handle poorly.
+    - title: Define the first release
+      body: Agree the core workflows, data model, integrations and measurable acceptance criteria.
+    - title: Build with real users
+      body: Configure and extend the foundation, rehearse imports and test a complete workflow with representative data.
+    - title: Deliver the operating model
+      body: Document deployment, support and maintenance responsibilities. Train the team and agree the next release priorities.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Who builds the custom CRM?
+      answer: Your internal engineering team or an Open Mercato implementation partner. The partner directory includes agencies offering consulting, custom development, integration and migration services.
+    - question: How much does a custom CRM cost?
+      answer: The main variables are business rules, integrations, migration, user interfaces and ongoing support. Scope a first release and compare proposals against the same acceptance criteria.
+    - question: Who owns the code?
+      answer: The Open Mercato core is MIT licensed. Confirm ownership and access for project-specific code, infrastructure, accounts and third-party components in the agreement with your delivery team.
+    - question: Can AI build the whole application for us?
+      answer: AI-assisted development can work within the framework's conventions. Production delivery still needs requirements, review, testing, migration validation and an accountable operating team.
+cta:
+  title: Bring three workflows worth building around.
+  body: We can help you find a delivery partner and shape a first release with clear outcomes, integrations and acceptance criteria.
+  primary:
+    label: Scope your CRM project
+    href: /contact?interest=custom-crm-development
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Buyer discussion of custom CRM maintenance and delivery
+      url: https://www.reddit.com/r/CRMSoftware/comments/1vbs4ze/has_anyone_here_actually_built_their_own_crm/
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato production-readiness documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/deployment/production-readiness.mdx
+    - label: Open Mercato certified implementation partners
+      url: https://www.openmercato.com/certified-partners
+    - label: Covo travel wallet and operator back office case study
+      url: https://www.openmercato.com/case-studies/covo-travel-esim-wallet

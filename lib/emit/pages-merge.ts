@@ -17,7 +17,7 @@ import {
   siteDir,
   type SiteConfig,
 } from '../core/site-host.ts'
-import { NON_PAGE_SEGMENTS } from '../schema/www-content.ts'
+import { NON_PAGE_SEGMENTS, PENDING_UNIQUE_PAGES } from '../schema/www-content.ts'
 import { checkPagesLayout, htmlRefs, nestedRootEntries, NOINDEX_ROOT_FILE } from './pages-layout.ts'
 import {
   DYNAMIC_TO,
@@ -33,12 +33,13 @@ import {
 export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as const
 
 /**
- * Pages of the main site that Webflow serves until their phase and that the www pages link on purpose: /careers, the
- * list of jobs, a unique page of Phase 6, which each job page's breadcrumb links on the live site. A noindex preview
- * lists them as pending, as the header's links; production fails on them. The detail pages of the collections (blog
- * posts, case studies, partners, jobs) are built since Phase 4, so a link to one must name a built page.
+ * Pages of the main site that Webflow serves until their phase and that the www pages link on purpose
+ * (PENDING_UNIQUE_PAGES of lib/schema/www-content.ts: /careers, the list of jobs each job page's breadcrumb links, and
+ * /contact and /crm, which the landings' calls to action link). A noindex preview lists them as pending, as the header's
+ * links; production fails on them. The detail pages of the collections (blog posts, case studies, partners, jobs) are
+ * built since Phase 4, so a link to one must name a built page.
  */
-export const PENDING_PAGE = /^\/careers$/
+export const PENDING_PAGE = new RegExp(`^/(?:${PENDING_UNIQUE_PAGES.join('|')})$`)
 
 /**
  * Root files the merge writes itself: a build that brings its own would be overwritten without notice. The main site's

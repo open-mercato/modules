@@ -1,0 +1,224 @@
+webflowId: 6af5bb0d8a176f6a2538fa66
+locale: en
+kind: industry
+seo:
+  title: LOT and Product Traceability with TraceCore | Open Mercato
+  description: Explore TraceCore on Open Mercato for connected recipes, supplier LOTs, production and customer orders. Scope traceability around your manufacturing operation.
+hero:
+  eyebrow: Product and LOT traceability software
+  title: Follow the batch. Find the records behind it.
+  lead: Connect incoming material LOTs, recipes, production and customer orders. TraceCore, built on Open Mercato, brings the manufacturing history into one operational system for food and supplement producers.
+  primary:
+    label: Discuss your traceability workflow
+    href: /contact?interest=lot-traceability-software
+  secondary:
+    label: Read the TraceCore case study
+    href: "#proof"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: A batch question should have a clear place to start.
+  items:
+    - title: The history is spread across files
+      body: Supplier LOTs, production notes and shipment records can require a manual reconstruction. TraceCore connects the records around the batch.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: The recipe and actual consumption drift apart
+      body: The intended recipe is only part of the story. Tie production work to the materials and LOTs actually used.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+    - title: The commercial record ends at the factory door
+      body: A traceability investigation also needs customer and order context. Connect sales, production and warehouse information in the same system.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Keep the manufacturing chain connected.
+  items:
+    - title: Incoming material history
+      body: Work with supplier records and LOT relationships across the operational chain.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb17a1f-om-lp-history-v3.svg
+        alt: ""
+        decorative: true
+    - title: Recipes and production
+      body: Connect recipes, production tasks and recorded material consumption.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+    - title: Warehouse context
+      body: TraceCore's domain workflow includes locations, stock, expiration dates and inventory audits.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Customer and shipment context
+      body: Link the production story to customer orders and shipment documentation.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Keep the batch number. Connect the history behind it.
+  lead: Compare separate batch logs with TraceCore's domain implementation on Open Mercato, built around production and LOT relationships.
+  label: What your team gets
+  tagline: CONNECTED LOT HISTORY
+  columns:
+    - name: Open Mercato
+      note: With the TraceCore implementation
+    - name: Manual batch logs
+      note: Separate spreadsheets and documents
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Native links from material LOTs to production
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "no"
+          theirsNote: Manual reconstruction
+        - label: Recipes linked to recorded material consumption
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "no"
+          theirsNote: Separate documents
+        - label: Connected production tasks and stock movements
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "no"
+          theirsNote: Manual reconciliation
+        - label: Customer orders connected to production history
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "no"
+          theirsNote: Manual cross-references
+        - label: Integrated warehouse and inventory-audit workflow
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "no"
+          theirsNote: Separate logs
+    - title: Capabilities available in both
+      rows:
+        - label: Store supplier and batch identifiers
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "yes"
+          theirsNote: Manual records
+        - label: Record stock locations and expiry dates
+          ours: "yes"
+          oursNote: TraceCore
+          theirs: "yes"
+          theirsNote: Manual records
+    - title: Implementation and scope
+      rows:
+        - label: Validation against your quality requirements
+          ours: build
+          oursNote: Project-specific validation
+          theirs: build
+          theirsNote: Process validation
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: The highlighted column describes TraceCore, a specialized implementation on Open Mercato. These domain features are not all part of the generic core. Quality validation and regulatory requirements are assessed for your operation.
+  reviewed: "2026-11-12"
+  sources:
+    - label: TraceCore implementation
+      url: https://www.openmercato.com/case-studies/tracecore
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Traceability question
+    - Open Mercato
+  rows:
+    - topic: Supplier LOT to production
+      theirs: Can you identify the input LOTs used in a finished batch?
+      ours: TraceCore includes native LOT relationships across materials and production.
+    - topic: Recipe to actual work
+      theirs: Can you connect the definition to recorded consumption?
+      ours: Recipes, tasks and material consumption share an operational context.
+    - topic: Warehouse history
+      theirs: Can location and expiry information be followed?
+      ours: The domain implementation includes stock, locations, expiry and inventory audits.
+    - topic: Batch to customer
+      theirs: Can the investigation reach the commercial record?
+      ours: Customer orders and shipment documentation connect to the manufacturing workflow.
+    - topic: Deployment
+      theirs: Where should manufacturing data and backups live?
+      ours: TraceCore supports on-premise or dedicated VPS deployment.
+    - topic: Validation
+      theirs: What evidence does your quality process require?
+      ours: Agree validation, access, audit and retention requirements with your quality team.
+demo:
+  eyebrow: TraceCore · built by BGW Pharma
+  title: Built from BGW Pharma's manufacturing experience.
+  body: TraceCore grew out of premium supplement production at BGW Pharma. The team used that experience to build connected production, warehouse and sales workflows on Open Mercato.
+  cta:
+    label: Explore TraceCore
+    href: /case-studies/tracecore
+  image:
+    src: /media/landings/6af2d0178940a4595efed73a-tracecore-3-gradient-clean.jpg
+    alt: Built from BGW Pharma's manufacturing experience.
+steps:
+  title: Start with one product family and its LOT history.
+  items:
+    - title: Map the traceability chain
+      body: Identify supplier LOTs, recipes, production records, stock movements and shipment references.
+    - title: Define the domain rules
+      body: Agree units, expiry, material substitutions, corrections and the records the quality team needs.
+    - title: Rehearse a batch investigation
+      body: Load representative data and follow an input LOT through production to the customer order. Review missing links.
+    - title: Validate and roll out
+      body: Agree acceptance criteria, access, retention and operating procedures before introducing the system more widely.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Is TraceCore part of the basic CRM?
+      answer: TraceCore is a specialist manufacturing implementation built on Open Mercato. Its production, warehouse and LOT capabilities belong to that domain product and implementation scope.
+    - question: Does the software guarantee regulatory compliance?
+      answer: Your quality and compliance requirements need their own assessment and validation. Scope audit evidence, electronic records, signatures, retention and operational procedures with the responsible specialists.
+    - question: Can we deploy it on premises?
+      answer: TraceCore's published deployment options include on-premise and dedicated VPS. Discuss infrastructure, backup, recovery and support requirements with the implementation team.
+    - question: Can historical spreadsheet data be imported?
+      answer: Historical data needs mapping and quality checks. A sample helps establish whether LOT, material, production and shipment relationships can be reconstructed and what gaps remain.
+cta:
+  title: Bring one batch and the questions it needs to answer.
+  body: Use its supplier LOTs, production records and customer orders to scope a traceability workflow with the right domain team.
+  primary:
+    label: Discuss your traceability workflow
+    href: /contact?interest=lot-traceability-software
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Engineers discussing practical traceability gaps
+      url: https://www.reddit.com/r/womenEngineers/comments/vnji6r/
+    - label: TraceCore manufacturing and LOT traceability case study
+      url: https://www.openmercato.com/case-studies/tracecore
+    - label: TraceCore implementation partner
+      url: https://www.openmercato.com/certified-partners/tracecore

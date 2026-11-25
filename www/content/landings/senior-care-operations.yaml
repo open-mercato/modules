@@ -1,0 +1,222 @@
+webflowId: 6af5bb0e8ef903bbd1882f42
+locale: en
+kind: industry
+seo:
+  title: Senior Care Operations Software Demo | Open Mercato
+  description: Explore a senior care operations demo with clients, schedules, visits and signed service confirmations. Build a tailored non-medical care workflow on Open Mercato.
+hero:
+  eyebrow: Senior care operations · workflow demo
+  title: Connect the planned visit to the signed service record.
+  lead: Give branch managers a connected view of clients, care orders, schedules and service confirmations. Explore the Open Mercato demo built around German non-medical senior care, then scope the workflow for your operation.
+  primary:
+    label: Discuss your care workflow
+    href: /contact?interest=senior-care-operations
+  secondary:
+    label: Explore the workflow case study
+    href: "#proof"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Keep schedules, care orders and service confirmations connected.
+  items:
+    - title: A schedule change affects several people
+      body: Distributed teams need the client, care order and assigned visit to stay connected. The demo shows a shared operational view for branch managers.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: A completed visit still needs confirmation
+      body: Missing signatures and disputed records create follow-up work. Model each confirmation state and make the next action visible.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+    - title: The software's workflow misses a local rule
+      body: Care operators have specific branch and documentation processes. Use a customizable foundation to scope those rules with the team responsible for them.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Follow one visit through the operational workflow.
+  items:
+    - title: Clients and care orders
+      body: The demo links client records to the work that has been planned.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Weekly schedules
+      body: Managers can review a branch's care schedule and today's visits.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+    - title: Service-confirmation states
+      body: Follow draft, pending-signature, disputed, signed and validated records.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb17a1f-om-lp-history-v3.svg
+        alt: ""
+        decorative: true
+    - title: A tailored operating layer
+      body: Care-specific dashboards, scheduling rules and validation sit on Open Mercato's application foundation.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: A clearer path from planned visit to confirmed service.
+  lead: Compare separate schedules and paper records with the workflow demonstrated by Senior Care Operations on Open Mercato.
+  label: What your team gets
+  tagline: A CONNECTED CARE WORKFLOW
+  columns:
+    - name: Open Mercato
+      note: Senior Care Operations demo
+    - name: Schedules + paper
+      note: Separate planning and service records
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Linked clients, care orders and visits
+          ours: "yes"
+          oursNote: Demonstrated
+          theirs: "no"
+          theirsNote: Manual cross-references
+        - label: One branch workspace for schedules and visits
+          ours: "yes"
+          oursNote: Demonstrated
+          theirs: "no"
+          theirsNote: Separate records
+        - label: Visible pending, disputed and validated states
+          ours: "yes"
+          oursNote: Demonstrated
+          theirs: "no"
+          theirsNote: Manual follow-up
+    - title: Capabilities available in both
+      rows:
+        - label: Maintain client and care-order records
+          ours: "yes"
+          oursNote: Demonstrated
+          theirs: "yes"
+          theirsNote: Manual records
+        - label: Plan a weekly visit schedule
+          ours: "yes"
+          oursNote: Demonstrated
+          theirs: "yes"
+          theirsNote: Manual schedule
+        - label: Keep signed service confirmations
+          ours: "yes"
+          oursNote: Demo confirmation flow
+          theirs: "yes"
+          theirsNote: Paper records
+    - title: Implementation and scope
+      rows:
+        - label: Business-specific application rules
+          ours: build
+          oursNote: Custom implementation
+          theirs: "no"
+          theirsNote: Manual procedures
+        - label: Production integrations and validation
+          ours: build
+          oursNote: Scope for your jurisdiction
+          theirs: build
+          theirsNote: Process and system work
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: The Open Mercato column shows a hackathon demo for German non-medical senior care. A check marks a demonstrated feature; a production rollout requires implementation and validation for your service model.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Senior Care Operations demo
+      url: https://www.openmercato.com/case-studies/senior-care-operations
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Operating requirement
+    - Open Mercato
+  rows:
+    - topic: Client context
+      theirs: Can the office find the care order behind a scheduled visit?
+      ours: The demo connects clients, care orders and the manager workspace.
+    - topic: Scheduling
+      theirs: Can managers see the planned work across the branch?
+      ours: Weekly schedules and today's visits are demonstrated.
+    - topic: Confirmation
+      theirs: Which visits still need a signature or a review?
+      ours: Explicit confirmation states show the progression toward validation.
+    - topic: Caregiver experience
+      theirs: What must work on a phone, with the connectivity staff have?
+      ours: Mobile and offline requirements must be scoped and tested for your deployment.
+    - topic: Billing and verification
+      theirs: Which payer and visit-verification systems are required?
+      ours: Assess and implement the local integrations and validation requirements separately.
+    - topic: Production operation
+      theirs: Who owns permissions, support, data retention and recovery?
+      ours: Define those responsibilities in the delivery and operating plan.
+demo:
+  eyebrow: Senior Care Operations · hackathon demo
+  title: A concrete demo from care order to validated confirmation.
+  body: The.good.code built the senior-care domain layer on Open Mercato during a hackathon. The case study shows scheduling, manager dashboards and the service-confirmation lifecycle.
+  cta:
+    label: Explore the demo case study
+    href: /case-studies/senior-care-operations
+  image:
+    src: /media/landings/6af2d010a5dc194210458bf1-senior-care-operations-1-gradient-clean.jpg
+    alt: A concrete demo from care order to validated confirmation.
+steps:
+  title: Start with one branch's real coordination process.
+  items:
+    - title: Map the service
+      body: Describe clients, caregivers, branches, care orders and the records needed to confirm a visit.
+    - title: Review local requirements
+      body: Identify privacy, access, billing, signature and visit-verification requirements with the responsible team.
+    - title: Prototype the branch workflow
+      body: Adapt the demo to representative schedules, changes and disputed or missing confirmations.
+    - title: Validate before production
+      body: Test usability, devices, integrations and recovery, then agree support and rollout responsibilities.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Is this a production-ready care platform we can buy today?
+      answer: The reference shown here is a hackathon workflow demo. A production system requires scoped development, integration, validation and operating arrangements for your organization.
+    - question: Does it include US Medicaid EVV or insurance billing?
+      answer: Those capabilities are outside the demonstrated German non-medical care workflow. If they are required, assess their interfaces, certification and implementation needs as part of the project.
+    - question: Can caregivers work offline?
+      answer: Offline and device behavior must be designed and verified for the implementation. Bring the devices, connectivity conditions and daily tasks your caregivers use to the evaluation.
+    - question: Why start from this demo?
+      answer: It gives your team a concrete model of clients, schedules and confirmation states to review. You can identify the changes your operation needs before committing to a full production scope.
+cta:
+  title: Bring a week's schedule and its unfinished paperwork.
+  body: We can help you assess where a tailored workflow could connect the visits, people and confirmations your team manages.
+  primary:
+    label: Discuss your care workflow
+    href: /contact?interest=senior-care-operations
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Capterra analysis of 250 home-care software reviews
+      url: https://www.capterra.com/resources/best-home-care-agency-software-reviews-analysis/
+    - label: Senior Care Operations demo case study
+      url: https://www.openmercato.com/case-studies/senior-care-operations

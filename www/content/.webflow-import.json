@@ -397,6 +397,166 @@
       "sha256": "1a1cf1874c08bd1fa764d4b03bf18e944c8aa910f5ee6db6264699d761808365"
     },
     {
+      "path": "www/content/landings/agile-crm-alternative.yaml",
+      "webflowId": "6af5dc09f660e23710d4ae0c",
+      "sha256": "0ad06d43556d67f6c620bc4ba42f0802d8f4fdf882f48df5fd6d981726704f8c"
+    },
+    {
+      "path": "www/content/landings/attio-alternative.yaml",
+      "webflowId": "6af5dbfe27b4a6aa95200dc5",
+      "sha256": "e59a6319205b420d1261d6d2eac369081c061b1a8e14e1b5328a2318cb4e0126"
+    },
+    {
+      "path": "www/content/landings/b2b-order-management.yaml",
+      "webflowId": "6af5bb0c3f38e40961e0dd65",
+      "sha256": "2cc72c4c8f788e7d224b689640deaac5e46e89facb1d4a1c44d240c2b0f05c20"
+    },
+    {
+      "path": "www/content/landings/baselinker-alternative.yaml",
+      "webflowId": "6af5dc11d99ef49d244210fd",
+      "sha256": "e7d0b334a59d6d35f3c21b196db90cde2a0cd734703696ae33a9c8f9e4b73f37"
+    },
+    {
+      "path": "www/content/landings/baselinker-alternatywa.yaml",
+      "webflowId": "6af5dc1131c663c24870d103",
+      "sha256": "c2b3cc50d15473d53278748f73b7b0625e2380f2c4aa84a942f02d7000c337c2"
+    },
+    {
+      "path": "www/content/landings/bitrix24-alternative.yaml",
+      "webflowId": "6af5dc07eadd13285373b9e4",
+      "sha256": "52a80090e727ef3256ceeff6afa3ed2158e12737cea918524cab00516b957903"
+    },
+    {
+      "path": "www/content/landings/capsule-crm-alternative.yaml",
+      "webflowId": "6af5dc06500a555138533480",
+      "sha256": "18b6790e087a133396e20032bc2b7a07b4a95c111ec85be00c6efd27976d136c"
+    },
+    {
+      "path": "www/content/landings/close-crm-alternative.yaml",
+      "webflowId": "6af5dc05f0f662f62b5f2179",
+      "sha256": "255d235df7839563b841df16bdccd9f112f1ad54f9f2f1f6ca576977262307f0"
+    },
+    {
+      "path": "www/content/landings/copper-crm-alternative.yaml",
+      "webflowId": "6af5dc04838ea3d640f44417",
+      "sha256": "66b3a5e76acb39f04de7920265f45fbbfd247f2df87aed707e2f993579205a0a"
+    },
+    {
+      "path": "www/content/landings/crm-for-manufacturing.yaml",
+      "webflowId": "6af5bb0bc82a4a4ddfdc5ac0",
+      "sha256": "d2d1398026b3b990900b753633512158f5fb9cc28ef86e3a26b997625997f876"
+    },
+    {
+      "path": "www/content/landings/crm-for-wholesale-distributors.yaml",
+      "webflowId": "6af5bb0c7fcfcbec64855ac9",
+      "sha256": "fb0c95947e9d0dd73aee15c041a6078067282177f1fbb9e5f15191618bd9c410"
+    },
+    {
+      "path": "www/content/landings/custom-crm-development.yaml",
+      "webflowId": "6af5bb0dc82a4a4ddfdc5c3b",
+      "sha256": "cac21eed34d99c5e0f746ffa1551b51f0a97a10275b91475740bec473d259521"
+    },
+    {
+      "path": "www/content/landings/dynamics-365-alternative.yaml",
+      "webflowId": "6af5dc0083424c68bb45fa14",
+      "sha256": "bf5ac163a32a23f61911e25d2aa3f95aed9111b5e925f7e964a287f467b4677d"
+    },
+    {
+      "path": "www/content/landings/freshsales-alternative.yaml",
+      "webflowId": "6af5dc03ba6f0c585fa52c3e",
+      "sha256": "f9a40438e738f18f62875b58a91d7fa28d632a6ec53b121bb40b7d7448a7789b"
+    },
+    {
+      "path": "www/content/landings/hubspot-alternative.yaml",
+      "webflowId": "6af5bb0a85282a5c93e5e93c",
+      "sha256": "25fbb14a7c91b4281451b67c324f8e0f413cd8ba18c987f1fceb4d7fbde89542"
+    },
+    {
+      "path": "www/content/landings/insightly-alternative.yaml",
+      "webflowId": "6af5dbff1685ce86d959742f",
+      "sha256": "7026dc6161808930acc1fa3dc3fd9ebb897cf66e5710e4e2601a15c5bfbef4c7"
+    },
+    {
+      "path": "www/content/landings/keap-alternative.yaml",
+      "webflowId": "6af5dc083a4c637c6a119783",
+      "sha256": "a0f2aeb14e88815d88d3aa58cfec1ba130fd5ed00e0ff3aced268bed65680759"
+    },
+    {
+      "path": "www/content/landings/lot-traceability-software.yaml",
+      "webflowId": "6af5bb0d8a176f6a2538fa66",
+      "sha256": "011797bfc1fe7561702791e3d49860e18754fc68599d2c244d2b9d2c1f7e128d"
+    },
+    {
+      "path": "www/content/landings/monday-crm-alternative.yaml",
+      "webflowId": "6af5dc02eadd13285373b6c0",
+      "sha256": "01511a473fb69362c105aaf42b861b83fb55205bfe3ba561847215c30de534e9"
+    },
+    {
+      "path": "www/content/landings/nutshell-crm-alternative.yaml",
+      "webflowId": "6af5dc05afeea37c7dd77600",
+      "sha256": "044793f57222892d2c319def0778ff7650e98f9067e95a04ca08d0bc96f44b0b"
+    },
+    {
+      "path": "www/content/landings/odoo-alternative.yaml",
+      "webflowId": "6af5bb0a1eb33a26d24418a8",
+      "sha256": "8af21dc5b0ed339eef039844fe08959691eec542ba59533883e7839d928b6dd5"
+    },
+    {
+      "path": "www/content/landings/pipedrive-alternative.yaml",
+      "webflowId": "6af5dbfc1685ce86d959730f",
+      "sha256": "76ed7414cdc6f0c3c266c9d60c5b13755b08485d3192ede4c1d7fae2abd8a487"
+    },
+    {
+      "path": "www/content/landings/salesforce-alternative.yaml",
+      "webflowId": "6af5bb0a85282a5c93e5e909",
+      "sha256": "6225303ced04b5bcc1ebb1d66fd15c765154a4b639afd14f8e43dc3f6ad12c96"
+    },
+    {
+      "path": "www/content/landings/salesmate-alternative.yaml",
+      "webflowId": "6af5dc09a7c004c4016276d6",
+      "sha256": "f433764c025aab5f6dfb5dec4b826c059732cfef3149bcfd688951beed74bf35"
+    },
+    {
+      "path": "www/content/landings/self-hosted-crm.yaml",
+      "webflowId": "6af5b72845753384a5ec7a6d",
+      "sha256": "aea7da8b966aa490615547dd23cae5dbe522fd5d34619998b125275df2bf9a4b"
+    },
+    {
+      "path": "www/content/landings/senior-care-operations.yaml",
+      "webflowId": "6af5bb0e8ef903bbd1882f42",
+      "sha256": "a517bc0172a536ad7c9cb437618da4df2dad36c267a58e488f84df9c25c54d62"
+    },
+    {
+      "path": "www/content/landings/sugarcrm-alternative.yaml",
+      "webflowId": "6af5dc0aa231bf864a3c42e6",
+      "sha256": "98a1fd2fff4623bad2aa0020c6cb270023098a01d829923f4c2965790bf4ce59"
+    },
+    {
+      "path": "www/content/landings/suitecrm-alternative.yaml",
+      "webflowId": "6af5dc10eadd13285373bd88",
+      "sha256": "bb1abf7dde764d16998de2c9846c9ae56cc1d8523cd0296d94e9742bccf30665"
+    },
+    {
+      "path": "www/content/landings/twenty-crm-alternative.yaml",
+      "webflowId": "6af5dc0d00d7729ef7d4af1c",
+      "sha256": "eaec2a50dade4c4cfe495ea33dc7e3cf29224fe0432b9b63f03c6f9ccdd37349"
+    },
+    {
+      "path": "www/content/landings/vtiger-alternative.yaml",
+      "webflowId": "6af5dc0ea231bf864a3c43e4",
+      "sha256": "a62398475c886c21b65c4fe34e5c42e79d6ca9a4b47990dc78870228deefb871"
+    },
+    {
+      "path": "www/content/landings/zendesk-sell-alternative.yaml",
+      "webflowId": "6af5dc0b232bc37f21b510cb",
+      "sha256": "c93a81ac8a6f28e4da575446a51f076e472fa3faa5da3f48586e8e14edfa46a9"
+    },
+    {
+      "path": "www/content/landings/zoho-crm-alternative.yaml",
+      "webflowId": "6af5dbfddf06b21821d71fbc",
+      "sha256": "22e5d058ec8b4a9eff7b14b6bbe9b969100ec261a4d08f037e6c6b5749f793dd"
+    },
+    {
       "path": "www/content/partner-industries.yaml",
       "webflowId": "6a2ad8fe4ffe0487fdfd5328",
       "sha256": "dbb2d76d1dc55c2efe31cf24829d9f4b9130e9855d411c8a9fd8f667386a59d3"
@@ -1460,6 +1620,91 @@
       "path": "www/public/media/case-studies/6b055baf2edeb6ac37618fa8-6b055976a1eb379e08798a47-creativaos-bookings.jpeg",
       "webflowId": "6b055baf2edeb6ac37618fa8",
       "sha256": "16c7ffc270decccdc4c51fc0cf2d12664b066057580be91f5fca4d552c537c72"
+    },
+    {
+      "path": "www/public/media/landings/6af2d0077efaf61368e70f1b-covo-travel-esim-wallet-1-gradient-clean.jpg",
+      "webflowId": "6af2d0077efaf61368e70f1b",
+      "sha256": "0336b78bf1e25f0711102695946d7617f4c5a3e85f144ee3adaf498db437a14a"
+    },
+    {
+      "path": "www/public/media/landings/6af2d010a5dc194210458bf1-senior-care-operations-1-gradient-clean.jpg",
+      "webflowId": "6af2d010a5dc194210458bf1",
+      "sha256": "aa6cbc5b95a993cbe1fbc15a1cfff25b761df05aa891893b238cf7b597120252"
+    },
+    {
+      "path": "www/public/media/landings/6af2d0178940a4595efed73a-tracecore-3-gradient-clean.jpg",
+      "webflowId": "6af2d0178940a4595efed73a",
+      "sha256": "376e765b15a48fc43d426b7c7168e0fde6e70d8c56d0ce7b214d3814de05e72b"
+    },
+    {
+      "path": "www/public/media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png",
+      "webflowId": "6af5bb329b98d27ae6a88d6e",
+      "sha256": "c39a4d62d4575adbcd559c3cd1f2400750962174ab48d65a933fe7b16b0365fd"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg",
+      "webflowId": "6af5f54a987f197223f70d6d",
+      "sha256": "da30e5f199f36d96f8a01f20bc920329b9affacb8fca6f0c223b6a0e673e864f"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg",
+      "webflowId": "6af5f54aacc44024cbb1c372",
+      "sha256": "2581e90ca53d13811eda768a502d167f436955187ad374b9c0167936042ab0ee"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg",
+      "webflowId": "6af5f54b1b98315466ed31c0",
+      "sha256": "b65a0d063cdb92c656e46fb8a8a6e199500cbbf5ea4c1b80c67683dea5039888"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg",
+      "webflowId": "6af5f54b80a055a87fa948c5",
+      "sha256": "14c9a45a289986f99228d381b97bf5b119750839c297edde3af6401a2cb207c4"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg",
+      "webflowId": "6af5f54b8284a0c81e2b6c4d",
+      "sha256": "31b9d045b20f7628867bcd37d517e5ead2a7af935726078bc3123ed5ee85aed3"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg",
+      "webflowId": "6af5f54bc76a29afdf67a3ca",
+      "sha256": "6cc9215308222012d2e5d78fe14cc073c29ecac0db2077eaba91bc7d5d7f3ad2"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg",
+      "webflowId": "6af5f54c28ee1822c15f9c7c",
+      "sha256": "b589ce9d5011c77707b77906b1046b8b91efabaaa9dbc6e1988732515f8da494"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54c44a15bad8e0b9549-om-lp-access-v3.svg",
+      "webflowId": "6af5f54c44a15bad8e0b9549",
+      "sha256": "5d4997173431e07efd0341b60df1bd8f4dcf5bfc7cd327f9fde293bf5816c628"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg",
+      "webflowId": "6af5f54ca716baf24131cd6a",
+      "sha256": "2d49ce59c44ee220dc73d68e466a3adfb7969f418a79d2fded57d6407e741d27"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg",
+      "webflowId": "6af5f54ced23f8851fb179ef",
+      "sha256": "95da0aa0d67be28eb94bc03fc133269e7d2901cf1e92e54a11e15fc5c40f3e5b"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54ced23f8851fb17a1f-om-lp-history-v3.svg",
+      "webflowId": "6af5f54ced23f8851fb17a1f",
+      "sha256": "3cc0c2e262ff35f88b2a0d8a471a7d3526d45de617580b1b512f7dadf5029135"
+    },
+    {
+      "path": "www/public/media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg",
+      "webflowId": "6af5f54d0e00f12bff84c20b",
+      "sha256": "070c0ac09fa013494f095db6cc22a960e555556df9a1d3f17e94fb096d39b949"
+    },
+    {
+      "path": "www/public/media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg",
+      "webflowId": "6af5fc4085c3fe8aec1f28cf",
+      "sha256": "0102f6590c20cbfcec613caba76707092d3e43c1fadb64d3734dababfc8ca78d"
     },
     {
       "path": "www/public/media/partners/6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo.webp",

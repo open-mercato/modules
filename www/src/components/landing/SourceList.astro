@@ -1,0 +1,29 @@
+---
+// The sources of a landing (`omlp-sources`): a details element whose summary carries the review date, then the links.
+import type { LandingLocale } from '../../../../lib/schema/www-content.ts'
+import { reviewedDay, templateText, type LandingData } from '../../lib/landings.ts'
+
+interface Props {
+  sources: NonNullable<LandingData['sources']>
+  locale: LandingLocale
+}
+const { sources, locale } = Astro.props
+const tpl = templateText(locale)
+---
+
+<div class="omlp-wrap">
+  <details class="omlp-sources">
+    <summary>{sources.title} · {tpl.reviewedInline} {reviewedDay(sources.reviewed, locale)}</summary>
+    <ul role="list">
+      {
+        sources.items.map((s) => (
+          <li>
+            <a href={s.url} rel="noopener noreferrer">
+              {s.label} <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</div>

@@ -80,7 +80,7 @@ describe('the build of the blog', () => {
       expect(html).toContain(`<link rel="canonical" href="${ORIGIN}/blog">`)
       expect(/<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1]).toBe('Open Mercato Blog')
       // the filter's controls wait for JavaScript; the server render lists every post
-      expect(html).toMatch(/<div class="category-filter__controls" role="group"[^>]* hidden/)
+      expect(html).toMatch(/<div class="blog-filters_component no-scrollbar" hidden/)
       expect(html).toContain(`Showing all ${published.length} posts.`)
     })
 
@@ -118,6 +118,23 @@ describe('the build of the blog', () => {
       // nothing of the importer's video tag is left, and no player loads before a click
       expect(html).not.toContain('<lite-video')
       expect(html).not.toMatch(/<iframe[^>]+youtube/)
+    })
+
+    it('a post has the live template: breadcrumb, byline and the table of contents of its h2 headings', () => {
+      for (const slug of published) {
+        const html = read('blog-posts', `${slug}.html`)
+        expect(html, slug).toContain(
+          `aria-current="page" class="text-size-tiny text-weight-medium breacrumb-link_with-limit`,
+        )
+        expect(html, slug).toMatch(
+          /<div class="blog-post_header"><span class="reader-avatar" aria-hidden="true">[A-Z]{1,2}<\/span>/,
+        )
+        expect(html, slug).toMatch(/<span class="text-size-small text-color-secondary">\d+ min read<\/span>/)
+        // every entry of the table of contents points at an h2 of the body
+        const toc = [...html.matchAll(/<a href="#([^"]+)" class="blog-post_toc-link/g)].map((m) => m[1]!)
+        const h2 = [...html.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]!)
+        expect(toc, slug).toEqual(h2)
+      }
     })
 
     it('a video is a link to YouTube that the page turns into a youtube-nocookie.com player', () => {

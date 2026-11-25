@@ -3,20 +3,25 @@
 import { getCollection } from 'astro:content'
 import { postCard, publishedPosts, refId, type PostCardData, type PostEntry } from './blog.ts'
 
+/** A blog category: its name, its Webflow order and the colours of its label. */
+export interface BlogCategory {
+  name: string
+  order: number
+  labelColor?: string
+  textColor?: string
+}
+
 export interface BlogData {
   published: PostEntry[]
   authors: Map<string, string>
-  categories: Map<string, { name: string; order: number }>
+  categories: Map<string, BlogCategory>
   card(post: PostEntry): PostCardData
 }
 
 export async function blogData(): Promise<BlogData> {
   const posts = (await getCollection('blog')) as unknown as PostEntry[]
   const authorEntries = (await getCollection('authors')) as unknown as { id: string; data: { name: string } }[]
-  const categoryEntries = (await getCollection('blogCategories')) as unknown as {
-    id: string
-    data: { name: string; order: number }
-  }[]
+  const categoryEntries = (await getCollection('blogCategories')) as unknown as { id: string; data: BlogCategory }[]
   const authors = new Map(authorEntries.map((a) => [a.id, a.data.name]))
   const categories = new Map(categoryEntries.map((c) => [c.id, c.data]))
   const names = { authors, categories: new Map([...categories].map(([id, c]) => [id, c.name])) }

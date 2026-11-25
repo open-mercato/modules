@@ -1,25 +1,39 @@
-// A post in a list (the blog list, featured posts, related posts and the filter island): thumbnail, category, title
-// with the link, description, date and author. Rendered on the server, and by the BlogFilter island in the browser.
-import { dayYear } from '../../../../site/src/lib/format.ts'
+// A post in the list of /blog (the featured post and the filter island's feed), in the live Webflow markup
+// (`blog-list_card`): the whole card is the link; thumbnail, category, title and description. The "Read more" button is
+// in the markup as live and hidden by the feed's style (www/src/styles/webflow/pages.css). Rendered on the server, and
+// by the CategoryFilter island in the browser.
 import type { PostCardData } from '../../lib/blog.ts'
+import { ARROW_ICON } from '../../lib/webflow-icons.ts'
 
-export default function PostCard({ post }: { post: PostCardData }) {
+export default function PostCard({ post, featured = false }: { post: PostCardData; featured?: boolean }) {
   return (
-    <article class="post-card">
-      {post.thumbnail && (
-        <img class="post-card__img" src={post.thumbnail.src} alt={post.thumbnail.alt} loading="lazy" decoding="async" />
-      )}
-      <div class="post-card__body">
-        {post.category && <span class="chip chip--line post-card__cat">{post.category.name}</span>}
-        <h3 class="post-card__title">
-          <a href={post.href}>{post.title}</a>
-        </h3>
-        <p class="post-card__desc">{post.description}</p>
-        <p class="post-card__meta t-small t-muted">
-          <time datetime={post.date}>{dayYear(post.date)}</time>
-          {post.author && <span> · {post.author}</span>}
-        </p>
+    <a href={post.href} class={`blog-list_card${featured ? ' is-featured' : ''} w-inline-block`}>
+      <div class={`blog-list_thumbnail-wrapper${featured ? ' is-featured' : ''}`}>
+        {post.thumbnail && (
+          <img
+            class="blog-list_thumbnail"
+            src={post.thumbnail.src}
+            alt={post.thumbnail.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        )}
       </div>
-    </article>
+      <div class="blog-list_card-content-wrapper">
+        <div class="blog_label">{post.category && <div class="blog_label-text">{post.category.name}</div>}</div>
+        <div class="blog-list_card-content">
+          <h2 class="heading-style-h5">{post.title}</h2>
+          <div class="spacer-1rem"></div>
+          <p class="text-color-secondary">{post.description}</p>
+          <div class="spacer-medium"></div>
+          <div class="button-group">
+            <div class="button is-arrow is-blog">
+              <div>Read more</div>
+              <div class="button_icon is-arrow" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ARROW_ICON }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
   )
 }

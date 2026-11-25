@@ -1,0 +1,221 @@
+webflowId: 6af5bb0c7fcfcbec64855ac9
+locale: en
+kind: industry
+seo:
+  title: CRM for Wholesale Distributors | Open Mercato
+  description: Build a wholesale CRM around customer accounts, repeat orders and pricing rules. Connect sales history with orders and your existing ERP on Open Mercato.
+hero:
+  eyebrow: CRM for wholesale distributors
+  title: Give every account manager the full customer picture.
+  lead: Repeat orders, negotiated prices and delivery questions are part of the same relationship. Build a wholesale CRM that connects customer history to the commercial and operational records your team needs.
+  primary:
+    label: Discuss your wholesale CRM
+    href: /contact?interest=crm-for-wholesale-distributors
+  secondary:
+    label: Explore the CRM demo
+    href: https://openmercatocloud.com/demo
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: The account knowledge should stay with the business.
+  items:
+    - title: Orders and conversations are scattered
+      body: Customers use calls, emails and messages. Give account managers a shared customer record, then scope the intake and communication integrations that match those channels.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: The right price lives in someone's spreadsheet
+      body: Different accounts, volumes and agreements need clear commercial rules. Build on catalog pricing and scope account-specific terms explicitly.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: A customer question interrupts the warehouse
+      body: Connect order and shipment context to the account workflow so the sales team can find the information it needs.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Build around the relationship, the order and the next purchase.
+  items:
+    - title: Shared account context
+      body: Companies, contacts, addresses, activities and notes preserve the history beyond one salesperson.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Pipeline and account activity
+      body: Use deals, stages and logged interactions to organize new business and account development.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Commercial foundations
+      body: Products, variants, channel prices, quotes and orders provide the starting point for your wholesale rules.
+      art:
+        src: /media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg
+        alt: ""
+        decorative: true
+    - title: Order visibility
+      body: Connect customer records to the order, shipment and ERP information relevant to the conversation.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Account knowledge your whole sales team can use.
+  lead: Keep the familiar customer and order information. Add the connections and permissions that separate files leave to your team.
+  label: What your team gets
+  tagline: ONE ACCOUNT PICTURE
+  columns:
+    - name: Open Mercato
+      note: CRM + sales and catalog modules
+    - name: Spreadsheets + email
+      note: Separate files and manual handoffs
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Built-in links between accounts, contacts and deals
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Manual cross-references
+        - label: Linked quotes, orders and shipment records
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Separate records
+        - label: Built-in product, variant and channel pricing
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Separate price files
+        - label: Application roles and feature permissions
+          ours: "yes"
+          theirs: "no"
+          theirsNote: File access only
+    - title: Capabilities available in both
+      rows:
+        - label: Store company and contact details
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual records
+        - label: Keep notes about customer conversations
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Files and email
+        - label: Track opportunities and pipeline stages
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual tracker
+    - title: Implementation and scope
+      rows:
+        - label: Apply account-specific contract pricing
+          ours: build
+          oursNote: Agreement rules
+          theirs: "no"
+          theirsNote: Manual price checks
+        - label: Synchronize accounts, products and orders with ERP
+          ours: build
+          oursNote: ERP integration
+          theirs: "no"
+          theirsNote: Manual handoff
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: "Baseline: separate spreadsheets and email, without an integrated CRM. Customer-specific contract pricing and ERP synchronization are project requirements to implement and test."
+  reviewed: "2026-11-12"
+  sources:
+    - label: Catalog and pricing
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Wholesale requirement
+    - Open Mercato
+  rows:
+    - topic: Account knowledge
+      theirs: Can someone take over a customer conversation?
+      ours: Linked people, companies, notes and activities keep the context accessible.
+    - topic: Pricing agreements
+      theirs: How are customer-specific rules applied and checked?
+      ours: Use catalog pricing foundations and implement the agreement rules in scope.
+    - topic: Repeat purchasing
+      theirs: Which steps are repeated on every order?
+      ours: Extend customer and sales workflows around the recurring process.
+    - topic: ERP connection
+      theirs: Which account, SKU and order data should synchronize?
+      ours: Build a defined integration with stable identifiers and clear ownership.
+    - topic: Team access
+      theirs: Which users need to see or change commercial data?
+      ours: Roles, feature permissions and organization scope support access control.
+demo:
+  eyebrow: Explore Open Mercato CRM
+  title: Start with connected customer and sales modules.
+  body: Open Mercato documents company, contact and deal workspaces alongside catalog pricing and sales documents. Your implementation adds the account-specific rules and connections your wholesale business needs.
+  cta:
+    label: Explore Open Mercato CRM
+    href: /crm
+  image:
+    src: /media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg
+    alt: A won deal starts a configured CRM automation workflow
+steps:
+  title: Start with a handful of representative accounts.
+  items:
+    - title: Choose the account patterns
+      body: Include a frequent buyer, a negotiated-price account and a customer with multiple delivery locations.
+    - title: Map the commercial records
+      body: Clean company and contact data, preserve ERP IDs and define pricing ownership.
+    - title: Pilot the daily work
+      body: Run a new quote, a repeat order and a delivery query with the account managers who handle them.
+    - title: Expand with evidence
+      body: Measure repeated entry, pricing corrections and time spent answering order questions before adding more accounts.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Can each customer have different pricing?
+      answer: The catalog provides product, variant and channel pricing foundations. Customer contracts, volume tiers and negotiated exceptions should be specified and tested in your implementation.
+    - question: Can orders arrive by email or WhatsApp?
+      answer: Those intake channels require appropriate integrations and validation. Scope how a message becomes a draft order, who approves it and how customer and SKU matching work.
+    - question: Do we have to replace our ERP?
+      answer: A wholesale CRM can operate alongside your current ERP. Define which system owns the customer, price, stock and invoice records, then scope the required connections.
+    - question: Can we add an ordering portal later?
+      answer: The API and modular architecture provide a foundation for a customer portal. Authentication, customer-specific catalogs, pricing and order permissions belong in that portal's delivery scope.
+cta:
+  title: Bring an account your team knows by heart.
+  body: Its contacts, pricing agreements and order history will help define what the CRM needs to make available to everyone who serves it.
+  primary:
+    label: Discuss your wholesale CRM
+    href: /contact?interest=crm-for-wholesale-distributors
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Wholesale operator requirements for customer-specific pricing
+      url: https://www.reddit.com/r/smallbusiness/comments/1qvn9nz/wholesale_b2b_stock_management_and_invoicing/
+    - label: Distributor discussion of manual order intake
+      url: https://www.reddit.com/r/SupplyChainTalks/comments/1xdigrn/best_software_for_wholesale_distributors/
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato catalog and pricing documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx

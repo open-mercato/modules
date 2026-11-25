@@ -1,0 +1,224 @@
+webflowId: 6af5bb0c3f38e40961e0dd65
+locale: en
+kind: industry
+seo:
+  title: B2B Order Management for Your Workflow | Open Mercato
+  description: Connect quotes, orders, shipments and payments in a B2B workflow built on Open Mercato. Explore ERP integration, packing and carrier automation.
+hero:
+  eyebrow: B2B order management software
+  title: Keep every order moving, from quote to shipment.
+  lead: Give the people selling, packing and answering customers a connected order record. Build your B2B order management workflow on Open Mercato's sales, catalog and shipment foundations.
+  primary:
+    label: Discuss your order workflow
+    href: /contact?interest=b2b-order-management
+  secondary:
+    label: See shipping automation in action
+    href: "#proof"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: An order should arrive with the context people need to fulfil it.
+  items:
+    - title: Orders arrive through several channels
+      body: Email, portals and sales teams can leave operations with repeated entry. Scope each intake source and connect it to a validated order workflow.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Inventory and order status drift apart
+      body: A customer promise depends on up-to-date information. Define the system of record and synchronization rules before adding availability and fulfilment views.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: Packing and shipping create another handoff
+      body: Labels, packing notes and tracking details often live separately. Bring them into the same operational chain, with the carrier and ERP integrations your business uses.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: A working foundation for the whole order record.
+  items:
+    - title: Quotes and confirmed orders
+      body: Convert commercial discussions into structured sales documents with customer and line-item context.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Pricing and adjustments
+      body: Use product, variant and channel pricing, taxes, discounts and document adjustments.
+      art:
+        src: /media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg
+        alt: ""
+        decorative: true
+    - title: Partial shipments
+      body: Allocate quantities to shipments and keep remaining items visible against the order.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Connected fulfilment
+      body: Extend the process with carrier integrations, packing screens, background jobs and status updates.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Every order detail, in a workflow that stays connected.
+  lead: Compare manual order administration with the sales, pricing and shipment capabilities you can start with on Open Mercato.
+  label: What your team gets
+  tagline: BUILT AROUND THE ORDER
+  columns:
+    - name: Open Mercato
+      note: Sales + catalog + shipments
+    - name: Spreadsheets + email
+      note: Separate files and manual handoffs
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Convert a quote into a linked order
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Copy and re-enter
+        - label: Built-in product, variant and channel pricing
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Separate price files
+        - label: Allocate order quantities to multiple shipments
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Manual reconciliation
+        - label: Linked order, payment and shipment records
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Separate records
+        - label: Application roles and feature permissions
+          ours: "yes"
+          theirs: "no"
+          theirsNote: File access only
+    - title: Capabilities available in both
+      rows:
+        - label: Record customer orders and line items
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual records
+        - label: Calculate prices, taxes and discounts
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual formulas
+    - title: Implementation and scope
+      rows:
+        - label: Synchronize order data with your ERP
+          ours: build
+          oursNote: ERP integration
+          theirs: "no"
+          theirsNote: Manual handoff
+        - label: Carrier labels and tracking updates
+          ours: build
+          oursNote: Carrier integration
+          theirs: "no"
+          theirsNote: Manual coordination
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: "Baseline: separate spreadsheets and email, without an integrated order-management application. Inventory synchronization, carrier connections and financial integrations are scoped per implementation."
+  reviewed: "2026-11-12"
+  sources:
+    - label: Sales documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: Shipment documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Order-management requirement
+    - Open Mercato
+  rows:
+    - topic: Order intake
+      theirs: Which channels create the order and who validates it?
+      ours: Sales APIs and extensible workflows support the intake integrations you scope.
+    - topic: Commercial context
+      theirs: Can pricing, discounts and taxes be explained?
+      ours: Catalog pricing and sales adjustments keep the calculation attached to the record.
+    - topic: Partial fulfilment
+      theirs: Can one order ship in several parts?
+      ours: Multiple shipments can fulfil quantities from the same order.
+    - topic: Tracking
+      theirs: Where can customer service see a shipment update?
+      ours: Shipment records can be connected to carrier and ERP integrations.
+    - topic: System ownership
+      theirs: Where do stock, invoicing and financial truth live?
+      ours: Define those boundaries in the project and connect the appropriate systems.
+demo:
+  eyebrow: MDM NT · manufacturing implementation
+  title: Packing, labels and tracking became one connected process.
+  body: MDM NT introduced a packing workspace, batch label jobs and carrier tracking through Open Mercato. The integration made the shipment information available in its existing ERP.
+  cta:
+    label: Read the MDM NT story
+    href: /case-studies/mdm-nt-shipping-automation
+  image:
+    src: /media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png
+    alt: Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.
+  caption: Open Mercato core order workspace. Explore MDM NT’s custom shipping workflow in the case study.
+steps:
+  title: Prove the flow on a representative set of orders.
+  items:
+    - title: Map the order journey
+      body: List intake channels, pricing decisions, approvals, fulfilment steps and customer notifications.
+    - title: Connect the master data
+      body: Map customer, SKU, tax, carrier and ERP identifiers. Decide how stock and financial records will be synchronized.
+    - title: Test the exceptions
+      body: Rehearse partial shipments, cancellations, price changes, returns and failed integration calls as required by your business.
+    - title: Roll out with operations
+      body: Start with one channel or warehouse, reconcile transactions and train the team that handles exceptions.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Does it connect to our carrier?
+      answer: Carrier-driven shipment creation requires a configured carrier integration. Review the carriers and services you use during scoping, then test labels, status updates and exception handling.
+    - question: Can it handle split shipments?
+      answer: The Sales module supports multiple shipments against an order, with quantities and remaining fulfilment visible. Your warehouse process can build on that foundation.
+    - question: Can we connect our B2B portal or ERP?
+      answer: Yes, integrations can be implemented through the API and extension architecture. The work depends on each system's interface, identifiers, data ownership and synchronization requirements.
+    - question: Is warehouse inventory included in every deployment?
+      answer: Inventory and warehouse requirements should be scoped alongside order management. Define reservations, locations, units, picking and stock ownership before choosing the modules and integrations for production.
+cta:
+  title: Bring your most difficult order exception.
+  body: A split shipment, a custom price or a missing tracking update is a useful starting point for a focused implementation conversation.
+  primary:
+    label: Discuss your order workflow
+    href: /contact?interest=b2b-order-management
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Capterra order-management review analysis
+      url: https://www.capterra.com/resources/best-order-management-software-small-business/
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: Open Mercato shipment documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx
+    - label: MDM NT shipping automation case study
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation

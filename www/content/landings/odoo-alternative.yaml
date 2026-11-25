@@ -1,0 +1,224 @@
+webflowId: 6af5bb0a1eb33a26d24418a8
+locale: en
+kind: alternative
+competitor: Odoo
+seo:
+  title: Odoo Alternative for Custom Business Workflows | Open Mercato
+  description: Compare Odoo and Open Mercato for modular CRM and ERP workflows. Explore customization, upgrade ownership and a phased implementation around your existing systems.
+hero:
+  eyebrow: Odoo alternative
+  title: Build the ERP workflows you still run in spreadsheets.
+  lead: Your ERP may cover the standard process while the exceptions still live in spreadsheets. Open Mercato gives your team a modular CRM and ERP foundation to turn those exceptions into software you control.
+  primary:
+    label: Discuss your ERP workflow
+    href: /contact?interest=odoo-alternative
+  secondary:
+    label: Compare the capabilities
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Specialized workflows need customization and an upgrade plan.
+  items:
+    - title: Specialized workflows need custom code
+      body: Odoo offers extensive customization. Reviews also describe the work needed to fit specialized processes. Open Mercato makes custom development a first-class part of the application, with modules and extension points your team can own.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Upgrades become their own project
+      body: Odoo documents additional code adaptation and testing for customized databases. With Open Mercato, agree a release and test plan for your extensions, supported by access to the application source.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: One improvement expands into a full ERP decision
+      body: A shipping problem can be a bounded implementation. Start with the workflow that creates daily friction, connect the necessary records and evaluate the next step using real operations.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: CRM, sales and catalog modules you can extend.
+  items:
+    - title: CRM and sales
+      body: Start with companies, contacts, deals, quotes and order records.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+    - title: Catalog and commercial rules
+      body: Use products, variants, sales channels, pricing and tax foundations.
+      art:
+        src: /media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg
+        alt: ""
+        decorative: true
+    - title: Operational extensions
+      body: Build the approvals, packing workspaces or domain records that make the process work for your business.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: A shared application core
+      body: Reuse authentication, permissions, data access and events across your custom modules.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Business modules today. Ownership for the next change.
+  lead: Compare Open Mercato with Odoo's paid Enterprise plans for a multi-app CRM and sales implementation.
+  label: What your team gets
+  tagline: NO CORE SEAT FEES
+  columns:
+    - name: Open Mercato
+      note: MIT-licensed application core
+    - name: Odoo Enterprise
+      note: Standard / Custom plans
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Enterprise licence
+        - label: No per-user licence fee for the multi-app core
+          ours: "yes"
+          oursNote: Hosting and services extra
+          theirs: "no"
+          theirsNote: Paid Enterprise seats
+    - title: Capabilities available in both
+      rows:
+        - label: Companies, contacts and CRM pipelines
+          ours: "yes"
+          theirs: "yes"
+        - label: Quotes and sales orders
+          ours: "yes"
+          theirs: "yes"
+        - label: Products and variants
+          ours: "yes"
+          theirs: "yes"
+        - label: Pricing and sales adjustments
+          ours: "yes"
+          theirs: "yes"
+        - label: Roles and permissions
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom fields and modules
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Custom plan
+        - label: External APIs
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Custom plan
+        - label: Self-hosted deployment
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Custom plan
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: "Scope: paid Odoo Enterprise Standard / Custom plans. Odoo Community is a separate open-source edition; One App Free is a different offer. Both platforms support customization and need maintenance. Accounting and specialist ERP requirements are assessed separately."
+  reviewed: "2026-11-12"
+  sources:
+    - label: Odoo plans and deployment
+      url: https://www.odoo.com/pricing
+    - label: Odoo editions and licences
+      url: https://www.odoo.com/documentation/19.0/legal/licenses.html
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Odoo
+    - Open Mercato
+  rows:
+    - topic: Starting point
+      theirs: An integrated suite of business applications.
+      ours: Core CRM, sales and catalog modules plus an extensible application foundation.
+    - topic: Custom development
+      theirs: Studio and custom modules, with availability depending on deployment and plan.
+      ours: TypeScript modules, custom entities, APIs and application extensions.
+    - topic: Updates
+      theirs: Customized databases require adaptation and testing during upgrades.
+      ours: Your team schedules and tests application and dependency updates.
+    - topic: Commercial model
+      theirs: Community and commercial editions have different capabilities and terms.
+      ours: MIT-licensed core, with delivery, hosting and support scoped separately.
+    - topic: Specialist ERP scope
+      theirs: Broad suite including accounting and manufacturing applications.
+      ours: Choose domain implementations and scope accounting, localization and industry requirements individually.
+    - topic: Rollout
+      theirs: Select the apps and migration scope for the implementation.
+      ours: Begin with a bounded workflow and integrate it with the existing system of record.
+demo:
+  eyebrow: MDM NT · manufacturing implementation
+  title: A manufacturer started with shipping.
+  body: MDM NT connected packing, carrier labels and tracking to its existing ERP. The company used a concrete operational problem as the first step in a broader transformation.
+  cta:
+    label: Read the MDM NT story
+    href: /case-studies/mdm-nt-shipping-automation
+  image:
+    src: /media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png
+    alt: Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.
+  caption: Open Mercato core order workspace. Explore MDM NT’s custom shipping workflow in the case study.
+steps:
+  title: Start with a process you can scope and test.
+  items:
+    - title: Inventory the Odoo setup
+      body: List apps, custom modules, Studio changes, scheduled actions, integrations and the processes they support.
+    - title: Choose the first boundary
+      body: Select one workflow and define record ownership. Decide which financial and operational systems it will connect to.
+    - title: Prove the data and behavior
+      body: Map external IDs, customer and product data, document states and required history. Test representative transactions.
+    - title: Roll out and extend
+      body: Reconcile the pilot, agree operating responsibilities and introduce the next process when the first is working.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Is Odoo too rigid to customize?
+      answer: Odoo supports extensive customization through configuration, Studio and custom modules. The relevant decision is the cost and ownership of your specific changes, integrations and future upgrades.
+    - question: Can Open Mercato replace all our Odoo apps?
+      answer: Review the apps you actually depend on. CRM and sales foundations are available, while accounting localization, payroll and specialist business rules require a separate fit assessment and implementation scope.
+    - question: Can our existing ERP stay connected?
+      answer: Yes, an implementation can introduce a specific workflow alongside an ERP through integrations. MDM NT's shipping project demonstrates this approach. Your connection and synchronization rules are part of the project.
+    - question: Are upgrades automatic?
+      answer: Your operating team owns release planning and regression testing. Source access and modular extensions provide control over that work, while the deployment still needs active maintenance.
+cta:
+  title: Bring the process that still ends in a spreadsheet.
+  body: We can help you scope the records, rules and integrations needed to turn it into a working application.
+  primary:
+    label: Discuss your ERP workflow
+    href: /contact?interest=odoo-alternative
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Odoo ERP user reviews on G2
+      url: https://www.g2.com/products/odoo-odoo-erp/reviews
+    - label: Odoo documentation for upgrading customized databases
+      url: https://www.odoo.com/documentation/19.0/developer/howtos/upgrade_custom_db.html
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: MDM NT shipping automation case study
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation

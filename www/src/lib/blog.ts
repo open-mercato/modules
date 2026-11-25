@@ -19,6 +19,7 @@ export interface PostImage {
 export interface PostEntry {
   id: string
   data: {
+    webflowId?: string
     title: string
     description: string
     date: Date
@@ -53,10 +54,17 @@ export function refId(r: Ref | undefined): string | undefined {
   return typeof r === 'string' ? r : r.id
 }
 
-/** Newest first; the same day by slug, so the order never depends on the file system. */
+/**
+ * Newest first; the same day the newer Webflow item first, then by slug, so the order never depends on the file system.
+ */
 function byDateDesc(a: PostEntry, b: PostEntry): number {
   const d = b.data.date.getTime() - a.data.date.getTime()
-  return d !== 0 ? d : a.id < b.id ? -1 : a.id > b.id ? 1 : 0
+  if (d !== 0) return d
+  // the same day: the newer Webflow item first, as the live list has them (an id starts with its creation time)
+  const wa = a.data.webflowId ?? ''
+  const wb = b.data.webflowId ?? ''
+  if (wa !== wb) return wa < wb ? 1 : -1
+  return a.id < b.id ? -1 : a.id > b.id ? 1 : 0
 }
 
 /** The posts the site shows: every entry that is not a draft, newest first. */
@@ -69,6 +77,14 @@ export function featuredPosts<T extends PostEntry>(published: readonly T[]): T[]
   return published.filter((p) => p.data.featured)
 }
 
+/**
+ * The one featured post /blog shows above the feed, as the live page does: the first featured post by title. Webflow's
+ * list has a limit of one and no sort of its own; its first item, as of 25 Nov 2026, is the first by title.
+ */
+export function leadFeaturedPost<T extends PostEntry>(published: readonly T[]): T | undefined {
+  return [...featuredPosts(published)].sort((a, b) => a.data.title.localeCompare(b.data.title, 'en'))[0]
+}
+
 /** Up to `n` other published posts: those of the same category first, then the newest. */
 export function relatedPosts<T extends PostEntry>(post: PostEntry, published: readonly T[], n = 3): T[] {
   const cat = refId(post.data.category)
@@ -77,6 +93,36 @@ export function relatedPosts<T extends PostEntry>(post: PostEntry, published: re
   const rest = others.filter((p) => !same.includes(p))
   return [...same, ...rest].slice(0, n)
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// The byline of a post, as the live template's reader script writes it (its om-blog-reader code, run here at build)
+
+/** The author a byline names: the post's author, or the site when it has none. */
+export const bylineName = (author: string | undefined): string => author || SITE_NAME
+
+/** The initials of the byline's avatar: the first letters of the first and the last word. */
+export function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter((w) => w !== '')
+    .map((w) => w[0]!)
+    .filter((_, i, all) => i === 0 || i === all.length - 1)
+    .join('')
+    .toUpperCase()
+}
+
+/** Minutes to read a text at 220 words a minute, at least 1. */
+export function readingMinutes(text: string): number {
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w !== '').length
+  return Math.max(1, Math.ceil(words / 220))
+}
+
+/** `November 24, 2026`, the date format of the live template. */
+export const longDate = (d: Date): string =>
+  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Category filter (spec, UI/UX, Blog filter): one facet; within it any selected value matches. The state lives in the
@@ -103,6 +149,12 @@ export function toggleCategory(selected: readonly string[], id: string, known: r
   if (next.has(id)) next.delete(id)
   else next.add(id)
   return known.filter((k) => next.has(k))
+}
+
+/** Whether an entry of the categories `categories` shows under the selection: any one selected matches. */
+export function matchesAnyCategory(categories: readonly string[], selected: readonly string[]): boolean {
+  if (selected.length === 0) return true
+  return categories.some((c) => selected.includes(c))
 }
 
 /** Whether a post of category `category` shows under the selection: everything when nothing is selected. */

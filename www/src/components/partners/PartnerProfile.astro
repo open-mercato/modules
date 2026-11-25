@@ -1,52 +1,113 @@
 ---
-// The head and facts of a partner page: breadcrumb, logo, tier (TierBadge), name, description, the facts of every
-// facet and the partner's website.
+// A partner page in the live Webflow markup: the hero (`header_component is-partner-hero`: breadcrumb, logo, name,
+// description and the certification badge), then the summary (`case-post_sticky-wrapper is-static`: the tier label,
+// the facts of every facet, the website and "Contact agency") beside the body.
 import Crumbs from '../Crumbs.astro'
-import { PARTNERS_PATH } from '../../lib/partners.ts'
+import { ARROW_ICON } from '../../lib/webflow-icons.ts'
+import { PARTNER_LOGO_PLACEHOLDER, PROFILE_HEADINGS, type Facet } from '../../lib/partner-filter.ts'
+import { PARTNER_BADGE, PARTNER_CONTACT, PARTNERS_CRUMB, PARTNERS_PATH } from '../../lib/partners.ts'
 import type { PostImage } from '../../lib/blog.ts'
 
 interface Props {
   name: string
+  href: string
   description: string
   tier: string
+  tierStyle: string
   logo?: PostImage
   website: string
-  facts: { facet: string; label: string; values: string[] }[]
+  facts: { facet: Facet; values: string[] }[]
 }
-const { name, description, tier, logo, website, facts } = Astro.props
+const { name, href, description, tier, tierStyle, logo, website, facts } = Astro.props
+/** Facets with one value show it as text, those that may have several as a list, as live. */
+const listed = new Set<Facet>(['industry', 'language', 'service'])
 ---
 
-<header class="post-head">
-  <Crumbs section={{ name: 'Certified Partners', href: PARTNERS_PATH }} current={name} />
-  {
-    logo && (
-      <img
-        class="partner-card__logo partner-head__logo"
-        src={logo.src}
-        alt={logo.decorative ? '' : logo.alt || `${name} logo`}
-        width={logo.width}
-        height={logo.height}
-        decoding="async"
-      />
-    )
-  }
-  <span class="chip chip--line tier-badge">{tier}</span>
-  <h1 class="t-h1 post-head__title">{name}</h1>
-  <p class="post-head__lead">{description}</p>
-</header>
-<aside class="facts" aria-label="Partner details">
-  <dl class="facts__list">
-    {
-      facts.map((f) => (
-        <div>
-          <dt>{f.label}</dt>
-          <dd>{f.values.join(', ')}</dd>
+<section class="section">
+  <div class="section-padding">
+    <div class="header_component is-flex is-partner-hero">
+      <div class="header_content max-width-47rem">
+        <Crumbs trail={[{ name: PARTNERS_CRUMB, href: PARTNERS_PATH }]} current={{ name, href }} />
+        <div class="spacer-medium"></div>
+        {/* without a logo, the live page shows Webflow's default image of the field, the site's logo */}
+        <div class="agency_logo-wrapper">
+          {
+            logo ? (
+              <img
+                class="agency_logo"
+                src={logo.src}
+                alt={logo.decorative ? '' : name}
+                width={logo.width}
+                height={logo.height}
+                decoding="async"
+              />
+            ) : (
+              <img class="agency_logo" src={PARTNER_LOGO_PLACEHOLDER} alt="" decoding="async" />
+            )
+          }
         </div>
-      ))
-    }
-    <div>
-      <dt>Website</dt>
-      <dd><a href={website} rel="noopener">{new URL(website).hostname.replace(/^www\./, '')}</a></dd>
+        <div class="spacer-small"></div>
+        <h1 class="heading-style-h3">{name}</h1>
+        <div class="spacer-1rem"></div>
+        <p class="text-color-secondary">{description}</p>
+      </div>
+      <div class="partner-tier_badge-wrapper">
+        <img class="partner-tier-badge" src={PARTNER_BADGE.src} alt={PARTNER_BADGE.alt} loading="lazy" />
+      </div>
     </div>
-  </dl>
-</aside>
+  </div>
+</section>
+<div class="section is-no-padding">
+  <div class="case-post_component">
+    <div class="case-post_sticky-wrapper is-static">
+      <div class="case_summary">
+        <div class="case_summary-content">
+          <div class="case_summary-item">
+            <div class="text-style-tagline text-color-secondary">{PROFILE_HEADINGS.tier}</div>
+            <div class="agencies_label-wrapper is-static">
+              <div class="agency_label" style={tierStyle || undefined}><div>{tier}</div></div>
+            </div>
+          </div>
+          {
+            facts.map((f) => (
+              <div class="case_summary-item">
+                <div class="text-style-tagline text-color-secondary">{PROFILE_HEADINGS[f.facet]}</div>
+                {listed.has(f.facet) ? (
+                  <div class="agency-overview_collection-list-wrapper">
+                    <div role="list" class="agency-overview_collection-list">
+                      {f.values.map((v) => (
+                        <div role="listitem" class="agency-overview_collection-list">
+                          <div>{v}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{f.values.join(', ')}</div>
+                )}
+              </div>
+            ))
+          }
+          <div class="case_summary-item">
+            <div class="text-style-tagline text-color-secondary">VISIT WEBSITE</div>
+            <a href={website} rel="noopener" class="case_summary-link w-inline-block">
+              <div>{website}</div>
+              <div class="code-embed" aria-hidden="true" set:html={ARROW_ICON} />
+            </a>
+          </div>
+        </div>
+        <div class="blog-post_cta-top is-case">
+          <div class="heading-style-h5">Ready to build?</div>
+          <div class="button-group">
+            <a href={PARTNER_CONTACT} class="button is-tertiary w-inline-block"><div>Contact agency</div></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="case-post_body">
+      <div class="case-post_content">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>

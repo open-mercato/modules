@@ -11,13 +11,24 @@ import {
   caseStudyPath,
   caseStudySeo,
   deliveredBy,
+  filterCategories,
+  newestFirst,
+  otherCaseStudies,
   publishedCaseStudies,
   relatedCaseStudies,
   type CaseStudyEntry,
 } from '../../www/src/lib/case-studies.ts'
 import { listOrder } from '../../www/src/lib/entries.ts'
 import { markdownHtml } from '../../www/src/lib/inline-markdown.ts'
-import { isRemote, jobJsonLd, jobPath, jobSeo, publishedJobs, type JobEntry } from '../../www/src/lib/jobs.ts'
+import {
+  applyHref,
+  isRemote,
+  jobJsonLd,
+  jobPath,
+  jobSeo,
+  publishedJobs,
+  type JobEntry,
+} from '../../www/src/lib/jobs.ts'
 import {
   emptySelection,
   FACETS,
@@ -30,6 +41,7 @@ import {
   type FacetValues,
 } from '../../www/src/lib/partner-filter.ts'
 import {
+  dictionaryOrder,
   facetOptions,
   optionValues,
   partnerCard,
@@ -39,6 +51,7 @@ import {
   partnerSeo,
   partnerValues,
   publishedPartners,
+  tierStyle,
 } from '../../www/src/lib/partners.ts'
 import { bodyLinkRules, detailIds, publishedIds, servesFixed } from '../../www/body-links.ts'
 import { partnersShownText } from '../../www/src/islands/PartnerFilter.tsx'
@@ -113,6 +126,29 @@ describe('which entries route and list', () => {
       e('ordered-1', 1),
     ].sort(listOrder)
     expect(sorted.map((x) => x.id)).toEqual(['ordered-1', 'ordered-2', 'new-file', 'young', 'old'])
+  })
+
+  it('the carousel of a case study shows every other published one, in list order', () => {
+    const pool = [cs('a'), cs('b'), cs('c')]
+    expect(otherCaseStudies(pool[1]!, pool).map((x) => x.id)).toEqual(['a', 'c'])
+  })
+
+  it('the case study filter offers the categories of listed case studies, newest first as Webflow lists them', () => {
+    expect(
+      newestFirst([
+        { id: 'old', webflowId: '6a2b03dcdae0237648965a32' },
+        { id: 'new', webflowId: '6abb98868b85972807195ac5' },
+        { id: 'local' },
+      ]),
+    ).toEqual(['local', 'new', 'old'])
+    const cards = [
+      { ...caseStudyCard(cs('a'), csCategories), categories: ['ERP', 'CRM'], categoryIds: ['erp', 'crm'] },
+      { ...caseStudyCard(cs('b'), csCategories), categories: ['ERP'], categoryIds: ['erp'] },
+    ]
+    expect(filterCategories(cards, ['edtech', 'crm', 'erp'])).toEqual([
+      { id: 'crm', name: 'CRM', count: 1 },
+      { id: 'erp', name: 'ERP', count: 2 },
+    ])
   })
 
   it('related case studies share a category first and are published', () => {
@@ -222,6 +258,26 @@ describe('the partner filter', () => {
     expect(card.tier).toBe(dict.tiers.get(card.values.tier[0]!)!.name)
     // the cards go into the page as JSON: nothing in them that JSON loses
     expect(JSON.parse(JSON.stringify(card))).toEqual(card)
+  })
+
+  it('orders a dictionary as the live filter does: entries without an order first, then by order and name', () => {
+    const d = new Map([
+      ['b', { name: 'B', order: 2 }],
+      ['none', { name: 'None' }],
+      ['a', { name: 'A', order: 1 }],
+    ])
+    expect(dictionaryOrder(d)).toEqual(['none', 'a', 'b'])
+  })
+
+  it('a tier label has its Webflow colours', () => {
+    const tiers = new Map([
+      ['agency', { name: 'Agency', backgroundColor: '#bc9aff', textColor: '#000000' }],
+      ['plain', { name: 'Plain' }],
+    ])
+    expect(tierStyle(tiers, 'agency')).toBe('background-color:#bc9aff;color:#000000')
+    expect(tierStyle(tiers, 'plain')).toBe('')
+    const card = partnerCard(publishedP[0]!, dict)
+    expect(card.tierStyle).toMatch(/^background-color:#[0-9a-f]{6};color:#[0-9a-f]{6}$/i)
   })
 
   it('announces the number of partners shown', () => {
@@ -366,6 +422,14 @@ describe('SEO of the detail pages', () => {
       unknown
     >[]
     expect(closed.map((g) => g['@type'])).toEqual(['BreadcrumbList'])
+  })
+
+  it('"Apply now" writes an e-mail with the subject of the live template', () => {
+    expect(applyHref('mailto:careers@openmercato.com', 'Senior AI Engineering')).toBe(
+      'mailto:careers@openmercato.com?subject=Application%3A%20Senior%20AI%20Engineering',
+    )
+    expect(applyHref('mailto:a@b.c?subject=x', 'T')).toBe('mailto:a@b.c?subject=x')
+    expect(applyHref('https://jobs.example/1', 'T')).toBe('https://jobs.example/1')
   })
 
   it('maps employment types and remote work', () => {

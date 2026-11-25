@@ -46,6 +46,15 @@ export interface PartnerEntry {
 
 export const PARTNERS_PATH = '/certified-partners'
 export const PARTNER_PREFIX = '/certified-partners/'
+/** How to become a partner: a unique page of the `pages` collection (Phase 6), still on Webflow until then. */
+export const AGENCIES_PATH = '/agencies'
+/** Where "Contact agency" of a partner page writes to: the live template's address, the same for every partner. */
+export const PARTNER_CONTACT = 'mailto:info@openmercato.com'
+/** The certification badge of a partner page, the live template's image (every published partner is an agency). */
+export const PARTNER_BADGE = {
+  src: '/files/site/6a5537d27bb7265b2391a3e0_badge-ai-certified.svg',
+  alt: 'Open Mercato Certified Agency badge',
+}
 
 /** The site path of a partner. */
 export const partnerPath = (slug: string): string => `${PARTNER_PREFIX}${slug}`
@@ -69,8 +78,11 @@ export function partnerValues(p: PartnerEntry): FacetValues {
   }
 }
 
-/** A dictionary as the pages read it: id, name and an optional order. */
-export type Dictionary = ReadonlyMap<string, { name: string; order?: number }>
+/** A dictionary as the pages read it: id, name, an optional order and, for the tiers, the colours of the label. */
+export type Dictionary = ReadonlyMap<
+  string,
+  { name: string; order?: number; backgroundColor?: string; textColor?: string }
+>
 
 export interface Dictionaries {
   tiers: Dictionary
@@ -80,10 +92,13 @@ export interface Dictionaries {
   services: Dictionary
 }
 
-/** Ordered first by `order` (entries without one last), then by name. */
-function dictionaryOrder(d: Dictionary): string[] {
+/**
+ * Ordered by `order`, entries without one first, as Webflow's lists of the live filter sort them (an empty field before
+ * any number), then by name.
+ */
+export function dictionaryOrder(d: Dictionary): string[] {
   return [...d]
-    .sort(([, a], [, b]) => (a.order ?? Infinity) - (b.order ?? Infinity) || a.name.localeCompare(b.name, 'en'))
+    .sort(([, a], [, b]) => (a.order ?? -Infinity) - (b.order ?? -Infinity) || a.name.localeCompare(b.name, 'en'))
     .map(([id]) => id)
 }
 
@@ -104,7 +119,10 @@ export function facetOptions(published: readonly PartnerEntry[], dict: Dictionar
   const fromDict = (f: Facet, d: Dictionary): FacetOption[] =>
     dictionaryOrder(d)
       .filter((id) => counts[f].has(id))
-      .map((id) => ({ value: id, label: d.get(id)!.name, count: counts[f].get(id)! }))
+      .map((id) => {
+        const style = f === 'tier' ? tierStyle(d, id) : ''
+        return { value: id, label: d.get(id)!.name, count: counts[f].get(id)!, ...(style ? { style } : {}) }
+      })
   const fromKeys = (f: Facet, keys: readonly string[], labels: Record<string, string>): FacetOption[] =>
     keys.filter((k) => counts[f].has(k)).map((k) => ({ value: k, label: labels[k]!, count: counts[f].get(k)! }))
   return {
@@ -129,6 +147,14 @@ export function optionValues(options: Record<Facet, FacetOption[]>): FacetOption
 /** The name of a dictionary id; the id itself when the dictionary does not know it (the build checks references). */
 const nameOf = (d: Dictionary, id: string): string => d.get(id)?.name ?? id
 
+/** The inline style of a tier's label (`agency_label`), its Webflow colours; '' when it has none. */
+export function tierStyle(tiers: Dictionary, id: string): string {
+  const t = tiers.get(id)
+  return [t?.backgroundColor && `background-color:${t.backgroundColor}`, t?.textColor && `color:${t.textColor}`]
+    .filter(Boolean)
+    .join(';')
+}
+
 export function partnerCard(p: PartnerEntry, dict: Dictionaries): PartnerCardData {
   const values = partnerValues(p)
   const card: PartnerCardData = {
@@ -137,6 +163,7 @@ export function partnerCard(p: PartnerEntry, dict: Dictionaries): PartnerCardDat
     name: p.data.name,
     description: p.data.description,
     tier: nameOf(dict.tiers, values.tier[0]!),
+    tierStyle: tierStyle(dict.tiers, values.tier[0]!),
     location: nameOf(dict.locations, values.location[0]!),
     industries: values.industry.map((id) => nameOf(dict.industries, id)),
     availability: PARTNER_AVAILABILITY_LABELS[p.data.availability],
@@ -186,14 +213,20 @@ export function partnerSeo(p: PartnerEntry, origin: string): PartnerSeo {
   }
 }
 
-/** `BreadcrumbList` (Home, Certified Partners, the partner) of a partner page, as a JSON-LD graph. */
+/**
+ * The name of the partner list in a breadcrumb: "Agencies", as the live breadcrumbs of the list and of each partner
+ * name it (the page's title is "Certified Partners").
+ */
+export const PARTNERS_CRUMB = 'Agencies'
+
+/** `BreadcrumbList` (Home, Agencies, the partner) of a partner page, as a JSON-LD graph: the visible trail. */
 export function partnerJsonLd(p: PartnerEntry, origin: string): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@graph': [
       breadcrumbJsonLd(origin, [
         { name: 'Home', path: '/' },
-        { name: 'Certified Partners', path: PARTNERS_PATH },
+        { name: PARTNERS_CRUMB, path: PARTNERS_PATH },
         { name: p.data.name, path: partnerPath(p.id) },
       ]),
     ],

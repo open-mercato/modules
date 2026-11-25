@@ -1,0 +1,225 @@
+webflowId: 6af5b72845753384a5ec7a6d
+locale: en
+kind: industry
+seo:
+  title: Self-Hosted CRM You Can Customize | Open Mercato
+  description: Run your CRM on your infrastructure. Explore Open Mercato's contacts, companies, pipelines and extensible workflows, with a practical deployment plan.
+hero:
+  eyebrow: Self-hosted CRM
+  title: A CRM you can run on your own infrastructure.
+  lead: Bring contacts, companies and deals into a CRM your team can shape. Open Mercato gives you an MIT-licensed application foundation, control over deployment, and a clear path to the workflows your business needs.
+  primary:
+    label: Discuss your deployment
+    href: /contact?interest=self-hosted-crm
+  secondary:
+    label: Explore the CRM demo
+    href: https://openmercatocloud.com/demo
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Owning the server should come with a workable operating plan.
+  items:
+    - title: The seat bill grows with your team
+      body: Giving more colleagues access adds another recurring cost. The open-source core has a $0 licence fee, so the commercial discussion can focus on hosting, delivery and support.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: A basic CRM becomes a collection of workarounds
+      body: Your accounts, approvals and customer history need to fit together. Extend records and workflows in one application instead of maintaining an ever-growing set of disconnected tools.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Maintenance lands on one person's evenings
+      body: Self-hosting needs someone to own updates, backups and recovery. Choose an internal operator or delivery partner and agree those responsibilities as part of the rollout.
+      art:
+        src: /media/landings/6af5f54c44a15bad8e0b9549-om-lp-access-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Start with the CRM work your team already does.
+  items:
+    - title: Company and contact records
+      body: Linked people, companies, addresses, notes and activities keep the customer relationship in context.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: A pipeline you can configure
+      body: Use deal stages, values, probabilities and expected close dates in list and kanban views.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Your business data model
+      body: Add custom fields and entities, then extend the application with purpose-built modules.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+    - title: Access that follows responsibility
+      body: Use roles, feature permissions and organization scope to define who can view and change records.
+      art:
+        src: /media/landings/6af5f54c44a15bad8e0b9549-om-lp-access-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: The CRM you need. On infrastructure you choose.
+  lead: "Compare a self-hosted Open Mercato deployment with Salesforce's managed CRM service: familiar sales tools, with a different ownership model."
+  label: What your team gets
+  tagline: YOUR INFRASTRUCTURE
+  columns:
+    - name: Open Mercato
+      note: Self-hosted CRM foundation
+    - name: Salesforce
+      note: Managed cloud CRM
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Run the CRM on your own infrastructure
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Salesforce-hosted
+        - label: Full application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Proprietary platform
+        - label: $0 core licence fee, without a user cap
+          ours: "yes"
+          oursNote: Hosting and services extra
+          theirs: "no"
+          theirsNote: "Free Suite: 2 users"
+    - title: Capabilities available in both
+      rows:
+        - label: Company and contact records
+          ours: "yes"
+          theirs: "yes"
+        - label: Deals and sales pipelines
+          ours: "yes"
+          theirs: "yes"
+        - label: Notes and activity history
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom fields
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Plan limits apply
+        - label: Quotes and order records
+          ours: "yes"
+          oursNote: Sales module
+          theirs: "yes"
+          theirsNote: Edition dependent
+        - label: Roles and permissions
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom business entities
+          ours: "yes"
+          oursNote: Extend the data model
+          theirs: "yes"
+          theirsNote: Paid editions
+        - label: Workflow automation
+          ours: "yes"
+          oursNote: Configure the workflow engine
+          theirs: "yes"
+          theirsNote: Edition limits apply
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: Salesforce is the named hosted-CRM reference in this table. Self-hosting includes responsibility for updates, backups and recovery, assigned to your team or partner.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Salesforce features
+      url: https://www.salesforce.com/sales/pricing/
+    - label: Free Suite limits
+      url: https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_free_suite.htm&language=en_US&type=5
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Buying decision
+    - Open Mercato
+  rows:
+    - topic: Software licence
+      theirs: Check the edition and user limits of each shortlisted CRM.
+      ours: The Open Mercato core is MIT licensed with a $0 licence fee.
+    - topic: Hosting
+      theirs: Decide where customer data and backups should live.
+      ours: Deploy in your environment and set your own data residency requirements.
+    - topic: Customization
+      theirs: List the processes and records your CRM must represent.
+      ours: Extend fields, entities, modules and workflows in code.
+    - topic: Operations
+      theirs: Assign patching, monitoring, backup and recovery ownership.
+      ours: Your team or an implementation partner operates the deployment.
+    - topic: Budget
+      theirs: Include implementation and ongoing service costs.
+      ours: Scope infrastructure, integrations, support and development separately.
+demo:
+  eyebrow: Explore Open Mercato CRM
+  title: Inspect the foundation before you commit.
+  body: Explore the customer workspace and public source code. Your technical team can review how data, permissions and extensions work before choosing a production architecture.
+  cta:
+    label: Explore Open Mercato CRM
+    href: /crm
+  image:
+    src: /media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg
+    alt: A won deal starts a configured CRM automation workflow
+steps:
+  title: Plan the deployment, data import and ongoing maintenance.
+  items:
+    - title: Define the environment
+      body: Agree hosting region, organizations, access roles and who will run the service.
+    - title: Prepare the customer data
+      body: Map accounts, contacts, deals and source identifiers. Clean duplicates and test a sample import.
+    - title: Rehearse real work
+      body: Run a pilot with sales users. Verify permissions, key integrations and a backup restoration.
+    - title: Move into production
+      body: Agree cutover, recovery steps, monitoring and support ownership before wider rollout.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Is Open Mercato free to self-host?
+      answer: The core software is MIT licensed. Budget separately for infrastructure, configuration, custom development and ongoing operations. A delivery partner can quote those services for your scope.
+    - question: Can we migrate an existing CRM?
+      answer: A migration starts with your export or API access, a record and relationship map, and a sample import. Workflows, attachments and integrations need their own validation. The delivery scope depends on the source system.
+    - question: Who maintains the deployment?
+      answer: Your internal team or a contracted partner. Agree patching, monitoring, backup restoration, incident handling and response times in the operating plan.
+    - question: Can we try the interface first?
+      answer: Yes. Explore the public demo, create a sandbox or inspect the repository. A production deployment should then be configured and tested against your business requirements.
+cta:
+  title: Bring your workflow and hosting requirements.
+  body: Tell us where the data should live, how many people need access and what your current CRM makes difficult. We can help you find an implementation route.
+  primary:
+    label: Discuss your deployment
+    href: /contact?interest=self-hosted-crm
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Self-hosted CRM users on maintenance and backups
+      url: https://www.reddit.com/r/CRMSoftware/comments/1wrzv4c/tried_to_save_money_on_crm_somehow_i_became_the/
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato production-readiness documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/deployment/production-readiness.mdx

@@ -1,0 +1,230 @@
+webflowId: 6af5bb0a85282a5c93e5e93c
+locale: en
+kind: alternative
+competitor: HubSpot
+seo:
+  title: HubSpot Alternative for a CRM You Own | Open Mercato
+  description: Explore an open-source HubSpot Sales CRM alternative. Compare customer records, customization, hosting and migration of deals, associations and workflows.
+hero:
+  eyebrow: HubSpot Sales CRM alternative
+  title: Build the custom records your sales process needs.
+  lead: Keep customer records, deal pipelines and sales activity together. Open Mercato gives your team an open-source foundation for the custom records, workflows and integrations your next stage needs.
+  primary:
+    label: Discuss your HubSpot migration
+    href: /contact?interest=hubspot-alternative
+  secondary:
+    label: Compare the capabilities
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Custom objects and advanced features change the HubSpot budget.
+  items:
+    - title: Custom objects require HubSpot Enterprise
+      body: Reviewers point to cost increases when moving into advanced features. HubSpot's custom objects require an Enterprise subscription. Scope your own data model on Open Mercato with implementation effort made explicit.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: Your business stops fitting the standard records
+      body: Assets, contracts, locations and service processes can become awkward when everything is forced into a contact or deal. Add purpose-built entities and relationships around the work you actually do.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: Moving customer history feels risky
+      body: Deal stages, associations and activity context need to survive the move. Rehearse those relationships with a sample before deciding how much of the sales workflow to migrate.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Customer records, pipelines and your own business objects.
+  items:
+    - title: A shared customer history
+      body: Connect people, companies, addresses, notes, activities and deals.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: A configurable deal pipeline
+      body: Work with stages, deal value, close dates and probabilities in board and list views.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Custom records and processes
+      body: Extend fields and entities, then implement the workflow and reporting your business requires.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Connections to operations
+      body: Build on sales and catalog modules when the customer journey extends into quotes, orders and fulfilment.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Your sales essentials, with room to build your own way.
+  lead: Bring contacts, deals and activity together. Add the records your business needs and keep control of the code and deployment.
+  label: What your team gets
+  tagline: GROW ON YOUR TERMS
+  columns:
+    - name: Open Mercato
+      note: Core CRM + extensible data model
+    - name: HubSpot
+      note: Sales CRM · plan dependent
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Run the CRM on your own infrastructure
+          ours: "yes"
+          theirs: "no"
+          theirsNote: HubSpot-hosted
+        - label: Full application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Proprietary platform
+        - label: $0 core licence fee, without a user cap
+          ours: "yes"
+          oursNote: Hosting and services extra
+          theirs: "no"
+          theirsNote: "Free tools: 2 users"
+    - title: Capabilities available in both
+      rows:
+        - label: Company and contact records
+          ours: "yes"
+          theirs: "yes"
+        - label: Deals and sales pipelines
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Plan limits apply
+        - label: Notes and activity history
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom fields / properties
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Plan limits apply
+        - label: Custom business objects
+          ours: "yes"
+          oursNote: Extend the data model
+          theirs: "yes"
+          theirsNote: Enterprise subscription
+        - label: Workflow automation
+          ours: "yes"
+          oursNote: Configure the workflow engine
+          theirs: "yes"
+          theirsNote: Plan dependent
+        - label: APIs for custom integrations
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: API limits apply
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: This table covers selected Sales CRM capabilities. HubSpot marketing, service and revenue products are assessed separately; required integrations and migration work are scoped for your project.
+  reviewed: "2026-11-12"
+  sources:
+    - label: HubSpot Sales CRM
+      url: https://www.hubspot.com/products/sales
+    - label: Custom objects
+      url: https://knowledge.hubspot.com/object-settings/create-custom-objects
+    - label: Free tools and limits
+      url: https://www.hubspot.com/pricing/crm?selectedPackage=free
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - HubSpot
+    - Open Mercato
+  rows:
+    - topic: Customer records
+      theirs: Contacts, companies and deals in HubSpot's CRM.
+      ours: People, companies, deals, notes and activities in the core CRM.
+    - topic: Custom objects
+      theirs: An Enterprise subscription is required for custom objects.
+      ours: Extend entities and fields in your application, with development scoped to the requirement.
+    - topic: Automation
+      theirs: Workflow capabilities vary by Hub and subscription.
+      ours: Use the workflow foundation and APIs to implement your process.
+    - topic: Commercial model
+      theirs: Hub and seat choices influence the subscription.
+      ours: MIT-licensed core with hosting, implementation and support budgeted separately.
+    - topic: Hosting and source
+      theirs: HubSpot operates its cloud service.
+      ours: Choose the environment and control the application source.
+    - topic: Marketing stack
+      theirs: Marketing Hub offers a broader marketing product suite.
+      ours: Scope required email, attribution, forms and marketing integrations individually.
+demo:
+  eyebrow: Explore Open Mercato CRM
+  title: Try the records your sales team will work with.
+  body: Inspect the customer and deal workspaces, then explore the custom-field configuration. Use real examples from your business to decide what to configure and what to extend.
+  cta:
+    label: Explore Open Mercato CRM
+    href: /crm
+  image:
+    src: /media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg
+    alt: A won deal starts a configured CRM automation workflow
+steps:
+  title: Move the relationships that make your CRM useful.
+  items:
+    - title: Define the sales scope
+      body: Inventory contacts, companies, deals, pipelines, custom objects, reports and the Hubs your sales team uses.
+    - title: Map records and associations
+      body: Preserve source IDs, owners, stages and company-contact-deal relationships. Decide how activity history and attachments will be retained.
+    - title: Test the connected workflow
+      body: Review sequences, email/calendar connections and marketing handoffs. Reimplement or integrate each required behavior and pilot with users.
+    - title: Reconcile and switch
+      body: Validate record counts and relationships, handle final changes and train the team on the new process.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Does this replace every HubSpot Hub?
+      answer: The strongest fit is a custom Sales CRM and operational workflows. Marketing automation, ad attribution, CMS, service tooling and HubSpot-specific integrations need a separate scope review.
+    - question: What happens to workflows and email sequences?
+      answer: Inventory their purpose, triggers, conditions and connected services. Your implementation team can then decide which behaviors to rebuild and which services to connect.
+    - question: Can we keep HubSpot for marketing?
+      answer: A phased architecture can keep a marketing service connected to a custom operational CRM. Define the owner of each field, consent record and lifecycle update, then test the synchronization.
+    - question: How do we estimate the migration?
+      answer: Start with record volumes, custom objects, association rules, activity history and integrations. A representative export helps establish the data work before a delivery estimate is agreed.
+cta:
+  title: Show us where your sales workflow has outgrown the setup.
+  body: Bring your pipelines, custom-object requirements and integrations. We can help you assess a CRM implementation around them.
+  primary:
+    label: Discuss your HubSpot migration
+    href: /contact?interest=hubspot-alternative
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: HubSpot CRM user reviews on Capterra
+      url: https://www.capterra.com/p/152373/HubSpot-CRM/reviews/
+    - label: HubSpot documentation for custom objects
+      url: https://knowledge.hubspot.com/object-settings/create-custom-objects
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato workflow documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/framework/workflows/index.mdx
