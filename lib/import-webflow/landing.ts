@@ -276,7 +276,8 @@ interface TitledItems {
   eyebrow?: string
   title: string
   lead?: Rich
-  items: { title: string; body: Rich }[]
+  /** `art`: the illustration a card shows after its text (an image without alt text), as a CDN URL. */
+  items: { title: string; body: Rich; art?: string }[]
 }
 
 /** A section of an h2 and (h3, p) pairs, with an eyebrow line before the h2 and a lead paragraph after it. */
@@ -285,13 +286,22 @@ function h3Section(c: Cursor, t: ItemText, where: string): TitledItems {
   const title = c.node('h2', undefined, where).text
   c.skipIcons(t)
   const lead = c.isNode('p') ? rich(t, c.node('p', undefined, where)) : undefined
-  const items: { title: string; body: Rich }[] = []
+  const items: TitledItems['items'] = []
   c.skipIcons(t)
   while (c.isNode('h3')) {
     const h = c.node('h3', undefined, where).text
     c.skipIcons(t)
     const body = rich(t, c.node('p', undefined, `${where} "${h}"`))
-    items.push({ title: h, body })
+    // the card's illustration follows its text: an image without alt text, before the next card
+    const p = c.peek()
+    let art: string | undefined
+    if (p?.kind === 'image' && !imageAlt(t, p)) {
+      const asset = p.assetId ? t.ctx.exp.assets.get(p.assetId) : undefined
+      if (!asset) throw new ItemStop(`${where} "${h}": the image asset ${p.assetId} is not in assets.json`)
+      art = asset.hostedUrl
+      c.i++
+    }
+    items.push(art === undefined ? { title: h, body } : { title: h, body, art })
     c.skipIcons(t)
   }
   if (items.length === 0) throw new ItemStop(`${where}: no items`)
@@ -727,7 +737,13 @@ export function landingEntry(
           eyebrow: tx(s.eyebrow),
           title: t.text(s.title),
           lead: md(s.lead),
-          items: s.items.map((i) => ({ title: t.text(i.title), body: md(i.body) })),
+          items: s.items.map((i) =>
+            compact({
+              title: t.text(i.title),
+              body: md(i.body),
+              art: i.art === undefined ? undefined : imageField(t, { url: i.art, alt: '' }),
+            }),
+          ),
         })
   const seo = {
     title: t.text(page.seo?.title?.trim() || page.title?.trim() || ''),

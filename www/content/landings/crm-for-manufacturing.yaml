@@ -1,0 +1,223 @@
+webflowId: 6af5bb0bc82a4a4ddfdc5ac0
+locale: en
+kind: industry
+seo:
+  title: CRM for Manufacturing and ERP Handoffs | Open Mercato
+  description: Connect manufacturing sales, quotes and customer orders with your operational workflow. Build a tailored CRM on Open Mercato and integrate your existing ERP.
+hero:
+  eyebrow: CRM for manufacturing
+  title: Give sales a clear path from customer request to shipped order.
+  lead: Quotes, specifications, delivery questions and order updates should stay connected. Build your manufacturing CRM on Open Mercato and bring the ERP information your sales team needs into their workflow.
+  primary:
+    label: Discuss your manufacturing workflow
+    href: /contact?interest=crm-for-manufacturing
+  secondary:
+    label: See the manufacturing case study
+    href: "#proof"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: The customer asks a simple question. Three teams chase the answer.
+  items:
+    - title: A won deal gets retyped downstream
+      body: Quotes, customer records and order details travel between sales and operations. Build a shared handoff with explicit record ownership and a connection to the ERP.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Sales cannot see what happens after the order
+      body: Delivery questions become calls to logistics. Give sales access to the shipment and order status relevant to the customer conversation.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: Your process lives in extra spreadsheets
+      body: Specifications, exceptions and approvals need their own place. Extend records and workflows around the way your products are sold and delivered.
+      art:
+        src: /media/landings/6af5f54c28ee1822c15f9c7c-om-lp-workflow-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Connect the commercial record to the operational work.
+  items:
+    - title: Accounts with history
+      body: Keep companies, contacts, addresses, notes and activities linked to the relationship.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: A manufacturing sales pipeline
+      body: Configure stages around qualification, quotation and commercial approval, with values and expected close dates.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Quotes that become orders
+      body: Use sales documents with line items, totals, payment and shipment context.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: The ERP handoff your team needs
+      body: Scope the product, customer, order and status connections, including validation and exception handling.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: From a customer list to a connected sales operation.
+  lead: See what a manufacturing CRM adds when customer records, quotes and fulfilment updates are currently kept in separate files.
+  label: What your team gets
+  tagline: CONNECT THE HANDOFFS
+  columns:
+    - name: Open Mercato
+      note: CRM + sales and shipment modules
+    - name: Spreadsheets + email
+      note: Separate files and manual handoffs
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Built-in links between accounts, contacts and deals
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Manual cross-references
+        - label: Convert a quote into a linked order
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Copy and re-enter
+        - label: Shipment records linked to orders
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Separate tracking files
+        - label: Application roles and feature permissions
+          ours: "yes"
+          theirs: "no"
+          theirsNote: File access only
+        - label: Approval workflows in the application
+          ours: "yes"
+          oursNote: Configure the workflow engine
+          theirs: "no"
+          theirsNote: Email follow-up
+    - title: Capabilities available in both
+      rows:
+        - label: Store customer and contact details
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual records
+        - label: Track pipeline stages and deal values
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Manual tracker
+    - title: Implementation and scope
+      rows:
+        - label: Synchronize customers and orders with your ERP
+          ours: build
+          oursNote: ERP integration
+          theirs: "no"
+          theirsNote: Manual handoff
+        - label: Plant-specific packing and carrier updates
+          ours: build
+          oursNote: MDM NT reference
+          theirs: "no"
+          theirsNote: Manual coordination
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: "Baseline: separate spreadsheets and email, without an integrated business application. Custom integrations are implementation work. MDM NT demonstrates a dedicated shipping implementation alongside its existing ERP."
+  reviewed: "2026-11-12"
+  sources:
+    - label: MDM NT implementation
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Workflow to check
+    - Open Mercato
+  rows:
+    - topic: Customer context
+      theirs: Can a colleague understand the relationship without asking the account owner?
+      ours: Linked companies, people, notes, activities and deals.
+    - topic: Quotation
+      theirs: Where are quote revisions, line items and commercial decisions kept?
+      ours: Quote and order foundations you can adapt to your process.
+    - topic: ERP handoff
+      theirs: Which records are entered twice and which system owns each field?
+      ours: Project-specific integration with agreed ownership and validation.
+    - topic: Shipment visibility
+      theirs: Can sales answer a delivery question from the customer record?
+      ours: Shipment records and integration options for carrier status.
+    - topic: Industry rules
+      theirs: Which specifications and approvals make your sales process different?
+      ours: Custom fields, entities and workflows for those requirements.
+demo:
+  eyebrow: MDM NT · manufacturing implementation
+  title: MDM NT connected the shipping information people needed.
+  body: At a 500-person manufacturer, Open Mercato connected packing records, label generation and tracking. Customer service gained shipment information inside the ERP it already used.
+  cta:
+    label: Read the MDM NT story
+    href: /case-studies/mdm-nt-shipping-automation
+  image:
+    src: /media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png
+    alt: Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.
+  caption: Open Mercato core order workspace. Explore MDM NT’s custom shipping workflow in the case study.
+steps:
+  title: Pilot one product line or sales team.
+  items:
+    - title: Follow one real order
+      body: Map the customer request, quote, approval, ERP handoff and delivery questions.
+    - title: Agree the data ownership
+      body: Identify customer and product masters, ERP identifiers and the systems responsible for each status.
+    - title: Run the connected pilot
+      body: Import a sample, configure stages and test both a standard order and an exception with sales and operations.
+    - title: Measure and expand
+      body: Track duplicate entry, time to answer order questions and handoff errors. Use the results to prioritize the next workflow.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Can we connect our current ERP?
+      answer: Start by reviewing its APIs, exports and integration options. MDM NT's project shows Open Mercato operating alongside an existing ERP. Your data mappings and synchronization behavior need to be scoped.
+    - question: Does this include production planning?
+      answer: The CRM and Sales modules cover the commercial workflow. Manufacturing planning, recipes and LOT traceability are domain requirements that can be addressed through a specialist implementation such as TraceCore.
+    - question: Can sales see stock and promised dates?
+      answer: Those views depend on reliable data from your inventory and planning systems. Include availability, reservation and delivery-date rules in the integration scope and test them with real orders.
+    - question: How should we judge the pilot?
+      answer: Agree a baseline for re-entry, order-status response time and handoff errors. Then test the same workflow with the people who use it before expanding the rollout.
+cta:
+  title: Bring one order and every handoff around it.
+  body: We can help you turn that journey into a focused CRM and integration scope.
+  primary:
+    label: Discuss your manufacturing workflow
+    href: /contact?interest=crm-for-manufacturing
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Manufacturing operators discussing CRM needs
+      url: https://www.reddit.com/r/manufacturing/comments/1i4uesn/what_pains_has_a_crm_solved_for_you/
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: MDM NT shipping automation case study
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation

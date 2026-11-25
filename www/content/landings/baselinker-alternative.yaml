@@ -1,0 +1,235 @@
+webflowId: 6af5dc11d99ef49d244210fd
+locale: en
+kind: alternative
+competitor: Base / BaseLinker
+seo:
+  title: BaseLinker Alternative for Custom Order Workflows | Open Mercato
+  description: Compare Base (BaseLinker) with a custom order-management application on Open Mercato. Assess costs, integrations, workflows and a phased migration.
+hero:
+  eyebrow: Base / BaseLinker alternative
+  title: Build an order system around your fulfilment rules.
+  lead: Build an owned order-management workspace when standard ecommerce flows no longer fit. Open Mercato brings customer, catalog, order and shipment records together as the foundation for your custom operation.
+  primary:
+    label: Discuss your Base migration
+    href: /contact?interest=baselinker-alternative
+  secondary:
+    label: Compare the capabilities
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Compare order-volume costs, custom rules and connector coverage.
+  items:
+    - title: Your order volume changes the software bill
+      body: Base combines subscription and order-volume pricing, with a separate Enterprise offer. Compare your actual account costs with the implementation, hosting and maintenance of an owned application.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: The exceptions become the daily process
+      body: B2B approvals, custom fulfilment rules and unusual ERP handoffs need more than another manual step. Implement the rules around your own order and customer data in Open Mercato.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: You cannot afford to lose a working connector
+      body: Base has a large ready-made integration catalog. List every marketplace, store, carrier and ERP flow before a migration. Open Mercato integrations are explicitly assessed and built for the project.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Build on the operational records your team needs.
+  items:
+    - title: Customer and order context
+      body: Connect people and companies with sales documents, addresses and activity history.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Products, variants and pricing
+      body: Use catalog and sales-channel modules as the basis for your product and pricing model.
+      art:
+        src: /media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg
+        alt: ""
+        decorative: true
+    - title: Orders, payments and shipments
+      body: Work with order records, sales adjustments, payments and shipment information in the sales modules.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Your fulfilment logic
+      body: Implement approvals, routing and ERP exchanges with workflows and APIs. Channel synchronization, labels and provider connections are scoped integration work.
+      art:
+        src: /media/landings/6af5f54d0e00f12bff84c20b-om-lp-operations-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Order essentials, with control over the rules behind them.
+  lead: Compare the operational foundation and the integration work required. Base has a ready-made connector ecosystem; Open Mercato is built for a scoped custom implementation.
+  label: What your team gets
+  tagline: OWN YOUR ORDER WORKFLOW
+  columns:
+    - name: Open Mercato
+      note: Sales + catalog + custom integrations
+    - name: Base / BaseLinker
+      note: Ecommerce operations platform
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Run the application on your infrastructure
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Hosted service
+        - label: Application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Commercial platform
+        - label: No per-order core licence charge
+          ours: "yes"
+          oursNote: Services and hosting extra
+          theirs: "no"
+          theirsNote: Volume-based commercial model
+    - title: Capabilities available in both
+      rows:
+        - label: Customer and order records
+          ours: "yes"
+          theirs: "yes"
+        - label: Products and variants
+          ours: "yes"
+          theirs: "yes"
+        - label: Payment and shipment records
+          ours: "yes"
+          theirs: "yes"
+        - label: Workflow automation
+          ours: "yes"
+          oursNote: Configure the engine
+          theirs: "yes"
+          theirsNote: Automatic actions
+    - title: Implementation and scope
+      rows:
+        - label: Ready-made marketplace and carrier catalog
+          ours: "no"
+          oursNote: Scope individual integrations
+          theirs: "yes"
+          theirsNote: Large integration ecosystem
+        - label: Project-specific ERP connections
+          ours: build
+          oursNote: Implementation
+          theirs: build
+          theirsNote: Connector / partner scope
+        - label: Custom order rules in your own application code
+          ours: "yes"
+          oursNote: Development required
+          theirs: build
+          theirsNote: Product / Enterprise scope
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: This compares order-management scope, not full ecommerce feature parity. Stock synchronization, marketplace listings, carrier labels, invoicing and country-specific requirements need separate validation. Open Mercato hosting, integrations and maintenance are paid delivery/operating work.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Base pricing and capabilities
+      url: https://base.com/en-US/pricing/
+    - label: Base ERP integrations
+      url: https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Base / BaseLinker
+    - Open Mercato
+  rows:
+    - topic: Order management
+      theirs: Managed multichannel order platform.
+      ours: Order, customer and shipment records with custom workflows.
+    - topic: Marketplace connections
+      theirs: Large ready-made integration catalog.
+      ours: Assess and implement each required channel connection.
+    - topic: Commercial model
+      theirs: Subscription and volume-based plans.
+      ours: MIT core without per-order licence charges; infrastructure and services cost separately.
+    - topic: Business rules
+      theirs: Automatic actions and product configuration.
+      ours: Application-level rules, custom modules and workflow implementation.
+    - topic: Migration
+      theirs: Orders, products, offers, identifiers and connected systems.
+      ours: Pilot one channel, reconcile data and validate the complete fulfilment path.
+demo:
+  eyebrow: MDM NT · manufacturing implementation
+  title: See an example of custom shipping automation.
+  body: The MDM NT case study describes a custom shipping implementation connected to business systems. It illustrates the delivery approach; it is not a claim that every Base connector is available out of the box.
+  cta:
+    label: Read the MDM NT story
+    href: /case-studies/mdm-nt-shipping-automation
+  image:
+    src: /media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png
+    alt: Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.
+  caption: Open Mercato core order workspace. Explore MDM NT’s custom shipping workflow in the case study.
+steps:
+  title: Migrate the order flow without breaking fulfilment.
+  items:
+    - title: Inventory the working connections
+      body: List marketplaces, stores, carriers, ERP systems, warehouses, currencies and every automatic action. Identify which connections can stay during a phased rollout.
+    - title: Map the operational data
+      body: Preserve SKU and offer identifiers, order statuses, addresses, payments and shipment references. Assign the system of record for stock and prices.
+    - title: Pilot one channel end to end
+      body: Test order intake, updates, stock behavior, cancellations, payment reconciliation, labels and tracking. Include retries, duplicate prevention and failure alerts.
+    - title: Reconcile and switch carefully
+      body: Set a data freeze and final synchronization plan, reconcile open orders, train operators and retain a tested rollback path.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Is Open Mercato a drop-in BaseLinker replacement?
+      answer: No. Base provides a large catalog of ready-made ecommerce integrations. Open Mercato is a custom application foundation. The required marketplace, carrier and ERP connections must be assessed and implemented before switching.
+    - question: Does Open Mercato charge per order?
+      answer: The MIT-licensed core has no per-order licence fee. Hosting, implementation, maintenance, support and external-provider usage still contribute to total cost.
+    - question: Can we keep Base for marketplace connectivity?
+      answer: A hybrid architecture can be scoped with Base handling selected channels and Open Mercato owning customer or operational processes. Define record ownership, synchronization and error handling before implementing it.
+    - question: When is this a good fit?
+      answer: When a distinctive operational workflow, code ownership or long-term application control justifies a custom implementation. A standard connector-led shop may be better served by a ready-made ecommerce platform.
+cta:
+  title: Bring the order exceptions your current setup cannot handle cleanly.
+  body: Start with your channels, monthly order range, ERP and fulfilment rules. Scope a practical pilot before committing to a full migration.
+  primary:
+    label: Discuss your Base migration
+    href: /contact?interest=baselinker-alternative
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Base official pricing
+      url: https://base.com/en-US/pricing/
+    - label: Base integrations and ERP connections
+      url: https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/
+    - label: Base / BaseLinker user reviews
+      url: https://pl.trustpilot.com/review/baselinker.com
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: Open Mercato catalog and pricing documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx
+    - label: Open Mercato shipment documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx
+    - label: MDM NT shipping automation case study
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation
