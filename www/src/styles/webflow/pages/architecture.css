@@ -1,0 +1,81 @@
+/*
+ * /architecture, a mirror of the live page (owner's decision of 25 Nov 2026, until the designer's pass, D7, replaces it).
+ * Origin: the embedded code of https://www.openmercato.com/architecture (the styles of its two video embeds), fetched
+ * on 25 Nov 2026.
+ * Edit as a mirror: change a rule only to match the live site.
+ */
+.video_component {
+  width: 100%;
+  aspect-ratio: 1.13 / 1;
+  background-color: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video_component iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  /* Scale to hide black lines on the vertical edges (optional) */
+  transform: scale(1.02);
+}
+
+.video_component.is-full {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video_component.is-full iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/*
+ * Not live: the click-to-load video (www/src/components/blog/VideoEmbed.astro, spec UI/UX) that stands for the live
+ * iframes fills the live video box; its look is the one of www/src/styles/blog.css, which this page does not load.
+ */
+.video_component .video-embed {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  background: #000 var(--video-poster, none) center / cover no-repeat;
+}
+.video_component .video-embed__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+}
+.video_component .video-embed__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #0c0c0c;
+  /* a play triangle cut out of the disc */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 38% 28%, 38% 72%, 74% 50%, 38% 28%);
+}
+.video_component .video-embed__label {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.6);
+  font-size: 15px;
+}
+.video_component .video-embed__player {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

@@ -1,0 +1,39 @@
+---
+// The /architecture trade-off section as the live one is: the tagline (`eyebrow`) and heading beside the big quote
+// card holding the block's text.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'prose'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const paragraphs = block.markdown.split(/\n\s*\n/).map((p) => p.trim())
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex is-aligned-top">
+        <div class="header_content no-shrink">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        <div class="bg-grid_component">
+          <div class="bg-grid_card is-quote is-big">
+            <div class="bg-grid_card-content">
+              {paragraphs.map((p) => <p class="text-color-secondary" set:html={inline(t(p))} />)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

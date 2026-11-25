@@ -1,0 +1,107 @@
+---
+// The /architecture scenarios as the live ones are: the tagline (`eyebrow`) and heading, then a two-column bordered
+// grid of cards: the icon, the title, the scenario (`body`), the tags (`points`) and the blueprint (`note`), a Markdown
+// list whose indented items are a list nested in the item above them. The grid lines follow the live cards: after
+// every card a line (shown on tablets only after the even ones) and a bottom line in each row but the last.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+// the live page draws its icons inline: an icon of the site's media is inlined the same way, its file read at build time
+const svgs = import.meta.glob<string>('../../../public/media/pages/*.svg', { query: '?raw', import: 'default', eager: true })
+const svg = (src: string): string | undefined => svgs[`../../../public${src}`]
+
+/**
+ * A list of `- ` items, those indented under an item a list inside it, as the live rich text nests them (without the
+ * live role="list": the catalog's base.css drops the bullets of such a list).
+ */
+function nestedList(md: string): string {
+  const items: { text: string; children: string[] }[] = []
+  for (const line of md.split(/\r?\n/)) {
+    const m = /^(\s*)[-*]\s+(.*)$/.exec(line)
+    if (!m) continue
+    if (m[1]!.length > 0 && items.length > 0) items[items.length - 1]!.children.push(m[2]!)
+    else items.push({ text: m[2]!, children: [] })
+  }
+  const li = (i: { text: string; children: string[] }): string =>
+    i.children.length === 0
+      ? `<li>${inline(t(i.text))}</li>`
+      : `<li>${inline(t(i.text))}<br/><ul>${i.children.map((c) => `<li>${inline(t(c))}</li>`).join('')}</ul></li>`
+  return `<ul>${items.map(li).join('')}</ul>`
+}
+const n = block.items.length
+const lastRow = n - (n % 2 === 0 ? 2 : 1)
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-2-col">
+      {
+        block.items.map((i, k) => (
+          <div class="border-grid_card">
+            <div class="border-grid_card-content">
+              {i.icon && (
+                <>
+                  <div class="border-grid_icon-wrapepr">
+                    {svg(i.icon.src) ? (
+                      <div class="border-grid_icon w-embed" set:html={svg(i.icon.src)} />
+                    ) : (
+                      <div class="border-grid_icon w-embed">
+                        <img src={i.icon.src} alt={i.icon.alt} width="20" height="20" loading="lazy" />
+                      </div>
+                    )}
+                  </div>
+                  <div class="spacer-1rem" />
+                </>
+              )}
+              {i.title && <h3 class="text-size-large">{t(i.title)}</h3>}
+              {i.body && (
+                <>
+                  <div class="spacer-1rem" />
+                  <p class="text-color-secondary" set:html={inline(t(i.body))} />
+                </>
+              )}
+              {i.points && (
+                <>
+                  <div class="spacer-1rem" />
+                  <div class="label-list_list">
+                    {i.points.map((p) => (
+                      <div class="label-list_item" set:html={inline(t(p))} />
+                    ))}
+                  </div>
+                </>
+              )}
+              {i.note && (
+                <>
+                  <div class="spacer-medium" />
+                  <div class="text-rich-text text-color-secondary w-richtext" set:html={nestedList(i.note)} />
+                </>
+              )}
+            </div>
+            {k < n - 1 && <div class:list={['border-grid_line', k % 2 === 1 && 'show-tablet']} />}
+            {k < lastRow && <div class="border-grid_line is-bottom hide-tablet" />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>
