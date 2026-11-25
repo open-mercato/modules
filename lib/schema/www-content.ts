@@ -670,6 +670,14 @@ export const NON_PAGE_SEGMENTS = [
   'og',
 ] as const
 
+/**
+ * Unique pages (Phase 6) that Webflow serves until their phase and that pages built before it link: `/careers` (each
+ * job page's breadcrumb, Phase 4) and the contact and CRM pages (the landings' calls to action, Phase 5). Those links
+ * point to the live site (MAIN_SITE_ORIGIN) until the page is built here; a noindex preview lists them as pending and
+ * production fails on them (lib/emit/pages-merge.ts). Phase 6 empties the list.
+ */
+export const PENDING_UNIQUE_PAGES = ['careers', 'contact', 'crm'] as const
+
 /** The pages entry routed at `/`. */
 export const HOME_PAGE_SLUG = 'home'
 
