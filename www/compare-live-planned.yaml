@@ -1,25 +1,22 @@
 # Intended differences for `yarn om compare-live --planned` (www site migration spec, cutover step C6; RUNBOOK,
 # "Main site switch"): one entry per URL and field the main site differs from the live Webflow site on purpose, with
-# the reason. Owner's decisions of 25 Nov 2026: template parts (related posts, the byline date, case study facts, the
-# sidebar CTA and table of contents, template-only images) are not reproduced before Phase 5. Body text and content
-# images were compared block by block (Webflow rich text against the preview's prose): the same, apart from what a
-# note names.
+# the reason. Owner's decision of 25 Nov 2026: until the designer's pass the main site mirrors the live templates
+# (markup, Webflow classes, breadcrumb, sidebar CTA, table of contents, carousels), so a template part differs only
+# where a note says why. Body text and content images were compared block by block (Webflow rich text against the
+# preview's): the same, apart from what a note names.
 # Landings and unique pages (Phases 5 and 6) are not listed: they fail until they are migrated.
 - url: /blog
   field: description
   note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), final text with the unique pages (Phase 6)."
 - url: /blog
   field: text
-  note: "Template, decided in Phase 5 with the designer: the list layout (featured post, filters, cards, counts) differs; every published entry is listed and linked."
-- url: /blog
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the list layout (featured post, filters, cards, counts) differs; every published entry is listed and linked."
+  note: "Live's category filter also offers Security, a category with no published post (here only categories with a post), lists the categories in another order, and has Webflow's form messages and the filter's empty-state text in its markup; live lists the post of 12 Apr 2026 (Open-source ERP in 2026) last, here it is in date order. Every published post is listed and linked, in the live markup."
 - url: /blog
   field: json-ld
   note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
 - url: /case-studies
   field: text
-  note: "Template, decided in Phase 5 with the designer: the list layout (featured post, filters, cards, counts) differs; every published entry is listed and linked."
+  note: "Live's page has no <main>, so its main text takes in the closing call to action that follows <main> here, and it has Webflow's form messages and the filter's empty-state text in its markup. The header, the filter and every card are the same."
 - url: /case-studies
   field: json-ld
   note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
@@ -28,634 +25,172 @@
   note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), final text with the unique pages (Phase 6)."
 - url: /certified-partners
   field: text
-  note: "Template, decided in Phase 5 with the designer: the list layout (featured post, filters, cards, counts) differs; every published entry is listed and linked."
-- url: /certified-partners
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the list layout (featured post, filters, cards, counts) differs; every published entry is listed and linked."
+  note: 'Live''s filter lists every country and language of Webflow in hidden selects and every tier and budget, also those no published partner has (here the values published partners have); each live card carries Finsweet''s hidden filter fields; live''s page has no <main>, so its main text takes in the closing call to action; its lead says "partner directory" where this page says "partner list". Every published partner is listed and linked, in the live markup.'
 - url: /certified-partners
   field: json-ld
   note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
-- url: /blog-posts/10-it-department-fears-about-open-mercato-answered-honestly
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/10-it-department-fears-about-open-mercato-answered-honestly
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/9-questions-software-agencies-open-mercato-honest-answers
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/9-questions-software-agencies-open-mercato-honest-answers
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/a-ceo-built-a-store-in-a-weekend
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/a-ceo-built-a-store-in-a-weekend
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/agentic-coding-at-scale
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/agentic-coding-at-scale
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (15 of 15)."
-- url: /blog-posts/ai-code-needs-a-harness
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/ai-code-needs-a-harness
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
 - url: /blog-posts/ai-engineering-at-enterprise-scale-8-lessons-fortune-500
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /blog-posts/ai-engineering-at-enterprise-scale-8-lessons-fortune-500
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/ai-engineering-at-enterprise-scale-8-lessons-fortune-500
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/ai-engineering-for-large-scale-commerce
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/ai-engineering-for-large-scale-commerce
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/ai-engineering-foundation-framework
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/ai-engineering-foundation-framework
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/ai-sdlc-adoption-resistance-9-hidden-blockers
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/ai-sdlc-adoption-resistance-9-hidden-blockers
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (3 of 3)."
-- url: /blog-posts/built-with-ai-designed-for-ai
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/built-with-ai-designed-for-ai
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/cezar-cockpit-for-ai-coding-agents
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/cezar-cockpit-for-ai-coding-agents
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/claude-code-vs-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/claude-code-vs-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/coding-agents-benchmark-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/coding-agents-benchmark-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (4 of 4)."
-- url: /blog-posts/comp-ai-crm-vs-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/comp-ai-crm-vs-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/cto-questions-before-building-on-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/cto-questions-before-building-on-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/cut-costs-own-your-software
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/cut-costs-own-your-software
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/decision-ready-ai-engineering-hackathon
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/decision-ready-ai-engineering-hackathon
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
-- url: /blog-posts/django-vs-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/django-vs-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/fire-and-forget-ai-engineering-open-mercato-tutorial
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/fire-and-forget-ai-engineering-open-mercato-tutorial
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/first-funding-round
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/first-funding-round
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/introducing-agent-orchestrator
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/introducing-agent-orchestrator
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (5 of 5)."
-- url: /blog-posts/odoo-vs-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/odoo-vs-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
-- url: /blog-posts/om-skills-cezar-open-source-sandboxes
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/om-skills-cezar-open-source-sandboxes
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/open-mercato-for-agencies-new-questions-after-27-partners
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-for-agencies-new-questions-after-27-partners
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/open-mercato-license-you-keep-the-code
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation."
-- url: /blog-posts/open-mercato-license-you-keep-the-code
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/open-mercato-nextjs-crm-framework
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-nextjs-crm-framework
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/open-mercato-nodejs-erp-platform
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-nodejs-erp-platform
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
 - url: /blog-posts/open-mercato-sandboxes-ga
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: a body video is a click-to-load link with its title on the preview, an iframe on live."
-- url: /blog-posts/open-mercato-sandboxes-ga
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/open-mercato-typescript-crm-framework
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-typescript-crm-framework
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
+  note: "A body video is a click-to-load link with its title here (nothing loads from YouTube before a click), an iframe on live; the byline's minutes to read are written at build here, by a script on live. The page is the same otherwise."
 - url: /blog-posts/open-mercato-typescript-erp-framework
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /blog-posts/open-mercato-typescript-erp-framework
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-typescript-erp-framework
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
 - url: /blog-posts/open-mercato-vs-twenty
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /blog-posts/open-mercato-vs-twenty
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-mercato-vs-twenty
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/open-source-erp-alternatives
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-source-erp-alternatives
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
-- url: /blog-posts/open-source-erp-odoo-erpnext-open-mercato-comparison
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/open-source-erp-odoo-erpnext-open-mercato-comparison
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/pirate-ship-ai-adoption-400-person-it
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/pirate-ship-ai-adoption-400-person-it
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/productivity-reliability-paradox
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/productivity-reliability-paradox
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/python-engineer-node-project-four-steps
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/python-engineer-node-project-four-steps
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/retool-vs-open-mercato-when-low-code-stops-paying-off
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/retool-vs-open-mercato-when-low-code-stops-paying-off
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/sap-vs-open-mercato
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/sap-vs-open-mercato
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (3 of 3)."
-- url: /blog-posts/software-houses-fixed-scope-erp-faster
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/software-houses-fixed-scope-erp-faster
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/the-third-path-buy-build-own-the-foundation
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/the-third-path-buy-build-own-the-foundation
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
-- url: /blog-posts/we-dont-do-ai-we-build-the-harness-around-it
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/we-dont-do-ai-we-build-the-harness-around-it
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/what-enterprises-actually-ask-about-ai-assisted-engineering
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/what-enterprises-actually-ask-about-ai-assisted-engineering
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /blog-posts/when-sales-reps-build-their-own-tools
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/when-sales-reps-build-their-own-tools
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (3 of 3)."
-- url: /blog-posts/which-utility-portals-need-a-connector
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/which-utility-portals-need-a-connector
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
 - url: /blog-posts/why-ai-rollouts-die-in-the-it-department
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /blog-posts/why-ai-rollouts-die-in-the-it-department
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/why-ai-rollouts-die-in-the-it-department
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/wms-module-open-source
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is the same apart from this: live hides the e-mail address in the body behind Cloudflare's obfuscation; a body video is a click-to-load link with its title on the preview, an iframe on live."
-- url: /blog-posts/wms-module-open-source
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (3 of 3)."
-- url: /blog-posts/your-agents-arent-the-bottleneck-you-are-2
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/your-agents-arent-the-bottleneck-you-are-2
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (1 of 1)."
-- url: /blog-posts/your-ai-access-is-not-property
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/your-ai-access-is-not-property
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (0 of 0)."
-- url: /case-studies/arvo-configurator
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/arvo-configurator
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (4 of 4)."
-- url: /case-studies/covo-travel-esim-wallet
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/covo-travel-esim-wallet
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (4 of 4)."
-- url: /case-studies/creativaos-law-firm-client-history
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/creativaos-law-firm-client-history
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (3 of 3)."
-- url: /case-studies/edube-ai-tutor
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/edube-ai-tutor
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (4 of 4)."
 - url: /case-studies/flowbiz-sewing-workshop-quoting
   field: title
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /case-studies/flowbiz-sewing-workshop-quoting
   field: h1
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /case-studies/flowbiz-sewing-workshop-quoting
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/flowbiz-sewing-workshop-quoting
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (2 of 2)."
-- url: /case-studies/kickserve-property-management
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/kickserve-property-management
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (2 of 2)."
-- url: /case-studies/mdm-nt-shipping-automation
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/mdm-nt-shipping-automation
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (0 of 0)."
-- url: /case-studies/opak-kreft-ppwr-documents
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/opak-kreft-ppwr-documents
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (2 of 2)."
-- url: /case-studies/open-service
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/open-service
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (3 of 3)."
-- url: /case-studies/pinpaw-gps-back-office
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/pinpaw-gps-back-office
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (5 of 5)."
-- url: /case-studies/senior-care-operations
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/senior-care-operations
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (3 of 3)."
-- url: /case-studies/thegoodcode-hours-rates-project-margin
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/thegoodcode-hours-rates-project-margin
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (4 of 4)."
-- url: /case-studies/tracecore
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/tracecore
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (3 of 3)."
-- url: /case-studies/vistula-valley-member-platform
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, numbered stats, the CTA and a carousel of every other case study; the preview has the case study facts, the video label and 3 related case studies. The body is word for word the same."
-- url: /case-studies/vistula-valley-member-platform
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's carousel shows every other case study, the preview 3 related ones. The content images are the same (4 of 4)."
 - url: /certified-partners/10clouds
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/10clouds
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/10clouds
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/300-codes
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/300-codes
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/300-codes
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/amt-solution
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/amt-solution
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/amt-solution
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/cognize
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/cognize
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/cognize
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/commerce-weavers
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/commerce-weavers
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/dev4you
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/dev4you
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/dev4you
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/easy-automate
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/easy-automate
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/easy-automate
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/enxoo
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/enxoo
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/enxoo
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/evojam
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/evojam
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/evojam
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/fast-white-cat
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/fast-white-cat
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/fast-white-cat
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/filanovum
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/filanovum
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/filanovum
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/freighttech
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/freighttech
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/freighttech
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/full-stack-house
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/full-stack-house
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/full-stack-house
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/gonextstage
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/gonextstage
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/lemonmind
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/lemonmind
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/lemonmind
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/macopedia
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/macopedia
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/macopedia
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/nardeo
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/nardeo
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/nardeo
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/omdyo
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/omdyo
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/omdyo
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/scaleoma
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/scaleoma
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/scaleoma
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/softiq
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/softiq
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/softiq
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/tandemite
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/tandemite
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/tandemite
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
-- url: /certified-partners/the-good-code
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/the-good-code
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/they-dev
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/they-dev
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/tracecore
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/tracecore
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/tracecore
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/univio
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/univio
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/univio
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /certified-partners/white-label-coders
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
 - url: /certified-partners/white-label-coders
   field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the partner type, the visit link, the contact CTA and the site CTA; the preview has the facts list. The body is word for word the same."
-- url: /certified-partners/white-label-coders
-  field: images
-  note: "Template, decided in Phase 5 with the designer: live's tier badge (and its case study carousel). The content images are the same (0 of 0)."
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
 - url: /careers-jobs/senior-ai-engineering
   field: title
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
-- url: /careers-jobs/senior-ai-engineering
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the all open roles link, the apply button and the site CTA; the preview has the job facts and its lead. The body is word for word the same."
-- url: /blog-posts/erpnext-alternative-what-to-replace
-  field: text
-  note: "Template, decided in Phase 5 with the designer: live has the breadcrumb, the sidebar CTA and the table of contents; the preview has the byline date, the updated date and related posts. The body is word for word the same."
-- url: /blog-posts/erpnext-alternative-what-to-replace
-  field: images
-  note: "Template, decided in Phase 5 with the designer: the post image in the header and the related post cards. The content images are the same (2 of 2)."
