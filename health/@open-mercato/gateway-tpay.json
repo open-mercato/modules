@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-tpay",
   "version": "0.10.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "computedAt": "2026-11-25T11:45:37Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "untested",
+      "0.10": "broken",
       "0.9": "untested",
-      "next": "untested"
+      "next": "quarantine"
     },
     "fit": {
       "0.10": "ok",
@@ -93,7 +93,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.10."
+      "detail": "Broken at add on 0.10 since 25 Nov."
     },
     {
       "id": "VER-2",
@@ -120,14 +120,13 @@
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.10."
+          "code": "BROKEN",
+          "text": "Broken at add on 0.10 since 25 Nov."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-tpay@0.10.0"
+      ]
     },
     "0.9": {
       "decision": "ask",
@@ -144,7 +143,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.0 on next yet; the receipt is for 0.8.1-develop.7442.1.4c1dbf1f0e (broken at add, 22 Nov)."
+          "text": "Not judged on next: on 25 Nov, Yarn held back a dependency younger than its age gate."
         }
       ],
       "consentText": "Install @open-mercato/gateway-tpay@0.10.0"

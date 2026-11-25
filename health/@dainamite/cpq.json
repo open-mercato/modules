@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq",
   "version": "1.2.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "computedAt": "2026-11-25T11:45:37Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -155,7 +155,7 @@
         },
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): in the age gate on 23 Nov."
+          "text": "Not judged on next: on 25 Nov, Yarn held back a dependency younger than its age gate."
         }
       ],
       "consentText": "Install @dainamite/cpq@1.2.0"

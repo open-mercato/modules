@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
   "version": "0.10.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "computedAt": "2026-11-25T11:45:37Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.10": "broken",
       "0.9": "untested",
-      "next": "untested"
+      "next": "verified"
     },
     "fit": {
       "0.10": "ok",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.10; verified on no line."
+        "Built for 0.10; verified on next."
       ]
     }
   },
@@ -139,21 +139,20 @@
       "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
     },
     "next": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.0 on next yet; the receipt is for 0.10.1-develop.7741.1.61a2652671 (broken at add, 22 Nov)."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on next."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
+      ]
     }
   },
   "state": "active",
   "recommended": {
     "0.10": null,
     "0.9": null,
-    "next": null
+    "next": "0.10.0"
   },
   "evaluated": {
     "0.10": "0.10.0",
