@@ -20,6 +20,7 @@ import { metaDescription } from '../lib/meta-description.ts'
 import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
+import { mainSiteJsonLd } from '../../../lib/core/main-site-json-ld.ts'
 import { otherProductionOrigins, siteConfig } from '../../../lib/core/site-host.ts'
 import { EMAIL_OFF, EMAIL_ON } from '../lib/email-off.ts'
 
@@ -122,6 +123,8 @@ const speculation = JSON.stringify({
     <style is:inline set:html={`${fontFaceCss()}@view-transition{navigation:auto}`}></style>
     {run && <script type="speculationrules" is:inline set:html={speculation} />}
     {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLdText(jsonLd)} />}
+    {/* the main site's Organization and WebSite, on each of its pages (www site migration, Phase 7) */}
+    {!run && <script type="application/ld+json" is:inline set:html={jsonLdText(mainSiteJsonLd(site))} />}
     <slot name="head" />
     <Fragment set:html={EMAIL_ON} />
   </head>
