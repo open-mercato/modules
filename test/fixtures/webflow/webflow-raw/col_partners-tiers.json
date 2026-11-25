@@ -1,0 +1,74 @@
+{
+  "id": "6a3393f46f251da6f05ac59a",
+  "displayName": "Partners / Tiers",
+  "singularName": "Partners / Tier",
+  "slug": "partners-tiers",
+  "createdOn": "2026-06-18T06:45:08.170Z",
+  "lastUpdated": "2026-06-18T08:35:26.121Z",
+  "fields": [
+    {
+      "id": "99724aea33964264d483870cb8d09ce2",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "order",
+      "displayName": "Order",
+      "helpText": "Sort order for tiers",
+      "validations": {
+        "format": "integer",
+        "precision": 1,
+        "allowNegative": false
+      }
+    },
+    {
+      "id": "e868cf8d2c9c4692335d2b2d290b2844",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Color",
+      "slug": "background-color",
+      "displayName": "Label Color",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "7c21f11d90dc1d2aa283927d6dc0e4f2",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Color",
+      "slug": "text-color",
+      "displayName": "Text Color",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "f8d801921776da1ca3c566cf8e7c8b1c",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "c7176c823ce0e3f76616a04bdb10e68b",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

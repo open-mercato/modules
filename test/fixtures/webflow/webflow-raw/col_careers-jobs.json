@@ -1,0 +1,163 @@
+{
+  "id": "6a3143f69aa7ba6170e3e963",
+  "displayName": "Careers / Jobs",
+  "singularName": "Careers / Job",
+  "slug": "careers-jobs",
+  "createdOn": "2026-06-16T12:39:18.476Z",
+  "lastUpdated": "2026-06-17T15:30:14.676Z",
+  "fields": [
+    {
+      "id": "f2ba773782a6341bd78cce92b9ec8e1d",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "short-description",
+      "displayName": "Short Description",
+      "helpText": "One-liner shown on the job card and hero",
+      "validations": null
+    },
+    {
+      "id": "ab294f6c045528da5116a30d16fa3a03",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "location",
+      "displayName": "Location",
+      "helpText": "e.g. Remote / Wrocław / Hybrid",
+      "validations": null
+    },
+    {
+      "id": "a911345eb9ecc8fb602984448eabae28",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Option",
+      "slug": "employment-type",
+      "displayName": "Employment Type",
+      "helpText": "Pick one",
+      "validations": {
+        "options": [
+          {
+            "name": "Full-time",
+            "id": "dc282e434043c5a5034effab40047e1f"
+          },
+          {
+            "name": "Part-time",
+            "id": "b30af0c4a8c5f9853e5cbc1991fefd49"
+          },
+          {
+            "name": "Contract",
+            "id": "499e83689f3a046a3b40aded9461eae3"
+          },
+          {
+            "name": "Internship",
+            "id": "8bccc2ecfb4869348a6639f529f767a6"
+          }
+        ]
+      }
+    },
+    {
+      "id": "e36f8668fc9b30ac3e590a6b61ad4a66",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "department",
+      "displayName": "Department",
+      "helpText": "e.g. Engineering, GTM, Operations",
+      "validations": null
+    },
+    {
+      "id": "1995ae4930067fe570ae59ea6bc1004a",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "description",
+      "displayName": "Description",
+      "helpText": "Full job description (responsibilities, requirements, etc.)",
+      "validations": null
+    },
+    {
+      "id": "137bd64832f85ce87bfbbf17338bc31c",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Link",
+      "slug": "apply-url",
+      "displayName": "Apply URL",
+      "helpText": "Link to application form / ATS / mailto",
+      "validations": null
+    },
+    {
+      "id": "47d1bb5a067991e8e9540ec2b9c85e12",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Switch",
+      "slug": "open-position",
+      "displayName": "Open position",
+      "helpText": "Turn on while the role is actively hiring (used to filter the list)",
+      "validations": null
+    },
+    {
+      "id": "e1f454c73e33c9f1a4385d79d522feee",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "display-order",
+      "displayName": "Display Order",
+      "helpText": "Number used for sorting (lower = higher on the list)",
+      "validations": {
+        "format": "integer",
+        "allowNegative": true,
+        "precision": 1
+      }
+    },
+    {
+      "id": "f8720e43809e064f9a7610a66f9b0779",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "salary",
+      "displayName": "Salary",
+      "helpText": "e.g. 140–180 PLN/h net (B2B) — shown as a chip in the hero",
+      "validations": null
+    },
+    {
+      "id": "05579d8929c683d4353e573f932e2a69",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "tech-stack",
+      "displayName": "Tech stack",
+      "helpText": "Comma-separated, e.g. TypeScript, React, Next.js, PostgreSQL, AI/LLM",
+      "validations": null
+    },
+    {
+      "id": "7298d0661c65d013522fb1872022da15",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "87d985cb2251403e99c280b9459f343b",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": null,
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "6a339591c109ff8d4e242a32",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-18T08:22:45.223Z",
+    "lastUpdated": "2026-06-18T08:19:32.311Z",
+    "createdOn": "2026-06-18T06:52:01.161Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "order": 1,
+      "background-color": "#2f520b",
+      "text-color": "#b4f372",
+      "name": "AI-Native Core Agency",
+      "slug": "ai-native-core-agency"
+    }
+  },
+  {
+    "id": "6a3395897eb45b0d16093c3f",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-18T08:22:45.223Z",
+    "lastUpdated": "2026-06-18T08:19:32.310Z",
+    "createdOn": "2026-06-18T06:51:53.897Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "order": 2,
+      "background-color": "#b4f372",
+      "text-color": "black",
+      "name": "AI-Native Expert Agency",
+      "slug": "ai-native-expert-agency"
+    }
+  },
+  {
+    "id": "6a33957b442ab5f027cd8d56",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-18T08:22:45.223Z",
+    "lastUpdated": "2026-06-18T08:19:32.309Z",
+    "createdOn": "2026-06-18T06:51:39.528Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "order": 3,
+      "background-color": "#eefb63",
+      "text-color": "black",
+      "name": "AI-Native Agency",
+      "slug": "ai-native-agency"
+    }
+  },
+  {
+    "id": "6a3395528bca900549dfa54d",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-18T08:22:45.223Z",
+    "lastUpdated": "2026-06-18T08:19:32.308Z",
+    "createdOn": "2026-06-18T06:50:58.745Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "order": 4,
+      "background-color": "#bc9aff",
+      "text-color": "black",
+      "name": "Agency",
+      "slug": "agency"
+    }
+  }
+]

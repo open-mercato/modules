@@ -1,0 +1,142 @@
+[
+  {
+    "id": "6a9fce5ca6c38271a14107fe",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-09-10T07:54:28.239Z",
+    "lastUpdated": "2026-09-08T08:59:48.669Z",
+    "createdOn": "2026-09-08T08:59:08.976Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 9,
+      "name": "Construction & Real Estate",
+      "slug": "construction-real-estate"
+    }
+  },
+  {
+    "id": "6a50c400bb3c504ed7b43e0c",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-07-10T10:06:33.202Z",
+    "lastUpdated": "2026-07-10T10:06:06.817Z",
+    "createdOn": "2026-07-10T10:05:52.753Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": null,
+      "name": "Energy & Utilities",
+      "slug": "energy-utilities"
+    }
+  },
+  {
+    "id": "6a4e83e65546d6cbbfa0a458",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-07-08T17:37:12.123Z",
+    "lastUpdated": "2026-07-08T17:08:04.703Z",
+    "createdOn": "2026-07-08T17:07:50.865Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 8,
+      "name": "Healthcare",
+      "slug": "healthcare"
+    }
+  },
+  {
+    "id": "6a4e7d47adae45fb23d3cb25",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-07-08T17:37:12.123Z",
+    "lastUpdated": "2026-07-08T16:39:41.315Z",
+    "createdOn": "2026-07-08T16:39:35.016Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 7,
+      "name": "EdTech",
+      "slug": "edtech"
+    }
+  },
+  {
+    "id": "6a2d47d7588a87e9b160b47e",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.661Z",
+    "createdOn": "2026-06-13T12:06:47.631Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 6,
+      "name": "Other",
+      "slug": "other"
+    }
+  },
+  {
+    "id": "6a2d47d15377018dfd010617",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.655Z",
+    "createdOn": "2026-06-13T12:06:41.969Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 5,
+      "name": "Software & Technology",
+      "slug": "software-technology"
+    }
+  },
+  {
+    "id": "6a2d47c3de45e959f399d531",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.660Z",
+    "createdOn": "2026-06-13T12:06:27.711Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 4,
+      "name": "Finance",
+      "slug": "finance"
+    }
+  },
+  {
+    "id": "6a2d47afb835d8b669528625",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.656Z",
+    "createdOn": "2026-06-13T12:06:07.251Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 3,
+      "name": "Retail",
+      "slug": "retail"
+    }
+  },
+  {
+    "id": "6a2d47a6172fd222e5fa2ef2",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.657Z",
+    "createdOn": "2026-06-13T12:05:58.990Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 2,
+      "name": "Freight & Logistics",
+      "slug": "freight-logistics"
+    }
+  },
+  {
+    "id": "6a2d47a0a589b9cdd008e9da",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-06-13T14:31:11.476Z",
+    "lastUpdated": "2026-06-13T12:50:40.658Z",
+    "createdOn": "2026-06-13T12:05:52.819Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "display-order": 1,
+      "name": "Manufacturing",
+      "slug": "manufacturing"
+    }
+  }
+]

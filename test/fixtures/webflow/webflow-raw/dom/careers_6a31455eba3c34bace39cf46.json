@@ -1,0 +1,98 @@
+{
+  "pageId": "6a31455eba3c34bace39cf46",
+  "branchId": null,
+  "nodes": [
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e185f",
+      "type": "component-instance",
+      "componentId": "5ffad809-50c0-31dd-2ebc-e3eb71f28b9b",
+      "propertyOverrides": []
+    },
+    {
+      "id": "56ced6da-44b3-ce8e-615c-2ea8f5e36563",
+      "type": "component-instance",
+      "componentId": "a4a86da8-5153-46f7-3524-75fa8a050a61",
+      "propertyOverrides": []
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e1860",
+      "type": "component-instance",
+      "componentId": "0a6631b9-2a3e-f4ae-46ed-9743a9b2f26d",
+      "propertyOverrides": []
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e1869",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"text-size-tiny text-weight-medium text-color-additional\" data-wf-link-page-id=\"69a97e33d587824eef365d5f\">Home</a>",
+        "text": "Home"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e186b",
+      "type": "text",
+      "text": {
+        "html": "<div class=\"text-size-tiny text-weight-medium text-color-additional\">/ </div>",
+        "text": "/ "
+      },
+      "attributes": {}
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e186d",
+      "type": "text",
+      "text": {
+        "html": "<a class=\"text-size-tiny text-weight-medium\" data-wf-link-page-id=\"6a31455eba3c34bace39cf46\">Careers</a>",
+        "text": "Careers"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e1870",
+      "type": "text",
+      "text": {
+        "html": "<h1>Join<br data-w-id=\"ebfee06d-836a-8f64-312a-dc2e061cbc4c\">Open Mercato</h1>",
+        "text": "Join\nOpen Mercato"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e1874",
+      "type": "text",
+      "text": {
+        "html": "<p class=\"text-color-secondary\">Open Mercato is an open-source, AI-native foundation for modern business software, built by a small and senior team. We hire builders who care about getting the architecture right and shipping real product. See our open roles below.</p>",
+        "text": "Open Mercato is an open-source, AI-native foundation for modern business software, built by a small and senior team. We hire builders who care about getting the architecture right and shipping real product. See our open roles below."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "44e2d325-b614-f867-473b-c74e3e69cf5b",
+      "type": "text",
+      "text": {
+        "html": "<h2 class=\"heading-style-h3\">Open positions</h2>",
+        "text": "Open positions"
+      },
+      "attributes": {}
+    },
+    {
+      "id": "dffc07a6-565c-ab60-972a-556ed038eef2",
+      "type": "text",
+      "text": {
+        "html": "<div>No items found.</div>",
+        "text": "No items found."
+      },
+      "attributes": {}
+    },
+    {
+      "id": "ab636cf4-9a18-b02e-9cc1-26ee445e1946",
+      "type": "component-instance",
+      "componentId": "d3fc2d2d-53bb-99df-d3d0-fe9d4c6e8026",
+      "propertyOverrides": []
+    }
+  ],
+  "pagination": {
+    "total": 11,
+    "fetched": 11
+  },
+  "lastUpdated": "2026-06-17T23:01:15.861Z"
+}

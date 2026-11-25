@@ -1,0 +1,40 @@
+{
+  "id": "6a2ad90b213ca1dc397962c1",
+  "displayName": "Partners / Languages",
+  "singularName": "Partners / Language",
+  "slug": "partners-language",
+  "createdOn": "2026-06-11T15:49:31.765Z",
+  "lastUpdated": "2026-06-18T06:25:04.911Z",
+  "fields": [
+    {
+      "id": "403a114dda6644422ff4637ca7ef6d1a",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Language",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "b335a893cb99db8452be77173a751a49",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

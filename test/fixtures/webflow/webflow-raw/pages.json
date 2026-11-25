@@ -1,0 +1,122 @@
+[
+  {
+    "id": "6af5dc1131c663c24870d103",
+    "siteId": "69a97e33d587824eef365d83",
+    "parentId": null,
+    "collectionId": null,
+    "title": "Alternatywa dla BaseLinkera",
+    "slug": "baselinker-alternatywa",
+    "createdOn": "2026-11-12T15:32:33.879Z",
+    "lastUpdated": "2026-11-13T07:27:21.310Z",
+    "archived": false,
+    "draft": false,
+    "shouldPublish": true,
+    "canBranch": true,
+    "isBranch": false,
+    "branchId": null,
+    "seo": {
+      "title": "Alternatywa dla BaseLinkera — własne procesy zamówień | Open Mercato",
+      "description": "Porównaj Base (BaseLinker) z Open Mercato. Własne procesy zamówień, kontrola kodu i plan migracji obejmujący integracje, dane oraz obsługę wysyłek."
+    },
+    "openGraph": {
+      "title": "Alternatywa dla BaseLinkera — własne procesy zamówień | Open Mercato",
+      "titleCopied": true,
+      "description": "Porównaj Base (BaseLinker) z Open Mercato. Własne procesy zamówień, kontrola kodu i plan migracji obejmujący integracje, dane oraz obsługę wysyłek.",
+      "descriptionCopied": true,
+      "imageUrl": null,
+      "imageAssetId": null
+    },
+    "publishedPath": "/baselinker-alternatywa",
+    "localeId": null
+  },
+  {
+    "id": "6af5dc11d99ef49d244210fd",
+    "siteId": "69a97e33d587824eef365d83",
+    "parentId": null,
+    "collectionId": null,
+    "title": "Base / BaseLinker Alternative",
+    "slug": "baselinker-alternative",
+    "createdOn": "2026-11-12T15:32:33.302Z",
+    "lastUpdated": "2026-11-13T07:28:55.711Z",
+    "archived": false,
+    "draft": false,
+    "shouldPublish": true,
+    "canBranch": true,
+    "isBranch": false,
+    "branchId": null,
+    "seo": {
+      "title": "BaseLinker Alternative for Custom Order Workflows | Open Mercato",
+      "description": "Compare Base (BaseLinker) with a custom order-management application on Open Mercato. Assess costs, integrations, workflows and a phased migration."
+    },
+    "openGraph": {
+      "title": "BaseLinker Alternative for Custom Order Workflows | Open Mercato",
+      "titleCopied": true,
+      "description": "Compare Base (BaseLinker) with a custom order-management application on Open Mercato. Assess costs, integrations, workflows and a phased migration.",
+      "descriptionCopied": true,
+      "imageUrl": null,
+      "imageAssetId": null
+    },
+    "publishedPath": "/baselinker-alternative",
+    "localeId": null
+  },
+  {
+    "id": "6a31455eba3c34bace39cf46",
+    "siteId": "69a97e33d587824eef365d83",
+    "parentId": null,
+    "collectionId": null,
+    "title": "Careers",
+    "slug": "careers",
+    "createdOn": "2026-06-16T12:45:18.034Z",
+    "lastUpdated": "2026-06-17T23:01:15.844Z",
+    "archived": false,
+    "draft": false,
+    "shouldPublish": true,
+    "canBranch": true,
+    "isBranch": false,
+    "branchId": null,
+    "seo": {
+      "title": "Careers | Open Mercato",
+      "description": "Join Open Mercato and help build the open-source, AI-native foundation for modern business software. See our open roles."
+    },
+    "openGraph": {
+      "title": null,
+      "titleCopied": true,
+      "description": null,
+      "descriptionCopied": true,
+      "imageUrl": null,
+      "imageAssetId": "69b16891c7299bff733f1851"
+    },
+    "publishedPath": "/careers",
+    "localeId": null
+  },
+  {
+    "id": "69af3df2d63be60b559a974d",
+    "siteId": "69a97e33d587824eef365d83",
+    "parentId": null,
+    "collectionId": null,
+    "title": "Contact",
+    "slug": "contact",
+    "createdOn": "2026-03-09T21:38:58.607Z",
+    "lastUpdated": "2026-11-10T12:24:11.906Z",
+    "archived": false,
+    "draft": false,
+    "shouldPublish": true,
+    "canBranch": true,
+    "isBranch": false,
+    "branchId": null,
+    "seo": {
+      "title": "Contact | Open Mercato",
+      "description": "Get in touch with Open Mercato for enterprise inquiries, implementation partnerships, or questions. Email info@openmercato.com or join our community."
+    },
+    "openGraph": {
+      "title": null,
+      "titleCopied": true,
+      "description": null,
+      "descriptionCopied": true,
+      "imageUrl": null,
+      "imageAssetId": "69b16891c7299bff733f1851"
+    },
+    "publishedPath": "/contact",
+    "localeId": null
+  }
+]

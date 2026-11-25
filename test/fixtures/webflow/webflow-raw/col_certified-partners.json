@@ -1,0 +1,217 @@
+{
+  "id": "6a2b03cd5e12536d31880f20",
+  "displayName": "Partners",
+  "singularName": "Partner",
+  "slug": "certified-partners",
+  "createdOn": "2026-06-11T18:51:57.884Z",
+  "lastUpdated": "2026-06-18T08:37:51.268Z",
+  "fields": [
+    {
+      "id": "e6c8b4d669aecf4b9c32248e3dcdd785",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Image",
+      "slug": "logo",
+      "displayName": "Logo",
+      "helpText": "Dark logo on transparent background",
+      "validations": null
+    },
+    {
+      "id": "a5975c6263dfa7039879c79d16010195",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Reference",
+      "slug": "tier-2",
+      "displayName": "Tier",
+      "helpText": "Pick partner tier from the list",
+      "validations": {
+        "collectionId": "6a3393f46f251da6f05ac59a"
+      }
+    },
+    {
+      "id": "8f4c4b1483d9cd93c87fedf8ebfc6058",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "MultiReference",
+      "slug": "industry",
+      "displayName": "Industry",
+      "helpText": "Pick one ore more suitable industries ",
+      "validations": {
+        "collectionId": "6a2ad8fe4ffe0487fdfd5328"
+      }
+    },
+    {
+      "id": "09b0c2319ed2f3b8489078002bcbb11f",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Reference",
+      "slug": "location-2",
+      "displayName": "Location",
+      "helpText": "Pick default location",
+      "validations": {
+        "collectionId": "6a2d49e5278a501ddae4abec"
+      }
+    },
+    {
+      "id": "d2abe10e950d7bb2cd00ab6fbe472349",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "MultiReference",
+      "slug": "language",
+      "displayName": "Language",
+      "helpText": "Pick one ore more suitable languages",
+      "validations": {
+        "collectionId": "6a2ad90b213ca1dc397962c1"
+      }
+    },
+    {
+      "id": "8ee8865ad59a9e80167d5cfa053f905d",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "MultiReference",
+      "slug": "services",
+      "displayName": "Services",
+      "helpText": "Pick one ore more suitable services",
+      "validations": {
+        "collectionId": "6a2ad91fb7947837b996aac0"
+      }
+    },
+    {
+      "id": "d1302978eed99d5b7c13d97deff254e9",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Option",
+      "slug": "budget",
+      "displayName": "Budget",
+      "helpText": "Pick minimal budger",
+      "validations": {
+        "options": [
+          {
+            "name": "Under $10,000",
+            "id": "7dcc6753da16383207c484b809557334"
+          },
+          {
+            "name": "$10,000 - $20,000",
+            "id": "82179424d54cf0e44fd6b35c20e56672"
+          },
+          {
+            "name": "$20,000 - $50,000",
+            "id": "d5207820f1ec6f8b60a9351eee8459bd"
+          },
+          {
+            "name": "$50,000 - $100,000",
+            "id": "5ea7cb6bc5aa1816bcd13ed58311ee63"
+          },
+          {
+            "name": "$100,000+",
+            "id": "da4dae6dd1b5a66094311378b88d0132"
+          }
+        ]
+      }
+    },
+    {
+      "id": "014e7727629376aedbb95d0bf38c1d26",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Option",
+      "slug": "availability",
+      "displayName": "Availability",
+      "helpText": "Determine availability",
+      "validations": {
+        "options": [
+          {
+            "name": "Accepting new projects",
+            "id": "00dc9181291a10b4f0132486e9d7e26c"
+          },
+          {
+            "name": "Not available",
+            "id": "dc6359bc77eacb241e7a713c9ac04e50"
+          }
+        ]
+      }
+    },
+    {
+      "id": "7fbe6f727e70747243b801205191f9be",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Option",
+      "slug": "projects-in-portfolio",
+      "displayName": "Projects in portfolio",
+      "helpText": "Pick if agency already have projects in Case Studies collection",
+      "validations": {
+        "options": [
+          {
+            "name": "Yes",
+            "id": "64efd2c45b8309231bed53f5b93bed6e"
+          },
+          {
+            "name": "No",
+            "id": "b90e5f9dcaebf601adf9aad3ed77910f"
+          }
+        ]
+      }
+    },
+    {
+      "id": "2854cc336071aa6fe38dd917945e65ee",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Link",
+      "slug": "website-url",
+      "displayName": "Website URL",
+      "helpText": null,
+      "validations": null
+    },
+    {
+      "id": "5466b7f8f03dc4770b7cbdbf0b06b14e",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "short-description",
+      "displayName": "Short Description",
+      "helpText": "Short description for agency card",
+      "validations": {
+        "singleLine": false
+      }
+    },
+    {
+      "id": "cdea733e07c63a608519610c5be7a5b4",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "bio",
+      "displayName": "BIO",
+      "helpText": "Main agency description",
+      "validations": null
+    },
+    {
+      "id": "1c8719d08fe57549905ea016782b54cf",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Agency name",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "15cf73b4ab042c83f009d7b21fc70977",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Short URL with agency name",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

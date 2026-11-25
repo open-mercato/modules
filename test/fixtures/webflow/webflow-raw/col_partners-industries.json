@@ -1,0 +1,54 @@
+{
+  "id": "6a2ad8fe4ffe0487fdfd5328",
+  "displayName": "Partners / Industries",
+  "singularName": "Partners / Industry",
+  "slug": "partners-industries",
+  "createdOn": "2026-06-11T15:49:18.281Z",
+  "lastUpdated": "2026-06-18T06:25:36.047Z",
+  "fields": [
+    {
+      "id": "6880d5b34b249a49fa10dab6bb471572",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "display-order",
+      "displayName": "Display Order",
+      "helpText": "Number used for display order",
+      "validations": {
+        "format": "integer",
+        "precision": 1,
+        "allowNegative": false
+      }
+    },
+    {
+      "id": "2ca8cc7d73ff3912c38adb7aab30848a",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Service name",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "faee49377232040ec4e366a44accd532",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

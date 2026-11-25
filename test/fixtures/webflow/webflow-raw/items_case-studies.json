@@ -1,0 +1,70 @@
+[
+  {
+    "id": "6af74f7322fd8b75b76ad499",
+    "cmsLocaleId": "69a97e33d587824eef365d85",
+    "lastPublished": "2026-11-23T21:27:19.842Z",
+    "lastUpdated": "2026-11-23T09:27:14.120Z",
+    "createdOn": "2026-11-13T17:57:07.830Z",
+    "isArchived": false,
+    "isDraft": false,
+    "fieldData": {
+      "category": ["6a2b03dcdae0237648965a32", "6a2b03e46a4a51e59b4e8f5d"],
+      "featured-on-agencies-page": true,
+      "display-order": null,
+      "main-heading": "Arvo Configurator: from product choices to a validated quote",
+      "short-description": "A machine in 3D. Rules that explain what fits. A quote that preserves every choice. thegoodcode built an end-to-end configuration and quoting demo on Open Mercato.",
+      "thumbnail": {
+        "fileId": "6af750bae31c5c40ac8b2fd4",
+        "url": "https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6af750bae31c5c40ac8b2fd4_6af750a6bc9f5b7bc0bd132e_arvo-cover-machine.jpeg",
+        "alt": "Close-up illustration based on the Arvo Configurator demo's blue 3D telescopic handler, on a lime and lavender gradient"
+      },
+      "hero-video": {
+        "url": "https://www.youtube.com/watch?v=2OzOEnM0Gqo",
+        "metadata": {
+          "url": "https://www.youtube.com/watch?v=2OzOEnM0Gqo",
+          "desc": "See the complete sales workflow in Arvo Configurator: create a quote, configure an Arvo TH-720 telescopic handler in 3D, review its options and specifications, add the configuration to a quote, and share the customer document and bill of materials. Built by TheGoodCode on Open Mercato, an open-source, modular foundation for business applications.",
+          "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2F2OzOEnM0Gqo%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2OzOEnM0Gqo&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2F2OzOEnM0Gqo%2Fhqdefault.jpg&type=text%2Fhtml&schema=youtube\" width=\"940\" height=\"528\" scrolling=\"no\" title=\"YouTube embed\" frameborder=\"0\" allow=\"autoplay; fullscreen; encrypted-media; picture-in-picture\" allowfullscreen=\"true\"></iframe>",
+          "type": "video",
+          "thumb": {
+            "h": 360,
+            "w": 480,
+            "url": "https://i.ytimg.com/vi/2OzOEnM0Gqo/hqdefault.jpg"
+          },
+          "title": "Product Configuration and Customer Quoting | Open Mercato by TheGoodCode",
+          "width": 940,
+          "height": 528,
+          "source": "https://www.youtube.com/",
+          "version": "1.0",
+          "videoId": "2OzOEnM0Gqo",
+          "author_url": "https://www.youtube.com/@thegoodcode-io",
+          "aspectRatio": 0.5617021276595745,
+          "author_name": "thegoodcode",
+          "description": "See the complete sales workflow in Arvo Configurator: create a quote, configure an Arvo TH-720 telescopic handler in 3D, review its options and specifications, add the configuration to a quote, and share the customer document and bill of materials. Built by TheGoodCode on Open Mercato, an open-source, modular foundation for business applications.",
+          "provider_url": "https://www.youtube.com/",
+          "provider_name": "YouTube",
+          "thumbnail_url": "https://i.ytimg.com/vi/2OzOEnM0Gqo/hqdefault.jpg",
+          "youTubeParams": {},
+          "thumbnail_width": 480,
+          "thumbnail_height": 360
+        }
+      },
+      "delivered-by": "6a4e83f5ae6cec34d193364b",
+      "overview-client": "Arvo Configurator (demo)",
+      "overview-industry": "Construction & agricultural machinery",
+      "overview-timeline": "2026 hackathon project and demo",
+      "overview-type": "Configuration & quoting",
+      "overview-stack": "<ul><li>Open Mercato customer records and sales workflow</li><li>Custom configuration and validation rules</li><li>Interactive 3D product visualisation</li><li>Calculated specification, bill of materials and pricing</li><li>Immutable configuration snapshots and customer documents</li></ul>",
+      "stat-1-title": "Live 3D",
+      "stat-1-description": "Machine, specification, parts and price stay connected",
+      "stat-2-title": "Built-in rules",
+      "stat-2-description": "Dependencies and review warnings explained as you configure",
+      "stat-3-title": "One snapshot",
+      "stat-3-description": "The configured machine preserved in the quote",
+      "case-content": "<h2>The machine looks right. Can it actually be quoted?</h2>\n<p>A heavier frame. Bigger tyres. More lift height. The largest attachment. On screen, each choice looks like one more option. Together, they can change whether a machine is a sensible configuration to put in front of a customer.</p>\n<p>In the Arvo Configurator walkthrough, that tension becomes visible. The salesperson selects the largest attachment and the system pushes back: the calculated load exceeds an engineering review threshold. The combination needs manufacturer confirmation. Switching to a mid-size attachment clears the warning, and the matching tine length is selected automatically.</p>\n<p>That is the heart of this project. thegoodcode connected product configuration to the sales process in Open Mercato, so the model, its rules, the parts and the price move together. Arvo Configurator demonstrates the team's Open Mercato Configuration &amp; Quoting module through an Arvo TH-720 telescopic handler.</p>\n<p><em>This case study follows a working demonstration developed from the team's hackathon project. It describes the workflow shown in the video, rather than a production customer deployment.</em></p>\n<figure class=\"w-richtext-figure-type-image w-richtext-align-fullwidth\"><div><img src=\"https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6af74f9efc70cf53b1eaefe4_6af74ec5ce319b953e4f14ba_arvo-configurator.jpeg\" alt=\"Arvo Configurator demo with product options, a live 3D telescopic handler, validation and bill of materials\" loading=\"lazy\"></div><figcaption>Actual frame from thegoodcode's walkthrough: options, the 3D machine and commercial details in one workspace.</figcaption></figure>\n<h2>Start with the customer, then build the machine</h2>\n<p>The workflow begins in the sales quotes list. A salesperson creates a new sales document, selects quote as its type and searches the customer list. Selecting the customer fills in their email automatically. The resulting quote already contains the customer's details.</p>\n<p>From there, the Configure product tab opens the next stage. There are no configured products on the quote yet, so the salesperson adds one and launches the configurator. Configuration starts inside an existing customer and sales context.</p>\n<p>The initial machine is already evaluated against a standard starting configuration. Options sit on the left, the interactive three-dimensional model occupies the centre, and validation, specification, bill of materials and price appear on the right. The salesperson can rotate the machine while making choices and immediately see the consequences.</p>\n<h2>Make the rules part of the conversation</h2>\n<p>As the configuration develops, the salesperson changes the frame, tyres, hydraulic stabilisers and lift height. The attachment warning brings the engineering constraint into the same workspace where the commercial decision is being made.</p>\n<p>The system also handles dependencies. When person detection is enabled, it automatically adds the required rear camera and explains the reason: the feature needs visibility around the back of the machine. The salesperson sees both the change and its justification.</p>\n<p>Choosing a compatible attachment sets its matching tine length. Adding a serrated edge or extra hydraulics updates the bill of materials and price alongside the model. These are business rules with visible consequences: a selection can change another option, add a component or require further review.</p>\n<figure class=\"w-richtext-figure-type-image w-richtext-align-fullwidth\"><div><img src=\"https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6af74f9efc70cf53b1eaefe1_6af74ec50767ab36c9cfe579_arvo-rules.jpeg\" alt=\"Person detection and the required rear camera shown in the Arvo Configurator demo\" loading=\"lazy\"></div><figcaption>Enabling person detection adds the rear camera automatically, with an explanation beside the option.</figcaption></figure>\n<h2>One configuration, several views of the same decision</h2>\n<p>A product configurator has to do more than draw an attractive machine. The customer needs to understand what they are buying. The salesperson needs to know what it costs. The component list needs to reflect the choices that produced that price.</p>\n<p>The walkthrough keeps those views together. Working lights are raised to their brightest setting, boom suspension is enabled, and the finish changes from standard green to a custom RAL blue. The model updates immediately while the specification, bill of materials and price remain in sync.</p>\n<p>By the time the salesperson reviews the final price, the configured machine already has its selected options and calculated details attached. There is no separate step in this demonstrated flow where someone has to reconstruct the machine from a visual preview.</p>\n<figure class=\"w-richtext-figure-type-image w-richtext-align-fullwidth\"><div><img src=\"https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6af74f9cfc70cf53b1eaefda_6af74ec5c7551038ef4f6282_arvo-cover.jpeg\" alt=\"Blue Arvo telescopic handler configured with custom RAL finish and synchronized bill of materials\" loading=\"lazy\"></div><figcaption>The configured RAL blue machine, captured directly from the video. Prices and specifications are demo data.</figcaption></figure>\n<h2>Freeze what was selected. Share that exact machine.</h2>\n<p>Adding the machine to the quote creates a configuration snapshot: an immutable record of the selections, specification, validation result and bill of materials. The quote now points to a specific configuration, preserving what the salesperson actually added.</p>\n<p>The salesperson then generates a sharing link that the customer can open without creating an account or logging in. It is a direct handoff of the configured machine.</p>\n<p>The customer document provides a read-only view of the same configuration. The model remains interactive, so the machine can be rotated and inspected. Below it, the customer can review the selected options, calculated specification and full priced bill of materials. A print or save-as-PDF action makes the document usable outside the application too.</p>\n<figure class=\"w-richtext-figure-type-image w-richtext-align-fullwidth\"><div><img src=\"https://cdn.prod.website-files.com/69a97e33d587824eef365d84/6af74f9efc70cf53b1eaefe7_6af74ec5c7551038ef4f62ad_arvo-customer-document.jpeg\" alt=\"Read-only Arvo customer document with an interactive blue machine model and print or save as PDF action\" loading=\"lazy\"></div><figcaption>The customer document presents the frozen configuration with an interactive model and a printable record.</figcaption></figure>\n<h2>Build the specialised layer on an existing foundation</h2>\n<p>thegoodcode built the machine-specific configuration logic on Open Mercato's customer records and sales workflow. According to the team's project description, the platform supplied the back office, authentication, multi-tenancy, catalogue, quotes and orders. Their custom work covered the configuration model, rules, pricing, specification, bill of materials and visualisation.</p>\n<p>That division of work is the value of starting with a business application foundation. The team could concentrate on questions specific to a configurable machine: which options belong together, when a combination needs review, how a selection changes the parts and price, and what must be preserved when it becomes a quote.</p>\n<h2>From a product choice to a customer-ready document</h2>\n<p>The result is a connected demonstration of a complete sales journey: select the customer, configure the machine, evaluate the choices, add the result to a quote and share the exact configuration with the customer.</p>\n<p>The most revealing moment is still the one where the configurator pushes back. It makes a constraint visible before the salesperson finishes the quote. From there, each correction carries through to the model, specification, parts and price, and finally into the document the customer receives.</p>\n<p>Built and demonstrated by Jan Zaremski and Kamil Nohotko from <a href=\"https://www.openmercato.com/certified-partners/the-good-code\">thegoodcode</a>. Watch the full walkthrough above, or explore the team's <a href=\"https://www.thegoodcode.io/work/open-mercato-configuration-quoting\">project description</a>.</p>\n<p><em>Images are actual frames extracted from the supplied video, presented on Open Mercato's gradient background. The machine, pricing and configuration data shown belong to the demonstration.</em></p>",
+      "screenshots": null,
+      "delivered-by-url": "https://www.openmercato.com/certified-partners/the-good-code",
+      "name": "Arvo Configurator: from product choices to a validated quote",
+      "slug": "arvo-configurator"
+    }
+  }
+]
