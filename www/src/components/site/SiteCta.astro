@@ -19,13 +19,16 @@ import githubMark from './github-mark.svg?raw'
             <div class="spacer-medium"></div>
             <div class="text-size-large text-color-additional">Start with 80% done.</div>
             <div class="spacer-medium"></div>
-            <div class="om-final-actions">
-              <a class="om-final-primary" href={MAIN_SITE_SANDBOX.url}
-                >Build with sandbox <span aria-hidden="true">↗</span></a
-              >
-              <a class="om-final-secondary" href={MAIN_SITE_GITHUB}
-                ><span aria-hidden="true"><Fragment set:html={githubMark} /></span><span>Steal this code (legally)</span></a
-              >
+            {/* the live embed wrapper: it shrinks to the buttons, so on a phone they are as wide as their text */}
+            <div class="w-embed">
+              <div class="om-final-actions">
+                <a class="om-final-primary" href={MAIN_SITE_SANDBOX.url}
+                  >Build with sandbox <span aria-hidden="true">↗</span></a
+                >
+                <a class="om-final-secondary" href={MAIN_SITE_GITHUB}
+                  ><span aria-hidden="true"><Fragment set:html={githubMark} /></span><span>Steal this code (legally)</span></a
+                >
+              </div>
             </div>
           </div>
         </div>
