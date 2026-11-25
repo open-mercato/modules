@@ -18,7 +18,8 @@ import {
   RUN_MENU,
 } from '../../lib/core/main-site.ts'
 import { CTA_EVENT_MAX } from '../../lib/schema/www-content.ts'
-import { gaHeadScript, gtagSrc } from '../../www/src/lib/analytics.ts'
+import { analyticsFromEnv, gaHeadScript, gtagSrc } from '../../www/src/lib/analytics.ts'
+import { siteBehavior } from '../../www/site-behavior.ts'
 import {
   CONSENT_COOKIE,
   CONSENT_DAYS,
@@ -78,6 +79,38 @@ describe('Google Analytics', () => {
     runInNewContext(js, ctx)
     expect(appended).toEqual([{ async: true, src: gtagSrc() }])
     expect((ctx.dataLayer as IArguments[]).map((a) => a[0])).toEqual(['js', 'config'])
+  })
+})
+
+describe('the analytics switch', () => {
+  /** What the integration injects for an environment. */
+  function injected(env: Record<string, string | undefined>): { stage: string; code: string }[] {
+    const out: { stage: string; code: string }[] = []
+    const hook = siteBehavior(env).hooks['astro:config:setup'] as unknown as (o: object) => void
+    hook({ injectScript: (stage: string, code: string) => out.push({ stage, code }), logger: { info() {} } })
+    return out
+  }
+
+  it('a production build loads GA4 and the CTA tracker, as today (D9)', () => {
+    const env = { GITHUB_ACTIONS: 'true' }
+    expect(analyticsFromEnv(env)).toBe(true)
+    const scripts = injected(env)
+    expect(scripts.find((s) => s.stage === 'head-inline')?.code).toBe(gaHeadScript())
+    const page = scripts.find((s) => s.stage === 'page')!.code
+    expect(page).toContain('cta-tracking.ts')
+    expect(page).toContain('consent-banner.ts')
+  })
+
+  it('a noindex build and a local build load neither, and keep the cookie banner', () => {
+    for (const env of [{ GITHUB_ACTIONS: 'true', PAGES_NOINDEX: '1' }, { PAGES_NOINDEX: 'true' }, {}]) {
+      expect(analyticsFromEnv(env), JSON.stringify(env)).toBe(false)
+      const scripts = injected(env)
+      expect(scripts.some((s) => s.stage === 'head-inline')).toBe(false)
+      const page = scripts.find((s) => s.stage === 'page')!.code
+      expect(page).not.toContain('cta-tracking.ts')
+      expect(page).toContain('consent-banner.ts')
+      expect(scripts.some((s) => s.stage === 'page-ssr' && s.code.includes('consent.css'))).toBe(true)
+    }
   })
 })
 

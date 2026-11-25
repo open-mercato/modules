@@ -1,5 +1,6 @@
 // The built main site's behavior (www site migration spec, Phase 7, D9), read from dist-www/ after `yarn build:www`:
-// every page loads GA4 G-64ZQGMNZKB in its head with no Consent Mode call, the CTA tracker and the cookie banner, and
+// every page of a production build loads GA4 G-64ZQGMNZKB in its head with no Consent Mode call and the CTA tracker (a
+// noindex or local build neither), every page shows the cookie banner, and
 // carries the site-wide Organization and WebSite JSON-LD; every CTA declares a live event name within 40 characters;
 // the 404 is the live utility page; the catalog's own pages (when built) load none of it. Runs only with
 // WWW_BUILD=1, right after `yarn build:www` (validate.yml does so); with the flag a missing build is a failure.
@@ -7,6 +8,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { CTA_EVENT_LENGTH, GA_MEASUREMENT_ID } from '../../lib/core/cta.ts'
+import { analyticsFromEnv } from '../../www/src/lib/analytics.ts'
 import { ROOT } from '../emit/helpers.ts'
 
 const DIST = join(ROOT, 'dist-www')
@@ -50,19 +52,29 @@ describe('the built behavior of the main site', () => {
     // a skipped describe still runs its body at collection, so read dist-www only when it is built
     const pages = built ? htmlFiles(DIST) : []
 
-    it('every page loads GA4 in its head, with no Consent Mode call, the CTA tracker and the cookie banner', () => {
+    // the build was made in this environment (validate.yml builds and tests in one job): GA4 and the CTA tracker load
+    // in a production build only, never in a noindex or local one (www/src/lib/analytics.ts analyticsFromEnv)
+    const analytics = analyticsFromEnv(process.env)
+
+    it(`every page ${analytics ? 'loads' : 'leaves out'} GA4 and the CTA tracker, and shows the cookie banner`, () => {
       expect(pages.length).toBeGreaterThan(50)
       for (const file of pages) {
         const html = readFileSync(file, 'utf8')
         const head = html.slice(0, html.indexOf('</head>'))
         const name = relative(DIST, file)
-        expect(head, name).toContain(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`)
-        expect(head, name).toContain(`gtag('config',"${GA_MEASUREMENT_ID}")`)
-        expect(html, name).not.toMatch(/gtag\(\s*['"]consent/)
         const js = pageScripts(html)
+        if (analytics) {
+          expect(head, name).toContain(`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`)
+          expect(head, name).toContain(`gtag('config',"${GA_MEASUREMENT_ID}")`)
+          expect(js, name).toContain('cta_placement')
+        } else {
+          expect(html, name).not.toContain('googletagmanager')
+          expect(js, name).not.toContain('googletagmanager')
+          expect(js, name).not.toContain('cta_placement')
+        }
+        expect(html, name).not.toMatch(/gtag\(\s*['"]consent/)
         expect(js, name).toContain('cookieAccepted')
         expect(js, name).toContain('cookie-banner_component')
-        expect(js, name).toContain('data-cta-action')
       }
     })
 

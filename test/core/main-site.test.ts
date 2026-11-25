@@ -19,10 +19,10 @@ import { findBannedChars } from '../../lib/core/text.ts'
 const PAGES = join(import.meta.dirname, '..', '..', 'site', 'src', 'pages')
 
 describe('the navbar of the main site', () => {
-  it('has the menus of www.openmercato.com in its order, then Contact and Case Studies', () => {
+  it('has the menus of www.openmercato.com in its order, then Contact, Case Studies and Blog', () => {
     expect(MAIN_SITE_MENUS.map((m) => m.label)).toEqual(['Product', 'Developers', 'Enterprise'])
     expect(MAIN_SITE_MENUS.map((m) => m.items.length)).toEqual([5, 3, 3])
-    expect(MAIN_SITE_LINKS.map((l) => l.label)).toEqual(['Contact', 'Case Studies'])
+    expect(MAIN_SITE_LINKS.map((l) => l.label)).toEqual(['Contact', 'Case Studies', 'Blog'])
   })
 
   it('gives every panel row a description and an icon of its own', () => {
