@@ -76,6 +76,18 @@ describe('which posts the blog shows', () => {
     expect(publishedIds(`${CONTENT}/blog`)).toEqual(published.map((p) => p.id).sort())
   })
 
+  it('orders posts of the same day by the newer Webflow item first, then by slug, as the live list does', () => {
+    const day = new Date('2026-11-24T00:00:00Z')
+    const all = [
+      post('a-older', { date: day, webflowId: '6a0000000000000000000001' }),
+      post('b-newer', { date: day, webflowId: '6b0000000000000000000001' }),
+      post('c-no-id', { date: day }),
+      post('d-no-id', { date: day }),
+      post('e-latest', { date: new Date('2026-11-25T00:00:00Z') }),
+    ]
+    expect(publishedPosts(all).map((p) => p.id)).toEqual(['e-latest', 'b-newer', 'a-older', 'c-no-id', 'd-no-id'])
+  })
+
   it('featured and related posts are published posts only', () => {
     const all = [post('a', { featured: true }), post('b', { featured: true, draft: true }), post('c')]
     const pub = publishedPosts(all)

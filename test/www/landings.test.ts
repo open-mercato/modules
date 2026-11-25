@@ -1,6 +1,7 @@
 // The landings of the main site (www site migration spec, Phase 5), from www/content/landings through the schema:
 // routes, hreflang, the FAQPage JSON-LD and the template's helpers, without a build.
 import { describe, expect, it } from 'vitest'
+import { fillCounts } from '../../lib/core/www-tokens.ts'
 import { PENDING_PAGE } from '../../lib/emit/pages-merge.ts'
 import { LANDING_TEMPLATE_TEXT } from '../../lib/schema/www-content.ts'
 import {
@@ -11,6 +12,7 @@ import {
   plainText,
   publishedLandings,
   reviewedDay,
+  sectionIds,
   siteHref,
 } from '../../www/src/lib/landings.ts'
 import { landingEntries } from './landings-content.ts'
@@ -49,8 +51,15 @@ describe('www/src/lib/landings.ts (Phase 5)', () => {
       }
       expect(ld['@type']).toBe('FAQPage')
       expect(ld.mainEntity.map((q) => [q.name, q.acceptedAnswer.text])).toEqual(
-        e.data.faq.items.map((f) => [f.question, plainText(f.answer)]),
+        e.data.faq.items.map((f) => [fillCounts(f.question, {}), fillCounts(plainText(f.answer), {})]),
       )
+    }
+  })
+
+  it('links its section navigation only to sections it renders', () => {
+    for (const e of entries) {
+      const ids = sectionIds(e.data)
+      for (const n of e.data.sectionNav) expect(ids, `${e.id} #${n.anchor}`).toContain(n.anchor)
     }
   })
 
