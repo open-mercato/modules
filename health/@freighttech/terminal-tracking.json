@@ -1,7 +1,7 @@
 {
   "locator": "npm:@freighttech/terminal-tracking",
   "version": "0.7.5",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "computedAt": "2026-11-25T15:15:31Z",
   "identity": {
     "type": "community",
     "typeReason": "No repository; npm scope @freighttech is listed in policy/community.yml.",
@@ -94,7 +94,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at add on 0.10 since 24 Nov."
+      "detail": "Broken at typecheck on 0.10 since 24 Nov."
     },
     {
       "id": "VER-2",
@@ -125,7 +125,7 @@
       "reasons": [
         {
           "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 24 Nov."
+          "text": "Broken at typecheck on 0.10 since 24 Nov."
         },
         {
           "code": "THIRD_PARTY",

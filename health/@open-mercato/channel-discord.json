@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-discord",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-25T15:15:31Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "untested",
+      "0.10": "verified",
       "0.9": "untested",
       "next": "untested"
     },
@@ -53,10 +53,8 @@
       "catchUpDays": null
     },
     "declaredVsObserved": {
-      "status": "mismatch",
-      "notes": [
-        "Built for 0.10; verified on no line."
-      ]
+      "status": "match",
+      "notes": []
     }
   },
   "rules": [
@@ -92,8 +90,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
+      "pass": true,
+      "detail": "Receipt on 0.10: verified (0.10.1)."
     },
     {
       "id": "VER-2",
@@ -116,18 +114,17 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.10."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-discord@0.10.1"
+      ]
     },
     "0.9": {
       "decision": "ask",
@@ -152,7 +149,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.10": null,
+    "0.10": "0.10.1",
     "0.9": null,
     "next": null
   },

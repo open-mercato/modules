@@ -1,7 +1,7 @@
 {
   "locator": "npm:@northbound-run/sync-shopify",
   "version": "0.5.0",
-  "computedAt": "2026-11-25T08:44:55Z",
+  "computedAt": "2026-11-25T15:15:31Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner Northbound-Run is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "broken",
+      "0.10": "verified",
       "0.9": "verified",
       "next": "broken"
     },
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for no tested line; verified on 0.9."
+        "Built for no tested line; verified on 0.9, 0.10."
       ]
     }
   },
@@ -90,8 +90,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "Broken at add on 0.10 since 24 Nov."
+      "pass": true,
+      "detail": "Receipt on 0.10: verified (0.5.0)."
     },
     {
       "id": "VER-2",
@@ -114,21 +114,18 @@
       "detail": "Tarball repository.url matches the descriptor."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 24 Nov."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         }
-      ]
+      ],
+      "consentText": "Install @northbound-run/sync-shopify@0.5.0"
     },
     "0.9": {
       "decision": "ask",
@@ -156,7 +153,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.10": null,
+    "0.10": "0.5.0",
     "0.9": "0.5.0",
     "next": null
   },

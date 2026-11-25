@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/billing",
   "version": "1.1.1",
-  "computedAt": "2026-11-25T11:45:37Z",
+  "computedAt": "2026-11-25T15:15:31Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "broken",
+      "0.10": "verified",
       "0.9": "quarantine",
       "next": "quarantine"
     },
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.9; verified on no line."
+        "Built for 0.9; verified on 0.10."
       ]
     }
   },
@@ -90,8 +90,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "Broken at add on 0.10 since 24 Nov."
+      "pass": true,
+      "detail": "Receipt on 0.10: verified (1.1.1)."
     },
     {
       "id": "VER-2",
@@ -114,21 +114,18 @@
       "detail": "Tarball repository.url matches the descriptor."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 24 Nov."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         }
-      ]
+      ],
+      "consentText": "Install @dainamite/billing@1.1.1"
     },
     "0.9": {
       "decision": "ask",
@@ -161,7 +158,7 @@
   },
   "state": "active",
   "recommended": {
-    "0.10": null,
+    "0.10": "1.1.1",
     "0.9": null,
     "next": null
   },

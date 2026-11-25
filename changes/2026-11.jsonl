@@ -63,3 +63,13 @@
 {"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/gateway-autopay","from":"none","to":"listed"}
 {"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/gateway-tpay","from":"none","to":"listed"}
 {"at":"2026-11-23T23:59:45Z","type":"tier-change","locator":"npm:@open-mercato/storage-s3","from":"verified","to":"listed"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@dainamite/billing","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@dainamite/cpq-billing-connector","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@dainamite/cpq","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@fastwhitecat/integration-ksef-direct","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@fullstackhouse/open-mercato-durable-work","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@northbound-run/channel-cloudflare-email","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@northbound-run/search-cloudflare","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@northbound-run/sync-google-sheets","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@northbound-run/sync-shopify","from":"listed","to":"verified"}
+{"at":"2026-11-25T15:15:31Z","type":"tier-change","locator":"npm:@open-mercato/channel-discord","from":"listed","to":"verified"}

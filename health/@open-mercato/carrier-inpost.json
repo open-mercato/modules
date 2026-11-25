@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-25T15:15:31Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,7 +27,7 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "untested",
+      "0.10": "verified",
       "0.9": "untested",
       "next": "verified"
     },
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.10; verified on next."
+        "Built for 0.10; verified on 0.10, next."
       ]
     }
   },
@@ -92,8 +92,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
+      "pass": true,
+      "detail": "Receipt on 0.10: verified (0.10.1)."
     },
     {
       "id": "VER-2",
@@ -125,10 +125,6 @@
         {
           "code": "HOLD",
           "text": "On hold: Moved into the Open Mercato monorepo (open-mercato#7081). No stable release on npm yet."
-        },
-        {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 24 Nov)."
         }
       ]
     },
@@ -157,7 +153,7 @@
   },
   "state": "hold",
   "recommended": {
-    "0.10": null,
+    "0.10": "0.10.1",
     "0.9": null,
     "next": "0.10.0"
   },
