@@ -7,8 +7,13 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   BLOG_PATH,
+  bylineName,
   canonicalUrl,
   featuredPosts,
+  initials,
+  leadFeaturedPost,
+  longDate,
+  matchesAnyCategory,
   matchesCategories,
   postCard,
   postJsonLd,
@@ -16,6 +21,7 @@ import {
   postSeo,
   publishedPosts,
   readCategories,
+  readingMinutes,
   refId,
   relatedPosts,
   toggleCategory,
@@ -82,6 +88,19 @@ describe('which posts the blog shows', () => {
     }
   })
 
+  it('/blog shows one featured post above the feed: the first featured by title, as live', () => {
+    const all = publishedPosts([
+      post('z', { featured: true, title: 'Zebra' }),
+      post('a', { featured: true, title: 'Apple', draft: true }),
+      post('m', { featured: true, title: 'Mango' }),
+      post('b', { title: 'Banana' }),
+    ])
+    expect(leadFeaturedPost(all)?.id).toBe('m')
+    expect(leadFeaturedPost(publishedPosts([post('b')]))).toBeUndefined()
+    // the imported content: the live page's featured post
+    expect(leadFeaturedPost(published)?.id).toBe('ai-engineering-foundation-framework')
+  })
+
   it('related posts take the same category first, then the newest', () => {
     const all = publishedPosts([
       post('x', { category: 'arch' }),
@@ -141,9 +160,37 @@ describe('the category filter and the query string', () => {
     expect(matchesCategories(undefined, ['security'])).toBe(false)
   })
 
+  it('an entry with several categories shows when any one is selected', () => {
+    expect(matchesAnyCategory([], [])).toBe(true)
+    expect(matchesAnyCategory(['erp', 'crm'], ['crm'])).toBe(true)
+    expect(matchesAnyCategory(['erp'], ['crm', 'edtech'])).toBe(false)
+    expect(matchesAnyCategory([], ['crm'])).toBe(false)
+  })
+
   it('announces the number of posts shown', () => {
     expect(shownText(49, 49)).toBe('Showing all 49 posts.')
     expect(shownText(3, 49)).toBe('Showing 3 of 49 posts.')
+  })
+})
+
+describe('the byline of a post, as the live reader script writes it', () => {
+  it('names the author or the site, with the initials of the first and the last word', () => {
+    expect(bylineName(undefined)).toBe('Open Mercato')
+    expect(bylineName('Piotr Karwatka')).toBe('Piotr Karwatka')
+    expect(initials('Open Mercato')).toBe('OM')
+    expect(initials('Anna Maria  Nowak')).toBe('AN')
+    expect(initials('cezar')).toBe('C')
+  })
+
+  it('counts the minutes to read at 220 words a minute, at least one', () => {
+    expect(readingMinutes('')).toBe(1)
+    expect(readingMinutes('word '.repeat(220))).toBe(1)
+    expect(readingMinutes(' word\n'.repeat(221))).toBe(2)
+  })
+
+  it('writes the date as the live template does', () => {
+    expect(longDate(new Date('2026-11-24T00:00:00Z'))).toBe('November 24, 2026')
+    expect(longDate(new Date('2026-04-06T23:30:00Z'))).toBe('April 6, 2026')
   })
 })
 

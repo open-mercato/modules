@@ -48,6 +48,36 @@ export function relatedCaseStudies<T extends CaseStudyEntry>(cs: CaseStudyEntry,
   return [...same, ...rest].slice(0, n)
 }
 
+/**
+ * The categories of the filter of /case-studies: those of at least one listed case study, with their counts, in
+ * `order` (the dictionary's ids newest first by Webflow id, the order of Webflow's list of categories).
+ */
+export function filterCategories(
+  cards: readonly CaseStudyCardData[],
+  order: readonly string[],
+): { id: string; name: string; count: number }[] {
+  const seen = new Map<string, { name: string; count: number }>()
+  for (const c of cards)
+    c.categoryIds.forEach((id, i) => {
+      const s = seen.get(id) ?? { name: c.categories[i]!, count: 0 }
+      s.count++
+      seen.set(id, s)
+    })
+  return order.filter((id) => seen.has(id)).map((id) => ({ id, ...seen.get(id)! }))
+}
+
+/** Ids newest first by Webflow id (an ObjectId starts with its creation time); ids without one first. */
+export function newestFirst(entries: readonly { id: string; webflowId?: string }[]): string[] {
+  return [...entries]
+    .sort((a, b) => (b.webflowId ?? 'z').localeCompare(a.webflowId ?? 'z') || a.id.localeCompare(b.id))
+    .map((e) => e.id)
+}
+
+/** Every other published case study, in list order: the carousel of a case study page, as live. */
+export function otherCaseStudies<T extends CaseStudyEntry>(cs: CaseStudyEntry, published: readonly T[]): T[] {
+  return published.filter((p) => p.id !== cs.id)
+}
+
 /** Who delivered a case study, as the page shows it. */
 export interface DeliveredBy {
   name: string
@@ -152,20 +182,26 @@ export interface CaseStudyCardData {
   href: string
   title: string
   description: string
+  /** The category names, in the order of the entry. */
   categories: string[]
+  /** The category ids, for the category filter of /case-studies. */
+  categoryIds: string[]
   thumbnail?: { src: string; alt: string }
 }
 
 export function caseStudyCard(cs: CaseStudyEntry, categoryNames: ReadonlyMap<string, string>): CaseStudyCardData {
+  const known = cs.data.categories.flatMap((c) => {
+    const id = refId(c) ?? ''
+    const name = categoryNames.get(id)
+    return name ? [{ id, name }] : []
+  })
   const card: CaseStudyCardData = {
     slug: cs.id,
     href: caseStudyPath(cs.id),
     title: cs.data.title,
     description: cs.data.description,
-    categories: cs.data.categories.flatMap((c) => {
-      const name = categoryNames.get(refId(c) ?? '')
-      return name ? [name] : []
-    }),
+    categories: known.map((c) => c.name),
+    categoryIds: known.map((c) => c.id),
   }
   const t = cs.data.thumbnail
   if (t) card.thumbnail = { src: t.src, alt: t.decorative ? '' : t.alt }

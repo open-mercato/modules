@@ -18,7 +18,32 @@ export const FACET_LABELS: Record<Facet, string> = {
   availability: 'Availability',
 }
 
-/** The values of each facet: dictionary ids, or the option keys of budget and availability. */
+/** What the live template shows for a partner without a logo: Webflow's default image of the field, the site's logo. */
+export const PARTNER_LOGO_PLACEHOLDER = '/files/site/69a9d816d9a3677cacfb527d_open-mercato-logo-dark.svg'
+
+/** The headings of the facets in the filter of the live list page, as Webflow writes them. */
+export const FILTER_HEADINGS: Record<Facet, string> = {
+  tier: 'PARTNER TYPE',
+  industry: 'Industry',
+  location: 'Location',
+  language: 'LANGUAGE',
+  service: 'SERVICES OFFERED',
+  budget: 'Budget',
+  availability: 'AVAILABILITY',
+}
+
+/** The headings of the facts in the summary of the live partner page, as Webflow writes them. */
+export const PROFILE_HEADINGS: Record<Facet, string> = {
+  tier: 'PARTNER TYPE',
+  industry: 'Industry',
+  location: 'LOCATION',
+  language: 'LANGUAGE',
+  service: 'SERVICES OFFERED',
+  budget: 'BUDGET',
+  availability: 'AVAILABILITY',
+}
+
+/** The values of each facet:dictionary ids, or the option keys of budget and availability. */
 export type FacetValues = Record<Facet, string[]>
 /** The selected values per facet; a facet with none selected does not filter. */
 export type Selection = Record<Facet, string[]>
@@ -69,6 +94,8 @@ export function toggleValue(selection: Selection, facet: Facet, value: string, o
 export interface FacetOption {
   value: string
   label: string
+  /** The inline style of a tier's label, its Webflow colours (tier options only). */
+  style?: string
   /** Published partners with the value. */
   count: number
 }
@@ -80,6 +107,8 @@ export interface PartnerCardData {
   name: string
   description: string
   tier: string
+  /** The inline style of the tier's label, its Webflow colours. */
+  tierStyle: string
   location: string
   industries: string[]
   availability: string

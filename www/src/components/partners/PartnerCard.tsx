@@ -1,31 +1,34 @@
-// A partner in the list of /certified-partners: logo, tier, name with the link, location, industries, description and
-// availability. Rendered on the server, and by the PartnerFilter island in the browser.
-import type { PartnerCardData } from '../../lib/partner-filter.ts'
+// A partner in the list of /certified-partners in the live Webflow markup (`agencies_card`): a link over the whole card,
+// logo, the tier label in its colours, name, location and description. Rendered on the server, and by the
+// PartnerFilter island in the browser.
+import { PARTNER_LOGO_PLACEHOLDER, type PartnerCardData } from '../../lib/partner-filter.ts'
 
 export default function PartnerCard({ partner }: { partner: PartnerCardData }) {
   return (
-    <article class="partner-card">
-      <div class="partner-card__head">
-        {partner.logo && (
-          <img
-            class="partner-card__logo"
-            src={partner.logo.src}
-            alt={partner.logo.alt}
-            loading="lazy"
-            decoding="async"
-          />
-        )}
-        <span class="chip chip--line tier-badge">{partner.tier}</span>
+    <div class="agencies_card">
+      <a href={partner.href} class="agencies_card-link w-inline-block" aria-label={partner.name}></a>
+      <div class="agencies_card-top">
+        {/* without a logo, the live card shows Webflow's default image of the field, the site's logo */}
+        <img
+          class="agencies_card-logo"
+          src={partner.logo?.src ?? PARTNER_LOGO_PLACEHOLDER}
+          alt={partner.logo?.alt ?? ''}
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="agencies_label-wrapper">
+          <div class="agency_label is-radio" style={partner.tierStyle || undefined}>
+            <div>{partner.tier}</div>
+          </div>
+        </div>
       </div>
-      <h3 class="post-card__title">
-        <a href={partner.href}>{partner.name}</a>
-      </h3>
-      <p class="partner-card__meta t-small t-muted">
-        {partner.location}
-        {partner.industries.length > 0 && <span> · {partner.industries.join(', ')}</span>}
-      </p>
-      <p class="post-card__desc">{partner.description}</p>
-      <p class="partner-card__meta t-small t-muted">{partner.availability}</p>
-    </article>
+      <div class="agencies_card-bottom">
+        <div class="agencies_card-title">
+          <h3 class="heading-style-h5">{partner.name}</h3>
+          <div class="text-size-small text-color-secondary">{partner.location}</div>
+        </div>
+        <p class="text-color-secondary">{partner.description}</p>
+      </div>
+    </div>
   )
 }

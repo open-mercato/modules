@@ -1,49 +1,74 @@
 ---
-// The head and facts of a job page: breadcrumb, department, title, description, the facts (location, employment type,
-// salary, technology) and how to apply. A closed job says so and offers no application.
-import Crumbs from '../Crumbs.astro'
+// A job page in the live Webflow markup: the head (`header_component max-width-50rem`: the link to all open roles, the
+// title, location, employment type and salary, the technology, "Apply now"), then the body and the same two links
+// again. A closed job says so and offers no application.
 import { EMPLOYMENT_TYPE_LABELS } from '../../../../lib/schema/www-content.ts'
-import type { JobEntry } from '../../lib/jobs.ts'
+import { applyHref, type JobEntry } from '../../lib/jobs.ts'
 
 interface Props {
   job: JobEntry
-  /** Where the breadcrumb's Careers points: /careers is still on Webflow until Phase 6. */
+  /** Where "All open roles" points: /careers is still on Webflow until Phase 6. */
   careersHref: string
 }
 const { job, careersHref } = Astro.props
 const d = job.data
-const facts = [
-  ['Location', d.location],
-  ['Employment', EMPLOYMENT_TYPE_LABELS[d.employmentType]],
-  ['Salary', d.salary],
-  ['Technology', d.techStack],
-].filter((f): f is [string, string] => typeof f[1] === 'string' && f[1] !== '')
+const facts = [d.location, EMPLOYMENT_TYPE_LABELS[d.employmentType], d.salary].filter(
+  (f): f is string => typeof f === 'string' && f !== '',
+)
+const apply = applyHref(d.applyUrl, d.title)
 ---
 
-<header class="post-head">
-  <Crumbs section={{ name: 'Careers', href: careersHref }} current={d.title} />
-  {d.department && <span class="chip chip--line">{d.department}</span>}
-  <h1 class="t-h1 post-head__title">{d.title}</h1>
-  <p class="post-head__lead">{d.description}</p>
-</header>
-<aside class="facts" aria-label="Job details">
-  <dl class="facts__list">
-    {
-      facts.map(([label, value]) => (
-        <div>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
+<section class="section no-bottom-border">
+  <div class="section-padding">
+    <div class="header_component max-width-50rem">
+      <div class="header_content">
+        <a href={careersHref} class="text-size-tiny text-weight-medium text-style-tagline text-color-additional"
+          >← All open roles</a
+        >
+        <div class="spacer-small"></div>
+        <div class="max-width-33rem"><h1>{d.title}</h1></div>
+        <div class="spacer-small"></div>
+        <div class="button-group">
+          {facts.map((f) => <p class="text-style-tagline text-color-secondary">{f}</p>)}
         </div>
-      ))
+        {
+          d.techStack && (
+            <>
+              <div class="spacer-small" />
+              <p class="text-style-tagline text-color-secondary">{d.techStack}</p>
+            </>
+          )
+        }
+        <div class="spacer-medium"></div>
+        <div class="button-group">
+          {
+            d.open ? (
+              <a href={apply} class="button w-inline-block">
+                Apply now
+              </a>
+            ) : (
+              <p class="text-color-secondary">This position is closed.</p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section no-bottom-border">
+  <div class="section-padding">
+    <div class="max-width-50rem"><slot /></div>
+    <div class="spacer-large"></div>
+    {
+      d.open && (
+        <div class="button-group">
+          <a href={apply} class="button w-inline-block">
+            Apply now
+          </a>
+        </div>
+      )
     }
-  </dl>
-  {
-    d.open ? (
-      <a class="btn btn--primary" href={d.applyUrl}>
-        Apply
-      </a>
-    ) : (
-      <p class="t-muted">This position is closed.</p>
-    )
-  }
-</aside>
+    <div class="spacer-large"></div>
+    <a href={careersHref} class="button is-icon is-secondary w-inline-block">← All open roles</a>
+  </div>
+</section>

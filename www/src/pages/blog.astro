@@ -1,16 +1,19 @@
 ---
-// /blog (spec, Routing and UI/UX): featured posts, then every published post with the category filter island. Drafts
-// are never listed (D6). Complete without JavaScript: the island's server render lists every post.
-import Base from '../../../site/src/layouts/Base.astro'
-import PostList from '../components/blog/PostList.astro'
+// /blog (spec, Routing and UI/UX), in the live Webflow markup: the header, the featured post, then every published post
+// with the category filter island. Drafts are never listed (D6). Complete without JavaScript: the island's server
+// render lists every post; the Latest and Featured tabs of the live page are added by a script, as live.
+import Main from '../layouts/Main.astro'
+import Crumbs from '../components/Crumbs.astro'
+import PostCard from '../components/blog/PostCard.tsx'
 import CategoryFilter from '../islands/CategoryFilter.tsx'
-import { BLOG_PATH, featuredPosts, refId, TITLE_SUFFIX } from '../lib/blog.ts'
+import { BLOG_PATH, leadFeaturedPost, refId, TITLE_SUFFIX } from '../lib/blog.ts'
 import { blogData } from '../lib/blog-data.ts'
-import '../styles/blog.css'
+import pagesCss from '../styles/webflow/pages.css?url'
 
 const data = await blogData()
 const posts = data.published.map((p) => data.card(p))
-const featured = featuredPosts(data.published).map((p) => data.card(p))
+const lead = leadFeaturedPost(data.published)
+const featured = lead ? data.card(lead) : undefined
 const counts = new Map<string, number>()
 for (const p of data.published) {
   const c = refId(p.data.category)
@@ -29,21 +32,73 @@ const description = `Posts from the Open Mercato team about ${categories
   .replace(/, ([^,]*)$/, ' and $1')}.`
 ---
 
-<Base section="main" path={BLOG_PATH} title={`Blog${TITLE_SUFFIX}`} description={description}>
-  <div class="band">
-    <div class="sheet blog-page">
-      {/* the heading and the lead of the Webflow page, as live; they move to the `pages` collection in Phase 6 */}
-      <header class="post-head">
-        <h1 class="t-h1 post-head__title">Open Mercato Blog</h1>
-        <p class="post-head__lead">
-          Practical guides, deep dives, and lessons learned from building production-ready AI systems.
-        </p>
-      </header>
-      <PostList heading="Featured" id="featured" posts={featured} />
-      <section aria-labelledby="all-posts">
-        <h2 class="t-h2" id="all-posts">All posts</h2>
+<Main path={BLOG_PATH} title={`Blog${TITLE_SUFFIX}`} description={description} bodyClass="wf-blog" styles={[pagesCss]}>
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <section class="section">
+        <div class="section-padding">
+          <div class="header_component">
+            <div class="header_content">
+              <Crumbs current={{ name: 'Blog', href: BLOG_PATH }} />
+              {/* the heading and the lead of the Webflow page, as live; they move to the `pages` collection in Phase 6 */}
+              <h1>Open Mercato Blog</h1>
+              <div class="spacer-small"></div>
+              <div class="max-width-47rem">
+                <p class="text-color-secondary">
+                  Practical guides, deep dives, and lessons learned from building production-ready AI systems.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {
+        featured && (
+          <section class="section no-bottom-border" data-feed="featured">
+            <div class="section-padding">
+              <div class="blog-list_collection-list-wrapper">
+                <div role="list" class="blog-list_collection-list">
+                  <div role="listitem" class="blog-list_collection-item">
+                    <div class="text-size-small text-color-secondary">FEATURED POST</div>
+                    <div class="spacer-small" />
+                    <PostCard post={featured} featured />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )
+      }
+      <section class="section" data-feed="latest">
         <CategoryFilter client:painted posts={posts} categories={categories} />
       </section>
     </div>
   </div>
-</Base>
+</Main>
+
+<script>
+  // the Latest and Featured tabs of the live page (its om-blog-feed script): Latest shows the feed, Featured the
+  // featured post; without JavaScript both show
+  const feed = document.querySelector('[data-feed="latest"]')
+  const featured = document.querySelector('[data-feed="featured"]')
+  if (feed && featured) {
+    const nav = document.createElement('nav')
+    nav.className = 'om-feed-nav'
+    nav.setAttribute('aria-label', 'Blog feeds')
+    featured.before(nav)
+    const buttons = ['Latest', 'Featured'].map((label, i) => {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.textContent = label
+      button.addEventListener('click', () => select(i))
+      nav.append(button)
+      return button
+    })
+    const select = (i: number): void => {
+      buttons.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)))
+      featured.classList.toggle('om-feed-hidden', i === 0)
+      feed.classList.toggle('om-feed-hidden', i === 1)
+    }
+    select(0)
+  }
+</script>
