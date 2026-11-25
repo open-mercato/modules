@@ -563,6 +563,35 @@ function tidyInline(nodes: PhrasingContent[]): PhrasingContent[] {
     }
   }
   collapse(merged)
+  // a space at the edge of strong, emphasis or a link moves outside it (`<b> c </b>` is ` *c* `)
+  const hoist = (list: PhrasingContent[]): PhrasingContent[] => {
+    const out: PhrasingContent[] = []
+    for (const n of list) {
+      if (n.type === 'strong' || n.type === 'emphasis' || n.type === 'link') {
+        n.children = hoist(n.children as PhrasingContent[]) as typeof n.children
+        const first = n.children[0]
+        const last = n.children[n.children.length - 1]
+        const lead = first?.type === 'text' && first.value.startsWith(' ')
+        const trail = last?.type === 'text' && last.value.endsWith(' ')
+        if (lead) first.value = first.value.slice(1)
+        if (trail && last.type === 'text') last.value = last.value.slice(0, -1)
+        if (lead) out.push({ type: 'text', value: ' ' })
+        out.push(n)
+        if (trail) out.push({ type: 'text', value: ' ' })
+      } else out.push(n)
+    }
+    // merge the texts the move made adjacent, one space between words
+    const merged2: PhrasingContent[] = []
+    for (const n of out) {
+      const prev = merged2[merged2.length - 1]
+      if (n.type === 'text' && prev?.type === 'text') prev.value = (prev.value + n.value).replace(/ {2,}/g, ' ')
+      else merged2.push(n)
+    }
+    return merged2
+  }
+  const hoisted = hoist(merged)
+  merged.length = 0
+  merged.push(...hoisted)
   // trim at the edges and around breaks, descending into the first and last nodes
   const trimEdge = (list: PhrasingContent[], side: 'start' | 'end') => {
     const n = side === 'start' ? list[0] : list[list.length - 1]
@@ -622,6 +651,32 @@ export function htmlTextNodes(html: string): string[] {
     }
   }
   walk(tree.children)
+  return out
+}
+
+/** The visible text nodes of a whole HTML document's body, one string each (as strony/<slug>.txt holds them). */
+export function documentTextNodes(html: string): string[] {
+  const doc = fromHtml(html)
+  const find = (nodes: (HastContent | ElementContent)[]): Element | undefined => {
+    for (const n of nodes) {
+      if (!isElement(n)) continue
+      if (n.tagName === 'body') return n
+      const inner = find(n.children)
+      if (inner) return inner
+    }
+    return undefined
+  }
+  const body = find(doc.children)
+  const out: string[] = []
+  const walk = (nodes: ElementContent[]) => {
+    for (const n of nodes) {
+      if (n.type === 'text') {
+        const t = n.value.replace(/[ \t\n\r\f]+/g, ' ').trim()
+        if (t) out.push(t)
+      } else if (isElement(n) && !NEVER.has(n.tagName) && n.tagName !== 'template') walk(n.children)
+    }
+  }
+  if (body) walk(body.children)
   return out
 }
 

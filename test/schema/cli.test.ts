@@ -24,6 +24,8 @@ describe('lib/cli.ts (spec 5.4)', () => {
       'pages-site',
       'plugin-sync',
       'check-text',
+      'import-webflow',
+      'webflow-export',
     ])
     const text = usage()
     for (const c of COMMANDS) expect(text).toContain(c.name)

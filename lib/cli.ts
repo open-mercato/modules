@@ -64,6 +64,16 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
   },
   { name: 'plugin-sync', owner: 'WP14', description: 'copy the skill and .mcp.json into the Claude Code plugin' },
   { name: 'check-text', owner: 'WP01', description: 'ban long dashes and control characters in texts' },
+  {
+    name: 'import-webflow',
+    owner: 'www',
+    description: 'import a Webflow export into www/content and www/public/media; --check compares only',
+  },
+  {
+    name: 'webflow-export',
+    owner: 'www',
+    description: 'write a Webflow export directory from the API (WEBFLOW_TOKEN, read-only; owner only)',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))
