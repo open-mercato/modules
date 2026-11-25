@@ -517,3 +517,9 @@ button:is(.cms-filters_filed, .case-slider_button, .agencies_filter-clear, .agen
   aspect-ratio: auto;
   border-radius: 0;
 }
+
+/* A post's figures keep the reading width, as on the live posts (measured 25 Nov 2026: 700 px at 1440, the width of
+   the paragraphs): the live reader style sizes every child of the body to --reader after the figure rule above */
+.wf-blog-post .text-blog-rich-text > figure {
+  width: min(100%, var(--reader));
+}
