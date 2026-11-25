@@ -1,0 +1,23 @@
+/*
+ * /agent-orchestrator, a mirror of the live page (owner's decision of 25 Nov 2026, until the designer's pass, D7, replaces it).
+ * Origin: https://www.openmercato.com/agent-orchestrator and its Webflow stylesheet, fetched on 25 Nov 2026; the page has no
+ * embedded code of its own.
+ * Edit as a mirror: change a rule only to match the live site.
+ */
+
+/*
+ * Webflow rules that site.css loses at phone width: its later (max-width: 991px) block (from line 3407) sets the
+ * table's column widths again after the (max-width: 479px) ones, so the live phone widths are restated here (live
+ * measured on 25 Nov 2026 at 390: 11rem, 16rem, 20rem).
+ */
+@media screen and (max-width: 479px) {
+  .table_column {
+    width: 16rem;
+  }
+  .table_column.is-20rem {
+    width: 20rem;
+  }
+  .table_column.is-agents-1-col {
+    width: 11rem;
+  }
+}

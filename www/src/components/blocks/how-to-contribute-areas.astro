@@ -1,0 +1,59 @@
+---
+// "Areas of Contribution" of /how-to-contribute: the heading, then a two-column grid of bordered cards, each an icon,
+// a title and its text, with the live grid's dividing lines.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import icon1 from './how-to-contribute-areas-1.svg?raw'
+import icon2 from './how-to-contribute-areas-2.svg?raw'
+import icon3 from './how-to-contribute-areas-3.svg?raw'
+import icon4 from './how-to-contribute-areas-4.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const icons = [icon1, icon2, icon3, icon4]
+const n = block.items.length
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-2-col">
+      {
+        block.items.map((item, i) => (
+          <div class="border-grid_card">
+            <div class="border-grid_card-content">
+              {icons[i] && (
+                <div class="border-grid_icon-wrapepr">
+                  <div class="border-grid_icon w-embed" set:html={icons[i]} />
+                </div>
+              )}
+              <div class="spacer-1rem" />
+              {item.title && <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>}
+              <div class="spacer-1rem" />
+              {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+            </div>
+            {i < n - 1 && <div class:list={['border-grid_line', { 'show-tablet': i % 2 === 1 }]} />}
+            {i < n - 2 && <div class="border-grid_line is-bottom hide-tablet" />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>

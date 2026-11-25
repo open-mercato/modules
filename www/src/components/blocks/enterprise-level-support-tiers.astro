@@ -1,0 +1,70 @@
+---
+// "At a Glance" of /enterprise-level-support: the heading, then the table of the support tiers, one item per column
+// as live has it: the row labels under their header, then each tier with a check before each cell.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import check from './enterprise-level-support-check.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const last = block.items.length - 1
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="table_component no-scrollbar is-enterprise">
+      {
+        block.items.map((col, i) => (
+          <div
+            class:list={[
+              'table_column',
+              { 'is-custom': i === 0, 'is-middle': i > 0 && i < last, 'is-20rem': i > 0 && i === last },
+            ]}
+          >
+            {i === 0 ? (
+              <div class="table_header is-align-bottom is-tablet-height-5rem">
+                {col.title && <p class="text-color-secondary">{t(col.title)}</p>}
+              </div>
+            ) : (
+              <div class="table_header is-tablet-height-5rem">
+                {col.title && <h3 class="text-size-large text-weight-normal">{t(col.title)}</h3>}
+              </div>
+            )}
+            <div class="table_content is-min-height-22rem">
+              {(col.points ?? []).map((p) => (
+                <div class="table_row">
+                  {i === 0 ? (
+                    <div class="text-color-secondary" set:html={inline(t(p))} />
+                  ) : (
+                    <>
+                      <div class="table_row-icon w-embed" set:html={check} />
+                      <div class="text-weight-medium" set:html={inline(t(p))} />
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>

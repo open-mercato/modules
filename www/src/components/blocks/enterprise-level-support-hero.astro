@@ -1,0 +1,46 @@
+---
+// The header of /enterprise-level-support as live has it: the breadcrumb, the heading (33rem), the lead (42rem) and
+// the contact button, in a 50rem column.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Crumbs from '../Crumbs.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import { pagePath, type BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'hero'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component max-width-50rem">
+        <div class="header_content">
+          {block.eyebrow && <Crumbs current={{ name: t(block.eyebrow), href: pagePath(page) }} />}
+          <div class="max-width-33rem">
+            <h1 set:html={headingHtml(t(block.title))} />
+          </div>
+          <div class="spacer-small"></div>
+          {
+            block.lead && (
+              <div class="max-width-42rem">
+                <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+              </div>
+            )
+          }
+          <div class="spacer-medium"></div>
+          <div class="button-group">
+            {
+              block.primary && (
+                <a href={block.primary.href} target="_blank" class="button is-icon w-inline-block">
+                  <div>{t(block.primary.label)}</div>
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>
