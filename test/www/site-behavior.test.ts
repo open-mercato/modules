@@ -5,10 +5,10 @@ import { describe, expect, it } from 'vitest'
 import {
   CTA_EVENT_LENGTH,
   GA_MEASUREMENT_ID,
-  ctaEventName,
   ctaParams,
   ctaSlug,
   navCtaAction,
+  sentCtaEventName,
 } from '../../lib/core/cta.ts'
 import {
   MAIN_SITE_GITHUB,
@@ -91,8 +91,8 @@ describe('CTA events', () => {
   it('cuts an event name at 40 characters, as the live tracker, and the schema agrees on the limit', () => {
     expect(CTA_EVENT_LENGTH).toBe(40)
     expect(CTA_EVENT_MAX).toBe(CTA_EVENT_LENGTH)
-    expect(ctaEventName('nav', 'home')).toBe('cta_nav_home')
-    const long = ctaEventName('nav', 'run_agents_and_skills_for_coding_agents')
+    expect(sentCtaEventName('nav', 'home')).toBe('cta_nav_home')
+    const long = sentCtaEventName('nav', 'run_agents_and_skills_for_coding_agents')
     expect(long).toHaveLength(40)
     expect(long).toBe('cta_nav_run_agents_and_skills_for_coding')
   })

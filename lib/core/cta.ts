@@ -25,8 +25,11 @@ export function ctaSlug(text: string): string {
     .replace(/^_|_$/g, '')
 }
 
-/** The event name of a CTA, cut as the live tracker cuts it. */
-export function ctaEventName(placement: string, action: string): string {
+/**
+ * The event name the tracker sends, cut as the live tracker cuts it (lib/schema/www-content.ts ctaEventName() is the
+ * whole name, which a typed Cta may not let grow past this length).
+ */
+export function sentCtaEventName(placement: string, action: string): string {
   return `cta_${placement}_${action}`.slice(0, CTA_EVENT_LENGTH)
 }
 
