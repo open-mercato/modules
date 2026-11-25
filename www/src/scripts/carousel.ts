@@ -2,7 +2,10 @@
 // clone of the last slide before the first and of the first after the last make it endless; the track moves by one
 // slide width plus the 24 px gap; the arrows, the arrow keys and a swipe of more than 50 px move it; a move under
 // reduced motion lands at once. A click on the active slide's video swaps the link for the youtube-nocookie.com player;
-// a click on a faded neighbour brings it forward first; a modified click (new tab) opens YouTube. Moving stops a video.
+// a click on a faded neighbour brings it forward first, a clone at either end included (hidden from assistive
+// technology and out of the tab order, but clickable as on the live slider); a modified click (new tab) opens YouTube.
+// Moving stops a video. Focus never stays in a slide that leaves: it moves to the carousel, and to the player once
+// it loads.
 import { carouselPlayerSrc, counterText, settledPosition, slideNumber, stepPosition } from '../lib/carousel.ts'
 
 const MOVE_MS = 420
@@ -18,7 +21,7 @@ function setUp(carousel: HTMLElement): void {
   const clone = (el: HTMLElement): HTMLElement => {
     const c = el.cloneNode(true) as HTMLElement
     c.setAttribute('aria-hidden', 'true')
-    c.inert = true
+    for (const el of c.querySelectorAll<HTMLElement>('a, button')) el.tabIndex = -1
     return c
   }
   track.prepend(clone(original[count - 1]!))
@@ -72,6 +75,7 @@ function setUp(carousel: HTMLElement): void {
   const show = (next: number): void => {
     if (busy || next === position) return
     busy = true
+    if (slides[position]?.contains(document.activeElement)) carousel.focus()
     slides.forEach(stop)
     position = next
     paint()
@@ -117,6 +121,7 @@ function setUp(carousel: HTMLElement): void {
     frame.referrerPolicy = 'strict-origin-when-cross-origin'
     play.hidden = true
     media.append(frame)
+    frame.focus()
   })
 }
 
