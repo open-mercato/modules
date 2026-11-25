@@ -127,16 +127,17 @@ export type WwwRef = (collection: WwwCollection) => z.ZodType
 export const slugRef: WwwRef = () => Slug
 
 // ---------------------------------------------------------------------------------------------------------------
-// Option values written as stable keys; their labels live here, so a label edit is not a content migration.
+// Option values written as stable keys; their labels live here, so a label edit is not a content migration. Each label
+// equals the Webflow option's name exactly (parity, and the importer maps an option to its key by this name).
 
 export const PARTNER_BUDGETS = ['under-10k', '10k-20k', '20k-50k', '50k-100k', '100k-plus'] as const
 export const PartnerBudget = z.enum(PARTNER_BUDGETS)
 export const PARTNER_BUDGET_LABELS: Record<(typeof PARTNER_BUDGETS)[number], string> = {
   'under-10k': 'Under $10,000',
-  '10k-20k': '$10,000 to $20,000',
-  '20k-50k': '$20,000 to $50,000',
-  '50k-100k': '$50,000 to $100,000',
-  '100k-plus': '$100,000 and more',
+  '10k-20k': '$10,000 - $20,000',
+  '20k-50k': '$20,000 - $50,000',
+  '50k-100k': '$50,000 - $100,000',
+  '100k-plus': '$100,000+',
 }
 
 export const PARTNER_AVAILABILITY = ['accepting', 'not-available'] as const
@@ -158,18 +159,44 @@ export const EMPLOYMENT_TYPE_LABELS: Record<(typeof EMPLOYMENT_TYPES)[number], s
 // ---------------------------------------------------------------------------------------------------------------
 // Collections
 
-const titled = <T extends z.ZodType>(item: T) => z.strictObject({ title: Text, items: z.array(item).min(1) })
 const TitleBody = z.strictObject({ title: Text, body: Markdown })
 const SourceLink = z.strictObject({ label: Text, url: HttpsUrl })
+/** A section of title and items; `eyebrow` is the short label some sections show above the title. */
+const titled = <T extends z.ZodType>(item: T) =>
+  z.strictObject({ eyebrow: Text.optional(), title: Text, items: z.array(item).min(1) })
 
 /** The least FAQ items of a landing. */
 export const LANDING_FAQ_MIN = 3
 
-/** `landings`: content/landings/<slug>.yaml, the shared layout of the SEO landings. */
+/** A cell mark of the capability matrix: available, not included, or requires implementation. */
+export const CAPABILITY_MARKS = ['yes', 'no', 'build'] as const
+export const CapabilityMark = z.enum(CAPABILITY_MARKS)
+
+/** The locales of the landings. */
+export const LANDING_LOCALES = ['en', 'pl'] as const
+export type LandingLocale = (typeof LANDING_LOCALES)[number]
+
+/**
+ * Words the landing template writes around data, per locale (the review lines of the capability matrix and of the
+ * source list). The template renders `{reviewedPrefix} <date>. {sourcesLabel}` and `<title> · {reviewedInline} <date>`,
+ * with the date in the locale's long form ("12 November 2026", "12 listopada 2026").
+ */
+export const LANDING_TEMPLATE_TEXT: Record<
+  LandingLocale,
+  { reviewedPrefix: string; sourcesLabel: string; reviewedInline: string }
+> = {
+  en: { reviewedPrefix: 'Reviewed', sourcesLabel: 'Sources:', reviewedInline: 'reviewed' },
+  pl: { reviewedPrefix: 'Sprawdzono', sourcesLabel: 'Źródła:', reviewedInline: 'sprawdzono' },
+}
+
+/**
+ * `landings`: content/landings/<slug>.yaml, the shared layout of the SEO landings. Fitted to the layout of the Webflow
+ * export (Phase 2): every visible text of a landing has a field, so the importer's text cross-check can hold.
+ */
 export function landingSchema(ref: WwwRef = slugRef) {
   return z.strictObject({
     webflowId: WebflowId.optional(),
-    locale: z.enum(['en', 'pl']),
+    locale: z.enum(LANDING_LOCALES),
     kind: z.enum(['alternative', 'industry']),
     competitor: Text.optional(),
     alternateOf: ref('landings').optional(),
@@ -184,10 +211,27 @@ export function landingSchema(ref: WwwRef = slugRef) {
     }),
     sectionNav: z.array(z.strictObject({ label: Text, anchor: Slug })),
     pains: titled(TitleBody).optional(),
-    features: z.strictObject({ title: Text, lead: Markdown.optional(), items: z.array(TitleBody).min(1) }).optional(),
+    features: z
+      .strictObject({
+        eyebrow: Text.optional(),
+        title: Text,
+        lead: Markdown.optional(),
+        items: z.array(TitleBody).min(1),
+      })
+      .optional(),
     capabilities: z
       .strictObject({
-        columns: z.tuple([Text, Text]),
+        eyebrow: Text.optional(),
+        title: Text,
+        lead: Markdown.optional(),
+        /** The label of the matrix's first header cell ("What your team gets") and the line under it. */
+        label: Text,
+        tagline: Text.optional(),
+        /** Ours, then theirs: the name of each column and the note under it. */
+        columns: z.tuple([
+          z.strictObject({ name: Text, note: Text.optional() }),
+          z.strictObject({ name: Text, note: Text.optional() }),
+        ]),
         groups: z
           .array(
             z.strictObject({
@@ -196,9 +240,9 @@ export function landingSchema(ref: WwwRef = slugRef) {
                 .array(
                   z.strictObject({
                     label: Text,
-                    ours: z.enum(['yes', 'no', 'build']),
+                    ours: CapabilityMark,
                     oursNote: Text.optional(),
-                    theirs: Text,
+                    theirs: CapabilityMark,
                     theirsNote: Text.optional(),
                   }),
                 )
@@ -206,23 +250,41 @@ export function landingSchema(ref: WwwRef = slugRef) {
             }),
           )
           .min(1),
-        legend: Markdown,
+        /** What each mark means. */
+        legend: z.strictObject({ yes: Text, no: Text, build: Text }),
         note: Markdown,
         reviewed: UtcDate,
         sources: z.array(SourceLink),
       })
       .optional(),
     comparison: z
-      .strictObject({ rows: z.array(z.strictObject({ topic: Text, theirs: Text, ours: Text })).min(1) })
+      .strictObject({
+        title: Text.optional(),
+        /** The label of the first header cell ("What matters"). */
+        label: Text,
+        /** Theirs, then ours. */
+        columns: z.tuple([Text, Text]),
+        rows: z.array(z.strictObject({ topic: Text, theirs: Text, ours: Text })).min(1),
+      })
       .optional(),
-    demo: z.strictObject({ title: Text, body: Markdown, cta: Cta, animation: Text.optional() }).optional(),
+    demo: z
+      .strictObject({
+        eyebrow: Text.optional(),
+        title: Text,
+        body: Markdown,
+        cta: Cta,
+        image: Image.optional(),
+        caption: Text.optional(),
+        animation: Text.optional(),
+      })
+      .optional(),
     steps: titled(TitleBody).optional(),
     faq: z.strictObject({
       title: Text,
       items: z.array(z.strictObject({ question: Text, answer: Markdown })).min(LANDING_FAQ_MIN),
     }),
     cta: z.strictObject({ title: Text, body: Markdown, primary: Cta, note: Text.optional() }),
-    sources: z.strictObject({ reviewed: UtcDate, items: z.array(SourceLink).min(1) }).optional(),
+    sources: z.strictObject({ title: Text, reviewed: UtcDate, items: z.array(SourceLink).min(1) }).optional(),
     related: z.array(ref('landings')).default([]),
     draft,
   })
@@ -299,7 +361,14 @@ export function caseStudySchema(ref: WwwRef = slugRef) {
       heroVideo: YouTubeId.optional(),
       deliveredBy: ref('partners').optional(),
       deliveredByUrl: HttpsUrl.optional(),
-      overview: z.strictObject({ client: Text, industry: Text, timeline: Text, type: Text, stack: Markdown }),
+      // each overview field may be empty: three published case studies of the export leave the timeline out
+      overview: z.strictObject({
+        client: Text.optional(),
+        industry: Text.optional(),
+        timeline: Text.optional(),
+        type: Text.optional(),
+        stack: Markdown.optional(),
+      }),
       stats: z
         .array(z.strictObject({ title: Text, description: Text }))
         .refine((s) => s.length === 0 || s.length === CASE_STUDY_STATS, `exactly ${CASE_STUDY_STATS} when present`)
@@ -342,7 +411,8 @@ export function partnerSchema(ref: WwwRef = slugRef) {
   return z.strictObject({
     webflowId: WebflowId.optional(),
     name: Text,
-    logo: Image,
+    // two published partners of the export have no logo
+    logo: Image.optional(),
     tier: ref('partnerTiers'),
     industries: z.array(ref('partnerIndustries')).default([]),
     location: ref('partnerLocations'),
@@ -445,14 +515,17 @@ export const WWW_SOURCES: Record<WwwCollection, WwwSource> = {
 
 /**
  * First path segments a page or a landing cannot take: the catalog, the redirected docs, the folders of files and of
- * the other collections, and the files the build writes at the root.
+ * the other collections, the list routes of the collections (`/blog`, `/careers`, `/case-studies`,
+ * `/certified-partners`), and the files the build writes at the root.
  */
 export const RESERVED_SEGMENTS = [
   'run',
   'docs',
   'documentation',
   'media',
+  'blog',
   'blog-posts',
+  'careers',
   'case-studies',
   'certified-partners',
   'careers-jobs',
