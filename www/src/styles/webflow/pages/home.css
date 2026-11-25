@@ -2272,9 +2272,3 @@ body:has(.om-home-refresh) {
     right: 12px;
   }
 }
-
-/* Not live code: the catalog's base.css keeps every svg from shrinking (flex-shrink: 0), and the arrows of the case
-   slider shrink to their 1rem box on a phone on live. */
-body.wf-home .case-slider_button-icon svg {
-  flex-shrink: 1;
-}
