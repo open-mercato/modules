@@ -15,6 +15,7 @@ import { mainSiteRun } from '../lib/core/site-host.ts'
 import { parseWwwRedirects, WWW_REDIRECTS_FILE, wwwRedirectsText } from '../lib/emit/www-redirects.ts'
 import { bodyLinkRules, noindexPostPaths } from './body-links.ts'
 import { runBasePlugin } from './run-base.ts'
+import { siteBehavior } from './site-behavior.ts'
 import { bodyHtmlPlugin } from './src/lib/body-html.ts'
 
 const repo = fileURLToPath(new URL('..', import.meta.url))
@@ -92,6 +93,7 @@ export default defineConfig({
     paintedDirective(),
     bodyHtml(),
     redirectsFile(),
+    siteBehavior(),
     sitemap({ filter: (page) => !/\/404\/?$/.test(page) && !noindex.has(new URL(page).pathname) }),
   ],
   devToolbar: { enabled: false },
