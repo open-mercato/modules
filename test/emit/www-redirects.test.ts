@@ -109,6 +109,13 @@ describe('loops and chains', () => {
     )
   })
 
+  it('fails a splat whose target prefix holds a fixed source', () => {
+    expect(redirectChainProblems('/a/* /b/:splat 301\n/b/c /d 301\n', ORIGIN)).toEqual([
+      'the redirect from /a/* is a chain of 2 hops for paths under /b/: /a/* -> /b/c; point it at the last target',
+    ])
+    expect(redirectChainProblems('/a/* /b/:splat 301\n/c/d /e 301\n', ORIGIN)).toEqual([])
+  })
+
   it('fails a loop, itself included', () => {
     expect(redirectChainProblems('/a /a 301\n', ORIGIN)).toEqual(['the redirect from /a loops: /a -> /a'])
     expect(redirectChainProblems('/a /b 301\n/b /a 301\n', ORIGIN)).toEqual([
@@ -175,5 +182,13 @@ describe('merge and check', () => {
     expect(problems).toMatch(/the redirect from \/old sends to \/gone, which is not a page or a file of this build/)
     expect(problems).toMatch(/the redirect from \/blog hides the file of the upload it would serve/)
     expect(problems).not.toMatch(/from \/y /)
+  })
+
+  it('accepts a folder rule whose target takes the splat (RUNBOOK C4)', () => {
+    put(join(dirs.www, 'blog-posts', 'a.html'), '<a href="/">home</a>')
+    const text = wwwRedirectsText([rule('/old-blog/*', '/blog-posts/:splat', 'webflow-panel'), ...DOCS])
+    put(join(dirs.www, '_redirects'), text)
+    mergePagesSite(dirs, WWW)
+    expect(redirectsOnly(checkMergedLayout(dirs.out, WWW, 50, false, text))).toEqual([])
   })
 })

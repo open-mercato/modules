@@ -277,6 +277,9 @@ function wwwPagePath(rel: string): string {
 
 const NOT_A_PAGE = /^(?:#|mailto:|tel:|data:|javascript:|about:)/i
 
+/** A _redirects target that takes the splat or a placeholder of its source. */
+const DYNAMIC_TARGET = /:splat|\/:[A-Za-z]/
+
 export interface MergedCheck {
   problems: string[]
   /**
@@ -351,7 +354,8 @@ export function checkMergedLayout(
     for (const r of pagesRules(wwwPart)) {
       if (!/[*:]/.test(r.from) && servesPath(root, r.from, []))
         say(`${at}: the redirect from ${r.from} hides the file of the upload it would serve`)
-      const target = ruleTargetPath(r, c.origin)
+      // a target with the splat or a placeholder names many pages: only a fixed target can be looked up
+      const target = DYNAMIC_TARGET.test(r.to) ? null : ruleTargetPath(r, c.origin)
       if (target !== null && !onMainSite(r.to, new URL(target, c.origin)))
         say(`${at}: the redirect from ${r.from} sends to ${r.to}, which is not a page or a file of this build`)
     }

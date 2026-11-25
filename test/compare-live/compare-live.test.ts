@@ -156,6 +156,10 @@ beforeAll(async () => {
     '/docs/platform-overview': { status: 200, html: livePage(page) },
     '/old-pricing': { status: 301, location: '/product' },
     '/apex': { status: 301, location: 'https://www.openmercato.com/' },
+    '/old-blog/compare-live-sample': {
+      status: 301,
+      location: 'https://www.openmercato.com/blog-posts/compare-live-sample',
+    },
     ...slow,
   })
   cand = await serve({
@@ -178,6 +182,9 @@ beforeAll(async () => {
     '/docs/platform-overview': { status: 302, location: '/docs' },
     '/docs/compare-live-sample': { status: 301, location: 'https://docs.openmercato.com/' },
     '/old-pricing': { status: 301, location: '/product' },
+    '/old-blog/compare-live-sample': { status: 301, location: '/blog-posts/compare-live-sample' },
+    // at C8 the candidate is www itself: Pages answers a rule to an absolute www address on its own origin
+    '/old-home': { status: 301, location: (o) => `${o}/` },
     ...slowCand,
   })
 })
@@ -359,6 +366,29 @@ describe('compareLive against two servers', () => {
     )
     expect(md).toContain('| /blog-posts/same | Blog | pass |  |')
     expect(md).toMatch(/Apex: .*\/apex answers 301 https:\/\/www\.openmercato\.com\/; expected 301/)
+  })
+})
+
+describe('rules of redirects.yaml with a splat or an absolute target', () => {
+  it('expects the splat sample in the target, and an absolute target on the candidate as a path', async () => {
+    const r = await compareLive({
+      live: live.origin,
+      candidate: cand.origin,
+      targets: mergeTargets(
+        [],
+        [
+          { from: '/old-blog/*', to: '/blog-posts/:splat', status: 301, source: 'webflow-panel' },
+          { from: '/old-home', to: `${cand.origin}/`, status: 301, source: 'manual' },
+        ],
+      ),
+      apex: null,
+    })
+    expect(r.urls.map((u) => [u.path, u.kind, u.result])).toEqual([
+      ['/old-blog/compare-live-sample', 'redirect', 'pass'],
+      ['/old-home', 'redirect', 'fail'],
+    ])
+    // the live site answers 404 for /old-home: the status class differs, the target does not
+    expect(r.urls[1]!.failures.map((d) => d.field)).toEqual(['status'])
   })
 })
 

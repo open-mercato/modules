@@ -925,7 +925,8 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
    ```
 
    `to` is a path of the site or an `https://` address. A Webflow rule written with a trailing slash or a wildcard is
-   written as Pages reads it (`/x/*` for a folder). Then, on a workstation:
+   written as Pages reads it (`/x/*` for a folder, `to` with `:splat`). Then, on Cezar (AGENTS.md rule 5: site builds
+   run there, not on the owner's Mac):
 
    ```sh
    export SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules PAGES_MERGED=1 PAGES_NOINDEX=1
@@ -968,7 +969,9 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
    ```
 
    If Cloudflare > zone `openmercato.com` > Rules > Redirect Rules has no rule for the apex, the 301 comes from
-   Webflow and stops with the switch. Then add a single redirect rule before C8: hostname equals `openmercato.com`,
+   Webflow and stops with the switch. A Cloudflare rule runs only on a proxied record: first make sure the apex
+   records (DNS, name `openmercato.com`) are proxied (orange cloud); if they point at Webflow DNS only, point them at
+   a proxied placeholder (`192.0.2.1`, proxied) in the same change. Then add a single redirect rule before C8: hostname equals `openmercato.com`,
    dynamic target `concat("https://www.openmercato.com", http.request.uri.path)`, status 301, preserve the query
    string. Pass: the apex line of the C6 report reads `pass` (run C6 again after a change).
 
@@ -977,7 +980,7 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
       production checks run `yarn om pages-site --check dist` on the merged layout, where every page the menus link
       must be in the build. Then `https://open-mercato-modules.pages.dev/` is the main site and
       `https://open-mercato-modules.pages.dev/run/modules` the catalog; www still shows Webflow.
-   2. Write down the current `www` record (Cloudflare > zone `openmercato.com` > DNS, its type and target) for C10.
+   2. Write down the current `www` record (Cloudflare > zone `openmercato.com` > DNS, its type, target and proxy status) for C10.
    3. Workers & Pages > `open-mercato-modules` > Custom domains > Set up a custom domain: `www.openmercato.com`.
       Cloudflare repoints the `www` record from Webflow to the project. Wait until the domain shows Active.
    4. Remove the Worker route `www.openmercato.com/run*` of the `/run` proxy (Workers & Pages >
@@ -1005,11 +1008,15 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
 
 **C10 Rollback** (within the 30 days; target 30 minutes):
 
-1. Workers & Pages > `open-mercato-modules` > Custom domains: remove `www.openmercato.com`.
-2. Cloudflare > zone `openmercato.com` > DNS: point the `www` record back to the Webflow target written down at C8.
-   The domain stays attached in Webflow for the 30 days, so Webflow answers again.
-3. Restore the Worker route `www.openmercato.com/run*` of the `/run` proxy, its upstream
-   `https://open-mercato-modules.pages.dev` ([docs/proxy/README.md](proxy/README.md), Switch day).
+In this order, so `www` always has an answer:
+
+1. Restore the Worker route `www.openmercato.com/run*` of the `/run` proxy, its upstream
+   `https://open-mercato-modules.pages.dev` ([docs/proxy/README.md](proxy/README.md), Switch day). While www is on
+   the project the route sends `/run` to the same project, so nothing changes yet.
+2. Cloudflare > zone `openmercato.com` > DNS: point the `www` record back to the Webflow target, with the type and
+   proxy status written down at C8. The domain stays attached in Webflow for the 30 days, so Webflow answers again.
+3. Workers & Pages > `open-mercato-modules` > Custom domains: remove `www.openmercato.com`. If the dashboard offers
+   to delete the DNS record with it, keep the record (it now points at Webflow).
 4. Check: `docs/proxy/check.sh https://www.openmercato.com` ends with `0 failed`, and
    `curl -sI https://www.openmercato.com/ | grep -iE '^(HTTP|server)'` names Webflow again.
 

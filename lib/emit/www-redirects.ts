@@ -130,6 +130,20 @@ export function redirectChainProblems(text: string, origin: string): string[] {
       seen.push(next)
       at = rules[next]!
     }
+    // a target with the splat reaches every path under its fixed prefix: a fixed source there is a second hop too
+    if (!loop && seen.length === 1 && /:splat|\/:[A-Za-z]/.test(rule.to)) {
+      const prefix = ruleTargetPath(
+        { ...rule, to: rule.to.replace(/(?::splat|:[A-Za-z][A-Za-z0-9_]*).*$/, '') },
+        origin,
+      )
+      const under = prefix === null ? undefined : rules.find((r) => !/[*:]/.test(r.from) && r.from.startsWith(prefix))
+      if (under) {
+        problems.push(
+          `the redirect from ${rule.from} is a chain of 2 hops for paths under ${prefix}: ${rule.from} -> ${under.from}; point it at the last target`,
+        )
+        continue
+      }
+    }
     if (loop) problems.push(`the redirect from ${rule.from} loops: ${hops.join(' -> ')}`)
     else if (seen.length > 1)
       problems.push(

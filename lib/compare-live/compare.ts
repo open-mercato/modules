@@ -147,6 +147,11 @@ export function samplePath(from: string): string {
   return from.replace(/\*/g, 'compare-live-sample').replace(/:[A-Za-z][A-Za-z0-9_]*/g, 'sample')
 }
 
+/** A rule's target as Pages sends it for samplePath(): the splat and each placeholder take the same samples. */
+export function sampleTarget(to: string): string {
+  return to.replace(/:splat/g, 'compare-live-sample').replace(/:[A-Za-z][A-Za-z0-9_]*/g, 'sample')
+}
+
 /** The targets of the sitemap and of redirects.yaml together, each path once, sitemap order first. */
 export function mergeTargets(sitemap: readonly Target[], redirects: readonly WwwRedirect[]): Target[] {
   const byPath = new Map<string, Target>()
@@ -227,7 +232,7 @@ const show = (v: unknown): string => (v === null || v === undefined ? '(none)' :
 const cls = (status: number): string => `${Math.floor(status / 100)}xx`
 
 /** The differences of one URL, before `--planned` is applied. */
-export function differences(t: Target, kind: Kind, ref: Answer | null, cand: Answer): Difference[] {
+export function differences(t: Target, kind: Kind, ref: Answer | null, cand: Answer, candidate = ''): Difference[] {
   const out: Difference[] = []
   const diff = (field: Field, reference: unknown, candidate: unknown): void => {
     out.push({ field, reference: show(reference), candidate: show(candidate) })
@@ -236,6 +241,12 @@ export function differences(t: Target, kind: Kind, ref: Answer | null, cand: Ans
     diff('request', 'an answer', cand.error)
     return out
   }
+  // the rule's target for the requested sample, written as the candidate's Location is kept: a path on its own origin
+  const expected = t.redirect
+    ? candidate
+      ? normalizeLocation(sampleTarget(t.redirect.to), `${candidate}${t.path}`, candidate)!
+      : sampleTarget(t.redirect.to)
+    : null
   // a docs URL is a 301 to docs.openmercato.com, whatever Webflow answers today (D4)
   if (kind === 'docs') {
     let host = ''
@@ -246,16 +257,12 @@ export function differences(t: Target, kind: Kind, ref: Answer | null, cand: Ans
     }
     if (cand.status !== 301 || host !== DOCS_HOST)
       diff('redirect', `301 to https://${DOCS_HOST}/...`, `${cand.status} ${show(cand.location)}`)
-    else if (t.redirect && cand.location !== t.redirect.to) diff('redirect', t.redirect.to, cand.location)
+    else if (expected !== null && cand.location !== expected) diff('redirect', expected, cand.location)
     return out
   }
   // a rule of redirects.yaml (the Webflow panel list, a manual rule): the candidate answers it
-  if (t.redirect) {
-    // Pages sends the target as written: a path stays a path, an address stays absolute
-    const to = t.redirect.to
-    if (cand.status !== 301 || cand.location !== to)
-      diff('redirect', `301 to ${to}`, `${cand.status} ${show(cand.location)}`)
-  }
+  if (expected !== null && (cand.status !== 301 || cand.location !== expected))
+    diff('redirect', `301 to ${expected}`, `${cand.status} ${show(cand.location)}`)
   if (ref === null) return out
   if (ref.error) {
     diff('request', ref.error, 'an answer')
@@ -332,7 +339,7 @@ export async function compareLive(opts: CompareOptions): Promise<Report> {
       const kind = base?.get(t.path)?.kind ?? kindOf(t, ref)
       const failures: Difference[] = []
       const plannedHit: Difference[] = []
-      for (const d of differences(t, kind, ref, cand)) {
+      for (const d of differences(t, kind, ref, cand, candidate)) {
         const p = planned.find((x) => plannedCovers(x, t.path, d.field))
         if (p) {
           used.add(p)
