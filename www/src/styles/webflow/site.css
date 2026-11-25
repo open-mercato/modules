@@ -5,14 +5,14 @@
  * Origin: the Webflow site stylesheet linked from every page of https://www.openmercato.com,
  * https://cdn.prod.website-files.com/69a97e33d587824eef365d83/css/openmercato-dev.webflow.shared.aa54cdb44.min.css,
  * fetched on 25 Nov 2026. Kept: the rules whose class selectors all appear in the live markup of the pages this site
- * serves (landings, blog, case studies, certified partners, the job page, and since Phase 6 the 15 unique pages, each
- * rule at its place in the live order); the navbar and the footer are the
+ * serves (landings, blog, case studies, certified partners, the job page, and since Phase 6 the 15 unique pages), in
+ * the live order; the navbar and the footer are the
  * catalog's own copy (site/src/components/Header.astro, Footer.astro) and their rules are not here. Font and image
  * URLs point to the copies in www/public/files/ (D5). Then the custom code Webflow adds to every page, in its order.
  * Edit as a mirror: change a rule only to match the live site.
  */
-
 /* Webflow site stylesheet (pruned) */
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -458,21 +458,17 @@ textarea.w-select {
 .w-richtext[contenteditable='true']:after {
   white-space: initial;
 }
-.w-richtext[contenteditable='true']:before,
-.w-richtext[contenteditable='true']:after {
-  white-space: initial;
-}
 .w-richtext ol,
 .w-richtext ul {
   overflow: hidden;
 }
-.w-richtext figure.w-richtext-figure-type-video > div:after,
 .w-richtext figure[data-rt-type='video'] > div:after {
   content: '';
   display: none;
   position: absolute;
   inset: 0;
 }
+.w-richtext figure.w-richtext-figure-type-video > div:after,
 .w-richtext figure[data-rt-type='video'] > div:after {
   content: '';
   display: none;
@@ -506,6 +502,20 @@ textarea.w-select {
   caption-side: bottom;
   display: table-caption;
 }
+.w-richtext figure[data-rt-type='video'] {
+  width: 60%;
+  height: 0;
+}
+.w-richtext figure[data-rt-type='video'] iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.w-richtext figure[data-rt-type='video'] > div {
+  width: 100%;
+}
 .w-richtext figure.w-richtext-figure-type-video,
 .w-richtext figure[data-rt-type='video'] {
   width: 60%;
@@ -520,33 +530,6 @@ textarea.w-select {
   left: 0;
 }
 .w-richtext figure.w-richtext-figure-type-video > div,
-.w-richtext figure[data-rt-type='video'] > div {
-  width: 100%;
-}
-.w-richtext figure.w-richtext-figure-type-image,
-.w-richtext figure[data-rt-type='image'] {
-  display: table;
-}
-.w-richtext figure.w-richtext-figure-type-image > div,
-.w-richtext figure[data-rt-type='image'] > div {
-  display: inline-block;
-}
-.w-richtext figure.w-richtext-figure-type-image > figcaption,
-.w-richtext figure[data-rt-type='image'] > figcaption {
-  caption-side: bottom;
-  display: table-caption;
-}
-.w-richtext figure[data-rt-type='video'] {
-  width: 60%;
-  height: 0;
-}
-.w-richtext figure[data-rt-type='video'] iframe {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 .w-richtext figure[data-rt-type='video'] > div {
   width: 100%;
 }
@@ -2810,9 +2793,6 @@ figcaption {
   padding: 1.5rem;
   display: flex;
 }
-.om-crm-page {
-  width: 100%;
-}
 .omlp,
 .omlp-wrap,
 .omlp-hero,
@@ -2882,6 +2862,9 @@ figcaption {
 .omlp-proof-illustration {
   box-sizing: border-box;
 }
+.om-crm-page {
+  width: 100%;
+}
 @media screen and (max-width: 991px) {
   body {
     --_headings---h1--size: 4.25rem;
@@ -2915,8 +2898,27 @@ figcaption {
   .spacer-large {
     padding-top: 2.5rem;
   }
+  .show-tablet {
+    display: block;
+  }
   .section.is-agencies-list {
     padding-bottom: 3rem;
+  }
+  .bg-grid_component.is-2-col,
+  .bg-grid_component.is-3-col {
+    grid-template-columns: 1fr;
+  }
+  .bg-grid_component.is-gap-3rem {
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+  }
+  .bg-grid_card {
+    padding: 1.25rem;
+  }
+  .bg-grid_card.is-quote,
+  .bg-grid_card.is-quote.is-big {
+    width: 100%;
+    max-width: 100%;
   }
   .header_component.is-flex {
     flex-flow: column;
@@ -2929,6 +2931,15 @@ figcaption {
     flex-flow: column;
     justify-content: space-between;
     align-items: flex-start;
+  }
+  .header_component.is-grid {
+    grid-template-columns: 1fr;
+  }
+  .header_component.is-grid.is-fast-track,
+  .header_component.is-grid.is-agent {
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: 1fr;
   }
   .header_component.is-case {
     grid-column-gap: 3rem;
@@ -3026,6 +3037,12 @@ figcaption {
   .navbar_content-right {
     display: none;
   }
+  .logos_list {
+    flex-flow: wrap;
+  }
+  .header_content.is-sticky {
+    position: static;
+  }
   .header_content.is-case {
     padding: 0;
   }
@@ -3053,6 +3070,71 @@ figcaption {
     align-items: center;
     display: flex;
   }
+  .bg-grid_card-content.is-grid.is-unequal {
+    grid-template-columns: 3.25fr;
+  }
+  .bg-grid_card-content.is-honesty {
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .border-grid_component.is-2-col {
+    grid-template-columns: 1fr;
+  }
+  .border-grid_component.is-2-col.is-unequal {
+    border-bottom-style: none;
+    grid-template-columns: 1fr;
+  }
+  .border-grid_component.is-3-col,
+  .border-grid_component.is-4-col {
+    grid-template-columns: 1fr;
+  }
+  .border-grid_card-content.is-sticky {
+    position: static;
+  }
+  .border-grid_line {
+    width: 100%;
+    height: 1px;
+    inset: auto 0% 0%;
+  }
+  .border-grid_team-card {
+    min-height: auto;
+  }
+  .table_component {
+    display: flex;
+    overflow: auto;
+  }
+  .table_column {
+    flex: none;
+    width: 20rem;
+  }
+  .table_header {
+    height: 100%;
+    min-height: 134.667px;
+    max-height: 134.667px;
+  }
+  .table_header.is-align-bottom.is-tablet-height-5rem {
+    min-height: 5rem;
+    max-height: none;
+  }
+  .table_header.is-tablet-height-5rem {
+    min-height: 5rem;
+  }
+  .table_content.is-min-height-27rem {
+    min-height: auto;
+  }
+  .table_content.is-min-height-22rem {
+    min-height: 19.5625rem;
+  }
+  .green-box_component {
+    padding: 1.5rem;
+  }
+  .green-box_content {
+    flex-flow: column;
+  }
+  .green-box_content-right {
+    max-width: 100%;
+  }
   .blog-list_card {
     flex-flow: column;
   }
@@ -3074,9 +3156,6 @@ figcaption {
     border-left-style: none;
     padding-top: 0;
     padding-left: 0;
-  }
-  .blog-post_toc-dot {
-    display: none;
   }
   .case-list_collection-list-wrapper {
     padding-left: 0.75rem;
@@ -3119,6 +3198,14 @@ figcaption {
   }
   .agencies_list {
     padding: 0;
+  }
+  .asset_component {
+    padding: 0.5rem;
+  }
+}
+@media screen and (max-width: 991px) {
+  .blog-post_toc-dot {
+    display: none;
   }
 }
 @media screen and (max-width: 767px) {
@@ -3198,10 +3285,6 @@ figcaption {
   }
   .header_component.is-support {
     grid-template-columns: 1fr;
-  }
-  .header_component.is-flex {
-    grid-column-gap: 1.5rem;
-    grid-row-gap: 1.5rem;
   }
   .navbar_component {
     padding-left: 0.75rem;
@@ -3322,6 +3405,12 @@ figcaption {
     margin-bottom: 1rem;
   }
 }
+@media screen and (max-width: 767px) {
+  .header_component.is-flex {
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 1.5rem;
+  }
+}
 @media screen and (max-width: 479px) {
   .navbar_container {
     grid-column-gap: 2rem;
@@ -3405,108 +3494,6 @@ figcaption {
   grid-area: span 1 / span 2 / span 1 / span 2;
 }
 @media screen and (max-width: 991px) {
-  .asset_component {
-    padding: 0.5rem;
-  }
-  .bg-grid_card-content.is-grid.is-unequal {
-    grid-template-columns: 3.25fr;
-  }
-  .bg-grid_card-content.is-honesty {
-    flex-flow: column;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .border-grid_component.is-2-col {
-    grid-template-columns: 1fr;
-  }
-  .border-grid_component.is-2-col.is-unequal {
-    border-bottom-style: none;
-    grid-template-columns: 1fr;
-  }
-  .border-grid_component.is-3-col,
-  .border-grid_component.is-4-col {
-    grid-template-columns: 1fr;
-  }
-  .border-grid_card-content.is-sticky {
-    position: static;
-  }
-  .border-grid_line {
-    width: 100%;
-    height: 1px;
-    inset: auto 0% 0%;
-  }
-  .border-grid_team-card {
-    min-height: auto;
-  }
-  .table_component {
-    display: flex;
-    overflow: auto;
-  }
-  .table_column {
-    flex: none;
-    width: 20rem;
-  }
-  .table_header {
-    height: 100%;
-    min-height: 134.667px;
-    max-height: 134.667px;
-  }
-  .table_header.is-align-bottom.is-tablet-height-5rem {
-    min-height: 5rem;
-    max-height: none;
-  }
-  .table_header.is-tablet-height-5rem {
-    min-height: 5rem;
-  }
-  .table_content.is-min-height-27rem {
-    min-height: auto;
-  }
-  .table_content.is-min-height-22rem {
-    min-height: 19.5625rem;
-  }
-  .green-box_component {
-    padding: 1.5rem;
-  }
-  .green-box_content {
-    flex-flow: column;
-  }
-  .green-box_content-right {
-    max-width: 100%;
-  }
-  .logos_list {
-    flex-flow: wrap;
-  }
-  .header_content.is-sticky {
-    position: static;
-  }
-  .header_component.is-grid {
-    grid-template-columns: 1fr;
-  }
-  .header_component.is-grid.is-fast-track,
-  .header_component.is-grid.is-agent {
-    grid-column-gap: 2rem;
-    grid-row-gap: 2rem;
-    grid-template-columns: 1fr;
-  }
-  .bg-grid_component.is-2-col,
-  .bg-grid_component.is-3-col {
-    grid-template-columns: 1fr;
-  }
-  .bg-grid_component.is-gap-3rem {
-    grid-column-gap: 2rem;
-    grid-row-gap: 2rem;
-  }
-  .bg-grid_card {
-    padding: 1.25rem;
-  }
-  .bg-grid_card.is-quote,
-  .bg-grid_card.is-quote.is-big {
-    width: 100%;
-    max-width: 100%;
-  }
-  .show-tablet {
-    display: block;
-  }
   #w-node-_955f710e-50fd-56b0-ae72-d4e804594811-7fd3562e {
     grid-area: span 1 / span 1 / span 1 / span 1;
   }
@@ -3519,16 +3506,14 @@ figcaption {
     grid-area: span 1 / span 1 / span 1 / span 1;
   }
 }
-/* Custom code of every page: font smoothing */
 
+/* Custom code of every page: font smoothing */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -o-font-smoothing: antialiased;
 }
-
 /* Custom code of every page: inherited link and form styles */
-
 /* Ensure these elements inherit color, decoration, and font size */
 a,
 .w-input,
@@ -3545,27 +3530,23 @@ a,
   text-decoration: inherit;
   font-size: inherit;
 }
-
 /* Focus style for keyboard navigation */
 *[tabindex]:focus-visible,
 input[type='file']:focus-visible {
   outline: 0.125rem solid #4d65ff;
   outline-offset: 0.125rem;
 }
-
 /* Remove top margin on first rich text element */
 .w-richtext > :not(div):first-child,
 .w-richtext > div:first-child > :first-child {
   margin-top: 0 !important;
 }
-
 /* Remove bottom margin on last rich text element */
 .w-richtext > :last-child,
 .w-richtext ol li:last-child,
 .w-richtext ul li:last-child {
   margin-bottom: 0 !important;
 }
-
 /* Click and hover interaction helpers */
 .pointer-events-off {
   pointer-events: none;
@@ -3573,14 +3554,12 @@ input[type='file']:focus-visible {
 .pointer-events-on {
   pointer-events: auto;
 }
-
 /* Maintain 1:1 ratio for .div-square */
 .div-square::after {
   content: '';
   display: block;
   padding-bottom: 100%;
 }
-
 /* Center alignment for containers */
 .container-medium,
 .container-small,
@@ -3588,7 +3567,6 @@ input[type='file']:focus-visible {
   margin-left: auto !important;
   margin-right: auto !important;
 }
-
 /* Line clamping */
 .text-style-3lines {
   display: -webkit-box;
@@ -3602,17 +3580,14 @@ input[type='file']:focus-visible {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-
 /* Inline flex helper */
 .display-inlineflex {
   display: inline-flex;
 }
-
 /* Hide utility */
 .hide {
   display: none !important;
 }
-
 @media screen and (max-width: 991px) {
   .hide,
   .hide-tablet {
@@ -3629,7 +3604,6 @@ input[type='file']:focus-visible {
     display: none !important;
   }
 }
-
 /* Margin & Padding resets */
 .margin-0 {
   margin: 0rem !important;
@@ -3641,7 +3615,6 @@ input[type='file']:focus-visible {
   margin: 0rem !important;
   padding: 0rem !important;
 }
-
 .margin-top {
   margin-right: 0rem !important;
   margin-bottom: 0rem !important;
@@ -3682,7 +3655,6 @@ input[type='file']:focus-visible {
   padding-right: 0rem !important;
   padding-bottom: 0rem !important;
 }
-
 .margin-horizontal {
   margin-top: 0rem !important;
   margin-bottom: 0rem !important;
@@ -3699,7 +3671,6 @@ input[type='file']:focus-visible {
   padding-right: 0rem !important;
   padding-left: 0rem !important;
 }
-
 /* Text truncation */
 .truncate-width {
   width: 100%;
@@ -3707,7 +3678,6 @@ input[type='file']:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 /* Hide scrollbar */
 .no-scrollbar {
   -ms-overflow-style: none;
@@ -3716,12 +3686,10 @@ input[type='file']:focus-visible {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 /* Remove Webflow default chevron in select field */
 select {
   -webkit-appearance: none;
 }
-
 /* Custom code of the closing call to action (every page but the landings) */
 .om-final-actions {
   display: flex;
