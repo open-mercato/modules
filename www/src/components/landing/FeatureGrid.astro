@@ -1,0 +1,36 @@
+---
+// The features of a landing (`#capabilities`, the dark band): a heading and cards of a title, a body and an
+// illustration.
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import { LANDING_SECTION_IDS, type LandingData } from '../../lib/landings.ts'
+import CardArt from './CardArt.astro'
+import Heading from './Heading.astro'
+import Rich from './Rich.astro'
+
+interface Props {
+  features: NonNullable<LandingData['features']>
+  counts: CountValues
+}
+const { features, counts } = Astro.props
+---
+
+<section id={LANDING_SECTION_IDS.features} class="omlp-section omlp-dark">
+  <div class="omlp-wrap">
+    <Heading eyebrow={features.eyebrow} title={features.title} lead={features.lead} counts={counts} />
+    <div class="omlp-feature-grid">
+      {
+        features.items.map((i) => (
+          <article class="omlp-feature">
+            <div class="omlp-feature-copy">
+              <h3>{i.title}</h3>
+              <p>
+                <Rich md={i.body} counts={counts} />
+              </p>
+            </div>
+            {i.art && <CardArt art={i.art} />}
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

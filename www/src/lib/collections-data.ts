@@ -4,31 +4,47 @@ import { getCollection } from 'astro:content'
 import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
 import { servesFixed } from '../../body-links.ts'
 import type { LinkRules } from './body-html.ts'
-import { publishedCaseStudies, type CaseStudyEntry, type PartnerIndex } from './case-studies.ts'
+import { newestFirst, publishedCaseStudies, type CaseStudyEntry, type PartnerIndex } from './case-studies.ts'
 import { publishedJobs, type JobEntry } from './jobs.ts'
 import { publishedPartners, type Dictionaries, type Dictionary, type PartnerEntry } from './partners.ts'
 
+type DictionaryEntry = {
+  id: string
+  data: { name: string; order?: number; webflowId?: string; backgroundColor?: string; textColor?: string }
+}
+
 async function dictionary(name: string): Promise<Dictionary> {
-  const entries = (await getCollection(name as never)) as unknown as {
-    id: string
-    data: { name: string; order?: number }
-  }[]
-  return new Map(entries.map((e) => [e.id, { name: e.data.name, order: e.data.order }]))
+  const entries = (await getCollection(name as never)) as unknown as DictionaryEntry[]
+  return new Map(
+    entries.map((e) => [
+      e.id,
+      {
+        name: e.data.name,
+        order: e.data.order,
+        ...(e.data.backgroundColor ? { backgroundColor: e.data.backgroundColor } : {}),
+        ...(e.data.textColor ? { textColor: e.data.textColor } : {}),
+      },
+    ]),
+  )
 }
 
 export interface CaseStudyData {
   published: CaseStudyEntry[]
   categories: Map<string, string>
+  /** The category ids in the order of Webflow's list of them, newest first. */
+  categoryOrder: string[]
   partners: PartnerIndex
 }
 
 export async function caseStudyData(): Promise<CaseStudyData> {
   const all = (await getCollection('caseStudies')) as unknown as CaseStudyEntry[]
-  const categories = new Map([...(await dictionary('caseStudyCategories'))].map(([id, d]) => [id, d.name]))
+  const categoryEntries = (await getCollection('caseStudyCategories')) as unknown as DictionaryEntry[]
+  const categories = new Map(categoryEntries.map((c) => [c.id, c.data.name]))
   const partners = (await getCollection('partners')) as unknown as PartnerEntry[]
   return {
     published: publishedCaseStudies(all),
     categories,
+    categoryOrder: newestFirst(categoryEntries.map((c) => ({ id: c.id, webflowId: c.data.webflowId }))),
     partners: {
       names: new Map(partners.map((p) => [p.id, p.data.name])),
       published: new Set(publishedPartners(partners).map((p) => p.id)),

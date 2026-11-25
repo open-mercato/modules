@@ -50,6 +50,15 @@ export const JOB_POSTING_EMPLOYMENT: Record<EmploymentTypeKey, string> = {
 /** Whether a job's location text offers remote work. */
 export const isRemote = (location: string): boolean => /\bremote\b/i.test(location)
 
+/**
+ * The link of "Apply now": an e-mail address gets the subject the live template writes (`Application: <title>`), unless
+ * it has a query of its own; any other address is kept.
+ */
+export function applyHref(applyUrl: string, title: string): string {
+  if (!applyUrl.startsWith('mailto:') || applyUrl.includes('?')) return applyUrl
+  return `${applyUrl}?subject=${encodeURIComponent(`Application: ${title}`)}`
+}
+
 export interface JobSeo {
   title: string
   description: string

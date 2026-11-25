@@ -1,0 +1,54 @@
+---
+// The proof line under the hero (`omlp-benefits`): the landing's short claims, each with the template's icon in order
+// (open source, community, flexibility). A `{githubStars}` count renders in a `data-om-star-count` element; without a
+// count from the build it is an empty slot that takes the navbar's count in the browser, as the live landings' script
+// does ("Keep the landing badge aligned with the site's existing GitHub counter").
+import { tokenParts, type CountValues } from '../../../../lib/core/www-tokens.ts'
+
+interface Props {
+  proof: string[]
+  counts: CountValues
+}
+const { proof, counts } = Astro.props
+const ICONS = [
+  '/files/site/6af61698fb82740ce38a08ba_om-github-mark.svg',
+  '/files/site/6af5f54d52c9c7154c72755d_om-lp-icon-community.svg',
+  '/files/site/6af5f54e1bf05ce9b9aa9d57_om-lp-icon-flexible.svg',
+]
+---
+
+<div class="omlp-benefits">
+  {
+    proof.map((claim, i) => (
+      <span class="omlp-benefit">
+        {ICONS[i] && <img src={ICONS[i]} loading="lazy" alt="" class="omlp-benefit-icon" />}
+        <span>
+          {tokenParts(claim, counts).map((p) =>
+            'text' in p ? (
+              p.text
+            ) : p.token === 'githubStars' ? (
+              <span data-om-star-count class={p.value === null ? 'omlp-star-slot' : undefined}>
+                {p.value ?? ''}
+              </span>
+            ) : (
+              (p.value ?? '')
+            ),
+          )}
+        </span>
+      </span>
+    ))
+  }
+</div>
+
+<script>
+  const source = document.querySelector('.navbar_component [data-om-star-count]')
+  const slots = document.querySelectorAll<HTMLElement>('.omlp-benefits .omlp-star-slot')
+  if (source && slots.length > 0) {
+    const sync = () => {
+      const count = source.textContent?.trim() ?? ''
+      if (/^\d[\d,.\s]*$/.test(count)) slots.forEach((s) => (s.textContent = count))
+    }
+    sync()
+    new MutationObserver(sync).observe(source, { childList: true, characterData: true, subtree: true })
+  }
+</script>

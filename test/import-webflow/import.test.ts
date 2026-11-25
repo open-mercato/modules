@@ -183,6 +183,14 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
     expect(en.alternateOf).toBeUndefined()
     expect(en.capabilities.groups[0].rows[0]).toMatchObject({ ours: 'yes', theirs: 'no' })
     expect(en.demo.image.src).toMatch(/^\/media\/landings\//)
+    // the illustration of each pain and feature card: an image without alt text after the card's text (Phase 5)
+    for (const item of [...en.pains.items, ...en.features.items])
+      expect(item.art).toMatchObject({
+        src: expect.stringMatching(/^\/media\/landings\/[0-9a-f]{24}-om-lp-/),
+        alt: '',
+        decorative: true,
+      })
+    expect(en.steps.items.every((i: Record<string, unknown>) => !('art' in i))).toBe(true)
     expect(result.report.crossChecked.sort()).toEqual(['baselinker-alternative', 'baselinker-alternatywa'])
   })
 

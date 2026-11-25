@@ -26,8 +26,21 @@ export const partnerEntries = (): PartnerEntry[] => entries('partners', partnerS
 export const jobEntries = (): JobEntry[] => entries('jobs', jobSchema())
 
 export function dictionary(file: string): Dictionary {
-  const data = parse(readFileSync(join(CONTENT, file), 'utf8')) as Record<string, { name: string; order?: number }>
-  return new Map(Object.entries(data).map(([id, v]) => [id, { name: v.name, order: v.order }]))
+  const data = parse(readFileSync(join(CONTENT, file), 'utf8')) as Record<
+    string,
+    { name: string; order?: number; backgroundColor?: string; textColor?: string }
+  >
+  return new Map(
+    Object.entries(data).map(([id, v]) => [
+      id,
+      {
+        name: v.name,
+        order: v.order,
+        ...(v.backgroundColor ? { backgroundColor: v.backgroundColor } : {}),
+        ...(v.textColor ? { textColor: v.textColor } : {}),
+      },
+    ]),
+  )
 }
 
 export function dictionaries(): Dictionaries {

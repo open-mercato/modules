@@ -160,6 +160,8 @@ export const EMPLOYMENT_TYPE_LABELS: Record<(typeof EMPLOYMENT_TYPES)[number], s
 // Collections
 
 const TitleBody = z.strictObject({ title: Text, body: Markdown })
+/** An item of a landing's pains or features: a title, a body and the illustration the card shows. */
+const ArtItem = z.strictObject({ title: Text, body: Markdown, art: Image.optional() })
 const SourceLink = z.strictObject({ label: Text, url: HttpsUrl })
 /** A section of title and items; `eyebrow` is the short label some sections show above the title. */
 const titled = <T extends z.ZodType>(item: T) =>
@@ -177,16 +179,48 @@ export const LANDING_LOCALES = ['en', 'pl'] as const
 export type LandingLocale = (typeof LANDING_LOCALES)[number]
 
 /**
- * Words the landing template writes around data, per locale (the review lines of the capability matrix and of the
- * source list). The template renders `{reviewedPrefix} <date>. {sourcesLabel}` and `<title> · {reviewedInline} <date>`,
- * with the date in the locale's long form ("12 November 2026", "12 listopada 2026").
+ * Words the landing template writes around data, per locale, as the live landings print them (25 Nov 2026): the review
+ * lines of the capability matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and
+ * `<title> · {reviewedInline} <date>`, the date in the locale's long form, "12 November 2026", "12 listopada 2026"),
+ * the label of the section navigation, the summary of the comparison's details when the comparison has no title, the
+ * heading of the related landings, and what each mark of the matrix reads as to a screen reader. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
+ * comparison` on every live landing, the Polish one too.
  */
 export const LANDING_TEMPLATE_TEXT: Record<
   LandingLocale,
-  { reviewedPrefix: string; sourcesLabel: string; reviewedInline: string }
+  {
+    reviewedPrefix: string
+    sourcesLabel: string
+    reviewedInline: string
+    navLabel: string
+    detailsSummary: string
+    relatedTitle: string
+    marks: Record<(typeof CAPABILITY_MARKS)[number], string>
+  }
 > = {
-  en: { reviewedPrefix: 'Reviewed', sourcesLabel: 'Sources:', reviewedInline: 'reviewed' },
-  pl: { reviewedPrefix: 'Sprawdzono', sourcesLabel: 'Źródła:', reviewedInline: 'sprawdzono' },
+  en: {
+    reviewedPrefix: 'Reviewed',
+    sourcesLabel: 'Sources:',
+    reviewedInline: 'reviewed',
+    navLabel: 'On this page',
+    detailsSummary: 'Explore implementation and commercial details',
+    relatedTitle: 'Related pages',
+    marks: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
+  },
+  pl: {
+    reviewedPrefix: 'Sprawdzono',
+    sourcesLabel: 'Źródła:',
+    reviewedInline: 'sprawdzono',
+    navLabel: 'Na tej stronie',
+    detailsSummary: 'Zobacz szczegóły wdrożenia i kosztów',
+    relatedTitle: 'Powiązane strony',
+    marks: { yes: 'Available', no: 'Not included', build: 'Wymaga wdrożenia' },
+  },
+}
+
+/** The accessible name of a landing's capability matrix, as the live landings write it in every locale. */
+export function matrixLabel(ours: string, theirs: string): string {
+  return `${ours} and ${theirs} feature comparison`
 }
 
 /**
@@ -210,13 +244,13 @@ export function landingSchema(ref: WwwRef = slugRef) {
       proof: z.array(Text),
     }),
     sectionNav: z.array(z.strictObject({ label: Text, anchor: Slug })),
-    pains: titled(TitleBody).optional(),
+    pains: titled(ArtItem).optional(),
     features: z
       .strictObject({
         eyebrow: Text.optional(),
         title: Text,
         lead: Markdown.optional(),
-        items: z.array(TitleBody).min(1),
+        items: z.array(ArtItem).min(1),
       })
       .optional(),
     capabilities: z
@@ -291,11 +325,91 @@ export function landingSchema(ref: WwwRef = slugRef) {
 }
 
 /**
- * A block of a unique page. The block types are agreed with the designer in Phase 5; until then the importer writes
- * one type, `copy`, with the page's text in DOM order.
+ * A block of a unique page, discriminated by `type` (spec, Data Model `pages` and UI/UX: hero, logo wall, feature grid,
+ * carousel, video, stats, team grid, quote, steps, FAQ, CTA, prose). The importer writes one type, `copy`, with the
+ * page's text in DOM order; Phase 6 replaces each `copy` block of a page with typed blocks. `legacy` names a component
+ * ported from a Webflow embed whose source is unknown (spec Q4). `id` is the anchor of the block's section.
  */
 export const CopyBlock = z.strictObject({ type: z.literal('copy'), markdown: Markdown, webflowNode: Text })
-export const PageBlock = z.discriminatedUnion('type', [CopyBlock])
+const block = <T extends string, S extends z.ZodRawShape>(type: T, shape: S) =>
+  z.strictObject({ type: z.literal(type), id: Slug.optional(), ...shape })
+export const PAGE_BLOCK_TYPES = [
+  'copy',
+  'hero',
+  'logos',
+  'features',
+  'carousel',
+  'video',
+  'stats',
+  'team',
+  'quote',
+  'steps',
+  'faq',
+  'cta',
+  'prose',
+  'legacy',
+] as const
+export const PageBlock = z.discriminatedUnion('type', [
+  CopyBlock,
+  block('hero', {
+    eyebrow: Text.optional(),
+    title: Text,
+    lead: Markdown.optional(),
+    primary: Cta.optional(),
+    secondary: Cta.optional(),
+    image: Image.optional(),
+    video: YouTubeId.optional(),
+  }),
+  block('logos', {
+    title: Text.optional(),
+    items: z.array(z.strictObject({ name: Text, logo: Image, href: Href.optional() })).min(1),
+  }),
+  block('features', {
+    eyebrow: Text.optional(),
+    title: Text,
+    lead: Markdown.optional(),
+    items: z.array(z.strictObject({ title: Text, body: Markdown, icon: Image.optional(), cta: Cta.optional() })).min(1),
+  }),
+  block('carousel', {
+    eyebrow: Text.optional(),
+    title: Text.optional(),
+    items: z
+      .array(
+        z.strictObject({
+          title: Text,
+          body: Markdown.optional(),
+          image: Image.optional(),
+          video: YouTubeId.optional(),
+          cta: Cta.optional(),
+        }),
+      )
+      .min(1),
+  }),
+  block('video', { title: Text.optional(), youtube: YouTubeId, poster: Image.optional(), caption: Text.optional() }),
+  block('stats', {
+    title: Text.optional(),
+    /** A value is text, so it can hold a count token ({moduleCount}, A6) instead of a typed number. */
+    items: z.array(z.strictObject({ value: Text, label: Text })).min(1),
+  }),
+  block('team', {
+    title: Text.optional(),
+    lead: Markdown.optional(),
+    members: z
+      .array(z.strictObject({ name: Text, role: Text, photo: Image.optional(), url: HttpsUrl.optional() }))
+      .min(1),
+  }),
+  block('quote', { quote: Markdown, author: Text, role: Text.optional(), image: Image.optional() }),
+  block('steps', { eyebrow: Text.optional(), title: Text, items: z.array(TitleBody).min(1) }),
+  block('faq', {
+    title: Text,
+    items: z.array(z.strictObject({ question: Text, answer: Markdown })).min(1),
+  }),
+  block('cta', { title: Text, body: Markdown.optional(), primary: Cta, secondary: Cta.optional() }),
+  block('prose', { markdown: z.string().trim().min(1) }),
+  /** A component of www/src/components/legacy/, by its file name, ported as it is from a Webflow embed (Q4). */
+  block('legacy', { component: Slug, note: Text }),
+])
+export type PageBlockData = z.infer<typeof PageBlock>
 
 /** `pages`: content/pages/<slug>.yaml, the unique pages (the entry `home` is `/`). */
 export function pageSchema() {
@@ -535,6 +649,7 @@ export const RESERVED_SEGMENTS = [
   'sitemap-0',
   'robots',
   '404',
+  'og',
 ] as const
 
 /**
@@ -552,7 +667,16 @@ export const NON_PAGE_SEGMENTS = [
   'sitemap-index',
   'sitemap-0',
   'robots',
+  'og',
 ] as const
+
+/**
+ * Unique pages (Phase 6) that Webflow serves until their phase and that pages built before it link: `/careers` (each
+ * job page's breadcrumb, Phase 4) and the contact and CRM pages (the landings' calls to action, Phase 5). Those links
+ * point to the live site (MAIN_SITE_ORIGIN) until the page is built here; a noindex preview lists them as pending and
+ * production fails on them (lib/emit/pages-merge.ts). Phase 6 empties the list.
+ */
+export const PENDING_UNIQUE_PAGES = ['careers', 'contact', 'crm'] as const
 
 /** The pages entry routed at `/`. */
 export const HOME_PAGE_SLUG = 'home'

@@ -1,0 +1,228 @@
+webflowId: 6af5dc0d00d7729ef7d4af1c
+locale: en
+kind: alternative
+competitor: Twenty CRM
+seo:
+  title: Twenty CRM Alternative for a CRM You Own | Open Mercato
+  description: "Compare Twenty CRM with Open Mercato: CRM features, customization, ownership and migration. Plan the records and integrations your next workflow needs."
+hero:
+  eyebrow: Twenty CRM alternative
+  title: Open-source CRM, connected to the work after the sale.
+  lead: Compare two open-source approaches. Choose Open Mercato when your application needs CRM alongside quote, order, product and shipment workflows.
+  primary:
+    label: Discuss your Twenty CRM migration
+    href: /contact?interest=twenty-crm-alternative
+  secondary:
+    label: Compare the capabilities
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: Compare the operational modules behind your next CRM workflow.
+  items:
+    - title: Your roadmap reaches beyond relationship management
+      body: Twenty offers a modern, extensible CRM. If the next requirement is an operational application, evaluate the domain modules you can start with in Open Mercato rather than building every sales-operation record from a blank object.
+      art:
+        src: /media/landings/6af5f54aacc44024cbb1c372-om-lp-connections-v3.svg
+        alt: ""
+        decorative: true
+    - title: You need a foundation for your own product
+      body: Both platforms expose source code and support customization. Compare the module architecture and licence of the exact editions you plan to use, then prototype the workflow that differentiates your application.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: Preserve relationships and daily workflows
+      body: Map People, Companies, Opportunities, custom objects, relations, notes, tasks and record owners. Rehearse the relationships and daily workflow with a representative sample before committing to the cutover.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Customer records, sales pipelines and order workflows.
+  items:
+    - title: Linked customer records
+      body: Link companies and people to deals, addresses, notes and activities. Extend the records with fields that describe your business.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Configurable sales stages
+      body: Configure stages and track deal value, probability, expected close and ownership in board or list views.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Quotes, orders and shipments
+      body: Use the sales and catalog modules for quotes, orders, products, payments and shipment records. Implement the handoffs and provider connections your process needs.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Custom entities and workflows
+      body: Extend the TypeScript application with your own entities, modules and workflows. Assess email/calendar synchronization, workflows, custom objects and deployed edition features as explicit migration work.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: Familiar CRM essentials. A foundation you can own.
+  lead: Green checks show available capabilities in the stated scope. Arrows identify implementation work, including the specialist features your team may need to retain.
+  label: What your team gets
+  tagline: BUILT FOR YOUR WORKFLOW
+  columns:
+    - name: Open Mercato
+      note: Core CRM + configurable modules
+    - name: Twenty CRM
+      note: Open-source core; edition differences
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Different open-source licence
+    - title: Capabilities available in both
+      rows:
+        - label: Company and contact records
+          ours: "yes"
+          theirs: "yes"
+        - label: Deals and sales pipelines
+          ours: "yes"
+          theirs: "yes"
+        - label: Notes and activities
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom fields
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Edition / plan scope applies
+        - label: Business-specific automation
+          ours: "yes"
+          oursNote: Configure the workflow engine
+          theirs: "yes"
+          theirsNote: Capabilities vary by edition
+        - label: Run on your own infrastructure
+          ours: "yes"
+          theirs: "yes"
+        - label: No per-user core licence fee for self-hosting
+          ours: "yes"
+          oursNote: Hosting and services extra
+          theirs: "yes"
+          theirsNote: Open-source edition
+    - title: Implementation and scope
+      rows:
+        - label: Existing Twenty workflows and communication sync
+          ours: build
+          oursNote: Assess and connect required services
+          theirs: "yes"
+          theirsNote: Within product / plan scope
+        - label: Your custom migration and data mapping
+          ours: build
+          oursNote: Scoped pilot and validation
+          theirs: build
+          theirsNote: Export and integration work
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: Twenty also has open-source code, self-hosting, a TypeScript stack, custom objects and workflows. Open Mercato is positioned for its CRM plus operational modules, not as the only open-source option. Check the exact Twenty edition and licence before choosing.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Twenty CRM product documentation
+      url: https://github.com/twentyhq/twenty
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Twenty CRM
+    - Open Mercato
+  rows:
+    - topic: Customer records
+      theirs: Twenty CRM provides CRM records and sales processes.
+      ours: Companies, people, deals, notes and activities in the core application.
+    - topic: Customization
+      theirs: Open-source core; edition differences. Existing configurations need a capability review.
+      ours: Custom fields, entities and TypeScript modules; implementation scoped to the workflow.
+    - topic: Operational handoff
+      theirs: Review the modules and connected systems used after a sale.
+      ours: Sales and catalog modules provide a starting point for quotes, orders and shipment records.
+    - topic: Hosting and cost
+      theirs: Open-source deployment and services.
+      ours: MIT-licensed core; hosting, implementation, maintenance and third-party usage budgeted separately.
+    - topic: Migration detail
+      theirs: Email/calendar synchronization, workflows, custom objects and deployed edition features.
+      ours: Keep source identifiers, verify relationships and rebuild required behavior in a tested pilot.
+demo:
+  eyebrow: Explore Open Mercato CRM
+  title: Test the foundation with one real workflow.
+  body: "Explore customer records, deals, custom fields and configurable workflows in Open Mercato CRM. Then bring an example from Twenty CRM: one account, its related records and the next operational step your team needs."
+  cta:
+    label: Explore Open Mercato CRM
+    href: /crm
+  image:
+    src: /media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg
+    alt: A won deal starts a configured CRM automation workflow
+steps:
+  title: A Twenty CRM migration plan for records, relationships and workflows.
+  items:
+    - title: Map the records and relationships
+      body: Inventory People, Companies, Opportunities, custom objects, relations, notes, tasks and record owners. Keep original identifiers and agree how each record maps to the new application.
+    - title: Audit the behaviors you depend on
+      body: Review email/calendar synchronization, workflows, custom objects and deployed edition features. Decide what to retain, integrate or reimplement and agree acceptance criteria.
+    - title: Rehearse with one team
+      body: Load a representative sample, validate permissions and relationships, and test a real customer journey from first activity to the operational handoff.
+    - title: Reconcile, train and cut over
+      body: Compare record counts and key totals, retain an accessible archive where needed, handle final changes and agree rollback, training and support ownership.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: When is Open Mercato a good Twenty CRM alternative?
+      answer: When you need an owned, extensible CRM and operational application, and have a team or partner to implement and run it. Twenty CRM can remain the better fit when its ready-to-use managed experience already matches your requirements.
+    - question: Will all our Twenty CRM features transfer?
+      answer: No automatic feature transfer is assumed. Review email/calendar synchronization, workflows, custom objects and deployed edition features. The core provides CRM and sales modules; specialized capabilities require configuration, integrations or development.
+    - question: How should we compare the cost?
+      answer: "Compare the same scope over the same period: current subscriptions and administration versus implementation, migration, hosting, maintenance, support and provider usage. The MIT core has no licence charge; a production service still has costs."
+    - question: Can we keep part of our current stack?
+      answer: Yes, a phased architecture can be scoped. Define the system of record for each entity, the synchronization rules and failure handling, then validate them before moving users.
+cta:
+  title: Bring the workflow that makes you question Twenty CRM.
+  body: Start with your record map, required integrations and the three changes that would make the biggest difference to your team.
+  primary:
+    label: Discuss your Twenty CRM migration
+    href: /contact?interest=twenty-crm-alternative
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Twenty CRM official product scope
+      url: https://github.com/twentyhq/twenty
+    - label: Twenty CRM evaluation research
+      url: https://www.reddit.com/r/CRM/comments/1vt0ugx/what_are_the_shortcomings_of_twenty_if_you/
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: Open Mercato catalog and pricing documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx
+    - label: Open Mercato production-readiness documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/deployment/production-readiness.mdx

@@ -1,0 +1,31 @@
+---
+// The questions of a landing (`#questions`): the title beside the items, each a details element. The same items are
+// the page's FAQPage JSON-LD (www/src/lib/landings.ts, faqJsonLd).
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import { LANDING_SECTION_IDS, type LandingData } from '../../lib/landings.ts'
+import Rich from './Rich.astro'
+
+interface Props {
+  faq: LandingData['faq']
+  counts: CountValues
+}
+const { faq, counts } = Astro.props
+---
+
+<section id={LANDING_SECTION_IDS.faq} class="omlp-section">
+  <div class="omlp-wrap omlp-faq-grid">
+    <h2>{faq.title}</h2>
+    <div>
+      {
+        faq.items.map((f) => (
+          <details class="omlp-faq">
+            <summary>{f.question}</summary>
+            <p>
+              <Rich md={f.answer} counts={counts} />
+            </p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

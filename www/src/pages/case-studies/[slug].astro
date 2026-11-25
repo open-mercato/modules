@@ -1,15 +1,18 @@
 ---
-// /case-studies/<slug> (spec, Routing, UI/UX and SEO): one page per published case study, never one for a draft (D6).
-// Title `<heading> | Open Mercato Case Study` and h1 `<title>`, as the live pages (Webflow template); canonical,
-// og:type article with the thumbnail as og:image, Article and BreadcrumbList JSON-LD, all from the entry. A partner
-// that delivered it is linked when published, named without a link when a draft (with a build warning).
+// /case-studies/<slug> (spec, Routing, UI/UX and SEO): one page per published case study, never one for a draft (D6),
+// in the live Webflow markup (`header_component is-case`, `case-post_component`, `case-slider_component`). Title
+// `<heading> | Open Mercato Case Study` and h1 `<title>`, as the live pages (Webflow template); canonical, og:type
+// article with the thumbnail as og:image, Article and BreadcrumbList JSON-LD, all from the entry. A partner that
+// delivered it is linked when published, named without a link when a draft (with a build warning). The carousel shows
+// every other case study, as live.
 import { render } from 'astro:content'
-import Base from '../../../../site/src/layouts/Base.astro'
+import Main from '../../layouts/Main.astro'
 import Crumbs from '../../components/Crumbs.astro'
 import Prose from '../../components/blog/Prose.astro'
 import VideoEmbed from '../../components/blog/VideoEmbed.astro'
 import CaseOverview from '../../components/case-studies/CaseOverview.astro'
-import CaseStudyList from '../../components/case-studies/CaseStudyList.astro'
+import CaseSlider from '../../components/case-studies/CaseSlider.astro'
+import CaseStack from '../../components/case-studies/CaseStack.astro'
 import ScreenshotGallery from '../../components/case-studies/ScreenshotGallery.astro'
 import StatTriplet from '../../components/case-studies/StatTriplet.astro'
 import { refId } from '../../lib/blog.ts'
@@ -20,11 +23,12 @@ import {
   caseStudyPath,
   caseStudySeo,
   deliveredBy,
-  relatedCaseStudies,
+  otherCaseStudies,
   type CaseStudyEntry,
 } from '../../lib/case-studies.ts'
 import { caseStudyData } from '../../lib/collections-data.ts'
-import '../../styles/collections.css'
+import pagesCss from '../../styles/webflow/pages.css?url'
+import blogCss from '../../styles/blog.css?url'
 
 export async function getStaticPaths() {
   const data = await caseStudyData()
@@ -40,62 +44,95 @@ const categories = cs.data.categories.flatMap((c) => {
   const name = data.categories.get(refId(c) ?? '')
   return name ? [name] : []
 })
-const related = relatedCaseStudies(cs, data.published).map((r) => caseStudyCard(r, data.categories))
+const others = otherCaseStudies(cs, data.published).map((r) => caseStudyCard(r, data.categories))
+const thumbnail = cs.data.thumbnail
 const { Content } = await render(cs as never)
 ---
 
-<Base
-  section="main"
+<Main
   path={caseStudyPath(cs.id)}
   title={seo.title}
   description={seo.description}
   ogType="article"
   ogImage={seo.ogImage}
   jsonLd={caseStudyJsonLd(cs, site, delivered, categories)}
+  bodyClass="wf-case-study"
+  styles={[pagesCss, blogCss]}
 >
-  <div class="band">
-    <div class="sheet blog-page">
-      <article class="case-study">
-        <header class="post-head">
-          <Crumbs section={{ name: 'Case Studies', href: CASE_STUDIES_PATH }} current={cs.data.title} />
-          {
-            categories.length > 0 && (
-              <ul class="chips">
-                {categories.map((c) => (
-                  <li class="chip chip--line">{c}</li>
-                ))}
-              </ul>
-            )
-          }
-          {/* the live page's h1 is the name, its <title> the heading field (Webflow template, decision of 25 Nov 2026) */}
-          <h1 class="t-h1 post-head__title">{cs.data.title}</h1>
-          <p class="post-head__lead">{cs.data.description}</p>
-        </header>
-        <StatTriplet stats={cs.data.stats} />
-        {cs.data.heroVideo && <VideoEmbed id={cs.data.heroVideo} title={cs.data.title} />}
-        {
-          !cs.data.heroVideo && cs.data.thumbnail && (
-            <img
-              class="post-head__img"
-              src={cs.data.thumbnail.src}
-              alt={cs.data.thumbnail.decorative ? '' : cs.data.thumbnail.alt}
-              width={cs.data.thumbnail.width}
-              height={cs.data.thumbnail.height}
-              decoding="async"
-            />
-          )
-        }
-        <div class="case-study__columns">
-          <Prose><Content /></Prose>
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <section class="section">
+        <div class="section-padding">
+          <div class="header_component is-case">
+            <div class="header_content is-case">
+              <Crumbs
+                trail={[{ name: 'Case Studies', href: CASE_STUDIES_PATH }]}
+                current={{ name: cs.data.title, href: caseStudyPath(cs.id) }}
+                limit
+              />
+              {/* the live page's h1 is the name, its <title> the heading field (Webflow template, decision of 25 Nov 2026) */}
+              <h1 class="heading-style-h3">{cs.data.title}</h1>
+              <div class="spacer-small"></div>
+              <p class="text-color-secondary">{cs.data.description}</p>
+              <div class="spacer-small"></div>
+              {
+                categories.length > 0 && (
+                  <div class="case-label_collection-list-wrapper no-margin">
+                    <div role="list" class="case-label_collection-list">
+                      {categories.map((c) => (
+                        <div role="listitem" class="case-label_collection-item">
+                          <div class="case_label">
+                            <div class="case_label-text">{c}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+            <div class="header_asset-wrapper is-case-studies">
+              {
+                cs.data.heroVideo ? (
+                  <div class="case-hero_video w-video" style="padding-top:56.25%">
+                    <VideoEmbed id={cs.data.heroVideo} title={cs.data.title} poster={thumbnail?.src} />
+                  </div>
+                ) : (
+                  thumbnail && (
+                    <img
+                      class="case-hero_asset"
+                      src={thumbnail.src}
+                      alt={thumbnail.decorative ? '' : thumbnail.alt}
+                      width={thumbnail.width}
+                      height={thumbnail.height}
+                      decoding="async"
+                    />
+                  )
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="section is-no-padding">
+        <div class="case-post_component">
+          <div class="case-post_body">
+            <StatTriplet stats={cs.data.stats} />
+            <div class="case-post_content">
+              <Prose><Content /></Prose>
+              <CaseStack stack={cs.data.overview.stack} />
+            </div>
+          </div>
           <CaseOverview overview={cs.data.overview} delivered={delivered} />
         </div>
-        <ScreenshotGallery images={cs.data.screenshots} />
-      </article>
-      <CaseStudyList heading="Related case studies" id="related" items={related} />
+      </div>
+      <ScreenshotGallery images={cs.data.screenshots} />
+      <CaseSlider tagline="RELATED CASE STUDIES" heading="Discover more projects" items={others} />
     </div>
   </div>
-</Base>
+</Main>
 
 <script>
   import '../../scripts/video-embed.ts'
+  import '../../scripts/case-nav.ts'
 </script>

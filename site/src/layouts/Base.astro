@@ -45,6 +45,8 @@ interface Props {
   ogType?: 'website' | 'article'
   /** The page's own og:image, a site path or an absolute URL; else the default 1200 x 630 card. */
   ogImage?: string
+  /** The size of the page's own og:image, when the page knows it (the landings' cards drawn at build). */
+  ogImageSize?: { width: number; height: number }
   /** Skip link target and text (spec 7.9). */
   skip?: { href: string; label: string }
   /** Force noindex (otherwise noindex on *.github.io, D36). */
@@ -52,6 +54,8 @@ interface Props {
   bodyClass?: string
   /** Breadcrumbs of a page deeper in a section, for the context line (PageContext.astro). */
   trail?: TrailStep[] | false
+  /** The language of the page (`<html lang>`): `en` but on a main-site page in another language (a landing in Polish). */
+  lang?: string
 }
 const {
   title,
@@ -68,6 +72,8 @@ const {
   section = 'run',
   ogType = 'website',
   ogImage: pageOgImage,
+  ogImageSize,
+  lang = 'en',
 } = Astro.props
 const run = section === 'run'
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
@@ -88,7 +94,7 @@ const speculation = JSON.stringify({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     {/* package@version reads as an e-mail address to Cloudflare (live review of 30 Oct): head and body are kept apart */}
@@ -112,9 +118,11 @@ const speculation = JSON.stringify({
     <meta property="og:description" content={shownDescription} />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
-    {/* the size is known for the default card only */}
+    {/* the size is known for the default card, and for a page's own image when the page gives it */}
     {!pageOgImage && <meta property="og:image:width" content="1200" />}
     {!pageOgImage && <meta property="og:image:height" content="630" />}
+    {pageOgImage && ogImageSize && <meta property="og:image:width" content={String(ogImageSize.width)} />}
+    {pageOgImage && ogImageSize && <meta property="og:image:height" content={String(ogImageSize.height)} />}
     <meta name="twitter:card" content="summary_large_image" />
     {/* the view-transition opt-in is inline in the head (review r4: the flight from a query to a module page was
         dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
@@ -127,6 +135,9 @@ const speculation = JSON.stringify({
   </head>
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
+    {/* the main site's own stylesheets (www/src/layouts/Main.astro): after every stylesheet of the head, so its rules
+        win where they and the catalog's style the same element, as on openmercato.com */}
+    <slot name="body-start" />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
     {/* the Run menu marks a catalog page only: on the main site no row of it is the current page */}
     <Header current={run ? (path ?? '') : ''} />
@@ -146,6 +157,9 @@ const speculation = JSON.stringify({
       {dataAsOf && <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />}
       <slot />
     </main>
+    {/* what the main site shows between the page and the footer, outside <main> as on openmercato.com (its closing call
+        to action) */}
+    <slot name="after-main" />
     <Footer />
     {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production)} />}
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>

@@ -1,0 +1,102 @@
+---
+// The capability matrix of a landing (`#comparison`, `omfm-*`): a heading, the table of our marks against theirs by
+// group, the legend, the scope note, the review line with its sources, and the comparison's details below it
+// (ComparisonTable), as on the live landings.
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import { matrixLabel, type LandingLocale } from '../../../../lib/schema/www-content.ts'
+import { LANDING_SECTION_IDS, reviewedDay, templateText, type LandingData } from '../../lib/landings.ts'
+import ComparisonTable from './ComparisonTable.astro'
+import Heading from './Heading.astro'
+import Rich from './Rich.astro'
+
+interface Props {
+  capabilities: NonNullable<LandingData['capabilities']>
+  comparison?: LandingData['comparison']
+  locale: LandingLocale
+  counts: CountValues
+}
+const { capabilities: k, comparison, locale, counts } = Astro.props
+const tpl = templateText(locale)
+const [ours, theirs] = k.columns
+const MARK = { yes: '✓', no: '×', build: '↗' } as const
+---
+
+<section id={LANDING_SECTION_IDS.capabilities} class="omlp-section">
+  <div class="omlp-wrap">
+    <Heading eyebrow={k.eyebrow} title={k.title} lead={k.lead} counts={counts} />
+    <div class="omfm-frame">
+      <table aria-label={matrixLabel(ours.name, theirs.name)} class="omfm-table">
+        <thead>
+          <tr>
+            <th scope="col" class="omfm-feature-head">{k.label}</th>
+            <th scope="col" class="omfm-owned">
+              {k.tagline && <span class="omfm-badge">{k.tagline}</span>}
+              <span class="omfm-product">{ours.name}</span>
+              {ours.note && <span class="omfm-product-note">{ours.note}</span>}
+            </th>
+            <th scope="col" class="omfm-competitor-head">
+              <span class="omfm-product">{theirs.name}</span>
+              {theirs.note && <span class="omfm-product-note">{theirs.note}</span>}
+            </th>
+          </tr>
+        </thead>
+        {
+          k.groups.map((g) => (
+            <tbody>
+                <tr class="omfm-group">
+                  <th scope="rowgroup" colspan="3">
+                    {g.title}
+                  </th>
+                </tr>
+                {g.rows.map((r) => (
+                  <tr class="omfm-row">
+                    <th scope="row">{r.label}</th>
+                    <td class="omfm-owned">
+                      <span role="img" aria-label={tpl.marks[r.ours]} class={`omfm-status omfm-${r.ours}`}>
+                        {MARK[r.ours]}
+                      </span>
+                      {r.oursNote && <span class="omfm-cell-note">{r.oursNote}</span>}
+                    </td>
+                    <td class="omfm-other">
+                      <span role="img" aria-label={tpl.marks[r.theirs]} class={`omfm-status omfm-${r.theirs}`}>
+                        {MARK[r.theirs]}
+                      </span>
+                      {r.theirsNote && <span class="omfm-cell-note">{r.theirsNote}</span>}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          ))
+        }
+      </table>
+    </div>
+    <div class="omfm-legend">
+      {
+        (['yes', 'no', 'build'] as const).map((m) => (
+          <span>
+            <span aria-hidden="true" class={`omfm-status omfm-${m}`}>
+              {MARK[m]}
+            </span>{' '}
+            {k.legend[m]}
+          </span>
+        ))
+      }
+    </div>
+    <p class="omfm-scope"><Rich md={k.note} counts={counts} /></p>
+    <p class="omfm-sources">
+      {tpl.reviewedPrefix}
+      {reviewedDay(k.reviewed, locale)}. {tpl.sourcesLabel}{' '}
+      {
+        k.sources.map((s, i) => (
+          <Fragment>
+            {i > 0 && ' · '}
+            <a href={s.url} rel="noopener noreferrer">
+              {s.label}
+            </a>
+          </Fragment>
+        ))
+      }
+    </p>
+    {comparison && <ComparisonTable comparison={comparison} summary={tpl.detailsSummary} />}
+  </div>
+</section>

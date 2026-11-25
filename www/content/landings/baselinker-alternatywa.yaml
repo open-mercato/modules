@@ -1,0 +1,236 @@
+webflowId: 6af5dc1131c663c24870d103
+locale: pl
+kind: alternative
+competitor: Base / BaseLinker
+alternateOf: baselinker-alternative
+seo:
+  title: Alternatywa dla BaseLinkera - własne procesy zamówień | Open Mercato
+  description: Porównaj Base (BaseLinker) z Open Mercato. Własne procesy zamówień, kontrola kodu i plan migracji obejmujący integracje, dane oraz obsługę wysyłek.
+hero:
+  eyebrow: Alternatywa dla Base / BaseLinker
+  title: Zbuduj system zamówień dopasowany do reguł realizacji.
+  lead: Gdy standardowy proces e-commerce przestaje pasować, zbuduj własne środowisko pracy na Open Mercato. Zacznij od klientów, katalogu, zamówień i wysyłek, a następnie dopasuj logikę do swojej firmy.
+  primary:
+    label: Porozmawiajmy o migracji z Base
+    href: /contact?interest=baselinker-alternatywa
+  secondary:
+    label: Porównaj możliwości
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Twój proces
+    anchor: needs
+  - label: Porównanie
+    anchor: comparison
+  - label: Zobacz w praktyce
+    anchor: proof
+  - label: Wdrożenie
+    anchor: migration
+  - label: Pytania
+    anchor: questions
+pains:
+  title: Porównaj koszty zamówień, własne reguły i dostępne integracje.
+  items:
+    - title: Wolumen rośnie razem z rachunkiem
+      body: Base łączy abonament z opłatami zależnymi od zamówień i osobną ofertą Enterprise. Porównaj koszt swojego konta z pełnym budżetem wdrożenia, hostingu i utrzymania własnej aplikacji.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: Wyjątki stały się codziennym procesem
+      body: Akceptacje B2B, nietypowe reguły realizacji i wymiana danych z ERP nie powinny zależeć od kolejnego ręcznego obejścia. Zaimplementuj je wokół własnych danych klientów i zamówień.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Działających integracji nie można zgubić po drodze
+      body: Base ma rozbudowany katalog gotowych połączeń. Przed migracją spisz każdy marketplace, sklep, system ERP i przewoźnika. Integracje Open Mercato wymagają osobnej oceny i wdrożenia.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Zacznij od danych i modułów potrzebnych do obsługi zamówienia.
+  items:
+    - title: Klient i zamówienie w jednym kontekście
+      body: Połącz firmy i osoby z dokumentami sprzedaży, adresami oraz historią aktywności.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Produkty, warianty i ceny
+      body: Wykorzystaj moduły katalogu i kanałów sprzedaży jako podstawę własnego modelu produktów i cen.
+      art:
+        src: /media/landings/6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg
+        alt: ""
+        decorative: true
+    - title: Zamówienia, płatności i wysyłki
+      body: Pracuj na rekordach zamówień, korektach sprzedaży, płatnościach i informacjach o wysyłkach.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Własna logika realizacji
+      body: Wdróż akceptacje, routing i wymianę z ERP przy użyciu workflow oraz API. Synchronizacja kanałów, etykiety i połączenia z usługodawcami wymagają integracji.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Funkcja po funkcji
+  title: Podstawy obsługi zamówień i kontrola reguł procesu.
+  lead: Porównaj dostępne moduły oraz potrzebne prace integracyjne. Base oferuje ekosystem gotowych połączeń, a Open Mercato fundament dedykowanego wdrożenia.
+  label: Co otrzymuje Twój zespół
+  tagline: WŁASNY PROCES ZAMÓWIEŃ
+  columns:
+    - name: Open Mercato
+      note: Sprzedaż, katalog i własne integracje
+    - name: Base / BaseLinker
+      note: Platforma operacji e-commerce
+  groups:
+    - title: Przewagi Open Mercato
+      rows:
+        - label: Uruchomienie na własnej infrastrukturze
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Usługa hostowana
+        - label: Rdzeń aplikacji na licencji MIT
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Platforma komercyjna
+        - label: Bez opłaty licencyjnej rdzenia za zamówienie
+          ours: "yes"
+          oursNote: Hosting i usługi osobno
+          theirs: "no"
+          theirsNote: Model zależny od wolumenu
+    - title: Funkcje dostępne w obu narzędziach
+      rows:
+        - label: Klienci i rekordy zamówień
+          ours: "yes"
+          theirs: "yes"
+        - label: Produkty i warianty
+          ours: "yes"
+          theirs: "yes"
+        - label: Rekordy płatności i wysyłek
+          ours: "yes"
+          theirs: "yes"
+        - label: Automatyzacja procesu
+          ours: "yes"
+          oursNote: Konfiguracja workflow
+          theirs: "yes"
+          theirsNote: Akcje automatyczne
+    - title: Zakres wymagający wdrożenia
+      rows:
+        - label: Katalog gotowych połączeń marketplace i kurierskich
+          ours: "no"
+          oursNote: Integracje do wdrożenia
+          theirs: "yes"
+          theirsNote: Rozbudowany ekosystem
+        - label: Dedykowana integracja z ERP
+          ours: build
+          oursNote: Prace wdrożeniowe
+          theirs: build
+          theirsNote: Zakres integracji / partnera
+        - label: Własne reguły zamówień w kodzie aplikacji
+          ours: "yes"
+          oursNote: Wymaga developmentu
+          theirs: build
+          theirsNote: Możliwości produktu / Enterprise
+  legend:
+    "yes": Dostępne we wskazanym zakresie
+    "no": Niedostępne w tym modelu
+    build: Wymaga wdrożenia
+  note: Porównanie dotyczy obsługi zamówień, nie pełnej zgodności funkcji e-commerce. Synchronizacja stanów, oferty marketplace, etykiety, fakturowanie i wymogi lokalne wymagają osobnej weryfikacji. Wdrożenie, hosting, integracje i utrzymanie Open Mercato mają własny koszt.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Cennik i możliwości Base
+      url: https://base.com/pl-PL/cennik/
+    - label: Integracje ERP w Base
+      url: https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Zobacz szczegóły wdrożenia i kosztów
+  label: Obszar porównania
+  columns:
+    - Base / BaseLinker
+    - Open Mercato
+  rows:
+    - topic: Obsługa zamówień
+      theirs: Gotowa platforma sprzedaży wielokanałowej.
+      ours: Rekordy zamówień, klientów i wysyłek oraz własne procesy.
+    - topic: Marketplace i kurierzy
+      theirs: Rozbudowany katalog gotowych połączeń.
+      ours: Każde wymagane połączenie wymaga oceny i wdrożenia.
+    - topic: Model kosztów
+      theirs: Abonament i rozliczenia zależne od wolumenu.
+      ours: Rdzeń MIT bez opłaty licencyjnej za zamówienie; osobno infrastruktura i usługi.
+    - topic: Reguły biznesowe
+      theirs: Akcje automatyczne i konfiguracja produktu.
+      ours: Logika aplikacji, własne moduły i wdrażane workflow.
+    - topic: Migracja
+      theirs: Zamówienia, produkty, oferty, identyfikatory i integracje.
+      ours: Pilotaż jednego kanału i weryfikacja całej ścieżki realizacji.
+demo:
+  eyebrow: MDM NT · wdrożenie w produkcji
+  title: Zobacz przykład automatyzacji wysyłek.
+  body: Case study MDM NT opisuje dedykowane wdrożenie procesów wysyłkowych połączonych z systemami firmy. Pokazuje sposób realizacji projektu; nie oznacza gotowości wszystkich integracji dostępnych w Base.
+  cta:
+    label: Zobacz wdrożenie MDM NT
+    href: /case-studies/mdm-nt-shipping-automation
+  image:
+    src: /media/landings/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png
+    alt: Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.
+  caption: Widok zamówienia w Open Mercato. Dedykowany proces wysyłek MDM NT opisano w case study.
+steps:
+  title: Przenieś proces zamówień, zachowując ciągłość realizacji.
+  items:
+    - title: Spisz działające połączenia
+      body: Uwzględnij marketplace, sklepy, przewoźników, ERP, magazyny, waluty i akcje automatyczne. Ustal, które połączenia mogą pozostać na czas pilotażu.
+    - title: Zmapuj dane operacyjne
+      body: Zachowaj SKU, identyfikatory ofert, statusy zamówień, adresy, płatności i numery wysyłek. Wskaż system odpowiedzialny za stany oraz ceny.
+    - title: Przetestuj jeden kanał od początku do końca
+      body: Sprawdź pobieranie zamówień, aktualizacje, anulacje, płatności, etykiety i tracking. Przetestuj ponowienia, ochronę przed duplikatami i alerty błędów.
+    - title: Uzgodnij dane i przełącz pracę
+      body: Zaplanuj końcową synchronizację, sprawdź otwarte zamówienia, przeszkol operatorów i zachowaj przetestowaną ścieżkę powrotu.
+faq:
+  title: Pytania przed kolejnym krokiem.
+  items:
+    - question: Czy Open Mercato zastępuje BaseLinkera od razu po instalacji?
+      answer: Nie. Base oferuje wiele gotowych integracji e-commerce. Open Mercato jest fundamentem dedykowanej aplikacji. Wymagane połączenia z marketplace, kurierami i ERP trzeba ocenić oraz wdrożyć przed przełączeniem.
+    - question: Czy płacimy licencję za każde zamówienie?
+      answer: Rdzeń na licencji MIT nie ma opłaty licencyjnej za zamówienie. Całkowity koszt obejmuje jednak wdrożenie, hosting, utrzymanie, wsparcie i wykorzystanie zewnętrznych usług.
+    - question: Czy możemy zostawić Base do obsługi marketplace?
+      answer: Można zaprojektować rozwiązanie, w którym Base obsługuje wybrane kanały, a Open Mercato procesy klientów i operacje. Trzeba określić właściciela danych, synchronizację i sposób obsługi błędów.
+    - question: Kiedy takie wdrożenie ma sens?
+      answer: Gdy specyficzny proces, kontrola kodu lub rozwój własnej aplikacji uzasadniają projekt wdrożeniowy. Przy standardowej sprzedaży opartej głównie na gotowych integracjach platforma e-commerce może być lepszym wyborem.
+cta:
+  title: Pokaż nam wyjątki, które utrudniają realizację zamówień.
+  body: Zacznij od listy kanałów, wolumenu zamówień, ERP i reguł wysyłki. Ustalmy zakres pilotażu przed pełną migracją.
+  primary:
+    label: Porozmawiajmy o migracji z Base
+    href: /contact?interest=baselinker-alternatywa
+  note: Omów proces, integracje i potrzeby wdrożeniowe z zespołem Open Mercato.
+sources:
+  title: Źródła i dokumentacja
+  reviewed: "2026-11-12"
+  items:
+    - label: Oficjalny cennik Base
+      url: https://base.com/pl-PL/cennik/
+    - label: Base integrations and ERP connections
+      url: https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/
+    - label: Base / BaseLinker user reviews
+      url: https://pl.trustpilot.com/review/baselinker.com
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx
+    - label: Open Mercato catalog and pricing documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx
+    - label: Open Mercato shipment documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx
+    - label: MDM NT shipping automation case study
+      url: https://www.openmercato.com/case-studies/mdm-nt-shipping-automation

@@ -1,0 +1,14 @@
+---
+// A short Markdown field of a landing (a lead, a card's body, an FAQ answer) as inline HTML, with its count tokens
+// (A6) filled. The landings' Markdown holds inline marks only.
+import { fillCounts, type CountValues } from '../../../../lib/core/www-tokens.ts'
+import { inline } from '../../lib/inline-markdown.ts'
+
+interface Props {
+  md: string
+  counts: CountValues
+}
+const { md, counts } = Astro.props
+---
+
+<Fragment set:html={inline(fillCounts(md, counts))} />

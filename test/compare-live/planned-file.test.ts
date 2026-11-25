@@ -1,18 +1,20 @@
 // The committed `--planned` file of compare-live (www/compare-live-planned.yaml, RUNBOOK step C6): it parses, names
-// each URL and field once, gives every entry its reason, and plans only migrated pages, never a docs redirect, a
-// landing or a unique page (those fail until they are migrated). Each URL is a published entry of the content or a
-// list page, so a renamed or unpublished entry cannot leave a stale plan behind.
+// each URL and field once, gives every entry its reason, and plans only migrated pages (the landings since Phase 5),
+// never a docs redirect or a unique page (those fail until they are migrated). Each URL is a published entry of the
+// content or a list page, so a renamed or unpublished entry cannot leave a stale plan behind.
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parsePlanned } from '../../lib/commands/compare-live.ts'
 import { postPath, publishedPosts } from '../../www/src/lib/blog.ts'
 import { caseStudyPath, publishedCaseStudies } from '../../www/src/lib/case-studies.ts'
+import { landingPath, publishedLandings } from '../../www/src/lib/landings.ts'
 import { jobPath, publishedJobs } from '../../www/src/lib/jobs.ts'
 import { partnerPath, publishedPartners } from '../../www/src/lib/partners.ts'
 import { ROOT } from '../emit/helpers.ts'
 import { blogEntries } from '../www/blog-content.ts'
 import { caseStudyEntries, jobEntries, partnerEntries } from '../www/collections-content.ts'
+import { landingEntries } from '../www/landings-content.ts'
 
 const FILE = 'www/compare-live-planned.yaml'
 const planned = parsePlanned(readFileSync(join(ROOT, FILE), 'utf8'), FILE)
@@ -34,6 +36,7 @@ describe('the committed planned differences', () => {
       ...publishedCaseStudies(caseStudyEntries()).map((c) => caseStudyPath(c.id)),
       ...publishedPartners(partnerEntries()).map((p) => partnerPath(p.id)),
       ...publishedJobs(jobEntries()).map((j) => jobPath(j.id)),
+      ...publishedLandings(landingEntries()).map((l) => landingPath(l.id)),
     ])
     for (const p of planned) expect(pages.has(p.url), p.url).toBe(true)
   })

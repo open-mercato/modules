@@ -1,0 +1,25 @@
+---
+// The heading of a landing section: an optional eyebrow, the title and an optional lead.
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import Rich from './Rich.astro'
+
+interface Props {
+  eyebrow?: string
+  title: string
+  lead?: string
+  counts: CountValues
+}
+const { eyebrow, title, lead, counts } = Astro.props
+---
+
+<div class="omlp-heading">
+  {eyebrow && <span class="omlp-eyebrow">{eyebrow}</span>}
+  <h2>{title}</h2>
+  {
+    lead && (
+      <p>
+        <Rich md={lead} counts={counts} />
+      </p>
+    )
+  }
+</div>

@@ -1,0 +1,36 @@
+---
+// The hero of a landing (`omlp-hero`): eyebrow, title, lead, the two calls to action and the legacy animation in its
+// frame, then the proof line (ProofBadges), as on the live landings.
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import type { LandingData } from '../../lib/landings.ts'
+import Cta from './Cta.astro'
+import LegacyAnimation from './LegacyAnimation.astro'
+import ProofBadges from './ProofBadges.astro'
+import Rich from './Rich.astro'
+
+interface Props {
+  hero: LandingData['hero']
+  counts: CountValues
+}
+const { hero, counts } = Astro.props
+---
+
+<div class="omlp-wrap">
+  <section aria-labelledby="landing-title" class="omlp-hero">
+    <div class="omlp-hero-copy">
+      <span class="omlp-eyebrow">{hero.eyebrow}</span>
+      <h1 id="landing-title">{hero.title}</h1>
+      <p class="omlp-intro"><Rich md={hero.lead} counts={counts} /></p>
+      <div class="omlp-actions">
+        <Cta cta={hero.primary} variant="primary" />
+        {hero.secondary && <Cta cta={hero.secondary} variant="secondary" />}
+      </div>
+    </div>
+    <figure class="omlp-hero-figure">
+      <div class="omlp-screen">
+        <LegacyAnimation />
+      </div>
+    </figure>
+  </section>
+  <ProofBadges proof={hero.proof} counts={counts} />
+</div>

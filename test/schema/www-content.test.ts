@@ -8,6 +8,8 @@ import {
   EMPLOYMENT_TYPES,
   Image,
   MediaPath,
+  PAGE_BLOCK_TYPES,
+  PageBlock,
   PARTNER_AVAILABILITY,
   PARTNER_AVAILABILITY_LABELS,
   PARTNER_BUDGET_LABELS,
@@ -127,6 +129,16 @@ const INVALID: Record<WwwCollection, [string, (v: Record<string, unknown>) => un
     ['an empty description', (v) => ({ ...v, seo: { ...seo, description: '' } })],
     ['a related landing that is not a slug', (v) => ({ ...v, related: ['Not A Slug'] })],
     [
+      'card art without alt text that is not decorative',
+      (v) => ({
+        ...v,
+        pains: {
+          title: 'Pains',
+          items: [{ title: 'Cost', body: 'Too much.', art: { src: '/media/landings/a.svg', alt: '' } }],
+        },
+      }),
+    ],
+    [
       'a capability mark that is not one',
       (v) => {
         const c = v.capabilities as { groups: { title: string; rows: object[] }[] }
@@ -138,7 +150,13 @@ const INVALID: Record<WwwCollection, [string, (v: Record<string, unknown>) => un
     ],
   ],
   pages: [
-    ['a block of an unknown type', (v) => ({ ...v, blocks: [{ type: 'hero', title: 'x' }] })],
+    ['a block of an unknown type', (v) => ({ ...v, blocks: [{ type: 'slider', title: 'x' }] })],
+    ['a hero block without a title', (v) => ({ ...v, blocks: [{ type: 'hero', lead: 'x' }] })],
+    ['a stats block without items', (v) => ({ ...v, blocks: [{ type: 'stats', items: [] }] })],
+    [
+      'a legacy block whose component is not a slug',
+      (v) => ({ ...v, blocks: [{ type: 'legacy', component: 'Crm Page', note: 'x' }] }),
+    ],
     ['no seo', ({ seo: _seo, ...v }) => v],
   ],
   blog: [
@@ -238,6 +256,28 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
     expect(MediaPath.safeParse('/files/logo.svg').success).toBe(true)
     for (const bad of ['/run/a.png', 'media/a.png', '/media/../secret', 'https://cdn.example.com/a.png'])
       expect(MediaPath.safeParse(bad).success, bad).toBe(false)
+  })
+
+  it('takes every block type of a unique page, and the type list matches the union (Phase 5)', () => {
+    const blocks = [
+      { type: 'copy', markdown: 'Text', webflowNode: 'section-1' },
+      { type: 'hero', id: 'top', title: 'Build any app', primary: cta, image },
+      { type: 'logos', items: [{ name: 'Acme', logo: image, href: 'https://acme.example.com' }] },
+      { type: 'features', title: 'Why', items: [{ title: 'Fast', body: 'It is.', icon: image }] },
+      { type: 'carousel', items: [{ title: 'Talk', video: 'dQw4w9WgXcQ' }] },
+      { type: 'video', youtube: 'dQw4w9WgXcQ', caption: 'Demo' },
+      { type: 'stats', items: [{ value: '{moduleCount}', label: 'modules' }] },
+      { type: 'team', members: [{ name: 'Jane Doe', role: 'CTO', photo: image }] },
+      { type: 'quote', quote: 'It works.', author: 'Jane Doe' },
+      { type: 'steps', title: 'How', items: [{ title: 'One', body: 'Start.' }] },
+      { type: 'faq', title: 'Questions', items: [{ question: 'Why?', answer: 'Because.' }] },
+      { type: 'cta', title: 'Start', primary: cta },
+      { type: 'prose', markdown: '## Terms' },
+      { type: 'legacy', component: 'crm-page', note: 'Compiled Astro output of /crm, source unknown (Q4).' },
+    ]
+    for (const b of blocks) expect(PageBlock.safeParse(b).success, b.type).toBe(true)
+    expect(blocks.map((b) => b.type).sort()).toEqual([...PAGE_BLOCK_TYPES].sort())
+    expect(PageBlock.options.map((o) => o.shape.type.value).sort()).toEqual([...PAGE_BLOCK_TYPES].sort())
   })
 
   it('allows an empty alt text only on a decorative image', () => {
