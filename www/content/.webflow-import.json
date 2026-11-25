@@ -307,6 +307,256 @@
       "sha256": "23a97e012c7fff8bde94c4ac980d7a9fbb76d87a998f017c43776f9ceda679f1"
     },
     {
+      "path": "www/content/case-studies/air-ocean-logistics-erp.md",
+      "webflowId": "6a2b04a3011ec6dfa928b9c1",
+      "sha256": "cb61e9e0fefaba7e3e1526707e22c4e4f237e13946bba0acdd4941d8c873ab3f"
+    },
+    {
+      "path": "www/content/case-studies/arvo-configurator.md",
+      "webflowId": "6af74f7322fd8b75b76ad499",
+      "sha256": "700e2e8c66d7a6d1618e2a63615f792cc27671a59b644e87a2e870ccc603e45c"
+    },
+    {
+      "path": "www/content/case-studies/covo-travel-esim-wallet.md",
+      "webflowId": "6aa17c440e840d0134af8d5d",
+      "sha256": "e57e4c497e5753efcc2979628d7a7caf91f05143e847c4f465421ad02a2e3d84"
+    },
+    {
+      "path": "www/content/case-studies/creativaos-law-firm-client-history.md",
+      "webflowId": "6b055b498b74ca5e48466c38",
+      "sha256": "0f01057ebdeba6cc5b4ef34a748432c84539c39df19c84042d559fbb381dbcb3"
+    },
+    {
+      "path": "www/content/case-studies/edube-ai-tutor.md",
+      "webflowId": "6abb98f9b0351c01f1ea7e0f",
+      "sha256": "8c1518b074855c4deca19da04cb412f1a79b75b35e14154ce6faa281357d0389"
+    },
+    {
+      "path": "www/content/case-studies/flowbiz-sewing-workshop-quoting.md",
+      "webflowId": "6b04bcad4eef352cbb4a73ae",
+      "sha256": "9122c283dbbe999a432e85ec71cf17fd992d8307886c72e82214a2205e1631c7"
+    },
+    {
+      "path": "www/content/case-studies/gns-ksef-connector.md",
+      "webflowId": "6a9fd10217aa9464101ec875",
+      "sha256": "2155b39e48e7c6023ad4ec7c30094b275f028a6fdaeb6f82395f32476cb69014"
+    },
+    {
+      "path": "www/content/case-studies/kickserve-property-management.md",
+      "webflowId": "6af2cd85cccbe0e5d3ad63e2",
+      "sha256": "efdf44eef0723732a8bc1eeaabb9e8be697d5056d617e5a74683ece36330b7ef"
+    },
+    {
+      "path": "www/content/case-studies/mdm-nt-shipping-automation.md",
+      "webflowId": "6af1c35e3835442cc4728aff",
+      "sha256": "656ddc5586f220a19340bfb83e0513002f0096e8f9cfaa2c988225bb66a3f148"
+    },
+    {
+      "path": "www/content/case-studies/opak-kreft-ppwr-documents.md",
+      "webflowId": "6b04bcad4eef352cbb4a73b0",
+      "sha256": "2f94f94aff7e509ddc65cb81347e66001f06dc5267f88fe1bfb652a6e675b8d6"
+    },
+    {
+      "path": "www/content/case-studies/open-service.md",
+      "webflowId": "6a4e81c674f233a19120fe88",
+      "sha256": "00022ccc00a74ea2033518483884a7fe862d4ac20ca0b9f4c9f413159a965b1d"
+    },
+    {
+      "path": "www/content/case-studies/pinpaw-gps-back-office.md",
+      "webflowId": "6af1f4baf082cf6045ffdf77",
+      "sha256": "ad7e23bce1bdcdec26f8de0c6d9f7c2ce6bae177427d7eba81bf88e7021a3507"
+    },
+    {
+      "path": "www/content/case-studies/senior-care-operations.md",
+      "webflowId": "6a3334982cb8113067e445e8",
+      "sha256": "ad3bf750c5dbb43793cc15a89d4be687b30bd1b9ae78bef86d6b2733de5ec0e2"
+    },
+    {
+      "path": "www/content/case-studies/thegoodcode-hours-rates-project-margin.md",
+      "webflowId": "6b0407e937a375f79b1de9cc",
+      "sha256": "6f39e9943da68d042f06c90f5e7f0530bff57d6aea05f936664bd3ad7d7eee1e"
+    },
+    {
+      "path": "www/content/case-studies/tracecore.md",
+      "webflowId": "6a4e9a214d59f3e59cd611ec",
+      "sha256": "58e47e096714e63217e81d514463ff40a64e0c53262e0767843801816d2fd3dd"
+    },
+    {
+      "path": "www/content/case-studies/vistula-valley-member-platform.md",
+      "webflowId": "6af1f6077800d8a6e0170da0",
+      "sha256": "252ce888924bf9b567d9cf4abd5aecc0ab2b313c0ccae381d2e72fe7d9d56291"
+    },
+    {
+      "path": "www/content/case-study-categories.yaml",
+      "webflowId": "6a2ad7d71ab5ae226a820bfd",
+      "sha256": "ba172e7014955d4823b92ab0f1677ee58227c0c142786f329ed4a15c21a43da8"
+    },
+    {
+      "path": "www/content/jobs/senior-ai-engineering.md",
+      "webflowId": "6a3149341f76e769ccf3d8ea",
+      "sha256": "1a1cf1874c08bd1fa764d4b03bf18e944c8aa910f5ee6db6264699d761808365"
+    },
+    {
+      "path": "www/content/partner-industries.yaml",
+      "webflowId": "6a2ad8fe4ffe0487fdfd5328",
+      "sha256": "dbb2d76d1dc55c2efe31cf24829d9f4b9130e9855d411c8a9fd8f667386a59d3"
+    },
+    {
+      "path": "www/content/partner-languages.yaml",
+      "webflowId": "6a2ad90b213ca1dc397962c1",
+      "sha256": "209068d123c8acb21f735cf009254bf20950d297495c7aef2a50f02e29616e1c"
+    },
+    {
+      "path": "www/content/partner-locations.yaml",
+      "webflowId": "6a2d49e5278a501ddae4abec",
+      "sha256": "2567c1d2681a1d656d79912b1bb326dddd7e20ae6fdc1e81740811f5901f3d04"
+    },
+    {
+      "path": "www/content/partner-services.yaml",
+      "webflowId": "6a2ad91fb7947837b996aac0",
+      "sha256": "7437939b289752eab7f2b561615158950a93aa27bb9d9d733fa2686e8abfb6b5"
+    },
+    {
+      "path": "www/content/partner-tiers.yaml",
+      "webflowId": "6a3393f46f251da6f05ac59a",
+      "sha256": "f51214d7f01532d2368f1578f1c9515491dfaeea3bed051fd12ff3e3e549117d"
+    },
+    {
+      "path": "www/content/partners/10clouds.md",
+      "webflowId": "6a4f6d510584689e00a9be52",
+      "sha256": "50fca1f3a702e1ebd713ed4dc735d8937f47eac268139301b1cd3a6af398f6a0"
+    },
+    {
+      "path": "www/content/partners/300-codes.md",
+      "webflowId": "6a4eb6d450e0646d871ef62c",
+      "sha256": "b615233c83af5a60ac6f71426b8e35badc2224fa33d26a55b5d9898e4385010f"
+    },
+    {
+      "path": "www/content/partners/amt-solution.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba129243",
+      "sha256": "63015fa4f0306ae1b4bb825f4b628bd63368e0ca777f06a9a2cc8067e98ab258"
+    },
+    {
+      "path": "www/content/partners/cognize.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba129235",
+      "sha256": "c6b1e7358fc741757d0761f78319c791635978e54a0a0b13caf0cf7199fcd3db"
+    },
+    {
+      "path": "www/content/partners/commerce-weavers.md",
+      "webflowId": "6a4e8ff3523627dd6c83b1da",
+      "sha256": "406aa2b3fef8ad38d28127ccdb48c779137ec5f43e3a6aacee8a12b39708687e"
+    },
+    {
+      "path": "www/content/partners/dev4you.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba129237",
+      "sha256": "031eadf51201e95036cbc4d8b0c6f7267cad872362253fbf8270c9530105b205"
+    },
+    {
+      "path": "www/content/partners/easy-automate.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba12923d",
+      "sha256": "edf95ee80b900e466bd81722d07dca616296a7a7030e37ad9986e8c6b3588453"
+    },
+    {
+      "path": "www/content/partners/enxoo.md",
+      "webflowId": "6a4e960879007956637b396c",
+      "sha256": "8dffe166e5f68d6c107d57e2997c7e5cafab2f79ccf43f5f33ba7cb741333d41"
+    },
+    {
+      "path": "www/content/partners/evojam.md",
+      "webflowId": "6a4e966b0ca0fb78bfdf51e8",
+      "sha256": "3486edfa95ccb2438fe82814ecd224906bb11095f204854571ff7b7a5ad6d80a"
+    },
+    {
+      "path": "www/content/partners/fast-white-cat.md",
+      "webflowId": "6a4e93894fc7af3b1b5545ec",
+      "sha256": "a5a4d3e85494aada3e324a7561403071bfa0ee351da8bceb3fa304b5d3cded91"
+    },
+    {
+      "path": "www/content/partners/filanovum.md",
+      "webflowId": "6a4e9258026dbc7600b3fd14",
+      "sha256": "63874460f6f5e6cd8ba9e2a2f89741f139b04a8076676144606405828ae13842"
+    },
+    {
+      "path": "www/content/partners/freighttech.md",
+      "webflowId": "6a2bf0c068995e11f22f04ad",
+      "sha256": "2cfa3cab6be57900271bb2b4ab746069ee2225bbb5cbf29a75151da4d2879219"
+    },
+    {
+      "path": "www/content/partners/full-stack-house.md",
+      "webflowId": "6a4e7cf0a824d42ab738c207",
+      "sha256": "edf1ce9ffacf5409087d8eda5ca09ec649fba78abd234c99d4c9f94c6da77544"
+    },
+    {
+      "path": "www/content/partners/gonextstage.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba129239",
+      "sha256": "5773973f5908ca2f55a873e57183fea0f47d76eafa0c7e6d1759bd75bdfeec8e"
+    },
+    {
+      "path": "www/content/partners/idego.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba12923b",
+      "sha256": "23486e00275877f21c09d517b74ceedcbdf91028afa1f469fcc3ce51dfd2ec56"
+    },
+    {
+      "path": "www/content/partners/lemonmind.md",
+      "webflowId": "6a4e94f679007956637a933f",
+      "sha256": "aef2b61d291efef5f266827b79e15ebca2f73ea5bbaab19e7eaf04ee9e63c002"
+    },
+    {
+      "path": "www/content/partners/macopedia.md",
+      "webflowId": "6a4e9710dc0dc9b11fefa43f",
+      "sha256": "a99434299dc650598867d6aba0e7be5cfb62d74a7aad65e90c0e46b4f8f89c80"
+    },
+    {
+      "path": "www/content/partners/nardeo.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba129241",
+      "sha256": "0cfe5fe6c63217d1088f3edb12b43e77898927789e88599b0aa1b2bdcb5e38c8"
+    },
+    {
+      "path": "www/content/partners/omdyo.md",
+      "webflowId": "6a4e8f68a380ca787d62bd47",
+      "sha256": "b05c2e26ed16e2c4d8611137c7b0ca1904537a30a46a86f57e4855f48fbd8b99"
+    },
+    {
+      "path": "www/content/partners/scaleoma.md",
+      "webflowId": "6a4e80de770e20068ae5748b",
+      "sha256": "4c59e76400a00248bfb178d48ccda2c45ce053bf80a138437c7b8e70dee675a8"
+    },
+    {
+      "path": "www/content/partners/softiq.md",
+      "webflowId": "6a4e971284c240cf6e90a7b0",
+      "sha256": "7e3ed1064b80b833a6b7a928f0cc398be9f3b384713a4d4bd206a3869c08ddac"
+    },
+    {
+      "path": "www/content/partners/tandemite.md",
+      "webflowId": "6a4e970f1fb053589f3261fc",
+      "sha256": "6f2cdec3a35c02d40dfa5a72f10960f3f45b5afff94fdccc764df900a68d06e9"
+    },
+    {
+      "path": "www/content/partners/the-good-code.md",
+      "webflowId": "6a4e83f5ae6cec34d193364b",
+      "sha256": "3d3b4dd66442c0f448ac103d498efeb8b28030e5765ba844c21849dd0a50926a"
+    },
+    {
+      "path": "www/content/partners/they-dev.md",
+      "webflowId": "6a4ec5ee8c7db8c6ba12923f",
+      "sha256": "99244451fca0426cdec411a37a72be376d0e8e527193fb2939dd3f2308ecb3a9"
+    },
+    {
+      "path": "www/content/partners/tracecore.md",
+      "webflowId": "6a4e944222242fe839f000ae",
+      "sha256": "5999ddc7514f935328844fa6e868a655a61b61ee160df575ad1483c2a69a0f7e"
+    },
+    {
+      "path": "www/content/partners/univio.md",
+      "webflowId": "6a4e97113680479054e91274",
+      "sha256": "53789624d9c25edc833c3676f014812ad92df91ba122b921e444f2c0319b406f"
+    },
+    {
+      "path": "www/content/partners/white-label-coders.md",
+      "webflowId": "6a4e94f77c2655137cd70139",
+      "sha256": "aa3f98af34cda754e4e29ce7e60cd798f51d82719b93f9c17183f17d320f9144"
+    },
+    {
       "path": "www/public/media/blog/69cee6b0b200584dc4783f1e-placeholder-1.jpg",
       "webflowId": "69cee6b0b200584dc4783f1e",
       "sha256": "8e2d65afe5b3323bc987f49d6d40685affdac1ca87e074327bbadeccf0e5a752"
@@ -880,6 +1130,456 @@
       "path": "www/public/media/blog/6b058d5409c1014219781656-6b058cc2d18875cf18146099-erpnext-alternative-packing-slip-and-label-printer.jpeg",
       "webflowId": "6b058d5409c1014219781656",
       "sha256": "199cf37a76fc48f449aa45ff046aaea901e3f1f67c9a72df2b9fa49c9456c482"
+    },
+    {
+      "path": "www/public/media/case-studies/6a2b160c10b9c251decd7477-senior-care-operations.avif",
+      "webflowId": "6a2b160c10b9c251decd7477",
+      "sha256": "8f1347dfed08d04c104aef3d3bc74c4bd14698844b45c74c7d841d3c6cab590c"
+    },
+    {
+      "path": "www/public/media/case-studies/6a9fd10217aa9464101ec82b-6a9fd0c8f53cef2b23f7ae31-gns-ksef-konektor-1.jpeg",
+      "webflowId": "6a9fd10217aa9464101ec82b",
+      "sha256": "aac986111ae62c3d15592f54c0bdd3151397615923999abf3765017c4b53f479"
+    },
+    {
+      "path": "www/public/media/case-studies/6a9fd10217aa9464101ec836-6a9fd0c8a1a1ac7a792d49d0-gns-ksef-konektor-3.jpeg",
+      "webflowId": "6a9fd10217aa9464101ec836",
+      "sha256": "431d7a2abf7d45385dab5fc10c35e532c1327a342478eb9bb29f04525e855012"
+    },
+    {
+      "path": "www/public/media/case-studies/6a9fd10217aa9464101ec83a-6a9fd0c8a5a148372995ffa4-gns-ksef-chart.png",
+      "webflowId": "6a9fd10217aa9464101ec83a",
+      "sha256": "53da16d63e688acc344f63b7e922e0ad20b2f69394bf16960de8ee9f0cb78b40"
+    },
+    {
+      "path": "www/public/media/case-studies/6aa17c420e840d0134af8cf4-6aa17b707e24478aefae5d70-covo-esim-wallet-card.png",
+      "webflowId": "6aa17c420e840d0134af8cf4",
+      "sha256": "3955fe799a85bf6e6e7e59d11ebb624e85bab0d6f053952e04886f6e0ca1a202"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1d75b999082f56d4ca85f-img-4335-min-1200x800.jpeg",
+      "webflowId": "6af1d75b999082f56d4ca85f",
+      "sha256": "0f8e9f06f272fac00c295468a8830aca07a56abf30d0be4732508c439e085d11"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1f4c6293986c10a0931a8-d-2.webp",
+      "webflowId": "6af1f4c6293986c10a0931a8",
+      "sha256": "d3c97f4765b289c88ccc324e08bbc7eb23dc7b856ecdb7ae9e6b009f6acc7a73"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fadaee6670759c32ef3e-6af1faba78d03f466bc65cbc-edube-cover.jpeg",
+      "webflowId": "6af1fadaee6670759c32ef3e",
+      "sha256": "c8f28a2d26b8faf303724a0ce69dcaad7823ee119586ac73a9b4ad7a395bc56d"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fadaee6670759c32ef42-6af1fabbc8429cd84dd8099e-mrp-pharma-cover.jpeg",
+      "webflowId": "6af1fadaee6670759c32ef42",
+      "sha256": "9be0375e375165fffc5ef1665a43e3463da06064909a15307876f369cacc0168"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fadaee6670759c32ef4a-6af1faba2310d25a0e7acec4-pinpaw-cover.jpeg",
+      "webflowId": "6af1fadaee6670759c32ef4a",
+      "sha256": "6c6ebb2b8bd350ca69b85d74b8b696ef388f250cdafa5534522584d9e2034cdb"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fadaee6670759c32ef4f-6af1fabaed75836ab66ea196-open-service-cover.jpeg",
+      "webflowId": "6af1fadaee6670759c32ef4f",
+      "sha256": "be8c49a114c4ef9f6ad06bc82acc6cc2da77d4406248f0deb42e4ddf9aa45f7e"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fb4bebbf1b254910586a-6af1fb43d021ecd8c3b2d5a7-vistula-cover-wide.jpeg",
+      "webflowId": "6af1fb4bebbf1b254910586a",
+      "sha256": "3fa75b4e4816b40372b7e006c8e626dec1a2cd5b5731d1526e4f4405ecaeba3c"
+    },
+    {
+      "path": "www/public/media/case-studies/6af1fc43e7a6d7ea0dd1dbf3-6af1fc3cef231e388b0abaa0-senior-care-wall-cover.jpeg",
+      "webflowId": "6af1fc43e7a6d7ea0dd1dbf3",
+      "sha256": "f6364acf5f395f27afec385ca3dac8cc61377b55d1aff0f32e1625ce696c6424"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c26d-6af2d00c25bad80337bd291c-edube-ai-tutor-4-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c26d",
+      "sha256": "686ff973d3021dc8082b9a5147c4c2eaa228676e81d44bfde8a58a233b917382"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c270-6af2d017ead7d7f72ea6318a-vistula-architecture-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c270",
+      "sha256": "b9593b33390d65407a9484f1a77f1ece71369fc79ea4cbb4b3c61bc8d8b83ada"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c273-6af2d0158949ac4cedeed621-sim-cards-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c273",
+      "sha256": "657a8527c4fb546ae7218a6169da414e63cdab1d134a0bc461eac7d3f20be317"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c276-6af2d0077efaf61368e70f1b-covo-travel-esim-wallet-1-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c276",
+      "sha256": "0336b78bf1e25f0711102695946d7617f4c5a3e85f144ee3adaf498db437a14a"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c279-6af2d009d2be3d8ec699ccd8-edube-ai-tutor-3-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c279",
+      "sha256": "923201bc925bd1e52543218ef166232bbcc06ab9ba011c96aa37d96ed17d7c5f"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c27c-6af2d00ecccbe0e5d3ae7b3c-edube-ai-tutor-7-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c27c",
+      "sha256": "83512d363aea35bb491333cc444a1ef14ac207b77030f2f5dfee4e3fb2d40a63"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c27f-6af2d0065e5b67103134869f-architecture-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c27f",
+      "sha256": "0e1d559e146bf0ddaa8526d80731e06029e6012573f6d85fb0c338f6f30ac75c"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c282-6af2d0188949ac4cedeed785-vistula-membership-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c282",
+      "sha256": "38811f834ad513d0a0396755377bf9e7ad7c6d29b2eb793230f7df7e2af77447"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c285-6af2d008e6c1556584ee8dbf-covo-travel-esim-wallet-6-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c285",
+      "sha256": "5f7fd9682c091252742f8ab0914e96bda87c502d0400efc2bb88fa97ed81e413"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c288-6af2d00d8f2eeccf9ee13165-edube-ai-tutor-6-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c288",
+      "sha256": "f13a62427d77c2f80b01fe76e6ad542ca97000a45f5cbfaf97096a7549905763"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c290-6af2d007f171b4f0c71cfea0-covo-travel-esim-wallet-4-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c290",
+      "sha256": "72e37dfe63d578d0f0d6f2d233800a05282826c9476b7431975ff07976889568"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c293-6af2d008a69eb6564dff5508-covo-travel-esim-wallet-5-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c293",
+      "sha256": "bd2da1900b31e8199a362b6240c3873ce447a259459c0924612aa6cdf3a652e1"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c296-6af2d0178940a4595efed73a-tracecore-3-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c296",
+      "sha256": "376e765b15a48fc43d426b7c7168e0fde6e70d8c56d0ce7b214d3814de05e72b"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c299-6af2d0165e5b671031348f92-tracecore-2-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c299",
+      "sha256": "5d319c4e2fdf99384a9d61fb0a2291acdd272dbd200ecb202c1a12905c77bbf6"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c29c-6af2d0170acbd78719ecfb8e-vistula-directory-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c29c",
+      "sha256": "49a0b60227fc6a6e390dda4de80f3e1b90bb7ed665bb9315a697b8577fdee0f5"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c29f-6af2d01ca434a527628a3549-vistula-review-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c29f",
+      "sha256": "1d3d7f3c4769334d49421b6140493d5ce45e02baa28507c3c7d81f2da7ebdb80"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2a2-6af2d0087efaf61368e71034-dashboard-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2a2",
+      "sha256": "f9ff9d65c989b29299dcc4d8c57f516f0d6eca0ff77a92c9d3f587b7e6ad5f7b"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2a5-6af2d015ee0af0cd5ecd3520-tracecore-1-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2a5",
+      "sha256": "a0b66bbc2bede3f49d54170ae7c7f984cc9f6a57da55d07b97b397ce8730861b"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2a8-6af2d010a5dc194210458bf1-senior-care-operations-1-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2a8",
+      "sha256": "aa6cbc5b95a993cbe1fbc15a1cfff25b761df05aa891893b238cf7b597120252"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2ab-6af2d01489eaf366097e3196-senior-care-operations-3-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2ab",
+      "sha256": "3011bff09c8fadc5c989330205fe08904c4ef0a6fa26b47766bee9a1c4b20b8e"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2bc-6af2d0115e5b671031348c53-senior-care-operations-2-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2bc",
+      "sha256": "7d8d8792041a2d8cb018c5c13b98aefef65681aee96181013184cd1e54080a56"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2bf-6af2d00f8f2eeccf9ee131eb-open-service-3-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2bf",
+      "sha256": "cb16fb5cc8f50ee74c4a2f5549453c482487335ab41c3ba315c5788011e25b91"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2c2-6af2d00e25bad80337bd29eb-open-service-2-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2c2",
+      "sha256": "2d2a140647cc8f81dbb956e7a0f60914095c915c9fca147552335e789b70ec2c"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2c5-6af2d00e4b3709454aa2e16f-open-service-1-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2c5",
+      "sha256": "41b55fb3f3cec2a32eedb44ece6563f165ecc2f3fc5b3d01a3a00d4c19217f96"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b14c918da2c831c2c8-6af2d006f171b4f0c71cfe15-command-templates-gradient-clean.jpeg",
+      "webflowId": "6af2d0b14c918da2c831c2c8",
+      "sha256": "cab2dcc0ba4202398aeb3c9e2d62fba05d36a820fff02262ccb95c4c54fb7f17"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b24c918da2c831c2d9-6af2ce23caea92099154a80d-kickserve-cover.jpeg",
+      "webflowId": "6af2d0b24c918da2c831c2d9",
+      "sha256": "803acc92697a8489fcb369f9264e7d7c2f0d1d8f0b02e447034ead377e792884"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b44c918da2c831c326-6af2d01dee0af0cd5ecd3a32-kickserve-whatsapp-preview.jpeg",
+      "webflowId": "6af2d0b44c918da2c831c326",
+      "sha256": "cf906238038cf19d4c278cf9899c52fce2535fd2071b2f60c978e338b0d3693d"
+    },
+    {
+      "path": "www/public/media/case-studies/6af2d0b44c918da2c831c329-6af2d01c90b081f8ba5530ed-kickserve-maintenance-board.jpeg",
+      "webflowId": "6af2d0b44c918da2c831c329",
+      "sha256": "8e5869718b81d5123c25ff7106b02a578825e12d9658358fc9938d1f9be9a989"
+    },
+    {
+      "path": "www/public/media/case-studies/6af74f9cfc70cf53b1eaefda-6af74ec5c7551038ef4f6282-arvo-cover.jpeg",
+      "webflowId": "6af74f9cfc70cf53b1eaefda",
+      "sha256": "9da9c7e87b7857ae6a727a4f2d103a4d2426331531005bb2e0f5de67ed3072bf"
+    },
+    {
+      "path": "www/public/media/case-studies/6af74f9efc70cf53b1eaefe1-6af74ec50767ab36c9cfe579-arvo-rules.jpeg",
+      "webflowId": "6af74f9efc70cf53b1eaefe1",
+      "sha256": "5c24ed995aa35711ec964692eb9f5336cb6110053443b071ce04763fbc252e64"
+    },
+    {
+      "path": "www/public/media/case-studies/6af74f9efc70cf53b1eaefe4-6af74ec5ce319b953e4f14ba-arvo-configurator.jpeg",
+      "webflowId": "6af74f9efc70cf53b1eaefe4",
+      "sha256": "cc2d69ad076401c456e1681744f5449f4b15f9987fa0c07e044a1c9bfac79cd1"
+    },
+    {
+      "path": "www/public/media/case-studies/6af74f9efc70cf53b1eaefe7-6af74ec5c7551038ef4f62ad-arvo-customer-document.jpeg",
+      "webflowId": "6af74f9efc70cf53b1eaefe7",
+      "sha256": "604e089d678153322cbe9f16990444ed8616f94e93c3b3ba12f1926079a3a7a6"
+    },
+    {
+      "path": "www/public/media/case-studies/6af750bae31c5c40ac8b2fd4-6af750a6bc9f5b7bc0bd132e-arvo-cover-machine.jpeg",
+      "webflowId": "6af750bae31c5c40ac8b2fd4",
+      "sha256": "4429f3156812c1ea4958a265c1cff32a2e874d5c918c567a98a17c03ffe5ed37"
+    },
+    {
+      "path": "www/public/media/case-studies/6b0407ef625d6c715c6297bf-6b0407872de9f46b16a772ad-tgc-timesheet.jpeg",
+      "webflowId": "6b0407ef625d6c715c6297bf",
+      "sha256": "2ee60529d85e4caae998b765d0f48398129ebdb1921106746c8b0955ba5b40a8"
+    },
+    {
+      "path": "www/public/media/case-studies/6b0407ef625d6c715c6297c2-6b040787625d6c715c627db5-tgc-dashboard.jpeg",
+      "webflowId": "6b0407ef625d6c715c6297c2",
+      "sha256": "aaf3e0e7330a575cd84acd59456d755d45bd4a160a4b7a37e04154a98249c134"
+    },
+    {
+      "path": "www/public/media/case-studies/6b0407ef625d6c715c6297c5-6b0407873ef7575a2be346ed-tgc-approval.jpeg",
+      "webflowId": "6b0407ef625d6c715c6297c5",
+      "sha256": "891baf870cfb75337a071cadd28418093ce1cdd703df28d6264c8dffc72acbff"
+    },
+    {
+      "path": "www/public/media/case-studies/6b0407f0625d6c715c6297c8-6b0407872de9f46b16a77280-tgc-closed-month.jpeg",
+      "webflowId": "6b0407f0625d6c715c6297c8",
+      "sha256": "19370e3b4dbaed6a66df0db67ab3f75822ea6d470db4af90455ef4293ced36d5"
+    },
+    {
+      "path": "www/public/media/case-studies/6b040c7786187f1ace4c91da-6b040c52e8231c40965d42e8-project-margin-detail.jpeg",
+      "webflowId": "6b040c7786187f1ace4c91da",
+      "sha256": "95dc89b6ae00c6f387d408fc063d94277711cfc9220bce282900801bbc3e18ad"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04bd0f27b47149dc5d05ba-6b04bceb31735d86a26543fd-ppwr-cover.jpeg",
+      "webflowId": "6b04bd0f27b47149dc5d05ba",
+      "sha256": "8f9aa74e2ba829109f78a6f4b1361d00adc6c10adeab5489fe67c90bf9d670de"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04bd1027b47149dc5d05c8-6b04bcec0083a902566712b7-ppwr-edytor-karty.jpeg",
+      "webflowId": "6b04bd1027b47149dc5d05c8",
+      "sha256": "d2dcdf3eef86918b5d01e733509292decee6af3d9b8955705871157e7de809e3"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04bd1027b47149dc5d05ce-6b04bcec3f621f0a81fe464c-ppwr-rejestr-dokumentow.jpeg",
+      "webflowId": "6b04bd1027b47149dc5d05ce",
+      "sha256": "9b7a49eb230010973bf9f1a882358bf45007c0b2ae03c2c305ba15f13fcd92ac"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04bd1127b47149dc5d0643-6b04bced44cae95a35c8e3bf-sewing-rules.jpeg",
+      "webflowId": "6b04bd1127b47149dc5d0643",
+      "sha256": "84a4c7e41e1566aa629dee6d3bda7c01dd4f5b64de07ce8af369df33b063165d"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04bd1127b47149dc5d0646-6b04bcec81bc515c969d06e9-sewing-pattern.jpeg",
+      "webflowId": "6b04bd1127b47149dc5d0646",
+      "sha256": "7b425fab6a9881d445abc378938869d840a29ceaff15963e96c7a83fdeb3d1a4"
+    },
+    {
+      "path": "www/public/media/case-studies/6b04c21d969c03700c07e30d-6b04c20baf0cda1c3701ff30-custom-bag-quote.jpeg",
+      "webflowId": "6b04c21d969c03700c07e30d",
+      "sha256": "22ce43711c68255598c00c3e1134f62953c62af95d949960a5750b31f9054194"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055bae2edeb6ac37618f3b-6b0559751639c1dd1a16d6f6-creativaos-cover.jpeg",
+      "webflowId": "6b055bae2edeb6ac37618f3b",
+      "sha256": "b69fb0cd0acaa521aa7d87c70fd274364252abcf427d17f03be1ad73cb9a2d55"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055bae2edeb6ac37618f46-6b055975dce5b7dc9e1d9355-creativaos-my-day.jpeg",
+      "webflowId": "6b055bae2edeb6ac37618f46",
+      "sha256": "2f020e8e4db2a7ae13ca6afbec662b19cfc7dde82df180e82925488ee9aa8b20"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055bae2edeb6ac37618f4b-6b05597671992c4722bdf384-creativaos-calendar.jpeg",
+      "webflowId": "6b055bae2edeb6ac37618f4b",
+      "sha256": "0077c8f56cbffed94c3320280233d1dc4fbeb5267c37a8e8b8c48a14cc62ff04"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055bae2edeb6ac37618f56-6b05597674c76e455e915096-creativaos-task-list.jpeg",
+      "webflowId": "6b055bae2edeb6ac37618f56",
+      "sha256": "01a6b51a4c43d3be105f00f4734608b35d3e1ab236ed79beccc9db57e0417f66"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055bae2edeb6ac37618f5e-6b0559777217acbfbfd8a034-creativaos-opportunities.jpeg",
+      "webflowId": "6b055bae2edeb6ac37618f5e",
+      "sha256": "97d8c919e9164351a530aa46aa0af93ae2f161c01605ea0ecc8f56cbb8cafcff"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055baf2edeb6ac37618f96-6b0559752edeb6ac3760fce7-creativaos-client-timeline.jpeg",
+      "webflowId": "6b055baf2edeb6ac37618f96",
+      "sha256": "ef2c4885ec2f38ef28a196b69b148d7e4a253e92dda4de4c901472688bd3bec9"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055baf2edeb6ac37618f99-6b0559774d6a4ecba7b85123-creativaos-time.jpeg",
+      "webflowId": "6b055baf2edeb6ac37618f99",
+      "sha256": "62ae43ef1008d42f70101ca28c1e2cd0d98902feabfabbeef8b48be23e9e425b"
+    },
+    {
+      "path": "www/public/media/case-studies/6b055baf2edeb6ac37618fa8-6b055976a1eb379e08798a47-creativaos-bookings.jpeg",
+      "webflowId": "6b055baf2edeb6ac37618fa8",
+      "sha256": "16c7ffc270decccdc4c51fc0cf2d12664b066057580be91f5fca4d552c537c72"
+    },
+    {
+      "path": "www/public/media/partners/6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo.webp",
+      "webflowId": "6a4e83f5ae6cec34d1933641",
+      "sha256": "ac5cd8dd28b2babce292ecad7c33a09589de9b83c4e6c1fb852198d23fc9c335"
+    },
+    {
+      "path": "www/public/media/partners/6a4e89d8908b54749152f74a-6a4e89c12fc2cb1c914be289-freighttech-logo.png",
+      "webflowId": "6a4e89d8908b54749152f74a",
+      "sha256": "a01790cc43e396a211bad676a059c73f8750147d0ae754d12552eba7d4585139"
+    },
+    {
+      "path": "www/public/media/partners/6a4e8f68a380ca787d62bd0d-6a4e8f414eb05b0980120182-omdyo-logo.svg",
+      "webflowId": "6a4e8f68a380ca787d62bd0d",
+      "sha256": "797c26e178cb396dd1dd0ff37829a8f99e588bcbce5543e2557638af1589b5f5"
+    },
+    {
+      "path": "www/public/media/partners/6a4e9258026dbc7600b3fcf1-6a4e923d42e58ef272c6b7c3-filanovum-logo.svg",
+      "webflowId": "6a4e9258026dbc7600b3fcf1",
+      "sha256": "7f0217e16ac0415cc2ea816c60928c5458f411730673ea4826b6ee4a93908bab"
+    },
+    {
+      "path": "www/public/media/partners/6a4e93894fc7af3b1b5545de-6a4e9372c053705a2c83c359-fast-white-cat-logo.svg",
+      "webflowId": "6a4e93894fc7af3b1b5545de",
+      "sha256": "6542264e091b651325c0099d7c259705cddd54e5e704e81a0f079ab05932be58"
+    },
+    {
+      "path": "www/public/media/partners/6a4e94f679007956637a9326-6a4e94d71f386fb6804029da-lemonmind-logo.svg",
+      "webflowId": "6a4e94f679007956637a9326",
+      "sha256": "f7f199b6666fc647042ab7ab936d88d305a1d418b97c22f941fd31108aefb3bd"
+    },
+    {
+      "path": "www/public/media/partners/6a4e960879007956637b391d-6a4e95ee669dd67c4d8a9bdd-enxoo-logo.png",
+      "webflowId": "6a4e960879007956637b391d",
+      "sha256": "ba24ef1ac4c0837264c6b0790ef933f1f7573f14ce2d10bc57b787493cf07d1c"
+    },
+    {
+      "path": "www/public/media/partners/6a4e966b0ca0fb78bfdf51de-6a4e965314aafab9bc1bd4f6-evojam-logo.png",
+      "webflowId": "6a4e966b0ca0fb78bfdf51de",
+      "sha256": "23d21abba2573f644d15f553598855e0b0d72ee8f36ff6e587974d01391dadf4"
+    },
+    {
+      "path": "www/public/media/partners/6a4e971284c240cf6e90a7a6-6a4e96e4d48e2bd4e4e85c6c-softiq-logo.svg",
+      "webflowId": "6a4e971284c240cf6e90a7a6",
+      "sha256": "6d0832ef7d7bd253bc725bc924f2cf7b0ed5645ae045a9c8fac27c72348018c0"
+    },
+    {
+      "path": "www/public/media/partners/6a4eb30410cd42120e4ad759-6a4eb2b7d3d7fe9bd613f563-tandemite-logo-cropped.png",
+      "webflowId": "6a4eb30410cd42120e4ad759",
+      "sha256": "4a1564db6be1c18847d0025f3d8ff803e299bfb0c5600c42c90e007c5e70d78a"
+    },
+    {
+      "path": "www/public/media/partners/6a4eb3042235c2ff5dba94d4-6a4eb2b7abf83624c4f8e860-macopedia-logo-cropped.png",
+      "webflowId": "6a4eb3042235c2ff5dba94d4",
+      "sha256": "241dd0617770a408468ef588c9fe9163d076ff5a96c3c94a236a0e12ae7b6ea8"
+    },
+    {
+      "path": "www/public/media/partners/6a4eb60effdcd825570fd01d-6a4eb5e450e0646d871e6f95-white-label-coders-logo-fixed.png",
+      "webflowId": "6a4eb60effdcd825570fd01d",
+      "sha256": "b899f8c5fc406a64c91c78f12c66afda9227b9577eb7405a7ec2e5cb351a55cf"
+    },
+    {
+      "path": "www/public/media/partners/6a4eb6d450e0646d871ef622-6a4eb69e50e0646d871ed9e4-300codes-logo.svg",
+      "webflowId": "6a4eb6d450e0646d871ef622",
+      "sha256": "dc86349a4e1f2af36624fbba34efdfc7c30e995c95b00c72f06b21ce6eb1aa24"
+    },
+    {
+      "path": "www/public/media/partners/6a4ec5ed8c7db8c6ba1291d8-6a4ec53a9d14e37cd2636358-easyautomate-logo.svg",
+      "webflowId": "6a4ec5ed8c7db8c6ba1291d8",
+      "sha256": "f6d0bd62e48bb6ce03eb2d579cc504306738d480b08fa5a87a8fa803d01bdfd5"
+    },
+    {
+      "path": "www/public/media/partners/6a4ec5ed8c7db8c6ba1291db-6a4ec5392e620f1c97163225-cognize-logo.webp",
+      "webflowId": "6a4ec5ed8c7db8c6ba1291db",
+      "sha256": "0e928e4e2c019fedb577dc86aa9e0a780d63961e1307d5df48ee8444c92397d6"
+    },
+    {
+      "path": "www/public/media/partners/6a4ec5ee8c7db8c6ba1291e1-6a4ec53ae0c4f990127723b5-nardeo-logo.png",
+      "webflowId": "6a4ec5ee8c7db8c6ba1291e1",
+      "sha256": "4082a0d1056eb6b509471accded6ff15b600cfa605316cf18940ca67fa4cc996"
+    },
+    {
+      "path": "www/public/media/partners/6a4ec5ee8c7db8c6ba1291e4-6a4ec53b79e63eeaf7107e17-amt-solution-logo.png",
+      "webflowId": "6a4ec5ee8c7db8c6ba1291e4",
+      "sha256": "2461327d50b05598c37af14de91df11e2c23b71e4a2ba0f747806a1af3a777f2"
+    },
+    {
+      "path": "www/public/media/partners/6a4ec5ee8c7db8c6ba1291e7-6a4ec539823699ab1cbfeda6-idego-logo.svg",
+      "webflowId": "6a4ec5ee8c7db8c6ba1291e7",
+      "sha256": "6d12ad7e77644301a8afc51f80c2bdb65abe89713d4c1b1dca11d903f5b16c66"
+    },
+    {
+      "path": "www/public/media/partners/6a4f6d510584689e00a9be3b-6a4f6cebd1988bc5b4ea4980-10clouds-logo-dark.png",
+      "webflowId": "6a4f6d510584689e00a9be3b",
+      "sha256": "49b4fd8650105c583e19231cf7ca3d76dcc91b3c894d4ffdf55900942d6d37c0"
+    },
+    {
+      "path": "www/public/media/partners/6a4f8c67a3b158d33151c088-6a4f8c35d5741d65d3bac4bb-univio-logo-2026.png",
+      "webflowId": "6a4f8c67a3b158d33151c088",
+      "sha256": "788e1448e7d72ac2ca6149f9a81f7b12c71fbd36f4759ca9aebb6e6f424991e7"
+    },
+    {
+      "path": "www/public/media/partners/6a50d262a8ba3ca726a72c5d-6a50d2271532ad81c24db64d-dev4you-logo.png",
+      "webflowId": "6a50d262a8ba3ca726a72c5d",
+      "sha256": "a89acfec122aa7c225d9ad991926e521f144ddabcd78dabc1886a6f8b19efca3"
+    },
+    {
+      "path": "www/public/media/partners/6a529b2547b428bbc09d9f43-6a529afda5ce2b2a66dcb3c2-commerce-weavers-logo-2026.png",
+      "webflowId": "6a529b2547b428bbc09d9f43",
+      "sha256": "b45c7c7d5c68b0efdf521fd7dc1cb38bd3744d12828849262d95e584fd74dbac"
+    },
+    {
+      "path": "www/public/media/partners/6a82d68f3addaf3982bf288a-6a82d6376883c0b796bf3829-theydev-logo-official.svg",
+      "webflowId": "6a82d68f3addaf3982bf288a",
+      "sha256": "b270d8151f4f8954e21dac1fd87225517e3692a44896ed41d6d740ba4e745d36"
+    },
+    {
+      "path": "www/public/media/partners/6a9fce84a5a148372994a197-6a9fce6294574c6097c7b577-go-next-stage-logo.svg",
+      "webflowId": "6a9fce84a5a148372994a197",
+      "sha256": "37eb0f97df71ff3ef09c443568101c4c09e8e286ed4369c0d2cc011786f6da78"
+    },
+    {
+      "path": "www/public/media/partners/6ac50d2fd773e63f86e1f397-6ac50d1898f5df55e0f07f12-full-stack-house-logo-2026-10.svg",
+      "webflowId": "6ac50d2fd773e63f86e1f397",
+      "sha256": "1589552ac3ef4b90edc9913cc25236262fe4703133df456b610ef4d0553357b8"
     }
   ]
 }

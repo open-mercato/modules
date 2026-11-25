@@ -1,0 +1,24 @@
+ai-native-core-agency:
+  webflowId: 6a339591c109ff8d4e242a32
+  name: AI-Native Core Agency
+  order: 1
+  backgroundColor: "#2f520b"
+  textColor: "#b4f372"
+ai-native-expert-agency:
+  webflowId: 6a3395897eb45b0d16093c3f
+  name: AI-Native Expert Agency
+  order: 2
+  backgroundColor: "#b4f372"
+  textColor: "#000000"
+ai-native-agency:
+  webflowId: 6a33957b442ab5f027cd8d56
+  name: AI-Native Agency
+  order: 3
+  backgroundColor: "#eefb63"
+  textColor: "#000000"
+agency:
+  webflowId: 6a3395528bca900549dfa54d
+  name: Agency
+  order: 4
+  backgroundColor: "#bc9aff"
+  textColor: "#000000"

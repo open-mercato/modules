@@ -1,0 +1,20 @@
+implementation:
+  webflowId: 6a2d48a2b8ecd18fab42157d
+  name: Implementation
+  order: 1
+consulting:
+  webflowId: 6a2d48aa4b1c2550e5f50c63
+  name: Consulting
+  order: 2
+custom-development:
+  webflowId: 6a2d48ad0cc80afc04e2b09d
+  name: Custom Development
+  order: 3
+ai-integration:
+  webflowId: 6a2d48b51f174bbdee4e32ba
+  name: AI Integration
+  order: 4
+migration:
+  webflowId: 6a2d48b8154c8415ce643e5e
+  name: Migration
+  order: 5
