@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/enterprise",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-25T21:48:18Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "lost",
+      "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": null,
+      "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
       "workflow": null
     },
     "claimed": {
@@ -38,10 +38,8 @@
     },
     "anatomy": "hidden",
     "supplyChain": {
-      "status": "warn",
-      "reasons": [
-        "Provenance lost: the previous release had it."
-      ]
+      "status": "ok",
+      "reasons": []
     },
     "hygiene": {
       "status": "ok",
@@ -100,8 +98,8 @@
     },
     {
       "id": "VER-3",
-      "pass": false,
-      "detail": "Supply chain: warn."
+      "pass": true,
+      "detail": "Supply chain: ok."
     },
     {
       "id": "VER-4",
@@ -127,10 +125,6 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
-        },
-        {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
         }
       ],
       "consentText": "Install @open-mercato/enterprise@0.10.1"
@@ -145,10 +139,6 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
-        },
-        {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
         }
       ],
       "consentText": "Install @open-mercato/enterprise@0.10.1"
@@ -163,10 +153,6 @@
         {
           "code": "LICENSE",
           "text": "License: enterprise (SEE LICENSE IN LICENSE.md)."
-        },
-        {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
         }
       ],
       "consentText": "Install @open-mercato/enterprise@0.10.1"

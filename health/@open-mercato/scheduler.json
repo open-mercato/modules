@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/scheduler",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-25T21:48:18Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "lost",
+      "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": null,
+      "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
       "workflow": null
     },
     "claimed": {
@@ -38,10 +38,8 @@
     },
     "anatomy": "full",
     "supplyChain": {
-      "status": "warn",
-      "reasons": [
-        "Provenance lost: the previous release had it."
-      ]
+      "status": "ok",
+      "reasons": []
     },
     "hygiene": {
       "status": "warn",
@@ -104,8 +102,8 @@
     },
     {
       "id": "VER-3",
-      "pass": false,
-      "detail": "Supply chain: warn."
+      "pass": true,
+      "detail": "Supply chain: ok."
     },
     {
       "id": "VER-4",
@@ -129,21 +127,17 @@
           "text": "Not yet tested in a new app on 0.10."
         },
         {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
-        },
-        {
           "code": "IN_PRESET",
           "text": "Nothing to install: a new app already registers scheduler in src/modules.ts."
         }
       ]
     },
     "0.9": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.9."
         },
         {
           "code": "IN_PRESET",
@@ -157,10 +151,6 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on next."
-        },
-        {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
         },
         {
           "code": "IN_PRESET",
@@ -178,7 +168,7 @@
   "evaluated": {
     "0.10": "0.10.1",
     "0.9": "0.9.0",
-    "next": "0.11.1-develop.8531.1.9c9f5e2b21"
+    "next": "0.11.1-develop.8534.1.62ca6cfffa"
   },
   "verdictPreset": "classic"
 }

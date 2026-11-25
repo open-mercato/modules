@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-autopay",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T15:15:31Z",
+  "computedAt": "2026-11-25T21:48:18Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -12,9 +12,9 @@
       "mismatch": false
     },
     "builtFrom": {
-      "status": "lost",
+      "status": "verified",
       "repo": "open-mercato/open-mercato",
-      "commit": null,
+      "commit": "cafc9dec247e197830224e4ee8fd025a2c9171c7",
       "workflow": null
     },
     "claimed": {
@@ -38,10 +38,8 @@
     },
     "anatomy": "full",
     "supplyChain": {
-      "status": "warn",
-      "reasons": [
-        "Provenance lost: the previous release had it."
-      ]
+      "status": "ok",
+      "reasons": []
     },
     "hygiene": {
       "status": "warn",
@@ -104,8 +102,8 @@
     },
     {
       "id": "VER-3",
-      "pass": false,
-      "detail": "Supply chain: warn."
+      "pass": true,
+      "detail": "Supply chain: ok."
     },
     {
       "id": "VER-4",
@@ -118,18 +116,17 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.10."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-autopay@0.10.1"
+      ]
     },
     "0.9": {
       "decision": "ask",
@@ -137,23 +134,18 @@
         {
           "code": "NOT_VERIFIED",
           "text": "Not yet tested in a new app on 0.9."
-        },
-        {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
         }
       ],
       "consentText": "Install @open-mercato/gateway-autopay@0.10.1"
     },
     "next": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "SUPPLY_CHAIN",
-          "text": "Provenance lost: the previous release had it."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on next."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-autopay@0.10.0"
+      ]
     }
   },
   "state": "active",
