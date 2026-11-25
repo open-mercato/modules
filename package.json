@@ -12,7 +12,7 @@
     "build": "yarn build:run && yarn build:www",
     "build:run": "node lib/cli.ts emit --data .data && astro build --outDir dist-run",
     "build:www": "astro build --root www",
-    "check": "tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text",
+    "check": "tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && tsc -p workers/old-hosts/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text",
     "test": "vitest run",
     "e2e": "playwright test",
     "e2e:build": "node test/e2e/build.ts",

@@ -129,6 +129,12 @@ jobs:
         if: ${{ !cancelled() && steps.scope.outputs.descriptors_only != 'true' }}
         run: yarn test
 
+      - name: Bundle the old hosts Worker
+        # workers/old-hosts/ (www site migration spec, Phase 1b): the bundle `wrangler deploy` would upload, with the
+        # locked wrangler, offline and without a token. --dry-run deploys nothing; the owner deploys (docs/RUNBOOK.md).
+        if: ${{ !cancelled() && steps.scope.outputs.descriptors_only != 'true' }}
+        run: yarn wrangler deploy --dry-run --config workers/old-hosts/wrangler.toml --outdir "$RUNNER_TEMP/old-hosts"
+
   build:
     name: build
     runs-on: ubuntu-latest
