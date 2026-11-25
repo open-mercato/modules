@@ -116,10 +116,15 @@ export function upstreamRequest(request: Request, path: string, upstream: string
   return new Request(moved, { headers, redirect: 'manual' })
 }
 
+/** A short answer of the Worker itself, with the CORS header every answer of the Pages project carries. */
 const text = (status: number, body: string): Response =>
   new Response(`${body}\n`, {
     status,
-    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Access-Control-Allow-Origin': '*',
+    },
   })
 
 type Fetch = (request: Request) => Promise<Response>

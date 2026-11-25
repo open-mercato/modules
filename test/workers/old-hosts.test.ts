@@ -222,6 +222,38 @@ describe('the Worker for the old hosts: edge cases of the Functions', () => {
     expect(r.redirect).toBe('manual')
   })
 
+  it('forwards the method and the body: POST and OPTIONS on a file, a fixed path and /run', async () => {
+    const { get, seen } = setup()
+    for (const p of ['/llms.txt', '/modules.json', '/run/modules'])
+      for (const method of ['POST', 'OPTIONS'])
+        await get(`${OLD}${p}`, { method, body: method === 'POST' ? 'x=1' : null })
+    expect(seen.map(where)).toEqual([
+      `POST ${UPSTREAM}/run/llms.txt`,
+      `OPTIONS ${UPSTREAM}/run/llms.txt`,
+      `POST ${UPSTREAM}/run/modules.json`,
+      `OPTIONS ${UPSTREAM}/run/modules.json`,
+      `POST ${UPSTREAM}/run/modules`,
+      `OPTIONS ${UPSTREAM}/run/modules`,
+    ])
+    expect(await seen[0]!.text()).toBe('x=1')
+  })
+
+  it('passes an encoded path under /run upstream byte for byte, neither decoded nor encoded twice', async () => {
+    const { get, seen } = setup()
+    await get(`${OLD}/run/m/%40open-mercato%2Fx`)
+    await get(`${OLD}/m/%40open-mercato%2Fx.md`)
+    expect(seen.map((r) => new URL(r.url).pathname)).toEqual([
+      '/run/m/%40open-mercato%2Fx',
+      '/run/m/%40open-mercato%2Fx.md',
+    ])
+  })
+
+  it('passes an absolute Location of the upstream through unchanged', async () => {
+    const up = async () => new Response(null, { status: 301, headers: { Location: `${UPSTREAM}/run/x` } })
+    const res = await handle(new Request(`${OLD}/run/y`), { ...DEFAULTS }, up)
+    expect([res.status, res.headers.get('location')]).toEqual([301, `${UPSTREAM}/run/x`])
+  })
+
   it('resolves `..` before the rule: the file stays under /run', async () => {
     const { get, seen } = setup()
     expect((await get(`${OLD}/a/../../llms.txt`)).status).toBe(200)

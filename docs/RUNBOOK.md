@@ -841,8 +841,10 @@ This creates the Worker `openmercato-old-hosts` with the two routes and four var
 `HOME_PATH` (the values of the repository variables after the move). No secret, no DNS record: the routes run on the
 existing records of the two hosts, which stay custom domains of the Pages project. No `*.workers.dev` address. On
 Workers Free, set the request limit failure mode of both routes to Fail open (zone `openmercato.com` > Workers Routes,
-edit each route): a request over the limit
-then reaches the Pages project, where the Functions still answer until Phase 1c.
+edit each route): a request over the limit then reaches the Pages project directly. The limit is the same for the
+Functions, so only static files answer there: `/run/*` and, until Phase 1c, the fixed root copies. Old page addresses
+do not move and other files answer 404, and after Phase 1c the root is the main site's. Workers Paid is the protection,
+not Fail open.
 
 **Check.** The commands of step 5 of Switch, in order, each with the result it names, then:
 
@@ -853,7 +855,8 @@ curl -s https://modules.openmercato.com//x
 # Not found. (the Worker's 404; the Functions answered the Pages 404 page)
 ```
 
-Phase 1c (no Functions in the Pages project) merges only after these pass.
+A route change takes effect in seconds, so a failed check is undone by the rollback below. Phase 1c (no Functions in
+the Pages project) merges only after these pass.
 
 **Rollback.** Workers & Pages > `openmercato-old-hosts` > Settings > Domains & Routes: remove both routes (or
 `yarn wrangler delete --name openmercato-old-hosts`). Until Phase 1c the Functions answer again from the next request.
