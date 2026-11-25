@@ -170,7 +170,7 @@ jobs:
         id: site
         if: ${{ !cancelled() }}
         run: |
-          if git diff --quiet origin/main...HEAD -- site lib/emit astro.config.ts; then
+          if git diff --quiet origin/main...HEAD -- site www lib/emit lib/schema/www-content.ts astro.config.ts; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -181,3 +181,5 @@ jobs:
         run: |
           yarn om emit --data test/fixtures/data
           yarn astro build
+          # the main site (www/, www site migration spec): its own build, on the shared Base layout and header
+          yarn build:www

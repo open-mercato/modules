@@ -27,6 +27,11 @@ export interface SiteConfig {
   origin: string
   base: string
   home: string
+  /**
+   * True in the merged layout (PAGES_MERGED, `yarn om pages-site --merge`): the main site sits at the root of the
+   * upload, so a `*.pages.dev` address serves every path as a static file instead of leading its root to the catalog.
+   */
+  merged?: boolean
 }
 
 /** The default site: modules.openmercato.com at the domain root, the home page at `/`. */
@@ -134,6 +139,27 @@ export function siteConfigFromEnv(env: Record<string, string | undefined>): Site
 export function noindexFromEnv(env: Record<string, string | undefined>): boolean {
   const v = (env.PAGES_NOINDEX ?? '').trim().toLowerCase()
   return v === '1' || v === 'true'
+}
+
+/**
+ * True when PAGES_MERGED asks for the merged layout: the main site (dist-www/) at the root of the upload and the
+ * catalog (dist-run/) under its base, composed by `yarn om pages-site --merge` (lib/emit/pages-merge.ts). Only `1`,
+ * the one value the steps of pages.yml test for, so the workflow and this command never read it differently.
+ */
+export function mergedFromEnv(env: Record<string, string | undefined>): boolean {
+  return (env.PAGES_MERGED ?? '').trim() === '1'
+}
+
+/** Where the main site links the catalog when the build does not nest it: https://www.openmercato.com/run/modules. */
+export const MAIN_SITE_RUN = { base: '/run', home: '/modules' } as const
+
+/**
+ * The base and the home path of the catalog that the main site's pages link (www/astro.config.ts): BASE_PATH and
+ * HOME_PATH when they nest the catalog, as in every merged build, else MAIN_SITE_RUN.
+ */
+export function mainSiteRun(env: Record<string, string | undefined>): Pick<SiteConfig, 'base' | 'home'> {
+  const c = siteConfigFromEnv({ ...env, SITE_URL: undefined })
+  return isNested(c) ? { base: c.base, home: c.home } : { ...MAIN_SITE_RUN }
 }
 
 /** dist/_headers of a noindex build: every static file of the upload answers with `X-Robots-Tag: noindex`. */
@@ -276,8 +302,8 @@ const UNSAFE = /[\u0000-\u001f\u007f\\]|%(?:[01][0-9a-f]|7f|5c)/i
  *   a home path); any other path outside the base and the fixed addresses (isFixedPath) goes to the same path under
  *   the base on the site's origin. The query is kept in each case.
  * - Nested layout, a `*.pages.dev` address: nothing moves to production, so a deployment can be looked at before the
- *   switch; only its root leads to the home page on the same host. Any other host (local `wrangler pages dev`):
- *   nothing.
+ *   switch; only its root leads to the home page on the same host. In the merged layout (c.merged) not even that:
+ *   the root is the main site's home page. Any other host (local `wrangler pages dev`): nothing.
  * Never a loop: a path under the base or a fixed address is never redirected (whatever _routes.json says), and neither
  * is a request that already carries the site's host (a proxy that cut the prefix would otherwise bounce it forever).
  * Never an open redirect: the target is built from the configured origin and base and checked to stay there, and a
@@ -297,6 +323,8 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
   const path = url.pathname
   if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
   if (url.host === new URL(c.origin).host) return null
+  // merged, the root of the upload is the main site: a deployment address serves it as it is
+  if (c.merged && isPreviewHost(url.hostname)) return null
   if (isPreviewHost(url.hostname))
     return path === '/' ? { location: `${url.origin}${homePath(c)}${url.search}`, status: 302 } : null
   if (!PAGES_HOSTS.includes(url.hostname)) return null
@@ -327,7 +355,8 @@ export function hostRedirect(requestUrl: string | URL, c: SiteConfig): HostRedir
  * /llms.txt, /raw/modules.md and /m/<package>.md), README badges (/badge/<package>.svg), `mercato module search`
  * (/modules.json). Never for a path under the base, a fixed address (served as a static file), a request that carries
  * the site's host, another host, or a path hostRedirect() would not touch either (`//`, a backslash, a control
- * character). At the domain root (the default layout) always null: the files are where they always were.
+ * character). At the domain root (the default layout) always null: the files are where they always were. Merged, never
+ * on a `*.pages.dev` address: its root files (robots.txt, the main site's media) are the main site's own.
  */
 export function hostFile(requestUrl: string | URL, c: SiteConfig): string | null {
   if (!isNested(c)) return null
@@ -340,6 +369,7 @@ export function hostFile(requestUrl: string | URL, c: SiteConfig): string | null
   const path = url.pathname
   if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
   if (url.host === new URL(c.origin).host) return null
+  if (c.merged && isPreviewHost(url.hostname)) return null
   if (!PAGES_HOSTS.includes(url.hostname) && !isPreviewHost(url.hostname)) return null
   if (path.startsWith('//') || UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
   return isFilePath(path) ? `${c.base}${path}` : null
@@ -388,7 +418,7 @@ export function siteModule(c: SiteConfig): string {
     '// pages.yml writes it before Functions are bundled; the committed copy is the default (root layout).',
     "import type { SiteConfig } from '../lib/core/site-host.ts'",
     '',
-    `export const SITE: SiteConfig = { origin: ${quote(c.origin)}, base: ${quote(c.base)}, home: ${quote(c.home)} }`,
+    `export const SITE: SiteConfig = { origin: ${quote(c.origin)}, base: ${quote(c.base)}, home: ${quote(c.home)}${c.merged ? ', merged: true' : ''} }`,
     '',
   ].join('\n')
 }

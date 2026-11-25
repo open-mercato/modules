@@ -557,7 +557,8 @@ To look at the layout on a workstation, without Cloudflare (the Pages emulator o
 `dist/_redirects`, `dist/_routes.json` and `functions/`):
 
 ```sh
-SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules yarn build
+SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules yarn build:run
+rm -rf dist && mv dist-run dist
 SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules yarn om pages-site
 yarn wrangler pages dev dist --port 8788
 curl -sI http://127.0.0.1:8788/run | grep -iE '^(HTTP|location)'
@@ -674,6 +675,39 @@ is the upstream to test the proxy of the main site against ([docs/proxy/README.m
 - **Check.** `docs/proxy/check.sh https://run-preview.open-mercato-modules.pages.dev` prints pass or fail per line.
   On a workstation: the commands of the section above with `PAGES_NOINDEX=1` added to each, then
   `docs/proxy/check.sh http://127.0.0.1:8788`.
+
+### Preview of the main site (www-preview)
+
+The main site moves off Webflow into `www/` of this repository (spec
+[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), on its own branch until it
+merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build:run`) and the main site to
+`dist-www/` (`yarn build:www`). The upload is one of two layouts:
+
+- **Catalog only** (production today, and the `run-preview` jobs): `dist-run/` moved to `dist/` as it is.
+- **Merged** (`PAGES_MERGED=1`): `yarn om pages-site --merge` lays `dist-www/` at the root of `dist/` and the catalog's
+  nested build under `/run`, and writes the root `_redirects` (the main site's `/sitemap.xml`, then the catalog's
+  rules), `robots.txt` and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. The
+  catalog's `_routes.json`, `schema/` and fixed root files stay until its Functions leave (Phase 1c of the spec).
+  `yarn om pages-site` writes `merged: true` into `functions/site.ts`, so a `*.pages.dev` address serves every path
+  as a static file; the old hosts are moved as before. `yarn om pages-site --check dist` with `PAGES_MERGED=1` proves
+  the merged layout and checks every link of every page against what this build serves. In the noindex preview a
+  header or footer link to a page only Webflow serves yet is allowed and counted; in a production upload it fails the
+  check, so `PAGES_MERGED=1` cannot reach production before the main site has every page the menus link.
+
+Every `pages` run on `main` deploys the merged layout to the branch `www-preview` of the same project (jobs
+`www-preview-build` and `www-preview`), `https://www-preview.open-mercato-modules.pages.dev/`, with `PAGES_NOINDEX=1`
+(`dist/_headers` and a `robots.txt` of `Disallow: /` at the root and under `/run`), beside production with the same
+guards. Production deploys the merged layout only when the repository variable `PAGES_MERGED` is `1`, which is step
+C8 of the spec, not before; unset, the production upload is byte for byte what it was before the main site existed.
+
+On a workstation:
+
+```sh
+export SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules PAGES_MERGED=1 PAGES_NOINDEX=1
+yarn build && yarn om pages-site --merge && yarn om pages-site && yarn om pages-site --check dist
+yarn wrangler pages dev dist --port 8788
+git checkout functions/site.ts
+```
 
 ### Switch, in order
 

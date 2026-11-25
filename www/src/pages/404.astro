@@ -1,0 +1,27 @@
+---
+// 404 of the main site (Phase 1a placeholder; the NotFound component comes in Phase 7). Pages serves it for any
+// missing path outside the catalog, which keeps its own 404 under its base.
+import Base from '../../../site/src/layouts/Base.astro'
+import { href } from '../../../site/src/lib/url.ts'
+---
+
+<Base
+  section="main"
+  path={null}
+  title="Not found · Open Mercato"
+  description="This page does not exist on the main site of Open Mercato."
+  noindex
+>
+  <section class="band">
+    <div class="sheet www-nf">
+      <h1 class="t-h1">Page not found.</h1>
+      <p><a href="/">Go to the home page</a> or <a href={href('/')}>open the Run section</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .www-nf {
+    padding-block: 64px;
+  }
+</style>

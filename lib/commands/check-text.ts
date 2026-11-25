@@ -1,5 +1,5 @@
 // `yarn om check-text`: no U+2014, U+2013 or control characters in human texts (spec 0.7, 3.5).
-// Scope: site/src/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/**,
+// Scope: site/src/**, www/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/**,
 // lib/core/main-site.ts (the texts of the navbar and the footer) and every *.md, except test/fixtures/** and generated or vendored directories. Optional args restrict the check to given
 // files.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
@@ -12,6 +12,8 @@ const SKIP_DIRS = new Set([
   'node_modules',
   '.git',
   'dist',
+  'dist-run',
+  'dist-www',
   'out',
   '.data',
   '.astro',
@@ -25,6 +27,7 @@ const SKIP_DIRS = new Set([
 const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/']
 const TEXT_DIRS = [
   'site/src/',
+  'www/',
   'modules/',
   'templates/',
   'policy/',

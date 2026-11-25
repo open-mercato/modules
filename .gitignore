@@ -2,6 +2,8 @@ node_modules
 .yarn/*
 !.yarn/patches
 dist/
+dist-run/
+dist-www/
 out/
 .data/
 .astro/

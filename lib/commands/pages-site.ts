@@ -9,6 +9,10 @@
 // answer 404 instead of a redirect.
 // With PAGES_NOINDEX=1 (the preview job of pages.yml) the check also wants the noindex files of the build (dist/_headers
 // and a robots.txt that allows nothing, lib/emit/pages-layout.ts markNoindex); only a nested layout has them.
+// With PAGES_MERGED=1 (the www-preview jobs of pages.yml, and production once the repository variable PAGES_MERGED
+// is on) the layout is the merged one of lib/emit/pages-merge.ts: `--merge` composes dist/ from dist-www/ (the main
+// site) and dist-run/ (the catalog, nested), functions/site.ts carries `merged: true`, and `--check` proves the
+// merged layout, listing the main site addresses the pages link that Webflow still serves.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -17,6 +21,7 @@ import {
   hasHomePath,
   homePath,
   isNested,
+  mergedFromEnv,
   noindexFromEnv,
   pagesHostProblem,
   siteConfigFromEnv,
@@ -25,29 +30,48 @@ import {
   type SiteConfig,
 } from '../core/site-host.ts'
 import { checkPagesLayout } from '../emit/pages-layout.ts'
+import { checkMergedLayout, MERGE_DIRS, mergeConfigProblem, mergePagesSite } from '../emit/pages-merge.ts'
 
 export const description =
-  'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --check <dist> checks the layout'
+  'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --merge composes dist/; --check <dist> checks the layout'
 
 /** The generated module, relative to the repository root. */
 export const SITE_MODULE = 'functions/site.ts'
 
 export default function pagesSite(ctx: CommandContext): number {
   let check: string | null = null
+  let merge = false
   for (let i = 0; i < ctx.args.length; i++) {
     const a = ctx.args[i] as string
-    if (a === '--check' && ctx.args[i + 1]) check = ctx.args[++i] as string
+    if (a === '--merge') merge = true
+    else if (a === '--check' && ctx.args[i + 1]) check = ctx.args[++i] as string
     else if (a.startsWith('--check=') && a.length > 8) check = a.slice(8)
     else {
       console.error(`om pages-site: unknown argument: ${a}`)
       return EXIT_ENV
     }
   }
+  if (merge && check !== null) {
+    console.error('om pages-site: --merge and --check are two steps; run them one after the other')
+    return EXIT_ENV
+  }
+  const merged = mergedFromEnv(process.env)
   let c: SiteConfig
   try {
     c = siteConfigFromEnv(process.env)
   } catch (err) {
     console.error(`om pages-site: ${(err as Error).message}`)
+    return EXIT_ENV
+  }
+  if (merged) {
+    const problem = mergeConfigProblem(c)
+    if (problem) {
+      console.error(`om pages-site: PAGES_MERGED: ${problem}`)
+      return EXIT_ENV
+    }
+    c = { ...c, merged: true }
+  } else if (merge) {
+    console.error('om pages-site: --merge needs PAGES_MERGED=1 (functions/site.ts and the check follow it)')
     return EXIT_ENV
   }
   const hostProblem = pagesHostProblem(c)
@@ -59,6 +83,26 @@ export default function pagesSite(ctx: CommandContext): number {
   if (noindex && !isNested(c)) {
     console.error('om pages-site: PAGES_NOINDEX needs a BASE_PATH other than / (the preview of the nested layout)')
     return EXIT_ENV
+  }
+  if (merge) {
+    try {
+      const r = mergePagesSite(
+        {
+          www: join(ctx.root, MERGE_DIRS.www),
+          run: join(ctx.root, MERGE_DIRS.run),
+          out: join(ctx.root, MERGE_DIRS.out),
+        },
+        c,
+        noindex,
+      )
+      console.log(
+        `om pages-site: ${MERGE_DIRS.out}/ merged from ${MERGE_DIRS.www}/ (${r.wwwFiles} files) and ${MERGE_DIRS.run}/ (${r.runFiles} files), ${r.sitemaps.length} sitemaps${noindex ? ', noindex' : ''}`,
+      )
+      return EXIT_OK
+    } catch (err) {
+      console.error(`om pages-site: ${(err as Error).message}`)
+      return EXIT_VALIDATION
+    }
   }
   const file = join(ctx.root, SITE_MODULE)
   const want = siteModule(c)
@@ -75,14 +119,21 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error(`om pages-site: ${check} does not exist; build first`)
     return EXIT_ENV
   }
-  const problems = checkPagesLayout(dist, c, 50, noindex)
+  const result = merged
+    ? checkMergedLayout(dist, c, 50, noindex)
+    : { problems: checkPagesLayout(dist, c, 50, noindex), pending: [] }
+  const problems = result.problems
   if (have !== want) problems.unshift(`${SITE_MODULE} is not for ${siteRoot(c)}; run yarn om pages-site`)
   if (problems.length > 0) {
     for (const p of problems) console.error(`om pages-site: ${p}`)
     return EXIT_VALIDATION
   }
   console.log(
-    `om pages-site: ${check} matches ${siteRoot(c)} (base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''}${noindex ? ', noindex' : ''})`,
+    `om pages-site: ${check} matches ${siteRoot(c)} (${merged ? 'merged, ' : ''}base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''}${noindex ? ', noindex' : ''})`,
   )
+  if (result.pending.length > 0)
+    console.log(
+      `om pages-site: main site addresses linked but not in this build yet (Webflow serves them until the switch): ${result.pending.length}`,
+    )
   return EXIT_OK
 }
