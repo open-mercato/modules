@@ -77,6 +77,9 @@ describe('check-text', () => {
     expect(inScope('test/fixtures/README.md')).toBe(false)
     expect(inScope('site/.generated/public/llms.txt')).toBe(false)
     expect(inScope('lib/core/text.ts')).toBe(false)
+    // media copied byte for byte by the Webflow importer are not texts of the repository
+    expect(inScope('www/public/media/blog/x-chart.svg')).toBe(false)
+    expect(inScope('www/content/blog/x.md')).toBe(true)
     // the menus and the footer copied from the main site are texts for people, though the file is code
     expect(inScope('lib/core/main-site.ts')).toBe(true)
   })

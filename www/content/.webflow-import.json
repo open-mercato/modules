@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "path": "www/content/authors.yaml",
+      "webflowId": "69ced930474469d745265300",
+      "sha256": "c13d055bbb30b1ed152ffc3ec60600acbd992f70e089c5e9eb7c33cb1ac398ce"
+    },
+    {
+      "path": "www/content/blog-categories.yaml",
+      "webflowId": "69ced92817323234ffa7c627",
+      "sha256": "6392983fa5b24666d054a762d9cc821b7cc14b1e4db21fb9da9c17ed1c433467"
+    },
+    {
+      "path": "www/content/blog/10-it-department-fears-about-open-mercato-answered-honestly.md",
+      "webflowId": "6a19ab4af6a9526e60e36211",
+      "sha256": "24d68f271cf4364ecf3d6ad7baebbdacb09feb5f0c3675514624ece9fde6cbf4"
+    },
+    {
+      "path": "www/content/blog/9-questions-software-agencies-open-mercato-honest-answers.md",
+      "webflowId": "6a19ad681ed83a1f015c929f",
+      "sha256": "81a4b4e9fa3aac395d17f8727455858eb5fa28a10c405f3f94085fa479d5d7f9"
+    },
+    {
+      "path": "www/content/blog/a-ceo-built-a-store-in-a-weekend.md",
+      "webflowId": "6b054f6b0b3a7e43bed86da8",
+      "sha256": "88f0e17d65f62538876618f9450ec238c7ab98cf47e9f642194c755bce81cb5c"
+    },
+    {
+      "path": "www/content/blog/agentic-coding-at-scale.md",
+      "webflowId": "6a95e45e9e33b8a0ea978cda",
+      "sha256": "c90d858d05ae6db138567b8c6845871159efb415157a2b53313e83393abeb122"
+    },
+    {
+      "path": "www/content/blog/ai-code-needs-a-harness.md",
+      "webflowId": "6a29be300999fde778314845",
+      "sha256": "93a1fa88d57be466e47ee9da4a7dc53ec43f528f3269502f2d0ade7c87ededf0"
+    },
+    {
+      "path": "www/content/blog/ai-engineering-at-enterprise-scale-8-lessons-fortune-500.md",
+      "webflowId": "6a0c222576686f65569ef4b3",
+      "sha256": "4fb2dc48f1dad638dc433373c12755c57fb9ca123d4c65f4772af9f311eeda23"
+    },
+    {
+      "path": "www/content/blog/ai-engineering-for-large-scale-commerce.md",
+      "webflowId": "6a22e56dcb6023c1b252e4fb",
+      "sha256": "dde9c9b28cb9bed6f971b61f97c7b96b95a5fd5a824a71ac129bf57de8ccf4dd"
+    },
+    {
+      "path": "www/content/blog/ai-engineering-foundation-framework.md",
+      "webflowId": "69f1c949c1422e5c2f2a48ad",
+      "sha256": "be8d83a75e45b9b951b4fe44a46c802be6aa097c4293dfe10bb4dae350e039c2"
+    },
+    {
+      "path": "www/content/blog/ai-sdlc-adoption-resistance-9-hidden-blockers.md",
+      "webflowId": "6aab01d2e55a20ee97d746eb",
+      "sha256": "0e4cf675c0a0e3064096aa576e8cd0f49382a199010f392d4da4ad92c42991a1"
+    },
+    {
+      "path": "www/content/blog/air-ocean-logistics-erp-built-in-6-weeks-owned-forever.md",
+      "webflowId": "69d0104a4f1bf2ce9e4a140a",
+      "sha256": "879489d570ac995308eeaef1bba5569e7386e798bfffa4e7bb04a5244840879d"
+    },
+    {
+      "path": "www/content/blog/build-your-first-open-mercato-module-with-ai-agents.md",
+      "webflowId": "69cee6b81dc6d043f19ff098",
+      "sha256": "130990dee953801e8f709951ad687cea876392d73552ce0be9d1a3391d721930"
+    },
+    {
+      "path": "www/content/blog/built-with-ai-designed-for-ai.md",
+      "webflowId": "6a22e242f56500f6da488816",
+      "sha256": "312390cde6d0df395e58174f2043f0eb162e69ba9cf1e2f13433c6cd81faaddb"
+    },
+    {
+      "path": "www/content/blog/ceo-real-playbook-for-ai.md",
+      "webflowId": "6a3d0277e088853ef6802d7e",
+      "sha256": "b7aa7355e131408159d561422af5a0b6789ddba13a2b12d0c0a24cb8e7d0506e"
+    },
+    {
+      "path": "www/content/blog/cezar-cockpit-for-ai-coding-agents.md",
+      "webflowId": "6a741f1b05d7481a0d918967",
+      "sha256": "7ab368faecabe82c46d071e6d3b622269b7876e60f12023952d5cc10c03af937"
+    },
+    {
+      "path": "www/content/blog/claude-code-vs-open-mercato.md",
+      "webflowId": "6a58cde08510f4e077334425",
+      "sha256": "1c0c07f4baff708ede8671910a06b1664ee71c24ccf44684280adae8ffef841b"
+    },
+    {
+      "path": "www/content/blog/coding-agents-benchmark-open-mercato.md",
+      "webflowId": "6a6c722b44618d3ca5cef37d",
+      "sha256": "8313d84d1c4d1cbcfe274feb9de1b4ea3a89601bfd81c9efe609a30de89bef9f"
+    },
+    {
+      "path": "www/content/blog/comp-ai-crm-vs-open-mercato.md",
+      "webflowId": "6aaaec92907b79e394dce3ec",
+      "sha256": "db6ed397206553eca3044b1990ab2930723a07958d870c7cd60211df71aebb5e"
+    },
+    {
+      "path": "www/content/blog/cto-questions-before-building-on-open-mercato.md",
+      "webflowId": "6a6c60141dbb15bd11701d59",
+      "sha256": "5d1c368731862b5c4707692fa54a7e8969b176bd5e268ae7b51406197e1c3fd3"
+    },
+    {
+      "path": "www/content/blog/cut-costs-own-your-software.md",
+      "webflowId": "6b04510fd829f77bd6be234e",
+      "sha256": "1170e2fd68aaa4916e5e31ab29cf09d393a5e4fa475845dcdfc6389e92407d5a"
+    },
+    {
+      "path": "www/content/blog/decision-ready-ai-engineering-hackathon.md",
+      "webflowId": "6aada7256d2ae44f333e3958",
+      "sha256": "5b81b1d9ae5371cc680a9c93ed9ca34fab71d78c9553474ade266190e408b94e"
+    },
+    {
+      "path": "www/content/blog/django-vs-open-mercato.md",
+      "webflowId": "69f08f893d586b33e7ffc4fa",
+      "sha256": "d37e6fbbd8c0c1cd8d75aaa54f0b182cd549fc4e704207aa083632aeac1b7c2e"
+    },
+    {
+      "path": "www/content/blog/erpnext-alternative-what-to-replace.md",
+      "webflowId": "6b058c6178b6b7cef55ad141",
+      "sha256": "f852a84fdb913dbd50d372e991f4ce382f0d66e4f0c43361916581440548cc2d"
+    },
+    {
+      "path": "www/content/blog/fire-and-forget-ai-engineering-open-mercato-tutorial.md",
+      "webflowId": "6a2f9217469e6c89d4a9cf5d",
+      "sha256": "fe045b19d88b294185af6a2f454ccab2832195553a80829c529c4109a6919ecf"
+    },
+    {
+      "path": "www/content/blog/first-funding-round.md",
+      "webflowId": "6a79c612cad26bd197f877aa",
+      "sha256": "b1f4f3f4ff687ad1025560e18060db090eecdcfee58ec333088aa7fb6d8223d3"
+    },
+    {
+      "path": "www/content/blog/get-starded-fast.md",
+      "webflowId": "69d001237c85fd5dbb26f0ba",
+      "sha256": "8877df0f0577ed65dd54a15ddc2eb716539ad23b477ff9ec423dadb633a0926f"
+    },
+    {
+      "path": "www/content/blog/harness-teardown-hub.md",
+      "webflowId": "6a302bccc0f81d5fd86919b8",
+      "sha256": "0eb243aff38390968cfe8bdd23c85709b7ad753bba102f72f31aa1e52c6e8048"
+    },
+    {
+      "path": "www/content/blog/introducing-agent-orchestrator.md",
+      "webflowId": "6a3b7feaa0aaedcf4d52a959",
+      "sha256": "8956bcd5883f1bd3f432737af279cd8e3ebf8c2d0d273cf901eeb5c30318795e"
+    },
+    {
+      "path": "www/content/blog/modular-monolith-overlay-the-architecture-behind-safe-extension.md",
+      "webflowId": "69d0010c1c78557f6855ad92",
+      "sha256": "91249cd38247f194ecba46cc034db9bec76cc4a078246b80bb06ff132f1f545b"
+    },
+    {
+      "path": "www/content/blog/odoo-vs-open-mercato.md",
+      "webflowId": "6a58fb777c93f7e13678090c",
+      "sha256": "693eae3c5a6c7c3854b9eb886634e66a0a8f2cc064f647a6da92eea4ad7b3ef9"
+    },
+    {
+      "path": "www/content/blog/om-skills-cezar-open-source-sandboxes.md",
+      "webflowId": "6a73a7afd143ca957b83239d",
+      "sha256": "b28f188ec24e70349e79076823a90c384fb5ea3a4a1cc85c1f15a62fcfa28639"
+    },
+    {
+      "path": "www/content/blog/open-mercato-for-agencies-new-questions-after-27-partners.md",
+      "webflowId": "6a29324cde333b649a11eed1",
+      "sha256": "791251dab924de06ef3a4a96155d7534681c6a3feb496494570cece0707e62bf"
+    },
+    {
+      "path": "www/content/blog/open-mercato-license-you-keep-the-code.md",
+      "webflowId": "6a99b1feb41b11746830bb47",
+      "sha256": "8c95f5954d327c72868722890894de4327d21d2725093fe1ba534fbd2d9cfb71"
+    },
+    {
+      "path": "www/content/blog/open-mercato-nextjs-crm-framework.md",
+      "webflowId": "69d7c4b035de438fc14f223d",
+      "sha256": "7d1c000128e896152953c33c36101f485dccd01896bc106d41558b84b4d1af84"
+    },
+    {
+      "path": "www/content/blog/open-mercato-nodejs-erp-platform.md",
+      "webflowId": "69d7c6cd3cc660439302f058",
+      "sha256": "70a6eb6cbd8d28427c39917d802559a357aa639b03de4994d26ca6c4fda9f15f"
+    },
+    {
+      "path": "www/content/blog/open-mercato-sandboxes-ga.md",
+      "webflowId": "6ab4c2704c3351bef250cd81",
+      "sha256": "f22dcbd99500600bdc7c9860deffed2a136b3b45d6be18728cede61727496ff6"
+    },
+    {
+      "path": "www/content/blog/open-mercato-typescript-crm-framework.md",
+      "webflowId": "69d7c415f04abe44bb591438",
+      "sha256": "d8b2d90ce1e67eede79276f5799dbd28ce45db2dd67ed3faf8dbb46f1410bed5"
+    },
+    {
+      "path": "www/content/blog/open-mercato-typescript-erp-framework.md",
+      "webflowId": "69d7c45fce7fa6e2f0022ab4",
+      "sha256": "e44b066392480a87d404a18382776b57620d24bbdc7b2d156f6013dae49b4f5f"
+    },
+    {
+      "path": "www/content/blog/open-mercato-vs-retool.md",
+      "webflowId": "6a212a63bf3ebfb82bf914c5",
+      "sha256": "fe08d625f74ef71ed6adab1cfccb07d65e1c1d9ee8e55f7c4d9b623f6ff19efb"
+    },
+    {
+      "path": "www/content/blog/open-mercato-vs-twenty.md",
+      "webflowId": "69f19fb5cacb2dca2c92271c",
+      "sha256": "9f9e0b0f3ed9e69dcdcebf8898f8d490ea0468f92d50c9a1cff2032bd84b8a27"
+    },
+    {
+      "path": "www/content/blog/open-source-erp-alternatives.md",
+      "webflowId": "6a578cac01c5dd6b3a0ccadb",
+      "sha256": "1ff698e5f66d61281250953f88691829da26c195b3bde12e775dd9fe9bda1a8c"
+    },
+    {
+      "path": "www/content/blog/open-source-erp-odoo-erpnext-open-mercato-comparison.md",
+      "webflowId": "69db7e7b7b79ed239c2cc5fc",
+      "sha256": "451efd24e8cc49cdbd8fc0db98d1eb6efdbe071eb4e962f17ba5b8361969a787"
+    },
+    {
+      "path": "www/content/blog/pirate-ship-ai-adoption-400-person-it.md",
+      "webflowId": "6a9fe17ed8aafb748025705e",
+      "sha256": "1c74141209988f7586abf6e6238cd59c825b791b3964995d708c829a93910eb3"
+    },
+    {
+      "path": "www/content/blog/productivity-reliability-paradox.md",
+      "webflowId": "6a3241154828d200acb79bfe",
+      "sha256": "a62def3c05d9a1a0251bf8495a7f07c7c5ff07865b5bfe20c1bae581b93a786c"
+    },
+    {
+      "path": "www/content/blog/python-engineer-node-project-four-steps.md",
+      "webflowId": "6a0ad82f696cfe508549dfe6",
+      "sha256": "fd6669ce16ccfbeb431d21ded965fecd679b11d596dfb0f1303421ce0891c46e"
+    },
+    {
+      "path": "www/content/blog/retool-vs-open-mercato-when-low-code-stops-paying-off.md",
+      "webflowId": "69eb585ca7dae54ec7f2c134",
+      "sha256": "7c291bb1a42f3d386148f3b491bbccdfcb2d2463c3e6e9b56b5e75e901c2d6e4"
+    },
+    {
+      "path": "www/content/blog/sap-vs-open-mercato.md",
+      "webflowId": "6a58efb0f2557406c02710bf",
+      "sha256": "c4c89752c430d8a8b02b54c215e006b256b022aca30ef267de498ac1546b1f7d"
+    },
+    {
+      "path": "www/content/blog/software-houses-fixed-scope-erp-faster.md",
+      "webflowId": "69fb50239697f3d5006c9686",
+      "sha256": "a7dd4472916aa9c1bfd02ecf0009491270a4585f6350b28bc4349cc13a608a10"
+    },
+    {
+      "path": "www/content/blog/tenant-scoped-field-level-encryption-aes-gcm-in-practice.md",
+      "webflowId": "69d000f864a3d281ed9855ab",
+      "sha256": "0e52042fef32de188c038595e5e2c480ab7af103378e9d209016ad101d35922c"
+    },
+    {
+      "path": "www/content/blog/test-post-how-open-mercato-uses-ai-to-transform-football-transfers.md",
+      "webflowId": "69d5261c1335c5a5da19383a",
+      "sha256": "4ea8cf50d096ac572bf39d80c424873dd8cd9872e2da35aafe9fb3a9cb882660"
+    },
+    {
+      "path": "www/content/blog/the-third-path-buy-build-own-the-foundation.md",
+      "webflowId": "6a58effeb9ccdfdbe61b90e9",
+      "sha256": "482db3946a5d182f11121a03d30c91782dfef9bebd60d7f6d2ee417327fcb768"
+    },
+    {
+      "path": "www/content/blog/two-layers-ai.md",
+      "webflowId": "6a292f293d30c6c0477fd424",
+      "sha256": "a8dfcf437c79d6b67a1f4af9bd845e83e5ff777b1de9861b94f10c7188768dd3"
+    },
+    {
+      "path": "www/content/blog/we-dont-do-ai-we-build-the-harness-around-it.md",
+      "webflowId": "6a22ec16e5389f9f77a842ed",
+      "sha256": "7e98c79c5670277ed294d80705e2f7c3174cdc6cf9925147f2c627f61b10d640"
+    },
+    {
+      "path": "www/content/blog/what-enterprises-actually-ask-about-ai-assisted-engineering.md",
+      "webflowId": "69e9de20473d9c59de166db8",
+      "sha256": "813f5ea483128bf3c3e4d2ef921eca3ac8f038c36a1583bf40cdedcd74f99787"
+    },
+    {
+      "path": "www/content/blog/when-sales-reps-build-their-own-tools.md",
+      "webflowId": "6b04adf5604da25608b884e5",
+      "sha256": "a53b1fbacbd6c7e005740c5794ec4350eac64a11cf479442b16f3d38f2f218be"
+    },
+    {
+      "path": "www/content/blog/which-utility-portals-need-a-connector.md",
+      "webflowId": "6b054b20c3c1efb5dbe20d07",
+      "sha256": "1e2562a2261a994a80789fe01744a529243460a1e5869e4f228a56613868386f"
+    },
+    {
+      "path": "www/content/blog/why-ai-rollouts-die-in-the-it-department.md",
+      "webflowId": "6a1fba0a1d365422a866aa2e",
+      "sha256": "03f5e52968a5b15791047c16dc538727f747185bae4ba5cfd4ca5974e651b72e"
+    },
+    {
+      "path": "www/content/blog/wms-module-open-source.md",
+      "webflowId": "6a79ada3770c6282bd3e4ff3",
+      "sha256": "8ffc24b5345325b58fa56704b1fe8a11d7e3f3d6c1c22bc1b8a0a09ef7599f02"
+    },
+    {
+      "path": "www/content/blog/your-agents-arent-the-bottleneck-you-are-2.md",
+      "webflowId": "6ad5ca49369770e5b7b3c4e0",
+      "sha256": "560159d3652855eae6c3177926bdbe45e8a2f7f54971d40d21131240164f64cc"
+    },
+    {
+      "path": "www/content/blog/your-ai-access-is-not-property.md",
+      "webflowId": "6a2d0de64fec05d8c3807dca",
+      "sha256": "23a97e012c7fff8bde94c4ac980d7a9fbb76d87a998f017c43776f9ceda679f1"
+    },
+    {
+      "path": "www/public/media/blog/69cee6b0b200584dc4783f1e-placeholder-1.jpg",
+      "webflowId": "69cee6b0b200584dc4783f1e",
+      "sha256": "8e2d65afe5b3323bc987f49d6d40685affdac1ca87e074327bbadeccf0e5a752"
+    },
+    {
+      "path": "www/public/media/blog/69cee6dc0b2bb62bee7f8784-placeholder-2.jpg",
+      "webflowId": "69cee6dc0b2bb62bee7f8784",
+      "sha256": "895e954eed2a9a810f4fe75fe68e150f4ee191496d49f375e0b1cb48e2f20cd0"
+    },
+    {
+      "path": "www/public/media/blog/69d0010463183e895778bf44-placeholder-3.jpg",
+      "webflowId": "69d0010463183e895778bf44",
+      "sha256": "d1cc424e96dbcbdeb961a5736522167a529da69ac73400f6d3bc16a18e21cb04"
+    },
+    {
+      "path": "www/public/media/blog/69d0015eb6cf2608a6d48f17-placeholder-4.jpg",
+      "webflowId": "69d0015eb6cf2608a6d48f17",
+      "sha256": "840a0c9040dee431c7ddffd4f4b47b4850bbf91e35bfc30d9c31da9265b7da9b"
+    },
+    {
+      "path": "www/public/media/blog/69d01041cc3a32edae462d53-placeholder-5.jpg",
+      "webflowId": "69d01041cc3a32edae462d53",
+      "sha256": "a6e2685c6cbcc4f829603042773ce1936f6f1b2d06625b6dec9c5fb469d7b07e"
+    },
+    {
+      "path": "www/public/media/blog/69d5291f67b420ecb431cf66-vardci.jpeg",
+      "webflowId": "69d5291f67b420ecb431cf66",
+      "sha256": "3754f76fdbca7433e04c7ce115dd6dcbea09993642efd27d2074314a2d0ff72e"
+    },
+    {
+      "path": "www/public/media/blog/69d7f828b0ed99430d3fd785-title.png",
+      "webflowId": "69d7f828b0ed99430d3fd785",
+      "sha256": "7943a232486d4d173373edde53652a7d01c9273074f69619a11f0276bd372514"
+    },
+    {
+      "path": "www/public/media/blog/69d88cd726f5c1095717e0ab-zrzut-ekranu-2026-04-10-o-07.38.13.png",
+      "webflowId": "69d88cd726f5c1095717e0ab",
+      "sha256": "c9fce6415dd58a99628f3e1ca3f283d81e8175aa765a9699bfe4feaec4413d92"
+    },
+    {
+      "path": "www/public/media/blog/69d88ce63ee7e94729df52bc-zrzut-ekranu-2026-04-10-o-07.38.03.png",
+      "webflowId": "69d88ce63ee7e94729df52bc",
+      "sha256": "5291487599f1746534a74bdf83cd303d3a2488262de0cb84d6a66fc9d1af50a8"
+    },
+    {
+      "path": "www/public/media/blog/69d88d1b979d42bde32a61e2-zrzut-ekranu-2026-04-10-o-07.37.54.png",
+      "webflowId": "69d88d1b979d42bde32a61e2",
+      "sha256": "285f15309632bfce6b668bd8f3ee6b9cfd502bbbdc0a4a7ab389090cfd622cae"
+    },
+    {
+      "path": "www/public/media/blog/69db7f0de3746738bde2e01b-open-mercato-cover-opensource-erp-brand.svg",
+      "webflowId": "69db7f0de3746738bde2e01b",
+      "sha256": "fe598ba1de4f55b94141ebc0f3402ce2aeabe8c7f16e05b9e6bd8915a27b3d82"
+    },
+    {
+      "path": "www/public/media/blog/69e9e0776a4e8d4313fd18e6-zrzut-ekranu-2026-04-23-o-11.03.42.png",
+      "webflowId": "69e9e0776a4e8d4313fd18e6",
+      "sha256": "5a58b8f1ca3cbfcf62fae3fc6dce7c885fccc211a3e5c56e9c43227e7c380e59"
+    },
+    {
+      "path": "www/public/media/blog/69eb58e8b8d930f55d60ba18-zrzut-ekranu-2026-04-24-o-13.40.39.png",
+      "webflowId": "69eb58e8b8d930f55d60ba18",
+      "sha256": "4b7b3ee6cbf1136330d6c64afea0fcde89aa3266c5f5c3f74d99a61825f27f76"
+    },
+    {
+      "path": "www/public/media/blog/69eb595bc994931b7d03b58d-zrzut-ekranu-2026-04-24-o-13.51.29.png",
+      "webflowId": "69eb595bc994931b7d03b58d",
+      "sha256": "1da94e2bf754790ee726272930bec80c1cc89eb0a9ed3d97b64f3fedb8548da3"
+    },
+    {
+      "path": "www/public/media/blog/69f09146d0d07a4ea99ab3b2-zrzut-ekranu-2026-04-28-o-12.51.37.png",
+      "webflowId": "69f09146d0d07a4ea99ab3b2",
+      "sha256": "a85d4e9db3fc7538c146c67cd733c72c4838a1de482fa37a1ed86eb1efbba37e"
+    },
+    {
+      "path": "www/public/media/blog/69f0917eb83762b2a7699770-zrzut-ekranu-2026-04-28-o-12.52.16.png",
+      "webflowId": "69f0917eb83762b2a7699770",
+      "sha256": "5fb9e7bba98627399de3bb3f4989d42732f0e224c281e6979eaa5aab687539e5"
+    },
+    {
+      "path": "www/public/media/blog/69f1a025176d80cd98cc491d-open-mercato-cover-twenty-brand.png",
+      "webflowId": "69f1a025176d80cd98cc491d",
+      "sha256": "d4e3c4c807bdeabf26bb539fe377b9ecd5a8db0a38ac15704aa8d4f63c81767b"
+    },
+    {
+      "path": "www/public/media/blog/69f1a11c895b50e31a9e7892-zrzut-ekranu-2026-04-29-o-08.11.21.png",
+      "webflowId": "69f1a11c895b50e31a9e7892",
+      "sha256": "bb703cea1627b1f41a61c18e751dc91b8f10b36f887a27b495ff181905a0d922"
+    },
+    {
+      "path": "www/public/media/blog/69f1c9c894096c371d087414-open-mercato-cover-ai-engineering-foundation.png",
+      "webflowId": "69f1c9c894096c371d087414",
+      "sha256": "a510d488454a542aab9cba2a822963bc5d91bc9fe1d3ed12b1e95ba7e0071391"
+    },
+    {
+      "path": "www/public/media/blog/69fb50b323842f91c2dad1a5-b453f64d-d87d-4601-9073-ec6dc2b27158.png",
+      "webflowId": "69fb50b323842f91c2dad1a5",
+      "sha256": "b6a07254c25fe97af1fc07623231ae8740d9c63159dfd089733369c6f2818ce2"
+    },
+    {
+      "path": "www/public/media/blog/69fb53e8b832d3f41c75f42e-25f5a1e9-0a9c-4d8b-97e5-9317ee8743e0.png",
+      "webflowId": "69fb53e8b832d3f41c75f42e",
+      "sha256": "ac03b3b1e75fa2e2d4a4b5ae4bdf2086e8821680752dee1696370696f6e41f2d"
+    },
+    {
+      "path": "www/public/media/blog/6a0ad9374763583705f35905-zrzut-ekranu-2026-05-18-o-11.17.22.png",
+      "webflowId": "6a0ad9374763583705f35905",
+      "sha256": "03bf570c0e97636ecf84c931826d638cb95bf72dcec38cf15c739f16bf6de340"
+    },
+    {
+      "path": "www/public/media/blog/6a0c247e23f5cb540a18e204-zrzut-ekranu-2026-05-19-o-10.50.43.png",
+      "webflowId": "6a0c247e23f5cb540a18e204",
+      "sha256": "d4aa0fea867cdcea5442bd041958a99c4e0e306663dc67a41e9a46d7f4bc2307"
+    },
+    {
+      "path": "www/public/media/blog/6a19ad1d2af7527cb529a78b-zrzut-ekranu-2026-05-29-o-17.10.20.png",
+      "webflowId": "6a19ad1d2af7527cb529a78b",
+      "sha256": "1447d3afb0fc4d7922235850c2a6809af2ab4bb94f657fb7a9a3fc61391f62b8"
+    },
+    {
+      "path": "www/public/media/blog/6a19b33951d287b8847b1619-zrzut-ekranu-2026-05-29-o-17.39.25.png",
+      "webflowId": "6a19b33951d287b8847b1619",
+      "sha256": "a8a76c3c098259ca2b3f72a879d9e98cf04dd966ad2239841b7ead830b24e390"
+    },
+    {
+      "path": "www/public/media/blog/6a1fba9937309d828b69f248-zrzut-ekranu-2026-06-3-o-07.24.29.png",
+      "webflowId": "6a1fba9937309d828b69f248",
+      "sha256": "f7703c9c5840656c6ebbd0e60d62fab29e16ed93483b02ea5d1060e691946ff5"
+    },
+    {
+      "path": "www/public/media/blog/6a20258654fd91df4513dab4-zrzut-ekranu-2026-06-3-o-15.00.45.png",
+      "webflowId": "6a20258654fd91df4513dab4",
+      "sha256": "655a1b06cfb18efd6088e1e361a5eea52c4a30c9e6a992d9b377e9d430c5b464"
+    },
+    {
+      "path": "www/public/media/blog/6a212ab122fbfd231511922b-zrzut-ekranu-2026-06-4-o-09.34.47.png",
+      "webflowId": "6a212ab122fbfd231511922b",
+      "sha256": "a10c81b243f31358350a42341c3c06b85ba3bfbfe30bc64fe043b7a0b8274eb0"
+    },
+    {
+      "path": "www/public/media/blog/6a22e3195fe5861d4738cb68-zrzut-ekranu-2026-06-5-o-16.53.35.png",
+      "webflowId": "6a22e3195fe5861d4738cb68",
+      "sha256": "b13f22a771b24f016205823e533b286dc444cd2d8fef3c3d75e3f3bbf1dfd376"
+    },
+    {
+      "path": "www/public/media/blog/6a22e5dd55c9aaa94386c5a0-zrzut-ekranu-2026-06-5-o-17.05.53.png",
+      "webflowId": "6a22e5dd55c9aaa94386c5a0",
+      "sha256": "4fad06086d5318c315566f9041a2517a3c706f0f8f75c8a0d804042a8d443d2f"
+    },
+    {
+      "path": "www/public/media/blog/6a22fb5ae803a5cb36b22dbb-zrzut-ekranu-2026-06-5-o-18.37.26.png",
+      "webflowId": "6a22fb5ae803a5cb36b22dbb",
+      "sha256": "8f3b864d256cbfe95f9f8954749c9e82da9b7cfa3399c694fff45ec08c86c25a"
+    },
+    {
+      "path": "www/public/media/blog/6a292f293d30c6c0477fd41d-6a292edb87bc12c7604c2264-two-layers-ai-board-mandate-cover.png",
+      "webflowId": "6a292f293d30c6c0477fd41d",
+      "sha256": "c588e61ec0df1efdc1c55623fa58b9ea2aac043af34682a348b218730a3c94dd"
+    },
+    {
+      "path": "www/public/media/blog/6a29324bde333b649a11eeca-6a29320d671bad3d59288138-agency-faq-27-partners-cover.png",
+      "webflowId": "6a29324bde333b649a11eeca",
+      "sha256": "1ea94f38ba8ebbbd5680d45e7cc505777191da62dd68496b1fd41a3cdb36150d"
+    },
+    {
+      "path": "www/public/media/blog/6a2a3599356e053ef4225cad-6a2a357e8a6a2403b7daf185-ai-code-needs-a-harness-cover-v3.png",
+      "webflowId": "6a2a3599356e053ef4225cad",
+      "sha256": "0248677aa9ce40b23709f4f9be3801f6e318e3a7b70dd21f8bf6c78b8b18b362"
+    },
+    {
+      "path": "www/public/media/blog/6a2d1101284219e95cc4d7cc-zrzut-ekranu-2026-06-13-o-10.04.49.png",
+      "webflowId": "6a2d1101284219e95cc4d7cc",
+      "sha256": "86a5957aa82108cc40cfe5a01590b291b522dd0e8d406868d13515ec0b018c36"
+    },
+    {
+      "path": "www/public/media/blog/6a300d26cb55a010417dc3e2-zrzut-ekranu-2026-06-15-o-16.31.50.png",
+      "webflowId": "6a300d26cb55a010417dc3e2",
+      "sha256": "079d8c250abd928655911bdb4eed31043eb0c13fc4498b7cdb70bc1f1ce6b0ff"
+    },
+    {
+      "path": "www/public/media/blog/6a300d4c8bbedb6a6b9581bd-zrzut-ekranu-2026-06-15-o-07.19.23.png",
+      "webflowId": "6a300d4c8bbedb6a6b9581bd",
+      "sha256": "f07b9246c5218e82cdd331a9907581c5cbe2a080f6cf2804d14236dff4cba540"
+    },
+    {
+      "path": "www/public/media/blog/6a302bccc0f81d5fd869195e-6a3029e12772121de8aa7eb8-harness-teardown-hub-cover.png",
+      "webflowId": "6a302bccc0f81d5fd869195e",
+      "sha256": "0ceca0e04aea08a0d3d2faa3f4bc53498896190d151a71f93f600067f63a65e7"
+    },
+    {
+      "path": "www/public/media/blog/6a3093802ad2abef07c37f4d-6a30931ca5f39fab0403ae82-harness-teardown-two-leaks-one-fence-v3.png",
+      "webflowId": "6a3093802ad2abef07c37f4d",
+      "sha256": "342dc253206155245e2f74a81473326d03cd32f1c7b089b06ba6303b8cb07123"
+    },
+    {
+      "path": "www/public/media/blog/6a32417f3c46c101120bee4c-zrzut-ekranu-2026-06-17-o-08.40.03.png",
+      "webflowId": "6a32417f3c46c101120bee4c",
+      "sha256": "cb18d622f477f10381810ecb7c3452c6b0df11964d95fe13e19b6c4488c1c836"
+    },
+    {
+      "path": "www/public/media/blog/6a3b802999dc1940f9c6e6b3-zrzut-ekranu-2026-06-24-o-08.33.03.png",
+      "webflowId": "6a3b802999dc1940f9c6e6b3",
+      "sha256": "bb8a6af6053ebae1c6cec4651957d1c4b47379494fbcb1432601b202d0fab348"
+    },
+    {
+      "path": "www/public/media/blog/6a3b80bd581b3065f5d89901-zrzut-ekranu-2026-06-24-o-08.33.17.png",
+      "webflowId": "6a3b80bd581b3065f5d89901",
+      "sha256": "142b668d63d2ede7f06e8c4d23f1d11a2f4d6d02d48c7874e58b0de262f15a57"
+    },
+    {
+      "path": "www/public/media/blog/6a3b80da387c46c48d7e9a27-zrzut-ekranu-2026-06-24-o-08.33.28.png",
+      "webflowId": "6a3b80da387c46c48d7e9a27",
+      "sha256": "40a83fe05cec77f96dbf5b7c370ce125516a4c9204ea0d1a623da56cc21edf87"
+    },
+    {
+      "path": "www/public/media/blog/6a3b8152a16203f3d44197db-agenr-orchestrator-open-mercato-approval.png",
+      "webflowId": "6a3b8152a16203f3d44197db",
+      "sha256": "16d0c2d57b36d59c4f79365a914755976d33fb5157299ec207313cacaefff0f6"
+    },
+    {
+      "path": "www/public/media/blog/6a3b816e43274b956c15c86b-agenr-orchestrator-open-mercato-workflow.png",
+      "webflowId": "6a3b816e43274b956c15c86b",
+      "sha256": "123e5eadd501dfbae4603e441cc28075dd5222055ce2ae19f1c0f78ca847ea3e"
+    },
+    {
+      "path": "www/public/media/blog/6a3b818b34936a05e87403bc-agenr-orchestrator-open-mercato.png",
+      "webflowId": "6a3b818b34936a05e87403bc",
+      "sha256": "a4dd7094b7b80985e9d5aabc189ff458f6a695156e809db8571fbec62595e9b5"
+    },
+    {
+      "path": "www/public/media/blog/6a3d228cd40cf03bc33a77ea-zrzut-ekranu-2026-06-25-o-14.40.39.png",
+      "webflowId": "6a3d228cd40cf03bc33a77ea",
+      "sha256": "68c0d831b30c4c88c2c9fcfcb123f35eda2e838e777fbba8f9f9bf9f1c55890d"
+    },
+    {
+      "path": "www/public/media/blog/6a3d243ea70f8f987ff9b551-zrzut-ekranu-2026-06-25-o-14.41.18.png",
+      "webflowId": "6a3d243ea70f8f987ff9b551",
+      "sha256": "78a77f1068f8191d232cfaca634bed61f64ab19089e541fc36ed06628acd2f65"
+    },
+    {
+      "path": "www/public/media/blog/6a578e1159bf5e438a4eb2bf-zrzut-ekranu-2026-07-15-o-15.38.05.jpg",
+      "webflowId": "6a578e1159bf5e438a4eb2bf",
+      "sha256": "b76c144ad8cd70879378f817afdd2334893874b4779aea2f816c382197102c39"
+    },
+    {
+      "path": "www/public/media/blog/6a578e66556a2e6d4871a2d2-3generations-erp.jpg",
+      "webflowId": "6a578e66556a2e6d4871a2d2",
+      "sha256": "f782688551bbc8881d32ffb6549bfce1da567c1e3170df58f690265c44af46a9"
+    },
+    {
+      "path": "www/public/media/blog/6a578ebcbf09ef6b1c4433ac-erp-ai-engineered-vs-ai-decorated.jpg",
+      "webflowId": "6a578ebcbf09ef6b1c4433ac",
+      "sha256": "9b70e5a4024c9fe8c8ed8e9af928132e76fbb08b426d081d6809ff12f6147c43"
+    },
+    {
+      "path": "www/public/media/blog/6a58ce637545ae4ccc33ce43-claude-code-vs-open-mercato-cover.png",
+      "webflowId": "6a58ce637545ae4ccc33ce43",
+      "sha256": "52aaaed05fbc4b520789d4eabfe4d99d6194687a95929d96cba484bbe5511b76"
+    },
+    {
+      "path": "www/public/media/blog/6a58d253bd2af48276f53b4b-claude-code-vs-open-mercato-division.png",
+      "webflowId": "6a58d253bd2af48276f53b4b",
+      "sha256": "d1b70b7c8bfdd76fb4407c063e288de1924b8fc988473a48fa2dd9e6df2047b9"
+    },
+    {
+      "path": "www/public/media/blog/6a58f0240806727306dda972-sap-vs-open-mercato-cover.png",
+      "webflowId": "6a58f0240806727306dda972",
+      "sha256": "eab4e12b72d364d3f624e4d71468714fc3b57c7cbed1db605bd059e5a5ba44ac"
+    },
+    {
+      "path": "www/public/media/blog/6a58f0c1349eb693dbc8bc55-zrzut-ekranu-2026-07-16-o-16.54.40.png",
+      "webflowId": "6a58f0c1349eb693dbc8bc55",
+      "sha256": "0a871b5b3e15b3abc16020067155bb0374868b80630a69affb36149d39c2607a"
+    },
+    {
+      "path": "www/public/media/blog/6a58f11dd19c5fdf6436464e-sap-vs-open-mercato-gradual-adoption.png",
+      "webflowId": "6a58f11dd19c5fdf6436464e",
+      "sha256": "5c97f6ba6cc392badf14ca6ab9074beefe97351466a26057f86eb65a90f36bd7"
+    },
+    {
+      "path": "www/public/media/blog/6a58f13d9f983b2575b58a79-sap-vs-open-mercato-battle-card.png",
+      "webflowId": "6a58f13d9f983b2575b58a79",
+      "sha256": "e4020909c9ee851398f3b711beaa83f2a2d3a7226444764782d76fb31f0eed47"
+    },
+    {
+      "path": "www/public/media/blog/6a58fa408899de9118981ab4-third-path-cover.png",
+      "webflowId": "6a58fa408899de9118981ab4",
+      "sha256": "74d7b0695cd0df92c5824f8ccac950b241c8fb748aa8335aa2d924ffc825a824"
+    },
+    {
+      "path": "www/public/media/blog/6a58fa6f9a375b825dbe155e-third-path-inline-three-paths.png",
+      "webflowId": "6a58fa6f9a375b825dbe155e",
+      "sha256": "ddba363074aa2799fa0573bc3220930e3ab73f8f995e5af34b58cd3b7a79ccf1"
+    },
+    {
+      "path": "www/public/media/blog/6a58fa9669ace8cc45406cb0-third-path-inline-weekend-demo.png",
+      "webflowId": "6a58fa9669ace8cc45406cb0",
+      "sha256": "32cd09b759440d4b726618c66040bd9a7d225c1a7ca5f04e0cd06b3d4a3a5620"
+    },
+    {
+      "path": "www/public/media/blog/6a58fbf9b001dca9f6970cb1-odoo-vs-open-mercato-hero.png",
+      "webflowId": "6a58fbf9b001dca9f6970cb1",
+      "sha256": "4dce8b88d680c76c8ad8f3017a4e847ab6f6eb3b0bedd08bb6b29fafb58176ab"
+    },
+    {
+      "path": "www/public/media/blog/6a58fc5a5fdec01683147933-odoo-vs-open-mercato-battlecard.png",
+      "webflowId": "6a58fc5a5fdec01683147933",
+      "sha256": "df747d549abd939d4b5dd399ca6ea9694ee79484021132319d5b0abce80f0965"
+    },
+    {
+      "path": "www/public/media/blog/6a58fc7cf7ace8289f236524-odoo-vs-open-mercato-approach.png",
+      "webflowId": "6a58fc7cf7ace8289f236524",
+      "sha256": "525deba3120f8e0cf65ff0f1c5e711ce34e10d9aea4259fd1f8a75490e225f22"
+    },
+    {
+      "path": "www/public/media/blog/6a6c63cb08d0ccd61a88c4d0-cto-questions-hero.png",
+      "webflowId": "6a6c63cb08d0ccd61a88c4d0",
+      "sha256": "8f23a09ff4f15c2046b63102c1cc172dca9a970e606d457147a4dbad8da2f9aa"
+    },
+    {
+      "path": "www/public/media/blog/6a6c722a44618d3ca5cef2ea-6a6c717644618d3ca5ce9648-evals-v1-pass-matrix.svg",
+      "webflowId": "6a6c722a44618d3ca5cef2ea",
+      "sha256": "c15741db053040eebef2cc0bd0464d32d00c3ca24ea84b941c8cfefffc0f3d25"
+    },
+    {
+      "path": "www/public/media/blog/6a6c722a44618d3ca5cef2ed-6a6c717778ad19640c056647-evals-v1-how-close.svg",
+      "webflowId": "6a6c722a44618d3ca5cef2ed",
+      "sha256": "7377434f3013fb9986e893e7745ede42b1a764de0830a1a8882f231a02c40cd1"
+    },
+    {
+      "path": "www/public/media/blog/6a6c722a44618d3ca5cef2f5-6a6c7177d225a72479c26eed-evals-v1-base-vs-agentic.svg",
+      "webflowId": "6a6c722a44618d3ca5cef2f5",
+      "sha256": "6813efb37dc4d407a91362972da581d189ccfaf5d0ba34622781de67768b0d66"
+    },
+    {
+      "path": "www/public/media/blog/6a6c722a44618d3ca5cef315-6a6c717704075f9a96cef44f-evals-v1-rubric-heatmap.svg",
+      "webflowId": "6a6c722a44618d3ca5cef315",
+      "sha256": "e568befe952673a7cc5bac9dac3d91b7a32cbe0d68443269fa2920992ca5e53b"
+    },
+    {
+      "path": "www/public/media/blog/6a6c80cf9c9ddd35f05e6c42-6a6c80b2c2b8cc144feabfd1-coding-agents-benchmark-cover.png",
+      "webflowId": "6a6c80cf9c9ddd35f05e6c42",
+      "sha256": "5c03f17c8d8d731b638716c9857523f4f6d3111159244139466453492bef1a3f"
+    },
+    {
+      "path": "www/public/media/blog/6a73a88b6a2c00d5be4b8924-premiere.jpg",
+      "webflowId": "6a73a88b6a2c00d5be4b8924",
+      "sha256": "185f89f4beae19de4d7314c8de8f3f40179d65c281eec72eacb699a6226afb9e"
+    },
+    {
+      "path": "www/public/media/blog/6a745028bd250eb2d2b9a43b-cezar-hero.png",
+      "webflowId": "6a745028bd250eb2d2b9a43b",
+      "sha256": "793470fe13742ee2d08143b7a3758f1a65d47cd7b76632555aa47d19aa1aeda8"
+    },
+    {
+      "path": "www/public/media/blog/6a79c4f9b5cd07a60d2c40e2-wms-module-hero.png",
+      "webflowId": "6a79c4f9b5cd07a60d2c40e2",
+      "sha256": "ce907b4ef66788549d20b5367578594b8d4d4c683631a0b79842d10b82cde8c5"
+    },
+    {
+      "path": "www/public/media/blog/6a79cacf3b3a40ad186285d7-blog-funding-round-hero.png",
+      "webflowId": "6a79cacf3b3a40ad186285d7",
+      "sha256": "197fea99321ae8c0fd91ed87f3da99e38e141e5cd3bb446986a4b2030179e134"
+    },
+    {
+      "path": "www/public/media/blog/6a7a0fb329229beeb8a0ca59-dashboard.png",
+      "webflowId": "6a7a0fb329229beeb8a0ca59",
+      "sha256": "14428037663aa27d4d9bcf49b34b49d841edb5797cebc1ff79cec52b7e9e3e16"
+    },
+    {
+      "path": "www/public/media/blog/6a7a0fcf568d0de6ae2efb14-inventory.png",
+      "webflowId": "6a7a0fcf568d0de6ae2efb14",
+      "sha256": "e6a31e27cb75272b802e9e0785852c05888e60f62ade11b40f7e7be9bcbe25d8"
+    },
+    {
+      "path": "www/public/media/blog/6a7a1130bbcb8c6ac29338eb-om-team.jpg",
+      "webflowId": "6a7a1130bbcb8c6ac29338eb",
+      "sha256": "8a5d96c4270ba57dd046494cf1cb5dba771542c44696cbe389c2a345ca07ab96"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45b9e33b8a0ea978c9a-6a95e336e3f53e3828e3cf15-acs-slide-01.png",
+      "webflowId": "6a95e45b9e33b8a0ea978c9a",
+      "sha256": "19bc987929d8d019403c495594d75539d7807a9ec7e82445853a85705bc732bf"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978ca7-6a95e338302a50fa122e5165-acs-slide-10.png",
+      "webflowId": "6a95e45d9e33b8a0ea978ca7",
+      "sha256": "8f7ad0adc3996a0114a5c95e6034ade00ed82b30a07e3ccd209befdafd015889"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978caa-6a95e33a7a0decaefe627c06-acs-slide-21.png",
+      "webflowId": "6a95e45d9e33b8a0ea978caa",
+      "sha256": "9a1e3e1408564136d27ef82283e8355bddf9c88dce621af5338db08d685be365"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cad-6a95e3382aeb54c8f178f7ea-acs-slide-09.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cad",
+      "sha256": "bdcc32c3a7fbb2023477aac4c829dfce9aa2ab0466acf1f3ad0e795b393895ba"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cb0-6a95e337b4ee8c9bb96b4407-acs-slide-02.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cb0",
+      "sha256": "c5e3bb69488658722bd394e20b549833296171a61078ae63d0e92393ec16f639"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cb4-6a95e33a1ab172af0eda8e10-acs-slide-23.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cb4",
+      "sha256": "20cd96a549eac915d840e5f4934b0cc2af162580f54822e6c746f62b5a0fcb67"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cb7-6a95e3373dad5c3f91cf14f5-acs-slide-07.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cb7",
+      "sha256": "6ae04f48af1ace3b06236c1925c313bf5506adca413ac824e7a5bc84ccd06594"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cba-6a95e338489f261dea270c3f-acs-skills-repo-real.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cba",
+      "sha256": "ac6e9620cf6a7a39f2978905cfd55a2db31a8ac1c4fc451b5737fa6f28d669bf"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cbd-6a95e3392aeb54c8f178f879-acs-slide-13.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cbd",
+      "sha256": "db4a45750142436f22406dd12693ea7c8f0c007fbafe0b1f0b110598b75e99a1"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cc0-6a95e33a489f261dea270cc1-acs-slide-19.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cc0",
+      "sha256": "a18806a5d0ce1b6c712f6da88663bf33e80abfeded1af58ad227b086b1cc5239"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45d9e33b8a0ea978cc4-6a95e3392aeb54c8f178f8d4-acs-slide-17.png",
+      "webflowId": "6a95e45d9e33b8a0ea978cc4",
+      "sha256": "e19eb44d0a5346b13edceb907bd48b374fffbe1885062aafdb209fcd550bf7fe"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45e9e33b8a0ea978cca-6a95e337fb7b3a5403824059-acs-repo-packages.png",
+      "webflowId": "6a95e45e9e33b8a0ea978cca",
+      "sha256": "a9f88807229959430867ef6a51f7366693e6071a06274df6b8ff24fa6d575773"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45e9e33b8a0ea978ccd-6a95e3383dad5c3f91cf1600-acs-actions-matrix.png",
+      "webflowId": "6a95e45e9e33b8a0ea978ccd",
+      "sha256": "77c850b7b2161d559d19d334188a7f7cfb430c8bc9a36b4b438c5cf9ba9797f6"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45e9e33b8a0ea978cd0-6a95e339fb7b3a5403824191-acs-pr-commits.png",
+      "webflowId": "6a95e45e9e33b8a0ea978cd0",
+      "sha256": "e230caa6717e0e6bbe5bff70beba210e465ff689b15f694ac3abb68a90579e50"
+    },
+    {
+      "path": "www/public/media/blog/6a95e45e9e33b8a0ea978cd3-6a95e3372aeb54c8f178f788-acs-specs-folder.png",
+      "webflowId": "6a95e45e9e33b8a0ea978cd3",
+      "sha256": "5ac52848d10c44e1ec1bba03353022f2edf2d3e4e19a99ea7566c1f76754fc79"
+    },
+    {
+      "path": "www/public/media/blog/6a99b22fedef6b0a2f2f307a-zrzut-ekranu-2026-09-3-o-19.45.09.png",
+      "webflowId": "6a99b22fedef6b0a2f2f307a",
+      "sha256": "7dad28b92bf3c6b21e0ce58735a552ce216653a4c65974ab7d2e720e8b71e10a"
+    },
+    {
+      "path": "www/public/media/blog/6a9fe20bd24f60e68d70cc68-pirate-ship-hero.png",
+      "webflowId": "6a9fe20bd24f60e68d70cc68",
+      "sha256": "869c65bb8d61d6c7d9f150cbd5437de684a3d92dcb2c74a007dc31ab2119c921"
+    },
+    {
+      "path": "www/public/media/blog/6aab02276559e25fcf36b9f4-compai-crm-vs-open-mercato-cover.png",
+      "webflowId": "6aab02276559e25fcf36b9f4",
+      "sha256": "86f556ae7c6c6b445ad1aa07448885d10c5ee02ee857a459c6b3be5e89dc2993"
+    },
+    {
+      "path": "www/public/media/blog/6aab024d7dc3dd579c493f25-compai-crm-vs-open-mercato-table.png",
+      "webflowId": "6aab024d7dc3dd579c493f25",
+      "sha256": "463682c3aaed6667a917b55ada8a98cdcfbda0dbad6202c6b46f21ad8cf4ce13"
+    },
+    {
+      "path": "www/public/media/blog/6aab02d6422d148d8d8b12cb-ai-sdlc-resistance-hero.png",
+      "webflowId": "6aab02d6422d148d8d8b12cb",
+      "sha256": "49440ee32dcd8a25013b12f8c37af81701243c8ee510af4e74028a96bcc3b03f"
+    },
+    {
+      "path": "www/public/media/blog/6aab030bbed381948e3320a5-ai-sdlc-resistance-fig1-belts.png",
+      "webflowId": "6aab030bbed381948e3320a5",
+      "sha256": "a2412f8dd77dc07b4a0750920bfe254b1f44728457d10c673b0e0be04e4b1a50"
+    },
+    {
+      "path": "www/public/media/blog/6aab0356c27284e2e050841d-ai-sdlc-resistance-fig2-map.png",
+      "webflowId": "6aab0356c27284e2e050841d",
+      "sha256": "5e5b4daa7d10572fb0d8df9d142b64912be1d6dc639a3705059193e5fe323cb7"
+    },
+    {
+      "path": "www/public/media/blog/6aab037cba63fc98b7c19f35-ai-sdlc-resistance-fig3-shadow.png",
+      "webflowId": "6aab037cba63fc98b7c19f35",
+      "sha256": "29e541c51c6184bc4e3678152086388210021acb74d35b9d9b364cfc0de45c7b"
+    },
+    {
+      "path": "www/public/media/blog/6aada8ac239b7798ba1476a5-decision-ready-hackathon-hero.png",
+      "webflowId": "6aada8ac239b7798ba1476a5",
+      "sha256": "5f52a87dfaa1a92ebf186bf5bc0fcf8fd6e173adc80cb897613d028fb7cf0ffe"
+    },
+    {
+      "path": "www/public/media/blog/6aada8cc5649963a5851d3cc-decision-ready-hackathon-fig1-filter.png",
+      "webflowId": "6aada8cc5649963a5851d3cc",
+      "sha256": "fe54751e069185b88d7f6d55c163a5e77022802671729935aa9fbca2467987e7"
+    },
+    {
+      "path": "www/public/media/blog/6aada92084522610234dc069-zrzut-ekranu-2026-09-18-o-23.11.40.png",
+      "webflowId": "6aada92084522610234dc069",
+      "sha256": "9de321d7a1567805861a9d292634896bce822e6a1c36e3a9532f05d440f99715"
+    },
+    {
+      "path": "www/public/media/blog/6ab4cade2af2cfdb3dc48f99-zrzut-ekranu-2026-09-24-o-09.00.54.png",
+      "webflowId": "6ab4cade2af2cfdb3dc48f99",
+      "sha256": "e04279c620adaa8242c58ba711a8368eec70d90e8aa44baa09aac596226deb21"
+    },
+    {
+      "path": "www/public/media/blog/6ad5c89d976c216bae76df6f-cezar-attention-hero.png",
+      "webflowId": "6ad5c89d976c216bae76df6f",
+      "sha256": "87bd37ecd172a3d6d072fecb039601030c047e5bf50a48f64833c9cec323081a"
+    },
+    {
+      "path": "www/public/media/blog/6ad5ca2bc677397c9b46953e-cezar-attention-fig1-scores.png",
+      "webflowId": "6ad5ca2bc677397c9b46953e",
+      "sha256": "3da0f878fcc589eb0d456ff51817100d95d03907abca8562339947cbda6dc387"
+    },
+    {
+      "path": "www/public/media/blog/6b045151ac7da345d98184f3-cut-costs-own-your-software-hero.png",
+      "webflowId": "6b045151ac7da345d98184f3",
+      "sha256": "a3bddfd0e48fa669fb47bdd209c9d2416f685c7d0d3d0deb3878f8589f6c52d3"
+    },
+    {
+      "path": "www/public/media/blog/6b04adfb472abca9f4dc3af6-6b04ad494414db5fb8f6bd38-shared-foundation.jpeg",
+      "webflowId": "6b04adfb472abca9f4dc3af6",
+      "sha256": "3b922f4592e7b46eae36ad5a9c661a2dd468851d36a19a6fe3a1aace5fa33f7f"
+    },
+    {
+      "path": "www/public/media/blog/6b04adfb472abca9f4dc3afb-6b04ad491f6b27eff468b412-growth-connector.jpeg",
+      "webflowId": "6b04adfb472abca9f4dc3afb",
+      "sha256": "3438f74ddaed978df9ad6c2961697a389cc89f2713fa7260b3c98e138f034fa0"
+    },
+    {
+      "path": "www/public/media/blog/6b04adfb472abca9f4dc3afe-6b04ad49c31efb0f2fce9ab9-team-prototypes.jpeg",
+      "webflowId": "6b04adfb472abca9f4dc3afe",
+      "sha256": "c09ee5276355438f67f685825d295b7a09688404ee905e73b18c756fa3ea9110"
+    },
+    {
+      "path": "www/public/media/blog/6b04bd1027b47149dc5d05ce-6b04bcec3f621f0a81fe464c-ppwr-rejestr-dokumentow.jpeg",
+      "webflowId": "6b04bd1027b47149dc5d05ce",
+      "sha256": "9b7a49eb230010973bf9f1a882358bf45007c0b2ae03c2c305ba15f13fcd92ac"
+    },
+    {
+      "path": "www/public/media/blog/6b054dc603b2871defdb170f-6b054d8b448f20a7895f02e8-om-deepki-cover.webp",
+      "webflowId": "6b054dc603b2871defdb170f",
+      "sha256": "dc2432cb81d47888cfbfa074e9f5b18d09ee16223dda583acaacbd4987b52583"
+    },
+    {
+      "path": "www/public/media/blog/6b054dc603b2871defdb1736-6b054d8ba99cb2be422e80b4-om-deepki-bill-ingestion.png",
+      "webflowId": "6b054dc603b2871defdb1736",
+      "sha256": "90198c4de8c9fba9d91497d2cf8855cbe6007b214fb334ab33811f1e194dab05"
+    },
+    {
+      "path": "www/public/media/blog/6b054f816bbecd7059a8f733-6b054efe780ae3c534179925-weekend-store-cover.jpeg",
+      "webflowId": "6b054f816bbecd7059a8f733",
+      "sha256": "5cd7bffb321160c96c4b8bacd12dadc9caedb8a8c22d71e39a66caa8ede5f27d"
+    },
+    {
+      "path": "www/public/media/blog/6b054f826bbecd7059a8f737-lauren-tan-3835.jpeg",
+      "webflowId": "6b054f826bbecd7059a8f737",
+      "sha256": "e3eb72c86beaaddad2fc59b92aed2e4aaed2500eb3543f1640492bcb769ceeea"
+    },
+    {
+      "path": "www/public/media/blog/6b058d5409c1014219781656-6b058cc2d18875cf18146099-erpnext-alternative-packing-slip-and-label-printer.jpeg",
+      "webflowId": "6b058d5409c1014219781656",
+      "sha256": "199cf37a76fc48f449aa45ff046aaea901e3f1f67c9a72df2b9fa49c9456c482"
+    }
+  ]
+}

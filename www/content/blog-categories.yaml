@@ -1,0 +1,30 @@
+ai-engineering:
+  webflowId: 69ced9a1ebdf8d9bf68d5720
+  name: AI Engineering
+  order: 1
+  labelColor: "#b4f372"
+  textColor: "#0c0c0c"
+architecture:
+  webflowId: 69ced9a6276f2db33ef97fc0
+  name: Architecture
+  order: 2
+  labelColor: "#846cb3"
+  textColor: "#efe7ff"
+product-updates:
+  webflowId: 69ced9b370468a8c84cf5d99
+  name: Product Updates
+  order: 3
+  labelColor: "#2f520b"
+  textColor: "#b4f372"
+security:
+  webflowId: 69ced9ac9a88037c4da938ba
+  name: Security
+  order: 4
+  labelColor: "#eefb63"
+  textColor: "#0c0c0c"
+ai-engineering-foundation-framework:
+  webflowId: 69f1ca04c17c6d9f1b22e3a0
+  name: AI-Engineering Foundation Framework
+  labelColor: "#2f520b"
+  textColor: "#b4f372"
+  order: 5
