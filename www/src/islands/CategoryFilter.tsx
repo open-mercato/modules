@@ -39,7 +39,9 @@ export default function CategoryFilter({ posts, categories }: Props) {
   const choose = (next: string[]): void => {
     setSelected(next)
     const { pathname, search, hash } = window.location
-    window.history.pushState(null, '', `${pathname}${writeCategories(search, next)}${hash}`)
+    const query = writeCategories(search, next)
+    // the same view again (All posts while nothing is selected) adds no step to Back
+    if (query !== search) window.history.pushState(null, '', `${pathname}${query}${hash}`)
   }
 
   const shown = posts.filter((p) => matchesCategories(p.category?.id, selected))
@@ -62,7 +64,7 @@ export default function CategoryFilter({ posts, categories }: Props) {
             aria-pressed={selected.includes(c.id)}
             onClick={() => choose(toggleCategory(selected, c.id, known))}
           >
-            {c.name} <span class="t-muted">({c.count})</span>
+            {c.name} <span class="category-filter__n">({c.count})</span>
           </button>
         ))}
       </div>

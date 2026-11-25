@@ -3,8 +3,7 @@
 import { dayYear } from '../../../../site/src/lib/format.ts'
 import type { PostCardData } from '../../lib/blog.ts'
 
-export default function PostCard({ post, level = 3 }: { post: PostCardData; level?: 2 | 3 }) {
-  const Heading = level === 2 ? 'h2' : 'h3'
+export default function PostCard({ post }: { post: PostCardData }) {
   return (
     <article class="post-card">
       {post.thumbnail && (
@@ -12,9 +11,9 @@ export default function PostCard({ post, level = 3 }: { post: PostCardData; leve
       )}
       <div class="post-card__body">
         {post.category && <span class="chip chip--line post-card__cat">{post.category.name}</span>}
-        <Heading class="post-card__title">
+        <h3 class="post-card__title">
           <a href={post.href}>{post.title}</a>
-        </Heading>
+        </h3>
         <p class="post-card__desc">{post.description}</p>
         <p class="post-card__meta t-small t-muted">
           <time datetime={post.date}>{dayYear(post.date)}</time>

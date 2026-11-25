@@ -1,7 +1,7 @@
 // The built blog (www site migration spec, Phase 3), read from dist-www/ after `yarn build:www`: every published post
 // routes with its canonical, og tags and JSON-LD, no draft is routed, listed, linked or in the sitemap, and a body's
-// video loads nothing from YouTube before a click. Skipped while dist-www/ holds no blog; validate.yml runs it after
-// the build with WWW_BUILD=1, which makes a missing build a failure.
+// video loads nothing from YouTube before a click. Runs only with WWW_BUILD=1, right after `yarn build:www` (validate.yml
+// does so), so a stale local dist-www/ never fails `yarn test`; with the flag a missing build is a failure.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -11,8 +11,8 @@ import { blogEntries } from './blog-content.ts'
 
 const DIST = join(ROOT, 'dist-www')
 const ORIGIN = 'https://www.openmercato.com'
-const built = existsSync(join(DIST, 'blog.html'))
 const required = process.env.WWW_BUILD === '1'
+const built = required && existsSync(join(DIST, 'blog.html'))
 
 const entries = blogEntries()
 const published = publishedPosts(entries).map((p) => p.id)
@@ -40,7 +40,8 @@ const meta = (html: string, property: string): string | undefined =>
 
 describe('the build of the blog', () => {
   it('exists when the test is required', () => {
-    if (required) expect(built, 'dist-www/blog.html (run yarn build:www first)').toBe(true)
+    if (required)
+      expect(existsSync(join(DIST, 'blog.html')), 'dist-www/blog.html (run yarn build:www first)').toBe(true)
   })
 
   describe.skipIf(!built)('dist-www', () => {

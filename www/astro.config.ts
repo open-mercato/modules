@@ -11,11 +11,14 @@ import type { AstroIntegration } from 'astro'
 import { defineConfig } from 'astro/config'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
 import { mainSiteRun } from '../lib/core/site-host.ts'
-import { bodyLinkRules } from './body-links.ts'
+import { bodyLinkRules, noindexPostPaths } from './body-links.ts'
 import { runBasePlugin } from './run-base.ts'
 import { bodyHtmlPlugin } from './src/lib/body-html.ts'
 
 const repo = fileURLToPath(new URL('..', import.meta.url))
+const content = fileURLToPath(new URL('./content/', import.meta.url))
+// a post that asks for noindex is no sitemap entry either (a draft is never routed, so it never reaches the sitemap)
+const noindex = noindexPostPaths(content)
 const run = mainSiteRun(process.env)
 
 /** client:painted of the catalog (site/src/directives/painted.ts): islands hydrate after the first paint. */
@@ -45,7 +48,7 @@ function bodyHtml(): AstroIntegration {
         const processor = config.markdown.processor as { name: string; options: { hastPlugins?: unknown[] } }
         if (processor.name !== 'satteri' || !Array.isArray(processor.options.hastPlugins))
           throw new Error(`om-www-body: the Markdown processor is ${processor.name}, not satteri with hastPlugins`)
-        const rules = bodyLinkRules(fileURLToPath(new URL('./content/', import.meta.url)))
+        const rules = bodyLinkRules(content)
         processor.options.hastPlugins.push(bodyHtmlPlugin(rules, (m) => logger.warn(m)))
       },
     },
@@ -62,8 +65,12 @@ export default defineConfig({
   base: '/',
   trailingSlash: 'never',
   build: { format: 'file' },
-  // a draft is never routed, so it never reaches the sitemap either (D6)
-  integrations: [preact(), paintedDirective(), bodyHtml(), sitemap({ filter: (page) => !/\/404\/?$/.test(page) })],
+  integrations: [
+    preact(),
+    paintedDirective(),
+    bodyHtml(),
+    sitemap({ filter: (page) => !/\/404\/?$/.test(page) && !noindex.has(new URL(page).pathname) }),
+  ],
   devToolbar: { enabled: false },
   vite: {
     // href('/') of site/src/lib/url.ts: the catalog's home page under its base (/run/modules)

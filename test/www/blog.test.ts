@@ -1,6 +1,9 @@
 // The blog of the main site (www site migration spec, Phase 3): which posts route and list, the category filter's
 // query string, the SEO of every published post, and what a Markdown body's HTML becomes. On the real content of
 // www/content/; the built pages themselves are checked by test/www/blog-build.test.ts.
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   BLOG_PATH,
@@ -23,12 +26,13 @@ import {
   bodyHtmlPlugin,
   linkAction,
   liteVideo,
+  rawHtml,
   videoEmbedNode,
   videoPlayerSrc,
   type BodyCtx,
   type LinkRules,
 } from '../../www/src/lib/body-html.ts'
-import { bodyLinkRules, frontmatter, publishedIds, servesFixed } from '../../www/body-links.ts'
+import { bodyLinkRules, frontmatter, noindexPostPaths, publishedIds, servesFixed } from '../../www/body-links.ts'
 import { shownText } from '../../www/src/islands/CategoryFilter.tsx'
 import { blogEntries, CONTENT, names } from './blog-content.ts'
 
@@ -268,21 +272,22 @@ describe('the HTML of a Markdown body', () => {
       removeNode: (n) => calls.push(`remove ${JSON.stringify(n)}`),
       setProperty: (_n, k, v) => calls.push(`set ${k}=${String(v)}`),
       wrapNode: (_n, p) => calls.push(`wrap ${p.raw}`),
-      textContent: () => 'the text',
       parent: () => ({ type: 'element', tagName: 'p', properties: {}, children: [open, close] }),
       fileURL: new URL('file:///repo/www/content/blog/x.md'),
     }
     const open = { type: 'raw' as const, value: '<lite-video id="0jdlGSlZusI" title="T">' }
     const close = { type: 'raw' as const, value: '</lite-video>' }
     const plugin = bodyHtmlPlugin(rules, (m) => warnings.push(m))
-    const a = (href: string) => ({ type: 'element' as const, tagName: 'a', properties: { href }, children: [] })
+    const bold = { type: 'element', tagName: 'strong', properties: {}, children: [{ type: 'text', value: 'b' }] }
+    const a = (href: string) => ({ type: 'element' as const, tagName: 'a', properties: { href }, children: [bold] })
     plugin.element.visit(a('/contact'), ctx)
     plugin.element.visit(a('/blog-posts/gone'), ctx)
     plugin.element.visit({ type: 'element', tagName: 'table', properties: {}, children: [] }, ctx)
     plugin.raw(open, ctx)
     plugin.raw(close, ctx)
     expect(calls[0]).toBe(`set href=${ORIGIN}/contact`)
-    expect(calls[1]).toContain('-> {"type":"text","value":"the text"}')
+    // the link goes, its content (here bold text) stays
+    expect(calls[1]).toMatch(new RegExp(`-> ${JSON.stringify([bold]).replace(/[[\]{}]/g, '\\$&')}$`))
     expect(warnings).toEqual([
       'www/content/blog/x.md: /blog-posts/gone is not a published post; the link renders as text',
     ])
@@ -292,6 +297,48 @@ describe('the HTML of a Markdown body', () => {
       `replace ${JSON.stringify({ type: 'element', tagName: 'p', properties: {}, children: [open, close] })} -> ${JSON.stringify(videoEmbedNode('0jdlGSlZusI', 'T'))}`,
     )
     expect(calls).toHaveLength(4)
+  })
+
+  it('raw HTML follows the same rules for images and links', () => {
+    const fig =
+      '<figure><img src="/media/blog/a.png" alt="A" /><figcaption>See <a href="/contact">us</a>, ' +
+      '<a class="x" href="/blog-posts/gone">a draft</a>, <a href="/blog-posts/live-post">a post</a> and ' +
+      '<a href="https://example.com/">a site</a>.</figcaption></figure>'
+    expect(rawHtml(fig, rules)).toEqual({
+      html:
+        '<figure><img loading="lazy" decoding="async" src="/media/blog/a.png" alt="A" /><figcaption>See ' +
+        `<a href="${ORIGIN}/contact">us</a>, <a class="x">a draft</a>, <a href="/blog-posts/live-post">a post</a> and ` +
+        '<a href="https://example.com/">a site</a>.</figcaption></figure>',
+      unlinked: ['/blog-posts/gone is not a published post'],
+    })
+    // an image that already says how it loads is left alone
+    expect(rawHtml('<img loading="eager" src="/media/x.png" alt="">', rules).html).toBe(
+      '<img loading="eager" src="/media/x.png" alt="">',
+    )
+    const warnings: string[] = []
+    const replaced: unknown[] = []
+    const ctx = {
+      replaceNode: (_n: unknown, m: unknown) => replaced.push(m),
+      removeNode: () => {},
+      setProperty: () => {},
+      wrapNode: () => {},
+      parent: () => undefined,
+      fileURL: undefined,
+    }
+    bodyHtmlPlugin(rules, (m) => warnings.push(m)).raw({ type: 'raw', value: '<a href="/blog-posts/gone">x</a>' }, ctx)
+    expect(replaced).toEqual([{ type: 'raw', value: '<a>x</a>' }])
+    expect(warnings).toEqual(['a Markdown body: /blog-posts/gone is not a published post; the link renders as text'])
+  })
+
+  it('no imported post asks for noindex; one that does is left out of the sitemap', () => {
+    expect([...noindexPostPaths(CONTENT)]).toEqual([])
+    const dir = mkdtempSync(join(tmpdir(), 'om-www-noindex-'))
+    mkdirSync(join(dir, 'blog'))
+    writeFileSync(join(dir, 'blog', 'a.md'), '---\ntitle: A\nseo:\n  noindex: true\n---\n')
+    writeFileSync(join(dir, 'blog', 'b.md'), '---\ntitle: B\n---\n')
+    writeFileSync(join(dir, 'blog', 'c.md'), '---\ntitle: C\ndraft: true\nseo:\n  noindex: true\n---\n')
+    expect([...noindexPostPaths(dir)]).toEqual(['/blog-posts/a'])
+    rmSync(dir, { recursive: true, force: true })
   })
 
   it('reads the frontmatter of a Markdown file', () => {

@@ -2,7 +2,7 @@
    The look is Oliwia's and comes in Phase 5 (D7); nothing here is a new visual language. */
 
 .blog-page {
-  padding-block: 48px 64px;
+  padding: 48px var(--pad) 64px;
 }
 .blog-page > * + * {
   margin-top: 40px;
@@ -72,6 +72,12 @@
   background: var(--cta);
   border-color: var(--cta);
   color: var(--cta-ink);
+}
+.category-filter__n {
+  color: var(--ink-2);
+}
+.category-filter__controls [aria-pressed='true'] .category-filter__n {
+  color: var(--film-ink-2);
 }
 .category-filter__count {
   margin: 12px 0 0;

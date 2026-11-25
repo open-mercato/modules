@@ -1,12 +1,13 @@
 // The link rules of Markdown bodies (www/src/lib/body-html.ts) for this build, read from www/content/ when the Astro
-// config loads: the published posts a body may link, and the site paths the www build serves. Node only (the config).
+// config loads: the published posts a body may link, and the site paths the www build serves; and the posts the
+// sitemap leaves out. Node only (the config).
 // A collection adds its routes here when it gets them (case studies, partners and jobs in Phase 4, pages and landings
 // in Phase 5 and 6); until then a link to one of its pages points at the live site.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse } from 'yaml'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
-import { BLOG_PATH } from './src/lib/blog.ts'
+import { BLOG_PATH, postPath } from './src/lib/blog.ts'
 import type { LinkRules } from './src/lib/body-html.ts'
 
 /** The frontmatter of a Markdown file, or `{}`. */
@@ -24,6 +25,19 @@ export function publishedIds(dir: string): string[] {
     .filter((f) => frontmatter(readFileSync(join(dir, f), 'utf8')).draft !== true)
     .map((f) => f.slice(0, -3))
     .sort()
+}
+
+/** Site paths of the published posts that ask for noindex (seo.noindex): kept out of the sitemap. */
+export function noindexPostPaths(content: string): Set<string> {
+  const dir = join(content, 'blog')
+  return new Set(
+    publishedIds(dir)
+      .filter((id) => {
+        const seo = frontmatter(readFileSync(join(dir, `${id}.md`), 'utf8')).seo as { noindex?: unknown } | undefined
+        return seo?.noindex === true
+      })
+      .map((id) => postPath(id)),
+  )
 }
 
 /** Site paths every www build serves: its fixed routes, its files and the catalog under /run. */

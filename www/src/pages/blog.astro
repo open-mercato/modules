@@ -36,7 +36,7 @@ const description = `Posts from the Open Mercato team about ${categories
       <PostList heading="Featured" id="featured" posts={featured} />
       <section aria-labelledby="all-posts">
         <h2 class="t-h2" id="all-posts">All posts</h2>
-        <CategoryFilter client:painted="idle" posts={posts} categories={categories} />
+        <CategoryFilter client:painted posts={posts} categories={categories} />
       </section>
     </div>
   </div>

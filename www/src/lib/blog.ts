@@ -68,7 +68,7 @@ export function featuredPosts<T extends PostEntry>(published: readonly T[]): T[]
 /** Up to `n` other published posts: those of the same category first, then the newest. */
 export function relatedPosts<T extends PostEntry>(post: PostEntry, published: readonly T[], n = 3): T[] {
   const cat = refId(post.data.category)
-  const others = published.filter((p) => p.id !== post.id && !p.data.draft)
+  const others = published.filter((p) => p.id !== post.id)
   const same = cat === undefined ? [] : others.filter((p) => refId(p.data.category) === cat)
   const rest = others.filter((p) => !same.includes(p))
   return [...same, ...rest].slice(0, n)

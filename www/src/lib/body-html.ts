@@ -8,7 +8,8 @@
 //   warning;
 // - a link to a page of the main site this build does not serve yet (it is still on Webflow until the switch, step C8)
 //   points at the live site, https://www.openmercato.com/<path>, instead of a 404 of the preview;
-// - a table sits in a scrollable, focusable region, so a wide one never widens the page.
+// - a table sits in a scrollable, focusable region, so a wide one never widens the page;
+// - raw HTML the importer kept (a figure with a caption) follows the same rules for its images and links (rawHtml).
 // Isomorphic: no Node APIs; the shapes below are the subset of hast the plugin reads.
 
 export const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/
@@ -123,13 +124,31 @@ export function linkAction(href: string, rules: LinkRules): LinkAction {
   return { kind: 'live', href: `${rules.origin}${href}` }
 }
 
+/**
+ * The raw HTML of a body (a figure the importer kept as HTML, say) under the same rules as the Markdown around it: an
+ * image loads lazily, a site link is kept, pointed at the live site, or loses its href (a link to a draft is never a
+ * link). The importer writes this HTML itself, double-quoted attributes only; anything else passes as it is.
+ */
+export function rawHtml(html: string, rules: LinkRules): { html: string; unlinked: string[] } {
+  const unlinked: string[] = []
+  const out = html
+    .replace(/<img\b(?![^>]*\bloading=)/g, '<img loading="lazy" decoding="async"')
+    .replace(/(<a\b[^>]*?)\s+href="(\/[^"]*)"/g, (all: string, head: string, href: string) => {
+      const action = linkAction(href, rules)
+      if (action.kind === 'keep') return all
+      if (action.kind === 'live') return `${head} href="${action.href}"`
+      unlinked.push(action.why)
+      return head
+    })
+  return { html: out, unlinked }
+}
+
 /** The part of satteri's hast visitor context the plugin uses. */
 export interface BodyCtx {
   replaceNode(node: unknown, newNode: unknown): void
   removeNode(node: unknown): void
   setProperty(node: unknown, key: string, value: unknown): void
   wrapNode(node: unknown, parent: { raw: string }): void
-  textContent(node: unknown): string
   parent(node: unknown): unknown
   readonly fileURL: URL | undefined
 }
@@ -144,6 +163,10 @@ function videoParagraph(p: HElement): { id: string; title?: string } | undefined
 
 /** The hast plugin. `warn` hears every link rendered as text. */
 export function bodyHtmlPlugin(rules: LinkRules, warn: (message: string) => void) {
+  const unlinked = (ctx: BodyCtx, why: string): void =>
+    warn(
+      `${ctx.fileURL ? ctx.fileURL.pathname.replace(/^.*\/www\//, 'www/') : 'a Markdown body'}: ${why}; the link renders as text`,
+    )
   return {
     name: 'om-www-body',
     element: {
@@ -163,9 +186,9 @@ export function bodyHtmlPlugin(rules: LinkRules, warn: (message: string) => void
         const action = linkAction(href, rules)
         if (action.kind === 'live') ctx.setProperty(node, 'href', action.href)
         else if (action.kind === 'text') {
-          const file = ctx.fileURL ? ctx.fileURL.pathname.replace(/^.*\/www\//, 'www/') : 'a Markdown body'
-          warn(`${file}: ${action.why}; the link renders as text`)
-          ctx.replaceNode(node, { type: 'text', value: ctx.textContent(node) })
+          unlinked(ctx, action.why)
+          // the link's content stays as it is (bold, code), without the link
+          ctx.replaceNode(node, node.children)
         }
       },
     },
@@ -180,7 +203,12 @@ export function bodyHtmlPlugin(rules: LinkRules, warn: (message: string) => void
         else ctx.replaceNode(node, videoEmbedNode(v.id, v.title))
         return
       }
-      if (!isLiteVideoClose(node.value)) return
+      if (!isLiteVideoClose(node.value)) {
+        const r = rawHtml(node.value, rules)
+        for (const why of r.unlinked) unlinked(ctx, why)
+        if (r.html !== node.value) ctx.replaceNode(node, { type: 'raw', value: r.html })
+        return
+      }
       const parent = ctx.parent(node) as HNode | undefined
       // its paragraph is gone with the opening tag
       if (parent?.type === 'element' && parent.tagName === 'p' && videoParagraph(parent as HElement)) return
