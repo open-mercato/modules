@@ -16,6 +16,7 @@ import {
   PARTNER_BUDGETS,
   RESERVED_SEGMENTS,
   routeNamespaceProblems,
+  LIST_PAGE_SLUGS,
   Seo,
   Slug,
   UtcDate,
@@ -63,7 +64,7 @@ const VALID: Record<WwwCollection, unknown> = {
     cta: { title: 'Try it', body: 'Start today.', primary: cta },
     related: ['salesforce-alternative'],
   },
-  pages: { seo, blocks: [{ type: 'copy', markdown: '# Product', webflowNode: 'section-1' }] },
+  pages: { seo, blocks: [{ type: 'hero', title: 'Product' }] },
   blog: {
     title: 'Release notes',
     description: 'What changed.',
@@ -273,11 +274,42 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
       { type: 'faq', title: 'Questions', items: [{ question: 'Why?', answer: 'Because.' }] },
       { type: 'cta', title: 'Start', primary: cta },
       { type: 'prose', markdown: '## Terms' },
+      { type: 'list', collection: 'caseStudies', featured: true, limit: 6 },
       { type: 'legacy', component: 'crm-page', note: 'Compiled Astro output of /crm, source unknown (Q4).' },
     ]
     for (const b of blocks) expect(PageBlock.safeParse(b).success, b.type).toBe(true)
     expect(blocks.map((b) => b.type).sort()).toEqual([...PAGE_BLOCK_TYPES].sort())
     expect(PageBlock.options.map((o) => o.shape.type.value).sort()).toEqual([...PAGE_BLOCK_TYPES].sort())
+  })
+
+  it('gives every typed block the parts of a live section, and an item needs copy', () => {
+    const section = {
+      type: 'features',
+      layout: 'product-grid',
+      id: 'data',
+      label: 'start with 80%',
+      eyebrow: 'Data',
+      title: 'Data Mastery',
+      lead: 'Native support.',
+      primary: cta,
+      secondary: cta,
+      note: 'MIT licensed.',
+      items: [{ eyebrow: '01', title: 'Tenancy', points: ['One', 'Two'], cta }, { image }],
+    }
+    expect(PageBlock.safeParse(section).success).toBe(false)
+    section.items[1] = { body: 'Text.', image } as never
+    expect(PageBlock.safeParse(section).success).toBe(true)
+    expect(PageBlock.safeParse({ type: 'list', collection: 'docs' }).success).toBe(false)
+    expect(PageBlock.safeParse({ type: 'legacy', component: 'crm-hero', note: 'x', layout: 'y' }).success).toBe(false)
+  })
+
+  it('refuses a copy block in a published page, and keeps it in a draft (Phase 6)', () => {
+    const page = wwwSchemas().pages
+    const copy = { type: 'copy', markdown: 'Text', webflowNode: 'section-1' }
+    const r = page.safeParse({ seo, blocks: [{ type: 'hero', title: 'Product' }, copy] })
+    expect(r.success).toBe(false)
+    expect(r.error?.issues[0]?.path).toEqual(['blocks', 1])
+    expect(page.safeParse({ seo, blocks: [copy], draft: true }).success).toBe(true)
   })
 
   it('allows an empty alt text only on a decorative image', () => {
@@ -331,10 +363,14 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
         expect(routeNamespaceProblems([], [seg])).toEqual([`landings/${seg}: /${seg} is a reserved path`])
       expect(routeNamespaceProblems(['run'], [])).toEqual(['pages/run: /run is a reserved path'])
     })
-    it('keeps the list routes of the collections for their collections', () => {
-      // /blog and /careers are list routes like /case-studies and /certified-partners, not pages entries
-      for (const seg of ['blog', 'careers', 'case-studies', 'certified-partners'])
-        expect(routeNamespaceProblems([seg], [])).toEqual([`pages/${seg}: /${seg} is a reserved path`])
+    it('lets a pages entry hold the copy of a list route, and keeps its slug from landings', () => {
+      // /blog, /careers, /case-studies and /certified-partners are list routes; their pages entries hold their copy
+      expect([...LIST_PAGE_SLUGS]).toEqual(['blog', 'case-studies', 'certified-partners', 'careers'])
+      for (const seg of LIST_PAGE_SLUGS) {
+        expect(routeNamespaceProblems([seg], [])).toEqual([])
+        expect(routeNamespaceProblems([], [seg])).toEqual([`landings/${seg}: /${seg} is a reserved path`])
+      }
+      expect(routeNamespaceProblems(['docs'], [])).toEqual(['pages/docs: /docs is a reserved path'])
     })
     it('keeps the home slug for the home page', () => {
       expect(routeNamespaceProblems([], ['home'])).toEqual(['landings/home: the slug of the home page'])
