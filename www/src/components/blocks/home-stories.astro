@@ -1,0 +1,37 @@
+---
+// "Over 1000 devs choose Open Mercato" of the home page as live has it (`omr-stories` in `omr`, styled by
+// www/src/styles/webflow/pages/home.css): the heading (its *emphasis* the live <mark>, a line break where the YAML
+// breaks the line) and the customer videos in the site's video carousel (www/src/components/Carousel.astro), one item
+// each: its title, YouTube id and poster. A play button sends stories/play_video, as live.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Carousel from '../Carousel.astro'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'carousel'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const title = block.title ? headingHtml(t(block.title)).replace(/span>/g, 'mark>').replace(/\n/g, '<br>') : ''
+const videos = block.items.map((item, i) => {
+  if (!item.video || !item.image || !item.title)
+    throw new Error(`www/content/pages/${page}.yaml ${block.layout} items.${i}: a video needs a title, a video and an image`)
+  return {
+    video: item.video,
+    title: t(item.title),
+    thumbnail: item.image.src,
+    width: item.image.width,
+    height: item.image.height,
+  }
+})
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="omr">
+      <section class="omr-stories" aria-labelledby="omr-stories-title" id={block.id}>
+        <div class="omr-heading"><h2 id="omr-stories-title" set:html={title} /></div>
+        <Carousel label="Customer videos" noun="customer video" placement="stories" items={videos} />
+      </section>
+    </div>
+  </div>
+</div>
