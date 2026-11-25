@@ -1,6 +1,6 @@
 ---
 // A case study in a list (/case-studies and the related case studies): thumbnail, categories, title with the link and
-// description.
+// description. Its link sends the live CTA event cta_cases_open_story (lib/core/cta.ts), as the Webflow card did.
 import type { CaseStudyCardData } from '../../lib/case-studies.ts'
 
 interface Props {
@@ -21,7 +21,7 @@ const { cs } = Astro.props
         </ul>
       )
     }
-    <h3 class="post-card__title"><a href={cs.href}>{cs.title}</a></h3>
+    <h3 class="post-card__title"><a href={cs.href} data-cta-placement="cases" data-cta-action="open_story">{cs.title}</a></h3>
     <p class="post-card__desc">{cs.description}</p>
   </div>
 </article>
