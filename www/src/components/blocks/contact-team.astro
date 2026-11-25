@@ -1,0 +1,52 @@
+---
+// "Meet the people behind Open Mercato" of /contact as live: the `#contact-team` section (styled by the page's code,
+// www/src/styles/webflow/pages/contact.css), the heading (its *emphasis* the live highlight) and one card per member:
+// photo, name, role and the LinkedIn mark linking the member's profile, then the bio.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import linkedin from './team-linkedin.svg?raw'
+
+type Props = BlockProps<'team'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const n = block.members.length
+---
+
+<Wrap>
+  <section id={block.id}>
+    <section class="section no-bottom-border">
+      <div class="section-padding">
+        <div class="header_component is-flex">
+          <div class="header_content">
+            {block.title && <h2 set:html={headingHtml(t(block.title))} />}
+          </div>
+        </div>
+      </div>
+      <div class="spacer-large" />
+      <div class="border-grid_component is-4-col">
+        {
+          block.members.map((m, i) => (
+            <div class:list={['border-grid_card', (i === 0 || i === n - 1) && 'is-team']}>
+              <a href={m.url} class="border-grid_team-card w-inline-block">
+                <div class="border-grid_team-image-wrapper">
+                  {m.photo && <img src={m.photo.src} loading="lazy" alt={m.photo.alt} class="border-grid_team-image" />}
+                </div>
+                <div class="border-grid_team-content">
+                  <h3 class="text-size-regular text-weight-medium">{t(m.name)}</h3>
+                  <div class="text-color-secondary">{t(m.role)}</div>
+                  <div class="spacer-xxsmall" />
+                  <div class="icon-embed-xxsmall" set:html={linkedin} />
+                </div>
+              </a>
+              <div class="border-grid_line" />
+              <div class="spacer-small" />
+              {m.bio && <p set:html={inline(t(m.bio))} />}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </section>
+</Wrap>

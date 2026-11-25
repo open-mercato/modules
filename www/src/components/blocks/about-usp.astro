@@ -1,0 +1,60 @@
+---
+// "Why do we win?" of /about as live: a white band, the eyebrow and heading, then a bordered grid of two columns, one
+// card per item with its icon, title and body (the grid's lines as Webflow draws them: a right line after the first
+// card of a row, a bottom line under every row but the last).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import { richInline } from './about-rich.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const rows = Math.ceil(block.items.length / 2)
+---
+
+<Wrap tone="white">
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          <div class="max-width-33rem">
+            {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large" />
+    <div class="border-grid_component is-2-col">
+      {
+        block.items.map((item, i) => (
+          <div class="border-grid_card">
+            <div class="border-grid_card-content">
+              <div class="bg-grid_heading-wrapper">
+                {item.icon && (
+                  <div class="icon-embed-small w-embed">
+                    <img src={item.icon.src} alt={item.icon.alt} width="32" height="32" />
+                  </div>
+                )}
+                {item.title && <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>}
+              </div>
+              <div class="spacer-1rem" />
+              {item.body && <p class="text-color-secondary" set:html={richInline(t(item.body), false)} />}
+              <div class="spacer-1rem" />
+            </div>
+            {i % 2 === 0 ? <div class="border-grid_line" /> : <div class="border-grid_line show-tablet" />}
+            {Math.floor(i / 2) < rows - 1 && <div class="border-grid_line is-bottom hide-tablet" />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>
