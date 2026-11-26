@@ -1,23 +1,23 @@
 {
   "locator": "npm:@dainamite/billing",
-  "checkedAt": "2026-11-23T14:41:33Z",
+  "checkedAt": "2026-11-26T21:39:20Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@dainamite/billing",
     "distTags": {
-      "latest": "1.1.1"
+      "latest": "1.1.2"
     },
-    "latestStable": "1.1.1",
-    "previousStable": "1.1.0",
+    "latestStable": "1.1.2",
+    "previousStable": "1.1.1",
     "preview": null,
     "publishedAt": {
-      "1.1.1": "2026-11-18T16:16:49Z",
-      "1.1.0": "2026-11-16T18:58:17Z"
+      "1.1.2": "2026-11-26T11:37:25Z",
+      "1.1.1": "2026-11-18T16:16:49Z"
     },
     "deprecated": null,
     "license": "MIT",
     "repositoryUrl": "git+https://github.com/dainamite-technologies/dainamite-core.git",
-    "gitHead": "53bc3650f6bdd584627f38ba1cb6d89b1eed76f3",
+    "gitHead": "bafe00d2727ad53c5a938affd1aa89ac181144f3",
     "keywords": [],
     "maintainers": [
       "dainamite-acc",
@@ -46,20 +46,32 @@
       "@pdf-lib/fontkit": "^1.1.1"
     },
     "installScripts": [],
-    "integrity": "sha512-7A7PxAG3TnUHCq8f6yJSIVUzOlnvTBh+TjSSeo02giibjHrE+lq3q9WP5DTg+olyTeqLrXqBw9nOpvrSoYMmQQ==",
-    "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-1.1.1.tgz"
+    "integrity": "sha512-78psZIIPzHv6b6fyCx2vXojUg5lf4RZ5tWsRSkwQgesm0+NupR293I10n/z20y4Zi3i0JtaNqDyHTmG0EC5pRQ==",
+    "tarball": "https://registry.npmjs.org/@dainamite/billing/-/billing-1.1.2.tgz"
   },
   "github": {
     "repo": "dainamite-technologies/dainamite-core",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-23T14:09:51Z",
+    "pushedAt": "2026-11-26T21:02:45Z",
     "defaultBranch": "main",
     "stars": 1,
     "license": "MIT",
     "topics": [],
     "ownerType": "Organization",
     "tags": [
+      {
+        "name": "@dainamite/cpq-billing-connector@5.3.0",
+        "sha": "bafe00d2727ad53c5a938affd1aa89ac181144f3"
+      },
+      {
+        "name": "@dainamite/cpq@1.3.0",
+        "sha": "bafe00d2727ad53c5a938affd1aa89ac181144f3"
+      },
+      {
+        "name": "@dainamite/billing@1.1.2",
+        "sha": "bafe00d2727ad53c5a938affd1aa89ac181144f3"
+      },
       {
         "name": "@dainamite/cpq@1.2.0",
         "sha": "53bc3650f6bdd584627f38ba1cb6d89b1eed76f3"
@@ -195,6 +207,6 @@
   "advisories": [],
   "type": "3rd-party",
   "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
-  "downloads30d": 1414,
+  "downloads30d": 1444,
   "errors": []
 }

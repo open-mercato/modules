@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-26T08:30:06.454Z",
+  "computedAt": "2026-11-26T21:41:18.482Z",
   "driftAgainst": "0.10.1",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -222,6 +222,35 @@
       },
       "hostDuplicates": []
     },
+    "npm:@dainamite/billing@1.1.2": {
+      "status": "drift",
+      "checked": 105,
+      "missing": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/attachments/data/entities#Attachment",
+        "@open-mercato/core/modules/attachments/lib/drivers#StorageDriverFactory",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/types#CommandHandler",
+        "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+        "@open-mercato/shared/lib/data/engine#DataEngine",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig",
+        "@open-mercato/ui/backend/DataTable#DataTableProps",
+        "@open-mercato/ui/backend/inputs#ComboboxInput"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
     "npm:@dainamite/cpq-billing-connector@0.1.1": {
       "status": "drift",
       "checked": 6,
@@ -343,6 +372,27 @@
       "hostDuplicates": []
     },
     "npm:@dainamite/cpq-billing-connector@5.2.0": {
+      "status": "drift",
+      "checked": 48,
+      "missing": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-bus#CommandBus",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq-billing-connector@5.3.0": {
       "status": "drift",
       "checked": 48,
       "missing": [],
@@ -564,6 +614,36 @@
     "npm:@dainamite/cpq@1.2.0": {
       "status": "drift",
       "checked": 109,
+      "missing": [],
+      "drift": [
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-api-operation-runner#AiApiOperationRequest",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#AiToolDefinition",
+        "@open-mercato/ai-assistant/modules/ai_assistant/lib/types#McpToolContext",
+        "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrder",
+        "@open-mercato/core/modules/sales/data/entities#SalesOrderLine",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuote",
+        "@open-mercato/core/modules/sales/data/entities#SalesQuoteLine",
+        "@open-mercato/shared/lib/commands#CommandBus",
+        "@open-mercato/shared/lib/commands#CommandHandler",
+        "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+        "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptorContext",
+        "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+        "@open-mercato/shared/modules/registry#ModuleCli",
+        "@open-mercato/shared/modules/registry#ModuleInfo",
+        "@open-mercato/shared/modules/setup#ModuleSetupConfig"
+      ],
+      "declared": {
+        "range": "^0.9.0",
+        "kind": "caret-0x",
+        "satisfied": true
+      },
+      "hostDuplicates": []
+    },
+    "npm:@dainamite/cpq@1.3.0": {
+      "status": "drift",
+      "checked": 110,
       "missing": [],
       "drift": [
         "@open-mercato/ai-assistant/modules/ai_assistant/lib/ai-agent-definition#AiAgentDefinition",

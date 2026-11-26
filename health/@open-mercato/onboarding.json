@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/onboarding",
   "version": "0.10.1",
-  "computedAt": "2026-11-26T08:30:08Z",
+  "computedAt": "2026-11-26T21:41:20Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -169,7 +169,7 @@
   "evaluated": {
     "0.10": "0.10.1",
     "0.9": "0.9.0",
-    "next": "0.11.1-develop.8545.1.dd603570fd"
+    "next": "0.11.1-develop.8581.1.535dac92b7"
   },
   "verdictPreset": "classic"
 }
