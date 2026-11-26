@@ -1,0 +1,11 @@
+webflowId: 6a2ac62eb3778f6545bd62ab
+seo:
+  title: Case Studies | Open Mercato
+  description: Explore customer stories and product builds on Open Mercato, from connected devices and manufacturing to education, care operations and travel.
+  ogImage: /media/pages/6af21c731eba24d2fe457877-open-mercato-case-studies-og.jpg
+blocks:
+  - type: hero
+    eyebrow: Case Studies
+    title: What teams ship with Open Mercato
+    # the live lead's long dash written `-` (A5)
+    lead: Real projects built on the framework - from logistics ERPs to B2B SaaS platforms. See what's possible when you start with 80% done.

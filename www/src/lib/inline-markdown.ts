@@ -54,3 +54,52 @@ export function markdownHtml(md: string, link: LinkFn = keepLink): string {
   flush()
   return out.join('')
 }
+
+/**
+ * A heading of a unique page as inline HTML: inline marks as in `inline`, except that `*emphasis*` is the live site's
+ * highlighted part of a heading, a `<span>` (the Webflow headings style `h1 span`, `h2 span`).
+ */
+export function headingHtml(text: string, link: LinkFn = keepLink): string {
+  return inline(text, link)
+    .replace(/<em>/g, '<span>')
+    .replace(/<\/em>/g, '</span>')
+}
+
+/**
+ * Longer Markdown of a unique page (a `prose` block, a team member's bio) as HTML: headings `##` to `####`, paragraphs,
+ * bullet lists and numbered lists (which keep the number they start at), with the inline marks of `inline`.
+ */
+export function proseHtml(md: string, link: LinkFn = keepLink): string {
+  const out: string[] = []
+  let para: string[] = []
+  let list: { tag: 'ul' | 'ol'; start: number; items: string[] } | undefined
+  const flush = (): void => {
+    if (para.length > 0) out.push(`<p>${inline(para.join(' '), link)}</p>`)
+    if (list) {
+      const start = list.tag === 'ol' && list.start !== 1 ? ` start="${list.start}"` : ''
+      const lis = list.items.map((i) => `<li>${inline(i, link)}</li>`).join('')
+      out.push(`<${list.tag}${start}>${lis}</${list.tag}>`)
+    }
+    para = []
+    list = undefined
+  }
+  for (const raw of md.split(/\r?\n/)) {
+    const line = raw.trim()
+    const heading = /^(#{2,4})\s+(.*)$/.exec(line)
+    const bullet = /^[-*]\s+(.*)$/.exec(line)
+    const numbered = /^(\d+)\.\s+(.*)$/.exec(line)
+    if (line === '') flush()
+    else if (heading) {
+      flush()
+      out.push(`<h${heading[1]!.length}>${inline(heading[2]!, link)}</h${heading[1]!.length}>`)
+    } else if (bullet || numbered) {
+      const tag = bullet ? 'ul' : 'ol'
+      if (para.length > 0 || (list && list.tag !== tag)) flush()
+      list ??= { tag, start: numbered ? Number(numbered[1]) : 1, items: [] }
+      list.items.push((bullet ? bullet[1] : numbered![2])!)
+    } else if (list) list.items[list.items.length - 1] += ` ${line}`
+    else para.push(line)
+  }
+  flush()
+  return out.join('')
+}

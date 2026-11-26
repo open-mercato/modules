@@ -46,7 +46,7 @@ export function intentOf(href: string): string | undefined {
 
 /**
  * The href a landing renders for a link of its content: a unique page that Webflow serves until Phase 6
- * (PENDING_UNIQUE_PAGES: /contact, /crm) on the live site, every other link as it is.
+ * (PENDING_UNIQUE_PAGES: /contact) on the live site, every other link as it is.
  */
 export function siteHref(href: string): string {
   if (!href.startsWith('/')) return href

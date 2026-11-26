@@ -1,0 +1,10 @@
+---
+// "Enterprise Security" of /product: two cards beside the heading, their icons above the titles.
+// The markup is product-split.astro.
+import Split from './product-split.astro'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+---
+
+<Split {...Astro.props} grid="is-2-col" vertical />

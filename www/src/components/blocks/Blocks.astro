@@ -1,0 +1,31 @@
+---
+// The blocks of a unique page, in order, each rendered by its component (www/src/lib/pages.ts blockComponent): a file
+// of this folder named by the block's `layout` (else its type), or for a `legacy` block a file of ../legacy/ named by
+// its `component`. A block whose component does not exist stops the build, naming the page and the file.
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import type { PageBlockData } from '../../../../lib/schema/www-content.ts'
+import { blockComponent } from '../../lib/pages.ts'
+
+interface Props {
+  blocks: PageBlockData[]
+  counts: CountValues
+  page: string
+}
+const { blocks, counts, page } = Astro.props
+type Module = { default: AstroComponentFactory }
+const files: Record<string, Module> = {
+  ...import.meta.glob<Module>('./*.astro', { eager: true }),
+  ...import.meta.glob<Module>('../legacy/*.astro', { eager: true }),
+}
+const rendered = blocks.map((block, i) => {
+  const { dir, name } = blockComponent(block)
+  const path = dir === 'blocks' ? `./${name}.astro` : `../legacy/${name}.astro`
+  const Component = files[path]?.default
+  if (!Component || name === 'Blocks')
+    throw new Error(`www/content/pages/${page}.yaml blocks.${i}: no component www/src/components/${dir}/${name}.astro`)
+  return { Component, block }
+})
+---
+
+{rendered.map(({ Component, block }) => <Component block={block} counts={counts} page={page} />)}

@@ -1,0 +1,82 @@
+---
+// "An agent becomes a function in your workflow" of /agent-orchestrator: the colour divider with its label, the
+// heading and lead aligned at the bottom, three icon rows in the right column, then the screenshot.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import icon1 from './agent-orchestrator-workflow-1.svg?raw'
+import icon2 from './agent-orchestrator-workflow-2.svg?raw'
+import icon3 from './agent-orchestrator-workflow-3.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const icons = [icon1, icon2, icon3]
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      {
+        block.label && (
+          <div class="color-divider_component">
+            <div class="color-divider_gradient-line" />
+            <div class="color-divider_line" />
+            <div class="color-divider_content">
+              <div class="text-style-tagline text-color-secondary">{t(block.label)}</div>
+            </div>
+          </div>
+        )
+      }
+      <div class="header_component is-grid is-aligned-bottom">
+        <div class="header_content max-width-22rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h4" set:html={headingHtml(t(block.title))} />}
+        </div>
+        {block.lead && <p class="text-color-secondary" set:html={inline(t(block.lead))} />}
+      </div>
+      <div class="spacer-large"></div>
+      <div class="header_component is-grid">
+        <div class="header_content hide-tablet"></div>
+        <div class="bg-grid_component">
+          {
+            block.items.map((item, i) => (
+              <div class="bg-grid_card is-how-it-works">
+                <div class="bg-grid_card-content is-grid is-small-first-col">
+                  <div class="bg-grid_heading-wrapper">
+                    {icons[i] && <div class="icon-embed-xsmall w-embed" set:html={icons[i]} />}
+                    {item.title && <h3 class="text-size-medium">{t(item.title)}</h3>}
+                  </div>
+                  {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      {
+        block.image && (
+          <>
+            <div class="spacer-large" />
+            <div class="asset_component">
+              <img
+                src={block.image.src}
+                loading="lazy"
+                width={block.image.width}
+                alt={block.image.alt}
+                class="asset_image"
+              />
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Wrap>

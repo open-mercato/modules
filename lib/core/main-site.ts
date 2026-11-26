@@ -1,7 +1,7 @@
 // The navbar and the footer of the main site, https://www.openmercato.com (Webflow), copied into the catalog. The
 // catalog is the Run section of that site, www.openmercato.com/run, so a visitor must not feel they left the main site: one navbar,
 // the same as there (Product, Developers and Enterprise open panels of icon, name and description; Contact; Case
-// Studies; the GitHub button with the star count; Launch sandbox), plus one menu the main site gets too: Run, after
+// Studies; Blog; the GitHub button with the star count; Launch sandbox), plus one menu the main site gets too: Run, after
 // Enterprise, with the pages of the catalog (RUN_MENU). Keep this file in step with the Webflow navbar: when the menu
 // changes there, change it here (docs/RUNBOOK.md).
 // Main-site addresses are absolute, so they hold on every host that serves the build. The layout check
@@ -207,10 +207,16 @@ export const RUN_MENU: { label: string; items: readonly RunMenuItem[] } = {
   ],
 }
 
-/** The plain links of the main navbar, after the menus: Contact, then Case Studies pushed to the right. */
+/**
+ * The plain links of the main navbar, after the menus: Contact, then Case Studies and Blog pushed to the right.
+ * Blog is the live navbar's link (owner's decision of 25 Nov 2026, www migration Phase 6): the one header shows it on
+ * the main site and on the /run pages alike, and keeps the Run menu on both, because after the switch /run is part of
+ * the site.
+ */
 export const MAIN_SITE_LINKS: readonly MainSiteLink[] = [
   { label: 'Contact', url: at('/contact') },
   { label: 'Case Studies', url: at('/case-studies') },
+  { label: 'Blog', url: at('/blog') },
 ]
 
 /** Footer links of the main site, in its order. */

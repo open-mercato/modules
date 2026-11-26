@@ -1,0 +1,158 @@
+webflowId: 6a54bec09d3e340e9ed10ca9
+seo:
+  title: Agent Orchestrator | Open Mercato
+  description: Production-ready AI agent orchestration with confidence thresholds, human-in-the-loop controls, full audit trails, and native workflow integration.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+blocks:
+  - type: hero
+    layout: agent-orchestrator-hero
+    eyebrow: Agent Orchestrator
+    title: Agent Orchestrator - the new AI agent module
+    lead: Everyone has an AI agent demo. Almost nobody has one you can safely let into a real business - real data, real processes, real customer money. A demo runs in a sandbox; production runs on your permissions, audit trail, and liability. Agent Orchestrator closes that gap - out of the box with Open Mercato Enterprise.
+    primary:
+      label: Clone the Repo
+      href: https://github.com/open-mercato/open-mercato
+    secondary:
+      label: See Live Demo
+      href: https://openmercatocloud.com/demo
+    image:
+      src: /media/pages/6a54d91ed7bf40956c02a9a2-product-1.jpg
+      alt: ""
+      decorative: true
+      width: 1216
+  - type: features
+    layout: agent-orchestrator-runtimes
+    eyebrow: FLEXIBLE RUNTIMES
+    title: Run your agent where you already run
+    lead: No walled garden. Pick the runtime that fits your stack. Your agent, your environment. We adapt to it - not the other way around.
+    items:
+      - eyebrow: self-hosted
+        title: OpenCode
+        body: Runs inside your Open Mercato Docker container.
+      - eyebrow: Vercel AI SDK
+        title: In-process
+        body: Lightweight agents, no extra infrastructure.
+      - eyebrow: A2A protocol
+        title: Cloud runtimes
+        body: Azure AI Foundry, Google, Amazon and others via one connector.
+  - type: features
+    layout: agent-orchestrator-workflow
+    label: start with 80%
+    eyebrow: NATIVE WORKFLOW INTEGRATION
+    title: An agent becomes a function in your workflow
+    lead: The Agent Orchestrator plugs into Open Mercato Workflows through a new node - Invoke Agent. No glue code, no separate integration project.
+    image:
+      src: /media/pages/6a54d91d9c775de11bb94b09-product-2.jpg
+      alt: ""
+      decorative: true
+      width: 1216
+    items:
+      - title: Pass context
+        body: The workflow hands the agent a well-defined context.
+      - title: It does the work
+        body: The agent runs as any other function.
+      - title: Workflow waits
+        body: It resumes on the agent's response.
+  - type: features
+    layout: agent-orchestrator-controls
+    eyebrow: PRODUCTION CONTROLS
+    title: Two controls make it production-grade
+    image:
+      src: /media/pages/6a54d91ddca040ee7c1a80b0-product-3.jpg
+      alt: ""
+      decorative: true
+    items:
+      - title: Confidence thresholds
+        points:
+          - ">80% → auto"
+          - "<80% → human"
+        body: Set the bar. Above your threshold the agent decides and the workflow moves on. Below it, the decision escalates to a person. You decide how much autonomy you hand over.
+      - title: Human-in-the-loop
+        points:
+          - ">80% → auto"
+          - "<80% → human"
+        body: When output needs sign-off, the workflow stops and routes it to the right person. The agent proposes, the human disposes.
+      - body: Runs on top of the Open Mercato MCP Server - the tools you already expose are discoverable and callable by agents. No new tooling to wire up.
+  - type: features
+    layout: agent-orchestrator-audit
+    eyebrow: TWO-LAYER AUDIT
+    title: Trust, because you can see everything
+    body: Most platforms ask you to take their word for it. We log instead. Every agent action is audited exactly like a human action - a data change by an agent is traced the same way as one made by a person. Nothing off the record.
+    image:
+      src: /media/pages/6a54d91d397816420095b2cd-product-4.jpg
+      alt: ""
+      decorative: true
+    items:
+      - eyebrow: "01"
+        body: Autonomous action - a clean agent-level record.
+      - eyebrow: "02"
+        body: Person-triggered action - both the agent and the person who set it in motion.
+    note: You always know what the agent did - and who put it to work. For regulated buyers, that's the price of entry.
+  - type: features
+    layout: agent-orchestrator-evals
+    eyebrow: EVALS & OBSERVABILITY
+    title: Stop guessing whether your agent is any good
+    items:
+      - title: Agent Evals
+        points:
+          - define
+          - benchmark
+        body: You don't ship code without tests. Define evaluation scenarios, benchmark your agents against them, and watch how they hold up on real cases - in the same place they run.
+        image:
+          src: /media/pages/6a54d91c92e75db5dca91dfd-product-5.jpg
+          alt: ""
+          decorative: true
+      - title: Observability
+        points:
+          - models
+          - cost
+          - performance
+        body: See which model an agent used, what it cost in tokens, and how it performs over time. Admins and AgentOps teams tune behavior with real numbers.
+        image:
+          src: /media/pages/6a54d91d44e8daf778cad67b-product-6.jpg
+          alt: ""
+          decorative: true
+  # the comparison table, one item per column as the live markup has it: the row labels, then n8n, then Open Mercato
+  - type: features
+    layout: agent-orchestrator-compare
+    eyebrow: WHY IT'S DIFFERENT
+    title: How is this different from n8n?
+    lead: Fair question - people ask it first.
+    body: The difference between automating a step and trusting an actor.
+    items:
+      - points:
+          - What an agent is
+          - How it runs
+          - Relationship
+      - title: In n8n
+        points:
+          - Another node that calls an API
+          - Fires a request, hopes for the best
+          - Bolted on, outside your system
+      - title: In Open Mercato
+        points:
+          - A supervised participant in the process
+          - Runs inside your data, permissions and audit
+          - Governed, native to the platform
+  - type: steps
+    layout: agent-orchestrator-layer
+    eyebrow: ONE COHERENT LAYER
+    title: One layer, not three features
+    lead: Runtimes, workflow integration, audit, evals - not four separate things. One coherent layer, start to finish.
+    items:
+      - eyebrow: "01"
+        title: Create
+        body: Define an agent, its tools and the runtime it runs on.
+      - eyebrow: "02"
+        title: Run
+        body: As a standalone function or as a step inside a workflow.
+      - eyebrow: "03"
+        title: Trace
+        body: Every action audited, two layers deep - agent and person.
+      - eyebrow: "04"
+        title: Understand
+        body: Model, token cost and performance, all in one place.
+      - eyebrow: "05"
+        title: Benchmark
+        body: Run evals against real-world scenarios.
+    note: AI agents spent two years doing impressive demos. This is the boring, hard part nobody screenshots - getting them safely into production.

@@ -1,12 +1,14 @@
 ---
 // /case-studies (spec, Routing and UI/UX), in the live Webflow markup: the header, then every published case study in
 // the order of the live list with the category filter island. Drafts are never listed (D6). Complete without
-// JavaScript: the island's server render lists every case study. Title, description and heading are the Webflow
-// page's; they move to the `pages` collection with the unique pages (Phase 6).
+// JavaScript: the island's server render lists every case study. Its title, description, OG image, breadcrumb, heading
+// and lead are the `pages` entry `case-studies` (www/src/lib/pages.ts listPageCopy).
+import { getCollection } from 'astro:content'
 import Main from '../layouts/Main.astro'
 import Crumbs from '../components/Crumbs.astro'
 import CategoryFilter from '../islands/CategoryFilter.tsx'
-import { TITLE_SUFFIX } from '../lib/blog.ts'
+import { inline } from '../lib/inline-markdown.ts'
+import { listPageCopy, type PageEntry } from '../lib/pages.ts'
 import { CASE_STUDIES_PATH, caseStudyCard, filterCategories } from '../lib/case-studies.ts'
 import { caseStudyData } from '../lib/collections-data.ts'
 import pagesCss from '../styles/webflow/pages.css?url'
@@ -14,17 +16,14 @@ import pagesCss from '../styles/webflow/pages.css?url'
 const data = await caseStudyData()
 const cards = data.published.map((cs) => caseStudyCard(cs, data.categories))
 const categories = filterCategories(cards, data.categoryOrder)
-const description =
-  'Explore customer stories and product builds on Open Mercato, from connected devices and manufacturing to education, care operations and travel.'
-// the lead under the heading is the Webflow page's own text, not its description (its long dash written `-`, A5)
-const lead =
-  "Real projects built on the framework - from logistics ERPs to B2B SaaS platforms. See what's possible when you start with 80% done."
+const { seo, hero } = listPageCopy((await getCollection('pages')) as unknown as PageEntry[], 'case-studies')
 ---
 
 <Main
   path={CASE_STUDIES_PATH}
-  title={`Case Studies${TITLE_SUFFIX}`}
-  description={description}
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
   bodyClass="wf-case-studies"
   styles={[pagesCss]}
 >
@@ -34,11 +33,11 @@ const lead =
         <div class="section-padding">
           <div class="header_component">
             <div class="header_content max-width-42rem">
-              <Crumbs current={{ name: 'Case Studies', href: CASE_STUDIES_PATH }} />
-              <h1 class="heading-style-h2">What teams ship with Open Mercato</h1>
+              <Crumbs current={{ name: hero.eyebrow ?? hero.title, href: CASE_STUDIES_PATH }} />
+              <h1 class="heading-style-h2">{hero.title}</h1>
               <div class="spacer-small"></div>
               <div class="max-width-47rem">
-                <p class="text-color-secondary">{lead}</p>
+                {hero.lead && <p class="text-color-secondary" set:html={inline(hero.lead)} />}
               </div>
             </div>
           </div>

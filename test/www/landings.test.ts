@@ -72,10 +72,11 @@ describe('www/src/lib/landings.ts (Phase 5)', () => {
 
   it('points links to unique pages still on Webflow to the live site, the merge check lists them as pending', () => {
     expect(siteHref('/contact?interest=hubspot-alternative')).toBe(`${ORIGIN}/contact?interest=hubspot-alternative`)
-    expect(siteHref('/crm')).toBe(`${ORIGIN}/crm`)
+    expect(siteHref('/crm')).toBe('/crm')
     expect(siteHref('/case-studies/tracecore')).toBe('/case-studies/tracecore')
     expect(siteHref('#comparison')).toBe('#comparison')
-    for (const p of ['/careers', '/contact', '/crm']) expect(PENDING_PAGE.test(p), p).toBe(true)
+    for (const p of ['/careers', '/contact', '/learn-ai-engineering']) expect(PENDING_PAGE.test(p), p).toBe(true)
+    expect(PENDING_PAGE.test('/crm')).toBe(false)
     expect(PENDING_PAGE.test('/contact/x')).toBe(false)
   })
 

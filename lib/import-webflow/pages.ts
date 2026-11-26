@@ -1,6 +1,9 @@
 // Unique pages (spec API Contracts, "Unique pages"): `seo` from pages.json, then one `copy` block per DOM section with
 // the page's text in DOM order. The Webflow DOM API returns a flat node list, so a section starts at each h1 or h2.
-// Phase 6 replaces the copy blocks with typed blocks; until then a page keeps all its text, embeds included.
+// Phase 6 replaces the copy blocks with typed blocks; until then a page keeps all its text, embeds included. A page of
+// copy blocks is written as a draft: the schema refuses a copy block in a published page, so a page the importer
+// writes is never built until a person has mapped it (the published pages of www/content/pages are edited files, which
+// a later run reports as conflicts and leaves alone).
 import { RESERVED_SEGMENTS, SLUG_RE } from '../schema/www-content.ts'
 import { compact, ItemStop, ItemText, validate, type Entry, type RunCtx } from './context.ts'
 import type { WfNode, WfPage } from './export.ts'
@@ -119,8 +122,8 @@ export function pageEntry(
     }
     ctx.report.coverage.push({ page: slug, words: all.length, missing })
   }
-  const data = compact({ webflowId: page.id, seo, blocks, draft: undefined })
-  const entry = validate(ctx, { collection: 'pages', id: slug, webflowId: page.id, draft: false, data })
+  const data = compact({ webflowId: page.id, seo, blocks, draft: true })
+  const entry = validate(ctx, { collection: 'pages', id: slug, webflowId: page.id, draft: true, data })
   t.commit()
   return entry
 }

@@ -1,0 +1,33 @@
+webflowId: 6af5f5ce44a15bad8e0bb337
+seo:
+  title: Open-source CRM built around your workflow | Open Mercato
+  description: Bring contacts, companies, deals and workflows together in a CRM you can customize. Explore Open Mercato and plan your own CRM build.
+# the page has its own closing call to action (the crm-closing embed)
+siteCta: false
+# the live page is 12 embeds of compiled Astro output whose source is unknown (spec Q4): the four style embeds are
+# www/src/styles/webflow/pages/crm.css, the other eight are these legacy components, in live order
+blocks:
+  - type: legacy
+    component: crm-hero
+    note: The hero, embed 5 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-demo
+    note: The animated CRM pipeline demo, embed 6 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-logos
+    note: The company logo wall, embed 7 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-features
+    note: The feature card grid, embed 8 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-ai
+    note: The AI workflows section, embed 9 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-modules
+    note: The module cards, embed 10 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-closing
+    note: The page's own closing call to action, embed 11 of 12, compiled Astro output ported as it is.
+  - type: legacy
+    component: crm-script
+    note: The script of the hero, demo and AI animations, embed 12 of 12, compiled output ported as it is.

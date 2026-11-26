@@ -1,0 +1,64 @@
+---
+// "Run your agent where you already run" of /agent-orchestrator: the tagline, heading and lead side by side, then
+// three cards, each under its coloured label (the live colours in order: grey, yellow, light green).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const tones = ['', 'is-yellow', 'is-green-light']
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex">
+        <div class="header_content max-width-22rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h4" set:html={headingHtml(t(block.title))} />}
+        </div>
+        {
+          block.lead && (
+            <div class="max-width-33rem">
+              <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+            </div>
+          )
+        }
+      </div>
+      <div class="spacer-large"></div>
+      <div class="bg-grid_component is-3-col">
+        {
+          block.items.map((item, i) => (
+            <div class="bg-grid_card-wrapper">
+              {item.eyebrow && (
+                <div class="label_wrapper">
+                  <div class:list={['agency_label', tones[i % tones.length]]}>{t(item.eyebrow)}</div>
+                </div>
+              )}
+              <div class="bg-grid_card">
+                <div class="bg-grid_card-content">
+                  {item.title && (
+                    <div class="bg-grid_heading-wrapper">
+                      <h3 class="text-size-medium text-weight-medium">{t(item.title)}</h3>
+                    </div>
+                  )}
+                  <div class="spacer-1rem" />
+                  {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Wrap>

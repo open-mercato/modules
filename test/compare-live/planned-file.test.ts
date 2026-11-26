@@ -2,7 +2,7 @@
 // each URL and field once, gives every entry its reason, and plans only migrated pages (the landings since Phase 5),
 // never a docs redirect or a unique page (those fail until they are migrated). Each URL is a published entry of the
 // content or a list page, so a renamed or unpublished entry cannot leave a stale plan behind.
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parsePlanned } from '../../lib/commands/compare-live.ts'
@@ -11,6 +11,8 @@ import { caseStudyPath, publishedCaseStudies } from '../../www/src/lib/case-stud
 import { landingPath, publishedLandings } from '../../www/src/lib/landings.ts'
 import { jobPath, publishedJobs } from '../../www/src/lib/jobs.ts'
 import { partnerPath, publishedPartners } from '../../www/src/lib/partners.ts'
+import { pagePath } from '../../www/src/lib/pages.ts'
+import { parse } from 'yaml'
 import { ROOT } from '../emit/helpers.ts'
 import { blogEntries } from '../www/blog-content.ts'
 import { caseStudyEntries, jobEntries, partnerEntries } from '../www/collections-content.ts'
@@ -18,6 +20,13 @@ import { landingEntries } from '../www/landings-content.ts'
 
 const FILE = 'www/compare-live-planned.yaml'
 const planned = parsePlanned(readFileSync(join(ROOT, FILE), 'utf8'), FILE)
+const PAGES = join(ROOT, 'www', 'content', 'pages')
+/** The site paths of the published unique pages (www/content/pages, Phase 6). */
+const uniquePages = readdirSync(PAGES)
+  .filter(
+    (f) => f.endsWith('.yaml') && (parse(readFileSync(join(PAGES, f), 'utf8')) as { draft?: boolean }).draft !== true,
+  )
+  .map((f) => pagePath(f.slice(0, -5)))
 
 describe('the committed planned differences', () => {
   it('name each URL and field once, each with a reason', () => {
@@ -27,7 +36,7 @@ describe('the committed planned differences', () => {
     for (const p of planned) expect(p.note?.trim(), `${p.url} ${p.field}`).toMatch(/\.$/)
   })
 
-  it('plan only published migrated pages and their lists, never a prefix', () => {
+  it('plan only published migrated pages, unique pages and lists, never a prefix', () => {
     const pages = new Set([
       '/blog',
       '/case-studies',
@@ -37,6 +46,7 @@ describe('the committed planned differences', () => {
       ...publishedPartners(partnerEntries()).map((p) => partnerPath(p.id)),
       ...publishedJobs(jobEntries()).map((j) => jobPath(j.id)),
       ...publishedLandings(landingEntries()).map((l) => landingPath(l.id)),
+      ...uniquePages,
     ])
     for (const p of planned) expect(pages.has(p.url), p.url).toBe(true)
   })

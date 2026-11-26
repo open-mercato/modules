@@ -571,7 +571,8 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
     .navbar_menu-links {
       flex: 1;
     }
-    .navbar_menu-links > .navbar_link:last-child {
+    /* as the live code does: Case Studies, and Blog after it, pushed to the right */
+    .navbar_menu-links > .navbar_link[href$='/case-studies'] {
       margin-left: auto;
     }
     .navbar_content-right {

@@ -1,12 +1,16 @@
 ---
 // /blog (spec, Routing and UI/UX), in the live Webflow markup: the header, the featured post, then every published post
 // with the category filter island. Drafts are never listed (D6). Complete without JavaScript: the island's server
-// render lists every post; the Latest and Featured tabs of the live page are added by a script, as live.
+// render lists every post; the Latest and Featured tabs of the live page are added by a script, as live. Its title,
+// description, breadcrumb, heading and lead are the `pages` entry `blog` (www/src/lib/pages.ts listPageCopy).
+import { getCollection } from 'astro:content'
 import Main from '../layouts/Main.astro'
 import Crumbs from '../components/Crumbs.astro'
 import PostCard from '../components/blog/PostCard.tsx'
 import CategoryFilter from '../islands/CategoryFilter.tsx'
-import { BLOG_PATH, leadFeaturedPost, refId, TITLE_SUFFIX } from '../lib/blog.ts'
+import { BLOG_PATH, leadFeaturedPost, refId } from '../lib/blog.ts'
+import { inline } from '../lib/inline-markdown.ts'
+import { listPageCopy, type PageEntry } from '../lib/pages.ts'
 import { blogData } from '../lib/blog-data.ts'
 import pagesCss from '../styles/webflow/pages.css?url'
 
@@ -24,29 +28,21 @@ const categories = [...data.categories]
   .filter(([id]) => counts.has(id))
   .sort(([, a], [, b]) => a.order - b.order || a.name.localeCompare(b.name))
   .map(([id, c]) => ({ id, name: c.name, count: counts.get(id)! }))
-// Webflow has no description for /blog (spec, Problem Statement); until its content PR writes one (Phase 6), it is
-// made of the category names, so no word of it is typed by hand
-const description = `Posts from the Open Mercato team about ${categories
-  .map((c) => c.name)
-  .join(', ')
-  .replace(/, ([^,]*)$/, ' and $1')}.`
+const { seo, hero } = listPageCopy((await getCollection('pages')) as unknown as PageEntry[], 'blog')
 ---
 
-<Main path={BLOG_PATH} title={`Blog${TITLE_SUFFIX}`} description={description} bodyClass="wf-blog" styles={[pagesCss]}>
+<Main path={BLOG_PATH} title={seo.title} description={seo.description} bodyClass="wf-blog" styles={[pagesCss]}>
   <div class="main-wrapper padding-global">
     <div class="container-main">
       <section class="section">
         <div class="section-padding">
           <div class="header_component">
             <div class="header_content">
-              <Crumbs current={{ name: 'Blog', href: BLOG_PATH }} />
-              {/* the heading and the lead of the Webflow page, as live; they move to the `pages` collection in Phase 6 */}
-              <h1>Open Mercato Blog</h1>
+              <Crumbs current={{ name: hero.eyebrow ?? hero.title, href: BLOG_PATH }} />
+              <h1>{hero.title}</h1>
               <div class="spacer-small"></div>
               <div class="max-width-47rem">
-                <p class="text-color-secondary">
-                  Practical guides, deep dives, and lessons learned from building production-ready AI systems.
-                </p>
+                {hero.lead && <p class="text-color-secondary" set:html={inline(hero.lead)} />}
               </div>
             </div>
           </div>

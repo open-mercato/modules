@@ -35,7 +35,7 @@ export const MERGE_DIRS = { www: 'dist-www', run: 'dist-run', out: 'dist' } as c
 /**
  * Pages of the main site that Webflow serves until their phase and that the www pages link on purpose
  * (PENDING_UNIQUE_PAGES of lib/schema/www-content.ts: /careers, the list of jobs each job page's breadcrumb links, and
- * /contact and /crm, which the landings' calls to action link). A noindex preview lists them as pending, as the header's
+ * /contact, which the landings' calls to action link). A noindex preview lists them as pending, as the header's
  * links; production fails on them. The detail pages of the collections (blog posts, case studies, partners, jobs) are
  * built since Phase 4, so a link to one must name a built page.
  */

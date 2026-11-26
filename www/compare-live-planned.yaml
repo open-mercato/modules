@@ -4,32 +4,24 @@
 # (markup, Webflow classes, breadcrumb, sidebar CTA, table of contents, carousels), so a template part differs only
 # where a note says why. Body text and content images were compared block by block (Webflow rich text against the
 # preview's): the same, apart from what a note names.
-# The landings (Phase 5) mirror the live template; one differs, on purpose, as its note says. Unique pages (Phase 6)
-# are not listed: they fail until they are migrated.
+# The landings (Phase 5) and the unique pages (Phase 6) mirror the live pages; where one differs, its note says why.
+# Owner's decision of 25 Nov 2026: a page shows the catalog's real module count ({moduleCount}, spec A6), not live's
+# hand-typed "50+"; every page that shows it has an entry for its text, though the change stays under the threshold.
 - url: /blog
   field: description
-  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), final text with the unique pages (Phase 6)."
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
 - url: /blog
   field: text
   note: "Live's category filter also offers Security, a category with no published post (here only categories with a post), lists the categories in another order, and has Webflow's form messages and the filter's empty-state text in its markup; live lists the post of 12 Apr 2026 (Open-source ERP in 2026) last, here it is in date order. Every published post is listed and linked, in the live markup."
-- url: /blog
-  field: json-ld
-  note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
 - url: /case-studies
   field: text
   note: "Live's page has no <main>, so its main text takes in the closing call to action that follows <main> here, and it has Webflow's form messages and the filter's empty-state text in its markup. The header, the filter and every card are the same."
-- url: /case-studies
-  field: json-ld
-  note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
 - url: /certified-partners
   field: description
-  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), final text with the unique pages (Phase 6)."
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
 - url: /certified-partners
   field: text
-  note: 'Live''s filter lists every country and language of Webflow in hidden selects and every tier and budget, also those no published partner has (here the values published partners have); each live card carries Finsweet''s hidden filter fields; live''s page has no <main>, so its main text takes in the closing call to action; its lead says "partner directory" where this page says "partner list". Every published partner is listed and linked, in the live markup.'
-- url: /certified-partners
-  field: json-ld
-  note: "No JSON-LD on the list pages yet: Organization and WebSite site-wide come in Phase 7 (spec, SEO table). Not a template difference."
+  note: "Live's filter lists every country and language of Webflow in hidden selects and every tier and budget, also those no published partner has (here the values published partners have); each live card carries Finsweet's hidden filter fields; live's page has no <main>, so its main text takes in the closing call to action. Every published partner is listed and linked, in the live markup."
 - url: /blog-posts/ai-engineering-at-enterprise-scale-8-lessons-fortune-500
   field: description
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
@@ -198,3 +190,111 @@
 - url: /baselinker-alternatywa
   field: title
   note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /
+  field: h1
+  note: 'Live''s HTML says "Build any Business App you need" and its script (om-hero-headline-copy) replaces it with "Start with 80% done" in the browser; the page renders the words visitors see.'
+- url: /
+  field: images
+  note: "Live's script (om-customer-implementation-partner) adds the implementation partner video to the stories in the browser; the page renders it, so one more image (its poster)."
+- url: /
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026); the release badge shows the core version of the catalog''s data where live''s HTML types v0.9.0 (AGENTS.md rule 8; the browser shows the latest release on both).'
+- url: /agile-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /attio-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /b2b-order-management
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /baselinker-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /baselinker-alternatywa
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /bitrix24-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /capsule-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /close-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /copper-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /crm-for-manufacturing
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /crm-for-wholesale-distributors
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /custom-crm-development
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /dynamics-365-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /freshsales-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /hubspot-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /insightly-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /keap-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /lot-traceability-software
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /monday-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /nutshell-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /odoo-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /pipedrive-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /salesforce-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /salesmate-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /self-hosted-crm
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /senior-care-operations
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /sugarcrm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /suitecrm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /twenty-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /vtiger-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /zendesk-sell-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /zoho-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'

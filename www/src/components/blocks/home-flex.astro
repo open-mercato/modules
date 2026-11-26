@@ -1,0 +1,201 @@
+---
+// "The most flexible business apps framework" of the home page as live has it (`om-flex-section`, styled by
+// www/src/styles/webflow/pages/home.css): the eyebrow, the heading (its *emphasis* the live <mark>, a line break where
+// the YAML breaks the line), the lead, and the builder: a chat with an AI assistant, where each request (an item's
+// title) gets its answer (its body) and adds a piece to the tower beside it, animated by the live script (below).
+// The first item is the assistant's window: eyebrow and title its header, body its greeting, points the composer's
+// placeholder and button, note what a phone shows once every request is in. `note` describes the scene for screen
+// readers. The tower has a piece for each of the seven requests, in order.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import scene from './home-flex-system.svg?raw'
+
+type Props = BlockProps<'features'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+/** Inline Markdown with each line break of the YAML a <br>. */
+const lines = (s: string): string => inline(t(s)).replace(/\n/g, '<br>')
+
+/** The pieces of the tower, in the order the requests add them. */
+const PIECES = ['crm', 'warehouse', 'bridge', 'ai', 'commerce', 'manager', 'idea']
+const [assistant, ...requests] = block.items
+if (!assistant || requests.length !== PIECES.length)
+  throw new Error(
+    `www/content/pages/${page}.yaml ${block.layout}: the window and ${PIECES.length} requests, one per piece of the tower`,
+  )
+const [placeholder, plan] = assistant.points ?? []
+const title = block.title ? headingHtml(t(block.title)).replace(/span>/g, 'mark>').replace(/\n/g, '<br>') : ''
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="om-home-refresh">
+      <section class="om-flex-section" aria-labelledby="om-flex-title" id={block.id}>
+        <div class="om-flex-heading">
+          {block.eyebrow && <span class="om-eyebrow">{t(block.eyebrow)}</span>}
+          <h2 id="om-flex-title" set:html={title} />
+          {block.lead && <p set:html={lines(block.lead)} />}
+        </div>
+        <div class="om-line-builder" data-animation-step="0">
+          <div class="om-mobile-prompt" aria-hidden="true" data-done={assistant.note ? t(assistant.note) : ''}>
+            {requests[0]!.title && t(requests[0]!.title)}
+          </div>
+          <div class="om-conversation">
+            <div class="om-conversation-head">
+              <span class="om-assistant-symbol">✳</span>
+              <div>
+                {assistant.eyebrow && <strong>{t(assistant.eyebrow)}</strong>}
+                {assistant.title && <span>{t(assistant.title)}</span>}
+              </div>
+              <i class="om-online"></i>
+            </div>
+            <div class="om-transcript" aria-hidden="true">
+              <div class="om-chat-welcome">
+                <span class="om-assistant-symbol">✳</span>
+                {assistant.body && <p set:html={inline(t(assistant.body))} />}
+              </div>
+              {
+                requests.map((r, i) => (
+                  <div class="om-message-pair" data-message={i}>
+                    <div class="om-user-bubble">{r.title && t(r.title)}</div>
+                    <div class="om-assistant-bubble">
+                      <span class="om-assistant-symbol">✳</span>
+                      <div>
+                        <span class="om-thinking">
+                          <i />
+                          <i />
+                          <i />
+                        </span>
+                        {r.body && <span class="om-message-answer" set:html={inline(t(r.body))} />}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <div class="om-composer" aria-hidden="true">
+              <div class="om-composer-text">
+                <span data-composer-text=""></span><i class="om-input-caret"></i><span class="om-input-placeholder"
+                  >{placeholder && t(placeholder)}</span
+                >
+              </div>
+              <div class="om-composer-toolbar">
+                <span>＋ <small>{plan && t(plan)}</small></span><span class="om-send-arrow" data-send-arrow="">↑</span>
+              </div>
+            </div>
+          </div>
+          <div class="om-system-scene" set:html={scene} />
+        </div>
+        {block.note && <p class="om-sr-only" set:html={inline(t(block.note))} />}
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The builder, the live page's script: the requests are typed into the composer one after another, each answered
+  // and its piece added to the tower, then the whole repeats (17 s; two and a half times as fast on a phone, where a
+  // line above the tower shows the request instead of the chat). It runs only while the builder is in view and the tab
+  // is visible; under reduced motion it shows the finished tower.
+  const builder = document.querySelector<HTMLElement>('.om-line-builder')
+  const section = builder?.closest<HTMLElement>('.om-flex-section')
+  if (builder && section && !builder.dataset.ready) {
+    builder.dataset.ready = 'true'
+    const mobile = matchMedia('(max-width:650px)')
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+    const mobilePrompt = builder.querySelector<HTMLElement>('.om-mobile-prompt')!
+    const messages = [...builder.querySelectorAll<HTMLElement>('[data-message]')]
+    const composer = builder.querySelector<HTMLElement>('.om-composer')!
+    const input = builder.querySelector<HTMLElement>('[data-composer-text]')!
+    const send = builder.querySelector<HTMLElement>('[data-send-arrow]')!
+    const transcript = builder.querySelector<HTMLElement>('.om-transcript')!
+    const prompts = messages.map((m) => m.querySelector('.om-user-bubble')?.textContent?.trim() ?? '')
+    const doneText = mobilePrompt.dataset.done ?? ''
+    const KEYS = ['crm', 'warehouse', 'bridge', 'ai', 'commerce', 'manager', 'idea']
+    const STARTS = [300, 1900, 3900, 6100, 8000, 10000, 12200]
+    const DURATIONS = [350, 650, 800, 550, 400, 850, 600]
+    const sent = STARTS.map((s, i) => s + DURATIONS[i]! + 250)
+    const done = sent.map((s) => s + 500)
+    const clock = { t: 0, visible: false }
+    let frame = 0
+    let last = 0
+    let lastScroll = ''
+
+    const paint = (t: number, still = false): void => {
+      const cycle = (mobile.matches ? t * 2.5 : t) % 17000
+      let active = -1
+      let mi = 0
+      STARTS.forEach((s, j) => {
+        if (cycle >= s) mi = j
+      })
+      mobilePrompt.textContent = still ? doneText : (prompts[mi] ?? '')
+      mobilePrompt.classList.toggle('is-done', still || cycle >= done[mi]!)
+      KEYS.forEach((key, i) => {
+        const isSent = still || cycle >= sent[i]!
+        const isDone = still || cycle >= done[i]!
+        messages[i]?.classList.toggle('is-sent', isSent)
+        messages[i]?.classList.toggle('is-done', isDone)
+        section.querySelector(`[data-system-piece="${key}"]`)?.classList.toggle('is-added', isDone)
+        section.querySelector(`[data-system-link="${key}"]`)?.classList.toggle('is-added', isDone)
+        if (cycle >= STARTS[i]! && cycle < sent[i]!) active = i
+      })
+      const writing = active >= 0 && !still
+      composer.classList.toggle('is-typing', writing && cycle < STARTS[active]! + DURATIONS[active]!)
+      composer.classList.toggle('has-text', writing)
+      const prompt = prompts[active] ?? ''
+      input.textContent = writing
+        ? prompt.slice(
+            0,
+            Math.min(prompt.length, Math.floor(((cycle - STARTS[active]!) / DURATIONS[active]!) * prompt.length)),
+          )
+        : ''
+      send.classList.toggle('is-sending', writing && cycle > sent[active]! - 200)
+      const complete = still ? KEYS.length : done.filter((s) => cycle >= s).length
+      const scrollKey = messages.map((m) => m.className).join('|')
+      if (scrollKey !== lastScroll) {
+        lastScroll = scrollKey
+        transcript.scrollTop = transcript.scrollHeight
+      }
+      if (cycle < 500) transcript.scrollTop = 0
+      builder.dataset.animationStep = still
+        ? 'complete'
+        : writing
+          ? `typing-${active}`
+          : messages.some((m) => m.classList.contains('is-sent') && !m.classList.contains('is-done'))
+            ? 'building'
+            : String(complete)
+    }
+
+    const tick = (now: number): void => {
+      frame = 0
+      const dt = last ? Math.min(now - last, 100) : 0
+      last = now
+      if (clock.visible && !document.hidden && !reduce.matches) {
+        clock.t += dt
+        paint(clock.t)
+        frame = requestAnimationFrame(tick)
+      } else last = 0
+    }
+    const start = (): void => {
+      if (!frame && !reduce.matches && !document.hidden) {
+        last = 0
+        frame = requestAnimationFrame(tick)
+      }
+    }
+    new IntersectionObserver(
+      (es) => {
+        clock.visible = es[0]?.isIntersecting ?? false
+        start()
+      },
+      { threshold: 0.12 },
+    ).observe(builder)
+    document.addEventListener('visibilitychange', start)
+    reduce.addEventListener('change', () => {
+      paint(0, reduce.matches)
+      start()
+    })
+    paint(0, reduce.matches)
+    start()
+  }
+</script>

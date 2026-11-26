@@ -194,8 +194,9 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
     expect(result.report.crossChecked.sort()).toEqual(['baselinker-alternative', 'baselinker-alternatywa'])
   })
 
-  it('writes a unique page as copy blocks and skips list routes', () => {
+  it('writes a unique page as a draft of copy blocks and skips list routes', () => {
     const contact = parseYaml(files.get('www/content/pages/contact.yaml')!.toString('utf8'))
+    expect(contact.draft).toBe(true)
     expect(contact.blocks.length).toBeGreaterThan(0)
     expect(contact.blocks.every((b: { type: string }) => b.type === 'copy')).toBe(true)
     expect(files.has('www/content/pages/careers.yaml')).toBe(false)

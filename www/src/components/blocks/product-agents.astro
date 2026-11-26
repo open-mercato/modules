@@ -1,0 +1,10 @@
+---
+// "AI-Native" of /product: the cards beside the heading, their icons beside the titles.
+// The markup is product-split.astro.
+import Split from './product-split.astro'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+---
+
+<Split {...Astro.props} />

@@ -1,0 +1,109 @@
+---
+// The two ways in of the home page as live has them (`omr-sandbox` in `omr`, styled by
+// www/src/styles/webflow/pages/home.css): for a developer (the first item: eyebrow, title and the command of its body,
+// a button that copies it) and for everyone else (the second: eyebrow, title and its cta). CTA events as the live map
+// names them: sandbox/copy_clone_command, sandbox/build_in_sandbox, sandbox/<label>.
+import { ctaAttrs, ctaSlug } from '../../../../lib/core/cta.ts'
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+
+const [dev, sandbox] = block.items
+const command = dev?.body ? /^(\S+) (\S+) (https:\/\/[^/]+\/)(\S+)$/.exec(dev.body.trim()) : null
+if (!dev || !sandbox || !command || !sandbox.cta)
+  throw new Error(
+    `www/content/pages/${page}.yaml ${block.layout}: a developer item with a git command as body, then an item with a cta`,
+  )
+const [, git, action, host, repo] = command
+const COPY_ICON =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>'
+const cta = sandbox.cta
+const sandboxAction = cta.href.includes('app.openmercatocloud.com/signup') ? 'build_in_sandbox' : ctaSlug(cta.label)
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="omr">
+      <section class="omr-sandbox" aria-labelledby="omr-sandbox-title" id={block.id} data-cta-placement="sandbox">
+        <div class="omr-developer-card" aria-labelledby="omr-developer-title">
+          <div class="omr-developer-copy">
+            {dev.eyebrow && <p class="omr-sandbox-kicker">{t(dev.eyebrow)}</p>}
+            {dev.title && <h2 id="omr-developer-title">{t(dev.title)}</h2>}
+          </div>
+          <button
+            type="button"
+            class="omr-developer-command"
+            aria-label={`Copy ${git} ${action} command`}
+            data-command={dev.body!.trim()}
+            {...ctaAttrs('copy_clone_command')}
+          >
+            <span class="omr-command-prompt" aria-hidden="true">$</span><code
+              ><span class="omr-code-git">{git}</span>{' '}<span class="omr-code-action">{action}</span>{' '}<span
+                class="omr-code-url">{host}<wbr /></span
+              ><span class="omr-code-repo">{repo}</span></code
+            ><span class="omr-command-copy" aria-hidden="true" set:html={COPY_ICON} /><span
+              class="omr-command-feedback"
+              aria-live="polite"></span>
+          </button>
+        </div>
+        <div class="omr-sandbox-card omr-sandbox-simple">
+          <div class="omr-sandbox-copy">
+            {sandbox.eyebrow && <p class="omr-sandbox-kicker">{t(sandbox.eyebrow)}</p>}
+            {sandbox.title && <h2 id="omr-sandbox-title">{t(sandbox.title)}</h2>}
+          </div>
+          <div class="om-final-actions">
+            <a class="om-final-primary" href={cta.href} {...ctaAttrs(sandboxAction)}
+              >{t(cta.label)} <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The copy button, the live page's script: a click copies the command, shows a check and "Copied!" for 1.8 s, or,
+  // where the browser cannot copy, asks the reader to copy it by hand.
+  const CHECK =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-10"/></svg>'
+  const box = document.querySelector<HTMLButtonElement>('.omr-developer-command')
+  const feedback = box?.querySelector<HTMLElement>('.omr-command-feedback')
+  const icon = box?.querySelector<HTMLElement>('.omr-command-copy')
+  if (box && feedback && icon) {
+    const command = box.dataset.command ?? ''
+    const normal = icon.innerHTML
+    let timer: ReturnType<typeof setTimeout> | undefined
+    box.addEventListener('click', async () => {
+      clearTimeout(timer)
+      try {
+        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(command)
+        else {
+          const input = document.createElement('textarea')
+          input.value = command
+          input.style.cssText = 'position:fixed;left:-9999px;top:0'
+          document.body.append(input)
+          input.select()
+          const copied = document.execCommand('copy')
+          input.remove()
+          box.focus()
+          if (!copied) throw new Error('Copy failed')
+        }
+        feedback.textContent = 'Copied!'
+        box.classList.add('is-copied')
+        icon.innerHTML = CHECK
+        timer = setTimeout(() => {
+          feedback.textContent = ''
+          box.classList.remove('is-copied')
+          icon.innerHTML = normal
+        }, 1800)
+      } catch {
+        feedback.textContent = 'Select and copy the command'
+        timer = setTimeout(() => (feedback.textContent = ''), 3000)
+      }
+    })
+  }
+</script>

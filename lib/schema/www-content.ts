@@ -327,13 +327,54 @@ export function landingSchema(ref: WwwRef = slugRef) {
 
 /**
  * A block of a unique page, discriminated by `type` (spec, Data Model `pages` and UI/UX: hero, logo wall, feature grid,
- * carousel, video, stats, team grid, quote, steps, FAQ, CTA, prose). The importer writes one type, `copy`, with the
- * page's text in DOM order; Phase 6 replaces each `copy` block of a page with typed blocks. `legacy` names a component
- * ported from a Webflow embed whose source is unknown (spec Q4). `id` is the anchor of the block's section.
+ * carousel, video, stats, team grid, quote, steps, FAQ, CTA, prose, plus `list`, a list of a collection's entries). The
+ * importer writes one type, `copy`, with the page's text in DOM order; Phase 6 replaced each `copy` block with typed
+ * blocks, and a published page with a `copy` block fails the build (pageSchema). `legacy` names a component ported
+ * from a Webflow embed whose source is unknown (spec Q4).
+ *
+ * Every typed block holds copy only; its look is a component. `layout` names that component
+ * (www/src/components/blocks/<layout>.astro, by default the block's type): while the site mirrors the live
+ * openmercato.com (owner's decision of 25 Nov 2026, until the designer's pass, D7), a layout reproduces one live
+ * section's markup. The parts every block may show: `id` (the anchor of its section), `label` (the word of the colour
+ * divider above a section), `eyebrow`, `lead`, the two calls to action and a `note` under them.
  */
 export const CopyBlock = z.strictObject({ type: z.literal('copy'), markdown: Markdown, webflowNode: Text })
+const head = {
+  id: Slug.optional(),
+  layout: Slug.optional(),
+  label: Text.optional(),
+  eyebrow: Text.optional(),
+  lead: Markdown.optional(),
+  primary: Cta.optional(),
+  secondary: Cta.optional(),
+  note: Markdown.optional(),
+}
 const block = <T extends string, S extends z.ZodRawShape>(type: T, shape: S) =>
-  z.strictObject({ type: z.literal(type), id: Slug.optional(), ...shape })
+  z.strictObject({ type: z.literal(type), ...head, ...shape })
+
+/** A card, row or slide of a block: the parts a repeated item of a live section shows, at least one of them copy. */
+export const BlockItem = z
+  .strictObject({
+    /** A small label above the title: a number ("01"), a tag or a date. */
+    eyebrow: Text.optional(),
+    title: Text.optional(),
+    body: Markdown.optional(),
+    icon: Image.optional(),
+    image: Image.optional(),
+    video: YouTubeId.optional(),
+    /** A list in the item (Markdown inline per point). */
+    points: z.array(Markdown).min(1).optional(),
+    cta: Cta.optional(),
+    note: Markdown.optional(),
+  })
+  .refine((i) => i.title !== undefined || i.body !== undefined || i.points !== undefined || i.eyebrow !== undefined, {
+    message: 'an item needs a title, a body, points or an eyebrow',
+  })
+const items = z.array(BlockItem).min(1)
+
+/** The collections a `list` block lists, in the order their own list page uses. */
+export const LIST_COLLECTIONS = ['caseStudies', 'jobs', 'blog', 'partners'] as const
+
 export const PAGE_BLOCK_TYPES = [
   'copy',
   'hero',
@@ -348,78 +389,109 @@ export const PAGE_BLOCK_TYPES = [
   'faq',
   'cta',
   'prose',
+  'list',
   'legacy',
 ] as const
 export const PageBlock = z.discriminatedUnion('type', [
   CopyBlock,
-  block('hero', {
-    eyebrow: Text.optional(),
-    title: Text,
-    lead: Markdown.optional(),
-    primary: Cta.optional(),
-    secondary: Cta.optional(),
-    image: Image.optional(),
-    video: YouTubeId.optional(),
-  }),
+  block('hero', { title: Text, image: Image.optional(), video: YouTubeId.optional(), items: items.optional() }),
   block('logos', {
     title: Text.optional(),
     items: z.array(z.strictObject({ name: Text, logo: Image, href: Href.optional() })).min(1),
   }),
-  block('features', {
-    eyebrow: Text.optional(),
-    title: Text,
-    lead: Markdown.optional(),
-    items: z.array(z.strictObject({ title: Text, body: Markdown, icon: Image.optional(), cta: Cta.optional() })).min(1),
-  }),
-  block('carousel', {
-    eyebrow: Text.optional(),
-    title: Text.optional(),
-    items: z
-      .array(
-        z.strictObject({
-          title: Text,
-          body: Markdown.optional(),
-          image: Image.optional(),
-          video: YouTubeId.optional(),
-          cta: Cta.optional(),
-        }),
-      )
-      .min(1),
-  }),
+  block('features', { title: Text.optional(), body: Markdown.optional(), image: Image.optional(), items }),
+  block('carousel', { title: Text.optional(), items }),
   block('video', { title: Text.optional(), youtube: YouTubeId, poster: Image.optional(), caption: Text.optional() }),
   block('stats', {
     title: Text.optional(),
     /** A value is text, so it can hold a count token ({moduleCount}, A6) instead of a typed number. */
-    items: z.array(z.strictObject({ value: Text, label: Text })).min(1),
+    items: z.array(z.strictObject({ value: Text, label: Text, body: Markdown.optional() })).min(1),
   }),
   block('team', {
     title: Text.optional(),
-    lead: Markdown.optional(),
     members: z
-      .array(z.strictObject({ name: Text, role: Text, photo: Image.optional(), url: HttpsUrl.optional() }))
+      .array(
+        z.strictObject({
+          name: Text,
+          role: Text,
+          photo: Image.optional(),
+          url: HttpsUrl.optional(),
+          bio: Markdown.optional(),
+          links: z.array(Cta).min(1).optional(),
+        }),
+      )
       .min(1),
   }),
   block('quote', { quote: Markdown, author: Text, role: Text.optional(), image: Image.optional() }),
-  block('steps', { eyebrow: Text.optional(), title: Text, items: z.array(TitleBody).min(1) }),
+  block('steps', { title: Text, items }),
   block('faq', {
     title: Text,
     items: z.array(z.strictObject({ question: Text, answer: Markdown })).min(1),
   }),
-  block('cta', { title: Text, body: Markdown.optional(), primary: Cta, secondary: Cta.optional() }),
-  block('prose', { markdown: z.string().trim().min(1) }),
+  block('cta', { title: Text, body: Markdown.optional(), items: items.optional() }),
+  /** Longer copy in Markdown: paragraphs, headings (`##` to `####`), lists and links. */
+  block('prose', { title: Text.optional(), markdown: z.string().trim().min(1) }),
+  /** The published entries of a collection, rendered by the layout; `featured` keeps the ones a page features. */
+  block('list', {
+    title: Text.optional(),
+    collection: z.enum(LIST_COLLECTIONS),
+    featured: z.boolean().optional(),
+    limit: z.int().positive().optional(),
+  }),
   /** A component of www/src/components/legacy/, by its file name, ported as it is from a Webflow embed (Q4). */
-  block('legacy', { component: Slug, note: Text }),
+  z.strictObject({ type: z.literal('legacy'), id: Slug.optional(), component: Slug, note: Text }),
 ])
 export type PageBlockData = z.infer<typeof PageBlock>
 
-/** `pages`: content/pages/<slug>.yaml, the unique pages (the entry `home` is `/`). */
+/**
+ * `pages`: content/pages/<slug>.yaml, the unique pages (the entry `home` is `/`; the entries of LIST_PAGE_SLUGS are
+ * the copy of the list routes). A published page holds typed blocks only: a `copy` block, the importer's raw text, is
+ * refused unless the page is a draft (spec Phase 6), so no page ships unmapped text.
+ */
+export const PAGE_JSON_LD_TYPES = [
+  'WebPage',
+  'AboutPage',
+  'ContactPage',
+  'TechArticle',
+  'HowTo',
+  'SoftwareApplication',
+] as const
+
 export function pageSchema() {
-  return z.strictObject({
-    webflowId: WebflowId.optional(),
-    seo: Seo,
-    blocks: z.array(PageBlock),
-    draft,
-  })
+  return z
+    .strictObject({
+      webflowId: WebflowId.optional(),
+      seo: Seo,
+      /**
+       * The JSON-LD of the page, computed from its content (spec SEO): the page's own type (its name and description
+       * from `seo`; a HowTo's steps from its first `steps` block), plus FAQPage from its `faq` blocks and from `faq`
+       * here, the questions the live page's head code names without showing them.
+       */
+      jsonLd: z
+        .strictObject({
+          type: z.enum(PAGE_JSON_LD_TYPES),
+          faq: z
+            .array(z.strictObject({ question: Text, answer: Markdown }))
+            .min(1)
+            .optional(),
+        })
+        .optional(),
+      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm). */
+      siteCta: z.boolean().default(true),
+      blocks: z.array(PageBlock),
+      draft,
+    })
+    .superRefine((p, ctx) => {
+      if (p.draft) return
+      p.blocks.forEach((b, i) => {
+        if (b.type === 'copy')
+          ctx.addIssue({
+            code: 'custom',
+            path: ['blocks', i],
+            message: 'a published page cannot hold a copy block: map it to typed blocks (spec Phase 6)',
+          })
+      })
+    })
 }
 
 /** `blog`: content/blog/<slug>.md, frontmatter of a post (the body is Markdown). */
@@ -672,15 +744,24 @@ export const NON_PAGE_SEGMENTS = [
 ] as const
 
 /**
- * Unique pages (Phase 6) that Webflow serves until their phase and that pages built before it link: `/careers` (each
- * job page's breadcrumb, Phase 4) and the contact and CRM pages (the landings' calls to action, Phase 5). Those links
+ * Unique pages (Phase 6) that Webflow serves until their pull request and that pages built before it link: `/careers`
+ * (each job page's breadcrumb, Phase 4), the contact page (the landings' and /crm's calls to action, Phase 5) and
+ * /learn-ai-engineering (the home page's Academy links). Those links
  * point to the live site (MAIN_SITE_ORIGIN) until the page is built here; a noindex preview lists them as pending and
- * production fails on them (lib/emit/pages-merge.ts). Phase 6 empties the list.
+ * production fails on them (lib/emit/pages-merge.ts). The second pull request of Phase 6 builds them and empties the
+ * list.
  */
-export const PENDING_UNIQUE_PAGES = ['careers', 'contact', 'crm'] as const
+export const PENDING_UNIQUE_PAGES = ['careers', 'contact', 'learn-ai-engineering'] as const
 
 /** The pages entry routed at `/`. */
 export const HOME_PAGE_SLUG = 'home'
+
+/**
+ * Pages entries that hold the copy of a list route of its own (its title, description, heading and lead) instead of
+ * routing at `/<slug>`: the list pages of the collections and /careers, which lists the jobs. Their slugs stay
+ * reserved for landings.
+ */
+export const LIST_PAGE_SLUGS = ['blog', 'case-studies', 'certified-partners', 'careers'] as const
 
 /**
  * Why the slugs of `pages` and `landings` cannot share the root namespace, one line per problem: a slug in both, or a
@@ -689,12 +770,15 @@ export const HOME_PAGE_SLUG = 'home'
 export function routeNamespaceProblems(pages: readonly string[], landings: readonly string[]): string[] {
   const problems: string[] = []
   const reserved = new Set<string>(RESERVED_SEGMENTS)
+  const listPages = new Set<string>(LIST_PAGE_SLUGS)
   const pageSet = new Set(pages)
   for (const [collection, ids] of [
     ['pages', pages],
     ['landings', landings],
   ] as const) {
-    for (const id of ids) if (reserved.has(id)) problems.push(`${collection}/${id}: /${id} is a reserved path`)
+    for (const id of ids)
+      if (reserved.has(id) && !(collection === 'pages' && listPages.has(id)))
+        problems.push(`${collection}/${id}: /${id} is a reserved path`)
   }
   for (const id of landings) if (pageSet.has(id)) problems.push(`pages/${id} and landings/${id} both route to /${id}`)
   if (landings.includes(HOME_PAGE_SLUG)) problems.push(`landings/${HOME_PAGE_SLUG}: the slug of the home page`)

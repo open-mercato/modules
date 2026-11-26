@@ -1,0 +1,10 @@
+---
+// "The Anatomy of an Open Mercato Module" of /product: as product-cards with a smaller heading, and the quote across both columns.
+// The markup is product-split.astro.
+import Split from './product-split.astro'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+---
+
+<Split {...Astro.props} grid="is-2-col" vertical heading="heading-style-h4" open />
