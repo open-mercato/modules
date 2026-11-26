@@ -301,6 +301,8 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       CF_PAGES_PROJECT: "${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}",
       // the merged layout of the www site migration: off until the switch (step C8 of its spec)
       PAGES_MERGED: "${{ vars.PAGES_MERGED || '' }}",
+      // the merged layout served on modules.openmercato.com before the switch (owner's decision of 26 Nov 2026): off
+      PAGES_SERVE_ORIGIN: "${{ vars.PAGES_SERVE_ORIGIN || '' }}",
     })
     expect(text('pages.yml')).not.toMatch(/upload-pages-artifact|deploy-pages|github-pages|github\.io/)
     expect(Object.keys(w.jobs)).toEqual([
@@ -454,8 +456,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       PAGES_NOINDEX: '1',
     }
     // the catalog alone, even once production is merged
-    expect(pb.env).toMatchObject({ ...fixed, PAGES_MERGED: '' })
-    expect(pv.env).toEqual({ ...fixed, PAGES_MERGED: '', PREVIEW_BRANCH: 'run-preview' })
+    // never served on a Pages host, whatever production does (PAGES_SERVE_ORIGIN)
+    expect(pb.env).toMatchObject({ ...fixed, PAGES_MERGED: '', PAGES_SERVE_ORIGIN: '' })
+    expect(pv.env).toEqual({ ...fixed, PAGES_MERGED: '', PAGES_SERVE_ORIGIN: '', PREVIEW_BRANCH: 'run-preview' })
     expect(build.env).not.toHaveProperty('PAGES_NOINDEX')
     expect(deploy).not.toHaveProperty('env')
     // the environment, token and checks of the deploy job
@@ -519,6 +522,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       HOME_PATH: '/modules',
       PAGES_NOINDEX: '1',
       PAGES_MERGED: '1',
+      PAGES_SERVE_ORIGIN: '',
     }
     expect(pb.env).toMatchObject(fixed)
     expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'www-preview' })
