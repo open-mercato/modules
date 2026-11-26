@@ -161,12 +161,16 @@ export interface MergeResult {
   sitemaps: string[]
   /** Rules of the main site's redirects.yaml in the root _redirects. */
   redirects: number
+  /** Main site links made root relative (localizeUpload), and the HTML files they are in. */
+  localLinks: number
+  localFiles: number
 }
 
 /**
  * Composes `out` from the two builds: the catalog's nested build `run` as it is, then every file of `www` at the root
  * (its 404.html replaces the catalog's root copy, which keeps its own under the base), then the merged root files
- * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build). Throws, before touching `out`, on
+ * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build), and last makes the links to the
+ * main site's pages it serves root relative (localizeUpload). Throws, before touching `out`, on
  * a config mergeConfigProblem() refuses, a missing build, a catalog build that is not nested, or a name the main site
  * would take from the catalog or from the merge.
  */
@@ -229,12 +233,147 @@ export function mergePagesSite(
   writeFileSync(join(out, 'robots.txt'), mergedRobots(c, noindex))
   if (noindex) writeFileSync(join(out, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
   else rmSync(join(out, NOINDEX_ROOT_FILE), { force: true })
+  // last, so "served" is what the upload now holds, _redirects included
+  const local = localizeUpload(out)
   return {
     wwwFiles: walk(www).length,
     runFiles: walk(run).length,
     sitemaps,
     redirects: pagesRules(wwwRedirects).length,
+    localLinks: local.links,
+    localFiles: local.files,
   }
+}
+
+// Links of the merged layout (owner's decision of 26 Nov 2026). Both builds link the main site by absolute addresses
+// (lib/core/main-site.ts for the shared header and footer, content and Markdown bodies for the rest), so a catalog-only
+// upload, where the main site is Webflow on another host, keeps working. In the merged layout those addresses would
+// send every click from a preview to the live site, and after the switch they would cost a full origin round trip.
+// The rule: in the merged upload, every `href` that names the main site absolutely (https://www.openmercato.com or
+// https://openmercato.com, also `http:` and `//`) at a path this upload serves (servesPath(): a file, a page or a
+// rule of its _redirects) becomes root relative, query and fragment kept (`/contact?interest=hubspot-alternative`).
+// "Served" is read from the files the two builds wrote, after the merge composed them, never from a list. A link to a
+// path the upload does not serve stays absolute, and so do `<link rel="canonical">` and `<link rel="alternate">`
+// (hreflang, feeds): they name the site's own address on purpose. og:url, JSON-LD and the sitemaps are no `href` and are
+// not touched either, nor is anything inside `<script>` or `<style>`. The catalog-only layout never runs
+// the merge, so its links stay as they are (dist-run/ is not touched). checkMergedLayout() fails on any such link
+// left absolute, naming the file and the link.
+
+/** An absolute address of the main site (www or apex, `http:`, `https:` or `//`), up to its path. */
+const MAIN_SITE_ABSOLUTE = /^(?:https?:)?\/\/(?:www\.)?openmercato\.com(?::443)?(?=[/?#]|$)/i
+
+/**
+ * The root-relative form of `ref` (an attribute value as written in the HTML) when it names the main site absolutely
+ * at a path `serves` answers for, else null. The query and the fragment are kept as written. Never a path that a
+ * browser would read as another host (`//x`, `/\x`).
+ */
+export function servedLocalHref(ref: string, serves: (pathname: string) => boolean): string | null {
+  const m = MAIN_SITE_ABSOLUTE.exec(ref)
+  if (!m) return null
+  const rest = ref.slice(m[0].length)
+  const local = rest.startsWith('/') ? rest : `/${rest}`
+  if (/^\/[\\/]/.test(local)) return null
+  let url: URL
+  try {
+    url = new URL(local.replace(/&amp;/g, '&'), MAIN_SITE_ORIGIN)
+  } catch {
+    return null
+  }
+  return serves(url.pathname) ? local : null
+}
+
+/** `<script>` and `<style>` elements with their content: their text is not markup, so no link in it is touched. */
+const RAW_TEXT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi
+/** A start tag with its attributes (quoted values may hold `>`). */
+const START_TAG = /<([A-Za-z][A-Za-z0-9-]*)((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*)\s*\/?>/g
+const HREF_ATTR = /(\shref\s*=\s*)(?:"([^"]*)"|'([^']*)')/i
+const REL_KEEPS = /\srel\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/i
+
+/** True for a tag whose href names the page's own address on purpose: `<link rel="canonical|alternate">`. */
+function keepsAbsolute(name: string, attrs: string): boolean {
+  if (name.toLowerCase() !== 'link') return false
+  const m = REL_KEEPS.exec(attrs)
+  const rel = (m?.[1] ?? m?.[2] ?? m?.[3] ?? '').toLowerCase().split(/\s+/)
+  return rel.includes('canonical') || rel.includes('alternate')
+}
+
+/**
+ * Calls `fn` with the value of every `href` of `html` outside `<script>` and `<style>`, but the hrefs keepsAbsolute()
+ * names; a string `fn` returns replaces the value. Returns the new HTML.
+ */
+function mapHrefs(html: string, fn: (value: string) => string | null): string {
+  const tags = (part: string): string =>
+    part.replace(START_TAG, (tag: string, name: string, attrs: string) => {
+      if (keepsAbsolute(name, attrs)) return tag
+      const m = HREF_ATTR.exec(attrs)
+      if (!m) return tag
+      const value = m[2] ?? m[3] ?? ''
+      const next = fn(value)
+      if (next === null || next === value) return tag
+      const quote = m[2] !== undefined ? '"' : "'"
+      const at = tag.indexOf(m[0])
+      return `${tag.slice(0, at)}${m[1]}${quote}${next}${quote}${tag.slice(at + m[0].length)}`
+    })
+  let out = ''
+  let last = 0
+  for (const m of html.matchAll(RAW_TEXT)) {
+    out += tags(html.slice(last, m.index)) + m[0]
+    last = m.index + m[0].length
+  }
+  return out + tags(html.slice(last))
+}
+
+/** `html` with every served main-site href made root relative (the rule above), and how many changed. */
+export function localizeHrefs(html: string, serves: (pathname: string) => boolean): { html: string; links: number } {
+  let links = 0
+  const out = mapHrefs(html, (v) => {
+    const local = servedLocalHref(v, serves)
+    if (local !== null) links++
+    return local
+  })
+  return { html: links > 0 ? out : html, links }
+}
+
+/** The hrefs of `html` that the rule above would make root relative, each with its root-relative form. */
+export function absoluteServedHrefs(
+  html: string,
+  serves: (pathname: string) => boolean,
+): { ref: string; local: string }[] {
+  const found: { ref: string; local: string }[] = []
+  mapHrefs(html, (v) => {
+    const local = servedLocalHref(v, serves)
+    if (local !== null) found.push({ ref: v.replace(/&amp;/g, '&'), local: local.replace(/&amp;/g, '&') })
+    return null
+  })
+  return found
+}
+
+/** servesPath() of `root` with its _redirects, remembered per path (a merged upload links the same paths often). */
+function servedIn(root: string): (pathname: string) => boolean {
+  const text = existsSync(join(root, '_redirects')) ? readFileSync(join(root, '_redirects'), 'utf8') : ''
+  const rules = redirectRules(text)
+  const seen = new Map<string, boolean>()
+  return (p) => {
+    let v = seen.get(p)
+    if (v === undefined) seen.set(p, (v = servesPath(root, p, rules)))
+    return v
+  }
+}
+
+/** Rewrites the HTML files of the merged upload `root` by localizeHrefs(); returns the links and files changed. */
+export function localizeUpload(root: string): { links: number; files: number } {
+  const serves = servedIn(root)
+  let links = 0
+  let files = 0
+  for (const f of walk(root)) {
+    if (!f.endsWith('.html')) continue
+    const r = localizeHrefs(readFileSync(f, 'utf8'), serves)
+    if (r.links === 0) continue
+    writeFileSync(f, r.html)
+    links += r.links
+    files++
+  }
+  return { links, files }
 }
 
 /** A _redirects source as a pattern: `*` matches the rest of the path, `:name` one segment. */
@@ -286,7 +425,8 @@ export interface MergedCheck {
  * build serves (or, in a noindex preview only, a header or footer link of lib/core/main-site.ts still on Webflow,
  * listed in `pending`); then the merged root files (_redirects with the Pages limits, robots.txt, the sitemap index
  * naming every sitemap file and no index, the home page's canonical), the pages the main site must not write
- * (NON_PAGE_SEGMENTS) and every link of its pages.
+ * (NON_PAGE_SEGMENTS) and every link of its pages. No `href` of any page may name the main site's address of a page
+ * or a file this build serves (localizeHrefs, the merge makes them root relative).
  * The main site's part of _redirects (after mergedRedirects(c)) must be a dist-www/_redirects text, equal to
  * `wwwRedirects` when given (wwwRedirectsText() of www/content/redirects.yaml), with no loop, no chain longer than one
  * hop, no source that hides a file of the upload, and every target on this origin a page or a file of it.
@@ -387,6 +527,14 @@ export function checkMergedLayout(
     if (statSync(p).isDirectory()) pages.push(...walk(p).filter((f) => f.endsWith('.html')))
     else if (name.endsWith('.html')) pages.push(p)
   }
+  // the rule of localizeHrefs(): no page of either part links a page of this upload by the main site's address
+  const servedHere = servedIn(root)
+  for (const f of walk(root)
+    .filter((x) => x.endsWith('.html'))
+    .sort())
+    for (const l of absoluteServedHrefs(readFileSync(f, 'utf8'), servedHere))
+      say(`${shown(f)}: ${l.ref} is a page or a file of this build; link it root relative, ${l.local}`)
+
   for (const f of pages.sort()) {
     const page = wwwPagePath(toPosix(relative(root, f)))
     for (const ref of htmlRefs(readFileSync(f, 'utf8'))) {
