@@ -703,8 +703,9 @@ merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build
 Every `pages` run on `main` deploys the merged layout to the branch `www-preview` of the same project (jobs
 `www-preview-build` and `www-preview`), `https://www-preview.open-mercato-modules.pages.dev/`, with `PAGES_NOINDEX=1`
 (`dist/_headers` and a `robots.txt` of `Disallow: /` at the root and under `/run`), beside production with the same
-guards. Production deploys the merged layout only when the repository variable `PAGES_MERGED` is `1`, which is step
-C8 of the spec, not before; unset, the production upload is byte for byte what it was before the main site existed.
+guards. Production deploys the merged layout only when the repository variable `PAGES_MERGED` is `1`: step C8 of the
+spec, or earlier on `modules.openmercato.com` with `PAGES_SERVE_ORIGIN` (Main site on modules.openmercato.com, below);
+unset, the production upload is byte for byte what it was before the main site existed.
 
 On a workstation:
 
@@ -867,6 +868,90 @@ the Pages project) merges only after these pass.
 **Rollback.** Workers & Pages > `openmercato-old-hosts` > Settings > Domains & Routes: remove both routes (or
 `yarn wrangler delete --name openmercato-old-hosts`). Until Phase 1c the Functions answer again from the next request.
 After Phase 1c, first revert that pull request and run `pages`, then remove the routes.
+
+## Main site on modules.openmercato.com (before the www switch)
+
+Owner's decision of 26 Nov 2026: the migrated main site goes live on `modules.openmercato.com` now, with the catalog
+under `/run`, while `www.openmercato.com` still runs on Webflow and the `/run` proxy is not live. One repository
+variable, `PAGES_SERVE_ORIGIN`, names the origin that serves the merged layout; `SITE_URL` stays the canonical one.
+
+What production does with the variables below:
+
+- **Pages.** `modules.openmercato.com` and `templates.openmercato.com` serve the merged upload themselves; nothing
+  is redirected to `SITE_URL`. The main site answers at the root (`/`, the landings, `/blog`, the case studies), the
+  catalog under `/run` (`/run/modules`, `/run/m/<package>`).
+- **Old catalog addresses** (decision 3a). A page address the catalog had at the root answers a 301 to the same path
+  and query under `/run` on `https://modules.openmercato.com` (`/m/<package>`, `/templates`, `/compat`, `/radar`,
+  `/submit?npm=<package>`; `/modules` leads to the catalog home the same way). The main site is asked first, so where both have a page the main site wins:
+  `/` (the main home; the catalog home is `/run/modules`) and `/about` (the catalog's is `/run/about`). Any other path
+  that neither has answers the main site's 404. The root of `templates.openmercato.com` answers a 302 to
+  `https://modules.openmercato.com/run/templates`.
+- **Files.** Every machine-readable file keeps its address with a 200 and no redirect: `/picker.json`,
+  `/modules.json`, `/templates.json` and `/schema/...` as static root copies, every other file (`/llms.txt`,
+  `/m/<package>.md`, badges, data files) with the catalog's copy under `/run`, asked before the main site's own files.
+  No file of the catalog shares a name with a file the main site writes at its root, except `/robots.txt`, which both
+  write as `Disallow: /` in this build. Absolute links inside the files name `https://www.openmercato.com/run/...`
+  (`SITE_URL`), which Webflow does not serve until the switch: a tool that reads a file keeps working, a person who
+  opens a link from one gets the Webflow 404 until then. The catalog's pages point their copy commands at the host
+  they are on.
+- **Not indexed** (decision 1a). `PAGES_SERVE_ORIGIN` turns noindex on, as `PAGES_NOINDEX=1` does for the previews:
+  `X-Robots-Tag: noindex` on every static file, `robots.txt` of `Disallow: /`, and no Google Analytics.
+- **Canonical on www** (decision 2a). Canonical, `og:url`, hreflang, JSON-LD and the sitemaps name
+  `https://www.openmercato.com/...`, as in the `www-preview` build, so the www switch changes no content.
+- **Cost.** `_routes.json` runs Functions on every path outside `/run` and the fixed root files, so each request to
+  the main site on the Pages hosts (pages, `/_astro/`, `/media/`) is a Function invocation. Check the daily count as
+  in Old hosts on a Worker, Before the deploy, above, for the two hosts together.
+
+**Order (owner).**
+
+1. Merge this change; the next `pages` run deploys today's catalog unchanged.
+2. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`, `SITE_URL` =
+   `https://www.openmercato.com`, `BASE_PATH` = `/run`, `HOME_PATH` = `/modules`, `PAGES_SERVE_ORIGIN` =
+   `https://modules.openmercato.com`. Set all five before the run: without `PAGES_SERVE_ORIGIN` the old hosts send
+   every page to Webflow. The `run-preview` jobs are skipped from then on (`BASE_PATH` is not `/`); `www-preview` runs
+   as before.
+3. Actions > pages > Run workflow. `Check artifact contents` and `Check downloaded site` run
+   `yarn om pages-site --check dist` on the merged layout; the summary names `https://modules.openmercato.com/`.
+
+**Checks after the deploy.**
+
+```sh
+for p in / /hubspot-alternative /blog /run/modules /run/m/@open-mercato/gateway-tpay; do
+  curl -s -o /dev/null -w "%{http_code} $p\n" "https://modules.openmercato.com$p"
+done
+# 200 for each
+for p in /m/@open-mercato/gateway-tpay '/submit?npm=@open-mercato/gateway-tpay' /templates /compat /radar; do
+  curl -s -o /dev/null -w "%{http_code} %{redirect_url} $p\n" "https://modules.openmercato.com$p"
+done
+# 301 https://modules.openmercato.com/run<path, query kept> for each
+curl -sI https://templates.openmercato.com/ | grep -iE '^(HTTP|location)'
+# 302 and location: https://modules.openmercato.com/run/templates
+for p in picker.json modules.json templates.json schema/modules-1.json llms.txt raw/modules.md \
+  m/@open-mercato/gateway-tpay.md badge/@open-mercato/gateway-tpay.svg built-in.json; do
+  curl -s -o /dev/null -w "%{http_code} %{redirect_url} $p\n" "https://modules.openmercato.com/$p"
+done
+# 200 and no redirect for each
+diff <(curl -s https://modules.openmercato.com/llms.txt) <(curl -s https://modules.openmercato.com/run/llms.txt) && echo same
+curl -sI https://modules.openmercato.com/ | grep -i '^x-robots-tag'
+# x-robots-tag: noindex
+curl -s https://modules.openmercato.com/robots.txt
+# User-agent: * and Disallow: /
+curl -s https://modules.openmercato.com/ | grep -c googletagmanager
+# 0
+curl -s https://modules.openmercato.com/ | grep -o '<link rel="canonical" href="[^"]*"'
+# href="https://www.openmercato.com/"
+```
+
+Then `npx create-mercato-app` with the module picker (it reads `/picker.json`) and `yarn mercato module search`
+(it reads `/modules.json`) once each.
+
+**Rollback.** Delete the five variables and run `pages` by hand: the next run deploys today's catalog at the root of
+`modules.openmercato.com`, `functions/site.ts` back to the default. Browsers keep the 301s they followed, so for them
+an old address still goes to `/run/...`, which the root layout does not serve (a 404) until the cache expires or the
+variables are set again. The templates root was a 302 and is not cached.
+
+**Later, at the www switch** (Main site switch, C8): delete only `PAGES_SERVE_ORIGIN`. The build is then indexed and
+the old hosts redirect to `https://www.openmercato.com/run/...` as planned (or their Worker does).
 
 ## Main site switch (www migration, steps C1 to C10)
 
