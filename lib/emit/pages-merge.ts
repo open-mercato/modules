@@ -266,11 +266,14 @@ const MAIN_SITE_ABSOLUTE = /^(?:https?:)?\/\/(?:www\.)?openmercato\.com(?::443)?
  * The root-relative form of `ref` (an attribute value as written in the HTML) when it names the main site absolutely
  * at a path `serves` answers for, else null. The query and the fragment are kept as written. Never a path that a
  * browser would read as another host: the result must resolve on the main site's origin as a browser parses it (the
- * URL parser drops tabs and newlines, so `/\t/x` is `//x`), and a value with a tab or a newline is left alone.
+ * URL parser drops tabs and newlines, so `/\t/x` is `//x`), and a value with a tab, a newline or a character
+ * reference other than `&amp;` (`&#9;`, `&Tab;`, `&#47;`) is left alone.
  */
 export function servedLocalHref(ref: string, serves: (pathname: string) => boolean): string | null {
-  const value = ref.trim()
-  if (/[\t\n\r]/.test(value)) return null
+  // browsers strip C0 controls and spaces around a value (not other Unicode spaces), and decode character references
+  // before they parse it: a value with a tab, a newline or any reference but `&amp;` is left alone
+  const value = ref.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, '')
+  if (/[\t\n\r]|&(?!amp;)/.test(value)) return null
   const m = MAIN_SITE_ABSOLUTE.exec(value)
   if (!m) return null
   const rest = value.slice(m[0].length)
@@ -383,9 +386,11 @@ export function absoluteServedHrefs(
     .replace(LINK_TAG, (tag) => (keepsAbsolute('link', attrsOf(tag.slice(5, -1))) ? ' ' : tag))
   const found: { ref: string; local: string }[] = []
   for (const m of markup.matchAll(ANY_HREF)) {
-    const v = (m[1] ?? m[2] ?? m[3] ?? '').replace(/&amp;/g, '&')
+    // the value as written, as the rewrite sees it; the report shows it decoded
+    const v = m[1] ?? m[2] ?? m[3] ?? ''
     const local = servedLocalHref(v, serves)
-    if (local !== null) found.push({ ref: v.trim(), local })
+    const shown = (x: string): string => x.trim().replace(/&amp;/g, '&')
+    if (local !== null) found.push({ ref: shown(v), local: shown(local) })
   }
   return found
 }

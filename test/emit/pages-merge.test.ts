@@ -462,8 +462,16 @@ describe('links of the merged layout to pages it serves (owner decision of 26 No
     expect(servedLocalHref(`${ORIGIN}/\t/evil.example/`, () => true)).toBeNull()
     expect(servedLocalHref(`${ORIGIN}/\n/evil.example/`, () => true)).toBeNull()
     expect(servedLocalHref(`${ORIGIN}/cr\tm`, () => true)).toBeNull()
-    // the spaces a browser trims around a value
+    // a browser decodes character references first: `&#9;` is a tab, `&#47;` a slash
+    for (const ref of ['&#9;', '&Tab;', '&#47;', '&#x2F;'])
+      expect(
+        servedLocalHref(`${ORIGIN}/${ref}/evil.example/`, () => true),
+        ref,
+      ).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/contact?a=1&amp;b=2`, serves)).toBe('/contact?a=1&amp;b=2')
+    // the spaces a browser trims around a value, and no other
     expect(servedLocalHref(` ${ORIGIN}/crm `, serves)).toBe('/crm')
+    expect(servedLocalHref(`\u00a0${ORIGIN}/crm`, serves)).toBeNull()
   })
 
   it('reads the href attribute itself, in any tag, quoted or not, and keeps comments as they are', () => {
