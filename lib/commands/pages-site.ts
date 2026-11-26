@@ -15,7 +15,9 @@
 // merged layout, listing the main site addresses the pages link that Webflow still serves. The root _redirects of the
 // merged layout ends with the rules of www/content/redirects.yaml (lib/emit/www-redirects.ts): `--merge` takes them
 // from dist-www/_redirects, which the www build writes, and `--check` wants them equal to the yaml of this checkout,
-// with no loop, no chain longer than one hop and within the Pages limits.
+// with no loop, no chain longer than one hop and within the Pages limits. `--merge` also makes every link to the main
+// site's address of a page the upload serves root relative, and `--check` fails on one left absolute (the rule is in
+// lib/emit/pages-merge.ts, localizeHrefs); the catalog-only layout keeps its absolute links.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -103,7 +105,7 @@ export default function pagesSite(ctx: CommandContext): number {
         noindex,
       )
       console.log(
-        `om pages-site: ${MERGE_DIRS.out}/ merged from ${MERGE_DIRS.www}/ (${r.wwwFiles} files) and ${MERGE_DIRS.run}/ (${r.runFiles} files), ${r.sitemaps.length} sitemaps, ${r.redirects} main site redirects${noindex ? ', noindex' : ''}`,
+        `om pages-site: ${MERGE_DIRS.out}/ merged from ${MERGE_DIRS.www}/ (${r.wwwFiles} files) and ${MERGE_DIRS.run}/ (${r.runFiles} files), ${r.sitemaps.length} sitemaps, ${r.redirects} main site redirects, ${r.localLinks} links to its own pages made root relative in ${r.localFiles} files${noindex ? ', noindex' : ''}`,
       )
       return EXIT_OK
     } catch (err) {

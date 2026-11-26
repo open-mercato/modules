@@ -161,12 +161,16 @@ export interface MergeResult {
   sitemaps: string[]
   /** Rules of the main site's redirects.yaml in the root _redirects. */
   redirects: number
+  /** Main site links made root relative (localizeUpload), and the HTML files they are in. */
+  localLinks: number
+  localFiles: number
 }
 
 /**
  * Composes `out` from the two builds: the catalog's nested build `run` as it is, then every file of `www` at the root
  * (its 404.html replaces the catalog's root copy, which keeps its own under the base), then the merged root files
- * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build). Throws, before touching `out`, on
+ * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build), and last makes the links to the
+ * main site's pages it serves root relative (localizeUpload). Throws, before touching `out`, on
  * a config mergeConfigProblem() refuses, a missing build, a catalog build that is not nested, or a name the main site
  * would take from the catalog or from the merge.
  */
@@ -229,12 +233,194 @@ export function mergePagesSite(
   writeFileSync(join(out, 'robots.txt'), mergedRobots(c, noindex))
   if (noindex) writeFileSync(join(out, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
   else rmSync(join(out, NOINDEX_ROOT_FILE), { force: true })
+  // last, so "served" is what the upload now holds, _redirects included
+  const local = localizeUpload(out)
   return {
     wwwFiles: walk(www).length,
     runFiles: walk(run).length,
     sitemaps,
     redirects: pagesRules(wwwRedirects).length,
+    localLinks: local.links,
+    localFiles: local.files,
   }
+}
+
+// Links of the merged layout (owner's decision of 26 Nov 2026). Both builds link the main site by absolute addresses
+// (lib/core/main-site.ts for the shared header and footer, content and Markdown bodies for the rest), so a catalog-only
+// upload, where the main site is Webflow on another host, keeps working. In the merged layout those addresses would
+// send every click from a preview to the live site, and after the switch they would cost a full origin round trip.
+// The rule: in the merged upload, every `href` that names the main site absolutely (https://www.openmercato.com or
+// https://openmercato.com, also `http:` and `//`) at a path this upload serves (servesPath(): a file, a page or a
+// rule of its _redirects) becomes root relative, query and fragment kept (`/contact?interest=hubspot-alternative`).
+// "Served" is read from the files the two builds wrote, after the merge composed them, never from a list. A link to a
+// path the upload does not serve stays absolute, and so do `<link rel="canonical">` and `<link rel="alternate">`
+// (hreflang, feeds): they name the site's own address on purpose. og:url, JSON-LD and the sitemaps are no `href` and are
+// not touched either, nor is anything inside a comment, `<script>` or `<style>`. The catalog-only layout never runs
+// the merge, so its links stay as they are (dist-run/ is not touched). checkMergedLayout() fails on any such link
+// left absolute, naming the file and the link.
+
+/** An absolute address of the main site (www or apex, `http:`, `https:` or `//`), up to its path. */
+const MAIN_SITE_ABSOLUTE = /^(?:https?:)?\/\/(?:www\.)?openmercato\.com(?::443)?(?=[/?#]|$)/i
+
+/**
+ * The root-relative form of `ref` (an attribute value as written in the HTML) when it names the main site absolutely
+ * at a path `serves` answers for, else null. The query and the fragment are kept as written. Never a path that a
+ * browser would read as another host: the result must resolve on the main site's origin as a browser parses it (the
+ * URL parser drops tabs and newlines, so `/\t/x` is `//x`), and a value with a tab, a newline or a character
+ * reference other than `&amp;` (`&#9;`, `&Tab;`, `&#47;`) is left alone.
+ */
+export function servedLocalHref(ref: string, serves: (pathname: string) => boolean): string | null {
+  // browsers strip C0 controls and spaces around a value (not other Unicode spaces), and decode character references
+  // before they parse it: a value with a tab, a newline or any reference but `&amp;` is left alone
+  const value = ref.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, '')
+  if (/[\t\n\r]|&(?!amp;)/.test(value)) return null
+  const m = MAIN_SITE_ABSOLUTE.exec(value)
+  if (!m) return null
+  const rest = value.slice(m[0].length)
+  const local = rest.startsWith('/') ? rest : `/${rest}`
+  if (/^\/[\\/]/.test(local)) return null
+  let url: URL
+  try {
+    url = new URL(local.replace(/&amp;/g, '&'), MAIN_SITE_ORIGIN)
+  } catch {
+    return null
+  }
+  if (url.origin !== MAIN_SITE_ORIGIN) return null
+  return serves(url.pathname) ? local : null
+}
+
+/**
+ * Comments, and `<script>` and `<style>` elements with their content: their text is not markup, so no link in it is
+ * touched (a comment first, so a `<script>` inside one does not swallow the markup after it).
+ */
+const RAW_TEXT = /<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi
+/** A start tag with its attributes (quoted values may hold `>`). */
+const START_TAG = /<([A-Za-z][A-Za-z0-9-]*)((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*)\s*\/?>/g
+/** One attribute of a start tag: its name and its value, quoted or not. */
+const ATTR = /(\s+)([^\s"'>/=]+)(?:(\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+
+interface Attr {
+  name: string
+  value: string | null
+  /** Where the attribute starts in the attribute text, and its length. */
+  at: number
+  length: number
+  /** The text up to the value: the space, the name and `=`. */
+  head: string
+  /** The quote of the value as written, `"` for an unquoted one. */
+  quote: '"' | "'"
+}
+
+function attrsOf(text: string): Attr[] {
+  return [...text.matchAll(ATTR)].map((m) => ({
+    name: (m[2] ?? '').toLowerCase(),
+    value: m[4] ?? m[5] ?? m[6] ?? null,
+    at: m.index,
+    length: m[0].length,
+    head: `${m[1] ?? ''}${m[2] ?? ''}${m[3] ?? ''}`,
+    quote: m[5] !== undefined ? "'" : '"',
+  }))
+}
+
+/** True for a tag whose href names the page's own address on purpose: `<link rel="canonical|alternate">`. */
+function keepsAbsolute(name: string, attrs: readonly Attr[]): boolean {
+  if (name.toLowerCase() !== 'link') return false
+  const rel = (attrs.find((a) => a.name === 'rel')?.value ?? '').toLowerCase().split(/\s+/)
+  return rel.includes('canonical') || rel.includes('alternate')
+}
+
+/**
+ * Calls `fn` with the value of the `href` attribute of each start tag of `html` outside comments, `<script>` and
+ * `<style>`, but the hrefs keepsAbsolute() names; a string `fn` returns replaces the value. Returns the new HTML.
+ */
+function mapHrefs(html: string, fn: (value: string) => string | null): string {
+  const tags = (part: string): string =>
+    part.replace(START_TAG, (tag: string, name: string, text: string) => {
+      const attrs = attrsOf(text)
+      if (keepsAbsolute(name, attrs)) return tag
+      const href = attrs.find((a) => a.name === 'href' && a.value !== null)
+      if (!href || href.value === null) return tag
+      const next = fn(href.value)
+      if (next === null || next === href.value) return tag
+      // the value came from inside these quotes, so it holds none of them
+      const quoted = `${href.quote}${next}${href.quote}`
+      const at = 1 + name.length + href.at
+      return `${tag.slice(0, at)}${href.head}${quoted}${tag.slice(at + href.length)}`
+    })
+  let out = ''
+  let last = 0
+  for (const m of html.matchAll(RAW_TEXT)) {
+    out += tags(html.slice(last, m.index)) + m[0]
+    last = m.index + m[0].length
+  }
+  return out + tags(html.slice(last))
+}
+
+/** `html` with every served main-site href made root relative (the rule above), and how many changed. */
+export function localizeHrefs(html: string, serves: (pathname: string) => boolean): { html: string; links: number } {
+  let links = 0
+  const out = mapHrefs(html, (v) => {
+    const local = servedLocalHref(v, serves)
+    if (local !== null) links++
+    return local
+  })
+  return { html: links > 0 ? out : html, links }
+}
+
+/** A `<link>` start tag, quoted values holding `>` included. */
+const LINK_TAG = /<link\b(?:"[^"]*"|'[^']*'|[^'">])*>/gi
+/** An `href` anywhere in markup, quoted or not. */
+const ANY_HREF = /\shref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi
+
+/**
+ * The hrefs of `html` that the rule above would make root relative, each with its root-relative form, for the check.
+ * Read more loosely than mapHrefs() does on purpose (any `href=` of the markup outside comments, `<script>`, `<style>`
+ * and the canonical and alternate `<link>` tags), so a gap in the rewrite fails the check instead of shipping.
+ */
+export function absoluteServedHrefs(
+  html: string,
+  serves: (pathname: string) => boolean,
+): { ref: string; local: string }[] {
+  const markup = html
+    .replace(RAW_TEXT, ' ')
+    .replace(LINK_TAG, (tag) => (keepsAbsolute('link', attrsOf(tag.slice(5, -1))) ? ' ' : tag))
+  const found: { ref: string; local: string }[] = []
+  for (const m of markup.matchAll(ANY_HREF)) {
+    // the value as written, as the rewrite sees it; the report shows it decoded
+    const v = m[1] ?? m[2] ?? m[3] ?? ''
+    const local = servedLocalHref(v, serves)
+    const shown = (x: string): string => x.trim().replace(/&amp;/g, '&')
+    if (local !== null) found.push({ ref: shown(v), local: shown(local) })
+  }
+  return found
+}
+
+/** servesPath() of `root` with its _redirects, remembered per path (a merged upload links the same paths often). */
+function servedIn(root: string): (pathname: string) => boolean {
+  const text = existsSync(join(root, '_redirects')) ? readFileSync(join(root, '_redirects'), 'utf8') : ''
+  const rules = redirectRules(text)
+  const seen = new Map<string, boolean>()
+  return (p) => {
+    let v = seen.get(p)
+    if (v === undefined) seen.set(p, (v = servesPath(root, p, rules)))
+    return v
+  }
+}
+
+/** Rewrites the HTML files of the merged upload `root` by localizeHrefs(); returns the links and files changed. */
+export function localizeUpload(root: string): { links: number; files: number } {
+  const serves = servedIn(root)
+  let links = 0
+  let files = 0
+  for (const f of walk(root)) {
+    if (!f.endsWith('.html')) continue
+    const r = localizeHrefs(readFileSync(f, 'utf8'), serves)
+    if (r.links === 0) continue
+    writeFileSync(f, r.html)
+    links += r.links
+    files++
+  }
+  return { links, files }
 }
 
 /** A _redirects source as a pattern: `*` matches the rest of the path, `:name` one segment. */
@@ -286,7 +472,8 @@ export interface MergedCheck {
  * build serves (or, in a noindex preview only, a header or footer link of lib/core/main-site.ts still on Webflow,
  * listed in `pending`); then the merged root files (_redirects with the Pages limits, robots.txt, the sitemap index
  * naming every sitemap file and no index, the home page's canonical), the pages the main site must not write
- * (NON_PAGE_SEGMENTS) and every link of its pages.
+ * (NON_PAGE_SEGMENTS) and every link of its pages. No `href` of any page may name the main site's address of a page
+ * or a file this build serves (localizeHrefs, the merge makes them root relative).
  * The main site's part of _redirects (after mergedRedirects(c)) must be a dist-www/_redirects text, equal to
  * `wwwRedirects` when given (wwwRedirectsText() of www/content/redirects.yaml), with no loop, no chain longer than one
  * hop, no source that hides a file of the upload, and every target on this origin a page or a file of it.
@@ -387,6 +574,14 @@ export function checkMergedLayout(
     if (statSync(p).isDirectory()) pages.push(...walk(p).filter((f) => f.endsWith('.html')))
     else if (name.endsWith('.html')) pages.push(p)
   }
+  // the rule of localizeHrefs(): no page of either part links a page of this upload by the main site's address
+  const servedHere = servedIn(root)
+  for (const f of walk(root)
+    .filter((x) => x.endsWith('.html'))
+    .sort())
+    for (const l of absoluteServedHrefs(readFileSync(f, 'utf8'), servedHere))
+      say(`${shown(f)}: ${l.ref} is a page or a file of this build; link it root relative, ${l.local}`)
+
   for (const f of pages.sort()) {
     const page = wwwPagePath(toPosix(relative(root, f)))
     for (const ref of htmlRefs(readFileSync(f, 'utf8'))) {

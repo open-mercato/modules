@@ -20,9 +20,11 @@ import {
   siteModule,
   type SiteConfig,
 } from '../../lib/core/site-host.ts'
-import { finishNestedLayout } from '../../lib/emit/pages-layout.ts'
+import { checkPagesLayout, finishNestedLayout } from '../../lib/emit/pages-layout.ts'
 import {
+  absoluteServedHrefs,
   checkMergedLayout,
+  localizeHrefs,
   mergeConfigProblem,
   mergedRedirects,
   mergedRobots,
@@ -30,10 +32,12 @@ import {
   REDIRECT_CHECK,
   redirectProblems,
   redirectRules,
+  servedLocalHref,
   servesPath,
   sitemapIndexXml,
   sitemapLocs,
 } from '../../lib/emit/pages-merge.ts'
+import { wwwRedirectsText } from '../../lib/emit/www-redirects.ts'
 import { PUBLISHED_SCHEMAS } from '../../lib/schema/json-schema.ts'
 
 const WWW: SiteConfig = { origin: 'https://www.openmercato.com', base: '/run', home: '/modules', merged: true }
@@ -397,5 +401,202 @@ describe('the Functions in the merged layout (until Phase 1c)', () => {
     expect(mainSiteRun({ BASE_PATH: '/' })).toEqual(MAIN_SITE_RUN)
     expect(mainSiteRun({ BASE_PATH: '/run', HOME_PATH: '/modules' })).toEqual({ base: '/run', home: '/modules' })
     expect(mainSiteRun({ BASE_PATH: '/apps' })).toEqual({ base: '/apps', home: '/' })
+  })
+})
+
+describe('links of the merged layout to pages it serves (owner decision of 26 Nov 2026)', () => {
+  const served = new Set(['/', '/crm', '/contact', '/blog-posts/x', '/run/modules'])
+  const serves = (p: string): boolean => served.has(p)
+
+  it('makes a main site address of a served path root relative, query and fragment kept', () => {
+    expect(servedLocalHref(`${ORIGIN}/crm`, serves)).toBe('/crm')
+    expect(servedLocalHref(`${ORIGIN}/contact?interest=hubspot-alternative`, serves)).toBe(
+      '/contact?interest=hubspot-alternative',
+    )
+    expect(servedLocalHref(`${ORIGIN}/contact?a=1&amp;b=2#form`, serves)).toBe('/contact?a=1&amp;b=2#form')
+    expect(servedLocalHref(`${ORIGIN}/run/modules`, serves)).toBe('/run/modules')
+    expect(servedLocalHref(ORIGIN, serves)).toBe('/')
+    expect(servedLocalHref(`${ORIGIN}?x=1`, serves)).toBe('/?x=1')
+    // the apex, plain http and a scheme-relative address name the same site
+    expect(servedLocalHref('https://openmercato.com/', serves)).toBe('/')
+    expect(servedLocalHref('http://www.openmercato.com/crm', serves)).toBe('/crm')
+    expect(servedLocalHref('//www.openmercato.com/blog-posts/x', serves)).toBe('/blog-posts/x')
+    expect(servedLocalHref('HTTPS://WWW.OPENMERCATO.COM/crm', serves)).toBe('/crm')
+  })
+
+  it('leaves alone paths it does not serve, other hosts and paths a browser reads as a host', () => {
+    expect(servedLocalHref(`${ORIGIN}/pricing`, serves)).toBeNull()
+    expect(servedLocalHref('https://docs.openmercato.com/', serves)).toBeNull()
+    expect(servedLocalHref('https://www.openmercato.com.example.com/crm', serves)).toBeNull()
+    expect(servedLocalHref('https://github.com/open-mercato/open-mercato', serves)).toBeNull()
+    expect(servedLocalHref('/crm', serves)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}//evil.example/`, () => true)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/\\evil.example/`, () => true)).toBeNull()
+  })
+
+  it('rewrites hrefs of the markup only: not canonical, alternate, scripts, styles or other attributes', () => {
+    const html =
+      `<link rel="canonical" href="${ORIGIN}/crm"><link rel="alternate" hreflang="pl" href="${ORIGIN}/crm">` +
+      `<meta property="og:url" content="${ORIGIN}/crm">` +
+      `<script type="application/ld+json">{"url":"${ORIGIN}/crm","x":"<a href=\\"${ORIGIN}/crm\\">"}</script>` +
+      `<style>a[href="${ORIGIN}/crm"]{}</style>` +
+      `<a class="navbar_link" data-x="a>b" href="${ORIGIN}/crm" data-om-cta="nav">CRM</a>` +
+      `<a href='${ORIGIN}/contact?interest=x&amp;y=1'>Contact</a>` +
+      `<a href="${ORIGIN}/pricing">Pricing</a><a title="${ORIGIN}/crm" href="https://github.com/x">GitHub</a>`
+    const r = localizeHrefs(html, serves)
+    expect(r.links).toBe(2)
+    expect(r.html).toBe(
+      html
+        .replace(`data-x="a>b" href="${ORIGIN}/crm"`, 'data-x="a>b" href="/crm"')
+        .replace(`href='${ORIGIN}/contact?interest=x&amp;y=1'`, "href='/contact?interest=x&amp;y=1'"),
+    )
+    expect(absoluteServedHrefs(r.html, serves)).toEqual([])
+    expect(absoluteServedHrefs(html, serves)).toEqual([
+      { ref: `${ORIGIN}/crm`, local: '/crm' },
+      { ref: `${ORIGIN}/contact?interest=x&y=1`, local: '/contact?interest=x&y=1' },
+    ])
+  })
+
+  it('never turns a link into one a browser reads as another host', () => {
+    // the URL parser drops tabs and newlines: `/\t/evil.example` would be `//evil.example`
+    expect(servedLocalHref(`${ORIGIN}/\t/evil.example/`, () => true)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/\n/evil.example/`, () => true)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/cr\tm`, () => true)).toBeNull()
+    // a browser decodes character references first: `&#9;` is a tab, `&#47;` a slash
+    for (const ref of ['&#9;', '&Tab;', '&#47;', '&#x2F;'])
+      expect(
+        servedLocalHref(`${ORIGIN}/${ref}/evil.example/`, () => true),
+        ref,
+      ).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/contact?a=1&amp;b=2`, serves)).toBe('/contact?a=1&amp;b=2')
+    // the spaces a browser trims around a value, and no other
+    expect(servedLocalHref(` ${ORIGIN}/crm `, serves)).toBe('/crm')
+    expect(servedLocalHref(`\u00a0${ORIGIN}/crm`, serves)).toBeNull()
+  })
+
+  it('reads the href attribute itself, in any tag, quoted or not, and keeps comments as they are', () => {
+    const html =
+      `<a title="see href='${ORIGIN}/crm'" href="${ORIGIN}/crm">CRM</a>` +
+      `<a href=${ORIGIN}/crm>CRM</a><A HREF="${ORIGIN}/crm">CRM</A>` +
+      `<LINK REL="Canonical" HREF="${ORIGIN}/crm"><link rel=alternate href=${ORIGIN}/crm>` +
+      `<link rel="stylesheet" href="${ORIGIN}/crm">` +
+      `<template><a href="${ORIGIN}/crm">CRM</a></template><svg><use href="${ORIGIN}/crm#icon"></use></svg>` +
+      `<!-- <script> --><a href="${ORIGIN}/contact">Contact</a><!-- <a href="${ORIGIN}/crm"> -->`
+    const r = localizeHrefs(html, serves)
+    expect(r.html).toBe(
+      `<a title="see href='${ORIGIN}/crm'" href="/crm">CRM</a>` +
+        '<a href="/crm">CRM</a><A HREF="/crm">CRM</A>' +
+        `<LINK REL="Canonical" HREF="${ORIGIN}/crm"><link rel=alternate href=${ORIGIN}/crm>` +
+        '<link rel="stylesheet" href="/crm">' +
+        '<template><a href="/crm">CRM</a></template><svg><use href="/crm#icon"></use></svg>' +
+        `<!-- <script> --><a href="/contact">Contact</a><!-- <a href="${ORIGIN}/crm"> -->`,
+    )
+    expect(r.links).toBe(7)
+  })
+
+  it('the check reads hrefs more loosely than the rewrite, so a doubt fails it', () => {
+    // a value the rewrite would not take as it is, and the text of another attribute
+    expect(absoluteServedHrefs(`<a href="${ORIGIN}/crm" title="x href=${ORIGIN}/contact">x</a>`, serves)).toEqual([
+      { ref: `${ORIGIN}/crm`, local: '/crm' },
+      { ref: `${ORIGIN}/contact`, local: '/contact' },
+    ])
+    // canonical and alternate, comments, scripts and styles are not links of the page
+    expect(
+      absoluteServedHrefs(
+        `<link rel="canonical" data-x="a>b" href="${ORIGIN}/crm"><LINK REL=ALTERNATE HREF=${ORIGIN}/crm>` +
+          `<!-- <a href="${ORIGIN}/crm"> --><script>x='<a href="${ORIGIN}/crm">'</script>`,
+        serves,
+      ),
+    ).toEqual([])
+  })
+
+  describe('in an upload', () => {
+    let tmp: string
+    let dirs: { www: string; run: string; out: string }
+    beforeEach(() => {
+      tmp = mkdtempSync(join(tmpdir(), 'om-pages-links-'))
+      dirs = { www: join(tmp, 'dist-www'), run: join(tmp, 'dist-run'), out: join(tmp, 'dist') }
+    })
+    afterEach(() => {
+      rmSync(tmp, { recursive: true, force: true })
+    })
+
+    it('merged: the merge decides from the files it composed, on both parts of the upload', () => {
+      runBuild(dirs.run)
+      wwwBuild(dirs.www)
+      put(join(dirs.www, 'product.html'), `<a href="${ORIGIN}/run/modules">Run</a><a href="${ORIGIN}/pricing">x</a>`)
+      const r = mergePagesSite(dirs, WWW)
+      const at = (f: string): string => readFileSync(join(dirs.out, f), 'utf8')
+      // the shared header's links on a catalog page and on a main site page
+      expect(at('run/modules.html')).toBe(
+        `<link rel="canonical" href="${ORIGIN}/run/modules"><a href="/run/m/x">x</a>` +
+          '<a href="/product">Product</a><a href="/">Open Mercato</a>',
+      )
+      expect(at('index.html')).toContain('<a href="/product">Product</a><a href="https://github.com/x">GitHub</a>')
+      expect(at('index.html')).toContain(`<link rel="canonical" href="${ORIGIN}/">`)
+      // a page of the catalog, and a page this upload does not serve, which stays absolute
+      expect(at('product.html')).toBe(`<a href="/run/modules">Run</a><a href="${ORIGIN}/pricing">x</a>`)
+      expect(r).toMatchObject({ localLinks: 4, localFiles: 3 })
+    })
+
+    it('merged: a path is served by a file, a directory index or a rule of _redirects', () => {
+      runBuild(dirs.run)
+      wwwBuild(dirs.www)
+      put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
+      put(join(dirs.www, 'blog', 'index.html'), '<a href="/">home</a>')
+      put(
+        join(dirs.www, '_redirects'),
+        wwwRedirectsText([
+          { from: '/docs/*', to: 'https://docs.openmercato.com/:splat', status: 301, source: 'docs-map' },
+        ]),
+      )
+      put(
+        join(dirs.www, 'team.html'),
+        `<a href="${ORIGIN}/blog/">Blog</a><a href="${ORIGIN}/docs/start">Docs</a>` +
+          `<a href="${ORIGIN}/_astro/Base.css">css</a><a href="${ORIGIN}/nowhere">x</a>`,
+      )
+      mergePagesSite(dirs, WWW)
+      expect(readFileSync(join(dirs.out, 'team.html'), 'utf8')).toBe(
+        `<a href="/blog/">Blog</a><a href="/docs/start">Docs</a><a href="/_astro/Base.css">css</a>` +
+          `<a href="${ORIGIN}/nowhere">x</a>`,
+      )
+    })
+
+    it('catalog only: the builds the merge reads keep their absolute links, and their check accepts them', () => {
+      runBuild(dirs.run)
+      wwwBuild(dirs.www)
+      put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
+      const before = readFileSync(join(dirs.run, 'run', 'modules.html'), 'utf8')
+      mergePagesSite(dirs, WWW)
+      // dist-run/ is the catalog-only upload as it is (pages.yml moves it to dist/): the merge only reads it
+      expect(readFileSync(join(dirs.run, 'run', 'modules.html'), 'utf8')).toBe(before)
+      expect(before).toContain(`<a href="${ORIGIN}/product">Product</a><a href="${ORIGIN}/">Open Mercato</a>`)
+      expect(readFileSync(join(dirs.www, 'index.html'), 'utf8')).toContain(`<a href="${ORIGIN}/product">`)
+      // the catalog-only check of a nested build, which links the main site by its address
+      expect(checkPagesLayout(dirs.run, { ...WWW, merged: undefined })).toEqual([])
+    })
+
+    it('the merged check names each file and absolute link to a page this build serves', () => {
+      runBuild(dirs.run)
+      wwwBuild(dirs.www)
+      put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
+      mergePagesSite(dirs, WWW)
+      expect(checkMergedLayout(dirs.out, WWW)).toEqual({ problems: [], pending: [] })
+      // as an upload that missed the merge's rewrite would be
+      put(join(dirs.out, 'product.html'), `<a href="${ORIGIN}/run/modules?x=1#y">Run</a>`)
+      put(join(dirs.out, 'run', 'm', 'x.html'), '<a href="https://openmercato.com/">home</a>')
+      const problems = checkMergedLayout(dirs.out, WWW).problems
+      expect(problems).toHaveLength(2)
+      expect(problems[0]).toMatch(
+        /dist\/product\.html: https:\/\/www\.openmercato\.com\/run\/modules\?x=1#y is a page or a file of this build; link it root relative, \/run\/modules\?x=1#y$/,
+      )
+      expect(problems[1]).toMatch(
+        /dist\/run\/m\/x\.html: https:\/\/openmercato\.com\/ is a page or a file of this build; link it root relative, \/$/,
+      )
+      // a link to a path the build does not serve is not this check's business
+      put(join(dirs.out, 'product.html'), `<a href="${ORIGIN}/pricing">x</a>`)
+      put(join(dirs.out, 'run', 'm', 'x.html'), '<a href="/run/modules">home</a>')
+      expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).not.toMatch(/root relative/)
+    })
   })
 })
