@@ -697,8 +697,10 @@ merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build
   serves root relative (`/crm`, `/contact?interest=hubspot-alternative`), so a click on a preview stays on it, and
   the check fails on one left absolute, naming the file and the link. Canonical, hreflang, `og:url`, JSON-LD and the
   sitemaps keep the absolute address; the catalog-only upload keeps its absolute links to the main site. In the noindex preview a
-  header or footer link to a page only Webflow serves yet is allowed and counted; in a production upload it fails the
-  check, so `PAGES_MERGED=1` cannot reach production before the main site has every page the menus link.
+  header or footer link to a page only Webflow serves yet is allowed and counted; in a production upload that is
+  indexed it fails the check, so `PAGES_MERGED=1` cannot reach www before the main site has every page the menus link.
+  With `PAGES_SERVE_ORIGIN` the production build is noindex too, so there such a link is counted, not refused: it stays
+  absolute and Webflow answers it (Main site on modules.openmercato.com, below).
 
 Every `pages` run on `main` deploys the merged layout to the branch `www-preview` of the same project (jobs
 `www-preview-build` and `www-preview`), `https://www-preview.open-mercato-modules.pages.dev/`, with `PAGES_NOINDEX=1`
@@ -901,16 +903,35 @@ What production does with the variables below:
 - **Cost.** `_routes.json` runs Functions on every path outside `/run` and the fixed root files, so each request to
   the main site on the Pages hosts (pages, `/_astro/`, `/media/`) is a Function invocation. Check the daily count as
   in Old hosts on a Worker, Before the deploy, above, for the two hosts together.
+- **Links to Webflow pages.** The production check counts a header or footer link to a page only Webflow serves, as in
+  the `www-preview` build, instead of refusing it: the build is noindex. The strict check returns when
+  `PAGES_SERVE_ORIGIN` is deleted at C8.
+- **No old-hosts Worker meanwhile.** Do not deploy `openmercato-old-hosts` (Old hosts on a Worker, above) while
+  `PAGES_SERVE_ORIGIN` is set: its routes would send every page of both hosts to `https://www.openmercato.com/run`,
+  which is Webflow.
+- **templates.openmercato.com** serves the same upload as `modules.openmercato.com` (its root goes to the Templates
+  section), noindex like it. `PAGES_SERVE_ORIGIN` accepts only `https://modules.openmercato.com`: the 301s of the old
+  addresses are cached by browsers, so they stay on the host the addresses came from.
 
 **Order (owner).**
 
 1. Merge this change; the next `pages` run deploys today's catalog unchanged.
-2. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`, `SITE_URL` =
+2. Check on the `www-preview` deployment of that run, which runs the same Functions on the merged layout, that the
+   static `_headers` and `_redirects` still apply through them:
+
+   ```sh
+   curl -sI https://www-preview.open-mercato-modules.pages.dev/hubspot-alternative | grep -i '^x-robots-tag'
+   # x-robots-tag: noindex
+   curl -sI https://www-preview.open-mercato-modules.pages.dev/docs/x | grep -iE '^(HTTP|location)'
+   # 301 and location: https://docs.openmercato.com/
+   ```
+
+3. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`, `SITE_URL` =
    `https://www.openmercato.com`, `BASE_PATH` = `/run`, `HOME_PATH` = `/modules`, `PAGES_SERVE_ORIGIN` =
    `https://modules.openmercato.com`. Set all five before the run: without `PAGES_SERVE_ORIGIN` the old hosts send
    every page to Webflow. The `run-preview` jobs are skipped from then on (`BASE_PATH` is not `/`); `www-preview` runs
    as before.
-3. Actions > pages > Run workflow. `Check artifact contents` and `Check downloaded site` run
+4. Actions > pages > Run workflow. `Check artifact contents` and `Check downloaded site` run
    `yarn om pages-site --check dist` on the merged layout; the summary names `https://modules.openmercato.com/`.
 
 **Checks after the deploy.**
