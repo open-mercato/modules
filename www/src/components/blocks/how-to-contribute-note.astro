@@ -1,0 +1,41 @@
+---
+// "MIT License" of /how-to-contribute: the tagline and heading on the left, the text in a card on the right.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'prose'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-grid">
+        <div class="header_content">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        <div class="bg-grid_component">
+          <div class="bg-grid_card">
+            <div class="bg-grid_card-content">
+              {
+                t(block.markdown)
+                  .split(/\n\s*\n/)
+                  .map((para) => <p class="text-color-secondary" set:html={inline(para.trim())} />)
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

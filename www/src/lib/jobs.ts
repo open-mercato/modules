@@ -1,6 +1,6 @@
 // The jobs of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Phase 4): which jobs route at
 // /careers-jobs/<slug> and the SEO of a job page, with `JobPosting` JSON-LD for an open job. The list of jobs is part of
-// /careers, a unique page of the `pages` collection (Phase 6), still served by Webflow until then. A draft is validated
+// /careers, a unique page of the `pages` collection (Phase 6). A draft is validated
 // but never routed, linked or put in a sitemap (D6). Isomorphic.
 import { canonicalUrl, SITE_NAME } from './blog.ts'
 import { breadcrumbJsonLd, publishedEntries } from './entries.ts'

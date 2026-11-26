@@ -1,0 +1,17 @@
+webflowId: 6a31455eba3c34bace39cf46
+seo:
+  title: Careers | Open Mercato
+  description: Join Open Mercato and help build the open-source, AI-native foundation for modern business software. See our open roles.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: AboutPage
+blocks:
+  - type: hero
+    layout: about-header
+    eyebrow: Careers
+    title: "Join\nOpen Mercato"
+    lead: Open Mercato is an open-source, AI-native foundation for modern business software, built by a small and senior team. We hire builders who care about getting the architecture right and shipping real product. See our open roles below.
+  - type: list
+    layout: careers-jobs
+    collection: jobs
+    title: Open positions

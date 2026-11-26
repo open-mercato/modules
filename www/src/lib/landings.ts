@@ -4,13 +4,7 @@
 import type { z } from 'zod'
 import { fillCounts, type CountValues } from '../../../lib/core/www-tokens.ts'
 import { formatProseDate } from '../../../lib/import-webflow/text.ts'
-import { MAIN_SITE_ORIGIN } from '../../../lib/core/main-site.ts'
-import {
-  LANDING_TEMPLATE_TEXT,
-  PENDING_UNIQUE_PAGES,
-  type LandingLocale,
-  type landingSchema,
-} from '../../../lib/schema/www-content.ts'
+import { LANDING_TEMPLATE_TEXT, type LandingLocale, type landingSchema } from '../../../lib/schema/www-content.ts'
 import { refId, type Ref } from './blog.ts'
 
 type Parsed = z.output<ReturnType<typeof landingSchema>>
@@ -42,16 +36,6 @@ export function reviewedDay(d: Date, locale: LandingLocale): string {
 export function intentOf(href: string): string | undefined {
   if (!href.startsWith('/')) return undefined
   return new URL(href, 'https://www.openmercato.com').searchParams.get('interest') ?? undefined
-}
-
-/**
- * The href a landing renders for a link of its content: a unique page that Webflow serves until Phase 6
- * (PENDING_UNIQUE_PAGES: /contact) on the live site, every other link as it is.
- */
-export function siteHref(href: string): string {
-  if (!href.startsWith('/')) return href
-  const path = href.replace(/[?#].*$/, '')
-  return (PENDING_UNIQUE_PAGES as readonly string[]).includes(path.slice(1)) ? `${MAIN_SITE_ORIGIN}${href}` : href
 }
 
 /** One `<link rel="alternate" hreflang>` of a landing. */

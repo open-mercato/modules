@@ -199,6 +199,27 @@
 - url: /
   field: images
   note: "Live's script (om-customer-implementation-partner) adds the implementation partner video to the stories in the browser; the page renders it, so one more image (its poster)."
+- url: /about
+  field: text
+  note: "Live closes <main> after the story section, so its main text leaves out the four sections after it; here they are inside <main>, with the same words."
+- url: /about
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /partners
+  field: text
+  note: "Live keeps a hidden section (The Commercial Support Model, class hide) in its markup; it is left out here because nobody sees it."
+- url: /partners
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /agencies
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /team
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
+- url: /terms-conditions
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
 - url: /
   field: text
   note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026); the release badge shows the core version of the catalog''s data where live''s HTML types v0.9.0 (AGENTS.md rule 8; the browser shows the latest release on both).'

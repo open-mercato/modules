@@ -1,12 +1,13 @@
 // The link rules of Markdown bodies (www/src/lib/body-html.ts) for this build, read from www/content/ when the Astro
 // config loads: the published posts, case studies, partners and jobs a body may link, and the site paths the www build
 // serves; and the posts the sitemap leaves out. Node only (the config).
-// A collection adds its routes here when it gets them (pages and landings in Phase 5 and 6); until then a link to one
-// of its pages points at the live site.
+// The root namespace counts too: every published landing (Phase 5) and pages entry (Phase 6) is a page of this build,
+// so a link to one stays on the site; a link to any other main-site path points at the live site.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse } from 'yaml'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
+import { HOME_PAGE_SLUG } from '../lib/schema/www-content.ts'
 import { BLOG_PATH, POST_PREFIX, postPath } from './src/lib/blog.ts'
 import { CASE_STUDIES_PATH, CASE_STUDY_PREFIX } from './src/lib/case-studies.ts'
 import { JOB_PREFIX } from './src/lib/jobs.ts'
@@ -75,6 +76,30 @@ export function detailIds(content: string): Map<string, Set<string>> {
   )
 }
 
+/** Ids of the YAML entries of a collection folder that are not drafts. */
+export function publishedYamlIds(dir: string): string[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.yaml') && !f.startsWith('.'))
+    .filter((f) => (parse(readFileSync(join(dir, f), 'utf8')) as { draft?: unknown } | null)?.draft !== true)
+    .map((f) => f.slice(0, -5))
+    .sort()
+}
+
+/** Site paths of the root namespace this build writes: the published landings and pages entries (`home` is `/`). */
+export function rootPagePaths(content: string): Set<string> {
+  // without the pages folder every link to a unique page would quietly point at the live site
+  if (!existsSync(join(content, 'pages'))) throw new Error(`${content}: no pages folder; is this the www content?`)
+  const ids = [...publishedYamlIds(join(content, 'landings')), ...publishedYamlIds(join(content, 'pages'))]
+  return new Set(ids.map((id) => (id === HOME_PAGE_SLUG ? '/' : `/${id}`)))
+}
+
+/** Whether the www build of `content` serves a site path (other than a detail page). */
+export function servesSite(content: string): (path: string) => boolean {
+  const root = rootPagePaths(content)
+  return (path) => servesFixed(path) || root.has(path)
+}
+
 export function bodyLinkRules(content: string): LinkRules {
-  return { origin: MAIN_SITE_ORIGIN, details: detailIds(content), serves: servesFixed }
+  return { origin: MAIN_SITE_ORIGIN, details: detailIds(content), serves: servesSite(content) }
 }

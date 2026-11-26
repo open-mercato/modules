@@ -131,15 +131,11 @@ describe('the merged layout (pages-site --merge)', () => {
     mergePagesSite(dirs, WWW, true)
     // the header's link to a page Webflow still serves; the home page is in this build
     expect(checkMergedLayout(dirs.out, WWW, 50, true)).toEqual({ problems: [], pending: [`${ORIGIN}/product`] })
-    // a job's breadcrumb link to /careers, a unique page the main site builds in a later phase, is pending too
+    // a link to a unique page the main site does not build is a problem even in a preview (Phase 6 built them all)
     put(join(dirs.www, 'careers-jobs', 'j.html'), `<a href="${ORIGIN}/careers">x</a>`)
     mergePagesSite(dirs, WWW, true)
-    expect(checkMergedLayout(dirs.out, WWW, 50, true)).toEqual({
-      problems: [],
-      pending: [`${ORIGIN}/careers`, `${ORIGIN}/product`],
-    })
-    // production answers it with Pages, not Webflow: a problem there
-    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/\/careers is not a page/)
+    expect(checkMergedLayout(dirs.out, WWW, 50, true).problems.join('\n')).toMatch(/\/careers is not a page/)
+    rmSync(join(dirs.www, 'careers-jobs', 'j.html'))
     // the detail pages of the collections are built since Phase 4: a link to one that is not built is a problem even
     // in a preview
     put(join(dirs.www, 'blog-posts', 'p.html'), `<a href="${ORIGIN}/case-studies/acme-erp">x</a>`)

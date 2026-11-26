@@ -1,0 +1,84 @@
+webflowId: 69aec214442cba3608042055
+seo:
+  title: Learn AI-Engineering | Open Mercato
+  description: A practical guide to building production-grade software with AI agents using Open Mercato as your foundation.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: HowTo
+blocks:
+  - type: hero
+    layout: learn-ai-engineering-hero
+    eyebrow: Learn AI Engineering
+    title: Learn AI-Assisted Engineering
+    lead: A practical guide to building production-grade software with AI agents using Open Mercato as your foundation.
+    primary:
+      label: Clone the Repo
+      href: https://github.com/open-mercato/open-mercato
+    secondary:
+      label: See Live Demo
+      href: https://openmercatocloud.com/demo
+  - type: video
+    layout: learn-ai-engineering-video
+    eyebrow: video tutorial
+    title: How to Master AI-Assisted Coding with Open Mercato
+    youtube: GD2ToD1jmLE
+    poster:
+      src: /media/pages/gd2tod1jmle-poster.jpg
+      alt: AI Assisted Engineering with Open Mercato
+  # the HowTo steps of the page's JSON-LD. A card's `note` is its quote, its last line the source under it; points
+  # written `1. ...` are a numbered list
+  - type: steps
+    layout: learn-ai-engineering-roadmap
+    eyebrow: STEP BY STEP
+    title: The roadmap to mastering AI-assisted coding
+    items:
+      - title: Understand the "Context First" Architecture
+        body: Standard AI coding often fails because the LLM loses context in large, fragmented codebases. Open Mercato solves this through its structural choices.
+        points:
+          - "Mono-repo Advantage: By keeping the core and modules in a mono-repo, you allow agents (like Cursor or Claude) to see the full relationship between entities, APIs, and the UI."
+          - 'Modular Monolith: Instead of chasing microservices, you work within a modular structure where AI can easily "reason" about dependencies via our Dependency Injection (Awilix).'
+        note: |-
+          "A mono repository structure simplifies AI-assisted engineering by making context management easier."
+          Source: Ai coding om short.txt
+      - title: Use AGENTS.MD as Your AI’s North Star
+        body: The most critical file for any developer in Open Mercato is agents.md. This is the "manual" you feed your LLM.
+        points:
+          - "The Content: It contains coding conventions, architectural decisions, and the Extensibility Contract (OCP)."
+          - 'The Practice: Before starting a task, point your agent (e.g., via @agents.md in Cursor) to this file. It prevents the AI from "hallucinating" patterns and ensures it uses our built-in helpers.'
+        note: |-
+          "The agents.md file specifies guidelines for agent encoding, architecture decisions, coding conventions, and patterns."
+          Source: Open Mercato website content
+      - title: Mastering the "Specification Loop"
+        body: Do not start by asking the AI to "write code." Start by asking it to challenge your logic.
+        points:
+          - "Logical Auditing: Use high-reasoning models (like Claude 3.5 Sonnet or Codex) to find gaps in your feature request."
+          - 'Example: When implementing an "Order Status History," first ask the AI: "Based on the existing Action Log pattern in Open Mercato, how should I track status changes without duplicating data?"'
+          - "Markdown API Specs: Open Mercato provides markdown specifications of the API. Pasting these into an LLM saves tokens and ensures the AI understands the exact authorization and data requirements."
+      - title: Leveraging the Overlay System (The "Safety Net")
+        body: One of the biggest risks with AI code is breaking the core system. Open Mercato uses an Overlay System based on the Open-Closed Principle (OCP).
+        points:
+          - "How it works: You never modify the core files (distributed via NPM). Instead, you instruct the AI to create overrides in the overlay directory."
+          - 'Learning Point: Practice telling the AI: "I need to change the validation logic for the Contact entity. Use the Overlay pattern to override the core service without modifying the original package."'
+        note: |-
+          Open Mercato is not a 'code generator'; it is a foundation framework... AI is used to accelerate the population of this proven structure, not to reinvent the wheel every time.
+          Source: Open Mercato FAQ
+      - title: "Technical Guardrails: Types and Commands"
+        body: "To ensure the AI produces production-grade code, Open Mercato enforces strict technical patterns:"
+        points:
+          - "Zod & TypeScript: The AI is forced to adhere to strict schemas. If the AI generates a field that doesn't exist, the TypeScript compiler (and the AI itself) will catch it immediately."
+          - 'Command Pattern: Every write operation is a "Command." This makes it easy for the AI to implement "Undo/Redo" and "Audit Logs" automatically, as the pattern is consistent across the entire framework.'
+      - title: Implementation Workflow (The "Pro" Routine)
+        body: "To learn effectively, follow this 4-step workflow:"
+        points:
+          - "1. Initialize: Run yarn mercato init to have a living, breathing system with sample data."
+          - '2. Prompt the Pattern: Ask the AI to find an existing pattern (e.g., "How does the CRM module handle many-to-many relationships?").'
+          - "3. Generate with Overlay: Have the AI generate the new module or field in the overlay layer."
+          - "4. Verify via Playwright: Use AI to generate E2E tests in Playwright to verify the new feature works as expected."
+  - type: cta
+    layout: learn-ai-engineering-honesty
+    eyebrow: Intellectual Honesty
+    title: What AI-assisted engineering requires from you
+    body: AI-assisted coding with Open Mercato significantly reduces "commodity" work, but it requires a developer who understands Software Architecture. If you don't understand Dependency Injection or the Open-Closed Principle, you might still struggle with complex customizations. We recommend studying our Architecture Webinar notes to understand the "Request Flow" before deep-diving into AI generation.
+    primary:
+      label: See Architecture
+      href: https://www.youtube.com/watch?v=ezfhcr_9Q0g
