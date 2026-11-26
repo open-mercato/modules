@@ -255,7 +255,7 @@ export function mergePagesSite(
 // "Served" is read from the files the two builds wrote, after the merge composed them, never from a list. A link to a
 // path the upload does not serve stays absolute, and so do `<link rel="canonical">` and `<link rel="alternate">`
 // (hreflang, feeds): they name the site's own address on purpose. og:url, JSON-LD and the sitemaps are no `href` and are
-// not touched either, nor is anything inside `<script>` or `<style>`. The catalog-only layout never runs
+// not touched either, nor is anything inside a comment, `<script>` or `<style>`. The catalog-only layout never runs
 // the merge, so its links stay as they are (dist-run/ is not touched). checkMergedLayout() fails on any such link
 // left absolute, naming the file and the link.
 
@@ -265,12 +265,15 @@ const MAIN_SITE_ABSOLUTE = /^(?:https?:)?\/\/(?:www\.)?openmercato\.com(?::443)?
 /**
  * The root-relative form of `ref` (an attribute value as written in the HTML) when it names the main site absolutely
  * at a path `serves` answers for, else null. The query and the fragment are kept as written. Never a path that a
- * browser would read as another host (`//x`, `/\x`).
+ * browser would read as another host: the result must resolve on the main site's origin as a browser parses it (the
+ * URL parser drops tabs and newlines, so `/\t/x` is `//x`), and a value with a tab or a newline is left alone.
  */
 export function servedLocalHref(ref: string, serves: (pathname: string) => boolean): string | null {
-  const m = MAIN_SITE_ABSOLUTE.exec(ref)
+  const value = ref.trim()
+  if (/[\t\n\r]/.test(value)) return null
+  const m = MAIN_SITE_ABSOLUTE.exec(value)
   if (!m) return null
-  const rest = ref.slice(m[0].length)
+  const rest = value.slice(m[0].length)
   const local = rest.startsWith('/') ? rest : `/${rest}`
   if (/^\/[\\/]/.test(local)) return null
   let url: URL
@@ -279,40 +282,67 @@ export function servedLocalHref(ref: string, serves: (pathname: string) => boole
   } catch {
     return null
   }
+  if (url.origin !== MAIN_SITE_ORIGIN) return null
   return serves(url.pathname) ? local : null
 }
 
-/** `<script>` and `<style>` elements with their content: their text is not markup, so no link in it is touched. */
-const RAW_TEXT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi
+/**
+ * Comments, and `<script>` and `<style>` elements with their content: their text is not markup, so no link in it is
+ * touched (a comment first, so a `<script>` inside one does not swallow the markup after it).
+ */
+const RAW_TEXT = /<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi
 /** A start tag with its attributes (quoted values may hold `>`). */
 const START_TAG = /<([A-Za-z][A-Za-z0-9-]*)((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*)\s*\/?>/g
-const HREF_ATTR = /(\shref\s*=\s*)(?:"([^"]*)"|'([^']*)')/i
-const REL_KEEPS = /\srel\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/i
+/** One attribute of a start tag: its name and its value, quoted or not. */
+const ATTR = /(\s+)([^\s"'>/=]+)(?:(\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+
+interface Attr {
+  name: string
+  value: string | null
+  /** Where the attribute starts in the attribute text, and its length. */
+  at: number
+  length: number
+  /** The text up to the value: the space, the name and `=`. */
+  head: string
+  /** The quote of the value as written, `"` for an unquoted one. */
+  quote: '"' | "'"
+}
+
+function attrsOf(text: string): Attr[] {
+  return [...text.matchAll(ATTR)].map((m) => ({
+    name: (m[2] ?? '').toLowerCase(),
+    value: m[4] ?? m[5] ?? m[6] ?? null,
+    at: m.index,
+    length: m[0].length,
+    head: `${m[1] ?? ''}${m[2] ?? ''}${m[3] ?? ''}`,
+    quote: m[5] !== undefined ? "'" : '"',
+  }))
+}
 
 /** True for a tag whose href names the page's own address on purpose: `<link rel="canonical|alternate">`. */
-function keepsAbsolute(name: string, attrs: string): boolean {
+function keepsAbsolute(name: string, attrs: readonly Attr[]): boolean {
   if (name.toLowerCase() !== 'link') return false
-  const m = REL_KEEPS.exec(attrs)
-  const rel = (m?.[1] ?? m?.[2] ?? m?.[3] ?? '').toLowerCase().split(/\s+/)
+  const rel = (attrs.find((a) => a.name === 'rel')?.value ?? '').toLowerCase().split(/\s+/)
   return rel.includes('canonical') || rel.includes('alternate')
 }
 
 /**
- * Calls `fn` with the value of every `href` of `html` outside `<script>` and `<style>`, but the hrefs keepsAbsolute()
- * names; a string `fn` returns replaces the value. Returns the new HTML.
+ * Calls `fn` with the value of the `href` attribute of each start tag of `html` outside comments, `<script>` and
+ * `<style>`, but the hrefs keepsAbsolute() names; a string `fn` returns replaces the value. Returns the new HTML.
  */
 function mapHrefs(html: string, fn: (value: string) => string | null): string {
   const tags = (part: string): string =>
-    part.replace(START_TAG, (tag: string, name: string, attrs: string) => {
+    part.replace(START_TAG, (tag: string, name: string, text: string) => {
+      const attrs = attrsOf(text)
       if (keepsAbsolute(name, attrs)) return tag
-      const m = HREF_ATTR.exec(attrs)
-      if (!m) return tag
-      const value = m[2] ?? m[3] ?? ''
-      const next = fn(value)
-      if (next === null || next === value) return tag
-      const quote = m[2] !== undefined ? '"' : "'"
-      const at = tag.indexOf(m[0])
-      return `${tag.slice(0, at)}${m[1]}${quote}${next}${quote}${tag.slice(at + m[0].length)}`
+      const href = attrs.find((a) => a.name === 'href' && a.value !== null)
+      if (!href || href.value === null) return tag
+      const next = fn(href.value)
+      if (next === null || next === href.value) return tag
+      // the value came from inside these quotes, so it holds none of them
+      const quoted = `${href.quote}${next}${href.quote}`
+      const at = 1 + name.length + href.at
+      return `${tag.slice(0, at)}${href.head}${quoted}${tag.slice(at + href.length)}`
     })
   let out = ''
   let last = 0
@@ -334,17 +364,29 @@ export function localizeHrefs(html: string, serves: (pathname: string) => boolea
   return { html: links > 0 ? out : html, links }
 }
 
-/** The hrefs of `html` that the rule above would make root relative, each with its root-relative form. */
+/** A `<link>` start tag, quoted values holding `>` included. */
+const LINK_TAG = /<link\b(?:"[^"]*"|'[^']*'|[^'">])*>/gi
+/** An `href` anywhere in markup, quoted or not. */
+const ANY_HREF = /\shref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi
+
+/**
+ * The hrefs of `html` that the rule above would make root relative, each with its root-relative form, for the check.
+ * Read more loosely than mapHrefs() does on purpose (any `href=` of the markup outside comments, `<script>`, `<style>`
+ * and the canonical and alternate `<link>` tags), so a gap in the rewrite fails the check instead of shipping.
+ */
 export function absoluteServedHrefs(
   html: string,
   serves: (pathname: string) => boolean,
 ): { ref: string; local: string }[] {
+  const markup = html
+    .replace(RAW_TEXT, ' ')
+    .replace(LINK_TAG, (tag) => (keepsAbsolute('link', attrsOf(tag.slice(5, -1))) ? ' ' : tag))
   const found: { ref: string; local: string }[] = []
-  mapHrefs(html, (v) => {
+  for (const m of markup.matchAll(ANY_HREF)) {
+    const v = (m[1] ?? m[2] ?? m[3] ?? '').replace(/&amp;/g, '&')
     const local = servedLocalHref(v, serves)
-    if (local !== null) found.push({ ref: v.replace(/&amp;/g, '&'), local: local.replace(/&amp;/g, '&') })
-    return null
-  })
+    if (local !== null) found.push({ ref: v.trim(), local })
+  }
   return found
 }
 

@@ -37,6 +37,7 @@ import {
   sitemapIndexXml,
   sitemapLocs,
 } from '../../lib/emit/pages-merge.ts'
+import { wwwRedirectsText } from '../../lib/emit/www-redirects.ts'
 import { PUBLISHED_SCHEMAS } from '../../lib/schema/json-schema.ts'
 
 const WWW: SiteConfig = { origin: 'https://www.openmercato.com', base: '/run', home: '/modules', merged: true }
@@ -456,6 +457,51 @@ describe('links of the merged layout to pages it serves (owner decision of 26 No
     ])
   })
 
+  it('never turns a link into one a browser reads as another host', () => {
+    // the URL parser drops tabs and newlines: `/\t/evil.example` would be `//evil.example`
+    expect(servedLocalHref(`${ORIGIN}/\t/evil.example/`, () => true)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/\n/evil.example/`, () => true)).toBeNull()
+    expect(servedLocalHref(`${ORIGIN}/cr\tm`, () => true)).toBeNull()
+    // the spaces a browser trims around a value
+    expect(servedLocalHref(` ${ORIGIN}/crm `, serves)).toBe('/crm')
+  })
+
+  it('reads the href attribute itself, in any tag, quoted or not, and keeps comments as they are', () => {
+    const html =
+      `<a title="see href='${ORIGIN}/crm'" href="${ORIGIN}/crm">CRM</a>` +
+      `<a href=${ORIGIN}/crm>CRM</a><A HREF="${ORIGIN}/crm">CRM</A>` +
+      `<LINK REL="Canonical" HREF="${ORIGIN}/crm"><link rel=alternate href=${ORIGIN}/crm>` +
+      `<link rel="stylesheet" href="${ORIGIN}/crm">` +
+      `<template><a href="${ORIGIN}/crm">CRM</a></template><svg><use href="${ORIGIN}/crm#icon"></use></svg>` +
+      `<!-- <script> --><a href="${ORIGIN}/contact">Contact</a><!-- <a href="${ORIGIN}/crm"> -->`
+    const r = localizeHrefs(html, serves)
+    expect(r.html).toBe(
+      `<a title="see href='${ORIGIN}/crm'" href="/crm">CRM</a>` +
+        '<a href="/crm">CRM</a><A HREF="/crm">CRM</A>' +
+        `<LINK REL="Canonical" HREF="${ORIGIN}/crm"><link rel=alternate href=${ORIGIN}/crm>` +
+        '<link rel="stylesheet" href="/crm">' +
+        '<template><a href="/crm">CRM</a></template><svg><use href="/crm#icon"></use></svg>' +
+        `<!-- <script> --><a href="/contact">Contact</a><!-- <a href="${ORIGIN}/crm"> -->`,
+    )
+    expect(r.links).toBe(7)
+  })
+
+  it('the check reads hrefs more loosely than the rewrite, so a doubt fails it', () => {
+    // a value the rewrite would not take as it is, and the text of another attribute
+    expect(absoluteServedHrefs(`<a href="${ORIGIN}/crm" title="x href=${ORIGIN}/contact">x</a>`, serves)).toEqual([
+      { ref: `${ORIGIN}/crm`, local: '/crm' },
+      { ref: `${ORIGIN}/contact`, local: '/contact' },
+    ])
+    // canonical and alternate, comments, scripts and styles are not links of the page
+    expect(
+      absoluteServedHrefs(
+        `<link rel="canonical" data-x="a>b" href="${ORIGIN}/crm"><LINK REL=ALTERNATE HREF=${ORIGIN}/crm>` +
+          `<!-- <a href="${ORIGIN}/crm"> --><script>x='<a href="${ORIGIN}/crm">'</script>`,
+        serves,
+      ),
+    ).toEqual([])
+  })
+
   describe('in an upload', () => {
     let tmp: string
     let dirs: { www: string; run: string; out: string }
@@ -483,6 +529,29 @@ describe('links of the merged layout to pages it serves (owner decision of 26 No
       // a page of the catalog, and a page this upload does not serve, which stays absolute
       expect(at('product.html')).toBe(`<a href="/run/modules">Run</a><a href="${ORIGIN}/pricing">x</a>`)
       expect(r).toMatchObject({ localLinks: 4, localFiles: 3 })
+    })
+
+    it('merged: a path is served by a file, a directory index or a rule of _redirects', () => {
+      runBuild(dirs.run)
+      wwwBuild(dirs.www)
+      put(join(dirs.www, 'product.html'), '<a href="/">home</a>')
+      put(join(dirs.www, 'blog', 'index.html'), '<a href="/">home</a>')
+      put(
+        join(dirs.www, '_redirects'),
+        wwwRedirectsText([
+          { from: '/docs/*', to: 'https://docs.openmercato.com/:splat', status: 301, source: 'docs-map' },
+        ]),
+      )
+      put(
+        join(dirs.www, 'team.html'),
+        `<a href="${ORIGIN}/blog/">Blog</a><a href="${ORIGIN}/docs/start">Docs</a>` +
+          `<a href="${ORIGIN}/_astro/Base.css">css</a><a href="${ORIGIN}/nowhere">x</a>`,
+      )
+      mergePagesSite(dirs, WWW)
+      expect(readFileSync(join(dirs.out, 'team.html'), 'utf8')).toBe(
+        `<a href="/blog/">Blog</a><a href="/docs/start">Docs</a><a href="/_astro/Base.css">css</a>` +
+          `<a href="${ORIGIN}/nowhere">x</a>`,
+      )
     })
 
     it('catalog only: the builds the merge reads keep their absolute links, and their check accepts them', () => {
