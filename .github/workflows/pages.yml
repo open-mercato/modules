@@ -27,6 +27,11 @@
 # `yarn om pages-site --merge` composes dist/ from both (the main site at the root, the catalog under /run) and the
 # checks follow the merged layout. Two jobs, `www-preview-build` and `www-preview`, deploy the merged layout to the
 # branch alias www-preview with PAGES_NOINDEX=1 meanwhile.
+# Before the www switch (owner's decision of 26 Nov 2026, docs/RUNBOOK.md, Main site on modules.openmercato.com): with
+# PAGES_MERGED=1 and the repository variable PAGES_SERVE_ORIGIN (https://modules.openmercato.com) production deploys
+# the merged layout and the Pages hosts serve it themselves: not indexed (dist/_headers and a robots.txt that allows
+# nothing, so no Google Analytics), canonical addresses on SITE_URL, old catalog page addresses a 301 under /run on the
+# same host. The preview jobs never read it.
 name: pages
 
 on:
@@ -65,6 +70,8 @@ env:
   CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}
   # 1: production deploys the merged layout (the main site at the root, the catalog under BASE_PATH); off by default
   PAGES_MERGED: ${{ vars.PAGES_MERGED || '' }}
+  # the origin that serves the merged layout before the www switch (https://modules.openmercato.com); off by default
+  PAGES_SERVE_ORIGIN: ${{ vars.PAGES_SERVE_ORIGIN || '' }}
 
 jobs:
   build:
@@ -299,7 +306,12 @@ jobs:
           if [ -n "$url" ] && [ -n "$base" ]; then url="${url%/}$path"; fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
           {
-            echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL%/}$path"
+            if [ -n "$PAGES_SERVE_ORIGIN" ]; then
+              # the merged layout served on a Pages host: the main site at its root, canonical addresses on SITE_URL
+              echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${PAGES_SERVE_ORIGIN%/}/ (the catalog at ${PAGES_SERVE_ORIGIN%/}$path, canonical on ${SITE_URL%/}, noindex)"
+            else
+              echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL%/}$path"
+            fi
             echo ""
             echo "This deployment: ${url:-see the wrangler output}"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -330,6 +342,7 @@ jobs:
       PAGES_NOINDEX: "1"
       # the catalog alone, whatever production deploys
       PAGES_MERGED: ""
+      PAGES_SERVE_ORIGIN: ""
     steps:
       - name: Check deploy settings
         id: settings
@@ -432,6 +445,7 @@ jobs:
       HOME_PATH: /modules
       PAGES_NOINDEX: "1"
       PAGES_MERGED: ""
+      PAGES_SERVE_ORIGIN: ""
       # the branch of the preview deployment; Cloudflare serves its latest deployment at
       # https://<branch>.<project>.pages.dev
       PREVIEW_BRANCH: run-preview
@@ -531,6 +545,7 @@ jobs:
       HOME_PATH: /modules
       PAGES_NOINDEX: "1"
       PAGES_MERGED: "1"
+      PAGES_SERVE_ORIGIN: ""
     steps:
       - name: Check deploy settings
         id: settings
@@ -631,6 +646,7 @@ jobs:
       HOME_PATH: /modules
       PAGES_NOINDEX: "1"
       PAGES_MERGED: "1"
+      PAGES_SERVE_ORIGIN: ""
       PREVIEW_BRANCH: www-preview
     steps:
       - name: Check token
