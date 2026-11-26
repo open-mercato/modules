@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/storage-s3",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "untested",
+      "0.10": "broken",
       "0.9": "verified",
-      "next": "untested"
+      "next": "broken"
     },
     "fit": {
       "0.10": "ok",
@@ -93,7 +93,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 25 Nov)."
+      "detail": "Broken at add on 0.10 since 26 Nov."
     },
     {
       "id": "VER-2",
@@ -120,14 +120,13 @@
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 25 Nov)."
+          "code": "BROKEN",
+          "text": "Broken at add on 0.10 since 26 Nov."
         }
-      ],
-      "consentText": "Install @open-mercato/storage-s3@0.10.1"
+      ]
     },
     "0.9": {
       "decision": "allow",
@@ -139,14 +138,13 @@
       ]
     },
     "next": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next. In isolation (empty preset): 0.9.0 verified on 28 Oct."
+          "code": "BROKEN",
+          "text": "Broken at add on next since 26 Nov."
         }
-      ],
-      "consentText": "Install @open-mercato/storage-s3@0.10.1"
+      ]
     }
   },
   "state": "active",

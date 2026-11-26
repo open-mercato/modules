@@ -1,7 +1,7 @@
 {
   "locator": "npm:@piotrkarwatka/visits",
   "version": "0.1.0",
-  "computedAt": "2026-11-25T11:45:37Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "community",
     "typeReason": "Repository pkarw/visits-example returns 404; npm scope @piotrkarwatka is listed in policy/community.yml.",
@@ -92,7 +92,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Broken at add on 0.10 since 25 Nov."
+      "detail": "Broken at typecheck on 0.10 since 25 Nov."
     },
     {
       "id": "VER-2",
@@ -123,7 +123,7 @@
       "reasons": [
         {
           "code": "BROKEN",
-          "text": "Broken at add on 0.10 since 25 Nov."
+          "text": "Broken at typecheck on 0.10 since 25 Nov."
         },
         {
           "code": "THIRD_PARTY",

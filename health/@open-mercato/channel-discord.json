@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-discord",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T15:15:31Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.10": "verified",
       "0.9": "untested",
-      "next": "untested"
+      "next": "broken"
     },
     "fit": {
       "0.10": "ok",
@@ -137,14 +137,13 @@
       "consentText": "Install @open-mercato/channel-discord@0.10.1"
     },
     "next": {
-      "decision": "ask",
+      "decision": "refuse",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.1 on next yet; the receipt is for 0.10.0 (broken at typecheck, 25 Nov)."
+          "code": "BROKEN",
+          "text": "Broken at typecheck on next since 26 Nov."
         }
-      ],
-      "consentText": "Install @open-mercato/channel-discord@0.10.1"
+      ]
     }
   },
   "state": "active",

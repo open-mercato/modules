@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/carrier-inpost",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T15:15:31Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -155,12 +155,12 @@
   "recommended": {
     "0.10": "0.10.1",
     "0.9": null,
-    "next": "0.10.0"
+    "next": "0.10.1"
   },
   "evaluated": {
     "0.10": "0.10.1",
     "0.9": "0.10.1",
-    "next": "0.10.0"
+    "next": "0.10.1"
   },
   "verdictPreset": "classic"
 }

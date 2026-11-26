@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-26T08:30:07.444Z",
+  "generatedAt": "2026-11-26T11:41:30.125Z",
   "next": "0.11.1-develop.8545.1.dd603570fd",
   "base": "0.10.1",
-  "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.10.1. 0 break statically. Receipts on next: 0 verified, 0 broken.",
+  "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.10.1. 0 break statically. Receipts on next: 3 verified, 0 broken.",
   "changedApis": [
     {
       "symbol": "@open-mercato/shared/lib/di/container#createRequestContainer",
@@ -50,7 +50,7 @@
   ],
   "staticBreaks": [],
   "receiptsOnNext": {
-    "verified": 0,
+    "verified": 3,
     "broken": 0
   },
   "sameFailure": [],

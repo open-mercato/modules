@@ -1,7 +1,7 @@
 {
   "locator": "npm:@dainamite/cpq-billing-connector",
   "version": "5.2.0",
-  "computedAt": "2026-11-25T15:15:31Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "3rd-party",
     "typeReason": "Owner dainamite-technologies is not a public member of open-mercato and not in policy/community.yml.",
@@ -29,7 +29,7 @@
     "receipt": {
       "0.10": "verified",
       "0.9": "harness-red",
-      "next": "broken"
+      "next": "verified"
     },
     "fit": {
       "0.10": "ok",
@@ -53,7 +53,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.9; verified on 0.10."
+        "Built for 0.9; verified on 0.10, next."
       ]
     }
   },
@@ -142,24 +142,21 @@
       "consentText": "Install @dainamite/cpq-billing-connector@5.2.0"
     },
     "next": {
-      "decision": "refuse",
+      "decision": "ask",
       "reasons": [
-        {
-          "code": "BROKEN",
-          "text": "Broken at add on next since 22 Nov."
-        },
         {
           "code": "THIRD_PARTY",
           "text": "Third-party code runs with access to all tenants' data."
         }
-      ]
+      ],
+      "consentText": "Install @dainamite/cpq-billing-connector@5.2.0"
     }
   },
   "state": "active",
   "recommended": {
     "0.10": "5.2.0",
     "0.9": null,
-    "next": null
+    "next": "5.2.0"
   },
   "evaluated": {
     "0.10": "5.2.0",

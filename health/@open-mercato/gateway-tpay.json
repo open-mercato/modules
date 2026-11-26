@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/gateway-tpay",
   "version": "0.10.1",
-  "computedAt": "2026-11-25T14:29:54Z",
+  "computedAt": "2026-11-26T11:41:30Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -27,9 +27,9 @@
   },
   "signals": {
     "receipt": {
-      "0.10": "untested",
+      "0.10": "verified",
       "0.9": "untested",
-      "next": "untested"
+      "next": "verified"
     },
     "fit": {
       "0.10": "ok",
@@ -55,7 +55,7 @@
     "declaredVsObserved": {
       "status": "mismatch",
       "notes": [
-        "Built for 0.10; verified on no line."
+        "Built for 0.10; verified on 0.10, next."
       ]
     }
   },
@@ -92,8 +92,8 @@
     },
     {
       "id": "VER-1",
-      "pass": false,
-      "detail": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 25 Nov)."
+      "pass": true,
+      "detail": "Receipt on 0.10: verified (0.10.1)."
     },
     {
       "id": "VER-2",
@@ -116,18 +116,17 @@
       "detail": "No repository in the descriptor to compare."
     }
   ],
-  "tier": "listed",
+  "tier": "verified",
   "quality": null,
   "agentPolicy": {
     "0.10": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "No receipt for 0.10.1 on 0.10 yet; the receipt is for 0.10.0 (broken at add, 25 Nov)."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on 0.10."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-tpay@0.10.1"
+      ]
     },
     "0.9": {
       "decision": "ask",
@@ -140,21 +139,20 @@
       "consentText": "Install @open-mercato/gateway-tpay@0.10.1"
     },
     "next": {
-      "decision": "ask",
+      "decision": "allow",
       "reasons": [
         {
-          "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on next."
+          "code": "OFFICIAL_VERIFIED",
+          "text": "Official, verified on next."
         }
-      ],
-      "consentText": "Install @open-mercato/gateway-tpay@0.10.1"
+      ]
     }
   },
   "state": "active",
   "recommended": {
-    "0.10": null,
+    "0.10": "0.10.1",
     "0.9": null,
-    "next": null
+    "next": "0.10.1"
   },
   "evaluated": {
     "0.10": "0.10.1",
