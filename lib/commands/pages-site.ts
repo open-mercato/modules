@@ -18,6 +18,10 @@
 // with no loop, no chain longer than one hop and within the Pages limits. `--merge` also makes every link to the main
 // site's address of a page the upload serves root relative, and `--check` fails on one left absolute (the rule is in
 // lib/emit/pages-merge.ts, localizeHrefs); the catalog-only layout keeps its absolute links.
+// With PAGES_SERVE_ORIGIN (owner's decision of 26 Nov 2026: the merged site on modules.openmercato.com before the www
+// switch) functions/site.ts carries `serve`, so the Pages hosts serve the merged layout themselves (hostServe in
+// lib/core/site-host.ts), and the build is noindex (noindexFromEnv). It needs PAGES_MERGED=1 and
+// https://modules.openmercato.com; both commands refuse anything else.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -29,6 +33,7 @@ import {
   mergedFromEnv,
   noindexFromEnv,
   pagesHostProblem,
+  serveOriginFromEnv,
   siteConfigFromEnv,
   siteModule,
   siteRoot,
@@ -66,8 +71,10 @@ export default function pagesSite(ctx: CommandContext): number {
   }
   const merged = mergedFromEnv(process.env)
   let c: SiteConfig
+  let serve: string | null
   try {
     c = siteConfigFromEnv(process.env)
+    serve = serveOriginFromEnv(process.env)
   } catch (err) {
     console.error(`om pages-site: ${(err as Error).message}`)
     return EXIT_ENV
@@ -78,9 +85,14 @@ export default function pagesSite(ctx: CommandContext): number {
       console.error(`om pages-site: PAGES_MERGED: ${problem}`)
       return EXIT_ENV
     }
-    c = { ...c, merged: true }
+    c = { ...c, merged: true, ...(serve ? { serve } : {}) }
   } else if (merge) {
     console.error('om pages-site: --merge needs PAGES_MERGED=1 (functions/site.ts and the check follow it)')
+    return EXIT_ENV
+  } else if (serve) {
+    console.error(
+      'om pages-site: PAGES_SERVE_ORIGIN needs PAGES_MERGED=1: a Pages host serves the merged layout, never the catalog alone',
+    )
     return EXIT_ENV
   }
   const hostProblem = pagesHostProblem(c)
@@ -119,7 +131,9 @@ export default function pagesSite(ctx: CommandContext): number {
 
   if (check === null) {
     if (have !== want) writeFileSync(file, want)
-    console.log(`om pages-site: ${SITE_MODULE} ${have === want ? 'already for' : 'written for'} ${siteRoot(c)}`)
+    console.log(
+      `om pages-site: ${SITE_MODULE} ${have === want ? 'already for' : 'written for'} ${siteRoot(c)}${c.serve ? `, served at ${c.serve}` : ''}`,
+    )
     return EXIT_OK
   }
 
@@ -148,7 +162,7 @@ export default function pagesSite(ctx: CommandContext): number {
     return EXIT_VALIDATION
   }
   console.log(
-    `om pages-site: ${check} matches ${siteRoot(c)} (${merged ? 'merged, ' : ''}base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''}${noindex ? ', noindex' : ''})`,
+    `om pages-site: ${check} matches ${siteRoot(c)} (${merged ? 'merged, ' : ''}${c.serve ? `served at ${c.serve}, ` : ''}base ${c.base}${hasHomePath(c) ? `, home ${homePath(c)}` : ''}${noindex ? ', noindex' : ''})`,
   )
   if (result.pending.length > 0)
     console.log(

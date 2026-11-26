@@ -32,6 +32,12 @@ export interface SiteConfig {
    * upload, so a `*.pages.dev` address serves every path as a static file instead of leading its root to the catalog.
    */
   merged?: boolean
+  /**
+   * The origin that serves the merged layout before the www switch (PAGES_SERVE_ORIGIN, owner's decision of 26 Nov
+   * 2026), as opposed to `origin`, the canonical one: `https://modules.openmercato.com`. Set, the Pages hosts serve the
+   * upload directly instead of redirecting to `origin` (hostServe), and the build is noindex (noindexFromEnv).
+   */
+  serve?: string
 }
 
 /** The default site: modules.openmercato.com at the domain root, the home page at `/`. */
@@ -133,12 +139,38 @@ export function siteConfigFromEnv(env: Record<string, string | undefined>): Site
 }
 
 /**
- * True when PAGES_NOINDEX asks for a build that search engines must not index: the preview of the nested layout that
- * pages.yml deploys to a Pages branch alias next to production (docs/RUNBOOK.md, Preview of the /run layout).
+ * True when the build is one that search engines must not index: PAGES_NOINDEX asks for it (the previews that
+ * pages.yml deploys to Pages branch aliases next to production, docs/RUNBOOK.md, Preview of the /run layout), or
+ * PAGES_SERVE_ORIGIN is set (decision 1a of 26 Nov 2026: while www is on Webflow, the merged site served on
+ * modules.openmercato.com is not indexed, and so has no Google Analytics either, www/src/lib/analytics.ts).
  */
 export function noindexFromEnv(env: Record<string, string | undefined>): boolean {
   const v = (env.PAGES_NOINDEX ?? '').trim().toLowerCase()
-  return v === '1' || v === 'true'
+  return v === '1' || v === 'true' || (env.PAGES_SERVE_ORIGIN ?? '').trim() !== ''
+}
+
+/**
+ * The origin from PAGES_SERVE_ORIGIN, or null when it is unset or empty. Throws on any value but the https origin of
+ * modules.openmercato.com (DEFAULT_SITE_ORIGIN), the one host of the Pages project the catalog was served from: the old
+ * addresses move there with a 301 that browsers cache, so it must be the host they came from, and the Functions serve
+ * the upload on the Pages hosts only. A trailing slash is allowed; a path, a query or a fragment is not.
+ */
+export function serveOriginFromEnv(env: Record<string, string | undefined>): string | null {
+  const raw = (env.PAGES_SERVE_ORIGIN ?? '').trim()
+  if (raw === '') return null
+  let u: URL
+  try {
+    u = new URL(raw)
+  } catch {
+    throw new Error(`PAGES_SERVE_ORIGIN must be an https origin: ${raw}`)
+  }
+  if (u.protocol !== 'https:' || u.pathname !== '/' || u.search !== '' || u.hash !== '' || /[?#]/.test(raw))
+    throw new Error(`PAGES_SERVE_ORIGIN must be an https origin without a path: ${raw}`)
+  if (u.origin !== DEFAULT_SITE_ORIGIN)
+    throw new Error(
+      `PAGES_SERVE_ORIGIN must be ${DEFAULT_SITE_ORIGIN}, the Pages host the catalog was served from: ${raw}`,
+    )
+  return u.origin
 }
 
 /**
@@ -376,6 +408,70 @@ export function hostFile(requestUrl: string | URL, c: SiteConfig): string | null
 }
 
 /**
+ * Status of the old catalog page addresses on a serving host (decision 3a of 26 Nov 2026): a 301, because the pages
+ * moved under the base for good, on the serving origin. MOVED_STATUS (302) stays for the move to SITE_URL.
+ */
+export const SERVE_MOVED_STATUS = 301
+
+/** One answer of hostServe(), carried out by functions/_middleware.ts with the asset server and the static files. */
+export type ServeStep =
+  | { kind: 'redirect'; redirect: HostRedirect }
+  | { kind: 'file'; file: string }
+  | { kind: 'page'; probe: string; location: string }
+
+/**
+ * What the Functions do with a request to a host of the Pages project while it serves the merged layout itself
+ * (SiteConfig.serve, PAGES_SERVE_ORIGIN), or null to leave it to the static files:
+ * - `redirect`: the root of templates.openmercato.com, to the Templates section under the base on the serving origin
+ *   (`https://modules.openmercato.com/run/templates`), query kept, a 302 as before.
+ * - `file`: a machine-readable file (isFilePath) outside the base. The catalog's copy under the base (`file`) answers
+ *   first, with a 200 and the same bytes, so every file the catalog published at its old address keeps answering
+ *   there (`/llms.txt`, `/m/<package>.md`, badges, data files); when the catalog has no such file (a 404), the static
+ *   file of the upload answers, the main site's own (`/media/...`).
+ * - `page`: any other path. The main site answers first (the static files and the root _redirects); only when it has
+ *   nothing there (a 404) and the catalog has a page at `probe` (its old address under the base) does the request
+ *   move with a SERVE_MOVED_STATUS to `location`, the same path and query under the base on the serving origin
+ *   (`/m/<package>` to `https://modules.openmercato.com/run/m/<package>`). So where an old catalog address and a page of
+ *   the main site collide (`/`, the main site's home), the main site wins.
+ * Null for a path under the base or a fixed address (static files at the root), a request that carries the site's own
+ * host, a `*.pages.dev` address, any other host, and a path with `//` at the start, a backslash or a control character
+ * (also percent-encoded): as hostRedirect() does, never a loop and never an open redirect. Null too unless the layout
+ * is merged and nested and `serve` is set: the Functions then use hostRedirect() and hostFile() as before.
+ */
+export function hostServe(requestUrl: string | URL, c: SiteConfig): ServeStep | null {
+  if (!c.serve || !c.merged || !isNested(c)) return null
+  let url: URL
+  try {
+    url = new URL(requestUrl)
+  } catch {
+    return null
+  }
+  const path = url.pathname
+  if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
+  if (url.host === new URL(c.origin).host) return null
+  if (isPreviewHost(url.hostname) || !PAGES_HOSTS.includes(url.hostname)) return null
+  if (path.startsWith('//') || UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
+  const root = path === '/' || path === '/index.html'
+  if (url.hostname === TEMPLATES_HOST && root)
+    return {
+      kind: 'redirect',
+      redirect: { location: `${templatesTarget(`${c.serve}${c.base}`)}${url.search}`, status: 302 },
+    }
+  // the root is the main site's home page on every serving host
+  if (root) return null
+  if (isFilePath(path)) return { kind: 'file', file: `${c.base}${path}` }
+  const location = `${c.serve}${c.base}${path}${url.search}`
+  let target: URL
+  try {
+    target = new URL(location)
+  } catch {
+    return null
+  }
+  if (target.origin !== c.serve || !target.pathname.startsWith(`${c.base}/`)) return null
+  return { kind: 'page', probe: `${c.base}${path}`, location }
+}
+
+/**
  * The answer for hostFile(): what the asset server gave for the file under the base (status, body, type, ETag and
  * cache headers as they are, a 404 for a file that does not exist), with `Access-Control-Allow-Origin: *` set, as
  * every static file of the project has it.
@@ -404,7 +500,17 @@ export function redirectResponse(r: HostRedirect): Response {
  * serves the site under the base as the source of the proxy.
  */
 export function otherProductionOrigins(c: SiteConfig): string[] {
+  if (c.serve) return []
   return PAGES_ORIGINS.filter((o) => o !== c.origin)
+}
+
+/**
+ * Origins that serve this build as the site itself, not as a preview: with PAGES_SERVE_ORIGIN, the hosts of the Pages
+ * project. There the page script points copy commands and links at the host a visitor is on, since SITE_URL (www)
+ * does not serve them yet, and shows no preview note. Empty otherwise.
+ */
+export function servingOrigins(c: SiteConfig): string[] {
+  return c.serve ? [...PAGES_ORIGINS] : []
 }
 
 /**
@@ -418,7 +524,7 @@ export function siteModule(c: SiteConfig): string {
     '// pages.yml writes it before Functions are bundled; the committed copy is the default (root layout).',
     "import type { SiteConfig } from '../lib/core/site-host.ts'",
     '',
-    `export const SITE: SiteConfig = { origin: ${quote(c.origin)}, base: ${quote(c.base)}, home: ${quote(c.home)}${c.merged ? ', merged: true' : ''} }`,
+    `export const SITE: SiteConfig = { origin: ${quote(c.origin)}, base: ${quote(c.base)}, home: ${quote(c.home)}${c.merged ? ', merged: true' : ''}${c.serve ? `, serve: ${quote(c.serve)}` : ''} }`,
     '',
   ].join('\n')
 }

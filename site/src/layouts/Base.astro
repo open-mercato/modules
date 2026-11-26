@@ -21,7 +21,7 @@ import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
 import { mainSiteJsonLd } from '../../../lib/core/main-site-json-ld.ts'
-import { otherProductionOrigins, siteConfig } from '../../../lib/core/site-host.ts'
+import { otherProductionOrigins, serveOriginFromEnv, servingOrigins, siteConfig } from '../../../lib/core/site-host.ts'
 import { EMAIL_OFF, EMAIL_ON } from '../lib/email-off.ts'
 
 interface Props {
@@ -82,8 +82,12 @@ const canonical = path === null ? null : run ? absoluteUrl(site, path) : new URL
 const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
 // a page's own image is a file of its own site (www/public/media), not under the catalog's base
 const ogImage = pageOgImage ? new URL(pageOgImage, site).toString() : absoluteUrl(site, '/og-default.png')
-// the other hosts of the Pages project serve this build too: the page script leaves their links alone (move of 13 Nov)
-const production = otherProductionOrigins(siteConfig(site, BASE || '/', HOME))
+// the other hosts of the Pages project serve this build too: the page script leaves their links alone (move of 13 Nov),
+// unless they serve it before SITE_URL does (PAGES_SERVE_ORIGIN): then it points the links at them (servingOrigins)
+const serve = serveOriginFromEnv(process.env)
+const hostConfig = { ...siteConfig(site, BASE || '/', HOME), ...(serve ? { serve } : {}) }
+const production = otherProductionOrigins(hostConfig)
+const serving = servingOrigins(hostConfig)
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
 const stale =
   dataAsOf?.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
@@ -164,7 +168,7 @@ const speculation = JSON.stringify({
         to action) */}
     <slot name="after-main" />
     <Footer />
-    {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production)} />}
+    {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production, serving)} />}
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
     <script>
       const toast = document.getElementById('om-toast')

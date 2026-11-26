@@ -11,7 +11,19 @@
 // page on its own host. The base itself (`/run`, `/run/`) never reaches Functions: dist/_redirects answers it.
 // `wrangler pages deploy dist` bundles this directory because the deploy job runs from the repository root
 // (.github/workflows/pages.yml), after `yarn om pages-site` wrote functions/site.ts.
-import { fileResponse, hostFile, hostRedirect, redirectResponse, type SiteConfig } from '../lib/core/site-host.ts'
+// With PAGES_SERVE_ORIGIN (functions/site.ts `serve`, owner's decision of 26 Nov 2026) the hosts of the Pages project
+// serve the merged layout themselves (hostServe): the main site's pages answer first and an old catalog page address
+// it does not serve moves with a 301 under the base on the same origin, a machine-readable file answers with the
+// catalog's copy under the base first and the main site's own file next.
+import {
+  fileResponse,
+  hostFile,
+  hostRedirect,
+  hostServe,
+  redirectResponse,
+  SERVE_MOVED_STATUS,
+  type SiteConfig,
+} from '../lib/core/site-host.ts'
 import { SITE } from './site.ts'
 
 /** The part of the Pages Functions context this middleware uses. */
@@ -24,6 +36,7 @@ export interface MiddlewareContext {
 
 /** The answer for the layout `site`; onRequest() is this for the layout of functions/site.ts. */
 export function answer(context: MiddlewareContext, site: SiteConfig): Response | Promise<Response> {
+  if (site.serve) return serve(context, site)
   const file = hostFile(context.request.url, site)
   const assets = context.env?.ASSETS
   if (file && assets) {
@@ -34,6 +47,38 @@ export function answer(context: MiddlewareContext, site: SiteConfig): Response |
   }
   const target = hostRedirect(context.request.url, site)
   return target ? redirectResponse(target) : context.next()
+}
+
+/** The asset server's answer for `path` of the upload: the same request (method, conditional headers, query). */
+function asset(
+  context: MiddlewareContext,
+  assets: { fetch: (request: Request) => Promise<Response> },
+  path: string,
+): Promise<Response> {
+  const url = new URL(context.request.url)
+  url.pathname = path
+  return assets.fetch(new Request(url, context.request))
+}
+
+/** The answer on a serving host (hostServe); without the asset server (a unit test without files) the static files. */
+async function serve(context: MiddlewareContext, site: SiteConfig): Promise<Response> {
+  const step = hostServe(context.request.url, site)
+  const assets = context.env?.ASSETS
+  if (step?.kind === 'redirect') return redirectResponse(step.redirect)
+  if (!step || !assets) return context.next()
+  if (step.kind === 'file') {
+    const file = await asset(context, assets, step.file)
+    if (file.status !== 404) return fileResponse(file)
+    await file.body?.cancel()
+    return context.next()
+  }
+  const page = await context.next()
+  if (page.status !== 404) return page
+  const old = await asset(context, assets, step.probe)
+  await old.body?.cancel()
+  if (old.status >= 400) return page
+  await page.body?.cancel()
+  return redirectResponse({ location: step.location, status: SERVE_MOVED_STATUS })
 }
 
 export function onRequest(context: MiddlewareContext): Response | Promise<Response> {
