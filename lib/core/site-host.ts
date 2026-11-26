@@ -150,9 +150,10 @@ export function noindexFromEnv(env: Record<string, string | undefined>): boolean
 }
 
 /**
- * The origin from PAGES_SERVE_ORIGIN, or null when it is unset or empty. Throws on a value that is not the https origin
- * of a host of the Pages project (PAGES_ORIGINS): the Functions serve the upload on those hosts only, so any other
- * origin would serve nothing. A trailing slash is allowed; a path, a query or a fragment is not.
+ * The origin from PAGES_SERVE_ORIGIN, or null when it is unset or empty. Throws on any value but the https origin of
+ * modules.openmercato.com (DEFAULT_SITE_ORIGIN), the one host of the Pages project the catalog was served from: the old
+ * addresses move there with a 301 that browsers cache, so it must be the host they came from, and the Functions serve
+ * the upload on the Pages hosts only. A trailing slash is allowed; a path, a query or a fragment is not.
  */
 export function serveOriginFromEnv(env: Record<string, string | undefined>): string | null {
   const raw = (env.PAGES_SERVE_ORIGIN ?? '').trim()
@@ -165,8 +166,10 @@ export function serveOriginFromEnv(env: Record<string, string | undefined>): str
   }
   if (u.protocol !== 'https:' || u.pathname !== '/' || u.search !== '' || u.hash !== '' || /[?#]/.test(raw))
     throw new Error(`PAGES_SERVE_ORIGIN must be an https origin without a path: ${raw}`)
-  if (!PAGES_ORIGINS.includes(u.origin))
-    throw new Error(`PAGES_SERVE_ORIGIN must be a host of the Pages project (${PAGES_ORIGINS.join(', ')}): ${raw}`)
+  if (u.origin !== DEFAULT_SITE_ORIGIN)
+    throw new Error(
+      `PAGES_SERVE_ORIGIN must be ${DEFAULT_SITE_ORIGIN}, the Pages host the catalog was served from: ${raw}`,
+    )
   return u.origin
 }
 
@@ -406,7 +409,7 @@ export function hostFile(requestUrl: string | URL, c: SiteConfig): string | null
 
 /**
  * Status of the old catalog page addresses on a serving host (decision 3a of 26 Nov 2026): a 301, because the pages
- * moved under the base for good on the same host. MOVED_STATUS (302) stays for the move to SITE_URL.
+ * moved under the base for good, on the serving origin. MOVED_STATUS (302) stays for the move to SITE_URL.
  */
 export const SERVE_MOVED_STATUS = 301
 

@@ -93,8 +93,9 @@ describe('PAGES_SERVE_ORIGIN', () => {
     expect(serveOriginFromEnv({ PAGES_SERVE_ORIGIN: ' ' })).toBeNull()
     expect(serveOriginFromEnv({ PAGES_SERVE_ORIGIN: MODULES })).toBe(MODULES)
     expect(serveOriginFromEnv({ PAGES_SERVE_ORIGIN: `${MODULES}/` })).toBe(MODULES)
-    expect(serveOriginFromEnv({ PAGES_SERVE_ORIGIN: TEMPLATES })).toBe(TEMPLATES)
     for (const bad of [
+      // a cached 301 of every old address to another host than the one it came from
+      TEMPLATES,
       'http://modules.openmercato.com',
       `${MODULES}/run`,
       `${MODULES}/?x=1`,
@@ -177,6 +178,43 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
       }
     // a file nobody has: the 404
     expect((await request(`${MODULES}/m/@x/nope.json`, SERVED)).status).toBe(404)
+  })
+
+  it('a 3xx of the catalog probe is a page there; a 304 of the main site passes through', async () => {
+    const run = (nextRes: () => Response, assetRes: () => Response, url: string) =>
+      answer(
+        {
+          request: new Request(url),
+          next: async () => nextRes(),
+          env: { ASSETS: { fetch: async () => assetRes() } },
+        },
+        SERVED,
+      )
+    // Pages answers `/run/m/@x/y/` with a 308 to the address without the slash: the catalog has the page
+    const slash = await run(
+      () => new Response('main 404', { status: 404 }),
+      () => new Response(null, { status: 308, headers: { location: '/run/m/@x/y' } }),
+      `${MODULES}/m/@x/y/`,
+    )
+    expect([slash.status, slash.headers.get('location')]).toEqual([301, `${MODULES}/run/m/@x/y/`])
+    // a conditional request the main site answers with a 304 is its answer, no probe
+    let probed = 0
+    const fresh = await run(
+      () => new Response(null, { status: 304 }),
+      () => {
+        probed++
+        return new Response('x')
+      },
+      `${MODULES}/blog`,
+    )
+    expect([fresh.status, probed]).toEqual([304, 0])
+    // a 304 of the catalog's file is passed on with the CORS header
+    const file = await run(
+      () => new Response('main', { status: 200 }),
+      () => new Response(null, { status: 304, headers: { etag: '"e1"' } }),
+      `${MODULES}/llms.txt`,
+    )
+    expect([file.status, file.headers.get('access-control-allow-origin')]).toEqual([304, '*'])
   })
 
   it('never a redirect to SITE_URL, never one off the serving origin, nothing on other hosts', async () => {
@@ -289,7 +327,7 @@ describe('yarn om pages-site with PAGES_SERVE_ORIGIN', () => {
     process.env.PAGES_MERGED = '1'
     process.env.PAGES_SERVE_ORIGIN = WWW
     expect(pagesSite(ctx([]))).toBe(2)
-    expect(error.mock.calls.flat().join('\n')).toContain('PAGES_SERVE_ORIGIN must be a host of the Pages project')
+    expect(error.mock.calls.flat().join('\n')).toContain('PAGES_SERVE_ORIGIN must be https://modules.openmercato.com')
     // the owner's variables
     process.env.PAGES_SERVE_ORIGIN = MODULES
     expect(pagesSite(ctx([]))).toBe(0)

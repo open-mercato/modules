@@ -20,8 +20,8 @@
 // lib/emit/pages-merge.ts, localizeHrefs); the catalog-only layout keeps its absolute links.
 // With PAGES_SERVE_ORIGIN (owner's decision of 26 Nov 2026: the merged site on modules.openmercato.com before the www
 // switch) functions/site.ts carries `serve`, so the Pages hosts serve the merged layout themselves (hostServe in
-// lib/core/site-host.ts), and the build is noindex (noindexFromEnv). It needs PAGES_MERGED=1 and a host of the Pages
-// project; both commands refuse anything else.
+// lib/core/site-host.ts), and the build is noindex (noindexFromEnv). It needs PAGES_MERGED=1 and
+// https://modules.openmercato.com; both commands refuse anything else.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'

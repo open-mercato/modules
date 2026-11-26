@@ -30,7 +30,7 @@
 # Before the www switch (owner's decision of 26 Nov 2026, docs/RUNBOOK.md, Main site on modules.openmercato.com): with
 # PAGES_MERGED=1 and the repository variable PAGES_SERVE_ORIGIN (https://modules.openmercato.com) production deploys
 # the merged layout and the Pages hosts serve it themselves: not indexed (dist/_headers and a robots.txt that allows
-# nothing, so no Google Analytics), canonical addresses on SITE_URL, old catalog page addresses a 301 under /run on the
+# nothing) and without Google Analytics, canonical addresses on SITE_URL, old catalog page addresses a 301 under /run on the
 # same host. The preview jobs never read it.
 name: pages
 
