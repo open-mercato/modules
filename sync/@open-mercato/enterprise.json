@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/enterprise",
-  "checkedAt": "2026-11-25T21:46:23Z",
+  "checkedAt": "2026-11-26T08:28:22Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/enterprise",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.10.1",
-      "develop": "0.11.1-develop.8534.1.62ca6cfffa"
+      "develop": "0.11.1-develop.8545.1.dd603570fd"
     },
     "latestStable": "0.10.1",
     "previousStable": "0.10.0",
@@ -64,7 +64,7 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-25T21:45:48Z",
+    "pushedAt": "2026-11-26T08:24:58Z",
     "defaultBranch": "main",
     "stars": 1966,
     "license": "MIT",
