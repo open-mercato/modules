@@ -79,15 +79,15 @@ export function mergedRedirectsHead(c: Pick<SiteConfig, 'base' | 'home'>): strin
 }
 
 /**
- * The fixed rules after the main site's (audit of 27 Nov 2026): one address per page under the base, no run of slashes
- * and a package page without its trailing slash, `@` kept (the base is static files, so these answer there, not the
- * Function). Last, because each has a splat or placeholders and Pages counts every rule after the first such rule as
- * dynamic: at the top they made the main site's 300 static rules dynamic, over the limit of 100.
+ * The fixed rules after the main site's (audit of 27 Nov 2026): a package page without its trailing slash, `@` kept
+ * (the base is static files, so this answers there, not the Function). Last, because it has placeholders and Pages
+ * counts every rule after the first such rule as dynamic: at the top it made the main site's 300 static rules dynamic,
+ * over the limit of 100. No rule for a run of slashes: Pages collapses `//` in a source, so `/run//*` was `/run/*` and
+ * sent every page under the base to itself (incident of 27 Nov 2026, redirectProblems).
  */
 export function mergedRedirectsTail(c: Pick<SiteConfig, 'base'>): string {
   return [
-    '# One address per page under the base: no run of slashes, and a package page without its trailing slash (@ kept).',
-    `${c.base}//* ${c.base}/:splat 301`,
+    '# One address per package page: without its trailing slash (@ kept).',
     `${c.base}/m/:scope/:name/ ${c.base}/m/:scope/:name 301`,
     '',
   ].join('\n')
@@ -151,7 +151,10 @@ export function redirectRules(text: string): { from: string; dynamic: boolean }[
   return rules
 }
 
-/** Why a _redirects text breaks the Pages limits with the check's margin, or a source is given twice. */
+/**
+ * Why a _redirects text breaks the Pages limits with the check's margin, a source is given twice, or a rule sends a
+ * path to itself: its source, with runs of slashes collapsed as Pages reads it, matches its own target.
+ */
 export function redirectProblems(text: string): string[] {
   const rules = redirectRules(text)
   const problems: string[] = []
@@ -169,6 +172,12 @@ export function redirectProblems(text: string): string[] {
   for (const r of rules) {
     if (seen.has(r.from)) problems.push(`the redirect from ${r.from} is given twice`)
     seen.add(r.from)
+  }
+  for (const r of pagesRules(text)) {
+    if (!r.to.startsWith('/') || r.to.startsWith('//')) continue
+    const target = (r.to.split(/[?#]/)[0] as string).replace(/:splat|:[A-Za-z][A-Za-z0-9_]*/g, 'x')
+    if (sourcePattern(r.from.replace(/\/{2,}/g, '/')).test(target))
+      problems.push(`the redirect from ${r.from} covers its own target ${r.to}: a loop`)
   }
   return problems
 }
