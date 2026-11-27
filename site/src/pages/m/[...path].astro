@@ -88,7 +88,16 @@ import { isolationDot } from '../../lib/status.ts'
 import { PREVIEW_QUEUED, PREVIEW_SENTENCE } from '../../../../lib/core/source.ts'
 import { isPreviewData } from '../../lib/freshness.ts'
 import { day, dayYear, duration, nbspDates, plural, shortIntegrity, shortVersion, timeUtc } from '../../lib/format.ts'
-import { absoluteUrl, builtInPage, categoryPage, href, modulePage, moduleMd, receiptPage } from '../../lib/url.ts'
+import {
+  absoluteUrl,
+  builtInPage,
+  categoryPage,
+  href,
+  modulePage,
+  moduleMd,
+  npmFileUrl,
+  receiptPage,
+} from '../../lib/url.ts'
 import { wbrHtml } from '../../lib/wrap.ts'
 import { transitionNames } from '../../lib/vt.ts'
 import { CATALOG_REPO_URL } from '../../../../lib/core/home.ts'
@@ -772,7 +781,7 @@ function anchorUrl(anchor: string | null): string | null {
 }
 const srcUrl = (file: string, line: number): string | null =>
   entry.npm && facts
-    ? `https://cdn.jsdelivr.net/npm/${entry.npm}@${facts.package.version}/${file}`
+    ? npmFileUrl(entry.npm, facts.package.version, file)
     : entry.github && entry.version.gitRef
       ? `https://github.com/${entry.github}/blob/${entry.version.gitRef}/${file}#L${line}`
       : null
