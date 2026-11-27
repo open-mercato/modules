@@ -52,6 +52,7 @@ function page(scripts: string): string {
 </header>
 <a href="${ORIGIN}/x" data-cta-action="orphan" data-stay>No placement</a>
 <section style="padding:40px 0 120px">${carousel}</section>
+<div style="height:3000px">a long page</div>
 <script>document.addEventListener('click', (e) => { if (e.target.closest('[data-stay]')) e.preventDefault() })</script>
 <script>${scripts}</script></body></html>`
 }
@@ -106,6 +107,17 @@ describe.skipIf(!required)('the behavior scripts in Chromium', () => {
     await expect.poll(() => banner.evaluate((el) => getComputedStyle(el).display)).toBe('none')
     await p.reload()
     expect(await p.locator('.cookie-banner_component').count()).toBe(0)
+  })
+
+  it('Accept keeps the scroll position and the address (no jump to the top, no #)', async () => {
+    const { p } = await open()
+    const banner = p.locator('.cookie-banner_component')
+    await expect.poll(() => banner.isVisible()).toBe(true)
+    await p.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(() => p.evaluate(() => window.scrollY)).toBe(1500)
+    await p.getByText('Accept cookies').click()
+    await expect.poll(() => banner.evaluate((el) => getComputedStyle(el).display)).toBe('none')
+    expect(await p.evaluate(() => [window.scrollY, location.hash, location.href])).toEqual([1500, '', `${ORIGIN}/`])
   })
 
   it('Dismiss works from the keyboard and sets the same cookie', async () => {

@@ -23,7 +23,7 @@ const year = new Date().getUTCFullYear()
         {
           MAIN_SITE_FOOTER_OTHER.map((g) => (
             <div class="ft__group">
-              <p class="ft__label">{g.label}</p>
+              <h3 class="ft__label">{g.label}</h3>
               {g.links.map((l) => (
                 <a href={l.url}>{l.label}</a>
               ))}
@@ -124,12 +124,16 @@ const year = new Date().getUTCFullYear()
     gap: 10px;
     min-width: 0;
   }
+  /* a heading, as the live Webflow footer has it (h3 in each group), in the look of a label */
   .ft__label {
     margin: 0 0 9px;
+    font-family: inherit;
     font-size: 14px;
     line-height: 1.4;
     font-weight: 500;
     letter-spacing: 0;
+    color: inherit;
+    text-transform: none;
   }
   .ft__group a {
     font-size: 13px;

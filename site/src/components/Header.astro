@@ -637,12 +637,18 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
       align-items: center;
       min-height: 44px;
     }
+    /* the main site's stylesheet draws this link as a bordered 2rem square too; the pill inside is the one button
+       (audit of 27 Nov 2026: a square over a wider pill), so the link sizes to it and draws no border of its own */
     .navbar_gh-button {
       display: flex;
       justify-content: center;
       align-items: center;
+      width: auto;
+      height: auto;
       min-width: 44px;
       min-height: 44px;
+      border: 0;
+      border-radius: 0;
     }
     .navbar_gh-button .om-github-stars {
       box-sizing: border-box;
