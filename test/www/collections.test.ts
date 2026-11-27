@@ -385,13 +385,11 @@ describe('SEO of the detail pages', () => {
     expect(partnerFacts(p, dict).map((f) => f.facet)[0]).toBe('tier')
   })
 
-  it('a partner page uses the logo as og:image only in a format social crawlers read', () => {
+  it('a partner page never uses its logo as og:image: the default card instead (audit of 27 Nov 2026)', () => {
     const p = publishedP[0]!
     const withLogo = (src: string) => ({ ...p, data: { ...p.data, logo: { src, alt: 'x' } } })
-    expect(partnerSeo(withLogo('/media/partners/a.png'), ORIGIN).ogImage).toBe('/media/partners/a.png')
-    expect(partnerSeo(withLogo('/media/partners/a.webp'), ORIGIN).ogImage).toBe('/media/partners/a.webp')
-    expect(partnerSeo(withLogo('/media/partners/a.svg'), ORIGIN).ogImage).toBeUndefined()
-    expect(partnerSeo(withLogo('/media/partners/a.avif'), ORIGIN).ogImage).toBeUndefined()
+    for (const src of ['/media/partners/a.png', '/media/partners/a.webp', '/media/partners/a.svg'])
+      expect(partnerSeo(withLogo(src), ORIGIN).ogImage, src).toBeUndefined()
   })
 
   it('an open job has JobPosting and a breadcrumb to /careers; a closed one only the breadcrumb', () => {

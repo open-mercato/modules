@@ -14,6 +14,7 @@ import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
 import { mainSiteRun } from '../lib/core/site-host.ts'
 import { parseWwwRedirects, WWW_REDIRECTS_FILE, wwwRedirectsText } from '../lib/emit/www-redirects.ts'
 import { bodyLinkRules, noindexPostPaths } from './body-links.ts'
+import { imageVariants } from './image-variants.ts'
 import { runBasePlugin } from './run-base.ts'
 import { siteBehavior } from './site-behavior.ts'
 import { bodyHtmlPlugin } from './src/lib/body-html.ts'
@@ -94,6 +95,8 @@ export default defineConfig({
     bodyHtml(),
     redirectsFile(),
     siteBehavior(),
+    // responsive variants, srcset and og:image crops of the images the pages show (audit of 27 Nov 2026)
+    imageVariants(),
     sitemap({ filter: (page) => !/\/404\/?$/.test(page) && !noindex.has(new URL(page).pathname) }),
   ],
   devToolbar: { enabled: false },
