@@ -726,7 +726,7 @@ yarn wrangler pages dev dist --port 8788
 git checkout functions/site.ts
 ```
 
-`scripts/pages-smoke.sh dist` runs the upload in the same emulator for about 30 seconds and checks what the unit tests
+`scripts/pages-smoke.sh dist` (Linux: it uses `setsid`; Cezar or a runner) runs the upload in the same emulator for about 30 seconds and checks what the unit tests
 cannot: that wrangler reads every rule of `_redirects` (Pages counts every rule after the first splat or placeholder
 as dynamic and skips the rest past 100), the security and cache headers of `_headers`, and with `PAGES_SERVE_ORIGIN`
 (set it instead of `PAGES_NOINDEX` for the production layout) the old catalog addresses on the serving hosts in one
