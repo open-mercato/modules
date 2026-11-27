@@ -93,7 +93,7 @@ describe('redirects.yaml as the www build reads it', () => {
 
 describe('loops and chains', () => {
   it('passes one hop, rules that leave the site and the catalog rules', () => {
-    const text = `${mergedRedirects(WWW)}/a /b 301\n/c ${ORIGIN}/d 301\n/docs/* https://docs.openmercato.com/ 301\n`
+    const text = mergedRedirects(WWW, `/a /b 301\n/c ${ORIGIN}/d 301\n/docs/* https://docs.openmercato.com/ 301\n`)
     expect(redirectChainProblems(text, ORIGIN)).toEqual([])
   })
 
@@ -118,7 +118,7 @@ describe('loops and chains', () => {
     expect(redirectChainProblems('/a/:id /b/:id/c 301\n/b/z /d 301\n', ORIGIN)).toEqual([])
     expect(redirectChainProblems('/a/:id /b/:id/c 301\n/b/z/c /d 301\n', ORIGIN)).toHaveLength(1)
     // a folder dropped (`/:splat`) reaches every fixed rule; the merge's own rules do not block it
-    expect(redirectChainProblems(`${mergedRedirects(WWW)}/en/* /:splat 301\n`, ORIGIN)).toEqual([])
+    expect(redirectChainProblems(mergedRedirects(WWW, `/en/* /:splat 301\n`), ORIGIN)).toEqual([])
   })
 
   it('fails a loop, itself included', () => {
@@ -158,7 +158,7 @@ describe('merge and check', () => {
     const r = mergePagesSite(dirs, WWW)
     expect(r.redirects).toBe(4)
     const root = readFileSync(join(dirs.out, '_redirects'), 'utf8')
-    expect(root).toBe(mergedRedirects(WWW) + text)
+    expect(root).toBe(mergedRedirects(WWW, text))
     expect(redirectsOnly(checkMergedLayout(dirs.out, WWW, 50, false, text))).toEqual([])
     // the upload was built from another yaml
     expect(redirectsOnly(checkMergedLayout(dirs.out, WWW, 50, false, wwwRedirectsText(DOCS)))).toEqual([
@@ -181,7 +181,7 @@ describe('merge and check', () => {
     put(join(dirs.www, '_redirects'), wwwRedirectsText(DOCS))
     mergePagesSite(dirs, WWW)
     const tail = [rule('/x', '/y'), rule('/y', '/'), rule('/old', '/gone'), rule('/blog', 'https://example.com/')]
-    writeFileSync(join(dirs.out, '_redirects'), mergedRedirects(WWW) + wwwRedirectsText(tail))
+    writeFileSync(join(dirs.out, '_redirects'), mergedRedirects(WWW, wwwRedirectsText(tail)))
     const problems = redirectsOnly(checkMergedLayout(dirs.out, WWW)).join('\n')
     expect(problems).toMatch(/the redirect from \/x is a chain of 2 hops: \/x -> \/y/)
     expect(problems).toMatch(/the redirect from \/old sends to \/gone, which is not a page or a file of this build/)

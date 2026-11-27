@@ -15,6 +15,8 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { AstroIntegration } from 'astro'
+import sharpService from 'astro/assets/services/sharp'
+import { imageMetadata } from 'astro/assets/utils'
 import pLimit from 'p-limit'
 import { MAIN_SITE_ORIGIN } from '../lib/core/main-site.ts'
 
@@ -190,8 +192,8 @@ export type Metadata = (input: Uint8Array, src: string) => Promise<{ width: numb
 
 /** The transform and metadata of Astro's sharp image service. */
 export async function astroImageService(): Promise<{ transform: Transform; metadata: Metadata }> {
-  const { default: service } = await import('astro/assets/services/sharp')
-  const { imageMetadata } = await import('astro/assets/utils')
+  // imported at the top: the config's module runner is closed by the time astro:build:done runs
+  const service = sharpService
   const config = { service: { entrypoint: 'astro/assets/services/sharp', config: {} }, dangerouslyProcessSVG: true }
   const logger = { warn: (m: string) => console.warn(`om-www-images: ${m}`) }
   return {

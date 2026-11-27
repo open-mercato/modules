@@ -66,17 +66,31 @@ export function mergeConfigProblem(c: SiteConfig): string | null {
  * take a catalog address; a source given twice fails the check (redirectProblems).
  */
 export function mergedRedirects(c: Pick<SiteConfig, 'base' | 'home'>, www = ''): string {
-  return (
-    [
-      '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
-      '/sitemap.xml /sitemap-index.xml 301',
-      // audit of 27 Nov 2026: the base is static files, so these two answer there and not the Function
-      '# One address per page under the base: no run of slashes, and a package page without its trailing slash (@ kept).',
-      `${c.base}//* ${c.base}/:splat 301`,
-      `${c.base}/m/:scope/:name/ ${c.base}/m/:scope/:name 301`,
-      pagesRedirects(c),
-    ].join('\n') + www
-  )
+  return mergedRedirectsHead(c) + www + mergedRedirectsTail(c)
+}
+
+/** The fixed rules before the main site's: all static, so Pages counts them as static rules. */
+export function mergedRedirectsHead(c: Pick<SiteConfig, 'base' | 'home'>): string {
+  return [
+    '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
+    '/sitemap.xml /sitemap-index.xml 301',
+    pagesRedirects(c),
+  ].join('\n')
+}
+
+/**
+ * The fixed rules after the main site's (audit of 27 Nov 2026): one address per page under the base, no run of slashes
+ * and a package page without its trailing slash, `@` kept (the base is static files, so these answer there, not the
+ * Function). Last, because each has a splat or placeholders and Pages counts every rule after the first such rule as
+ * dynamic: at the top they made the main site's 300 static rules dynamic, over the limit of 100.
+ */
+export function mergedRedirectsTail(c: Pick<SiteConfig, 'base'>): string {
+  return [
+    '# One address per page under the base: no run of slashes, and a package page without its trailing slash (@ kept).',
+    `${c.base}//* ${c.base}/:splat 301`,
+    `${c.base}/m/:scope/:name/ ${c.base}/m/:scope/:name 301`,
+    '',
+  ].join('\n')
 }
 
 /** Sitemap files at the root of the upload `root` (`sitemap-0.xml`, `sitemap-index.xml`), for mergedPagesRoutes(). */
@@ -120,14 +134,19 @@ export function mergedSitemapLocs(wwwIndex: string, runIndex: string): string[] 
   return [...sitemapLocs(wwwIndex), ...sitemapLocs(runIndex)]
 }
 
-/** One rule of _redirects: its source, and whether Pages counts it as dynamic (a splat or a placeholder). */
+/**
+ * One rule of _redirects: its source, and whether Pages counts it as dynamic: a splat or a placeholder, or any rule
+ * after the first such rule (wrangler's parser, audit of 27 Nov 2026: past 100 it skips the rest of the file).
+ */
 export function redirectRules(text: string): { from: string; dynamic: boolean }[] {
   const rules: { from: string; dynamic: boolean }[] = []
+  let after = false
   for (const raw of text.split('\n')) {
     const line = raw.trim()
     if (line === '' || line.startsWith('#')) continue
     const from = line.split(/\s+/)[0] as string
-    rules.push({ from, dynamic: from.includes('*') || /\/:[A-Za-z]/.test(from) })
+    after ||= from.includes('*') || /\/:[A-Za-z]/.test(from)
+    rules.push({ from, dynamic: after })
   }
   return rules
 }
@@ -522,12 +541,18 @@ export function checkMergedLayout(
     return false
   }
 
-  // the fixed rules of the merge, then the main site's: checkPagesLayout() wants the whole text, so the main site's part
-  // is taken from the upload when the fixed part matches and checked on its own below
-  const fixed = mergedRedirects(c)
-  const wwwPart = redirectsText !== null && redirectsText.startsWith(fixed) ? redirectsText.slice(fixed.length) : ''
+  // the fixed rules of the merge around the main site's: checkPagesLayout() wants the whole text, so the main site's
+  // part is taken from the upload when the fixed parts match and checked on its own below
+  const head = mergedRedirectsHead(c)
+  const tail = mergedRedirectsTail(c)
+  const framed =
+    redirectsText !== null &&
+    redirectsText.length >= head.length + tail.length &&
+    redirectsText.startsWith(head) &&
+    redirectsText.endsWith(tail)
+  const wwwPart = framed ? redirectsText.slice(head.length, redirectsText.length - tail.length) : ''
   for (const p of checkPagesLayout(root, c, max, noindex, {
-    redirects: fixed + wwwPart,
+    redirects: head + wwwPart + tail,
     routes: mergedPagesRoutes(c.base, rootSitemaps(root)),
     headers: mergedHeaders(c, noindex),
     mainSite: (ref, url) => onMainSite(ref, url),
