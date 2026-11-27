@@ -30,6 +30,27 @@ export function routedPages<T extends PageEntry>(entries: readonly T[]): T[] {
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
 }
 
+/**
+ * The OG card the build draws for a routed page without an OG image of its own (/og/<slug>.png, like a landing's):
+ * the eyebrow and title of its first hero block, else "Open Mercato" and the SEO title without the site's suffix.
+ */
+export function pageOgCard(entry: PageEntry): { eyebrow: string; title: string } | undefined {
+  if (entry.data.seo.ogImage !== undefined) return undefined
+  const hero = entry.data.blocks.find((b) => b.type === 'hero')
+  return {
+    eyebrow: (hero?.eyebrow ?? 'Open Mercato').trim(),
+    title: (hero && 'title' in hero
+      ? String(hero.title)
+      : entry.data.seo.title.replace(/\s*\|\s*Open Mercato$/, '')
+    ).trim(),
+  }
+}
+
+/** The OG image of a page: its own, or the card the build draws (pageOgCard). */
+export function pageOgImage(entry: PageEntry): string | undefined {
+  return entry.data.seo.ogImage ?? (pageOgCard(entry) ? `/og/${entry.id}.png` : undefined)
+}
+
 /** The published entry `slug`; a build fails without it (the home page and the list pages read theirs). */
 export function pageEntry<T extends PageEntry>(entries: readonly T[], slug: string): T {
   const e = entries.find((p) => p.id === slug)
