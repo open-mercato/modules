@@ -19,10 +19,26 @@ import { findBannedChars } from '../../lib/core/text.ts'
 const PAGES = join(import.meta.dirname, '..', '..', 'site', 'src', 'pages')
 
 describe('the navbar of the main site', () => {
-  it('has the menus of www.openmercato.com in its order, then Contact, Case Studies and Blog', () => {
+  it('has the menus and links of www.openmercato.com (27 Nov) in its order', () => {
     expect(MAIN_SITE_MENUS.map((m) => m.label)).toEqual(['Product', 'Developers', 'Enterprise'])
-    expect(MAIN_SITE_MENUS.map((m) => m.items.length)).toEqual([5, 3, 3])
-    expect(MAIN_SITE_LINKS.map((l) => l.label)).toEqual(['Contact', 'Case Studies', 'Blog'])
+    expect(MAIN_SITE_MENUS[1]!.items.map((i) => i.label)).toEqual([
+      'Docs',
+      'Architecture',
+      'Modules',
+      'How to contribute',
+      'For Agencies & Software Houses',
+    ])
+    expect(MAIN_SITE_MENUS.map((m) => m.items.length)).toEqual([5, 5, 3])
+    expect(MAIN_SITE_LINKS.map((l) => [l.label, l.url.replace(MAIN_SITE_ORIGIN, '')])).toEqual([
+      ['Pricing', '/pricing'],
+      ['Clients', '/case-studies'],
+      ['Blog', '/blog'],
+      ['Contact', '/contact'],
+      ['GitHub', 'https://github.com/open-mercato/open-mercato'],
+    ])
+    expect(MAIN_SITE_LINKS.at(-1)!.variant).toBe('is-github')
+    expect(MAIN_SITE_MENUS[1]!.items[0]!.url).toBe('https://docs.openmercato.com/')
+    expect(MAIN_SITE_MENUS[1]!.items[2]!.run).toBe('/')
   })
 
   it('gives every panel row a description and an icon of its own', () => {

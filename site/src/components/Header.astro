@@ -49,7 +49,13 @@ const menus: Menu[] = [
   ...MAIN_SITE_MENUS.map((m) => ({
     id: m.label.toLowerCase(),
     label: m.label,
-    rows: m.items.map((i) => ({ ...i, current: undefined })),
+    rows: m.items.map((i) => ({
+      label: i.label,
+      url: i.run === undefined ? i.url : href(i.run),
+      description: i.description,
+      icon: i.icon,
+      current: i.run === undefined ? undefined : runCurrent(i.run, current),
+    })),
   })),
   {
     id: 'run',
@@ -110,7 +116,7 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
                 </div>
               ))
             }
-            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link" {...linkCta(l.label, l.url)}>{l.label}</a>)}
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class:list={['navbar_link', l.variant]} {...linkCta(l.label, l.url)}>{l.label}</a>)}
           </div>
         </nav>
       </div>
@@ -177,7 +183,7 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
                 </details>
               ))
             }
-            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class="navbar_link" {...linkCta(l.label, l.url)}>{l.label}</a>)}
+            {MAIN_SITE_LINKS.map((l) => <a href={l.url} class:list={['navbar_link', l.variant]} {...linkCta(l.label, l.url)}>{l.label}</a>)}
           </nav>
         </details>
       </div>
@@ -570,10 +576,6 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
     .navbar_menu,
     .navbar_menu-links {
       flex: 1;
-    }
-    /* as the live code does: Case Studies, and Blog after it, pushed to the right */
-    .navbar_menu-links > .navbar_link[href$='/case-studies'] {
-      margin-left: auto;
     }
     .navbar_content-right {
       flex: none;
