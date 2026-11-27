@@ -299,7 +299,9 @@ describe('the merged layout (pages-site --merge)', () => {
       { from: '/x/*', dynamic: true },
       { from: '/a', dynamic: true },
     ])
-    expect(redirectProblems(`/x/* /y 301\n${statics}`)).toEqual(['1802 dynamic redirects; the check allows 90 (Pages 100)'])
+    expect(redirectProblems(`/x/* /y 301\n${statics}`)).toEqual([
+      '1802 dynamic redirects; the check allows 90 (Pages 100)',
+    ])
     expect(redirectProblems('/a /b 301\n/a /c 301\n')).toEqual(['the redirect from /a is given twice'])
   })
 
