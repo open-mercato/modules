@@ -4,7 +4,7 @@
 // catalog's Base layout, header, footer, fonts and styles (site/src/), which link the catalog under its base: the
 // same BASE_PATH and HOME_PATH the catalog is built with when they nest it, else `/run` and `/modules`
 // (mainSiteRun()), through the om-run-base plugin (www/run-base.ts).
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import preact from '@astrojs/preact'
 import sitemap from '@astrojs/sitemap'
@@ -39,6 +39,16 @@ function paintedDirective(): AstroIntegration {
   }
 }
 
+/** The rich-text embeds of the bodies, www/content/embeds/<name>.html, by name (the importer writes them). */
+function bodyEmbeds(dir: string): Map<string, string> {
+  const embeds = `${dir}embeds/`
+  const out = new Map<string, string>()
+  if (!existsSync(embeds)) return out
+  for (const f of readdirSync(embeds).sort())
+    if (f.endsWith('.html')) out.set(f.slice(0, -5), readFileSync(`${embeds}${f}`, 'utf8').trim())
+  return out
+}
+
 /**
  * The hast plugin of Markdown bodies (www/src/lib/body-html.ts: video embeds, links to drafts and to pages still on
  * Webflow, tables), added to Astro's Markdown processor (satteri), whose options integrations may extend.
@@ -52,7 +62,7 @@ function bodyHtml(): AstroIntegration {
         if (processor.name !== 'satteri' || !Array.isArray(processor.options.hastPlugins))
           throw new Error(`om-www-body: the Markdown processor is ${processor.name}, not satteri with hastPlugins`)
         const rules = bodyLinkRules(content)
-        processor.options.hastPlugins.push(bodyHtmlPlugin(rules, (m) => logger.warn(m)))
+        processor.options.hastPlugins.push(bodyHtmlPlugin(rules, (m) => logger.warn(m), bodyEmbeds(content)))
       },
     },
   }

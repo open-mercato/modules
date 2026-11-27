@@ -261,7 +261,7 @@ describe('SEO of every published post', () => {
     })
   })
 
-  it('a card leaves out what a post does not have and hides the alt text of a decorative image', () => {
+  it('a card leaves out what a post does not have; its image takes the post name as alt text, as live', () => {
     const maps = { authors: new Map([['a', 'Ann']]), categories: new Map([['c', 'Cat']]) }
     const card = postCard(
       post('x', {
@@ -278,7 +278,7 @@ describe('SEO of every published post', () => {
       description: 'About x.',
       date: '2026-10-01T00:00:00.000Z',
       author: 'Ann',
-      thumbnail: { src: '/media/blog/x.png', alt: '' },
+      thumbnail: { src: '/media/blog/x.png', alt: 'x' },
     })
   })
 })
