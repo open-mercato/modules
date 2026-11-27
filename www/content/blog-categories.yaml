@@ -28,3 +28,8 @@ ai-engineering-foundation-framework:
   labelColor: "#2f520b"
   textColor: "#b4f372"
   order: 5
+tools-templates:
+  name: Tools & Templates
+  labelColor: "#243f57"
+  textColor: "#f8f8f1"
+  order: 6

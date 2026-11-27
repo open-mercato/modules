@@ -323,6 +323,14 @@ describe('who delivered a case study', () => {
     expect(deliveredBy(cs('a'), index)).toBeUndefined()
   })
 
+  it('names the partner whose website an outside address is, and keeps the address', () => {
+    const withSites = { ...index, websites: new Map([['live', 'https://live.example']]) }
+    expect(deliveredBy(cs('a', { deliveredByUrl: 'https://www.live.example/' }), withSites)).toEqual({
+      name: 'Live Agency',
+      href: 'https://www.live.example/',
+    })
+  })
+
   it('the draft partner of the content delivers no published case study a link to its page', () => {
     const real = {
       names: new Map(partners.map((p) => [p.id, p.data.name])),

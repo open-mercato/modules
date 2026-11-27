@@ -45,21 +45,36 @@ export interface MediaFile {
   users: Set<string>
 }
 
-/** Collects the media the content refers to; the site path of a file is fixed by its first use. */
+/**
+ * Collects the media the content refers to; the site path of a file is fixed by its first use, or by the path an
+ * earlier run wrote it to (`known`: file id to site path, from the manifest), so a new item that reuses a file never
+ * moves it.
+ */
 export class MediaRegistry {
   readonly files = new Map<string, MediaFile>()
+  private readonly known: ReadonlyMap<string, readonly string[]>
+
+  constructor(known: ReadonlyMap<string, readonly string[]> = new Map()) {
+    this.known = known
+  }
 
   /** Site path of a CDN address used by `collection` (a folder name such as `blog`), or undefined if not a CDN file. */
   use(url: string, collection: string, item: string): string | undefined {
     const f = cdnFile(url)
     if (!f) return undefined
-    const known = this.files.get(f.fileId)
-    if (known) {
-      known.users.add(item)
-      return known.path
+    // a file an earlier run wrote to several folders keeps the copy in the user's folder (an import never moves one)
+    const known = this.known.get(f.fileId) ?? []
+    const path =
+      known.find((p) => p.startsWith(`/media/${collection}/`)) ??
+      known[0] ??
+      `/media/${collection}/${mediaFileName(f.fileId, f.name)}`
+    const key = known.length > 1 ? `${f.fileId} ${path}` : f.fileId
+    const used = this.files.get(key)
+    if (used) {
+      used.users.add(item)
+      return used.path
     }
-    const path = `/media/${collection}/${mediaFileName(f.fileId, f.name)}`
-    this.files.set(f.fileId, { fileId: f.fileId, url, path, users: new Set([item]) })
+    this.files.set(key, { fileId: f.fileId, url, path, users: new Set([item]) })
     return path
   }
 
@@ -67,6 +82,15 @@ export class MediaRegistry {
   list(): MediaFile[] {
     return [...this.files.values()].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
   }
+}
+
+/** File id to the site paths of the media files a manifest lists (`www/public/media/...`), in manifest order. */
+export function knownMedia(files: readonly { path: string; webflowId: string }[]): Map<string, string[]> {
+  const out = new Map<string, string[]>()
+  for (const f of files)
+    if (f.path.startsWith('www/public/media/'))
+      out.set(f.webflowId, [...(out.get(f.webflowId) ?? []), f.path.slice('www/public'.length)])
+  return out
 }
 
 export interface FetchMediaOptions {

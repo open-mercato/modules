@@ -29,7 +29,7 @@ const listed = new Set<Facet>(['industry', 'language', 'service'])
       <div class="header_content max-width-47rem">
         <Crumbs trail={[{ name: PARTNERS_CRUMB, href: PARTNERS_PATH }]} current={{ name, href }} />
         <div class="spacer-medium"></div>
-        {/* without a logo, the live page shows Webflow's default image of the field, the site's logo */}
+        {/* without a logo, the live page shows Webflow's default image of the field, the site's logo, with the partner's name as its alt text */}
         <div class="agency_logo-wrapper">
           {
             logo ? (
@@ -42,7 +42,7 @@ const listed = new Set<Facet>(['industry', 'language', 'service'])
                 decoding="async"
               />
             ) : (
-              <img class="agency_logo" src={PARTNER_LOGO_PLACEHOLDER} alt="" decoding="async" />
+              <img class="agency_logo" src={PARTNER_LOGO_PLACEHOLDER} alt={name} decoding="async" />
             )
           }
         </div>

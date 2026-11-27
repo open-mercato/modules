@@ -1,0 +1,21 @@
+---
+// The heading of /pricing as live (its embed's `op-intro`): the title, the lead and the jump link to the comparison
+// (`primary`). The page's code is www/src/styles/webflow/pages/pricing.css.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'hero'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<div class="op-shell">
+  <header class="op-intro" id={block.id}>
+    <div>
+      <h1>{t(block.title)}</h1>
+      {block.lead && <p set:html={inline(t(block.lead))} />}
+    </div>
+    {block.primary && <a href={block.primary.href} class="op-jump">{t(block.primary.label)}</a>}
+  </header>
+</div>

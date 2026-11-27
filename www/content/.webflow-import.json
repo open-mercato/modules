@@ -9,7 +9,7 @@
     {
       "path": "www/content/blog-categories.yaml",
       "webflowId": "69ced92817323234ffa7c627",
-      "sha256": "6392983fa5b24666d054a762d9cc821b7cc14b1e4db21fb9da9c17ed1c433467"
+      "sha256": "431babfd7605ad933c09104a51de9ad6db38c99bed7b343d8a9e2832405f6507"
     },
     {
       "path": "www/content/blog/10-it-department-fears-about-open-mercato-answered-honestly.md",
@@ -62,6 +62,11 @@
       "sha256": "879489d570ac995308eeaef1bba5569e7386e798bfffa4e7bb04a5244840879d"
     },
     {
+      "path": "www/content/blog/bill-of-materials-example-template.md",
+      "webflowId": "new:bill-of-materials-example-template",
+      "sha256": "c6e7b0c5c28c278778cbd389dc9a153abeefc6d33e06f0b990ffd7504e9a4153"
+    },
+    {
       "path": "www/content/blog/build-your-first-open-mercato-module-with-ai-agents.md",
       "webflowId": "69cee6b81dc6d043f19ff098",
       "sha256": "130990dee953801e8f709951ad687cea876392d73552ce0be9d1a3391d721930"
@@ -85,6 +90,11 @@
       "path": "www/content/blog/claude-code-vs-open-mercato.md",
       "webflowId": "6a58cde08510f4e077334425",
       "sha256": "1c0c07f4baff708ede8671910a06b1664ee71c24ccf44684280adae8ffef841b"
+    },
+    {
+      "path": "www/content/blog/code-128-barcode-generator.md",
+      "webflowId": "new:code-128-barcode-generator",
+      "sha256": "dd9ec4215a00c553739ff7e358203e4002092a3ab572f83d6d9b8fccd03383c7"
     },
     {
       "path": "www/content/blog/coding-agents-benchmark-open-mercato.md",
@@ -152,6 +162,11 @@
       "sha256": "91249cd38247f194ecba46cc034db9bec76cc4a078246b80bb06ff132f1f545b"
     },
     {
+      "path": "www/content/blog/nextjs-crm-client-timeline-handover.md",
+      "webflowId": "new:nextjs-crm-client-timeline-handover",
+      "sha256": "9a704dd01315a91c4ac74c1a1ac96fe0994deb37c1c81dc2918bc44d00c077ba"
+    },
+    {
       "path": "www/content/blog/odoo-vs-open-mercato.md",
       "webflowId": "6a58fb777c93f7e13678090c",
       "sha256": "693eae3c5a6c7c3854b9eb886634e66a0a8f2cc064f647a6da92eea4ad7b3ef9"
@@ -217,6 +232,21 @@
       "sha256": "451efd24e8cc49cdbd8fc0db98d1eb6efdbe071eb4e962f17ba5b8361969a787"
     },
     {
+      "path": "www/content/blog/open-source-kanban-board.md",
+      "webflowId": "new:open-source-kanban-board",
+      "sha256": "2dfb63dc52dc713232a779685c5266eeafc6918fdb46e424c6ca125256018be1"
+    },
+    {
+      "path": "www/content/blog/open-source-wms-lot-trace-demo.md",
+      "webflowId": "new:open-source-wms-lot-trace-demo",
+      "sha256": "f26af29c6d950fa4d24c209263d9ac5d1555b8d10fe1e7277917c955de1e781d"
+    },
+    {
+      "path": "www/content/blog/packing-slip-template.md",
+      "webflowId": "new:packing-slip-template",
+      "sha256": "4d790421f14e580be3cee662db76c4adde1e86bb1eb2c8d7d3c9b96d87a4d5d1"
+    },
+    {
       "path": "www/content/blog/pirate-ship-ai-adoption-400-person-it.md",
       "webflowId": "6a9fe17ed8aafb748025705e",
       "sha256": "1c74141209988f7586abf6e6238cd59c825b791b3964995d708c829a93910eb3"
@@ -225,6 +255,11 @@
       "path": "www/content/blog/productivity-reliability-paradox.md",
       "webflowId": "6a3241154828d200acb79bfe",
       "sha256": "a62def3c05d9a1a0251bf8495a7f07c7c5ff07865b5bfe20c1bae581b93a786c"
+    },
+    {
+      "path": "www/content/blog/profit-margin-calculator.md",
+      "webflowId": "new:profit-margin-calculator",
+      "sha256": "db2a7fa93e56a1b36006e340571c8a8a610debe69f4dec7bfc42da7173051b2f"
     },
     {
       "path": "www/content/blog/python-engineer-node-project-four-steps.md",
@@ -237,6 +272,11 @@
       "sha256": "7c291bb1a42f3d386148f3b491bbccdfcb2d2463c3e6e9b56b5e75e901c2d6e4"
     },
     {
+      "path": "www/content/blog/safety-stock-calculator.md",
+      "webflowId": "new:safety-stock-calculator",
+      "sha256": "19442265c31493736c89df09fc1aebae421d3b40641e03c5c252d6a94f33c71f"
+    },
+    {
       "path": "www/content/blog/sap-vs-open-mercato.md",
       "webflowId": "6a58efb0f2557406c02710bf",
       "sha256": "c4c89752c430d8a8b02b54c215e006b256b022aca30ef267de498ac1546b1f7d"
@@ -245,6 +285,11 @@
       "path": "www/content/blog/software-houses-fixed-scope-erp-faster.md",
       "webflowId": "69fb50239697f3d5006c9686",
       "sha256": "a7dd4472916aa9c1bfd02ecf0009491270a4585f6350b28bc4349cc13a608a10"
+    },
+    {
+      "path": "www/content/blog/tailor-vs-open-mercato-change-approved-order.md",
+      "webflowId": "new:tailor-vs-open-mercato-change-approved-order",
+      "sha256": "3a2562ab5e5914138cc8b3889d5dc21d49e5051ae9ead30ff91535135e6cb770"
     },
     {
       "path": "www/content/blog/tenant-scoped-field-level-encryption-aes-gcm-in-practice.md",
@@ -277,6 +322,21 @@
       "sha256": "813f5ea483128bf3c3e4d2ef921eca3ac8f038c36a1583bf40cdedcd74f99787"
     },
     {
+      "path": "www/content/blog/what-is-an-ai-agent-examples.md",
+      "webflowId": "new:what-is-an-ai-agent-examples",
+      "sha256": "dfc70548f2ae82cbb9af241f02fbc484a1cee8fc2cb1550abb5663c31b582726"
+    },
+    {
+      "path": "www/content/blog/what-is-cpq-configure-price-quote.md",
+      "webflowId": "new:what-is-cpq-configure-price-quote",
+      "sha256": "c2ba0a01fcb52021268e04f862f2acf93f42717387fe05b4c426420159b3980a"
+    },
+    {
+      "path": "www/content/blog/what-is-mcp-crm-example.md",
+      "webflowId": "new:what-is-mcp-crm-example",
+      "sha256": "e6040f1849a7ce1d7f769ee03157340952418abea4fabbcf7b83c0f1a19f1883"
+    },
+    {
       "path": "www/content/blog/when-sales-reps-build-their-own-tools.md",
       "webflowId": "6b04adf5604da25608b884e5",
       "sha256": "a53b1fbacbd6c7e005740c5794ec4350eac64a11cf479442b16f3d38f2f218be"
@@ -297,6 +357,11 @@
       "sha256": "8ffc24b5345325b58fa56704b1fe8a11d7e3f3d6c1c22bc1b8a0a09ef7599f02"
     },
     {
+      "path": "www/content/blog/workflow-automation-discount-approval.md",
+      "webflowId": "new:workflow-automation-discount-approval",
+      "sha256": "8c6b719dd6ea0921e10ad8f41faef674ecbbf0baebbe82c70b926f24a8b73a37"
+    },
+    {
       "path": "www/content/blog/your-agents-arent-the-bottleneck-you-are-2.md",
       "webflowId": "6ad5ca49369770e5b7b3c4e0",
       "sha256": "560159d3652855eae6c3177926bdbe45e8a2f7f54971d40d21131240164f64cc"
@@ -312,6 +377,11 @@
       "sha256": "cb61e9e0fefaba7e3e1526707e22c4e4f237e13946bba0acdd4941d8c873ab3f"
     },
     {
+      "path": "www/content/case-studies/anter-system-warehouse-barrier-plan-to-quote.md",
+      "webflowId": "new:anter-system-warehouse-barrier-plan-to-quote",
+      "sha256": "3b3931f1b33fbae68f6f18d533f5b7224ac64cfa10b533a4ac4b240b06b1bf2c"
+    },
+    {
       "path": "www/content/case-studies/arvo-configurator.md",
       "webflowId": "6af74f7322fd8b75b76ad499",
       "sha256": "700e2e8c66d7a6d1618e2a63615f792cc27671a59b644e87a2e870ccc603e45c"
@@ -324,7 +394,7 @@
     {
       "path": "www/content/case-studies/creativaos-law-firm-client-history.md",
       "webflowId": "6b055b498b74ca5e48466c38",
-      "sha256": "0f01057ebdeba6cc5b4ef34a748432c84539c39df19c84042d559fbb381dbcb3"
+      "sha256": "8533f5de997c99187d27dca764dd0481e9196a4527a23e075a465b80c6b6120c"
     },
     {
       "path": "www/content/case-studies/edube-ai-tutor.md",
@@ -332,9 +402,19 @@
       "sha256": "8c1518b074855c4deca19da04cb412f1a79b75b35e14154ce6faa281357d0389"
     },
     {
+      "path": "www/content/case-studies/fachura-renovation-quotes-from-floor-plans.md",
+      "webflowId": "new:fachura-renovation-quotes-from-floor-plans",
+      "sha256": "c38add95ca76a4fb9283e39fc0519ecd5208f59bf28546c53f34299243434297"
+    },
+    {
       "path": "www/content/case-studies/flowbiz-sewing-workshop-quoting.md",
       "webflowId": "6b04bcad4eef352cbb4a73ae",
       "sha256": "9122c283dbbe999a432e85ec71cf17fd992d8307886c72e82214a2205e1631c7"
+    },
+    {
+      "path": "www/content/case-studies/fondaco-warehouse-receiving-pallet-counts.md",
+      "webflowId": "new:fondaco-warehouse-receiving-pallet-counts",
+      "sha256": "5f2a916f8d005e1d29b8fe5a31ac310450783096670c9e1ac4294d0d645ac3d6"
     },
     {
       "path": "www/content/case-studies/gns-ksef-connector.md",
@@ -344,7 +424,7 @@
     {
       "path": "www/content/case-studies/kickserve-property-management.md",
       "webflowId": "6af2cd85cccbe0e5d3ad63e2",
-      "sha256": "efdf44eef0723732a8bc1eeaabb9e8be697d5056d617e5a74683ece36330b7ef"
+      "sha256": "1921c3ba16ad45cb4d77b8945e99698d29813a09c6c6d78972ef3edb92001f7f"
     },
     {
       "path": "www/content/case-studies/mdm-nt-shipping-automation.md",
@@ -354,7 +434,7 @@
     {
       "path": "www/content/case-studies/opak-kreft-ppwr-documents.md",
       "webflowId": "6b04bcad4eef352cbb4a73b0",
-      "sha256": "2f94f94aff7e509ddc65cb81347e66001f06dc5267f88fe1bfb652a6e675b8d6"
+      "sha256": "06c94854388d65eebdb692a053b58c1cd57f53df1d12ffea5978e49f9fd0d6ef"
     },
     {
       "path": "www/content/case-studies/open-service.md",
@@ -370,6 +450,11 @@
       "path": "www/content/case-studies/senior-care-operations.md",
       "webflowId": "6a3334982cb8113067e445e8",
       "sha256": "ad3bf750c5dbb43793cc15a89d4be687b30bd1b9ae78bef86d6b2733de5ec0e2"
+    },
+    {
+      "path": "www/content/case-studies/skalo-wholesale-pricing-cost-to-serve.md",
+      "webflowId": "new:skalo-wholesale-pricing-cost-to-serve",
+      "sha256": "e89793a7f4437933eb256b35dae559d0200ccd16d019eccc426753bed09f672d"
     },
     {
       "path": "www/content/case-studies/thegoodcode-hours-rates-project-margin.md",
@@ -390,6 +475,51 @@
       "path": "www/content/case-study-categories.yaml",
       "webflowId": "6a2ad7d71ab5ae226a820bfd",
       "sha256": "ba172e7014955d4823b92ab0f1677ee58227c0c142786f329ed4a15c21a43da8"
+    },
+    {
+      "path": "www/content/embeds/blog-bill-of-materials-example-template-1.html",
+      "webflowId": "new:bill-of-materials-example-template",
+      "sha256": "88033550b7ec1645cb812375c467a7d327ac14a508ee8c419a7498f1b5d77f3a"
+    },
+    {
+      "path": "www/content/embeds/blog-code-128-barcode-generator-1.html",
+      "webflowId": "new:code-128-barcode-generator",
+      "sha256": "b1eb627f69e788d5f34173fa1d9ec6fb3415824c941f3af2db4e1b35aa1d00bd"
+    },
+    {
+      "path": "www/content/embeds/blog-open-source-kanban-board-1.html",
+      "webflowId": "new:open-source-kanban-board",
+      "sha256": "7986771b99dcaa8d0308a0446c080a92236854b25e0d5fe75e05c310712dd470"
+    },
+    {
+      "path": "www/content/embeds/blog-packing-slip-template-1.html",
+      "webflowId": "new:packing-slip-template",
+      "sha256": "30aa53972abcf5ce7f7783207e3735f93ffefd7c9ae45e9451a525b8773061e5"
+    },
+    {
+      "path": "www/content/embeds/blog-profit-margin-calculator-1.html",
+      "webflowId": "new:profit-margin-calculator",
+      "sha256": "95dadae798a260439445c66ef333194e4b135c3fefb14626096c3577d4a9bf99"
+    },
+    {
+      "path": "www/content/embeds/blog-safety-stock-calculator-1.html",
+      "webflowId": "new:safety-stock-calculator",
+      "sha256": "e3683d19701a77384ebf8a635e5b879a91ee76a77bd5b85728547838a4d4c3c3"
+    },
+    {
+      "path": "www/content/embeds/blog-what-is-cpq-configure-price-quote-1.html",
+      "webflowId": "new:what-is-cpq-configure-price-quote",
+      "sha256": "6fb1a5152ae394dfb8d1d2833b784c0bb4b9580a0c81ff30dd8049655fad7a29"
+    },
+    {
+      "path": "www/content/embeds/blog-what-is-mcp-crm-example-1.html",
+      "webflowId": "new:what-is-mcp-crm-example",
+      "sha256": "a31c6f8c138d233e3c7bab14808eff1af4ed835ef2381710c5756333d20f91ae"
+    },
+    {
+      "path": "www/content/embeds/blog-workflow-automation-discount-approval-1.html",
+      "webflowId": "new:workflow-automation-discount-approval",
+      "sha256": "bfd3bcbfd3667e63cc787767b12e5552f66f366cca037fc0ad0dbda5fc52ad78"
     },
     {
       "path": "www/content/jobs/senior-ai-engineering.md",
@@ -1297,6 +1427,66 @@
       "sha256": "199cf37a76fc48f449aa45ff046aaea901e3f1f67c9a72df2b9fa49c9456c482"
     },
     {
+      "path": "www/public/media/blog/6b08a7c2132093eead7cc62d-6b08a5cb802db97cfdc835b1-om-guide-warehouse-20261126.jpeg",
+      "webflowId": "6b08a7c2132093eead7cc62d",
+      "sha256": "957d8f82df3aad7a508282d70a49feb1084a4276136a1b9c82f5a127e3a39d7d"
+    },
+    {
+      "path": "www/public/media/blog/6b08a7c2132093eead7cc632-6b08a5cc11568b3b2723775c-om-guide-handover-20261126.jpeg",
+      "webflowId": "6b08a7c2132093eead7cc632",
+      "sha256": "e02e82b2c3715aa285e559b3d4ec181df380ae46e88c978cc9e32a809bca9c61"
+    },
+    {
+      "path": "www/public/media/blog/6b08a7c2132093eead7cc635-6b08a5ccc44d213f87377619-om-guide-order-20261126.jpeg",
+      "webflowId": "6b08a7c2132093eead7cc635",
+      "sha256": "47db0f1de609a736cf3e5c0b8b235a50ae387186d158baf8098db487fabe6273"
+    },
+    {
+      "path": "www/public/media/blog/6b08a7c2132093eead7cc644-6b08a5cdc628e43426f16d84-om-guide-timeline-20261126.jpeg",
+      "webflowId": "6b08a7c2132093eead7cc644",
+      "sha256": "f434fc78c3c539c67f3b023a469718f2018292b55c24acf41fdebf3249558679"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba0ceabe59c20793f78a-6b08b99fb5af08e0b7548af9-om-guide-margin.jpeg",
+      "webflowId": "6b08ba0ceabe59c20793f78a",
+      "sha256": "0841b89736ca0f9feaf183a179abe482ba9887693a8de93c12e615f0ca47f91b"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba187ed5d091bc893774-6b08b9a08c441b24054852c6-om-guide-packing.jpeg",
+      "webflowId": "6b08ba187ed5d091bc893774",
+      "sha256": "c30eb122e5d43285e2ca715531ed5258187a2b277e7eaecd4815f305b048c9de"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba1d1e8c6a2ea3545c67-6b08b99fb23a3251c1a58a40-om-guide-bom.jpeg",
+      "webflowId": "6b08ba1d1e8c6a2ea3545c67",
+      "sha256": "0c0f0c209a53dc84730349f77d3886da3b02a784ac5716760a98e22d8d6e162c"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba284a2d3bd8a546b83f-6b08b80761bb3b58d8644693-open-mercato-kanban-board-0-10-1.webp",
+      "webflowId": "6b08ba284a2d3bd8a546b83f",
+      "sha256": "12826186d7034a6eff01e7767c1fd6312a6666275e5f5591beb95a3aaa1ecf46"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba2de4cc7bcb3729e78f-6b08b9a06127ca30b1d9166e-om-guide-safety.jpeg",
+      "webflowId": "6b08ba2de4cc7bcb3729e78f",
+      "sha256": "5bf435f1fd2fec0f7d3f49174a6a8ab09b4f358d38282afd94791801d7d97f92"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba324c4662bd5519b568-6b08b99ff8bde4ed6b7c329a-om-guide-mcp.jpeg",
+      "webflowId": "6b08ba324c4662bd5519b568",
+      "sha256": "91f659a1deb2d8ca7d01f4e7c7d4a72ba725eaafe9b47f03e7076dbbbd903914"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba36f93ab75edc03a578-6b08b9a042a80257b3239d86-om-guide-workflow.jpeg",
+      "webflowId": "6b08ba36f93ab75edc03a578",
+      "sha256": "531a2dbb20bcbc3ece7943a2f9375872c359d1466f18d89d21740f7b07530d5f"
+    },
+    {
+      "path": "www/public/media/blog/6b08ba3a180e2184ebefe335-6b08b99f59c1ec41a0cc826a-om-guide-barcode.jpeg",
+      "webflowId": "6b08ba3a180e2184ebefe335",
+      "sha256": "9a65e14124442f341e3f597bb895d2549e76ab756e747fb8c0a206b5b6313621"
+    },
+    {
       "path": "www/public/media/case-studies/6a2b160c10b9c251decd7477-senior-care-operations.avif",
       "webflowId": "6a2b160c10b9c251decd7477",
       "sha256": "8f1347dfed08d04c104aef3d3bc74c4bd14698844b45c74c7d841d3c6cab590c"
@@ -1620,6 +1810,96 @@
       "path": "www/public/media/case-studies/6b055baf2edeb6ac37618fa8-6b055976a1eb379e08798a47-creativaos-bookings.jpeg",
       "webflowId": "6b055baf2edeb6ac37618fa8",
       "sha256": "16c7ffc270decccdc4c51fc0cf2d12664b066057580be91f5fca4d552c537c72"
+    },
+    {
+      "path": "www/public/media/case-studies/6b089d96f429bbf5fc7a9854-6b089c6f5214eee1001d1a4e-skalo-invoice-margin-analysis.webp",
+      "webflowId": "6b089d96f429bbf5fc7a9854",
+      "sha256": "e627e9e7a67f41a4d9a1ce08a18058319f930dc94d1df3ffad6cf77df72a355b"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08a3241e8c6a2ea34f213a-6b08a2df874e9246335931a0-skalo-price-advisor-screenshot.webp",
+      "webflowId": "6b08a3241e8c6a2ea34f213a",
+      "sha256": "d6a9d29fc3762910e90c22417c6a134f2b34ff2234f24f17c4c5f3d6786d8ebf"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08a3241e8c6a2ea34f213d-6b08a2df42aad97b1e7b547b-skalo-margin-calculator-screenshot.webp",
+      "webflowId": "6b08a3241e8c6a2ea34f213d",
+      "sha256": "f844334ab353c226f24cc7c0b6b0e04309aa9d6efc30823b31cc7bbcbc2636db"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08a8181e8c6a2ea350ec3d-6b08a70990b5cfb1659db36e-fachura-service-catalog.webp",
+      "webflowId": "6b08a8181e8c6a2ea350ec3d",
+      "sha256": "4037d206b5a19a1a695d51600f6d109aacd59c0d8841ec1450b1a5fe2faa2932"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08a8181e8c6a2ea350ec40-6b08a7086535af87a3a2542c-fachura-ai-inbox.webp",
+      "webflowId": "6b08a8181e8c6a2ea350ec40",
+      "sha256": "03a3628e8785703c7ba2ea2d61fe8ede9c363b39831e3c3c8ac65e64b6a0b2e1"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08a8181e8c6a2ea350ec43-6b08a70990b5cfb1659db3a6-fachura-quote-lines.webp",
+      "webflowId": "6b08a8181e8c6a2ea350ec43",
+      "sha256": "0b4bf4580aff668af1f8a3630df598deaefe3ee150b8ecb3c50141f479878967"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b3b3874e9246335aba46-6b08b36b089886669400ae26-fachura-workbench-quote-phone.webp",
+      "webflowId": "6b08b3b3874e9246335aba46",
+      "sha256": "98e67f7e53205e9eceb6ec5b6375bfbaf99a815af58c2e5c8fc1f38e40618a78"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b3b3874e9246335aba49-6b08b36beb12147846348c0d-skalo-before-after-usd.webp",
+      "webflowId": "6b08b3b3874e9246335aba49",
+      "sha256": "958adda7b2bdc98311358fd7122638fbbc138c7d8afd6a31d962878e434f73ab"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b3b4874e9246335aba5e-6b08b36c4ed5685ab88a51cc-skalo-basket-comparison-usd.webp",
+      "webflowId": "6b08b3b4874e9246335aba5e",
+      "sha256": "0e6336a510d54828f68a501e5f8db49725c5aaed7652876a15db423eaf656f0e"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b5fb99e371aa3ba83f17-6b08b5de1a5cb0a1d95ed04f-creativaos-client-history-hero.webp",
+      "webflowId": "6b08b5fb99e371aa3ba83f17",
+      "sha256": "7b11c903ba47d3daac942a6bc4033d7201147f45d61ef8a22a47c350f31b02e2"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b5fb99e371aa3ba83f1c-6b08b5deb95baf1d55a39bfc-opak-kreft-carton-dieline.webp",
+      "webflowId": "6b08b5fb99e371aa3ba83f1c",
+      "sha256": "ac7565a52e60bd3571517b70dfc2186bf173d3f7b6af2415ad6dba81fab89288"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08b5fb99e371aa3ba83f1f-6b08b5df11568b3b27273db1-kickserve-maintenance-hero.webp",
+      "webflowId": "6b08b5fb99e371aa3ba83f1f",
+      "sha256": "63f501e947414ecc0a6f413e404ba4e56acf8e78d0ea686fdc9b23482b117d6c"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08ba954c4662bd5519d7cb-6b08b9fb62955729fd013496-fondaco-warehouse-label-printing.webp",
+      "webflowId": "6b08ba954c4662bd5519d7cb",
+      "sha256": "4b4a4aa2267d4099e8fe8f382ec2e822bdb0d8a6a4bfde93012f80e3db174972"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08ba964c4662bd5519d7ee-6b08b9fb6127ca30b1d92b6b-fondaco-scan-and-count.webp",
+      "webflowId": "6b08ba964c4662bd5519d7ee",
+      "sha256": "e4150f1c9af500eaa21ac8f34398d792dcbf31237c548e8b923751bd58211973"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08ba964c4662bd5519d7f1-6b08b9fb82c60291208ef03e-fondaco-receiving-summary.webp",
+      "webflowId": "6b08ba964c4662bd5519d7f1",
+      "sha256": "4c73d17bda015d5f6e74417ff25bc3aa833a625ee89bb0fc925ae74313b5ea0e"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08ba964c4662bd5519d7f5-6b08b9fc1969eb7b674642bb-anter-system-floor-plan-configurator.webp",
+      "webflowId": "6b08ba964c4662bd5519d7f5",
+      "sha256": "9e6f0561d6fb1a7317144dafdde7c54c91a988f98cf8f5af78dfadc29de5a36f"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08ba964c4662bd5519d7f8-6b08b9fe75a8121ef38dd802-anter-system-distributor-offer.webp",
+      "webflowId": "6b08ba964c4662bd5519d7f8",
+      "sha256": "2995cb14bdefa6da3003e9ef8585fc73f391a23aa039f4374fe5312cdf3c0e3d"
+    },
+    {
+      "path": "www/public/media/case-studies/6b08bd18664a553b2c3b7020-6b08bcf4b342a76c8892b6e6-anter-system-barrier-plan-quote-usd.webp",
+      "webflowId": "6b08bd18664a553b2c3b7020",
+      "sha256": "c2c47c7024bc47ea73dc5bb7b329c4bbd81615e620cf927d0dd2330925cd54c0"
     },
     {
       "path": "www/public/media/landings/6af2d0077efaf61368e70f1b-covo-travel-esim-wallet-1-gradient-clean.jpg",

@@ -30,6 +30,12 @@ export interface ConvertHooks {
   link?: (href: string) => string
   /** The `src` of an image; returns the path to write. */
   image?: (src: string) => string
+  /**
+   * A rich-text embed (`div[data-rt-embed-type]`: an editor's HTML block, here interactive tools) as the HTML Webflow
+   * holds for it; returns the name it is kept under, written as `<om-embed name="…"></om-embed>`. Without the hook an
+   * embed is converted like any `div` (and stops at its first element without a rule).
+   */
+  embed?: (html: string) => string
 }
 
 /**
@@ -89,6 +95,8 @@ const PHRASING = new Set(['a', 'strong', 'b', 'em', 'i', 'code', 'br', 'img', 's
 interface Ctx {
   hooks: ConvertHooks
   mode: ConvertMode
+  /** The converted HTML, for the exact source of an embed. */
+  source?: string
 }
 
 /** Converts a fragment of HTML to Markdown (no trailing newline). Throws ConvertError on an element without a rule. */
@@ -138,7 +146,7 @@ export function mdastToMarkdown(tree: MdRoot): string {
 
 export function htmlToMdast(html: string, hooks: ConvertHooks = {}, mode: ConvertMode = 'strict'): MdRoot {
   const tree: HastRoot = fromHtml(html, { fragment: true })
-  const ctx: Ctx = { hooks, mode }
+  const ctx: Ctx = { hooks, mode, source: html }
   return { type: 'root', children: blocks(tree.children, ctx, 'body') as MdContent[] }
 }
 
@@ -224,6 +232,7 @@ function block(el: Element, ctx: Ctx, path: string): BlockContent[] {
     case 'iframe':
       return [video(el, path)]
     case 'div':
+      if (el.properties?.dataRtEmbedType !== undefined && ctx.hooks.embed) return [embed(el, ctx, path)]
       return blocks(el.children, ctx, path)
     default:
       if (NEVER.has(tag)) throw new ConvertError(`<${tag}> has no rule`, path)
@@ -231,6 +240,19 @@ function block(el: Element, ctx: Ctx, path: string): BlockContent[] {
         return blocks(el.children, ctx, path)
       throw new ConvertError(`<${tag}> has no rule`, path)
   }
+}
+
+/** The name an embed is kept under: lowercase letters, digits and hyphens. */
+export const EMBED_NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+function embed(el: Element, ctx: Ctx, path: string): Html {
+  const first = el.children[0]?.position?.start.offset
+  const last = el.children[el.children.length - 1]?.position?.end.offset
+  if (ctx.source === undefined || first === undefined || last === undefined)
+    throw new ConvertError('an embed without content', path)
+  const name = ctx.hooks.embed!(ctx.source.slice(first, last).trim())
+  if (!EMBED_NAME_RE.test(name)) throw new ConvertError(`the embed name "${name}" is not a slug`, path)
+  return { type: 'html', value: `<om-embed name="${name}"></om-embed>` }
 }
 
 function heading(el: Element, depth: 1 | 2 | 3 | 4, ctx: Ctx, path: string): Heading[] {

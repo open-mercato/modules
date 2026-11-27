@@ -8,7 +8,7 @@ import {
   type WwwCollection,
 } from '../schema/www-content.ts'
 import { compact, guard, ItemStop, ItemText, validate, type Entry, type RunCtx } from './context.ts'
-import { optionNames, requireFields, type WfCollection, type WfItem } from './export.ts'
+import { itemKey, optionNames, requireFields, type WfCollection, type WfItem } from './export.ts'
 import { youTubeId } from './richtext.ts'
 import { isoUtc, updatedAfter } from './text.ts'
 import { cmp } from './output.ts'
@@ -50,7 +50,7 @@ export type SlugIndex = Map<string, Map<string, string>>
 export function slugIndex(ctx: RunCtx): SlugIndex {
   const index: SlugIndex = new Map()
   for (const { schema, items } of ctx.exp.collections.values()) {
-    index.set(schema.id, new Map(items.map((i) => [i.id, String(i.fieldData.slug ?? '')])))
+    index.set(schema.id, new Map(items.map((i) => [itemKey(i), String(i.fieldData.slug ?? '')])))
   }
   return index
 }
@@ -81,8 +81,8 @@ class ItemReader {
     return v
   }
 
-  markdown(field: string): string {
-    return this.t.markdown(String(this.f[field] ?? ''))
+  markdown(field: string, embeds = false): string {
+    return this.t.markdown(String(this.f[field] ?? ''), 'strict', embeds)
   }
 
   /** A Reference field to the referenced item's slug; a dangling id is reported and left out. */
@@ -313,7 +313,7 @@ function base(
   body?: string,
 ): Entry {
   const draft = r.item.isDraft
-  const e: Entry = { collection, id: slug, webflowId: r.item.id, draft, data: compact(data) }
+  const e: Entry = { collection, id: slug, webflowId: itemKey(r.item), draft, data: compact(data) }
   if (body !== undefined) e.body = body
   return e
 }
@@ -326,13 +326,13 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
       r.t.note('no publication date in Webflow, createdOn is used')
     }
     if (!date) throw new ItemStop('no publication date and no createdOn')
-    const body = r.markdown('content')
-    return base(
+    const body = r.markdown('content', true)
+    const e = base(
       r,
       'blog',
       slug,
       {
-        webflowId: r.item.id,
+        webflowId: r.item.id || undefined,
         title: r.required('name'),
         description: r.required('short-description'),
         date,
@@ -345,11 +345,13 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
       },
       body,
     )
+    if (r.t.embeds.length > 0) e.embeds = [...r.t.embeds]
+    return e
   },
-  authors: (r, slug) => base(r, 'authors', slug, { webflowId: r.item.id, name: r.required('name') }),
+  authors: (r, slug) => base(r, 'authors', slug, { webflowId: r.item.id || undefined, name: r.required('name') }),
   blogCategories: (r, slug) =>
     base(r, 'blogCategories', slug, {
-      webflowId: r.item.id,
+      webflowId: r.item.id || undefined,
       name: r.required('name'),
       order: num(r.f['display-order']),
       labelColor: r.color('label-color'),
@@ -390,7 +392,7 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
       'caseStudies',
       slug,
       {
-        webflowId: r.item.id,
+        webflowId: r.item.id || undefined,
         title: r.required('name'),
         heading: r.required('main-heading'),
         description: r.required('short-description'),
@@ -416,7 +418,7 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
     )
   },
   caseStudyCategories: (r, slug) =>
-    base(r, 'caseStudyCategories', slug, { webflowId: r.item.id, name: r.required('name') }),
+    base(r, 'caseStudyCategories', slug, { webflowId: r.item.id || undefined, name: r.required('name') }),
   partners: (r, slug) => {
     const name = r.required('name')
     const portfolio = r.option('projects-in-portfolio')
@@ -428,7 +430,7 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
       'partners',
       slug,
       {
-        webflowId: r.item.id,
+        webflowId: r.item.id || undefined,
         name,
         logo: r.image('logo', `${name} logo`),
         tier: r.ref('tier-2'),
@@ -448,7 +450,7 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
   },
   partnerTiers: (r, slug) =>
     base(r, 'partnerTiers', slug, {
-      webflowId: r.item.id,
+      webflowId: r.item.id || undefined,
       name: r.required('name'),
       order: num(r.f.order),
       backgroundColor: r.color('background-color'),
@@ -456,18 +458,20 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
     }),
   partnerIndustries: (r, slug) =>
     base(r, 'partnerIndustries', slug, {
-      webflowId: r.item.id,
+      webflowId: r.item.id || undefined,
       name: r.required('name'),
       order: num(r.f['display-order']),
     }),
   partnerServices: (r, slug) =>
     base(r, 'partnerServices', slug, {
-      webflowId: r.item.id,
+      webflowId: r.item.id || undefined,
       name: r.required('name'),
       order: num(r.f['display-order']),
     }),
-  partnerLanguages: (r, slug) => base(r, 'partnerLanguages', slug, { webflowId: r.item.id, name: r.required('name') }),
-  partnerLocations: (r, slug) => base(r, 'partnerLocations', slug, { webflowId: r.item.id, name: r.required('name') }),
+  partnerLanguages: (r, slug) =>
+    base(r, 'partnerLanguages', slug, { webflowId: r.item.id || undefined, name: r.required('name') }),
+  partnerLocations: (r, slug) =>
+    base(r, 'partnerLocations', slug, { webflowId: r.item.id || undefined, name: r.required('name') }),
   jobs: (r, slug) => {
     const datePosted = isoUtc(r.item.createdOn)
     if (!datePosted) throw new ItemStop('no createdOn for datePosted')
@@ -477,7 +481,7 @@ const WRITERS: Partial<Record<WwwCollection, Writer>> = {
       'jobs',
       slug,
       {
-        webflowId: r.item.id,
+        webflowId: r.item.id || undefined,
         title: r.required('name'),
         description: r.required('short-description'),
         location: r.required('location'),

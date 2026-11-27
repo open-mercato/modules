@@ -1,7 +1,7 @@
 // The blog of the main site (www site migration spec, Phase 3): which posts route and list, the category filter's
 // query string, the SEO of every published post, and what a Markdown body's HTML becomes. On the real content of
 // www/content/; the built pages themselves are checked by test/www/blog-build.test.ts.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -30,6 +30,7 @@ import {
 } from '../../www/src/lib/blog.ts'
 import {
   bodyHtmlPlugin,
+  embedName,
   linkAction,
   liteVideo,
   rawHtml,
@@ -260,7 +261,7 @@ describe('SEO of every published post', () => {
     })
   })
 
-  it('a card leaves out what a post does not have and hides the alt text of a decorative image', () => {
+  it('a card leaves out what a post does not have; its image takes the post name as alt text, as live', () => {
     const maps = { authors: new Map([['a', 'Ann']]), categories: new Map([['c', 'Cat']]) }
     const card = postCard(
       post('x', {
@@ -277,7 +278,7 @@ describe('SEO of every published post', () => {
       description: 'About x.',
       date: '2026-10-01T00:00:00.000Z',
       author: 'Ann',
-      thumbnail: { src: '/media/blog/x.png', alt: '' },
+      thumbnail: { src: '/media/blog/x.png', alt: 'x' },
     })
   })
 })
@@ -391,6 +392,57 @@ describe('the HTML of a Markdown body', () => {
     bodyHtmlPlugin(rules, (m) => warnings.push(m)).raw({ type: 'raw', value: '<a href="/blog-posts/gone">x</a>' }, ctx)
     expect(replaced).toEqual([{ type: 'raw', value: '<a>x</a>' }])
     expect(warnings).toEqual(['a Markdown body: /blog-posts/gone is not a published post; the link renders as text'])
+  })
+
+  it('puts an om-embed back as its HTML, and stops on a name without a file', () => {
+    expect(embedName('<om-embed name="blog-x-1"></om-embed>')).toBe('blog-x-1')
+    expect(embedName('<om-embed name="blog-x-1">')).toBe('blog-x-1')
+    expect(embedName('<om-embed name="Bad Name">')).toBeUndefined()
+    const open = { type: 'raw' as const, value: '<om-embed name="blog-x-1">' }
+    const close = { type: 'raw' as const, value: '</om-embed>' }
+    const p = { type: 'element', tagName: 'p', properties: {}, children: [open, close] }
+    const calls: unknown[][] = []
+    const ctx: BodyCtx = {
+      replaceNode: (n, m) => calls.push(['replace', n, m]),
+      removeNode: (n) => calls.push(['remove', n]),
+      setProperty: () => {},
+      wrapNode: () => {},
+      parent: () => p,
+      fileURL: new URL('file:///repo/www/content/blog/x.md'),
+    }
+    const html = '<section class="om-workbench"><a href="/contact">Talk</a><script>run()</script></section>'
+    const plugin = bodyHtmlPlugin(rules, () => {}, new Map([['blog-x-1', html]]))
+    plugin.raw(open, ctx)
+    plugin.raw(close, ctx)
+    // the paragraph goes for the embed, its links under the body rules, and the closing tag goes with it
+    expect(calls).toEqual([
+      [
+        'replace',
+        p,
+        {
+          type: 'raw',
+          value: `<!-- om-embed blog-x-1 -->${html.replace('href="/contact"', `href="${ORIGIN}/contact"`)}<!-- /om-embed -->`,
+        },
+      ],
+    ])
+    expect(() => bodyHtmlPlugin(rules, () => {}).raw(open, ctx)).toThrow(
+      'www/content/blog/x.md: no www/content/embeds/blog-x-1.html for <om-embed name="blog-x-1">',
+    )
+  })
+
+  it('every om-embed of a post has its file, and every file a post', () => {
+    const dir = join(CONTENT, 'embeds')
+    const files = new Set(
+      readdirSync(dir)
+        .filter((f) => f.endsWith('.html'))
+        .map((f) => f.slice(0, -5)),
+    )
+    const used = new Set<string>()
+    for (const f of readdirSync(join(CONTENT, 'blog')))
+      for (const m of readFileSync(join(CONTENT, 'blog', f), 'utf8').matchAll(/<om-embed name="([^"]+)">/g))
+        used.add(m[1]!)
+    expect([...used].sort()).toEqual([...files].sort())
+    expect(used.size).toBeGreaterThan(0)
   })
 
   it('no imported post asks for noindex; one that does is left out of the sitemap', () => {

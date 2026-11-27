@@ -102,7 +102,7 @@ const { Content } = await render(cs as never)
                     <img
                       class="case-hero_asset"
                       src={thumbnail.src}
-                      alt={thumbnail.decorative ? '' : thumbnail.alt}
+                      alt={cs.data.title}
                       width={thumbnail.width}
                       height={thumbnail.height}
                       decoding="async"

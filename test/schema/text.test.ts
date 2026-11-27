@@ -79,6 +79,8 @@ describe('check-text', () => {
     expect(inScope('lib/core/text.ts')).toBe(false)
     // media copied byte for byte by the Webflow importer are not texts of the repository
     expect(inScope('www/public/media/blog/x-chart.svg')).toBe(false)
+    // so are the rich-text embeds of posts (their scripts are code)
+    expect(inScope('www/content/embeds/blog-x-1.html')).toBe(false)
     expect(inScope('www/content/blog/x.md')).toBe(true)
     // the menus and the footer copied from the main site are texts for people, though the file is code
     expect(inScope('lib/core/main-site.ts')).toBe(true)

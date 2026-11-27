@@ -9,7 +9,10 @@
 // - a link to a page of the main site this build does not serve yet (it is still on Webflow until the switch, step C8)
 //   points at the live site, https://www.openmercato.com/<path>, instead of a 404 of the preview;
 // - a table sits in a scrollable, focusable region, so a wide one never widens the page;
-// - raw HTML the importer kept (a figure with a caption) follows the same rules for its images and links (rawHtml).
+// - raw HTML the importer kept (a figure with a caption) follows the same rules for its images and links (rawHtml);
+// - an `<om-embed name>` the importer wrote for a Webflow rich-text embed (an interactive tool of a post) becomes the
+//   embed's HTML, kept byte for byte in www/content/embeds/<name>.html, between `<!-- om-embed <name> -->` and
+//   `<!-- /om-embed -->`; a name without its file stops the build.
 // Isomorphic: no Node APIs; the shapes below are the subset of hast the plugin reads.
 
 export const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/
@@ -90,6 +93,21 @@ export function liteVideo(raw: string): { id: string; title?: string } | undefin
 }
 
 const isLiteVideoClose = (raw: string): boolean => /^\s*<\/lite-video>\s*$/.test(raw)
+
+/** The name of a raw `<om-embed name="...">` opening tag (www/content/embeds/<name>.html); undefined otherwise. */
+export function embedName(raw: string): string | undefined {
+  return /^\s*<om-embed name="([a-z0-9]+(?:-[a-z0-9]+)*)">\s*(?:<\/om-embed>\s*)?$/.exec(raw)?.[1]
+}
+
+const isEmbedClose = (raw: string): boolean => /^\s*<\/om-embed>\s*$/.test(raw)
+
+/** A paragraph that holds one om-embed tag pair and nothing else (whitespace aside). */
+function embedParagraph(p: HElement): boolean {
+  const parts = p.children.filter((c) => !(c.type === 'text' && (c.value ?? '').trim() === ''))
+  if (parts.length < 1 || parts.length > 2 || parts[0]!.type !== 'raw') return false
+  if (parts.length === 2 && !(parts[1]!.type === 'raw' && isEmbedClose(parts[1]!.value ?? ''))) return false
+  return embedName(parts[0]!.value ?? '') !== undefined
+}
 
 function decodeEntities(s: string): string {
   return s
@@ -173,8 +191,14 @@ function videoParagraph(p: HElement): { id: string; title?: string } | undefined
   return liteVideo(parts[0]!.value ?? '')
 }
 
-/** The hast plugin. `warn` hears every link rendered as text. */
-export function bodyHtmlPlugin(rules: LinkRules, warn: (message: string) => void) {
+/**
+ * The hast plugin. `warn` hears every link rendered as text; `embeds` holds the HTML of www/content/embeds/ by name.
+ */
+export function bodyHtmlPlugin(
+  rules: LinkRules,
+  warn: (message: string) => void,
+  embeds: ReadonlyMap<string, string> = new Map(),
+) {
   const unlinked = (ctx: BodyCtx, why: string): void =>
     warn(
       `${ctx.fileURL ? ctx.fileURL.pathname.replace(/^.*\/www\//, 'www/') : 'a Markdown body'}: ${why}; the link renders as text`,
@@ -207,6 +231,28 @@ export function bodyHtmlPlugin(rules: LinkRules, warn: (message: string) => void
     // a lite-video alone in its paragraph replaces the paragraph (a figure cannot sit in a p); elsewhere (inside a list
     // item, say) it replaces the tag pair
     raw(node: HRaw, ctx: BodyCtx): void {
+      const name = embedName(node.value)
+      if (name !== undefined) {
+        const html = embeds.get(name)
+        const file = ctx.fileURL ? ctx.fileURL.pathname.replace(/^.*\/www\//, 'www/') : 'a Markdown body'
+        if (html === undefined)
+          throw new Error(`${file}: no www/content/embeds/${name}.html for <om-embed name="${name}">`)
+        const r = rawHtml(html, rules)
+        for (const why of r.unlinked) unlinked(ctx, why)
+        // the markers let a check of the post (its table of contents, say) tell the embed's markup from the body's
+        const embed = { type: 'raw', value: `<!-- om-embed ${name} -->${r.html}<!-- /om-embed -->` }
+        const parent = ctx.parent(node) as HNode | undefined
+        if (parent?.type === 'element' && parent.tagName === 'p' && embedParagraph(parent as HElement))
+          ctx.replaceNode(parent, embed)
+        else ctx.replaceNode(node, embed)
+        return
+      }
+      if (isEmbedClose(node.value)) {
+        const parent = ctx.parent(node) as HNode | undefined
+        if (parent?.type === 'element' && parent.tagName === 'p' && embedParagraph(parent as HElement)) return
+        ctx.removeNode(node)
+        return
+      }
       const v = liteVideo(node.value)
       if (v) {
         const parent = ctx.parent(node) as HNode | undefined

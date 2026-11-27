@@ -271,6 +271,7 @@ export function postCard(
   if (author) card.author = author
   const category = catId === undefined ? undefined : names.categories.get(catId)
   if (catId !== undefined && category) card.category = { id: catId, name: category }
-  if (d.thumbnail) card.thumbnail = { src: d.thumbnail.src, alt: d.thumbnail.decorative ? '' : d.thumbnail.alt }
+  // the live cards bind the image's alt text to the post's name (27 Nov 2026), whatever the thumbnail's own
+  if (d.thumbnail) card.thumbnail = { src: d.thumbnail.src, alt: d.title }
   return card
 }
