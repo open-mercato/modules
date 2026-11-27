@@ -89,11 +89,16 @@ export interface DeliveredBy {
 export interface PartnerIndex {
   names: ReadonlyMap<string, string>
   published: ReadonlySet<string>
+  /** Partner id to its website, to name the partner an outside address belongs to. */
+  websites?: ReadonlyMap<string, string>
 }
+
+const hostOf = (url: string): string => new URL(url).hostname.replace(/^www\./, '')
 
 /**
  * Who delivered `cs`: a published partner with a link to its page; a draft partner by name only, with a warning (D6,
- * a draft is never linked); an outside address under its host name; nobody otherwise.
+ * a draft is never linked); an outside address under the name of the partner whose website it is (as live shows the
+ * name and links the address), else under its host name; nobody otherwise.
  */
 export function deliveredBy(
   cs: CaseStudyEntry,
@@ -109,7 +114,9 @@ export function deliveredBy(
   }
   if (cs.data.deliveredByUrl) {
     const url = new URL(cs.data.deliveredByUrl)
-    return { name: url.hostname.replace(/^www\./, ''), href: url.toString() }
+    const host = hostOf(url.toString())
+    const owner = [...(partners.websites ?? [])].find(([, w]) => hostOf(w) === host)?.[0]
+    return { name: (owner && partners.names.get(owner)) || host, href: url.toString() }
   }
   return undefined
 }
