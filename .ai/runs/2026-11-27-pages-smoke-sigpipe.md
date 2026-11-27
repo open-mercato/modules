@@ -21,5 +21,5 @@ Non-goals: no change to what any check asserts; no other cleanup.
 
 ### Phase 1: Fix and prove
 
-- [ ] 1.1 Match captured headers instead of a pipe into grep -q
-- [ ] 1.2 Repeated smoke runs against a merged upload
+- [x] 1.1 Match captured headers instead of a pipe into grep -q - f40a51a
+- [x] 1.2 Repeated smoke runs against a merged upload - f40a51a
