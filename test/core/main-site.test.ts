@@ -1,7 +1,7 @@
 // The navbar of the main site in the catalog (owner's request of 14 Nov): one navbar, the same as on
 // www.openmercato.com, with a new Run menu after Enterprise that holds the pages of the catalog. The layout check
 // accepts every main-site address the header and the footer link, and nothing else on that origin.
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
@@ -39,6 +39,14 @@ describe('the navbar of the main site', () => {
     expect(MAIN_SITE_LINKS.at(-1)!.variant).toBe('is-github')
     expect(MAIN_SITE_MENUS[1]!.items[0]!.url).toBe('https://docs.openmercato.com/')
     expect(MAIN_SITE_MENUS[1]!.items[2]!.run).toBe('/')
+  })
+
+  it('hides the GitHub text link in the header of every page, as the main site does', () => {
+    const header = readFileSync(
+      join(import.meta.dirname, '..', '..', 'site', 'src', 'components', 'Header.astro'),
+      'utf8',
+    )
+    expect(header).toMatch(/\.navbar_link\.is-github \{\s*display: none;/)
   })
 
   it('gives every panel row a description and an icon of its own', () => {

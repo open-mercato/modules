@@ -154,6 +154,13 @@ describe('a page Webflow added after the export', () => {
     expect(kept[0]).toMatch(/^<section\s+class="om-workbench"[\s\S]*<script>[\s\S]*<\/section>$/)
   })
 
+  it('keeps the base thumbnail of a case study the list shows no card for', () => {
+    const url = `${ORIGIN}/case-studies/arvo-configurator`
+    const p = readCaseStudyPage(page('/case-studies/arvo-configurator'), url)
+    const base = bySlug('case-studies', 'arvo-configurator')
+    expect(caseStudyItem(p, base, dicts(), undefined, url).fieldData.thumbnail).toEqual(base.fieldData.thumbnail)
+  })
+
   it('refuses a partner page the export does not hold, and a page that is not a case study', () => {
     const path = '/case-studies/arvo-configurator'
     const p = readCaseStudyPage(page(path), `${ORIGIN}${path}`)
@@ -207,6 +214,12 @@ describe('the small readers', () => {
     expect(sameRichText('<p>It is here</p>', '<p>It is there</p>')).toBe(false)
     expect(sameRichText('<img src="/a.png">', '<img src="/b.png">')).toBe(false)
     expect(sameRichText(null, '<p>x</p>')).toBe(false)
+    // a formatting edit counts, a wrapper around an image does not
+    expect(sameRichText('<h3>Title</h3>', '<h2>Title</h2>')).toBe(false)
+    expect(sameRichText('<p>a b</p>', '<p>a <strong>b</strong></p>')).toBe(false)
+    expect(sameRichText('<figure><div><img src="/a.png"></div></figure>', '<figure><img src="/a.png"></figure>')).toBe(
+      true,
+    )
   })
 })
 

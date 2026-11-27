@@ -362,7 +362,7 @@ async function serialize(
         out.push({ path, webflowId: e.webflowId, bytes: utf8(await format(text, path, repoRoot)) })
         for (const em of e.embeds ?? []) {
           const file = `${EMBEDS_DIR}/${em.name}.html`
-          out.push({ path: file, webflowId: e.webflowId, bytes: utf8(await format(`${em.html}\n`, file, repoRoot)) })
+          out.push({ path: file, webflowId: e.webflowId, bytes: utf8(`${em.html}\n`) })
         }
       }
       continue

@@ -1,479 +1,126 @@
-<section class="om-workbench" data-om-guide="bom" aria-label="What is a bill of materials? An editable BOM example">
-  <style>
-    .om-workbench {
-      --ink: #18212b;
-      --muted: #495762;
-      --rule: #c8ced0;
-      --paper: #f8f8f4;
-      --blue: #2446ab;
-      box-sizing: border-box;
-      max-width: 100%;
-      margin: 1.5rem 0 2.25rem;
-      padding: clamp(16px, 3vw, 30px);
-      border: 1px solid var(--rule);
-      border-top: 3px solid var(--blue);
-      border-radius: 8px;
-      background: var(--paper);
-      color: var(--ink);
-      font:
-        400 16px/1.45 system-ui,
-        sans-serif;
-      text-align: left;
-    }
-    .om-workbench *,
-    .om-workbench *:before,
-    .om-workbench *:after {
-      box-sizing: border-box;
-    }
-    .om-workbench .wb-title {
-      font:
-        650 clamp(21px, 3vw, 28px)/1.2 system-ui,
-        sans-serif;
-      color: var(--ink);
-      margin: 0 0 18px;
-      letter-spacing: -0.035em;
-    }
-    .om-workbench .wb-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px 20px;
-      margin: 12px 0;
-    }
-    .om-workbench label,
-    .om-workbench legend {
-      display: block;
-      color: var(--ink);
-      font:
-        600 14px/1.35 system-ui,
-        sans-serif;
-    }
-    .om-workbench input:not([type='checkbox']),
-    .om-workbench select,
-    .om-workbench textarea {
-      display: block;
-      width: 100%;
-      min-width: 0;
-      margin: 6px 0 0;
-      padding: 9px 10px;
-      border: 1px solid #869295;
-      border-radius: 4px;
-      background: #fff;
-      color: var(--ink);
-      font:
-        400 16px/1.35 system-ui,
-        sans-serif;
-    }
-    .om-workbench input[type='checkbox'] {
-      width: 18px;
-      height: 18px;
-      vertical-align: middle;
-      accent-color: var(--blue);
-    }
-    .om-workbench textarea {
-      min-height: 100px;
-      font-family: ui-monospace, monospace;
-    }
-    .om-workbench input:focus-visible,
-    .om-workbench select:focus-visible,
-    .om-workbench textarea:focus-visible,
-    .om-workbench button:focus-visible,
-    .om-workbench a:focus-visible {
-      outline: 3px solid #4262b8;
-      outline-offset: 2px;
-    }
-    .om-workbench button,
-    .om-workbench a.wb-button {
-      font:
-        600 14px/1.3 system-ui,
-        sans-serif;
-      color: #fff;
-      background: var(--blue);
-      border: 1px solid var(--blue);
-      border-radius: 4px;
-      padding: 10px 15px;
-      cursor: pointer;
-      text-decoration: none;
-      margin: 0;
-    }
-    .om-workbench button.secondary {
-      background: white;
-      color: var(--ink);
-      border-color: #879394;
-    }
-    .om-workbench button:disabled {
-      opacity: 0.48;
-      cursor: default;
-    }
-    .om-workbench .wb-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 16px 0 0;
-    }
-    .om-workbench .wb-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr));
-      gap: 14px;
-      border-block-start: 1px solid var(--rule);
-      margin-top: 20px;
-      padding-top: 16px;
-    }
-    .om-workbench .wb-results small {
-      display: block;
-      color: var(--muted);
-      font:
-        500 13px/1.3 system-ui,
-        sans-serif;
-    }
-    .om-workbench .wb-results strong {
-      display: block;
-      font:
-        650 clamp(19px, 3vw, 27px)/1.3 ui-monospace,
-        monospace;
-      letter-spacing: -0.045em;
-      font-variant-numeric: tabular-nums;
-      overflow-wrap: anywhere;
-    }
-    .om-workbench .wb-hint,
-    .om-workbench .wb-status,
-    .om-workbench .wb-error {
-      margin: 10px 0 0;
-      font:
-        400 14px/1.5 system-ui,
-        sans-serif;
-      text-align: left;
-      color: var(--muted);
-    }
-    .om-workbench .wb-error:not(:empty) {
-      color: #992d18;
-      font-weight: 600;
-    }
-    .om-workbench .wb-error:empty,
-    .om-workbench [hidden] {
-      display: none !important;
-    }
-    .om-workbench .wb-sheet,
-    .om-workbench .wb-snapshot {
-      margin-top: 14px;
-      padding: 16px;
-      background: white;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      overflow-wrap: anywhere;
-    }
-    .om-workbench .wb-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(95px, 100%), 1fr));
-      gap: 8px;
-      padding: 12px 0;
-      border-top: 1px solid var(--rule);
-      align-items: end;
-    }
-    .om-workbench .wb-row label:first-child {
-      grid-column: span 2;
-    }
-    .om-workbench .wb-row label {
-      font-size: 12px;
-    }
-    .om-workbench .wb-row input {
-      padding: 7px;
-    }
-    .om-workbench .wb-row button {
-      justify-self: start;
-      padding: 8px 10px;
-    }
-    .om-workbench .wb-codes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(235px, 100%), 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-    .om-workbench .wb-code {
-      min-width: 0;
-      padding: 12px;
-      background: white;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      text-align: center;
-    }
-    .om-workbench .wb-code svg {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 0 auto 8px;
-    }
-    .om-workbench .wb-code button {
-      padding: 6px 10px;
-    }
-    .om-workbench .wb-choice {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 12px 0;
-    }
-    #om-sheet-print {
-      display: none;
-    }
-    @media (max-width: 560px) {
-      .om-workbench .wb-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .om-workbench .wb-grid {
-        gap: 12px;
-      }
-      .om-workbench .wb-title {
-        margin-bottom: 14px;
-      }
-    }
-    @media (max-width: 400px) {
-      .om-workbench .wb-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media print {
-      body.om-printing {
-        overflow: visible !important;
-        height: auto !important;
-        background: white !important;
-      }
-      body.om-printing > :not(#om-sheet-print) {
-        display: none !important;
-      }
-      body.om-printing > #om-sheet-print {
-        display: block !important;
-        position: static !important;
-        color: #111;
-        font:
-          12pt/1.4 Arial,
-          sans-serif;
-        background: white;
-        max-width: none;
-        margin: 0;
-        padding: 0;
-      }
-      #om-sheet-print * {
-        box-sizing: border-box;
-      }
-      #om-sheet-print h1 {
-        font:
-          600 22pt/1.2 Arial,
-          sans-serif;
-        color: #111;
-        margin: 0 0 6mm;
-      }
-      #om-sheet-print table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 5mm;
-      }
-      #om-sheet-print th,
-      #om-sheet-print td {
-        border-bottom: 1px solid #777;
-        text-align: left;
-        padding: 2mm;
-        overflow-wrap: anywhere;
-      }
-      #om-sheet-print .wb-labels {
-        display: flex;
-        gap: 1.5mm;
-        flex-wrap: wrap;
-      }
-      #om-sheet-print .wb-print-label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        break-inside: avoid;
-        border: 0.2mm dotted #aaa;
-        page-break-inside: avoid;
-      }
-      #om-sheet-print svg {
-        display: block;
-        max-width: none !important;
-        print-color-adjust: exact;
-        -webkit-print-color-adjust: exact;
-      }
-    }
-  </style>
-  <div class="wb-title">Build a single-level bill of materials</div>
-  <div class="wb-grid">
-    <label>Finished product<input data-ui="product" maxlength="90" value="Coffee gift box" /></label
-    ><label
-      >Finished units to build<input data-ui="batch" type="number" min="1" max="1000000" step="1" required value="100"
-    /></label>
-  </div>
-  <div data-ui="rows"></div>
-  <p class="wb-hint">Enter purchase cost per component unit. Use one unit of measure per line.</p>
-  <div class="wb-results" aria-live="polite">
-    <div><small>Materials per finished unit</small><strong data-ui="unit">$6.00</strong></div>
-    <div><small>Batch material cost</small><strong data-ui="total">$600.00</strong></div>
-  </div>
-  <p class="wb-error" data-ui="error" role="alert"></p>
-  <div class="wb-actions">
-    <button type="button" class="secondary" data-ui="add">Add component</button
-    ><button type="button" data-ui="csv">Download BOM as CSV</button>
-  </div>
-  <noscript><p>Enable JavaScript to edit the example in your browser.</p></noscript>
-  <script>
-    ;(() => {
-      const root = document.currentScript.closest('[data-om-guide]')
-      const get = (role) => root.querySelector('[data-ui="' + role + '"]')
-      const all = (role) => Array.from(root.querySelectorAll('[data-ui="' + role + '"]'))
-      const amount = (role) => {
-        const input = get(role)
-        return input.value.trim() && input.validity.valid ? input.valueAsNumber : NaN
-      }
-      const usd = (value) =>
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(value)
-      const fmt = (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(value)
-      const make = (tag, value) => {
-        const element = document.createElement(tag)
-        if (value !== undefined) element.textContent = value
-        return element
-      }
-      function download(name, type, data) {
-        const link = document.createElement('a')
-        const url = URL.createObjectURL(new Blob([data], { type }))
-        link.href = url
-        link.download = name
-        document.body.append(link)
-        link.click()
-        link.remove()
-        setTimeout(() => URL.revokeObjectURL(url), 30000)
-      }
-      function printSheet(content) {
-        document.getElementById('om-sheet-print')?.remove()
-        const sheet = make('section')
-        sheet.id = 'om-sheet-print'
-        sheet.append(content)
-        document.body.append(sheet)
-        document.body.classList.add('om-printing')
-        const finish = () => {
-          document.body.classList.remove('om-printing')
-          sheet.remove()
-        }
-        window.addEventListener('afterprint', finish, { once: true })
-        window.print()
-      }
+<section class="om-workbench" data-om-guide="bom" aria-label="What is a bill of materials? An editable BOM example"><style>.om-workbench{--ink:#18212b;--muted:#495762;--rule:#c8ced0;--paper:#f8f8f4;--blue:#2446ab;box-sizing:border-box;max-width:100%;margin:1.5rem 0 2.25rem;padding:clamp(16px,3vw,30px);border:1px solid var(--rule);border-top:3px solid var(--blue);border-radius:8px;background:var(--paper);color:var(--ink);font:400 16px/1.45 system-ui,sans-serif;text-align:left}
+.om-workbench *,.om-workbench *:before,.om-workbench *:after{box-sizing:border-box}
+.om-workbench .wb-title{font:650 clamp(21px,3vw,28px)/1.2 system-ui,sans-serif;color:var(--ink);margin:0 0 18px;letter-spacing:-.035em}
+.om-workbench .wb-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin:12px 0}
+.om-workbench label,.om-workbench legend{display:block;color:var(--ink);font:600 14px/1.35 system-ui,sans-serif}
+.om-workbench input:not([type=checkbox]),.om-workbench select,.om-workbench textarea{display:block;width:100%;min-width:0;margin:6px 0 0;padding:9px 10px;border:1px solid #869295;border-radius:4px;background:#fff;color:var(--ink);font:400 16px/1.35 system-ui,sans-serif}
+.om-workbench input[type=checkbox]{width:18px;height:18px;vertical-align:middle;accent-color:var(--blue)}
+.om-workbench textarea{min-height:100px;font-family:ui-monospace,monospace}
+.om-workbench input:focus-visible,.om-workbench select:focus-visible,.om-workbench textarea:focus-visible,.om-workbench button:focus-visible,.om-workbench a:focus-visible{outline:3px solid #4262b8;outline-offset:2px}
+.om-workbench button,.om-workbench a.wb-button{font:600 14px/1.3 system-ui,sans-serif;color:#fff;background:var(--blue);border:1px solid var(--blue);border-radius:4px;padding:10px 15px;cursor:pointer;text-decoration:none;margin:0}
+.om-workbench button.secondary{background:white;color:var(--ink);border-color:#879394}
+.om-workbench button:disabled{opacity:.48;cursor:default}
+.om-workbench .wb-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.om-workbench .wb-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(125px,100%),1fr));gap:14px;border-block-start:1px solid var(--rule);margin-top:20px;padding-top:16px}
+.om-workbench .wb-results small{display:block;color:var(--muted);font:500 13px/1.3 system-ui,sans-serif}
+.om-workbench .wb-results strong{display:block;font:650 clamp(19px,3vw,27px)/1.3 ui-monospace,monospace;letter-spacing:-.045em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.om-workbench .wb-hint,.om-workbench .wb-status,.om-workbench .wb-error{margin:10px 0 0;font:400 14px/1.5 system-ui,sans-serif;text-align:left;color:var(--muted)}
+.om-workbench .wb-error:not(:empty){color:#992d18;font-weight:600}
+.om-workbench .wb-error:empty,.om-workbench [hidden]{display:none!important}
+.om-workbench .wb-sheet,.om-workbench .wb-snapshot{margin-top:14px;padding:16px;background:white;border:1px solid var(--rule);border-radius:4px;overflow-wrap:anywhere}
+.om-workbench .wb-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(95px,100%),1fr));gap:8px;padding:12px 0;border-top:1px solid var(--rule);align-items:end}
+.om-workbench .wb-row label:first-child{grid-column:span 2}
+.om-workbench .wb-row label{font-size:12px}
+.om-workbench .wb-row input{padding:7px}
+.om-workbench .wb-row button{justify-self:start;padding:8px 10px}
+.om-workbench .wb-codes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(235px,100%),1fr));gap:12px;margin-top:16px}
+.om-workbench .wb-code{min-width:0;padding:12px;background:white;border:1px solid var(--rule);border-radius:4px;text-align:center}
+.om-workbench .wb-code svg{display:block;max-width:100%;height:auto;margin:0 auto 8px}
+.om-workbench .wb-code button{padding:6px 10px}
+.om-workbench .wb-choice{display:flex;align-items:center;gap:8px;margin:12px 0}
+#om-sheet-print{display:none}
+@media(max-width:560px){.om-workbench .wb-row{grid-template-columns:repeat(2,minmax(0,1fr))}.om-workbench .wb-grid{gap:12px}.om-workbench .wb-title{margin-bottom:14px}}
+@media(max-width:400px){.om-workbench .wb-grid{grid-template-columns:1fr}}
+@media print{body.om-printing{overflow:visible!important;height:auto!important;background:white!important}body.om-printing>:not(#om-sheet-print){display:none!important}body.om-printing>#om-sheet-print{display:block!important;position:static!important;color:#111;font:12pt/1.4 Arial,sans-serif;background:white;max-width:none;margin:0;padding:0}#om-sheet-print *{box-sizing:border-box}#om-sheet-print h1{font:600 22pt/1.2 Arial,sans-serif;color:#111;margin:0 0 6mm}#om-sheet-print table{width:100%;border-collapse:collapse;margin-top:5mm}#om-sheet-print th,#om-sheet-print td{border-bottom:1px solid #777;text-align:left;padding:2mm;overflow-wrap:anywhere}#om-sheet-print .wb-labels{display:flex;gap:1.5mm;flex-wrap:wrap}#om-sheet-print .wb-print-label{display:flex;align-items:center;justify-content:center;break-inside:avoid;border:.2mm dotted #aaa;page-break-inside:avoid}#om-sheet-print svg{display:block;max-width:none!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style><div class="wb-title">Build a single-level bill of materials</div>
+<div class="wb-grid"><label>Finished product<input data-ui="product" maxlength="90" value="Coffee gift box"></label><label>Finished units to build<input data-ui="batch" type="number" min="1" max="1000000" step="1" required value="100"></label></div>
+<div data-ui="rows"></div><p class="wb-hint">Enter purchase cost per component unit. Use one unit of measure per line.</p>
+<div class="wb-results" aria-live="polite"><div><small>Materials per finished unit</small><strong data-ui="unit">$6.00</strong></div><div><small>Batch material cost</small><strong data-ui="total">$600.00</strong></div></div>
+<p class="wb-error" data-ui="error" role="alert"></p><div class="wb-actions"><button type="button" class="secondary" data-ui="add">Add component</button><button type="button" data-ui="csv">Download BOM as CSV</button></div>
+<noscript><p>Enable JavaScript to edit the example in your browser.</p></noscript><script>(() => {
+const root = document.currentScript.closest('[data-om-guide]');
+const get = (role) => root.querySelector('[data-ui="' + role + '"]');
+const all = (role) => Array.from(root.querySelectorAll('[data-ui="' + role + '"]'));
+const amount = (role) => {
+  const input = get(role);
+  return input.value.trim() && input.validity.valid ? input.valueAsNumber : NaN;
+};
+const usd = (value) => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:2}).format(value);
+const fmt = (value) => new Intl.NumberFormat('en-US', {maximumFractionDigits:2}).format(value);
+const make = (tag, value) => {
+  const element = document.createElement(tag);
+  if (value !== undefined) element.textContent = value;
+  return element;
+};
+function download(name, type, data) {
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(new Blob([data], {type}));
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+function printSheet(content) {
+  document.getElementById('om-sheet-print')?.remove();
+  const sheet = make('section');
+  sheet.id = 'om-sheet-print';
+  sheet.append(content);
+  document.body.append(sheet);
+  document.body.classList.add('om-printing');
+  const finish = () => { document.body.classList.remove('om-printing'); sheet.remove(); };
+  window.addEventListener('afterprint', finish, {once:true});
+  window.print();
+}
 
-      function component(name = '', quantity = 1, cost = 0) {
-        const row = make('div')
-        row.className = 'wb-row'
-        for (const [caption, field, value] of [
-          ['Component / unit', 'part', name],
-          ['Quantity per finished unit', 'qty', quantity],
-          ['Cost per component unit ($)', 'cost', cost],
-        ]) {
-          const label = make('label', caption),
-            input = make('input')
-          input.dataset.field = field
-          input.value = value
-          input.required = true
-          if (field === 'part') input.maxLength = 100
-          else {
-            input.type = 'number'
-            input.min = '0'
-            input.max = '10000000'
-            input.step = 'any'
-          }
-          label.append(input)
-          row.append(label)
-        }
-        const line = make('span')
-        line.dataset.field = 'line'
-        row.append(line)
-        const remove = make('button', 'Remove')
-        remove.type = 'button'
-        remove.className = 'secondary'
-        remove.addEventListener('click', () => {
-          row.remove()
-          recompute()
-        })
-        row.append(remove)
-        get('rows').append(row)
-        return row
-      }
-      function recalcRows() {
-        const batch = amount('batch'),
-          rows = Array.from(get('rows').children)
-        if (!Number.isInteger(batch) || !get('product').value.trim() || !rows.length)
-          throw Error('Enter a product, a positive whole batch size, and at least one component.')
-        const items = rows.map((row, index) => {
-          const field = (name) => row.querySelector('[data-field="' + name + '"]')
-          const part = field('part').value.trim(),
-            qty = field('qty').valueAsNumber,
-            cost = field('cost').valueAsNumber
-          if (!part || !field('qty').validity.valid || qty <= 0 || !field('cost').validity.valid)
-            throw Error('Component ' + (index + 1) + ': enter a name, a quantity above zero, and a nonnegative cost.')
-          return { part, qty, cost, required: qty * batch, extended: qty * batch * cost, row }
-        })
-        return { items, batch, unit: items.reduce((sum, i) => sum + i.qty * i.cost, 0) }
-      }
-      function recompute() {
-        get('add').disabled = get('rows').children.length >= 30
-        try {
-          const { items, batch, unit } = recalcRows()
-          for (const item of items)
-            item.row.querySelector('[data-field=line]').textContent =
-              fmt(item.required) + ' needed · ' + usd(item.extended)
-          get('unit').textContent = usd(unit)
-          get('total').textContent = usd(unit * batch)
-          get('error').textContent = ''
-          get('csv').disabled = false
-        } catch (e) {
-          get('unit').textContent = 'N/A'
-          get('total').textContent = 'N/A'
-          get('error').textContent = e.message
-          get('csv').disabled = true
-          root.querySelectorAll('[data-field=line]').forEach((el) => (el.textContent = ''))
-        }
-      }
-      function csvCell(value) {
-        let s = String(value)
-        if (typeof value === 'string' && /^[\s]*[=+\-@\t\r]/.test(s)) s = "'" + s
-        return '"' + s.replace(/"/g, '""') + '"'
-      }
-      get('csv').addEventListener('click', () => {
-        const { items, batch } = recalcRows(),
-          product = get('product').value.trim()
-        const rows = [
-          [
-            'Product',
-            'Batch size',
-            'Component / unit',
-            'Quantity per finished unit',
-            'Cost per component unit (USD)',
-            'Quantity for batch',
-            'Batch line cost (USD)',
-          ],
-        ]
-        for (const p of items)
-          rows.push([
-            product,
-            batch,
-            p.part,
-            p.qty,
-            p.cost,
-            Number(p.required.toFixed(8)),
-            Number(p.extended.toFixed(2)),
-          ])
-        download(
-          'bill-of-materials.csv',
-          'text/csv;charset=utf-8',
-          '\uFEFF' + rows.map((r) => r.map(csvCell).join(',')).join('\r\n'),
-        )
-      })
-      get('add').addEventListener('click', () => {
-        const row = component()
-        row.querySelector('input').focus()
-        recompute()
-      })
-      root.addEventListener('input', recompute)
-      component('Coffee pouch (each)', 2, 2.4)
-      component('Gift carton (each)', 1, 0.85)
-      component('Printed card (each)', 1, 0.2)
-      component('Seal (each)', 1, 0.15)
-      recompute()
-    })()
-  </script>
-</section>
+function component(name='',quantity=1,cost=0) {
+  const row=make('div');row.className='wb-row';
+  for(const [caption,field,value] of [['Component / unit','part',name],['Quantity per finished unit','qty',quantity],['Cost per component unit ($)','cost',cost]]) {
+    const label=make('label',caption),input=make('input');input.dataset.field=field;input.value=value;input.required=true;
+    if(field==='part')input.maxLength=100;else{input.type='number';input.min='0';input.max='10000000';input.step='any';}
+    label.append(input);row.append(label);
+  }
+  const line=make('span');line.dataset.field='line';row.append(line);
+  const remove=make('button','Remove');remove.type='button';remove.className='secondary';
+  remove.addEventListener('click',()=>{row.remove();recompute();});row.append(remove);get('rows').append(row);return row;
+}
+function recalcRows() {
+  const batch=amount('batch'),rows=Array.from(get('rows').children);
+  if(!Number.isInteger(batch)||!get('product').value.trim()||!rows.length)throw Error('Enter a product, a positive whole batch size, and at least one component.');
+  const items=rows.map((row,index)=>{
+    const field=name=>row.querySelector('[data-field="'+name+'"]');
+    const part=field('part').value.trim(),qty=field('qty').valueAsNumber,cost=field('cost').valueAsNumber;
+    if(!part||!field('qty').validity.valid||qty<=0||!field('cost').validity.valid) throw Error('Component '+(index+1)+': enter a name, a quantity above zero, and a nonnegative cost.');
+    return {part,qty,cost,required:qty*batch,extended:qty*batch*cost,row};
+  });
+  return {items,batch,unit:items.reduce((sum,i)=>sum+i.qty*i.cost,0)};
+}
+function recompute(){
+  get('add').disabled=get('rows').children.length>=30;
+  try{
+    const {items,batch,unit}=recalcRows();
+    for(const item of items)item.row.querySelector('[data-field=line]').textContent=fmt(item.required)+' needed · '+usd(item.extended);
+    get('unit').textContent=usd(unit);get('total').textContent=usd(unit*batch);get('error').textContent='';get('csv').disabled=false;
+  }catch(e){
+    get('unit').textContent='N/A';get('total').textContent='N/A';get('error').textContent=e.message;get('csv').disabled=true;
+    root.querySelectorAll('[data-field=line]').forEach(el=>el.textContent='');
+  }
+}
+function csvCell(value) {
+  let s=String(value);
+  if(typeof value==='string'&&/^[\s]*[=+\-@\t\r]/.test(s))s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+get('csv').addEventListener('click',()=>{
+  const {items,batch}=recalcRows(),product=get('product').value.trim();
+  const rows=[['Product','Batch size','Component / unit','Quantity per finished unit','Cost per component unit (USD)','Quantity for batch','Batch line cost (USD)']];
+  for(const p of items)rows.push([product,batch,p.part,p.qty,p.cost,Number(p.required.toFixed(8)),Number(p.extended.toFixed(2))]);
+  download('bill-of-materials.csv','text/csv;charset=utf-8','\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n'));
+});
+get('add').addEventListener('click',()=>{const row=component();row.querySelector('input').focus();recompute();});
+root.addEventListener('input',recompute);
+component('Coffee pouch (each)',2,2.40);component('Gift carton (each)',1,.85);component('Printed card (each)',1,.20);component('Seal (each)',1,.15);
+recompute();
+
+})();</script></section>

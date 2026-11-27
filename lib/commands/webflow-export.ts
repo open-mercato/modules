@@ -29,7 +29,7 @@ export default async function webflowExport(ctx: CommandContext): Promise<number
     else if (a === '--site') site = ctx.args[++i] ?? ''
     else if (a.startsWith('--site=')) site = a.slice(7)
     else if (a === '--no-text') text = false
-    else if (a === '--from-site') fromSite = ctx.args[++i]
+    else if (a === '--from-site') fromSite = ctx.args[++i] ?? ''
     else if (a.startsWith('--from-site=')) fromSite = a.slice(12)
     else {
       console.error(`webflow-export: unknown argument ${a}`)
@@ -44,7 +44,13 @@ export default async function webflowExport(ctx: CommandContext): Promise<number
     console.error('webflow-export: --site takes a Webflow site id (24 hex digits)')
     return EXIT_ENV
   }
-  if (fromSite !== undefined) return fromSiteExport(ctx, dir, fromSite)
+  if (fromSite !== undefined) {
+    if (site !== DEFAULT_SITE_ID || !text) {
+      console.error('webflow-export: --site and --no-text belong to the API export, not to --from-site')
+      return EXIT_ENV
+    }
+    return fromSiteExport(ctx, dir, fromSite)
+  }
   if (process.env.CI) {
     console.error('webflow-export: refused in CI; the owner runs it on a workstation')
     return EXIT_ENV

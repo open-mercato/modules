@@ -387,6 +387,10 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
     font-weight: 500;
     white-space: nowrap;
   }
+  /* the live GitHub text link: in the markup, hidden at every width by the main site's styles */
+  .navbar_link.is-github {
+    display: none;
+  }
   .navbar_content-right {
     display: flex;
     gap: 1rem;

@@ -166,7 +166,9 @@ export function readCaseStudyPage(served: string, url: string): CaseStudyPage {
   const description = textOf(find(header, (e) => e.tagName === 'p'))
   if (!name || !description) throw new PublishedPageError(`${url}: no heading or description`)
   const labels = byClass(header, 'case-label_collection-list')
-  const categories = labels ? findAll(labels, (e) => hasClass(e, 'case_label-text')).map((e) => textOf(e) ?? '') : []
+  const categories = labels
+    ? findAll(labels, (e) => hasClass(e, 'case_label-text')).flatMap((e) => textOf(e) ?? [])
+    : []
   const hero = byClass(tree, 'header_asset-wrapper')
   const iframe = hero ? find(hero, (e) => e.tagName === 'iframe') : undefined
   const heroVideo = typeof iframe?.properties?.src === 'string' ? youTubeWatch(iframe.properties.src) : undefined
@@ -346,7 +348,7 @@ export interface Dictionaries {
   blogCategories: Dictionary
 }
 
-/** What rich text shows: its text, whitespace collapsed, and its image addresses. */
+/** What rich text shows: its text, whitespace collapsed, its elements in order, its image and link addresses. */
 function richTextShape(html: string): string {
   const tree = fromHtml(html, { fragment: true })
   const texts: string[] = []
@@ -359,7 +361,10 @@ function richTextShape(html: string): string {
   const text = texts.join(' ').replace(/\s+/g, ' ').trim()
   const srcs = findAll(tree, (e) => e.tagName === 'img').map((e) => String(e.properties?.src ?? ''))
   const links = findAll(tree, (e) => e.tagName === 'a').map((e) => String(e.properties?.href ?? ''))
-  return JSON.stringify([text, srcs, links])
+  // the element sequence keeps a formatting edit (h3 to h2, bold, a list type); wrappers Webflow adds or drops around an
+  // image (figure > div) are left out
+  const tags = findAll(tree, (e) => e.tagName !== 'div').map((e) => e.tagName)
+  return JSON.stringify([text, srcs, links, tags])
 }
 
 /**
@@ -426,7 +431,8 @@ export function caseStudyItem(
     'main-heading': page.heading,
     'short-description': page.description,
     category: page.categories.map((c) => dicts.caseCategories.id(c)),
-    thumbnail: image(f.thumbnail, thumbnail),
+    // no card on the list (a limit, a hidden card): the base's thumbnail stays
+    thumbnail: thumbnail ? image(f.thumbnail, thumbnail) : ((f.thumbnail as WfItem['fieldData'][string]) ?? null),
     'hero-video': page.heroVideo ? (sameVideo ? video : { url: page.heroVideo }) : null,
     'delivered-by': deliveredBy,
     'delivered-by-url': deliveredByUrl,
@@ -541,7 +547,8 @@ export async function exportFromSite(opts: FromSiteOptions): Promise<FromSiteRes
   const sitemap = await get('/sitemap.xml')
   const cards = listCards(await get('/case-studies'))
   const thumbnails = new Map(cards.flatMap((c) => (c.image ? [[c.href, c.image] as const] : [])))
-  const position = new Map(cards.map((c, i) => [c.href, i + 1]))
+  const position = new Map<string, number>()
+  cards.forEach((c, i) => position.has(c.href) || position.set(c.href, i + 1))
   const limit = pLimit(4)
   const result: FromSiteResult = {
     counts: {
@@ -585,6 +592,9 @@ export async function exportFromSite(opts: FromSiteOptions): Promise<FromSiteRes
     log(
       `${slug}: ${read.length} pages read, ${result.counts[slug].added.length} new, ${kept.length} kept from the base`,
     )
+    // a published base item the site no longer lists was unpublished or deleted there: the import keeps it, say so
+    const gone = kept.filter((i) => !i.isDraft && !i.isArchived).map((i) => String(i.fieldData.slug))
+    if (gone.length > 0) log(`${slug}: published in the base but not on the site (check them): ${gone.join(', ')}`)
   }
   cpSync(opts.base, opts.dir, { recursive: true, filter: (src) => !/(^|\/)\._/.test(src) })
   for (const [slug, d] of [

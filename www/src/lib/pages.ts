@@ -25,25 +25,24 @@ export const isListPage = (slug: string): boolean => (LIST_PAGE_SLUGS as readonl
 
 /** The entries routed at `/<slug>` by the root route: every published one but the home page and the list pages. */
 export function routedPages<T extends PageEntry>(entries: readonly T[]): T[] {
-  return entries
-    .filter((e) => !e.data.draft && e.id !== HOME_PAGE_SLUG && !isListPage(e.id))
-    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+  return entries.filter(isRouted).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+}
+
+/** Whether a page has a route of its own, /<slug> (routedPages). */
+export function isRouted(entry: PageEntry): boolean {
+  return !entry.data.draft && entry.id !== HOME_PAGE_SLUG && !isListPage(entry.id)
 }
 
 /**
  * The OG card the build draws for a routed page without an OG image of its own (/og/<slug>.png, like a landing's):
- * the eyebrow and title of its first hero block, else "Open Mercato" and the SEO title without the site's suffix.
+ * the eyebrow ("Open Mercato" without one) and title of its first hero block. A page without a hero has no words for
+ * a card (team would read "Open Mercato" twice) and keeps the default image.
  */
 export function pageOgCard(entry: PageEntry): { eyebrow: string; title: string } | undefined {
-  if (entry.data.seo.ogImage !== undefined) return undefined
+  if (entry.data.seo.ogImage !== undefined || !isRouted(entry)) return undefined
   const hero = entry.data.blocks.find((b) => b.type === 'hero')
-  return {
-    eyebrow: (hero?.eyebrow ?? 'Open Mercato').trim(),
-    title: (hero && 'title' in hero
-      ? String(hero.title)
-      : entry.data.seo.title.replace(/\s*\|\s*Open Mercato$/, '')
-    ).trim(),
-  }
+  if (!hero || hero.type !== 'hero') return undefined
+  return { eyebrow: (hero.eyebrow ?? 'Open Mercato').trim(), title: hero.title.trim() }
 }
 
 /** The OG image of a page: its own, or the card the build draws (pageOgCard). */
