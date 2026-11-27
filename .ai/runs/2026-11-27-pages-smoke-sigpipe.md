@@ -17,9 +17,12 @@ Non-goals: no change to what any check asserts; no other cleanup.
 
 ## Progress
 
+PR: #41
+
 > Convention: `- [ ]` pending, `- [x]` done. Append ` - <commit sha>` when a step lands. Do not rename step titles.
 
 ### Phase 1: Fix and prove
 
 - [x] 1.1 Match captured headers instead of a pipe into grep -q - f40a51a
 - [x] 1.2 Repeated smoke runs against a merged upload - f40a51a
+- [x] Post-review fix: a failed curl still fails a header check, as before - fd0727d
