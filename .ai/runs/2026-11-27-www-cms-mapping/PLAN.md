@@ -15,7 +15,8 @@ Base: main (71c9fc1)
 | 1     | 1.1b | Landing template words as a content file                      | inline | done   | 79ed9f5 |
 | 1     | 1.2  | Mapping table, toDocument and fromDocument, Strapi REST fixture | inline | done   | d531039 |
 | 1     | 1.3  | Content source decision table                                 | inline | done   | 232fbe6 |
-| 1     | 1.3-review-fix | Shadow summary lists the problems of invalid content   | inline | done   | (this) |
+| 1     | 1.3-review-fix | Shadow summary lists the problems of invalid content   | inline | done   | 2039d9f |
+| 1     | 1.2-review-fix | fromDocument names a field that holds no list          | inline | done   | (this) |
 
 ## Goal
 

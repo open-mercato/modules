@@ -778,6 +778,12 @@ function fromFields(fields: readonly Field[], doc: Record<string, unknown>, medi
     if (!(name in doc)) fail(where, `the field ${name} is missing`)
     return doc[name]
   }
+  /** A list field of the document: Strapi answers a list, empty when unset, never null. */
+  const needList = <T>(name: string, at: string): T[] => {
+    const v = need(name)
+    if (!Array.isArray(v)) fail(at, `a list is expected, not ${v === null ? 'null' : typeof v}`)
+    return v as T[]
+  }
   for (const f of fields) {
     const at = `${where}.${f.key}`
     switch (f.kind) {
@@ -792,27 +798,37 @@ function fromFields(fields: readonly Field[], doc: Record<string, unknown>, medi
         break
       }
       case 'relation': {
-        const v = need(f.key)
         if (f.many) {
-          const list = (v as { slug?: unknown }[]).map((r) => slugOf(r, at))
+          const list = needList<unknown>(f.key, at).map((r) => slugOf(r, at))
           if (list.length > 0 || f.keep) out[f.key] = list
-        } else if (v !== null) out[f.key] = slugOf(v, at)
+        } else {
+          const v = need(f.key)
+          if (v !== null) out[f.key] = slugOf(v, at)
+        }
         break
       }
       case 'lines': {
-        const list = (need(f.key) as { text: unknown }[]).map((l) => l.text)
+        const list = needList<unknown>(f.key, at).map((l, i) => {
+          if (!isObject(l)) fail(`${at}.${i}`, 'a line is expected')
+          return l.text
+        })
         if (list.length > 0 || f.keep) out[f.key] = list
         break
       }
       case 'component': {
-        const v = need(nameOf(f))
         if (f.repeatable) {
-          const list = (v as Record<string, unknown>[]).map((x, i) =>
-            fromFields(componentFields(f.component), x, media, `${at}.${i}`),
-          )
+          const list = needList<unknown>(nameOf(f), at).map((x, i) => {
+            if (!isObject(x)) fail(`${at}.${i}`, `an object is expected for ${f.component}`)
+            return fromFields(componentFields(f.component), x, media, `${at}.${i}`)
+          })
           if (list.length > 0 || f.keep) out[f.key] = list
-        } else if (v !== null)
-          out[f.key] = fromFields(componentFields(f.component), v as Record<string, unknown>, media, at)
+        } else {
+          const v = need(nameOf(f))
+          if (v !== null) {
+            if (!isObject(v)) fail(at, `an object is expected for ${f.component}`)
+            out[f.key] = fromFields(componentFields(f.component), v, media, at)
+          }
+        }
         break
       }
       case 'pair': {
@@ -831,7 +847,8 @@ function fromFields(fields: readonly Field[], doc: Record<string, unknown>, medi
         break
       }
       case 'zone':
-        out[f.key] = (need(f.key) as Record<string, unknown>[]).map((b, i) => {
+        out[f.key] = needList<unknown>(f.key, at).map((b, i) => {
+          if (!isObject(b)) fail(`${at}.${i}`, 'a block is expected')
           const type = Object.entries(f.components).find(([, uid]) => uid === b.__component)?.[0]
           if (type === undefined) fail(`${at}.${i}`, `the component ${String(b.__component)} is not in the mapping`)
           return { type, ...fromFields(componentFields(b.__component as string), b, media, `${at}.${i}`) }

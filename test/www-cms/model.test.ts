@@ -144,6 +144,24 @@ describe('the mapping refuses what it cannot carry (drift fails loudly)', () => 
     expect(() => fromDocument(landing, without as StrapiDocument, media)).toThrow(/competitor is missing/)
   })
 
+  it('names the field when a document holds null or an object where a list belongs', () => {
+    const doc = toDocument(landing, entry!, { media })
+    expect(() => fromDocument(landing, { ...doc, related: null }, media)).toThrow(
+      /landings\/hubspot-alternative\.related: a list is expected, not null/,
+    )
+    expect(() => fromDocument(landing, { ...doc, sectionNav: {} }, media)).toThrow(/sectionNav: a list is expected/)
+    const hero = { ...(doc.hero as object), proof: null }
+    expect(() => fromDocument(landing, { ...doc, hero }, media)).toThrow(/hero\.proof: a list is expected/)
+    const page = typeOf('pages')
+    const [home] = entriesOf('pages', {
+      path: 'pages/home.yaml',
+      text: readFileSync(join(CONTENT, 'pages', 'home.yaml'), 'utf8'),
+    })
+    expect(() => fromDocument(page, { ...toDocument(page, home!, { media }), blocks: null }, media)).toThrow(
+      /pages\/home\.blocks: a list is expected/,
+    )
+  })
+
   it('writes a document never published as a draft, where the type has drafts', () => {
     const doc = { ...toDocument(landing, entry!, { media }), publishedAt: null }
     expect(fromDocument(landing, doc, media).data.draft).toBe(true)
