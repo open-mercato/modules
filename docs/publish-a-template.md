@@ -14,7 +14,7 @@ cd my-app
 
 If you plan to list the template in the catalog, check these before you commit:
 
-- README - Replace the starter `README.md` with a description of what the app does and when someone would use it.
+- README - Add a root `README.md` with a description of what the app does and when someone would use it.
 - License - Include the full text of an OSI-approved license, such as MIT or Apache-2.0, in the root `LICENSE` file.
 - Packages - Keep all Open Mercato packages on the latest stable release line.
 - Demo data - Use fictional names. For email addresses and links in seed and demo data, use `example.com` or `acme.com`.
@@ -27,11 +27,11 @@ npx create-mercato-template prepare --out ../my-template
 
 `prepare` works offline and doesn't run your app code. It excludes files such as `.env` files and uploads, clears non-stock values from `.env.example`, scans for secrets and writes `mercato-template.json` into the snapshot.
 
-The files you'll publish are in `../my-template/tree`. The export report, including the `snapshotId`, is in `../my-template/report.json`. If preparation fails, only the report is written.
+The files you'll publish are in `../my-template/tree`. The export report, including the `snapshotId`, is in `../my-template/report.json`. If `prepare` finds an error, only the report is written.
 
 ## 2. Review the snapshot
 
-Open `../my-template/report.json`. Check the errors and warnings, the modules and images included in the export, and the values cleared from `.env.example`. The report also lists uncommitted files. If one belongs in the template, commit it in the app before preparing the next snapshot.
+Open `../my-template/report.json`. Check the errors and warnings, the modules and images included in the export, and the keys whose values were cleared from `.env.example`. The report also lists uncommitted files. If one belongs in the template, commit it in the app before preparing the next snapshot.
 
 For each `env-undocumented` warning, add a comment above the key in the app's `.env.example` explaining what it's for. That comment supplies the description for the catalog entry. If the scan found a secret, move the value to your local `.env` and remove it from the committed file.
 
