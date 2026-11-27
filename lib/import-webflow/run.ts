@@ -19,12 +19,13 @@ import { emptyReport, guard, ItemText, type Entry, type Report, type RunCtx } fr
 import { buildDocsMap, DOCS_SITEMAP_URL, REDIRECTS_HEADER, sitemapPaths, type DocsMap } from './docs-map.ts'
 import { readExport, type WebflowExport, type WfPage } from './export.ts'
 import { align, chromeOf, contentLines, isLandingDom, landingEntry, parseLanding } from './landing.ts'
-import { loadMedia, MAX_TOTAL_BYTES, MediaError, MediaRegistry } from './media.ts'
+import { knownMedia, loadMedia, MAX_TOTAL_BYTES, MediaError, MediaRegistry } from './media.ts'
 import {
   applyPlan,
   format,
   markdownFile,
   planOutput,
+  readManifest,
   toYaml,
   utf8,
   type ManifestEntry,
@@ -65,6 +66,9 @@ export interface ImportResult {
 
 export class ImportEnvError extends Error {}
 
+/** Where the rich-text embeds of the bodies go, one HTML file each (www/src/lib/body-html.ts puts them in place). */
+export const EMBEDS_DIR = 'www/content/embeds'
+
 /** The docs sitemap: a given file, else the copy in the media cache, else (online) the network, then cached. */
 async function docsSitemap(opts: ImportOptions): Promise<string> {
   if (opts.docsSitemap) return readFileSync(opts.docsSitemap, 'utf8')
@@ -96,7 +100,7 @@ function pageTexts(exp: WebflowExport): { chrome: { prefix: number; suffix: numb
 export async function runImport(opts: ImportOptions): Promise<ImportResult> {
   const exp = readExport(opts.exportDir)
   const report = emptyReport()
-  const media = new MediaRegistry()
+  const media = new MediaRegistry(knownMedia(readManifest(opts.target).files))
   let docs: DocsMap | undefined
   const docsItems = exp.collections.get('docs')?.items ?? []
   if (docsItems.length > 0) docs = buildDocsMap(docsItems, sitemapPaths(await docsSitemap(opts)))
@@ -309,6 +313,8 @@ function ownedPrefixes(only: ReadonlySet<WwwCollection> | undefined): string[] |
     const s = WWW_SOURCES[c]
     out.push(s.kind === 'entries' ? `www/content/${s.dir}/` : `www/content/${s.file}`)
   }
+  // the embeds are the blog's: only the blog writes them
+  if (only.has('blog')) out.push(`${EMBEDS_DIR}/`)
   // media are not owned by --only: a folder is shared (blog-categories and blog), so a partial run carries every media
   // entry it does not write and never reports one as gone
   return out
@@ -354,6 +360,10 @@ async function serialize(
         const path = `www/content/${source.dir}/${e.id}.${source.ext}`
         const text = source.ext === 'md' ? markdownFile(e.data, e.body ?? '') : toYaml(e.data)
         out.push({ path, webflowId: e.webflowId, bytes: utf8(await format(text, path, repoRoot)) })
+        for (const em of e.embeds ?? []) {
+          const file = `${EMBEDS_DIR}/${em.name}.html`
+          out.push({ path: file, webflowId: e.webflowId, bytes: utf8(await format(`${em.html}\n`, file, repoRoot)) })
+        }
       }
       continue
     }

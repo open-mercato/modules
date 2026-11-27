@@ -23,6 +23,8 @@ export interface Entry {
   data: Record<string, unknown>
   /** The Markdown body, for collections of `.md` files. */
   body?: string
+  /** Rich-text embeds of the body, written to www/content/embeds/<name>.html (EMBEDS_DIR). */
+  embeds?: { name: string; html: string }[]
 }
 
 export interface Report {
@@ -68,6 +70,8 @@ export interface RunCtx {
 /** The text and link rules for one item, counting what they change into the report under `item`. */
 export class ItemText {
   readonly tally: TextTally = emptyTally()
+  /** Rich-text embeds met so far, in body order; only a collection that keeps embeds (blog) passes `embeds`. */
+  readonly embeds: { name: string; html: string }[] = []
   readonly ctx: RunCtx
   readonly item: string
   readonly mediaDir: string
@@ -104,16 +108,28 @@ export class ItemText {
     return path
   }
 
-  hooks(): ConvertHooks {
+  hooks(embeds = false): ConvertHooks {
     return {
       text: (v, c) => this.text(v, c.code),
       link: (h) => this.link(h),
       image: (s) => this.media(s),
+      ...(embeds ? { embed: (html: string) => this.embed(html) } : {}),
     }
   }
 
-  markdown(html: string, mode: ConvertMode = 'strict'): string {
-    return htmlToMarkdown(html, this.hooks(), mode)
+  /**
+   * Keeps a rich-text embed byte for byte, as Q4 ports a Webflow embed: `<collection>-<slug>-<n>`. Its images stay
+   * on the Webflow CDN and its links are not rewritten; a long dash in it stops the item (A5 holds for every text).
+   */
+  embed(html: string): string {
+    if (/[\u2013\u2014]/.test(html)) throw new ItemStop('an embed holds a long dash; replace it in Webflow')
+    const name = `${this.item.replace('/', '-').toLowerCase()}-${this.embeds.length + 1}`
+    this.embeds.push({ name, html })
+    return name
+  }
+
+  markdown(html: string, mode: ConvertMode = 'strict', embeds = false): string {
+    return htmlToMarkdown(html, this.hooks(embeds), mode)
   }
 
   inline(html: string, mode: ConvertMode = 'strict'): string {
