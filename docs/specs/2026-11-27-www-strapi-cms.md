@@ -8,17 +8,24 @@ comes with this document.
 
 ## 📝 TLDR
 
-- **Who needs it.** The two marketing editors who run www.openmercato.com in Webflow today. After the www switch the
-  content is files in `www/content/` and every change is a pull request (migration spec D2, D10), which they cannot
+- **Who needs it.** The two marketing editors who run www.openmercato.com in Webflow today. Once Webflow editing ends
+  the content is files in `www/content/` and every change is a pull request (migration spec D2, D10), which they cannot
   work with day to day.
 - **Today.** 32 landings, 19 pages, 72 blog posts, 20 case studies, 27 partners, 1 job, 8 dictionary files, `redirects.yaml`,
   9 HTML embeds, 350 media files (71 MB, `www/public/media`) and 15 site files (`www/public/files`) live in the repository (counted on `main`, 27 Nov 2026). The menus and the
   footer are constants in `lib/core/main-site.ts`.
-- **Proposed (future behavior).** A self-hosted Strapi 5 (Community edition) holds all of that content. Publishing
-  fires a dispatch of the `pages` workflow; the build pulls content and media from the Strapi REST API, turns them
-  back into the exact files of today (`yarn om www-pull`), validates them with the existing Zod schemas and builds the
-  same static site on Cloudflare Pages. The first import is a round trip whose output must be byte-identical to the
-  files it started from.
+- **Proposed (future behavior).** A self-hosted Strapi 5 (Community edition) holds all of that content. Its project
+  lives in a `cms/` folder of this repository, outside the catalog's toolchain, and the Strapi host runs a pinned tag
+  of that folder. Publishing fires a dispatch of the `pages` workflow; the build pulls content and media from the
+  Strapi REST API, turns them back into the exact files of today (`yarn om www-pull`), validates them with the existing
+  Zod schemas and builds the same static site on Cloudflare Pages. The first import is a round trip whose output must
+  be byte-identical to the files it started from.
+- **When.** Strapi becomes the source of the merged site on modules.openmercato.com before the www switch (Q10). At
+  that moment Webflow editing stops for good; www.openmercato.com keeps serving the frozen Webflow content until the
+  www switch, which then serves the Strapi content with no second migration.
+- **Decided 27 Nov 2026 (Q1 to Q10).** `cms.openmercato.com` behind a Cloudflare Tunnel with Access on `/admin`,
+  Community edition, a fine-grained token for the dispatch, media on a Docker volume, backups to a Hetzner Storage
+  Box, drafts on a separate Pages project behind Access, and every editor a Super Admin.
 - **Why this shape.** Turning Strapi back into today's files keeps every existing contract (schemas, routes, the
   srcset step of PR #39, `compare-live`, the merge) unchanged, makes parity a `git diff`, and makes rollback to files a
   copy of the last snapshot.
@@ -33,33 +40,36 @@ Made by the repository owner. This spec designs within them and does not reopen 
 | S2b | 27 Nov 2026 | All content of the main site goes to Strapi: blog, case studies, partners, pricing, pages, navigation, footer, SEO fields, redirects where sensible. Every content type and field of `www/` maps to a Strapi type; what stays in code is listed with a reason.                                                                                                                                                                                                       |
 | S3a | 27 Nov 2026 | Publishing in Strapi triggers the site build (a dispatch of the `pages` workflow). The build fetches content from the Strapi API at build time. The site stays fully static on Cloudflare Pages.                                                                                                                                                                                                                                                                     |
 | S4  | 27 Nov 2026 | Out of scope: the marketplace contact form (decided separately: a Pages Function form, the author address from a `contactEmail` field of the module YAML, mail provider not chosen) and analytics (GA and Hotjar only after the www switch).                                                                                                                                                                                                                         |
+| Q1  | 27 Nov 2026 | Option a. The Strapi admin and API answer at `cms.openmercato.com` in the `openmercato.com` zone; the infrastructure owner sets the record. The address survives the move, only the record's target changes.                                                                                                                                                                                                                                                         |
+| Q2  | 27 Nov 2026 | Option a. A Cloudflare Tunnel from the Strapi host, no open port. Cloudflare Access with an email one-time code is in front of `/admin`; the API stays reachable with its token.                                                                                                                                                                                                                                                                                     |
+| Q3  | 27 Nov 2026 | Option a. Strapi Community (free, MIT). The git snapshot of every publish gives the history and audit trail that Community lacks.                                                                                                                                                                                                                                                                                                                                    |
+| Q4  | 27 Nov 2026 | Option a. A fine-grained personal access token of a machine account, this repository only, permission Actions read and write, expiry one year.                                                                                                                                                                                                                                                                                                                       |
+| Q5  | 27 Nov 2026 | Option a. Media on a Docker volume of the Strapi host (the upload provider `local`), in the same backup as the database.                                                                                                                                                                                                                                                                                                                                             |
+| Q6  | 27 Nov 2026 | Option b. The Strapi project lives in a `cms/` folder of this repository with its own `package.json` and lockfile, outside the catalog's dependency list and tooling (The `cms/` folder, below).                                                                                                                                                                                                                                                                     |
+| Q7  | 27 Nov 2026 | Option a. Drafts are rendered on a separate Pages project (for example `open-mercato-www-drafts`) with Cloudflare Access on it.                                                                                                                                                                                                                                                                                                                                      |
+| Q8  | 27 Nov 2026 | Option a. Encrypted backups go to a Hetzner Storage Box.                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Q9  | 27 Nov 2026 | Option b. The marketing editors are Super Admins too, each with a personal account. There is no Editor-role account.                                                                                                                                                                                                                                                                                                                                                 |
+| Q10 | 27 Nov 2026 | Option b. Strapi becomes the source of the live site before the www switch, on the merged site of `modules.openmercato.com` (D11 of the migration spec). Shadow mode comes first; the www switch then serves the Strapi content.                                                                                                                                                                                                                                     |
 
 Effect on the migration spec (PR #23): D2 is superseded by S1. D10 (content pull requests reviewed by the site owner)
 ends for content that lives in Strapi: editors publish there, and the repository keeps code review for code. D5
 (images in the repository) holds until the source switch (Phase 6); after it the media of record are in Strapi and a
 copy rides in the snapshot branch. D6 (Webflow drafts kept as `draft: true`) maps to Strapi drafts.
 
-## 📝 Open Questions (the owner's to decide)
-
-Each has lettered options and a recommended default. The design below is written so it reads under the defaults, but
-none of them is decided: the phase named in each row cannot start until the owner answers it.
-
-| #   | Question                                                   | Options                                                                                                                                                                                                                                                                                                                                                        | Recommended default and why                                                                                                                                                                                                                                                          | Blocks  |
-| --- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| Q1  | Address of the Strapi admin and API, and who sets its DNS. | (a) `cms.openmercato.com` in the `openmercato.com` zone, record set by the infrastructure owner. (b) A name in a zone the owner holds for Cezar, changed at the move. (c) No public name: reachable only through a tunnel or VPN.                                                                                                                              | (a). The address survives the move (only the record's target changes), and GitHub Actions and the editors need a stable public name. (c) locks out CI runners.                                                                                                                       | Phase 2 |
-| Q2  | How the host is exposed.                                   | (a) Cloudflare Tunnel from the Strapi host (no open port) with Cloudflare Access (email one-time code) in front of `/admin`; the API stays reachable with its token. (b) A reverse proxy with its own TLS on an open port, Strapi's login only. (c) Access on the whole host, CI uses an Access service token.                                                 | (a). Community Strapi has no SSO and no second factor; Access adds one for editors at no cost, and a tunnel moves with the container, not with the server. (c) also protects the API but adds a second secret to CI.                                                                 | Phase 2 |
-| Q3  | Strapi Community (free, MIT) or a paid plan.               | (a) Community. (b) A paid self-hosted plan (live preview side by side, content history, review workflows, audit logs, SSO; which plan holds which feature is re-checked in Step 0.1). (c) Community now, re-evaluated after three months of use.                                                                                                               | (a). Two editors, one site: drafts, publish, roles, the media library and the preview button are in Community; the git snapshot of every publish (Architecture) gives history and an audit trail that Community lacks.                                                               | Phase 2 |
-| Q4  | The GitHub credential that starts the build.               | (a) A fine-grained personal access token of a machine account, this repository only, permission Actions read and write, expiry one year. (b) A GitHub App installed on this repository only, permission Actions write, its private key in the Strapi host. (c) A small relay (Worker) holds the GitHub token; Strapi holds only a shared secret for the relay. | (a). It is the smallest permission that can call `workflow_dispatch`, needs no new service, and moves with the Strapi environment. `repository_dispatch` is not used because it needs Contents write, which can push code. (b) is the upgrade if a personal account must not own it. | Phase 4 |
-| Q5  | Where the media files of Strapi live.                      | (a) A Docker volume on the Strapi host (the upload provider `local`). (b) A Cloudflare R2 bucket through the S3 upload provider.                                                                                                                                                                                                                               | (a). Visitors never load media from Strapi (the build copies them into the Pages upload), so R2 brings no speed; a volume needs no Cloudflare token and is in the same backup as the database. (b) makes the move lighter (no media copy) and is a config change later.              | Phase 2 |
-| Q6  | Where the Strapi project (code and config) lives.          | (a) A new small repository, for example `open-mercato/www-cms`. (b) A `cms/` folder in this repository with its own `package.json` and lockfile.                                                                                                                                                                                                               | (a). AGENTS.md rule 1 fixes this repository's dependency list, and Strapi brings a large tree of its own; a separate repository can be handed to the infrastructure owner as a whole. The contract stays here (schemas, pull, push).                                                 | Phase 2 |
-| Q7  | Where editors see a draft rendered as the site.            | (a) A separate Pages project for drafts (for example `open-mercato-www-drafts`) with Cloudflare Access on it. (b) A branch alias of the existing project with Access on all its preview deployments. (c) No hosted draft preview: Strapi's own edit view only, then the published site.                                                                        | (a). Drafts are unannounced posts and must not be public. (b) would also put `www-preview` behind a login, which the RUNBOOK keeps open. Until the owner answers, Phase 5 does not deploy drafts anywhere.                                                                           | Phase 5 |
-| Q8  | Where encrypted backups go.                                | (a) A Hetzner Storage Box. (b) A Cloudflare R2 bucket. (c) Both.                                                                                                                                                                                                                                                                                               | (a). No Cloudflare change, and the move repoints one setting. Backups are encrypted with a key the owner holds, so the target only stores ciphertext.                                                                                                                                | Phase 2 |
-| Q9  | Admin accounts and roles.                                  | (a) The owner and the infrastructure owner are Super Admins; each marketing editor has a personal account with the Editor role. (b) Marketing editors are Super Admins too.                                                                                                                                                                                    | (a). Editors can create, edit and publish every content type, which is the whole job; settings, API tokens and users stay with two people.                                                                                                                                           | Phase 2 |
-| Q10 | When Strapi becomes the source of the live site.           | (a) After the www switch (migration spec C8) is stable, with Strapi running in shadow mode before it. (b) Before the switch, on the merged site of `modules.openmercato.com` (D11).                                                                                                                                                                            | (a). One change at a time, as the migration spec orders the `/run` and www switches (A9). Shadow mode proves parity on every build before the switch, so (a) costs no extra wait.                                                                                                    | Phase 6 |
+Effect of Q10 on the migration spec's Cutover (C1 to C10) and A9. A9 (the catalog's switch first, the main site's
+second) holds, and so does the order of C2 and C4 to C10. What moves is the content part: C1 (freeze) and C3 (final
+Webflow export and delta) leave the C8 sequence and happen at the source switch, after C2 and before C4. C2 is the
+precondition of both switches: in the RUNBOOK's Main site switch it is the merged site stable on
+modules.openmercato.com, the path that replaced the `/run` proxy of A9. D10 ends there, not at C8: after the freeze
+editors work in Strapi, not in pull requests. C6, C8 and C10 change as Phase 6 describes (C6 compares Webflow with the
+freeze commit, C8 compares against the same deployment, C10 copies back everything published since the freeze). The
+migration spec (PR #23, its own branch) is not edited by this PR; Step 6.1 amends its Cutover and the RUNBOOK's Main
+site switch.
 
 ## 📝 Resolved assumptions (autonomous defaults)
 
-Design choices this spec made itself, each the most reversible option. Any of them can be changed before merge.
+Design choices this spec made itself, each the most reversible option. Any of them can be changed before merge. None
+of the owner's answers of 27 Nov 2026 (Q1 to Q10) changes one of them.
 
 | #   | Question                                                              | Applied default                                                                                                                                                                                                                                                                                                                  | Why                                                                                                                                                                                                                                  | Confirm?   |
 | --- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
@@ -75,8 +85,9 @@ Design choices this spec made itself, each the most reversible option. Any of th
 
 ## 📝 Problem Statement
 
-- **Editors lose their tool at the www switch.** Webflow ends at C8 of the migration spec. From then on a typo fix is a
-  branch, a commit and a review, for two people who do not use Git.
+- **Editors lose their tool at the content freeze.** Webflow editing ends at the freeze (C1 of the migration spec) and
+  Webflow itself at C8. From then on, without a CMS, a typo fix is a branch, a commit and a review, for two people who
+  do not use Git.
 - **The content is ready for a CMS but has none.** The migration spec built typed collections (`lib/schema/www-content.ts`,
   15 collections, references checked at build). That model maps cleanly to Strapi types; what is missing is an editor
   and a publish path.
@@ -88,9 +99,9 @@ Design choices this spec made itself, each the most reversible option. Any of th
 
 ## 📝 Proposed Solution
 
-1. **Strapi 5 Community in Docker Compose** (Strapi, PostgreSQL, a backup job, a tunnel), defined in a small repository
-   (Q6) with content types and components as code. In production the Content-Type Builder is read-only, so the model
-   changes only through a reviewed commit.
+1. **Strapi 5 Community in Docker Compose** (Strapi, PostgreSQL, a backup job, a tunnel), defined in the `cms/` folder
+   of this repository (Q6) with content types and components as code. In production the Content-Type Builder is
+   read-only, so the model changes only through a reviewed commit.
 2. **`yarn om www-push`**, the one-off and repeatable import: files of `www/content/` and media of `www/public/media/`
    and `www/public/files/` into Strapi, upserted by slug, idempotent.
 3. **`yarn om www-pull`**, the reverse: Strapi documents and media into the same files, same bytes. It is the only
@@ -99,7 +110,7 @@ Design choices this spec made itself, each the most reversible option. Any of th
    `shadow`, `strapi`). After a good deploy it writes the pulled content to a `www-content` branch, the pinned
    snapshot and the fallback.
 5. **A publish hook in the Strapi project** calls `workflow_dispatch` of `pages` after a quiet period of 60 seconds.
-6. **Draft preview** as a second static build of draft content, behind Access (Q7).
+6. **Draft preview** as a second static build of draft content on its own Pages project behind Access (Q7).
 
 ### Alternatives considered
 
@@ -143,7 +154,7 @@ otherwise.
 - The upload plugin generates responsive formats unless `breakpoints` and `sizeOptimization` are turned off, and
   switches to S3-compatible storage such as R2 through `@strapi/provider-upload-aws-s3`
   ([Media Library](https://docs.strapi.io/cms/features/media-library),
-  [R2 S3 API](https://developers.cloudflare.com/r2/api/s3/)). Taken: formats off (A7), the local provider by default (Q5).
+  [R2 S3 API](https://developers.cloudflare.com/r2/api/s3/)). Taken: formats off (A7), the local provider (Q5).
 - Strapi's data management CLI (`strapi export`, `import`, `transfer`) moves content, media and configuration between
   instances, with optional encryption; admin users and API tokens are not part of it
   ([Data management](https://docs.strapi.io/cms/features/data-management)). Taken: as the portable archive of the move,
@@ -191,22 +202,79 @@ snapshot branch.
 
 ### Components
 
-| Component               | Where                                                                                                                                    | What it does                                                                                                                                                                                                                                                                                               |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Strapi project          | the repository of Q6: `compose.yaml`, `src/api/**`, `src/components/**`, `config/**`, `scripts/backup.sh`, `scripts/restore.sh`, `docs/` | Content types and components as `schema.json` files, upload config (A7), roles seed, the publish hook (`src/index.ts` bootstrap), the preview handler, backup and restore. Strapi version pinned exactly; Node of its image as Strapi supports it (re-checked in Step 0.1), not this repository's Node 24. |
-| `lib/www-cms/model.ts`  | this repository                                                                                                                          | The mapping table between each file collection and its Strapi type: field names, components, relations, media fields. Pure functions `toDocument(entry)` and `fromDocument(doc)`; erasable TypeScript, no Node APIs.                                                                                       |
-| `yarn om www-push`      | `lib/commands/www-push.ts`                                                                                                               | Files into Strapi (API Contracts).                                                                                                                                                                                                                                                                         |
-| `yarn om www-pull`      | `lib/commands/www-pull.ts`                                                                                                               | Strapi into files (API Contracts).                                                                                                                                                                                                                                                                         |
-| `lib/www-cms/source.ts` | this repository                                                                                                                          | One function that decides, from `WWW_CONTENT_SOURCE`, the trigger and the pull result, which content a build uses (Edge Cases). Unit-tested as a table.                                                                                                                                                    |
-| `pages.yml` steps       | this repository                                                                                                                          | Read www content (before the www build), Write www snapshot (a job after `deploy`, `contents: write` on that job only), the `www_content` input of `workflow_dispatch`, the drafts build (Phase 5).                                                                                                        |
-| branch `www-content`    | this repository                                                                                                                          | The pulled files of the last good deploy: `content/**`, `media/**`, `manifest.json` (Strapi `documentId` and `updatedAt` per file, SHA-256 per media file, the pull time). Written only by the snapshot job with `GITHUB_TOKEN`, so it starts no workflow.                                                 |
+| Component               | Where                                                                                                                                                                | What it does                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Strapi project          | `cms/` of this repository (Q6): `compose.yaml`, `Dockerfile`, `src/api/**`, `src/components/**`, `config/**`, `scripts/backup.sh`, `scripts/restore.sh`, `README.md` | Content types and components as `schema.json` files, upload config (A7), roles seed, the publish hook (`src/index.ts` bootstrap), the preview handler, backup and restore. Strapi version pinned exactly; Node of its image as Strapi supports it (re-checked in Step 0.1), not this repository's Node 24.                                                                        |
+| `lib/www-cms/model.ts`  | this repository                                                                                                                                                      | The mapping table between each file collection and its Strapi type: field names, components, relations, media fields. Pure functions `toDocument(entry)` and `fromDocument(doc)`; erasable TypeScript, no Node APIs.                                                                                                                                                              |
+| `yarn om www-push`      | `lib/commands/www-push.ts`                                                                                                                                           | Files into Strapi (API Contracts).                                                                                                                                                                                                                                                                                                                                                |
+| `yarn om www-pull`      | `lib/commands/www-pull.ts`                                                                                                                                           | Strapi into files (API Contracts).                                                                                                                                                                                                                                                                                                                                                |
+| `lib/www-cms/source.ts` | this repository                                                                                                                                                      | One function that decides, from `WWW_CONTENT_SOURCE`, the trigger and the pull result, which content a build uses (Edge Cases). Unit-tested as a table.                                                                                                                                                                                                                           |
+| `pages.yml` steps       | this repository                                                                                                                                                      | Read www content (before the www build), Write www snapshot (a job after `deploy`, `contents: write` on that job only), the `www_content` input of `workflow_dispatch`, the drafts build moves to `pages-drafts.yml` (Phase 5).                                                                                                                                                   |
+| branch `www-content`    | this repository                                                                                                                                                      | The pulled files of the last good deploy: `content/**` (without `embeds/`, and with only the `manual` rules of `redirects.yaml`; a fallback takes the rest from the checkout), `media/**`, `manifest.json` (Strapi `documentId` and `updatedAt` per file, SHA-256 per media file, the pull time). Written only by the snapshot job with `GITHUB_TOKEN`, so it starts no workflow. |
 
 ### No Cezar path in the site build
 
 The site repository knows Strapi only by the variable `STRAPI_URL` (an https address, Q1) and the secret
 `STRAPI_READ_TOKEN`. Nothing in `pages.yml`, `www/` or `lib/` names Cezar, a Docker volume or a host path. The Strapi
-project reads every host-specific value from an `.env` file that is not committed (`.env.example` lists the keys):
-database password, app keys, JWT secrets, the GitHub token, the tunnel token, the backup target and key.
+project reads every host-specific value from `cms/.env` on the host, which is never committed (`.gitignore` lists it,
+`cms/.env.example` lists the keys): database password, app keys, JWT secrets, the GitHub token, the tunnel token, the
+backup target and key.
+
+### The `cms/` folder (Q6)
+
+The Strapi project is a folder of this repository, not a package of it. `cms/` has its own `package.json`, `yarn.lock`
+and `.yarnrc.yml`, so Yarn treats it as a project of its own; its `.yarnrc.yml` restates the root rules (dependency
+scripts off, the 14-day age gate) and names the Strapi packages that need a build step as `dependenciesMeta`
+exceptions, each with a comment. Nothing of its tree enters the root `package.json` or `yarn.lock`, so AGENTS.md rule
+1 holds: the catalog's dependency list does not grow. The root toolchain and `cms/` stay apart as follows.
+
+| Tool                                  | How `cms/` is kept out of the catalog, and the catalog out of `cms/`                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Root workspace and install            | The root `package.json` has no `workspaces` field, so `yarn install` at the root never reads `cms/`. `cms/` installs with `yarn install --immutable` inside the folder.                                                                                                                                                                                                                                                                                  |
+| `yarn check`: `tsc`, `astro check`    | The root `tsconfig.json` includes `lib`, `site/src`, `scripts` and `test` only; `astro check` reads `site/` and `www/`. `cms/` has Strapi's own `tsconfig.json`, compiled by `strapi build` on the Node of the Strapi image. Its TypeScript is still erasable (rule 6), so the same reviewers read it the same way.                                                                                                                                      |
+| `yarn check`: Prettier and check-text | Root Prettier checks the sources of `cms/` with the root config (no new dependency); `.prettierignore` gains the folder's outputs (`cms/node_modules/`, `cms/dist/`, `cms/build/`, `cms/.strapi/`, `cms/types/generated/`, `cms/public/uploads/`). check-text already covers every `*.md`; `cms/src/` and `cms/config/` join its text directories, so help texts are checked for the banned dashes and control characters; the rest of rule 7 is review. |
+| `yarn test`                           | Vitest includes `test/**` only, so no test of `cms/` runs there. One root test reads `cms/src/**/schema.json` as plain JSON, without importing Strapi, and compares it with `lib/www-cms/model.ts` (Step 2.2). `cms/` tests itself with `node --test`, so it adds no test runner.                                                                                                                                                                        |
+| `validate.yml`                        | No trigger change. A PR that changes `cms/` is outside `modules/`, so `yarn check` and `yarn test` run (the drift test with them) without installing `cms/`; its site builds are skipped because `cms/` is not among the paths of Detect site changes.                                                                                                                                                                                                   |
+| `cms.yml` (new)                       | On pull requests and pushes with `paths: ['cms/**']` only: `yarn install --immutable` in `cms/`, `strapi build`, `node --test`, `docker compose config`. `ubuntu-latest`, `contents: read`, no secrets. A change outside `cms/` never starts it.                                                                                                                                                                                                         |
+| `pages.yml`                           | Its `push` trigger gains `paths-ignore: ['cms/**']`, so a merge that changes only `cms/` neither builds nor deploys the site. The `workflow_run`, schedule and `workflow_dispatch` triggers do not change. The reverse holds by construction: no change of this repository redeploys Strapi, because the host runs a tag (below).                                                                                                                        |
+| Dependency updates                    | No Dependabot or Renovate config exists today (no `.github/dependabot.yml`, no `renovate.json`, checked 27 Nov 2026). If one is added, `cms/` gets an entry of its own (`directory: /cms`), so a Strapi update never lands in a root PR. GitHub's dependency graph reads every lockfile, so security alerts for the Strapi tree appear on this repository's Security tab; the owners of `cms/` triage them.                                              |
+| CODEOWNERS                            | A `/cms/` line names the owner and the infrastructure owner; every other path keeps its owner.                                                                                                                                                                                                                                                                                                                                                           |
+| AGENTS.md                             | Its Map gains a `cms/` line: the Strapi project, its own `package.json` and lockfile, not part of the root toolchain (a note for its owner in the PR of Step 2.1).                                                                                                                                                                                                                                                                                       |
+
+#### How the Strapi host deploys from this repository
+
+The host runs a pinned tag of `cms/` from a sparse checkout, and builds the image itself:
+
+```sh
+git clone --filter=blob:none --no-checkout --sparse https://github.com/open-mercato/modules.git www-cms
+cd www-cms && git sparse-checkout set cms && git checkout cms-v1.0.0
+docker compose -f cms/compose.yaml up -d --build
+```
+
+- **Tags.** `cms-v<major>.<minor>.<patch>` on a commit of `main` whose `cms.yml` run is green. A tag ruleset on `cms-v*`
+  limits who can create or move one (an owner click). An upgrade is `git fetch --tags`, a checkout of the new tag and
+  `up -d --build`, after a backup; a downgrade is the previous tag plus the restore of that backup, because Strapi's
+  database migrations run forward only.
+- **Why a sparse checkout, not a release artifact.** An artifact (an image in GitHub Packages or a tarball on a
+  Release) is a published output that needs a yes under rule 3 for each release, a workflow with `packages: write` or
+  `contents: write`, and a host that trusts a build it did not make. The repository is public, so the checkout needs
+  no credential on the host; the image is built from the same lockfile `cms.yml` checked; and the working tree holds
+  only `cms/` (the blob filter fetches no file of other paths). The cost is that the host builds the admin panel at
+  each upgrade, which takes minutes and memory.
+
+#### The hand-over to the infrastructure owner: a folder, not a repository
+
+- **Access.** GitHub has no per-folder write permission. The infrastructure owner either works through pull requests
+  from a fork, merged by a maintainer, or gets write access to this repository. With write access, the `/cms/` line of
+  CODEOWNERS and the rule "require review from code owners" on `main` make their review required for `cms/` and keep
+  the owner's review required for every other path; the access itself is repository-wide (branches, workflow runs),
+  which the owner accepts by granting it.
+- **What they own.** The host, its `cms/.env`, the tunnel, the backup target, the `cms-v*` tags (when the ruleset
+  allows them) and the review of `cms/`. The repository holds no Strapi secret except `STRAPI_READ_TOKEN`, which the
+  owner sets.
+- **The exit.** If they later want a repository of their own, `git subtree split --prefix=cms` gives one with the
+  folder's history. The site side does not change (it knows only `STRAPI_URL`); only the drift test of Step 2.2 goes
+  back to reading a pinned commit of another repository.
 
 ### Shared code and the catalog
 
@@ -248,7 +316,7 @@ components:
 | `partnerIndustries`, `partnerServices`              | `partner-industry`, `partner-service`  | collection | `slug`, `name`, `order`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `partnerLanguages`, `partnerLocations`              | `partner-language`, `partner-location` | collection | `slug`, `name`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `jobs` (1)                                          | `job`                                  | collection | the fields of `jobSchema`; `employmentType` enum with the keys of `EMPLOYMENT_TYPES`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `redirects` (`source: manual` only)                 | `redirect`                             | collection | `from` (text, `RedirectFrom` regex, unique), `to`, `status` (enum 301, 302). The pull appends them after the file's rules with `source: manual`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `redirects` (`source: manual` only)                 | `redirect`                             | collection | `from` (text, `RedirectFrom` regex, unique), `to`, `status` (enum 301, 302). The pull copies the file's other rules (and their comments) from the checkout verbatim and appends these after them with `source: manual`.                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `MAIN_SITE_MENUS`, `MAIN_SITE_LINKS`                | `navigation`                           | single     | repeatable `nav.menu` { `label`, repeatable `nav.item` { `label`, `description`, `href`, `icon` (enum of the keys of `site/src/components/nav-icons.ts`) } }, `links` (repeatable `shared.cta`), `sandbox` (`shared.cta`).                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `MAIN_SITE_FOOTER`, `_FOOTER_OTHER`, `_FOOTER_NOTE` | `footer`                               | single     | `links`, repeatable `footer.group` { `label`, `links` }, `note`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `LANDING_TEMPLATE_TEXT`                             | `landing-template`                     | single     | two components `en` and `pl` with the keys of the constant (`reviewedPrefix`, `sourcesLabel`, `reviewedInline`, `navLabel`, `detailsSummary`, `relatedTitle`, `marks`). It moves to `www/content/landing-template.yaml`; the constant becomes the schema.                                                                                                                                                                                                                                                                                                                                                                           |
@@ -373,8 +441,8 @@ yarn om www-pull --strapi <https url> [--out <dir>] [--drafts] [--status publish
 
 ### `pages` workflow (changes)
 
-- `workflow_dispatch` gains two inputs: `www_content`, an enum of `auto` (default), `publish` (sent by the hook),
-  `drafts` and `snapshot`; and `snapshot`, a commit of `www-content` (only with `www_content: snapshot`, for rollback;
+- `workflow_dispatch` gains two inputs: `www_content`, an enum of `auto` (default), `publish` (sent by the hook)
+  and `snapshot`; and `snapshot`, a commit of `www-content` (only with `www_content: snapshot`, for rollback;
   the build then reads that commit and never Strapi).
 - Step **Read www content** (before the www build), by `WWW_CONTENT_SOURCE`:
   - `files` (default while unset): nothing changes, the build reads `www/content` of the commit.
@@ -385,7 +453,9 @@ yarn om www-pull --strapi <https url> [--out <dir>] [--drafts] [--status publish
   `www-content` as one commit (`www-content: <newest updatedAt>`), skipped when nothing changed. History is kept as the audit
   trail; it grows by new or changed media only, since git stores each file once. `permissions:
 contents: write` on this job only.
-- The drafts build (Phase 5) runs only for `www_content: drafts` and deploys to the target of Q7, never to production.
+- The drafts build (Phase 5) is a workflow of its own, `pages-drafts.yml`, dispatched by the hook, with its own
+  concurrency group, so a draft save never replaces a pending publish run. It deploys to the drafts project of Q7,
+  never to production.
 - The existing `concurrency: pages` group (one running, one pending) is kept; a burst of publishes becomes at most one
   running and one pending build.
 
@@ -395,8 +465,8 @@ contents: write` on this job only.
 - Waits for 60 seconds without a new event (at most 5 minutes from the first), then calls
   `POST /repos/open-mercato/modules/actions/workflows/pages.yml/dispatches` with
   `{"ref": "main", "inputs": {"www_content": "publish"}}` and the token of Q4 from the environment.
-- Draft saves (create, update without publish) start the drafts build the same way with `drafts`, after 120 seconds
-  quiet, only once Q7 is answered.
+- Draft saves (create, update without publish) dispatch `pages-drafts.yml` the same way, after 120 seconds
+  quiet, once the drafts project of Q7 exists (Phase 5).
 - Three tries with backoff on a 5xx or a network error; a 401 or 403 is logged as `dispatch refused: token` and not
   retried. The daily scheduled `pages` run (05:47 UTC) pulls Strapi anyway in `strapi` mode, so a lost dispatch is at
   most a day late.
@@ -405,35 +475,51 @@ contents: write` on this job only.
 
 - **Direction.** Strapi calls GitHub; nothing calls Strapi from outside except editors and the pull. There is no
   inbound webhook endpoint to protect.
-- **What a stolen dispatch token can do.** Actions write cannot be limited to one workflow: with Q4 (a) or (b) the
+- **What a stolen dispatch token can do.** Actions write cannot be limited to one workflow: with the token of Q4 the
   holder can dispatch any workflow of this repository on any branch of it with any inputs (`nightly.yml`,
   `mcp-deploy.yml`), cancel or delete runs, delete caches and disable workflows. It cannot push code or content, and
-  deploys stay safe because environment `cloudflare` accepts only `main`. `pages` checks its own input against the enum
-  and ends on any other value. Q4 (c) is the option that narrows this to `pages.yml`, `ref: main` and the two input
-  values, at the cost of a relay to run; it is the natural upgrade at the move.
+  deploys stay safe because environments `cloudflare` (`pages.yml`) and `mcp` (`mcp-deploy.yml`) accept only `main`; the
+  `main`-only rule of `mcp` is still an owner step in the RUNBOOK (Repository setup), so Step 2.6 makes it a
+  precondition of the token. `pages` checks its own input against the enum and ends on any other value. A relay (a
+  Worker that holds the token, option c of Q4) would narrow this to `pages.yml` and `pages-drafts.yml` on `ref: main`
+  with their fixed inputs, at the cost of a service to run; it is the natural upgrade at the move.
 - **What a stolen read token can do.** Read published and draft content of Strapi. It is a repository secret, not
   available to pull requests from forks, and is rotated with the dispatch token.
-- **Where secrets live.** The GitHub token and the Strapi secrets are in the Strapi host's `.env` (file mode 600, not
-  in the image, not in the database, not in the admin UI). Built-in Strapi webhooks stay unused, so no Super Admin can
-  read a token in the UI.
-- **Rotation.** Both tokens expire within a year; rotation is a RUNBOOK section (new token, update `.env` or the
-  repository secret, restart, one dispatch by hand).
+- **Where secrets live.** The GitHub token and the Strapi secrets are in `cms/.env` on the Strapi host (file mode 600,
+  not in the image, not in the database, not in the admin UI). That stays true with every editor a Super Admin (Q9):
+  built-in Strapi webhooks stay unused, so no account can read the GitHub token in the UI.
+- **What every Super Admin can do (Q9).** Each of the four accounts can read and create API tokens (a full-access token
+  reads drafts and writes every type), change settings (upload settings, built-in webhooks, which could send entry
+  events to any address), and create, change and delete admin users. What none of them can do in production is change
+  the model: the Content-Type Builder is read-only there, so a type or field changes only through a reviewed commit to
+  `cms/`, and the drift test of Step 2.2 keeps it equal to the mapping. Two more doors stay open to every account: the
+  Public role (any Super Admin can grant it `find`, which opens the content API without a token, since Access covers
+  only `/admin`) and the upload settings. The bootstrap of `cms/` resets the Public role to no permission and re-applies
+  the upload settings of A7 at every start; `www-pull` fails when an anonymous `GET /api/<type>` answers 200; and the
+  pull's SHA-256 check against the snapshot manifest names every existing media file whose bytes changed. What remains
+  is in Risks.
+- **Rotation.** Both tokens expire within a year; rotation is a RUNBOOK section (new token, update `cms/.env` or the
+  repository secret, restart, one dispatch by hand). API tokens made in the admin UI are listed and reviewed at the
+  same time; any not named in the RUNBOOK is deleted.
 
 ## 📝 UI/UX
 
-- **Editors work in the Strapi admin** at the address of Q1, behind Access (Q2). Content types are grouped as the site
+- **Editors work in the Strapi admin** at `cms.openmercato.com/admin` (Q1), behind Access with an email one-time code
+  (Q2), each with a personal Super Admin account (Q9). Content types are grouped as the site
   is: Pages and Landings, Blog, Case studies, Partners, Careers, Site (navigation, footer, landing template,
   redirects). Edit views hide `webflowId` and order fields as the site reads them.
-- **Publish means live after the next build.** Publish, then about 60 seconds of quiet, then the `pages` build (about the
-  length of a merged build today). The Strapi project adds a short help text on every type: "Published changes are on
-  www.openmercato.com when the next site build ends, a minute after the last publish at the earliest."
+- **Publish means live after the next build.** Publish, then about 60 seconds of quiet, then the `pages` build (about
+  the length of a merged build today). The Strapi project adds a short help text on every type: "Published changes are
+  on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the
+  site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages." The second sentence goes
+  at C8 (Step 6.4).
 - **When a publish cannot go live.** The live site keeps its last good version. The run summary lists the problems by
   document and field, and A9's single issue in this repository carries the same list. Strapi field rules (required,
   regex, max) catch most problems at save.
 - **Preview.** The Preview button of Strapi 5 opens the draft build at the document's path (`/blog-posts/<slug>`,
-  `/<landing slug>`, and so on, from the same route map as the site). If the drafts build failed validation, the draft
-  site's page for that path is a plain list of the problems, so the editor sees why. Until Q7 is answered there is no
-  Preview button.
+  `/<landing slug>`, and so on, from the same route map as the site). The draft build lives on its own Pages project
+  behind Access (Q7). If the drafts build failed validation, the draft site's page for that path is a plain list of
+  the problems, so the editor sees why. Until Phase 5 ships there is no Preview button.
 - **Slugs.** Changing the slug of a published entry needs a redirect from the old path (API Contracts, Removed URLs);
   the help text of every `slug` field says so.
 
@@ -441,20 +527,20 @@ Prototype: none. The editor UI is Strapi's own admin; the site's look does not c
 
 ## 📝 Edge Cases & Failure Scenarios
 
-| Case                                                                                                       | What happens                                                                                                                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Strapi is down or times out, build started by a publish (`www_content: publish`)                           | The build fails at Read www content with `Strapi unreachable: <status>`. Nothing deploys; the live site keeps the last good version. The hook does not retry a failed build; the next publish or the daily run does.                                                                                  |
-| Strapi is down, any other build (push to main, catalog data, schedule)                                     | The build uses the `www-content` snapshot, adds a warning and the line `Main site content from snapshot <sha> of <date>: Strapi unreachable` to the summary, updates the issue of A9 and deploys. The catalog keeps its several deploys a day.                                                        |
-| Strapi is down and there is no snapshot yet                                                                | The build fails. This happens only before the first good `strapi` deploy, which Phase 6 rules out by running `shadow` first.                                                                                                                                                                          |
-| Strapi answers, but the content is invalid (missing alt, a fourth stat, a removed slug without a redirect) | A publish build fails with every problem listed by document and field. Any other build falls back to the snapshot as in the row above, with `Strapi content invalid` as the reason. The live site keeps the last good version either way, and the issue of A9 lists the problems.                     |
-| An editor deletes a media file still used by a published entry                                             | Strapi clears the field; the pull fails the schema on a required image, as above. An optional image just disappears from the page, as the editor asked.                                                                                                                                               |
-| A published slug changes without a redirect                                                                | The pull fails naming the old path (D3).                                                                                                                                                                                                                                                              |
-| Two publishes 20 seconds apart                                                                             | One dispatch after 60 seconds of quiet. If a build is already running, GitHub keeps one pending run; later dispatches replace it.                                                                                                                                                                     |
-| The dispatch token expired                                                                                 | The hook logs `dispatch refused: token`; the daily run still publishes. Rotation is in the RUNBOOK; GitHub mails the token owner before expiry.                                                                                                                                                       |
-| A publish lands while `WWW_CONTENT_SOURCE` is `files` or `shadow`                                          | The build runs and reads the files (or only compares). Editors are told in Phase 6 when Strapi becomes the source.                                                                                                                                                                                    |
-| The Strapi model and the Zod schemas drift (a field added on one side)                                     | The pull's mapping table names unknown or missing fields and exits 1 (then the rows above apply). A model change ships as one PR here (schema, mapping, test fixture, and a migration of the `www-content` snapshot so a fallback still validates) and one in the Strapi repository, merged together. |
-| Strapi or Postgres is upgraded                                                                             | Pinned versions; an upgrade is a PR in the Strapi repository, tested on a restored copy first (Backup).                                                                                                                                                                                               |
-| Somebody edits `www/content` in a PR after the source switch                                               | Overwritten by the pull at the next build. Phase 6 adds a check to `validate.yml` that fails a PR touching `www/content/**` (except `embeds/` and `redirects.yaml`) while the source is `strapi`.                                                                                                     |
+| Case                                                                                                       | What happens                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Strapi is down or times out, build started by a publish (`www_content: publish`)                           | The build fails at Read www content with `Strapi unreachable: <status>`. Nothing deploys; the live site keeps the last good version. The hook does not retry a failed build; the next publish or the daily run does.                                                                                                                                                      |
+| Strapi is down, any other build (push to main, catalog data, schedule)                                     | The build uses the `www-content` snapshot, adds a warning and the line `Main site content from snapshot <sha> of <date>: Strapi unreachable` to the summary, updates the issue of A9 and deploys. The catalog keeps its several deploys a day.                                                                                                                            |
+| Strapi is down and there is no snapshot yet                                                                | The build fails. This happens only before the first good `strapi` deploy, which Phase 6 rules out by running `shadow` first.                                                                                                                                                                                                                                              |
+| Strapi answers, but the content is invalid (missing alt, a fourth stat, a removed slug without a redirect) | A publish build fails with every problem listed by document and field. Any other build falls back to the snapshot as in the row above, with `Strapi content invalid` as the reason. The live site keeps the last good version either way, and the issue of A9 lists the problems.                                                                                         |
+| An editor deletes a media file still used by a published entry                                             | Strapi clears the field; the pull fails the schema on a required image, as above. An optional image just disappears from the page, as the editor asked.                                                                                                                                                                                                                   |
+| A published slug changes without a redirect                                                                | The pull fails naming the old path (D3).                                                                                                                                                                                                                                                                                                                                  |
+| Two publishes 20 seconds apart                                                                             | One dispatch after 60 seconds of quiet. If a build is already running, GitHub keeps one pending run; later dispatches replace it.                                                                                                                                                                                                                                         |
+| The dispatch token expired                                                                                 | The hook logs `dispatch refused: token`; the daily run still publishes. Rotation is in the RUNBOOK; GitHub mails the token owner before expiry.                                                                                                                                                                                                                           |
+| A publish lands while `WWW_CONTENT_SOURCE` is `files` or `shadow`                                          | The build runs and reads the files (or only compares). Before the freeze editors do not edit Strapi; `shadow` names any difference, removed before the switch (Phase 6).                                                                                                                                                                                                  |
+| The Strapi model and the Zod schemas drift (a field added on one side)                                     | The pull's mapping table names unknown or missing fields and exits 1 (then the rows above apply). A model change ships as one PR here (schema, mapping, test fixture, and a migration of the `www-content` snapshot so a fallback still validates) and the `schema.json` of `cms/`, in the same commit; the drift test of Step 2.2 fails a PR that changes one side only. |
+| Strapi or Postgres is upgraded                                                                             | Pinned versions; an upgrade is a PR that changes `cms/`, tested on a restored copy first (Backup), then a new `cms-v*` tag.                                                                                                                                                                                                                                               |
+| Somebody edits `www/content` in a PR after the source switch                                               | Overwritten by the pull at the next build. Phase 6 adds a check to `validate.yml` that fails a PR touching `www/content/**` (except `embeds/` and `redirects.yaml`) or the media folders while the source is `strapi`.                                                                                                                                                    |
 
 ## 📝 Migration of today's files
 
@@ -468,20 +554,57 @@ Prototype: none. The editor UI is Strapi's own admin; the site's look does not c
    `diff -r` of `dist-www` must be empty (the build is a function of the files, so step 3 implies it; the diff catches a
    build that reads anything else). Then `yarn om compare-live --baseline <report of the files build> --candidate
 <the pull build served by wrangler pages dev>` with the migration spec's checks, no planned differences.
-5. **Shadow (Phase 6).** `WWW_CONTENT_SOURCE=shadow` on `pages` until the switch: every build reports `0 files differ`
-   or names the difference.
-6. **Freeze and switch.** The content freeze of the migration spec (C1) is the moment of the final `www-push`; after
-   it, edits go to Strapi only, and the owner sets `WWW_CONTENT_SOURCE=strapi` (Q10).
+5. **Shadow (Phase 6).** `WWW_CONTENT_SOURCE=shadow` on `pages` from Step 4.3 on: every build reports
+   `0 files differ` or names the difference.
+6. **Freeze and source switch.** The content freeze of the migration spec (C1) is the moment of the final `www-push`;
+   after it, edits go to Strapi only. Shadow must show `0 files differ` on the commit of that push before the owner sets
+   `WWW_CONTENT_SOURCE=strapi`. This happens on the merged site of modules.openmercato.com, before the www switch (Q10).
+
+### Before and after the www switch (Q10)
+
+Strapi becomes the source of the live site while www.openmercato.com still serves Webflow. The live site here is the
+merged site on modules.openmercato.com (D11 of the migration spec: not indexed, canonical addresses on www).
+
+| Period                                                  | Editors edit                                                                                                                                          | www.openmercato.com           | modules.openmercato.com          |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | -------------------------------- |
+| Until the freeze                                        | Webflow only. Strapi is not edited: its copy must equal the files, and `shadow` names every difference, which is removed in Strapi before the switch. | Webflow, live edits           | the files of `main`              |
+| Freeze day (C1, C3, final `www-push`, shadow, `strapi`) | Nothing. Target: one working session.                                                                                                                 | Webflow, frozen               | the files of `main`, then Strapi |
+| From the source switch to the www switch                | Strapi only. Webflow is not edited again.                                                                                                             | Webflow, frozen at the freeze | Strapi, every publish            |
+| From the www switch (C8) on                             | Strapi only.                                                                                                                                          | Strapi, every publish         | the same deployment              |
+
+- **The freeze day, in order.** C2 is green (the merged site stable on modules.openmercato.com). C1: Webflow editing
+  stops. C3: the final Webflow export and its delta PR into `www/content` are merged. The owner runs the final
+  `www-push` from that commit of `main` (the freeze commit, recorded in the RUNBOOK). The next `pages` run in `shadow`
+  shows `0 files differ`; only then `WWW_CONTENT_SOURCE=strapi`, one dispatch by hand, `compare-live` against the
+  previous build with no planned difference. From here editors work in Strapi.
+- **The two sites diverge on purpose.** Every publish after the freeze reaches modules.openmercato.com only; the
+  indexed site keeps the Webflow state of the freeze. The divergence is exactly the difference between `www/content`
+  of the freeze commit and the latest `www-content` commit (same formats), so it is listed by one `git diff`. A fix
+  that cannot wait for C8 (a wrong price, a legal text) is made in Strapi and, with the owner's yes, copied by hand
+  into Webflow; the RUNBOOK keeps the list of such pages. Webflow never becomes a source again.
+- **C8 needs no second migration.** C3 is not repeated at C8: Strapi already holds everything. C4 (the Webflow 301
+  list) still runs before C8, as a PR on `redirects.yaml`, which stays a file. C6 compares Webflow with a merged build
+  on Cezar of the current `main` with the content of the freeze commit (`www/content` without `redirects.yaml`,
+  `www/public/media` and `www/public/files` checked out from that commit; served by `wrangler pages dev`, as in step 4
+  above). The code and the C4 redirects are then the ones that go live, and the pass rule stays `0 failed`, with the
+  hand-copied pages of the list as `--planned` differences; the person's side by side review of C6
+  uses `www-preview`, which shows the current Strapi content. C8 adds the custom domain to the project that already
+  serves the Strapi content, and its `compare-live --baseline` is a report of that same deployment on its `pages.dev`
+  address taken just before the switch, so C8 checks the switch, not the content.
+- **Spacing.** The source switch and C8 are never on the same day: C8 waits until Strapi builds have deployed for 7
+  days without a snapshot fallback, so each change keeps its own rollback (the reason of A9 of the migration spec).
+- **C10 grows with the freeze.** A rollback of the www switch points www back to the frozen Webflow; everything
+  published in Strapi since the freeze, not only since C8, is copied to Webflow by hand from that `git diff`.
 
 ## 📝 Backup and restore
 
 - **Nightly** on the Strapi host, by `scripts/backup.sh` in a container of the Compose file: `pg_dump --format=custom`
   of the database and a tar of the uploads volume, encrypted with `age` to a public key whose private key the owner
   holds, sent to the target of Q8. Kept 14 daily and 8 weekly.
-- **Weekly** a `strapi export` archive (content, media, config; encrypted with its own key option) as the portable
-  copy for the move. Admin users and API tokens are not in it; they are recreated (two Super Admins, two editors).
-- **Last resort.** The `www-content` branch holds every published state since the switch. `www-push` from it into an
-  empty Strapi restores the published content and media without any backup (drafts and users excluded).
+- **Weekly** a `strapi export` archive (content, media, config; encrypted with its own key option) as the portable copy
+  for the move. Admin users and API tokens are not in it; they are recreated (four personal Super Admin accounts, Q9).
+- **Last resort.** The `www-content` branch holds every published state since the source switch. `www-push` from it into
+  an empty Strapi restores the published content and media without any backup (drafts and users excluded).
 - **Restore drill.** `scripts/restore.sh` into a fresh Compose project, then `www-pull --check` against the snapshot:
   equal means the backup is good. Run once in Phase 3 and before the move; the RUNBOOK records the date.
 
@@ -489,23 +612,24 @@ Prototype: none. The editor UI is Strapi's own admin; the site's look does not c
 
 Because the site knows only `STRAPI_URL` and two secrets, the move is:
 
-1. A host with Docker; clone the Strapi repository; copy `.env` (new secrets where the new host differs: tunnel
-   token, backup target).
+1. A host with Docker; the sparse checkout of the current `cms-v*` tag (The `cms/` folder, above); copy `cms/.env`
+   (new secrets where the new host differs: tunnel token, backup target).
 2. Restore the latest backup (`scripts/restore.sh`), then `www-pull --check` against the snapshot.
 3. Stop writes on Cezar (editors told; a short freeze), take a final backup, restore it on the new host.
 4. Point the DNS record of Q1 at the new host (or move the tunnel). `STRAPI_URL` does not change.
 5. One `pages` dispatch by hand; `www-pull --check` passes; Cezar's Strapi is stopped and its volumes kept for 30 days.
 
-Nothing in this repository changes for the move. If the infrastructure owner prefers R2 for media (Q5 (b)), it is a
+Nothing in this repository changes for the move (CODEOWNERS of `/cms/` already names the infrastructure owner). If the
+infrastructure owner later prefers R2 for media (option b of Q5), it is a
 change of the upload provider plus a one-time copy, done before or after the move, not during it.
 
 ## 📝 Rollback to files
 
-| Level                  | When                   | How                                                                                                                                                                                                                                                                                                                                      | Loss                                         |
-| ---------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| One bad publish        | A wrong text went live | Fix or unpublish in Strapi and publish again. With Strapi broken: dispatch `pages` on `main` with `www_content: snapshot` and `snapshot: <sha>` of an earlier `www-content` commit; it builds from that commit without reading Strapi. After the switch the snapshot branch is the only rollback source (the files of `main` are stale). | none                                         |
-| Strapi lost            | Host or database gone  | Restore from backup; or `www-push` from the snapshot into a new Strapi.                                                                                                                                                                                                                                                                  | drafts since the last backup                 |
-| Back to files for good | The owner ends Strapi  | A PR copies `content/**` and `media/**` of `www-content` into `www/content` and `www/public`; `WWW_CONTENT_SOURCE` set to `files` (or unset). The formats are the same, so the PR is a plain diff.                                                                                                                                       | unpublished drafts (kept in the last backup) |
+| Level                  | When                   | How                                                                                                                                                                                                                                                                                                                                             | Loss                                         |
+| ---------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| One bad publish        | A wrong text went live | Fix or unpublish in Strapi and publish again. With Strapi broken: dispatch `pages` on `main` with `www_content: snapshot` and `snapshot: <sha>` of an earlier `www-content` commit; it builds from that commit without reading Strapi. After the source switch the snapshot branch is the only rollback source (the files of `main` are stale). | none                                         |
+| Strapi lost            | Host or database gone  | Restore from backup; or `www-push` from the snapshot into a new Strapi.                                                                                                                                                                                                                                                                         | drafts since the last backup                 |
+| Back to files for good | The owner ends Strapi  | A PR copies `content/**` and `media/**` of `www-content` into `www/content` and `www/public`; `WWW_CONTENT_SOURCE` set to `files` (or unset). The formats are the same, so the PR is a plain diff.                                                                                                                                              | unpublished drafts (kept in the last backup) |
 
 ## 📝 Risks & Impact Review
 
@@ -515,11 +639,25 @@ change of the upload provider plus a one-time copy, done before or after the mov
   pinned versions. The move (S1) ends this.
 - **A second deployable system.** A Strapi outage stops publishing, not the site (Edge Cases). The daily run and the
   snapshot bound the damage.
-- **Model lock-in in two repositories.** A field change needs two PRs merged together; the pull's strict mapping makes
-  drift fail loudly rather than lose data.
+- **The model in two places, one repository (Q6).** A field lives in the Zod schema, the mapping and a `schema.json`
+  of `cms/`. All three change in one PR; the drift test (Step 2.2) fails a PR that changes one side only, and the pull's
+  strict mapping makes any drift at run time fail loudly rather than lose data.
+- **A Strapi tree inside the catalog repository (Q6).** The clone grows by `cms/` and its lockfile; GitHub's security
+  alerts for the Strapi tree appear on this repository; `cms.yml` adds CI minutes on `cms/` changes only. Write access
+  for the infrastructure owner is repository-wide, so CODEOWNERS and the code-owner review rule on `main` carry the
+  boundary, not the permission. The exit to a repository of its own is a `git subtree split` (The `cms/` folder).
+- **Every editor is a Super Admin (Q9).** Any of the four accounts can create a full-access API token, change settings,
+  add a built-in webhook or manage users, so one taken-over account can read every draft or change every document.
+  What remains as mitigation: Access with an email one-time code in front of `/admin` (a password alone is not
+  enough), personal accounts only and no shared login, the `www-content` history as the audit trail of every published
+  change, the model read-only in production, and the token review at every rotation (Webhook path and its security).
+- **The freeze is longer (Q10).** From the source switch to C8 the indexed site does not change unless a page is
+  copied into Webflow by hand, and a rollback at C10 must copy back everything published since the freeze. The 7-day
+  spacing is a minimum; the freeze day records a target date for C8 in the RUNBOOK, and when C8 slips past it the
+  owner decides again whether to wait or to copy the divergence into Webflow.
 - **Draft media are public by URL.** Strapi's local provider serves `/uploads/*` without a token. File names carry a
-  hash, but a draft's image can be fetched by anyone who has its address. Acceptable for marketing images; Q2 (c) or
-  Q5 (b) with a private bucket closes it if needed.
+  hash, but a draft's image can be fetched by anyone who has its address. Acceptable for marketing images; Access on the
+  whole host or a private R2 bucket closes it if needed.
 - **Build time and size.** The pull adds one paged read per type and, after the first run, only new media. The 71 MB
   of media move from `main` to Strapi and the snapshot branch at the switch; `main` keeps today's copy until the
   rollback window ends, then a PR removes it.
@@ -527,28 +665,33 @@ change of the upload provider plus a one-time copy, done before or after the mov
   those PRs (AGENTS.md rule 1). The catalog-only and merged layouts keep their bytes while `WWW_CONTENT_SOURCE` is
   unset.
 - **Dependencies.** None added to this repository: the pull and push use `fetch` of Node 24, `yaml`, `zod` and Prettier,
-  which the repository already has. Strapi's dependencies live in its own repository (Q6).
-- **Rules honored.** Rule 3: the new repository, the tokens, DNS and Cloudflare settings are the owner's actions; no
+  which the repository already has. Strapi's dependencies live in `cms/package.json` and `cms/yarn.lock` (Q6); the root
+  lockfile does not change.
+- **Rules honored.** Rule 1: the root dependency list does not grow (The `cms/` folder). Rule 3: the `cms-v*` tags,
+  the tokens, DNS, the drafts Pages project and Cloudflare settings are the owner's actions; no
   step here does them. Rule 6: new TypeScript is erasable. Rule 7: help texts and summaries follow it. Rule 8: no typed
   counts. Rule 9: the commands are `www-push` and `www-pull`, the keys carry no `catalog` or `directory`.
 
 ## 📋 Phasing
 
-- **Phase 0: checks and answers.** Re-check the cited pages, record the owner's answers to Q1 to Q10. No code.
+- **Phase 0: checks and answers.** Re-check the cited pages (Step 0.1, open). The owner's answers to Q1 to Q10 are
+  recorded (Step 0.2, done in this PR). No code.
 - **Phase 1: the mapping, offline.** Navigation, footer and landing template become content files; the mapping table
   and its byte round trip over today's files. Ships alone; the site does not change.
-- **Phase 2: the Strapi project.** The repository of Q6 with Compose, types, roles, hook, backup. Ends with a branch
-  and a ready PR description (rule 3); nothing runs on Cezar yet.
+- **Phase 2: the Strapi project.** PRs in this repository that add `cms/` (Q6) with Compose, types, roles, hook,
+  backup, and keep it out of the root toolchain. Nothing runs on Cezar yet, and no change of `cms/` builds the site.
 - **Phase 3: push, pull and parity on Cezar.** Import, byte parity, built-site parity, restore drill.
 - **Phase 4: `pages` reads Strapi.** The variable, the snapshot branch, the fallback, the dispatch input. Default
-  `files`, so it ships without changing the site.
-- **Phase 5: draft preview.** After Q7.
-- **Phase 6: the switch.** Shadow, then `strapi`, then the `www/content` guard and the RUNBOOK sections.
+  `files`, so it ships without changing the site; it ends with `shadow` on.
+- **Phase 5: draft preview.** The drafts build on its own Pages project behind Access (Q7).
+- **Phase 6: the source switch, then the www switch.** Shadow until `0 files differ`, the freeze and the final
+  `www-push`, then `strapi` on the merged site of modules.openmercato.com (Q10). The www switch (C8) follows later and
+  serves the same Strapi content.
 
 ## 📋 Implementation Plan
 
-Each step is one PR (or one PR description for the other repository), leaves `yarn check` and `yarn test` green, and
-names its test. Steps marked Owner are the owner's actions, not PRs.
+Each step is one PR in this repository, leaves `yarn check` and `yarn test` green (and `cms.yml` green when it
+changes `cms/`), and names its test. Steps marked Owner are the owner's actions, not PRs.
 
 ### Phase 0: checks and answers
 
@@ -556,7 +699,7 @@ names its test. Steps marked Owner are the owner's actions, not PRs.
 spec where a page differs (exact Strapi 5 minor, Node versions of its image, Preview and roles in Community, the data
 management contents, the token permissions). Test: the PR lists each URL with what it says.
 
-0.2. Owner: answer Q1 to Q10 in this spec (a docs PR).
+0.2. Done 27 Nov 2026: the owner's answers to Q1 to Q10 are in Decisions, and the spec reads under them.
 
 ### Phase 1: the mapping, offline
 
@@ -564,6 +707,12 @@ management contents, the token permissions). Test: the PR lists each URL with wh
 `www/content/navigation.json` and `footer.json`, with Zod schemas in `lib/schema/www-content.ts`; `main-site.ts`
 re-exports the same names from the JSON. Test: the catalog and merged builds are byte-identical before and after
 (`diff -r dist`), and `yarn om pages-site --check` passes.
+
+1.1a. Move the YAML comments of `www/content/**` out of the content: 17 of the 19 files of `www/content/pages/` carry
+`#` comments (counted 27 Nov 2026) that a Strapi document cannot hold. Notes on the structure go to the block schemas
+of `lib/schema/www-content.ts`, notes on Webflow quirks to the import manifest. `redirects.yaml` keeps its comments:
+the pull copies its non-`manual` part from the checkout verbatim (Data Model, `redirect`). Test: no file of
+`www/content` outside `redirects.yaml` has a comment line, and the merged build is byte-identical before and after.
 
 1.1b. Move `LANDING_TEMPLATE_TEXT` (today a constant in `lib/schema/www-content.ts`) into
 `www/content/landing-template.yaml`, a `file` collection with its own schema; the landing template reads the entry.
@@ -578,27 +727,41 @@ fixture maps to valid files.
 1.3. `lib/www-cms/source.ts`: the decision table of Edge Cases (source variable, trigger, pull result: unreachable,
 invalid or good, to `pull`, `snapshot` or `fail`, plus `www_content: snapshot` with a commit). Test: one case per row.
 
-### Phase 2: the Strapi project (other repository, rule 3)
+### Phase 2: the Strapi project in `cms/` (Q6)
 
-2.1. Compose (Strapi pinned, PostgreSQL pinned, backup job, tunnel), `.env.example`, a non-root user, upload config
-(A7, 25 MiB, the provider of Q5). Test: `docker compose config` and a start on a workstation or Cezar with an empty
-database.
+2.1. The folder and its boundary: `cms/package.json`, `cms/yarn.lock`, `cms/.yarnrc.yml`, Compose (Strapi pinned,
+PostgreSQL pinned, backup job, tunnel), `Dockerfile`, `.env.example`, a non-root user, upload config (A7, 25 MiB, the
+local provider of Q5); `.gitignore` gains `cms/.env`; `.prettierignore`, the check-text directories, the `paths-ignore`
+of the `pages` push trigger, the new `cms.yml` and the `/cms/` line of CODEOWNERS as in The `cms/` folder; a note for
+the owner of AGENTS.md (the Map line). Test: the root `yarn install --immutable` leaves the root `yarn.lock`
+unchanged; `cms.yml` passes `docker compose config` and a start with an empty database; a test of the workflow files
+asserts the `paths-ignore` of `pages.yml` and the `paths` of `cms.yml`.
 
-2.2. Content types and components of the Data Model as `schema.json`, with the field rules Strapi can hold (required,
-regex, enums, max). Test: a script compares the Strapi model with `lib/www-cms/model.ts` of a pinned commit of this
-repository and fails on a difference.
+2.2. Content types and components of the Data Model as `schema.json` in `cms/src/`, with the field rules Strapi can
+hold (required, regex, enums, max). Test: a root test (`test/www-cms/model-drift.test.ts`) reads those JSON files and
+compares them with `lib/www-cms/model.ts` of the same commit, failing on a difference. In one repository there is no
+pinned commit to fetch and no second CI to keep in step: a PR that changes one side without the other is red in
+`yarn test`.
 
-2.3. Roles seed (Q9), help texts, edit view layout, Content-Type Builder read-only in production. Test: a seeded
-Editor can publish a post and cannot open Settings.
+2.3. Roles seed (Q9): four personal Super Admin accounts (the owner, the infrastructure owner, the two editors), their
+addresses listed in `cms/.env` and each first password set through Strapi's invitation link (no password in
+`.env`), no shared login and no Editor-role account; help texts, edit view layout, Content-Type Builder read-only
+in production, the A7 upload settings re-applied at start. Test: in production mode a Super Admin can publish a
+post and a request to change a content type is refused; after a start the Public role has no permission; the seed
+refuses an account list with a repeated or role address (`admin@`, `marketing@`).
 
-2.4. The publish hook and the preview handler (the handler stays off until Q7). Test: unit test with a fake GitHub
-endpoint: a burst of events gives one dispatch with the fixed body; a 403 is not retried.
+2.4. The publish hook and the preview handler (the handler stays off until Phase 5). Test: `node --test` with a fake
+GitHub endpoint: a burst of events gives one dispatch with the fixed body; a 403 is not retried.
 
-2.5. `scripts/backup.sh`, `scripts/restore.sh`, `docs/` (operate, rotate tokens, move). Test: backup then restore into
-a second Compose project gives the same `www-pull --check` result.
+2.5. `cms/scripts/backup.sh` (to the Hetzner Storage Box of Q8), `cms/scripts/restore.sh`, `cms/README.md` (operate,
+rotate tokens, deploy a tag, move). Test: in `cms.yml`, backup to a local target and restore into a second
+Compose project give the same `pg_dump` listing and the same SHA-256 of every upload. The `www-pull --check` drill
+follows in Step 3.3.
 
-2.6. Owner: create the repository, push the branch, merge it; DNS of Q1, tunnel and Access of Q2, the machine account
-and token of Q4, the backup target of Q8.
+2.6. Owner: merge the PRs of Phase 2 and create the first `cms-v*` tag with its ruleset; the record
+`cms.openmercato.com` (Q1, set by the infrastructure owner); the tunnel and Access on `/admin` (Q2); the machine
+account and its token (Q4), after the `main`-only rule of environment `mcp` is set; the Storage Box (Q8); the
+sparse checkout of the tag on Cezar.
 
 ### Phase 3: push, pull and parity on Cezar
 
@@ -614,41 +777,58 @@ untouched.
 
 ### Phase 4: `pages` reads Strapi (default unchanged)
 
-4.1. `pages.yml`: the `www_content` and `snapshot` inputs, Read www content with `files`, `shadow` and `strapi`, the snapshot job,
-`STRAPI_URL` and `STRAPI_READ_TOKEN` read only in that step. Test: with the variable unset the catalog-only and merged
-uploads are byte-identical to before (the existing checks); `source.ts` tests cover the branches; a dispatch with
-`www_content: snapshot` on a test commit of `www-content` builds that commit.
+4.1. `pages.yml`: the `www_content` and `snapshot` inputs, Read www content with `files`, `shadow` and `strapi`, the
+snapshot job, `STRAPI_URL` and `STRAPI_READ_TOKEN` read only in that step. Test: with the variable unset the
+catalog-only and merged uploads are byte-identical to before (the existing checks); `source.ts` tests cover the
+branches; the build job with `www_content: snapshot` on a test commit of `www-content` builds that commit (run on a
+branch, where the deploy job does not run, never a deploy to production).
 
-4.2. A9: on a failed `publish` build or a snapshot fallback, one issue in this repository created or updated with the problem list (title
-fixed, no assignee, no mention). Test: unit test of the issue body from a pull report.
+4.2. A9: on a failed `publish` build or a snapshot fallback, one issue in this repository created or updated with the
+problem list (title fixed, no assignee, no mention). Test: unit test of the issue body from a pull report.
 
-4.3. Owner: add the secret and the variable `STRAPI_URL`; set `WWW_CONTENT_SOURCE=shadow`.
+4.3. Owner: add the secret and the variable `STRAPI_URL` (`https://cms.openmercato.com`); set
+`WWW_CONTENT_SOURCE=shadow`.
 
-### Phase 5: draft preview (after Q7)
+### Phase 5: draft preview (Q7)
 
-5.1. The drafts build (`www_content: drafts`): `www-pull --status draft --drafts`, `PAGES_NOINDEX=1`, deploy to the
-target of Q7; on invalid content a problem page per path on that protected target. The public run prints counts
+5.0. Owner: create the Pages project for drafts (for example `open-mercato-www-drafts`), put Cloudflare Access on all
+its hostnames, and give the deploy token of environment `cloudflare` access to it.
+
+5.1. The drafts build, `pages-drafts.yml`: `www-pull --status draft --drafts`, `PAGES_NOINDEX=1`, deploy to the
+drafts project; on invalid content a problem page per path on that protected project. The public run prints counts
 only, uploads no artifact and never echoes draft text (A8). Test: the build of the fixture in drafts mode routes the
 draft documents and writes noindex headers; a test greps the job log of a fixture run for a draft title and fails on
 a match.
 
-5.2. Turn on the preview handler and the draft-save dispatch in the Strapi project. Test: the handler maps each type
-to its route (the route map is a shared JSON written by this repository's build).
+5.2. Turn on the preview handler and the draft-save dispatch in `cms/`. Test: the handler maps each type to its route
+(the route map is a JSON file in this repository that the site build and the handler both read, at the same commit).
 
-### Phase 6: the switch
+### Phase 6: the source switch, then the www switch (Q10)
 
-6.1. Owner: final `www-push` at the content freeze, then `WWW_CONTENT_SOURCE=strapi` (timing per Q10), one dispatch by
-hand, `compare-live` against the previous build.
+6.1. Docs: amend the migration spec's Cutover (PR #23, its own branch) and the RUNBOOK's Main site switch as Effect of
+Q10 describes (C1 and C3 at the source switch, the C6 build of the freeze commit, the C8 baseline, C10 since the
+freeze), and add the RUNBOOK sections: publishing, the freeze day, Strapi down, rotation, backup, deploying a `cms-v*`
+tag, the move, rollback. Test: check-text and Prettier on the files.
 
-6.2. `validate.yml`: fail a PR that changes `www/content/**` (except `embeds/` and `redirects.yaml`) while the variable
-is `strapi`. RUNBOOK sections: publishing, Strapi down, rotation, backup, the move, rollback. Test: the check on a
-sample diff.
+6.2. `validate.yml`: fail a PR that changes `www/content/**` (except `embeds/` and `redirects.yaml`),
+`www/public/media/**` or `www/public/files/**` while the variable is `strapi`; when a run cannot read the variable
+(a PR from a fork), the check treats the source as `strapi`. Merged before the freeze; it does nothing while the
+variable is `shadow`. Test: the check on a sample diff.
 
-6.3. After the rollback window (30 days, as A7 of the migration spec): a PR removes the media copy from `main` and
-leaves a README in `www/content` that points to Strapi and the snapshot branch.
+6.3. Owner, the freeze day (Before and after the www switch): C2 green; C1, C3 merged; the final `www-push` from the
+freeze commit; the next `shadow` run shows `0 files differ`; `WWW_CONTENT_SOURCE=strapi`, one dispatch by hand,
+`compare-live` against the previous build. Editors are told that Strapi is now the only place to edit.
+
+6.4. At C8, after 7 days of Strapi builds without a snapshot fallback: a `cms/` PR and tag that drop the second sentence
+of the publish help text; C4 to C10 of the amended Cutover.
+
+6.5. After the rollback window (30 days after C8, as A7 of the migration spec): a PR removes the media copy from
+`main` and leaves a README in `www/content` that points to Strapi and the snapshot branch.
 
 ## Review notes
 
 - Scope: one capability (editing the main site in a CMS); the Strapi server and the pull are its two halves (A1).
+- Merge order with the migration spec: PR #23 is still a draft on its own branch. Step 6.1 amends its Cutover, so
+  that step lands after #23 merges or as a change in #23 itself, whichever comes first.
 - Not checked in this run: any web page (see the research section), any Strapi behavior on a running instance, the
   build time of a pull.
