@@ -2,7 +2,7 @@
 
 Extend everything. Start with 80% done. Every entry here is read from its published code, and every module is installed in a fresh Open Mercato app on each release line by the nightly run. Providers, libraries and tools are read, not installed.
 
-This repository holds the module descriptors, the code that measures them and the site for https://modules.openmercato.com. That address is not live yet: it answers 404 until the Cloudflare deploy is done (see [docs/RUNBOOK.md](docs/RUNBOOK.md#repository-setup-owner-clicks)). Descriptions come from authors. Everything else is measured.
+This repository holds the module descriptors, the code that measures them, the catalog site and the main site of Open Mercato (`www/`, the site of www.openmercato.com, moving off Webflow). Both are live on https://modules.openmercato.com: the main site at the root and the catalog under `/run` (https://modules.openmercato.com/run/modules), not indexed until www.openmercato.com switches to it. The old catalog addresses (`/modules`, `/m/...`) move there with a 301, and the machine-readable files keep their addresses. See [docs/RUNBOOK.md](docs/RUNBOOK.md#main-site-on-modulesopenmercatocom-before-the-www-switch). Descriptions come from authors. Everything else is measured.
 
 ## Submit a module in 3 steps
 
@@ -22,7 +22,7 @@ This repository holds the module descriptors, the code that measures them and th
 
 Fields, categories and text rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Once the site is live, the form at https://modules.openmercato.com/submit does the same in your browser: paste your npm name, it runs the checks, writes the YAML and opens GitHub with the file filled in.
+The form at https://modules.openmercato.com/run/submit does the same in your browser: paste your npm name, it runs the checks, writes the YAML and opens GitHub with the file filled in.
 
 ## What the catalog measures
 

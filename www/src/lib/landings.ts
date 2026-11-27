@@ -1,4 +1,4 @@
-// The SEO landings of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Phase 5): which landings the
+// The SEO landings of the main site (spec 2026-11-24-www-site-migration.md of PR #23, Phase 5): which landings the
 // site routes, their address, the language links between a landing and its translation (hreflang), the FAQPage
 // JSON-LD equal to each landing's `faq`, and the helpers of the template. A draft is never routed (D6). Isomorphic.
 import type { z } from 'zod'

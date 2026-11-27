@@ -22,6 +22,8 @@
 // switch) functions/site.ts carries `serve`, so the Pages hosts serve the merged layout themselves (hostServe in
 // lib/core/site-host.ts), and the build is noindex (noindexFromEnv). It needs PAGES_MERGED=1 and
 // https://modules.openmercato.com; both commands refuse anything else.
+// `--settings` checks only that the variables make one of those layouts, in seconds: pages.yml runs it before the
+// build, so a partial rollback (PAGES_MERGED left at 1 without BASE_PATH) fails fast with SETTINGS_HINT.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
@@ -47,7 +49,14 @@ import { parseWwwRedirects, wwwRedirectsText } from '../emit/www-redirects.ts'
 export const WWW_REDIRECTS_YAML = 'www/content/redirects.yaml'
 
 export const description =
-  'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --merge composes dist/; --check <dist> checks the layout'
+  'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --merge composes dist/; --check <dist> checks the layout; --settings checks the variables only'
+
+/**
+ * Printed after a refused variable set (audit of 27 Nov 2026): the variables of the layout go together, so a partial
+ * rollback fails the build instead of deploying.
+ */
+export const SETTINGS_HINT =
+  'The layout variables go together: catalog only (none set), merged (PAGES_MERGED=1 with SITE_URL https://www.openmercato.com, BASE_PATH /run, HOME_PATH /modules), or merged and served (the same and PAGES_SERVE_ORIGIN https://modules.openmercato.com). A rollback deletes all five (docs/RUNBOOK.md, Main site on modules.openmercato.com).'
 
 /** The generated module, relative to the repository root. */
 export const SITE_MODULE = 'functions/site.ts'
@@ -55,9 +64,11 @@ export const SITE_MODULE = 'functions/site.ts'
 export default function pagesSite(ctx: CommandContext): number {
   let check: string | null = null
   let merge = false
+  let settings = false
   for (let i = 0; i < ctx.args.length; i++) {
     const a = ctx.args[i] as string
     if (a === '--merge') merge = true
+    else if (a === '--settings') settings = true
     else if (a === '--check' && ctx.args[i + 1]) check = ctx.args[++i] as string
     else if (a.startsWith('--check=') && a.length > 8) check = a.slice(8)
     else {
@@ -69,6 +80,21 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error('om pages-site: --merge and --check are two steps; run them one after the other')
     return EXIT_ENV
   }
+  if (settings && (merge || check !== null)) {
+    console.error('om pages-site: --settings checks the variables only; run it on its own')
+    return EXIT_ENV
+  }
+  return run(ctx, merge, check, settings)
+}
+
+/** A refused variable set: the reason, then what goes together (SETTINGS_HINT). */
+function refused(message: string): number {
+  console.error(`om pages-site: ${message}`)
+  console.error(`om pages-site: ${SETTINGS_HINT}`)
+  return EXIT_ENV
+}
+
+function run(ctx: CommandContext, merge: boolean, check: string | null, settings: boolean): number {
   const merged = mergedFromEnv(process.env)
   let c: SiteConfig
   let serve: string | null
@@ -76,34 +102,32 @@ export default function pagesSite(ctx: CommandContext): number {
     c = siteConfigFromEnv(process.env)
     serve = serveOriginFromEnv(process.env)
   } catch (err) {
-    console.error(`om pages-site: ${(err as Error).message}`)
-    return EXIT_ENV
+    return refused((err as Error).message)
   }
   if (merged) {
     const problem = mergeConfigProblem(c)
-    if (problem) {
-      console.error(`om pages-site: PAGES_MERGED: ${problem}`)
-      return EXIT_ENV
-    }
+    if (problem) return refused(`PAGES_MERGED: ${problem}`)
     c = { ...c, merged: true, ...(serve ? { serve } : {}) }
   } else if (merge) {
     console.error('om pages-site: --merge needs PAGES_MERGED=1 (functions/site.ts and the check follow it)')
     return EXIT_ENV
   } else if (serve) {
-    console.error(
-      'om pages-site: PAGES_SERVE_ORIGIN needs PAGES_MERGED=1: a Pages host serves the merged layout, never the catalog alone',
+    return refused(
+      'PAGES_SERVE_ORIGIN needs PAGES_MERGED=1: a Pages host serves the merged layout, never the catalog alone',
     )
-    return EXIT_ENV
   }
   const hostProblem = pagesHostProblem(c)
-  if (hostProblem) {
-    console.error(`om pages-site: ${hostProblem}`)
-    return EXIT_ENV
-  }
+  if (hostProblem) return refused(hostProblem)
   const noindex = noindexFromEnv(process.env)
   if (noindex && !isNested(c)) {
     console.error('om pages-site: PAGES_NOINDEX needs a BASE_PATH other than / (the preview of the nested layout)')
     return EXIT_ENV
+  }
+  if (settings) {
+    console.log(
+      `om pages-site: the variables make one layout: ${merged ? 'merged' : isNested(c) ? 'nested' : 'catalog only'} at ${siteRoot(c)}${c.serve ? `, served at ${c.serve}` : ''}${noindex ? ', noindex' : ''}`,
+    )
+    return EXIT_OK
   }
   if (merge) {
     try {

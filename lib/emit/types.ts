@@ -138,6 +138,12 @@ export interface EmitOptions {
   originTrialTokens: string | null
   /** The catalog commit the build comes from (footer build stamp), when known. */
   build?: BuildStamp
+  /**
+   * Site root plus base path of the host that serves the build when it is not `site` (PAGES_SERVE_ORIGIN, audit of 27
+   * Nov 2026: `https://modules.openmercato.com/run`). Only the agent-skills index uses it: a discovery client fetches
+   * the `url` of each skill, which on `site` (www, still Webflow) answers 404 until the switch.
+   */
+  servingSite?: string
 }
 
 /**

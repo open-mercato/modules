@@ -13,7 +13,7 @@ export const DOCS_SITEMAP_URL = `${DOCS_ORIGIN}/sitemap.xml`
  * read through the API and which is copied from the Webflow panel at cutover step C4 (docs/RUNBOOK.md, Main site
  * switch): those rules go first, before the docs map, so they match before the docs catch-all.
  */
-export const REDIRECTS_HEADER = `# Redirects of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Data Model, redirects).
+export const REDIRECTS_HEADER = `# Redirects of the main site (spec 2026-11-24-www-site-migration.md of PR #23, Data Model, redirects).
 # yarn om pages-site --merge writes them into the root _redirects in this order; the first matching rule wins.
 #
 # source: webflow-panel. The 301 list of Webflow (Site settings, Publishing, 301 redirects; decision D8), copied by

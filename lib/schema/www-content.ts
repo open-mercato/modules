@@ -1,4 +1,4 @@
-// Content model of the main site www.openmercato.com (spec docs/specs/2026-11-24-www-site-migration.md, Data Model):
+// Content model of the main site www.openmercato.com (spec 2026-11-24-www-site-migration.md of PR #23, Data Model):
 // one Zod schema per content collection of www/content/, the single source of truth that www/content.config.ts hands
 // to Astro. A reference to another collection is a slug here; the Astro config passes its own `reference()` instead
 // (WwwRef), so the same schemas validate a sample in a unit test and a file in a build. Isomorphic: no Node APIs.

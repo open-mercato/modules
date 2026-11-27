@@ -84,8 +84,7 @@ const MARK = { yes: '✓', no: '×', build: '↗' } as const
     </div>
     <p class="omfm-scope"><Rich md={k.note} counts={counts} /></p>
     <p class="omfm-sources">
-      {tpl.reviewedPrefix}
-      {reviewedDay(k.reviewed, locale)}. {tpl.sourcesLabel}{' '}
+      {`${tpl.reviewedPrefix} ${reviewedDay(k.reviewed, locale)}.`} {tpl.sourcesLabel}{' '}
       {
         k.sources.map((s, i) => (
           <Fragment>

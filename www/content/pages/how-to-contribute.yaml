@@ -101,7 +101,7 @@ blocks:
       - eyebrow: "03"
         title: Documentation
         body: Every new module or core change must include an update to its respective AGENTS.MD file so the AI community can use it immediately.
-  # live links Roadmap to `#` (nowhere); an anchor of this page stands for it
+  # live links Roadmap to `#` (nowhere); the roadmap of the docs stands for it (audit of 27 Nov 2026)
   - type: features
     layout: how-to-contribute-connect
     eyebrow: contribute
@@ -118,7 +118,7 @@ blocks:
       - title: Check our public roadmap to see if your idea aligns with our upcoming milestones (e.g., Vector Search integration or Advanced CPQ).
         cta:
           label: Roadmap
-          href: "#roadmap"
+          href: https://docs.openmercato.com/architecture/future-roadmap
   - type: prose
     layout: how-to-contribute-note
     eyebrow: NOTE

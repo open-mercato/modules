@@ -25,6 +25,8 @@ import {
   NOINDEX_ROBOTS,
   noindexFromEnv,
   pagesRedirects,
+  type PagesRoutes,
+  routesLimitProblem,
   pagesRoutes,
   SCHEMA_DIR,
   siteConfigFromEnv,
@@ -230,6 +232,9 @@ function readJson(file: string): unknown {
  */
 export interface MergedLayout {
   redirects: string
+  /** dist/_routes.json and dist/_headers of the merged layout (mergedPagesRoutes, mergedHeaders). */
+  routes: PagesRoutes
+  headers: string
   mainSite: (ref: string, url: URL) => boolean
 }
 
@@ -258,8 +263,11 @@ export function checkPagesLayout(
 
   for (const f of ROOT_FILES) if (!existsSync(join(root, f))) say(`${shown(join(root, f))} is missing`)
   const routes = readJson(join(root, '_routes.json'))
-  if (routes !== undefined && JSON.stringify(routes) !== JSON.stringify(pagesRoutes(c.base)))
-    say(`${shown(join(root, '_routes.json'))} is not ${JSON.stringify(pagesRoutes(c.base))}`)
+  const wantRoutes = merged?.routes ?? pagesRoutes(c.base)
+  if (routes !== undefined && JSON.stringify(routes) !== JSON.stringify(wantRoutes))
+    say(`${shown(join(root, '_routes.json'))} is not ${JSON.stringify(wantRoutes)}`)
+  const routesProblem = routesLimitProblem(wantRoutes)
+  if (routesProblem) say(`${shown(join(root, '_routes.json'))}: ${routesProblem}`)
   if (
     existsSync(join(root, '_redirects')) &&
     readFileSync(join(root, '_redirects'), 'utf8') !== (merged?.redirects ?? pagesRedirects(c))
@@ -305,15 +313,22 @@ export function checkPagesLayout(
       say(`${shown(copy)} differs from ${shown(join(site, f))}`)
   }
   const allowed = new Set<string>(nestedRootEntries(c))
+  if (merged) {
+    // merged, _headers is always there: the security headers, the cache of the bundles and, noindex, X-Robots-Tag
+    allowed.add(NOINDEX_ROOT_FILE)
+    const headers = join(root, NOINDEX_ROOT_FILE)
+    if (!existsSync(headers) || readFileSync(headers, 'utf8') !== merged.headers)
+      say(`${shown(headers)} is not mergedHeaders()${noindex ? ' of a noindex build' : ''}`)
+  }
   if (noindex) {
     allowed.add(NOINDEX_ROOT_FILE)
     const headers = join(root, NOINDEX_ROOT_FILE)
-    if (!existsSync(headers) || readFileSync(headers, 'utf8') !== NOINDEX_HEADERS)
+    if (!merged && (!existsSync(headers) || readFileSync(headers, 'utf8') !== NOINDEX_HEADERS))
       say(`${shown(headers)} is not NOINDEX_HEADERS; a noindex build sends X-Robots-Tag: noindex`)
     const robots = join(site, 'robots.txt')
     if (!existsSync(robots) || readFileSync(robots, 'utf8') !== NOINDEX_ROBOTS)
       say(`${shown(robots)} is not NOINDEX_ROBOTS; a noindex build allows no crawling`)
-  } else if (existsSync(join(root, NOINDEX_ROOT_FILE))) {
+  } else if (!merged && existsSync(join(root, NOINDEX_ROOT_FILE))) {
     say(`${shown(join(root, NOINDEX_ROOT_FILE))} is for a noindex build (PAGES_NOINDEX), and this build is not one`)
     allowed.add(NOINDEX_ROOT_FILE)
   }

@@ -19,6 +19,7 @@ import {
   whyHtml,
 } from '../../lib/receipts.ts'
 import { receiptPreset } from '../../../../lib/core/lines.ts'
+import { receiptDescription, receiptTitle } from '../../lib/receipt-meta.ts'
 import { isoMark } from '../../lib/status.ts'
 import { day, dayYear, timeUtc } from '../../lib/format.ts'
 import { href, modulePage, receiptPage } from '../../lib/url.ts'
@@ -101,10 +102,13 @@ const heading =
   r.result.status === 'infra-error' || r.result.status === 'harness-red'
     ? 'Not judged'
     : `${own[0]!.toUpperCase()}${own.slice(1)}`
-const title = `Receipt ${r.id} · ${name} on ${r.om.version} · Open Mercato Modules`
+const title = receiptTitle(r.id, name, r.om.version)
 // the heading's word, and a preview run says so where the link unfurls too (review r9: a Slack card of a preview
 // receipt read `verified` like CI)
-const description = `${name}${r.module ? ` ${r.module.version}` : ''} on Open Mercato ${r.om.version}: ${own}, ${dayYear(r.run.at)}.${preview ? ` ${PREVIEW_CHIP}.` : ''}`
+const description = receiptDescription(
+  `${name}${r.module ? ` ${r.module.version}` : ''} on Open Mercato ${r.om.version}: ${own}, ${dayYear(r.run.at)}.${preview ? ` ${PREVIEW_CHIP}.` : ''}`,
+  r.id,
+)
 // one order for the cell (review r8: a missing link moved its placeholder to the end): baseline, previous, next
 const neighbours: { k: string; r: ReceiptT | null; label: string }[] = [
   ...(r.module

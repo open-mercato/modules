@@ -76,13 +76,27 @@ export const categoryPage = (id: string): string => `/c/${id}`
 /** Receipt page. */
 export const receiptPage = (id: string): string => `/r/${id}`
 
+/** The longest entry name of a tar header (ustar `name`); npm writes a longer path of the tarball in a pax header. */
+export const TAR_NAME_MAX = 100
+
+/**
+ * Address of a file of a published package. jsDelivr, unless the file's path in the tarball (`package/<file>`) is
+ * longer than TAR_NAME_MAX: jsDelivr indexes such an entry by its first 100 characters only (audit of 27 Nov 2026:
+ * `.../[invitationId]/send/route.ts` of @open-mercato/forms answers 404 there and `.../send/route.t` 200), so the link
+ * goes to unpkg, which reads the full name.
+ */
+export function npmFileUrl(npm: string, version: string, file: string): string {
+  const host = `package/${file}`.length > TAR_NAME_MAX ? 'https://unpkg.com' : 'https://cdn.jsdelivr.net/npm'
+  return `${host}/${npm}@${version}/${file}`
+}
+
 /** Source link for a fact `file:line` (spec 7.6 AnatomyFilm). */
 export function sourceLink(
   src: { npm: string | null; github: string | null; version: string | null; gitRef: string | null },
   file: string,
   line?: number | null,
 ): string | null {
-  if (src.npm && src.version) return `https://cdn.jsdelivr.net/npm/${src.npm}@${src.version}/${file}`
+  if (src.npm && src.version) return npmFileUrl(src.npm, src.version, file)
   if (src.github && src.gitRef)
     return `https://github.com/${src.github}/blob/${src.gitRef}/${file}${line ? `#L${line}` : ''}`
   return null

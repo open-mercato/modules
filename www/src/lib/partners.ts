@@ -1,4 +1,4 @@
-// The certified partners of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Phase 4): which partners
+// The certified partners of the main site (spec 2026-11-24-www-site-migration.md of PR #23, Phase 4): which partners
 // the site shows and in what order, the values and options of the partner filter's facets (its rules live in
 // partner-filter.ts), the cards and profiles, and the SEO of a partner page. A draft is validated by the content config
 // but never routed, listed, linked or put in a sitemap (D6). Isomorphic; the pages and the unit tests use it.
@@ -193,6 +193,7 @@ export interface PartnerSeo {
   title: string
   description: string
   canonical: string
+  /** Always unset: the page uses the site's default card (partnerSeo). */
   ogImage?: string
 }
 
@@ -208,8 +209,8 @@ export function partnerSeo(p: PartnerEntry, origin: string): PartnerSeo {
     title: `${p.data.name}${PARTNER_TITLE_SUFFIX}`,
     description: p.data.description,
     canonical: canonicalUrl(origin, partnerPath(p.id)),
-    // social crawlers read png, jpeg and webp only; an SVG or AVIF logo leaves the site's default image
-    ogImage: p.data.logo && /\.(?:png|jpe?g|webp)$/i.test(p.data.logo.src) ? p.data.logo.src : undefined,
+    // no og:image of its own: a logo is no social card (audit of 27 Nov 2026), and live Webflow names none here, so
+    // the page shows the site's default 1200 by 630 card
   }
 }
 

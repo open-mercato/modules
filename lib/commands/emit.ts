@@ -4,6 +4,7 @@
 // copies public/ into dist/. Works on an empty or missing `.data` (first day: empty states).
 // Extra flags: --to <dir> (default site/.generated), --modules <dir>, --templates <dir>, --policy <dir>,
 // --skills <dir>, --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, HOME_PATH, MCP_URL, WEBMCP_OT_TOKENS,
+// PAGES_SERVE_ORIGIN (the agent-skills index names the serving host while it is set),
 // GITHUB_SHA (the build stamp in the footer; otherwise `git rev-parse` of the repo).
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
@@ -16,7 +17,7 @@ import { loadEmitData } from '../emit/load.ts'
 import { writeEmit } from '../emit/write.ts'
 import { byteLength } from '../emit/util.ts'
 import { DEFAULT_BASE_PATH, DEFAULT_HOME_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
-import { homeConfig } from '../core/site-host.ts'
+import { homeConfig, serveOriginFromEnv } from '../core/site-host.ts'
 import type { BuildStamp } from '../emit/types.ts'
 
 export const description = 'published files and site data from .data'
@@ -104,6 +105,14 @@ export default function emit(ctx: CommandContext): number {
     console.error(
       `om emit: warning: SITE_URL is not set; llms.txt, modules.json and the .md cards link to ${site.site}. For a preview, set SITE_URL and BASE_PATH to the address that serves it.`,
     )
+  // the merged site served before the www switch (PAGES_SERVE_ORIGIN): the agent-skills index names that host
+  let serve: string | null
+  try {
+    serve = serveOriginFromEnv(process.env)
+  } catch (err) {
+    console.error(`om emit: ${(err as Error).message}`)
+    return EXIT_ENV
+  }
   const nowRaw = args['--now'] ?? process.env.OM_NOW
   const now = new Date(nowRaw ?? Date.now())
   if (Number.isNaN(now.getTime())) {
@@ -143,6 +152,7 @@ export default function emit(ctx: CommandContext): number {
       mcpUrl,
       originTrialTokens: process.env.WEBMCP_OT_TOKENS ?? null,
       build: buildStamp(ctx.root),
+      ...(serve ? { servingSite: `${serve}${site.base === '/' ? '' : site.base}` } : {}),
     })
   } catch (err) {
     console.error(`om emit: ${(err as Error).message}`)

@@ -6,7 +6,7 @@ import { fenceFor, yamlScalar } from '../../lib/emit/markdown.ts'
 import { originTrialFor, originTrialMeta, skillFrontMatter } from '../../lib/emit/wellknown.ts'
 import type { IndexEntry, ModulesIndex } from '../../lib/schema/published/modules.ts'
 import { parse as parseYaml } from 'yaml'
-import { fixtureData, fixtureEmit, json, OPTS, SITE, text } from './helpers.ts'
+import { fixtureData, fixtureEmit, json, OPTS, SITE, skillsDir, text } from './helpers.ts'
 
 const KSEF = '@fastwhitecat/integration-ksef-direct'
 const lines = () => fixtureData().lines!.lines
@@ -65,6 +65,19 @@ describe('llms.txt (llmstxt.org)', () => {
     expect(out.warnings.some((w) => w.startsWith('MCP_URL is not set'))).toBe(true)
     // with the Worker deployed the sentence goes
     expect(text(fixtureEmit(), 'llms.txt')).not.toContain('not deployed')
+  })
+
+  test('with a serving host (PAGES_SERVE_ORIGIN) only the agent-skills index names it, so its skill URLs answer', () => {
+    const serving = 'https://modules.openmercato.com/run'
+    const data = fixtureData({ skills: skillsDir() })
+    const out = buildEmit(data, { ...OPTS, servingSite: serving })
+    const index = json<{ skills: { url: string }[] }>(out, '.well-known/agent-skills/index.json')
+    expect(index.skills.length).toBeGreaterThan(0)
+    for (const s of index.skills) expect(s.url.startsWith(`${serving}/.well-known/agent-skills/`), s.url).toBe(true)
+    // everything else keeps SITE_URL (decision 2a)
+    expect(text(out, 'llms.txt')).toBe(text(buildEmit(data, OPTS), 'llms.txt'))
+    const plain = json<{ skills: { url: string }[] }>(buildEmit(data, OPTS), '.well-known/agent-skills/index.json')
+    for (const s of plain.skills) expect(s.url.startsWith(`${OPTS.site}/`), s.url).toBe(true)
   })
 
   test('raw/modules.md has the anchors llms.txt links to', () => {

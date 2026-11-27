@@ -1,4 +1,4 @@
-// Worker for the old hosts (spec docs/specs/2026-11-24-www-site-migration.md, Option B and Phase 1b): a Cloudflare
+// Worker for the old hosts (spec 2026-11-24-www-site-migration.md of PR #23, Option B and Phase 1b): a Cloudflare
 // Worker on the routes modules.openmercato.com/* and templates.openmercato.com/* that answers them as the Pages
 // Functions of the nested layout do today (functions/_middleware.ts, docs/RUNBOOK.md, Old addresses), so the Pages
 // project can run without Functions once the main site sits at its root (Phase 1c).

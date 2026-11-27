@@ -52,6 +52,8 @@ describe('the build of the landings', () => {
         ).toEqual(
           l.data.faq.items.map((f) => [fillCounts(f.question, counts), fillCounts(plainText(f.answer), counts)]),
         )
+        // the capability matrix's sources line keeps the space before the date (audit of 27 Nov 2026)
+        expect(html).not.toMatch(/omfm-sources"[^>]*>(?:Reviewed|Sprawdzono)\d/)
         // no hand-typed count: the tokens are filled or print nothing (A6)
         expect(html).not.toMatch(/\{(?:githubStars|moduleCount)\}/)
         const hreflang = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)"/g)].map((m) => m[1])

@@ -14,7 +14,8 @@ import {
   MAIN_SITE_RUN,
   mainSiteRun,
   mergedFromEnv,
-  NOINDEX_HEADERS,
+  mergedHeaders,
+  mergedPagesRoutes,
   NOINDEX_ROBOTS,
   pagesRedirects,
   siteModule,
@@ -107,13 +108,20 @@ describe('the merged layout (pages-site --merge)', () => {
     expect(at('run/404.html')).toBe('<a href="/run/modules">home</a>')
     expect(at('_redirects')).toBe(mergedRedirects(WWW))
     expect(at('_redirects')).toContain('/sitemap.xml /sitemap-index.xml 301\n')
-    expect(at('_redirects').endsWith(pagesRedirects(WWW))).toBe(true)
+    expect(at('_redirects')).toContain(pagesRedirects(WWW))
+    // audit of 27 Nov 2026: every static rule before the first splat or placeholder, the cleanup rules last
+    const rules = redirectRules(at('_redirects'))
+    expect(rules.filter((r) => r.dynamic).map((r) => r.from)).toEqual(['/run//*', '/run/m/:scope/:name/'])
     expect(at('robots.txt')).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap-index.xml\n`)
     expect(sitemapLocs(at('sitemap-index.xml'))).toEqual(r.sitemaps)
     // the catalog's fixed root files and Functions route list stay until Phase 1c
     for (const f of ['_routes.json', 'modules.json', 'templates.json', 'picker.json', 'schema/modules-1.json'])
       expect(existsSync(join(dirs.out, f)), f).toBe(true)
-    expect(existsSync(join(dirs.out, '_headers'))).toBe(false)
+    // audit of 27 Nov 2026: the security headers and the cache of the bundles, no noindex; the main site's static
+    // folders, robots.txt and sitemaps stay away from Functions
+    expect(at('_headers')).toBe(mergedHeaders(WWW, false))
+    expect(at('_headers')).not.toContain('X-Robots-Tag')
+    expect(JSON.parse(at('_routes.json'))).toEqual(mergedPagesRoutes('/run', ['sitemap-0.xml', 'sitemap-index.xml']))
     // a production upload: every main site page the header links must be in the build (Pages answers it, not Webflow)
     const before = checkMergedLayout(dirs.out, WWW)
     expect(before.pending).toEqual([])
@@ -171,11 +179,13 @@ describe('the merged layout (pages-site --merge)', () => {
     runBuild(dirs.run, true)
     wwwBuild(dirs.www)
     mergePagesSite(dirs, WWW, true)
-    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toBe(NOINDEX_HEADERS)
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toBe(mergedHeaders(WWW, true))
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toContain('/*\n  Strict-Transport-Security')
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toContain('  X-Robots-Tag: noindex\n')
     expect(readFileSync(join(dirs.out, 'robots.txt'), 'utf8')).toBe(NOINDEX_ROBOTS)
     expect(readFileSync(join(dirs.out, 'run', 'robots.txt'), 'utf8')).toBe(NOINDEX_ROBOTS)
     expect(checkMergedLayout(dirs.out, WWW, 50, true).problems).toEqual([])
-    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/_headers is for a noindex build/)
+    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/_headers is not mergedHeaders\(\)$/m)
   })
 
   it('a new merge empties the upload folder first', () => {
@@ -255,7 +265,7 @@ describe('the merged layout (pages-site --merge)', () => {
     wwwBuild(dirs.www)
     mergePagesSite(dirs, WWW)
     writeFileSync(join(dirs.out, 'robots.txt'), 'User-agent: *\nDisallow: /\n')
-    writeFileSync(join(dirs.out, '_redirects'), `${mergedRedirects(WWW)}/a /b 301\n`)
+    writeFileSync(join(dirs.out, '_redirects'), mergedRedirects(WWW, `/a /b 301\n`))
     writeFileSync(
       join(dirs.out, 'sitemap-index.xml'),
       sitemapIndexXml([`${ORIGIN}/run/sitemap-index.xml`, 'https://example.com/sitemap-0.xml', `${ORIGIN}/x.xml`]),
@@ -283,6 +293,15 @@ describe('the merged layout (pages-site --merge)', () => {
     expect(redirectProblems(statics)).toEqual(['1801 static redirects; the check allows 1800 (Pages 2000)'])
     const dynamics = Array.from({ length: REDIRECT_CHECK.dynamic + 1 }, (_, i) => `/d${i}/* /t 301`).join('\n')
     expect(redirectProblems(dynamics)).toEqual(['91 dynamic redirects; the check allows 90 (Pages 100)'])
+    // a static rule after the first splat or placeholder counts as dynamic, as wrangler's parser counts it (audit of
+    // 27 Nov 2026: two cleanup rules at the top made the 300 rules of the main site dynamic and Pages dropped them)
+    expect(redirectRules('/x/* /y 301\n/a /b 301\n')).toEqual([
+      { from: '/x/*', dynamic: true },
+      { from: '/a', dynamic: true },
+    ])
+    expect(redirectProblems(`/x/* /y 301\n${statics}`)).toEqual([
+      '1802 dynamic redirects; the check allows 90 (Pages 100)',
+    ])
     expect(redirectProblems('/a /b 301\n/a /c 301\n')).toEqual(['the redirect from /a is given twice'])
   })
 

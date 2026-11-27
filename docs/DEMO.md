@@ -22,8 +22,9 @@ GitHub Actions or under the build lock of a shared machine).
    node test/e2e/serve.ts out/e2e/real 4410
    ```
 
-   Then open `http://127.0.0.1:4410/`. The public address `https://modules.openmercato.com/` is not live yet (it
-   answers 404 until the Cloudflare deploy, see docs/RUNBOOK.md), so present the local build.
+   Then open `http://127.0.0.1:4410/`. The public catalog is https://modules.openmercato.com/run/modules (the main
+   site at the root, the catalog under `/run`, docs/RUNBOOK.md); present the local build, which has the paths below at
+   the root and the data you chose.
 
 2. Rehearse in a browser: `yarn e2e test/e2e/demo.spec.ts` clicks every step below and saves one screenshot per
    step to `out/e2e/demo/` (the report in `playwright-report/` lists what each step showed).

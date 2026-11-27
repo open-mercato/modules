@@ -11,8 +11,13 @@ import {
   DEFAULT_SITE,
   hostRedirect,
   hostServe,
+  mergedPagesRoutes,
   noindexFromEnv,
+  oldPagePath,
   otherProductionOrigins,
+  routesLimitProblem,
+  SECURITY_HEADERS,
+  SERVE_REDIRECT_CACHE,
   serveOriginFromEnv,
   servingOrigins,
   siteModule,
@@ -63,25 +68,45 @@ const UPLOAD: Record<string, string> = {
   '/run/404.html': 'catalog 404',
 }
 
-/** Pages' asset server for UPLOAD: a file, `/x` as x.html or x/index.html, else the 404 page with a 404. */
-function serveStatic(path: string): Response {
-  const p = decodeURIComponent(path)
-  for (const f of p === '/' ? ['/index.html'] : [p, `${p}.html`, `${p}/index.html`]) {
-    const body = UPLOAD[f]
-    if (body !== undefined) return new Response(body, { headers: { 'x-robots-tag': 'noindex' } })
-  }
-  return new Response(p.startsWith('/run/') ? UPLOAD['/run/404.html'] : UPLOAD['/404.html'], { status: 404 })
+/** Static rules of the upload's _redirects, as the fake asset server applies them before any file. */
+const REDIRECTS: Record<string, { to: string; status: number }> = {
+  '/sitemap.xml': { to: '/sitemap-index.xml', status: 301 },
+  '/docs/intro': { to: 'https://docs.openmercato.com/intro', status: 301 },
+  '/run': { to: '/run/modules', status: 302 },
 }
 
-/** One request through the Function of `site`: status, Location and body. */
+/**
+ * Pages' asset server for UPLOAD, closer to the real one: a _redirects rule first, then a file, `/x` as x.html or
+ * x/index.html, `/x.html` and `/x/` with a 308 to `/x` where x.html exists, else the 404 page with a 404. A HEAD
+ * request gets the same status and headers without a body.
+ */
+function serveStatic(path: string, method = 'GET'): Response {
+  const p = decodeURIComponent(path)
+  const body = (text: string | null): string | null => (method === 'HEAD' ? null : text)
+  const rule = REDIRECTS[p]
+  if (rule) return new Response(null, { status: rule.status, headers: { location: rule.to } })
+  const page = p.endsWith('.html') ? p.slice(0, -5) : p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : null
+  if (page !== null && UPLOAD[`${page}.html`] !== undefined) {
+    const to = page === '/index' ? '/' : page.replace(/\/index$/, '')
+    return new Response(null, { status: 308, headers: { location: encodeURI(to).replace(/@/g, '%40') } })
+  }
+  for (const f of p === '/' ? ['/index.html'] : [p, `${p}.html`, `${p}/index.html`]) {
+    const text = UPLOAD[f]
+    if (text !== undefined) return new Response(body(text), { headers: { 'x-robots-tag': 'noindex' } })
+  }
+  return new Response(body(p.startsWith('/run/') ? UPLOAD['/run/404.html']! : UPLOAD['/404.html']!), { status: 404 })
+}
+
+/** One request through the Function of `site`: status, Location and body (HEAD: an empty body), and the headers. */
 async function request(
   url: string,
   site: SiteConfig,
-): Promise<{ status: number; location: string | null; body: string }> {
-  const ASSETS = { fetch: async (req: Request) => serveStatic(new URL(req.url).pathname) }
-  const next = async () => serveStatic(new URL(url).pathname)
-  const res = await answer({ request: new Request(url), next, env: { ASSETS } }, site)
-  return { status: res.status, location: res.headers.get('location'), body: await res.text() }
+  method = 'GET',
+): Promise<{ status: number; location: string | null; body: string; headers: Headers }> {
+  const ASSETS = { fetch: async (req: Request) => serveStatic(new URL(req.url).pathname, req.method) }
+  const next = async () => serveStatic(new URL(url).pathname, method)
+  const res = await answer({ request: new Request(url, { method }), next, env: { ASSETS } }, site)
+  return { status: res.status, location: res.headers.get('location'), body: await res.text(), headers: res.headers }
 }
 
 const shown = (r: { status: number; location: string | null; body: string }): string =>
@@ -130,7 +155,8 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
       // the main site, at the root of every Pages host
       ['/', '200 main home', `302 ${MODULES}/run/templates`],
       ['/?utm=x', '200 main home', `302 ${MODULES}/run/templates?utm=x`],
-      ['/index.html', '200 main home', `302 ${MODULES}/run/templates`],
+      // Pages answers /index.html with a 308 to / (the fake asset server does too)
+      ['/index.html', '308 /', `302 ${MODULES}/run/templates`],
       ['/hubspot-alternative', '200 main landing', '200 main landing'],
       ['/blog', '200 main blog', '200 main blog'],
       ['/case-studies/acme', '200 main case study', '200 main case study'],
@@ -161,8 +187,8 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
       ['/llms.txt', UPLOAD['/run/llms.txt'] as string],
       ['/m/@x/y.md', UPLOAD['/run/m/@x/y.md'] as string],
       ['/badge/@x/y.svg', UPLOAD['/run/badge/@x/y.svg'] as string],
-      // the catalog's robots.txt first; in a noindex build it is the same text as the root one
-      ['/robots.txt', UPLOAD['/run/robots.txt'] as string],
+      // the main site's robots.txt wins at the root (audit of 27 Nov 2026); in a noindex build the texts are equal
+      ['/robots.txt', UPLOAD['/robots.txt'] as string],
       // the fixed root copies: static files, the Function leaves them alone
       ['/picker.json', UPLOAD['/picker.json'] as string],
       ['/modules.json', UPLOAD['/modules.json'] as string],
@@ -190,13 +216,13 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
         },
         SERVED,
       )
-    // Pages answers `/run/m/@x/y/` with a 308 to the address without the slash: the catalog has the page
+    // a 308 of the probe (Pages' answer for a page address with a slash) means the catalog has the page
     const slash = await run(
       () => new Response('main 404', { status: 404 }),
       () => new Response(null, { status: 308, headers: { location: '/run/m/@x/y' } }),
-      `${MODULES}/m/@x/y/`,
+      `${MODULES}/m/@x/y`,
     )
-    expect([slash.status, slash.headers.get('location')]).toEqual([301, `${MODULES}/run/m/@x/y/`])
+    expect([slash.status, slash.headers.get('location')]).toEqual([301, `${MODULES}/run/m/@x/y`])
     // a conditional request the main site answers with a 304 is its answer, no probe
     let probed = 0
     const fresh = await run(
@@ -230,8 +256,13 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
       expect(shown(await request(`${host}/`, SERVED)), host).toBe('200 main home')
     }
     // paths a redirect must not be built from
-    for (const path of ['//evil.example/x', '/%5Cevil.example', '/a%0d%0aSet-Cookie:x'])
+    for (const path of ['/%5Cevil.example', '/a%0d%0aSet-Cookie:x'])
       expect(hostServe(`${MODULES}${path}`, SERVED), path).toBeNull()
+    // a run of slashes moves to the single-slash path, absolute on the serving origin, never to another host
+    expect(hostServe(`${MODULES}//evil.example/x`, SERVED)).toEqual({
+      kind: 'redirect',
+      redirect: { location: `${MODULES}/evil.example/x`, status: 301 },
+    })
     // the steps themselves
     expect(hostServe(`${MODULES}/m/@x/y?q=1`, SERVED)).toEqual({
       kind: 'page',
@@ -267,6 +298,123 @@ describe('the Pages hosts serve the merged layout (variable set)', () => {
     expect(run(PREVIEW)).toEqual([false, 1])
     // without serving origins the script is the one of every earlier build
     expect(hereScript(`${WWW}/run`, '/run', ['x'], [])).toBe(hereScript(`${WWW}/run`, '/run', ['x']))
+  })
+})
+
+describe('one hop, bounded and noindex (audit of 27 Nov 2026)', () => {
+  it('an old address with a trailing slash, .html, %40 or a run of slashes reaches /run in one 301', async () => {
+    const table: [path: string, want: string][] = [
+      ['/modules/', `301 ${MODULES}/run/modules`],
+      ['/modules.html', `301 ${MODULES}/run/modules`],
+      ['/modules/index.html', `301 ${MODULES}/run/modules`],
+      ['/modules/?q=crm', `301 ${MODULES}/run/modules?q=crm`],
+      ['/m/@x/y/', `301 ${MODULES}/run/m/@x/y`],
+      ['/m/%40x/y', `301 ${MODULES}/run/m/@x/y`],
+      ['/m/@x/y.html?tab=install', `301 ${MODULES}/run/m/@x/y?tab=install`],
+      ['//run/modules', `301 ${MODULES}/run/modules`],
+      ['/m//@x/y', `301 ${MODULES}/m/@x/y`],
+      // the main site's own pages keep Pages' answer: a 308 to the address without the slash or .html
+      ['/about/', '308 /about'],
+      ['/blog.html', '308 /blog'],
+    ]
+    for (const [path, want] of table) {
+      const r = await request(`${MODULES}${path}`, SERVED)
+      expect(shown(r), path).toBe(want)
+      // the target answers 200 (or, for the run of slashes, its single-slash form is one more old address)
+      if (r.status === 301 && r.location?.startsWith(`${MODULES}/run/`)) {
+        const target = new URL(r.location)
+        expect(serveStatic(target.pathname).status, r.location).toBe(200)
+        expect(r.location, path).not.toContain('%40')
+      }
+    }
+  })
+
+  it('normalizes an old page path, and keeps the templates root on a run of slashes', async () => {
+    const table: [path: string, want: string][] = [
+      ['/compat', '/compat'],
+      ['/compat/', '/compat'],
+      ['/compat.html', '/compat'],
+      ['/compat.html/', '/compat'],
+      ['/compat/index.html', '/compat'],
+      ['/m/%40x/y//', '/m/@x/y'],
+      ['/index.html', '/'],
+      // a package named like a file keeps its name: only `.html` goes
+      ['/m/socket.io', '/m/socket.io'],
+    ]
+    for (const [path, want] of table) expect(oldPagePath(path), path).toBe(want)
+    expect(shown(await request(`${MODULES}/compat.html/`, SERVED))).toBe(`301 ${MODULES}/run/compat`)
+    expect(shown(await request(`${TEMPLATES}//`, SERVED))).toBe(`302 ${MODULES}/run/templates`)
+    expect(shown(await request(`${TEMPLATES}//?utm=x`, SERVED))).toBe(`302 ${MODULES}/run/templates?utm=x`)
+  })
+
+  it('keeps _routes.json of the merged layout within the Pages limits', () => {
+    const r = mergedPagesRoutes('/run', ['sitemap-0.xml', 'sitemap-index.xml'])
+    expect(r.exclude).toEqual(
+      expect.arrayContaining(['/run/*', '/_astro/*', '/media/*', '/files/*', '/og/*', '/robots.txt', '/sitemap-0.xml']),
+    )
+    expect(routesLimitProblem(r)).toBeNull()
+    const many = { ...r, exclude: Array.from({ length: 100 }, (_, i) => `/x${i}`) }
+    expect(routesLimitProblem(many)).toBe('101 rules; Pages allows 100')
+    const long = { ...r, exclude: [`/${'a'.repeat(100)}`] }
+    expect(routesLimitProblem(long)).toBe(`the rule /${'a'.repeat(100)} is longer than 100 characters`)
+  })
+
+  it('the redirects a serving host builds are noindex, cached an hour and carry the security headers', async () => {
+    for (const url of [`${MODULES}/m/@x/y`, `${TEMPLATES}/`, `${MODULES}//run/modules`]) {
+      const r = await request(url, SERVED)
+      expect(r.status, url).toBeGreaterThanOrEqual(301)
+      expect(r.headers.get('x-robots-tag'), url).toBe('noindex')
+      expect(r.headers.get('cache-control'), url).toBe(SERVE_REDIRECT_CACHE)
+      expect(r.headers.get('access-control-allow-origin'), url).toBe('*')
+      for (const [k, v] of SECURITY_HEADERS) expect(r.headers.get(k), `${url} ${k}`).toBe(v)
+    }
+    // without the variable (the plan after the switch) the redirect to SITE_URL is as before: no bounded cache
+    const after = await request(`${MODULES}/m/@x/y`, MERGED)
+    expect([after.status, after.headers.get('cache-control'), after.headers.get('x-robots-tag')]).toEqual([
+      302,
+      null,
+      null,
+    ])
+  })
+
+  it('HEAD gets the same answer as GET, without a body', async () => {
+    for (const path of [
+      '/',
+      '/m/@x/y',
+      '/modules/',
+      '/llms.txt',
+      '/robots.txt',
+      '/run/modules',
+      '/nope',
+      '/sitemap.xml',
+    ])
+      for (const host of [MODULES, TEMPLATES]) {
+        const get = await request(`${host}${path}`, SERVED)
+        const head = await request(`${host}${path}`, SERVED, 'HEAD')
+        expect([head.status, head.location], `HEAD ${host}${path}`).toEqual([get.status, get.location])
+        expect(head.body, `HEAD ${host}${path}`).toBe('')
+      }
+  })
+
+  it('a rule of the root _redirects answers before the catalog is asked', async () => {
+    let probed = 0
+    const ASSETS = {
+      fetch: async (req: Request) => {
+        probed++
+        return serveStatic(new URL(req.url).pathname)
+      },
+    }
+    for (const [path, want] of [
+      ['/docs/intro', '301 https://docs.openmercato.com/intro'],
+      ['/sitemap.xml', '301 /sitemap-index.xml'],
+    ] as const) {
+      const res = await answer(
+        { request: new Request(`${MODULES}${path}`), next: async () => serveStatic(path), env: { ASSETS } },
+        SERVED,
+      )
+      expect(`${res.status} ${res.headers.get('location')}`, path).toBe(want)
+    }
+    expect(probed).toBe(0)
   })
 })
 
@@ -332,5 +480,29 @@ describe('yarn om pages-site with PAGES_SERVE_ORIGIN', () => {
     process.env.PAGES_SERVE_ORIGIN = MODULES
     expect(pagesSite(ctx([]))).toBe(0)
     expect(readFileSync(join(tmp, 'functions', 'site.ts'), 'utf8')).toBe(siteModule(SERVED))
+  })
+
+  it('--settings fails fast on a variable set that makes no layout, naming what goes together', () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    for (const k of keys) delete process.env[k]
+    // none set: the catalog alone
+    expect(pagesSite(ctx(['--settings']))).toBe(0)
+    expect(log.mock.calls.flat().join('\n')).toContain('catalog only')
+    // the rollback of the old RUNBOOK text: SITE_URL, BASE_PATH and HOME_PATH deleted, PAGES_MERGED left at 1
+    Object.assign(process.env, { PAGES_MERGED: '1', PAGES_SERVE_ORIGIN: MODULES })
+    expect(pagesSite(ctx(['--settings']))).toBe(2)
+    const said = error.mock.calls.flat().join('\n')
+    expect(said).toContain('PAGES_MERGED: the merged layout needs the catalog under a base path; BASE_PATH is /')
+    expect(said).toContain('A rollback deletes all five')
+    // the owner's five variables
+    Object.assign(process.env, { SITE_URL: WWW, BASE_PATH: '/run', HOME_PATH: '/modules' })
+    expect(pagesSite(ctx(['--settings']))).toBe(0)
+    expect(log.mock.calls.flat().join('\n')).toContain(
+      'merged at https://www.openmercato.com/run, served at https://modules.openmercato.com, noindex',
+    )
+    // it writes nothing
+    expect(() => readFileSync(join(tmp, 'functions', 'site.ts'), 'utf8')).toThrow()
+    expect(pagesSite(ctx(['--settings', '--merge']))).toBe(2)
   })
 })

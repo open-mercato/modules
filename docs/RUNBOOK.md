@@ -652,7 +652,7 @@ with its DNS record, even when no page is served there. The addresses under `/ru
 
 ### Preview of the /run layout (15 Nov)
 
-While production is at the root, every `pages` run on `main` also builds the nested layout with fixed values
+While `BASE_PATH` is `/` (production at the root, as it was until 26 Nov 2026), every `pages` run on `main` also builds the nested layout with fixed values
 (`SITE_URL=https://www.openmercato.com`, `BASE_PATH=/run`, `HOME_PATH=/modules`) and deploys it to the branch
 `run-preview` of the same Pages project: the jobs `preview-build` and `preview` of `pages.yml`. Cloudflare serves the
 latest deployment of a branch at its alias, the branch name in lowercase with every character but `a-z`, `0-9` and `-`
@@ -671,7 +671,8 @@ is the upstream to test the proxy of the main site against ([docs/proxy/README.m
   without it the check refuses a `_headers`, and a production build removes one left in `dist`. The canonical links
   name `https://www.openmercato.com/run/...`, as production will after the switch.
 - **Off after the switch.** Both jobs are skipped once the repository variable `BASE_PATH` is set to anything but `/`:
-  production then serves the same layout. The alias keeps its last deployment.
+  production then serves the same layout. The alias keeps its last deployment. Since 26 Nov 2026 (`BASE_PATH=/run`,
+  Main site on modules.openmercato.com, below) they are skipped.
 - **Access.** If Cloudflare Access is turned on for the preview deployments of the project, the alias asks for a login
   and the proxy cannot read it. Keep it off for this project while the proxy is tested.
 - **Check.** `docs/proxy/check.sh https://run-preview.open-mercato-modules.pages.dev` prints pass or fail per line.
@@ -681,15 +682,21 @@ is the upstream to test the proxy of the main site against ([docs/proxy/README.m
 ### Preview of the main site (www-preview)
 
 The main site moves off Webflow into `www/` of this repository (spec
-[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), on its own branch until it
+[2026-11-24-www-site-migration.md](https://github.com/open-mercato/modules/blob/spec/www-site-migration/docs/specs/2026-11-24-www-site-migration.md), a draft on the branch `spec/www-site-migration`, pull request #23, until it
 merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build:run`) and the main site to
 `dist-www/` (`yarn build:www`). The upload is one of two layouts:
 
-- **Catalog only** (production today, and the `run-preview` jobs): `dist-run/` moved to `dist/` as it is.
+- **Catalog only** (the default without the variables, production until 26 Nov 2026, and the `run-preview` jobs):
+  `dist-run/` moved to `dist/` as it is.
 - **Merged** (`PAGES_MERGED=1`): `yarn om pages-site --merge` lays `dist-www/` at the root of `dist/` and the catalog's
   nested build under `/run`, and writes the root `_redirects` (the main site's `/sitemap.xml`, the catalog's
-  rules, then the main site's `www/content/redirects.yaml`), `robots.txt` and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. The
-  catalog's `_routes.json`, `schema/` and fixed root files stay until its Functions leave (Phase 1c of the spec).
+  rules, then the main site's `www/content/redirects.yaml`, then two cleanup rules under `/run` with placeholders,
+  last because Pages counts every rule after the first splat or placeholder as dynamic and allows 100), `robots.txt`
+  and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. It also writes `_headers`
+  (the security headers live Webflow sends, `noindex` in a noindex build, and a year's immutable cache on `/_astro/*`
+  and `/run/_astro/*`) and `_routes.json` (the catalog's rules plus `/_astro/*`, `/media/*`, `/files/*`, `/og/*`,
+  `/robots.txt` and the sitemap files, so those static files run no Function). The catalog's `schema/` and fixed root
+  files stay until its Functions leave (Phase 1c of the spec).
   `yarn om pages-site` writes `merged: true` into `functions/site.ts`, so a `*.pages.dev` address serves every path
   as a static file; the old hosts are moved as before. `yarn om pages-site --check dist` with `PAGES_MERGED=1` proves
   the merged layout and checks every link of every page against what this build serves. The merge also makes every
@@ -714,11 +721,23 @@ On a workstation:
 ```sh
 export SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules PAGES_MERGED=1 PAGES_NOINDEX=1
 yarn build && yarn om pages-site --merge && yarn om pages-site && yarn om pages-site --check dist
+scripts/pages-smoke.sh dist
 yarn wrangler pages dev dist --port 8788
 git checkout functions/site.ts
 ```
 
+`scripts/pages-smoke.sh dist` (Linux: it uses `setsid`; Cezar or a runner) runs the upload in the same emulator for about 30 seconds and checks what the unit tests
+cannot: that wrangler reads every rule of `_redirects` (Pages counts every rule after the first splat or placeholder
+as dynamic and skips the rest past 100), the security and cache headers of `_headers`, and with `PAGES_SERVE_ORIGIN`
+(set it instead of `PAGES_NOINDEX` for the production layout) the old catalog addresses on the serving hosts in one
+301, by their Host header. `pages.yml` runs it in the build job of every merged build and in `www-preview-build`.
+
 ### Switch, in order
+
+Not the path from today's state. Since 26 Nov 2026 production serves the merged layout on `modules.openmercato.com`
+with `PAGES_SERVE_ORIGIN` (Main site on modules.openmercato.com, below), and `www.openmercato.com` moves to the Pages
+project as a whole at C8 (Main site switch, below), with no `/run` proxy in between. These steps hold only for the
+catalog-only nested layout behind a `/run` proxy on Webflow, if the owner goes back to it.
 
 Each step waits for the one before it to be green.
 
@@ -795,6 +814,11 @@ Each step waits for the one before it to be green.
 
 ### Rollback
 
+For the catalog-only nested layout of the steps above (`PAGES_MERGED` unset). Today's state has its own rollback (Main
+site on modules.openmercato.com, Rollback, below: delete all five variables); deleting only these three while
+`PAGES_MERGED` is `1` stops the next `pages` run at `Check layout variables` (`yarn om pages-site --settings`), which
+names the variables that go together, and deploys nothing.
+
 Delete the repository variables `SITE_URL`, `BASE_PATH` and `HOME_PATH` and run `pages` by hand. The build returns to
 the domain root, `functions/site.ts` to the default and Functions to `/` only, so `modules.openmercato.com` serves the
 site again. The 302s were not cached. Then take the `/run` route off the proxy of the main site, or point it at a
@@ -806,7 +830,7 @@ run again from the next `pages` run, so the proxy can also go back to the previe
 
 Once the main site sits at the root of the Pages project, the root `/` of the project cannot be both the main home
 page and the 302 of `modules.openmercato.com`, so the old hosts leave the Functions for a Worker of their own (spec
-[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), Option B). `workers/old-hosts/`
+[2026-11-24-www-site-migration.md](https://github.com/open-mercato/modules/blob/spec/www-site-migration/docs/specs/2026-11-24-www-site-migration.md), pull request #23, Option B). `workers/old-hosts/`
 is that Worker, ready to deploy, not deployed from this repository. It runs the rules of `lib/core/site-host.ts` that
 the Functions run today (Old addresses, above), on the routes `modules.openmercato.com/*` and
 `templates.openmercato.com/*`:
@@ -827,8 +851,9 @@ old host, and gives the same answer as `functions/_middleware.ts` path by path. 
 it with `wrangler deploy --dry-run`. This step removes nothing: the Functions, `_routes.json` and the fixed root
 copies stay until Phase 1c, and answer again as soon as the Worker routes are gone.
 
-**When.** After step 5 of Switch, in order, is green with the Functions: production serves `/run`, so the upstream
-holds every file under `/run/`. Not before: at the domain root the upstream has no `/run/`.
+**When.** After C8 of Main site switch, below, is green: `www.openmercato.com` serves the project, so the Worker's
+302s to `https://www.openmercato.com/run/...` land on pages. Never while `PAGES_SERVE_ORIGIN` is set (Main site on
+modules.openmercato.com, below). (Behind a `/run` proxy instead: after step 5 of Switch, in order.)
 
 **Before the deploy: the request count.** The Worker counts every request to the old hosts, the fixed files included,
 which cost no invocation today. In the Cloudflare dashboard, zone `openmercato.com` > Analytics & Logs > HTTP Traffic,
@@ -884,25 +909,44 @@ What production does with the variables below:
   catalog under `/run` (`/run/modules`, `/run/m/<package>`).
 - **Old catalog addresses** (decision 3a). A page address the catalog had at the root answers a 301 to the same path
   and query under `/run` on `https://modules.openmercato.com` (`/m/<package>`, `/templates`, `/compat`, `/radar`,
-  `/submit?npm=<package>`; `/modules` leads to the catalog home the same way). The main site is asked first, so where both have a page the main site wins:
+  `/submit?npm=<package>`; `/modules` leads to the catalog home the same way). One hop: the Function drops a trailing
+  slash, `.html` and `/index.html` and writes `%40` as `@` before it builds the address (`oldPagePath` in
+  `lib/core/site-host.ts`), and a path with a run of slashes (`//run/modules`) answers a 301 to its single-slash form;
+  under `/run`, `_redirects` does the same for `/run//...` and for a package page with a trailing slash. These 301s and
+  the 302 of the templates root carry `Cache-Control: public, max-age=3600`, `X-Robots-Tag: noindex` and the security
+  headers below (`serveRedirectHeaders`), so a browser keeps a 301 for an hour, not for good. The main site is asked first, so where both have a page the main site wins:
   `/` (the main home; the catalog home is `/run/modules`) and `/about` (the catalog's is `/run/about`). Any other path
   that neither has answers the main site's 404. The root of `templates.openmercato.com` answers a 302 to
   `https://modules.openmercato.com/run/templates`.
 - **Files.** Every machine-readable file keeps its address with a 200 and no redirect: `/picker.json`,
   `/modules.json`, `/templates.json` and `/schema/...` as static root copies, every other file (`/llms.txt`,
   `/m/<package>.md`, badges, data files) with the catalog's copy under `/run`, asked before the main site's own files.
-  No file of the catalog shares a name with a file the main site writes at its root, except `/robots.txt`, which both
-  write as `Disallow: /` in this build. Absolute links inside the files name `https://www.openmercato.com/run/...`
+  No file of the catalog shares a name with a file the main site writes at its root, except `/robots.txt`: the main
+  site's wins at the root (a static file, no Function), `/run/robots.txt` is the catalog's, the same `Disallow: /` text
+  in this build, with the same headers. Absolute links inside the files name `https://www.openmercato.com/run/...`
   (`SITE_URL`), which Webflow does not serve until the switch: a tool that reads a file keeps working, a person who
   opens a link from one gets the Webflow 404 until then. The catalog's pages point their copy commands at the host
-  they are on.
+  they are on. One exception: `/.well-known/agent-skills/index.json` (and `/run/...`) names each skill at
+  `https://modules.openmercato.com/run/.well-known/agent-skills/<name>/SKILL.md` while `PAGES_SERVE_ORIGIN` is set
+  (`yarn om emit` reads it), because a discovery client fetches that `url` itself; it names `SITE_URL` again once the
+  variable is deleted.
 - **Not indexed** (decision 1a). `PAGES_SERVE_ORIGIN` turns noindex on, as `PAGES_NOINDEX=1` does for the previews:
   `X-Robots-Tag: noindex` on every static file, `robots.txt` of `Disallow: /`, and no Google Analytics.
 - **Canonical on www** (decision 2a). Canonical, `og:url`, hreflang, JSON-LD and the sitemaps name
   `https://www.openmercato.com/...`, as in the `www-preview` build, so the www switch changes no content.
-- **Cost.** `_routes.json` runs Functions on every path outside `/run` and the fixed root files, so each request to
-  the main site on the Pages hosts (pages, `/_astro/`, `/media/`) is a Function invocation. Check the daily count as
-  in Old hosts on a Worker, Before the deploy, above, for the two hosts together.
+- **Cost.** `_routes.json` runs Functions on every path outside `/run`, the fixed root files and the main site's
+  static files (`/_astro/*`, `/media/*`, `/files/*` with the fonts, `/og/*`, `/robots.txt`, the sitemap files), so
+  each page request to the main site on the Pages hosts is a Function invocation, and its images, scripts and styles
+  are not. Check the daily count as in Old hosts on a Worker, Before the deploy, above, for the two hosts together.
+- **Headers.** `_headers` sends the headers live Webflow sends on www (`curl -sI https://www.openmercato.com/` of 27
+  Nov 2026) with every static file: `Strict-Transport-Security: max-age=31536000` (no `includeSubDomains`),
+  `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, and `Referrer-Policy:
+strict-origin-when-cross-origin`, the value Pages sends anyway. No Content-Security-Policy: Webflow's
+  `frame-ancestors 'self'` is what `X-Frame-Options` already says. The hashed bundles (`/_astro/*`, `/run/_astro/*`)
+  get `Cache-Control: public, max-age=31536000, immutable`.
+- **Images.** The www build writes webp variants of every raster image under `/media/` and `/files/` that a page
+  shows, with `srcset` and `sizes` (`www/image-variants.ts`), recompresses large originals in their own format, and
+  gives a page whose og:image is not a raster 1200 by 630 under 1 MB a crop of that size (`-og.jpg`).
 - **Links to Webflow pages.** The production check counts a header or footer link to a page only Webflow serves, as in
   the `www-preview` build, instead of refusing it: the build is noindex. The strict check returns when
   `PAGES_SERVE_ORIGIN` is deleted at C8.
@@ -966,18 +1010,19 @@ curl -s https://modules.openmercato.com/ | grep -o '<link rel="canonical" href="
 Then `npx create-mercato-app` with the module picker (it reads `/picker.json`) and `yarn mercato module search`
 (it reads `/modules.json`) once each.
 
-**Rollback.** Delete the five variables and run `pages` by hand: the next run deploys today's catalog at the root of
-`modules.openmercato.com`, `functions/site.ts` back to the default. Browsers keep the 301s they followed, so for them
-an old address still goes to `/run/...`, which the root layout does not serve (a 404) until the cache expires or the
-variables are set again. The templates root was a 302 and is not cached.
+**Rollback.** Delete all five variables (`PAGES_MERGED`, `SITE_URL`, `BASE_PATH`, `HOME_PATH`,
+`PAGES_SERVE_ORIGIN`) and run `pages` by hand: the next run deploys the catalog alone at the root of
+`modules.openmercato.com`, `functions/site.ts` back to the default. Deleting only some of them stops the run at
+`Check layout variables` with the reason, before the build. Browsers keep the 301s they followed: an hour for the 301s
+sent with `Cache-Control: public, max-age=3600`, and for the 301s sent before that header (deploys of 26 and 27 Nov 2026) as long as the browser likes. For them an old address still goes to `/run/...`, which the root layout does not
+serve (a 404) until the cache expires or the variables are set again. The templates root is a 302 and is not cached.
 
-**Later, at the www switch** (Main site switch, C8): delete only `PAGES_SERVE_ORIGIN`. The build is then indexed and
-the old hosts redirect to `https://www.openmercato.com/run/...` as planned (or their Worker does).
+**Later, at the www switch:** Main site switch, C8, below, in its order.
 
 ## Main site switch (www migration, steps C1 to C10)
 
 www.openmercato.com moves from Webflow to the merged layout of the Pages project `open-mercato-modules` (spec
-[docs/specs/2026-11-24-www-site-migration.md](specs/2026-11-24-www-site-migration.md), Cutover). Each step waits for
+[2026-11-24-www-site-migration.md](https://github.com/open-mercato/modules/blob/spec/www-site-migration/docs/specs/2026-11-24-www-site-migration.md), pull request #23, Cutover). Each step waits for
 the one before it. Webflow stays published and paid for 30 days after C8, so C10 can undo the switch.
 
 **Tools.** `yarn om compare-live` requests every URL of a sitemap and every rule of `www/content/redirects.yaml` on a
@@ -1004,14 +1049,17 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
 1. **C1 Freeze.** The team stops editing Webflow. From here every content change is a pull request on
    `www/content/**`, reviewed and merged by the owner of the main site's content (spec, D10). A post that must publish
    during the freeze is written in the repository.
-2. **C2 The `/run` switch is done and stable** (Switch, in order, above, all 8 steps), and the old hosts run on their
-   Worker with no Functions in the Pages project (Old hosts on a Worker, above, and Phase 1c of the spec). Check:
+2. **C2 The merged site is stable on modules.openmercato.com** (Main site on modules.openmercato.com, above): the five
+   variables are set and every command of its Checks after the deploy gives the result it names. There is no `/run`
+   proxy on Webflow in this path (Switch, in order, above, is not needed), and the old hosts stay on the Functions
+   until after C8: no old-hosts Worker while `PAGES_SERVE_ORIGIN` is set, and Phase 1c comes after the Worker.
+   Check:
 
    ```sh
-   docs/proxy/check.sh https://www.openmercato.com
-   # 0 failed
    docs/proxy/check.sh https://modules.openmercato.com
    # 0 failed
+   curl -sI https://modules.openmercato.com/ | grep -iE '^(x-robots-tag|strict-transport-security)'
+   # x-robots-tag: noindex and strict-transport-security: max-age=31536000
    ```
 
 3. **C3 Final export and delta (owner, on a workstation).** With the read-only token in `WEBFLOW_TOKEN`:
@@ -1090,18 +1138,27 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
    `curl -sI https://openmercato.com/ | grep -iE '^(HTTP|location)'`. Pass: the apex line of the C6 report reads
    `pass` (run C6 again after a change).
 
-8. **C8 Switch.** In order:
-   1. Settings > Secrets and variables > Actions > Variables: `PAGES_MERGED` = `1`. Run `pages` by hand. The
-      production checks run `yarn om pages-site --check dist` on the merged layout, where every page the menus link
-      must be in the build. Then `https://open-mercato-modules.pages.dev/` is the main site and
-      `https://open-mercato-modules.pages.dev/run/modules` the catalog; www still shows Webflow.
-   2. Write down the current `www` record (Cloudflare > zone `openmercato.com` > DNS, its type, target and proxy status) for C10.
+8. **C8 Switch.** In this order, so `www` and the old addresses always have an answer:
+   1. Write down the current `www` record (Cloudflare > zone `openmercato.com` > DNS, its type, target and proxy
+      status) for C10.
+   2. Settings > Secrets and variables > Actions > Variables: delete `PAGES_SERVE_ORIGIN` only. `PAGES_MERGED` (`1`),
+      `SITE_URL`, `BASE_PATH` and `HOME_PATH` stay as they are. Run `pages` by hand. The build is now indexed (no
+      `X-Robots-Tag`, a `robots.txt` that allows all and names the sitemap, Google Analytics on), and the production
+      check is the strict one: every page the menus link must be in the build. From this deploy on the Functions send
+      the pages of `modules.openmercato.com` and `templates.openmercato.com` with a 302 to
+      `https://www.openmercato.com/run/...`, which Webflow answers with a 404 until step 3: keep the two steps minutes
+      apart. `/run/...` on the old hosts and every machine-readable file keep answering 200, so a browser that still
+      holds a 301 to `https://modules.openmercato.com/run/...` lands on a page.
    3. Workers & Pages > `open-mercato-modules` > Custom domains > Set up a custom domain: `www.openmercato.com`.
       Cloudflare repoints the `www` record from Webflow to the project. Wait until the domain shows Active.
-   4. Remove the Worker route `www.openmercato.com/run*` of the `/run` proxy (Workers & Pages >
-      `openmercato-run-proxy` > Settings > Domains & Routes). Until it is removed it proxies `/run` to the same
-      project, so the order is safe.
-   5. Compare against the C6 snapshot of the preview, then the checks of the old hosts and of `/run`:
+   4. If a Worker route `www.openmercato.com/run*` of a `/run` proxy exists, remove it (Workers & Pages >
+      `openmercato-run-proxy` > Settings > Domains & Routes); in this path there is none.
+   5. Caching > Configuration > Purge cache > Custom purge: `https://www.openmercato.com/robots.txt`,
+      `https://modules.openmercato.com/robots.txt` and `https://templates.openmercato.com/robots.txt`. The zone sends
+      the root `robots.txt` with `Cache-Control: max-age=14400` (4 hours, a zone setting, not the build: the file
+      under `/run` gets `max-age=0`), so without the purge the edge and browsers may serve Webflow's or the noindex
+      `Disallow: /` for up to 4 hours. Crawlers keep their own copy (Google up to a day) whatever the headers say.
+   6. Compare against the C6 snapshot of the preview, then the checks of the old hosts and of `/run`:
 
       ```sh
       yarn om compare-live --baseline ~/compare-live-c6.json --candidate https://www.openmercato.com \
@@ -1111,10 +1168,17 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
       # nothing: production is indexed
       curl -s https://www.openmercato.com/robots.txt
       # User-agent: *, Allow: / and Sitemap: https://www.openmercato.com/sitemap-index.xml
+      curl -sI https://modules.openmercato.com/m/@open-mercato/gateway-tpay | grep -iE '^(HTTP|location)'
+      # 302 and location: https://www.openmercato.com/run/m/@open-mercato/gateway-tpay
       ```
 
       and the commands of step 5 of Switch, in order, above. Pass: `0 failed` and every result as named. Note the
       date and time: C10 lists the pull requests merged since.
+
+   7. Only now, and only after its request count (Old hosts on a Worker, above): deploy the old-hosts Worker, then
+      Phase 1c. Browsers that followed a 301 of the old addresses before step 2 go to
+      `https://modules.openmercato.com/run/...`, which the Pages project keeps serving (with its canonical on www), so
+      no cached 301 ends on a 404.
 9. **C9 After.** Search Console, property www.openmercato.com: submit `https://www.openmercato.com/sitemap-index.xml`.
    The owner of the automation that writes docs into the Webflow `docs` collection turns it off (spec, Q1). Webflow
    stays published and paid for 30 days. For 14 days, daily: Search Console, Pages, the counts of "Not found (404)" and
@@ -1125,18 +1189,22 @@ the build, and at most 1,800 static and 90 dynamic rules (Pages allows 2,000 and
 
 In this order, so `www` always has an answer:
 
-1. Restore the Worker route `www.openmercato.com/run*` of the `/run` proxy, its upstream
+1. If C8 removed a Worker route `www.openmercato.com/run*` of a `/run` proxy, restore it, its upstream
    `https://open-mercato-modules.pages.dev` ([docs/proxy/README.md](proxy/README.md), Switch day). While www is on
-   the project the route sends `/run` to the same project, so nothing changes yet.
+   the project the route sends `/run` to the same project, so nothing changes yet. In the path of C2 there is none.
 2. Cloudflare > zone `openmercato.com` > DNS: point the `www` record back to the Webflow target, with the type and
    proxy status written down at C8. The domain stays attached in Webflow for the 30 days, so Webflow answers again.
 3. Workers & Pages > `open-mercato-modules` > Custom domains: remove `www.openmercato.com`. If the dashboard offers
    to delete the DNS record with it, keep the record (it now points at Webflow).
-4. Check: `docs/proxy/check.sh https://www.openmercato.com` ends with `0 failed`, and
-   `curl -sI https://www.openmercato.com/ | grep -iE '^(HTTP|server)'` names Webflow again.
+4. Settings > Secrets and variables > Actions > Variables: set `PAGES_SERVE_ORIGIN` = `https://modules.openmercato.com`
+   again and run `pages` by hand, so `modules.openmercato.com` serves the merged site again (noindex), as before C8,
+   instead of sending its pages to `https://www.openmercato.com/run/...`, which Webflow does not serve. If the
+   old-hosts Worker was deployed in C8 step 7, remove its routes first (Old hosts on a Worker, Rollback, above).
+5. Purge `robots.txt` as in C8 step 5.
+6. Check: `curl -sI https://www.openmercato.com/ | grep -iE '^(HTTP|server)'` names Webflow again, and the Checks
+   after the deploy of Main site on modules.openmercato.com, above, give the results they name.
 
-The old hosts are not affected: their Worker reads the `pages.dev` address. `PAGES_MERGED` can stay `1`; nothing
-serves the root of the project then. Webflow has no docs map, so `/docs/*` answers as before the switch. Content and
+`PAGES_MERGED`, `SITE_URL`, `BASE_PATH` and `HOME_PATH` stay as they are. Webflow has no docs map, so `/docs/*` answers as before the switch. Content and
 redirects merged in the repository since C8 are copied to Webflow by hand; list them with:
 
 ```sh

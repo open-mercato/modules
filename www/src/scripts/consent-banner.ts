@@ -1,6 +1,6 @@
 // ConsentBanner (www/src/lib/consent.ts): the live banner's behavior. Without an answer in the cookie it appends the
 // banner to the body and fades it in from below (0.4 s); Dismiss or Accept sets `cookieAccepted` for 180 days and fades
-// it out. Reduced motion skips the fades. Without JavaScript there is no banner, which changes nothing: it gates nothing.
+// it out, the page staying where it is. Reduced motion skips the fades. Without JavaScript there is no banner, which changes nothing: it gates nothing.
 import { consentBannerHtml, consentCookie, hasConsent } from '../lib/consent.ts'
 
 const FADE_MS = 400
@@ -20,7 +20,10 @@ function show(): void {
       requestAnimationFrame(() => Object.assign(banner.style, { opacity: '1', transform: 'translateY(0)' })),
     )
 
-  const dismiss = (): void => {
+  const dismiss = (e?: Event): void => {
+    // Accept is the live `<a href="#">`: webflow.js cancelled every click on such a link, this site has no webflow.js,
+    // so without this the page jumps to the top and the address gets a `#` (audit of 27 Nov 2026)
+    e?.preventDefault()
     document.cookie = consentCookie(new Date())
     if (still) {
       banner.style.display = 'none'
