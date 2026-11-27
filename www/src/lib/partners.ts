@@ -1,4 +1,4 @@
-// The certified partners of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Phase 4): which partners
+// The certified partners of the main site (spec 2026-11-24-www-site-migration.md of PR #23, Phase 4): which partners
 // the site shows and in what order, the values and options of the partner filter's facets (its rules live in
 // partner-filter.ts), the cards and profiles, and the SEO of a partner page. A draft is validated by the content config
 // but never routed, listed, linked or put in a sitemap (D6). Isomorphic; the pages and the unit tests use it.

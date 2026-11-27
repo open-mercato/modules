@@ -1,6 +1,6 @@
 // `yarn om import-webflow --export <dir> [--media-cache <dir>] [--offline] [--only <collection>[,...]] [--check]
 // [--force <path>] [--target <dir>] [--docs-sitemap <file>]`: the deterministic importer from a Webflow export to
-// www/content/ and www/public/media/ (spec docs/specs/2026-11-24-www-site-migration.md, API Contracts). Writes the run
+// www/content/ and www/public/media/ (spec 2026-11-24-www-site-migration.md of PR #23, API Contracts). Writes the run
 // report to <out>/import-webflow/report.md. Exit 0 ok, 1 stopped items, conflicts or (with --check) a difference,
 // 2 environment error. `--target` (default: the repository root) writes the output under another folder, for a trial run.
 import { mkdirSync, writeFileSync } from 'node:fs'

@@ -1,4 +1,4 @@
-# The Worker for the old hosts (spec docs/specs/2026-11-24-www-site-migration.md, Phase 1b). Not deployed from this
+# The Worker for the old hosts (spec 2026-11-24-www-site-migration.md of PR #23, Phase 1b). Not deployed from this
 # repository: the owner deploys it from the repository root, on the Cloudflare account of the openmercato.com zone,
 # after the move to /run (docs/RUNBOOK.md, Old hosts on a Worker):
 #   yarn wrangler deploy --config workers/old-hosts/wrangler.toml

@@ -1,4 +1,4 @@
-# Redirects of the main site (spec docs/specs/2026-11-24-www-site-migration.md, Data Model, redirects).
+# Redirects of the main site (spec 2026-11-24-www-site-migration.md of PR #23, Data Model, redirects).
 # yarn om pages-site --merge writes them into the root _redirects in this order; the first matching rule wins.
 #
 # source: webflow-panel. The 301 list of Webflow (Site settings, Publishing, 301 redirects; decision D8), copied by

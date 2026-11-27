@@ -1,4 +1,4 @@
-// The partner filter of /certified-partners (spec docs/specs/2026-11-24-www-site-migration.md, UI/UX, Partner filter):
+// The partner filter of /certified-partners (spec 2026-11-24-www-site-migration.md of PR #23, UI/UX, Partner filter):
 // seven facets; within a facet any selected value matches, across facets all must match. The state lives in the query
 // string, one parameter per selected value, named after its facet
 // (`?tier=ai-native-agency&industry=finance&industry=retail`), so a filtered view can be shared and Back works.
