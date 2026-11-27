@@ -93,6 +93,36 @@ describe('srcset and sizes', () => {
   })
 })
 
+describe('a build through a stand-in service', () => {
+  let tmp: string
+  beforeEach(() => {
+    tmp = mkdtempSync(join(tmpdir(), 'om-images-'))
+  })
+  afterEach(() => rmSync(tmp, { recursive: true, force: true }))
+  const stub = {
+    transform: async () => new Uint8Array([1, 2, 3]),
+    metadata: async () => ({ width: 1000, height: 500, format: 'png' }),
+  }
+
+  it('refuses two sources that would write the same variant, and skips a source that is no valid encoding', async () => {
+    mkdirSync(join(tmp, 'media'))
+    for (const f of ['x.png', 'x.jpg']) writeFileSync(join(tmp, 'media', f), 'img')
+    writeFileSync(join(tmp, 'a.html'), '<img src="/media/x.png" alt=""><img src="/media/x.jpg" alt="">')
+    await expect(processImages(tmp, stub)).rejects.toThrow(
+      'om-www-images: /media/x.jpg and /media/x.png would both write /media/x-240w.webp; rename one of them',
+    )
+    writeFileSync(join(tmp, 'a.html'), '<img src="/media/100%.png" alt="">')
+    expect((await processImages(tmp, stub)).images).toBe(0)
+  })
+
+  it('states the og size after an og:image tag in any attribute order and quoting', () => {
+    const head = `<meta content='${ORIGIN}/media/a.png' property='og:image'><meta name="x" content="y">`
+    expect(withOgImage(head, '/media/a.png', '/media/a-og.jpg', { width: 800, height: 420 })).toBe(
+      `<meta content="${ORIGIN}/media/a-og.jpg" property='og:image'><meta property="og:image:width" content="800"><meta property="og:image:height" content="420"><meta name="x" content="y">`,
+    )
+  })
+})
+
 describe('a build through the image service', () => {
   let tmp: string
   beforeEach(() => {

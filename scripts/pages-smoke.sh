@@ -20,13 +20,16 @@ base="http://127.0.0.1:$port"
 serving=0
 grep -q "serve: 'https://modules.openmercato.com'" functions/site.ts && serving=1
 
+if curl -s -o /dev/null "$base/"; then
+  echo "$0: something already answers on $base; stop it or pass another port" >&2
+  exit 64
+fi
 log="$(mktemp)"
-WRANGLER_SEND_METRICS=false yarn wrangler pages dev "$dist" --port "$port" >"$log" 2>&1 &
+# its own process group (setsid), so the stop below ends wrangler and the workerd it starts, and nothing else
+WRANGLER_SEND_METRICS=false setsid node_modules/.bin/wrangler pages dev "$dist" --port "$port" >"$log" 2>&1 &
 pid=$!
 stop() {
-  kill "$pid" 2>/dev/null
-  # wrangler starts workerd as a child: stop what is left of this server only
-  pkill -P "$pid" 2>/dev/null
+  kill -- "-$pid" 2>/dev/null
   wait "$pid" 2>/dev/null
   rm -f "$log"
 }
@@ -84,6 +87,14 @@ check "HEAD of the home" 200 - / -I
 check "the catalog home" 200 - /run/modules
 check "the base leads to the catalog home" 302 "127.0.0.1:$port/run/modules" /run
 check "a run of slashes under the base" 301 "127.0.0.1:$port/run/modules" /run//modules
+pkg="$(cd "$dist/run/m" 2>/dev/null && ls -d @*/*.html 2>/dev/null | head -n 1)"
+pkg="${pkg%.html}"
+if [ -n "$pkg" ]; then
+  check "a package page with a trailing slash keeps its @" 301 "127.0.0.1:$port/run/m/$pkg" "/run/m/$pkg/"
+else
+  echo "fail  $dist/run/m has a scoped package page"
+  failed=$((failed + 1))
+fi
 check "/sitemap.xml" 301 "127.0.0.1:$port/sitemap-index.xml" /sitemap.xml
 check "a docs address (a splat rule of the main site, after the static ones)" 301 "docs.openmercato.com/" /docs/smoke-test
 for h in 'Strict-Transport-Security: max-age=31536000$' 'X-Frame-Options: SAMEORIGIN' 'X-Content-Type-Options: nosniff'; do

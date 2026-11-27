@@ -550,7 +550,14 @@ export function hostServe(requestUrl: string | URL, c: SiteConfig): ServeStep | 
   // a run of slashes (`//run/modules`, `/m//x`): one 301 to the path with single slashes on the serving origin, an
   // absolute address there, so `//evil.example` is never a Location a browser could read as another host
   if (path.includes('//')) {
-    const location = `${c.serve}${path.replace(/\/{2,}/g, '/')}${url.search}`
+    const single = path.replace(/\/{2,}/g, '/')
+    // `templates.openmercato.com//` is its root: the Templates section, as for `/`
+    if (url.hostname === TEMPLATES_HOST && single === '/')
+      return {
+        kind: 'redirect',
+        redirect: { location: `${templatesTarget(`${c.serve}${c.base}`)}${url.search}`, status: 302 },
+      }
+    const location = `${c.serve}${single}${url.search}`
     return onOrigin(location, c.serve, '/')
       ? { kind: 'redirect', redirect: { location, status: SERVE_MOVED_STATUS } }
       : null
@@ -590,7 +597,8 @@ function onOrigin(location: string, origin: string, prefix: string): boolean {
 export function oldPagePath(path: string): string {
   const p = path
     .replace(/%40/gi, '@')
-    .replace(/\/index\.html$/, '/')
+    .replace(/\/+$/, '')
+    .replace(/\/index\.html$/, '')
     .replace(/\.html$/, '')
     .replace(/\/+$/, '')
   return p === '' ? '/' : p

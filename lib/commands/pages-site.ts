@@ -84,9 +84,14 @@ export default function pagesSite(ctx: CommandContext): number {
     console.error('om pages-site: --settings checks the variables only; run it on its own')
     return EXIT_ENV
   }
-  const code = run(ctx, merge, check, settings)
-  if (code === EXIT_ENV) console.error(`om pages-site: ${SETTINGS_HINT}`)
-  return code
+  return run(ctx, merge, check, settings)
+}
+
+/** A refused variable set: the reason, then what goes together (SETTINGS_HINT). */
+function refused(message: string): number {
+  console.error(`om pages-site: ${message}`)
+  console.error(`om pages-site: ${SETTINGS_HINT}`)
+  return EXIT_ENV
 }
 
 function run(ctx: CommandContext, merge: boolean, check: string | null, settings: boolean): number {
@@ -97,30 +102,22 @@ function run(ctx: CommandContext, merge: boolean, check: string | null, settings
     c = siteConfigFromEnv(process.env)
     serve = serveOriginFromEnv(process.env)
   } catch (err) {
-    console.error(`om pages-site: ${(err as Error).message}`)
-    return EXIT_ENV
+    return refused((err as Error).message)
   }
   if (merged) {
     const problem = mergeConfigProblem(c)
-    if (problem) {
-      console.error(`om pages-site: PAGES_MERGED: ${problem}`)
-      return EXIT_ENV
-    }
+    if (problem) return refused(`PAGES_MERGED: ${problem}`)
     c = { ...c, merged: true, ...(serve ? { serve } : {}) }
   } else if (merge) {
     console.error('om pages-site: --merge needs PAGES_MERGED=1 (functions/site.ts and the check follow it)')
     return EXIT_ENV
   } else if (serve) {
-    console.error(
-      'om pages-site: PAGES_SERVE_ORIGIN needs PAGES_MERGED=1: a Pages host serves the merged layout, never the catalog alone',
+    return refused(
+      'PAGES_SERVE_ORIGIN needs PAGES_MERGED=1: a Pages host serves the merged layout, never the catalog alone',
     )
-    return EXIT_ENV
   }
   const hostProblem = pagesHostProblem(c)
-  if (hostProblem) {
-    console.error(`om pages-site: ${hostProblem}`)
-    return EXIT_ENV
-  }
+  if (hostProblem) return refused(hostProblem)
   const noindex = noindexFromEnv(process.env)
   if (noindex && !isNested(c)) {
     console.error('om pages-site: PAGES_NOINDEX needs a BASE_PATH other than / (the preview of the nested layout)')

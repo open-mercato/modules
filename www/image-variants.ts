@@ -177,7 +177,14 @@ export function withOgImage(
     sawWidth ? '' : `<meta property="og:image:width" content="${size.width}">`,
     sawHeight ? '' : `<meta property="og:image:height" content="${size.height}">`,
   ].join('')
-  if (add !== '') out = out.replace(/<meta\s+property="og:image"[^>]*>/i, (m) => `${m}${add}`)
+  // after the og:image tag, whatever the order and quoting of its attributes
+  let added = false
+  if (add !== '')
+    out = out.replace(META_TAG, (tag) => {
+      if (added || attr(tag, 'property') !== 'og:image') return tag
+      added = true
+      return `${tag}${add}`
+    })
   return out
 }
 
@@ -276,11 +283,30 @@ export async function processImages(
   const html = new Map(pages.map((f) => [f, readFileSync(f, 'utf8')]))
   const sources = new Set<string>()
   const ogs = new Set<string>()
-  for (const text of html.values()) {
-    for (const s of imgSources(text)) sources.add(s)
-    const og = ogSource(text)
-    if (og) ogs.add(og)
+  // a source whose path is no valid percent-encoding names no file of the build: left as it is
+  const decodable = (src: string): boolean => {
+    try {
+      decodeURIComponent(src)
+      return true
+    } catch {
+      return false
+    }
   }
+  for (const text of html.values()) {
+    for (const s of imgSources(text)) if (decodable(s)) sources.add(s)
+    const og = ogSource(text)
+    if (og && decodable(og)) ogs.add(og)
+  }
+  // two sources that differ only in their extension (`x.png`, `x.jpg`) would write the same variant: refuse the build
+  const outputs = new Map<string, string>()
+  const claim = (out: string, src: string): void => {
+    const other = outputs.get(out)
+    if (other !== undefined && other !== src)
+      throw new Error(`om-www-images: ${src} and ${other} would both write ${out}; rename one of them`)
+    outputs.set(out, src)
+  }
+  for (const src of sources) for (const w of VARIANT_WIDTHS) claim(variantPath(src, w), src)
+  for (const src of ogs) claim(ogPath(src), src)
   const { run, hits } = cached(cacheDir, service.transform)
   const limit = pLimit(4)
   const widths = new Map<string, number[]>()

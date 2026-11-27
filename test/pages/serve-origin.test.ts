@@ -11,8 +11,11 @@ import {
   DEFAULT_SITE,
   hostRedirect,
   hostServe,
+  mergedPagesRoutes,
   noindexFromEnv,
+  oldPagePath,
   otherProductionOrigins,
+  routesLimitProblem,
   SECURITY_HEADERS,
   SERVE_REDIRECT_CACHE,
   serveOriginFromEnv,
@@ -324,6 +327,36 @@ describe('one hop, bounded and noindex (audit of 27 Nov 2026)', () => {
         expect(r.location, path).not.toContain('%40')
       }
     }
+  })
+
+  it('normalizes an old page path, and keeps the templates root on a run of slashes', async () => {
+    const table: [path: string, want: string][] = [
+      ['/compat', '/compat'],
+      ['/compat/', '/compat'],
+      ['/compat.html', '/compat'],
+      ['/compat.html/', '/compat'],
+      ['/compat/index.html', '/compat'],
+      ['/m/%40x/y//', '/m/@x/y'],
+      ['/index.html', '/'],
+      // a package named like a file keeps its name: only `.html` goes
+      ['/m/socket.io', '/m/socket.io'],
+    ]
+    for (const [path, want] of table) expect(oldPagePath(path), path).toBe(want)
+    expect(shown(await request(`${MODULES}/compat.html/`, SERVED))).toBe(`301 ${MODULES}/run/compat`)
+    expect(shown(await request(`${TEMPLATES}//`, SERVED))).toBe(`302 ${MODULES}/run/templates`)
+    expect(shown(await request(`${TEMPLATES}//?utm=x`, SERVED))).toBe(`302 ${MODULES}/run/templates?utm=x`)
+  })
+
+  it('keeps _routes.json of the merged layout within the Pages limits', () => {
+    const r = mergedPagesRoutes('/run', ['sitemap-0.xml', 'sitemap-index.xml'])
+    expect(r.exclude).toEqual(
+      expect.arrayContaining(['/run/*', '/_astro/*', '/media/*', '/files/*', '/og/*', '/robots.txt', '/sitemap-0.xml']),
+    )
+    expect(routesLimitProblem(r)).toBeNull()
+    const many = { ...r, exclude: Array.from({ length: 100 }, (_, i) => `/x${i}`) }
+    expect(routesLimitProblem(many)).toBe('101 rules; Pages allows 100')
+    const long = { ...r, exclude: [`/${'a'.repeat(100)}`] }
+    expect(routesLimitProblem(long)).toBe(`the rule /${'a'.repeat(100)} is longer than 100 characters`)
   })
 
   it('the redirects a serving host builds are noindex, cached an hour and carry the security headers', async () => {
