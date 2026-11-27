@@ -698,6 +698,84 @@ export const WWW_SOURCES: Record<WwwCollection, WwwSource> = {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// The navbar and the footer of the main site: www/content/navigation.json and footer.json, read by
+// lib/core/main-site.ts (Strapi CMS spec 2026-11-27-www-strapi-cms.md, Phase 1). JSON, not YAML, so lib/core keeps no
+// Node API: main-site.ts imports both with an import attribute. The texts are the main site's own words, copied as
+// they stand there, except its long dash (U+2014, in two descriptions), written " - " (AGENTS.md 7; `yarn om
+// check-text` reads www/). Main-site addresses are absolute, so they hold on every host that serves the build. The
+// Docs row links docs.openmercato.com, where the live row's /documentation answers a 301.
+
+/** Names of the 22 px stroke icons of the navbar panels (site/src/components/nav-icons.ts draws them). */
+export const NAV_ICONS = [
+  'crm',
+  'foundation-framework',
+  'agent-orchestrator',
+  'cloud-sandboxes',
+  'cezar',
+  'docs',
+  'architecture',
+  'modules',
+  'how-to-contribute',
+  'agencies',
+  'partners',
+  'certified-partners',
+  'enterprise-level-support',
+  'run-modules',
+  'run-templates',
+  'run-compat',
+  'run-radar',
+  'run-quality',
+  'run-agents',
+] as const
+export const NavIcon = z.enum(NAV_ICONS)
+
+/** A link of the navbar or the footer; `variant` is a class next to `navbar_link` (`is-github`, hidden by the styles). */
+export const SiteLink = z.strictObject({
+  label: Text,
+  url: HttpsUrl,
+  variant: z.literal('is-github').optional(),
+})
+
+/** `navigation.json`: the menus with a panel, in the navbar's order, its plain links and the sandbox button. */
+export function navigationSchema() {
+  return z.strictObject({
+    menus: z
+      .array(
+        z.strictObject({
+          label: Text,
+          items: z
+            .array(
+              z.strictObject({
+                label: Text,
+                url: HttpsUrl,
+                /** A site path of the catalog the header links instead of `url` (built with href(), like the Run rows). */
+                run: z
+                  .string()
+                  .regex(/^\/[^\s]*$/)
+                  .optional(),
+                description: Text,
+                icon: NavIcon,
+              }),
+            )
+            .min(1),
+        }),
+      )
+      .min(1),
+    links: z.array(SiteLink).min(1),
+    sandbox: SiteLink,
+  })
+}
+
+/** `footer.json`: the footer's links in its order, the groups of its folded "Other" list and the licence line. */
+export function footerSchema() {
+  return z.strictObject({
+    links: z.array(SiteLink).min(1),
+    other: z.array(z.strictObject({ label: Text, links: z.array(SiteLink).min(1) })).min(1),
+    note: Text,
+  })
+}
+
+// ---------------------------------------------------------------------------------------------------------------
 // Routes
 
 /**

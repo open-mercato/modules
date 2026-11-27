@@ -1,0 +1,106 @@
+{
+  "menus": [
+    {
+      "label": "Product",
+      "items": [
+        {
+          "label": "CRM",
+          "url": "https://www.openmercato.com/crm",
+          "description": "Contacts, deals and workflows in a CRM you can make your own.",
+          "icon": "crm"
+        },
+        {
+          "label": "Foundation Framework",
+          "url": "https://www.openmercato.com/product",
+          "description": "Start with 80% of CRM/ERP done - modular monolith, OCP overlays, and AI-native extensibility.",
+          "icon": "foundation-framework"
+        },
+        {
+          "label": "Agent Orchestrator",
+          "url": "https://www.openmercato.com/agent-orchestrator",
+          "description": "Run AI agents in production with workflow integration, audit trails, and human-in-the-loop controls.",
+          "icon": "agent-orchestrator"
+        },
+        {
+          "label": "Cloud Sandboxes",
+          "url": "https://openmercatocloud.com/demo",
+          "description": "Boot a ready Open Mercato workspace in 30 seconds and build with AI agents - no local setup.",
+          "icon": "cloud-sandboxes"
+        },
+        {
+          "label": "Cezar",
+          "url": "https://cezar.run/",
+          "description": "Run Claude Code, Codex and other coding agents in parallel, 24/7, on the subscriptions you already pay for.",
+          "icon": "cezar"
+        }
+      ]
+    },
+    {
+      "label": "Developers",
+      "items": [
+        {
+          "label": "Docs",
+          "url": "https://docs.openmercato.com/",
+          "description": "Get started, build a module, or look up an API.",
+          "icon": "docs"
+        },
+        {
+          "label": "Architecture",
+          "url": "https://www.openmercato.com/architecture",
+          "description": "Learn the Modular Monolith, Overlay system (OCP), DI, and request flow.",
+          "icon": "architecture"
+        },
+        {
+          "label": "Modules",
+          "url": "https://modules.openmercato.com/",
+          "run": "/",
+          "description": "Browse the Open Mercato module catalog.",
+          "icon": "modules"
+        },
+        {
+          "label": "How to contribute",
+          "url": "https://www.openmercato.com/how-to-contribute",
+          "description": "Install Open Mercato and run a working environment in minutes.",
+          "icon": "how-to-contribute"
+        },
+        {
+          "label": "For Agencies & Software Houses",
+          "url": "https://www.openmercato.com/agencies",
+          "description": "Deliver fixed-scope projects faster with reusable overlays and better margins.",
+          "icon": "agencies"
+        }
+      ]
+    },
+    {
+      "label": "Enterprise",
+      "items": [
+        {
+          "label": "Implementation Partners",
+          "url": "https://www.openmercato.com/partners",
+          "description": "Certified software houses trained in the Open Mercato Way for enterprise delivery.",
+          "icon": "partners"
+        },
+        {
+          "label": "Certified Partners",
+          "url": "https://www.openmercato.com/certified-partners",
+          "description": "Browse and hire a certified agency matched to your industry, scope, and budget.",
+          "icon": "certified-partners"
+        },
+        {
+          "label": "Enterprise Level Support",
+          "url": "https://www.openmercato.com/enterprise-level-support",
+          "description": "Community and commercial support tiers for mission-critical deployments.",
+          "icon": "enterprise-level-support"
+        }
+      ]
+    }
+  ],
+  "links": [
+    { "label": "Pricing", "url": "https://www.openmercato.com/pricing" },
+    { "label": "Clients", "url": "https://www.openmercato.com/case-studies" },
+    { "label": "Blog", "url": "https://www.openmercato.com/blog" },
+    { "label": "Contact", "url": "https://www.openmercato.com/contact" },
+    { "label": "GitHub", "url": "https://github.com/open-mercato/open-mercato", "variant": "is-github" }
+  ],
+  "sandbox": { "label": "Launch sandbox", "url": "https://app.openmercatocloud.com/signup?template=mercato" }
+}

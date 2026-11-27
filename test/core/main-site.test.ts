@@ -7,14 +7,17 @@ import { describe, expect, it } from 'vitest'
 import {
   isMainSiteLink,
   MAIN_SITE_FOOTER,
+  MAIN_SITE_FOOTER_NOTE,
   MAIN_SITE_FOOTER_OTHER,
   MAIN_SITE_HOME,
   MAIN_SITE_LINKS,
   MAIN_SITE_MENUS,
   MAIN_SITE_ORIGIN,
+  MAIN_SITE_SANDBOX,
   RUN_MENU,
 } from '../../lib/core/main-site.ts'
 import { findBannedChars } from '../../lib/core/text.ts'
+import { footerSchema, navigationSchema } from '../../lib/schema/www-content.ts'
 
 const PAGES = join(import.meta.dirname, '..', '..', 'site', 'src', 'pages')
 
@@ -66,6 +69,36 @@ describe('the navbar of the main site', () => {
     for (const u of urls) expect(isMainSiteLink(u), u).toBe(true)
     for (const u of [`${MAIN_SITE_ORIGIN}/crm/x`, `${MAIN_SITE_ORIGIN}/modules`, '/crm', `${MAIN_SITE_ORIGIN}/m/x`])
       expect(isMainSiteLink(u), u).toBe(false)
+  })
+})
+
+describe('the navbar and the footer as content files (Strapi CMS spec, Step 1.1)', () => {
+  const read = (name: string): unknown =>
+    JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'www', 'content', name), 'utf8'))
+
+  it('re-exports www/content/navigation.json and footer.json as they are', () => {
+    expect(navigationSchema().parse(read('navigation.json'))).toEqual({
+      menus: MAIN_SITE_MENUS,
+      links: MAIN_SITE_LINKS,
+      sandbox: MAIN_SITE_SANDBOX,
+    })
+    expect(footerSchema().parse(read('footer.json'))).toEqual({
+      links: MAIN_SITE_FOOTER,
+      other: MAIN_SITE_FOOTER_OTHER,
+      note: MAIN_SITE_FOOTER_NOTE,
+    })
+  })
+
+  it('refuses an icon the navbar cannot draw, a link that is not https and an unknown key', () => {
+    const nav = read('navigation.json') as { menus: { items: Record<string, unknown>[] }[]; sandbox: object }
+    const withIcon = structuredClone(nav)
+    withIcon.menus[0]!.items[0]!.icon = 'rocket'
+    expect(navigationSchema().safeParse(withIcon).success).toBe(false)
+    const withUrl = structuredClone(nav)
+    withUrl.menus[0]!.items[0]!.url = 'http://www.openmercato.com/crm'
+    expect(navigationSchema().safeParse(withUrl).success).toBe(false)
+    expect(navigationSchema().safeParse({ ...nav, extra: true }).success).toBe(false)
+    expect(footerSchema().safeParse({ ...(read('footer.json') as object), note: ' ' }).success).toBe(false)
   })
 })
 

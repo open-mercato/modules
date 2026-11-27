@@ -12,6 +12,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "types": ["node"],
+    "resolveJsonModule": true,
     "skipLibCheck": true
   },
   "include": ["lib", "site/src", "scripts", "test"],

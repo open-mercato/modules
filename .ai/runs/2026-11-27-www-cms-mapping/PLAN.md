@@ -10,7 +10,7 @@ Base: main (71c9fc1)
 
 | Phase | Step | Title                                                         | Exec   | Status | Commit |
 | ----- | ---- | ------------------------------------------------------------- | ------ | ------ | ------ |
-| 1     | 1.1  | Navbar and footer as content files                            | inline | todo   | -      |
+| 1     | 1.1  | Navbar and footer as content files                            | inline | done   | (next) |
 | 1     | 1.1a | Comments out of the content, files in the pull's format       | inline | todo   | -      |
 | 1     | 1.1b | Landing template words as a content file                      | inline | todo   | -      |
 | 1     | 1.2  | Mapping table, toDocument and fromDocument, Strapi REST fixture | inline | todo   | -      |
