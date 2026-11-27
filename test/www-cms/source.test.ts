@@ -88,6 +88,20 @@ const ROWS: [row: string, input: SourceInput, expected: Partial<Decision> & { us
     { use: 'files', writeSnapshot: false, summary: ['Strapi shadow: Strapi unreachable: 503.'] },
   ],
   [
+    'shadow with invalid content: the files, and every problem in the summary to fix before the switch',
+    { variable: 'shadow', input: undefined, pull: invalid },
+    {
+      use: 'files',
+      writeSnapshot: false,
+      issue: 'none',
+      summary: [
+        'Strapi shadow: Strapi content invalid.',
+        '- blog/x.md: thumbnail.alt is required',
+        '- case-studies/y.md: stats: 4',
+      ],
+    },
+  ],
+  [
     'strapi with a good pull: the pulled content, the snapshot job, and the issue closed',
     { variable: 'strapi', input: 'publish', pull: good, snapshot },
     { use: 'pull', writeSnapshot: true, issue: 'close' },

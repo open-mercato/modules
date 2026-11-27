@@ -131,11 +131,13 @@ export function decideContent(x: SourceInput): Decision {
         summary: [`Strapi shadow: ${pull.differs ?? 0} files differ.`],
       }
     const why = pull.kind === 'unreachable' ? `Strapi unreachable: ${pull.status}.` : 'Strapi content invalid.'
+    // the problems are what has to be fixed in Strapi before the source switch (Phase 6), so the summary lists them
+    const problems = pull.kind === 'invalid' ? problemLines(pull.problems) : []
     return {
       use: 'files',
       writeSnapshot: false,
       issue: 'none',
-      summary: pull.kind === 'not-run' ? ['Strapi shadow: not read.'] : [`Strapi shadow: ${why}`],
+      summary: pull.kind === 'not-run' ? ['Strapi shadow: not read.'] : [`Strapi shadow: ${why}`, ...problems],
     }
   }
 
