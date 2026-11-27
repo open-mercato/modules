@@ -13,8 +13,8 @@ Base: main (71c9fc1)
 | 1     | 1.1  | Navbar and footer as content files                            | inline | done   | 14382ca |
 | 1     | 1.1a | Comments out of the content, files in the pull's format       | inline | done   | a61c4ef |
 | 1     | 1.1b | Landing template words as a content file                      | inline | done   | 79ed9f5 |
-| 1     | 1.2  | Mapping table, toDocument and fromDocument, Strapi REST fixture | inline | done   | (next) |
-| 1     | 1.3  | Content source decision table                                 | inline | todo   | -      |
+| 1     | 1.2  | Mapping table, toDocument and fromDocument, Strapi REST fixture | inline | done   | d531039 |
+| 1     | 1.3  | Content source decision table                                 | inline | done   | (next) |
 
 ## Goal
 
