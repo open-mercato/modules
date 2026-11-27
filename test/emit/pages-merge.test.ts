@@ -28,6 +28,7 @@ import {
   localizeHrefs,
   mergeConfigProblem,
   mergedRedirects,
+  mergedRedirectsTail,
   mergedRobots,
   mergePagesSite,
   REDIRECT_CHECK,
@@ -111,7 +112,7 @@ describe('the merged layout (pages-site --merge)', () => {
     expect(at('_redirects')).toContain(pagesRedirects(WWW))
     // audit of 27 Nov 2026: every static rule before the first splat or placeholder, the cleanup rules last
     const rules = redirectRules(at('_redirects'))
-    expect(rules.filter((r) => r.dynamic).map((r) => r.from)).toEqual(['/run//*', '/run/m/:scope/:name/'])
+    expect(rules.filter((r) => r.dynamic).map((r) => r.from)).toEqual(['/run/m/:scope/:name/'])
     expect(at('robots.txt')).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap-index.xml\n`)
     expect(sitemapLocs(at('sitemap-index.xml'))).toEqual(r.sitemaps)
     // the catalog's fixed root files and Functions route list stay until Phase 1c
@@ -303,6 +304,21 @@ describe('the merged layout (pages-site --merge)', () => {
       '1802 dynamic redirects; the check allows 90 (Pages 100)',
     ])
     expect(redirectProblems('/a /b 301\n/a /c 301\n')).toEqual(['the redirect from /a is given twice'])
+  })
+
+  it('fails on a rule whose source, slashes collapsed as Pages reads it, covers its own target', () => {
+    // incident of 27 Nov 2026: Pages read `/run//*` as `/run/*`, and every page under /run answered 301 to itself
+    expect(mergedRedirects(WWW)).not.toContain('//*')
+    expect(redirectProblems('/run//* /run/:splat 301\n')).toEqual([
+      'the redirect from /run//* covers its own target /run/:splat: a loop',
+    ])
+    expect(redirectProblems('/a /a 301\n/b/:x /b/:x?y=1 301\n')).toEqual([
+      'the redirect from /a covers its own target /a: a loop',
+      'the redirect from /b/:x covers its own target /b/:x?y=1: a loop',
+    ])
+    // the package page rule drops the trailing slash, which its source needs: no loop
+    expect(redirectProblems(mergedRedirectsTail(WWW))).toEqual([])
+    expect(redirectProblems('/x/* /y/:splat 301\n/p https://x.example/p 301\n')).toEqual([])
   })
 
   it('serves a path as Pages does: files, pages with or without the trailing slash, and redirect sources', () => {

@@ -82,19 +82,48 @@ header() {
   fi
 }
 
+# answers <path>: 200, or exactly one redirect to another URL that answers 200; never a redirect to itself (incident of
+# 27 Nov 2026: Pages read `/run//*` as `/run/*` and sent every page under the base to itself)
+answers() {
+  local path="$1" got status location next
+  got="$(curl -s -o /dev/null --path-as-is -w '%{http_code} %{redirect_url}' "$base$path")"
+  status="${got%% *}" location="${got#* }"
+  if [ "$status" = 200 ]; then echo "pass  $path answers 200"; return; fi
+  case "$status" in
+    301 | 302 | 307 | 308)
+      if [ "$location" = "$base$path" ]; then
+        echo "fail  $path: $status to itself"
+        failed=$((failed + 1))
+        return
+      fi
+      next="$(curl -s -o /dev/null -w '%{http_code}' "$location")"
+      if [ "$next" = 200 ]; then echo "pass  $path answers $status to $location, which answers 200"; else
+        echo "fail  $path: $status to $location, which answers $next"
+        failed=$((failed + 1))
+      fi
+      ;;
+    *)
+      echo "fail  $path: $status"
+      failed=$((failed + 1))
+      ;;
+  esac
+}
+
 check "the main site home" 200 - /
 check "HEAD of the home" 200 - / -I
 check "the catalog home" 200 - /run/modules
 check "the base leads to the catalog home" 302 "127.0.0.1:$port/run/modules" /run
-check "a run of slashes under the base" 301 "127.0.0.1:$port/run/modules" /run//modules
 pkg="$(cd "$dist/run/m" 2>/dev/null && ls -d @*/*.html 2>/dev/null | head -n 1)"
 pkg="${pkg%.html}"
 if [ -n "$pkg" ]; then
   check "a package page with a trailing slash keeps its @" 301 "127.0.0.1:$port/run/m/$pkg" "/run/m/$pkg/"
+  answers "/run/m/$pkg"
+  answers "/run/m/$pkg/"
 else
   echo "fail  $dist/run/m has a scoped package page"
   failed=$((failed + 1))
 fi
+for p in /run/modules /run/modules/ /run/compat /run/compat/ /run/templates /run/templates/; do answers "$p"; done
 check "/sitemap.xml" 301 "127.0.0.1:$port/sitemap-index.xml" /sitemap.xml
 check "a docs address (a splat rule of the main site, after the static ones)" 301 "docs.openmercato.com/" /docs/smoke-test
 for h in 'Strict-Transport-Security: max-age=31536000$' 'X-Frame-Options: SAMEORIGIN' 'X-Content-Type-Options: nosniff'; do

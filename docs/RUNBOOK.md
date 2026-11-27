@@ -690,7 +690,7 @@ merges). `yarn build` writes two builds: the catalog to `dist-run/` (`yarn build
   `dist-run/` moved to `dist/` as it is.
 - **Merged** (`PAGES_MERGED=1`): `yarn om pages-site --merge` lays `dist-www/` at the root of `dist/` and the catalog's
   nested build under `/run`, and writes the root `_redirects` (the main site's `/sitemap.xml`, the catalog's
-  rules, then the main site's `www/content/redirects.yaml`, then two cleanup rules under `/run` with placeholders,
+  rules, then the main site's `www/content/redirects.yaml`, then one cleanup rule under `/run` with placeholders,
   last because Pages counts every rule after the first splat or placeholder as dynamic and allows 100), `robots.txt`
   and a `sitemap-index.xml` that lists the main site's sitemap files and the catalog's. It also writes `_headers`
   (the security headers live Webflow sends, `noindex` in a noindex build, and a year's immutable cache on `/_astro/*`
