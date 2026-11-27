@@ -32,7 +32,6 @@ blocks:
     lead: |-
       CRM, warehouse operations, AI agents, and automations.
       Connect the pieces. Make it yours.
-    note: "Seven requests build a tower: CRM and warehouse supports, an automation bridge, procurement and commerce, then an AI workflows manager and your fancy idea on top."
     items:
       - eyebrow: Build with your AI assistant
         title: One request. One new capability.
@@ -55,6 +54,7 @@ blocks:
         body: AI workflows manager added. Your modules work together.
       - title: Add your fancy idea
         body: Your fancy idea, built into your business app.
+    note: "Seven requests build a tower: CRM and warehouse supports, an automation bridge, procurement and commerce, then an AI workflows manager and your fancy idea on top."
   - type: features
     layout: home-80
     title: Start with *80% done*.
@@ -203,24 +203,24 @@ blocks:
       label: Explore Mercato Academy
       href: /learn-ai-engineering
     items:
-      - title: AI Assisted Engineering with Open Mercato
-        eyebrow: 40:15
+      - eyebrow: 40:15
+        title: AI Assisted Engineering with Open Mercato
         video: GD2ToD1jmLE
         image:
           src: /media/pages/home-video-gd2tod1jmle.jpg
           alt: AI Assisted Engineering with Open Mercato
           width: 1280
           height: 720
-      - title: How to install Open Mercato
-        eyebrow: 13:03
+      - eyebrow: 13:03
+        title: How to install Open Mercato
         video: OsalmbiWQ-I
         image:
           src: /media/pages/home-video-osalmbiwq-i.jpg
           alt: How to install Open Mercato
           width: 1280
           height: 720
-      - title: Open Mercato Architecture
-        eyebrow: 29:50
+      - eyebrow: 29:50
+        title: Open Mercato Architecture
         video: ezfhcr_9Q0g
         image:
           src: /media/pages/home-video-ezfhcr-9q0g.jpg

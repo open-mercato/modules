@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "0nkgvcs1yupcaq10sw9l80fx",
+      "slug": "implementation",
+      "webflowId": "6a2d48a2b8ecd18fab42157d",
+      "name": "Implementation",
+      "order": 1,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "0lnsngk015xvfy0v985181xy",
+      "slug": "consulting",
+      "webflowId": "6a2d48aa4b1c2550e5f50c63",
+      "name": "Consulting",
+      "order": 2,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "documentId": "1mkakaa1a654040twn2p418f",
+      "slug": "custom-development",
+      "webflowId": "6a2d48ad0cc80afc04e2b09d",
+      "name": "Custom Development",
+      "order": 3,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 3 } }
+}

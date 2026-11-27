@@ -1,0 +1,30 @@
+{
+  "data": {
+    "id": 1,
+    "documentId": "0c1p2t208bmehs1rskf701jg",
+    "en": {
+      "id": 1,
+      "reviewedPrefix": "Reviewed",
+      "sourcesLabel": "Sources:",
+      "reviewedInline": "reviewed",
+      "navLabel": "On this page",
+      "detailsSummary": "Explore implementation and commercial details",
+      "relatedTitle": "Related pages",
+      "marks": { "id": 2, "yes": "Available", "no": "Not included", "build": "Requires implementation" }
+    },
+    "pl": {
+      "id": 3,
+      "reviewedPrefix": "Sprawdzono",
+      "sourcesLabel": "Źródła:",
+      "reviewedInline": "sprawdzono",
+      "navLabel": "Na tej stronie",
+      "detailsSummary": "Zobacz szczegóły wdrożenia i kosztów",
+      "relatedTitle": "Powiązane strony",
+      "marks": { "id": 4, "yes": "Available", "no": "Not included", "build": "Wymaga wdrożenia" }
+    },
+    "createdAt": "2026-11-27T10:00:00.000Z",
+    "updatedAt": "2026-11-27T10:00:00.000Z",
+    "publishedAt": "2026-11-27T10:00:00.000Z"
+  },
+  "meta": {}
+}

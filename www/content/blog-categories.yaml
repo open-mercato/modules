@@ -25,11 +25,11 @@ security:
 ai-engineering-foundation-framework:
   webflowId: 69f1ca04c17c6d9f1b22e3a0
   name: AI-Engineering Foundation Framework
+  order: 5
   labelColor: "#2f520b"
   textColor: "#b4f372"
-  order: 5
 tools-templates:
   name: Tools & Templates
+  order: 6
   labelColor: "#243f57"
   textColor: "#f8f8f1"
-  order: 6

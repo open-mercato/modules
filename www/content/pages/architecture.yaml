@@ -19,13 +19,6 @@ blocks:
     layout: architecture-hero
     eyebrow: Architecture
     title: Architecture built for safe extension
-    items:
-      - title: Modular Monolith
-      - title: OCP + Overlay
-      - title: Awilix DI
-      - title: Command Pattern
-      - title: Events
-      - title: Field‑level encryption
     lead: Open Mercato uses a Modular Monolith architecture. It provides the deployment simplicity of a single application with the strict boundary isolation typically found in microservices. This is the structural "North Star" that allows AI agents to write production-grade code without creating a maintenance nightmare.
     primary:
       label: Clone the Repo
@@ -33,6 +26,13 @@ blocks:
     secondary:
       label: See Live Demo
       href: https://openmercatocloud.com/demo
+    items:
+      - title: Modular Monolith
+      - title: OCP + Overlay
+      - title: Awilix DI
+      - title: Command Pattern
+      - title: Events
+      - title: Field‑level encryption
   - type: hero
     layout: architecture-watch
     eyebrow: Modular Monolith

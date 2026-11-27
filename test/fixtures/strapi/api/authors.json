@@ -1,0 +1,31 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "1g8furq1cxwend1l96nan091",
+      "slug": "piotr-karwatka",
+      "webflowId": "69ced951d78e56b184a3d8a2",
+      "name": "Piotr Karwatka",
+      "role": null,
+      "avatar": null,
+      "url": null,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "15i3a081xmbmvy02lc1gg0sn",
+      "slug": "tomasz-karwatka",
+      "webflowId": "69ced9470148d89bf9734ece",
+      "name": "Tomasz Karwatka",
+      "role": null,
+      "avatar": null,
+      "url": null,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+}

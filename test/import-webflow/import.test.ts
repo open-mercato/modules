@@ -167,6 +167,14 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
     // dictionaries by order, then name
     const tiers = Object.keys(parseYaml(files.get('www/content/partner-tiers.yaml')!.toString('utf8')))
     expect(tiers).toEqual(['ai-native-core-agency', 'ai-native-expert-agency', 'ai-native-agency', 'agency'])
+    // `order` right after `name`, also where the importer numbered a missing order (the mapping's key order, Step 1.2)
+    for (const file of ['blog-categories.yaml', 'partner-tiers.yaml']) {
+      const entries = parseYaml(files.get(`www/content/${file}`)!.toString('utf8')) as Record<string, object>
+      for (const [id, e] of Object.entries(entries)) {
+        const keys = Object.keys(e)
+        expect(keys.indexOf('order'), `${file} ${id}`).toBe(keys.indexOf('name') + 1)
+      }
+    }
   })
 
   it('parses the landings, tokens their counts (A6) and links the Polish one to the English one', () => {

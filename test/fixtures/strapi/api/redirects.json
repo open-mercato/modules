@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "0ngzldq01eq3k91u19hh31ln",
+      "slug": "/old-pricing",
+      "from": "/old-pricing",
+      "to": "/pricing",
+      "status": 301,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+}

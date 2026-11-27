@@ -1,0 +1,60 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "1rulh9u1kq7kog0t6jud41rz",
+      "slug": "manufacturing",
+      "webflowId": "6a2d47a0a589b9cdd008e9da",
+      "name": "Manufacturing",
+      "order": 1,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "162odt00236oiy01sumqc0hf",
+      "slug": "freight-logistics",
+      "webflowId": "6a2d47a6172fd222e5fa2ef2",
+      "name": "Freight & Logistics",
+      "order": 2,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "documentId": "0g1u9me0b3cldc0j4cruc1a8",
+      "slug": "software-technology",
+      "webflowId": "6a2d47d15377018dfd010617",
+      "name": "Software & Technology",
+      "order": 5,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "documentId": "1aiclou1nlgivw0vjaaug1b5",
+      "slug": "other",
+      "webflowId": "6a2d47d7588a87e9b160b47e",
+      "name": "Other",
+      "order": 6,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "documentId": "0yisvem0bn3j2x0utor8n0on",
+      "slug": "healthcare",
+      "webflowId": "6a4e83e65546d6cbbfa0a458",
+      "name": "Healthcare",
+      "order": 8,
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 5 } }
+}

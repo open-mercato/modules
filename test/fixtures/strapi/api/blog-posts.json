@@ -1,0 +1,51 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "14ahcma1l0kqfh090ne1z0xy",
+      "slug": "workflow-automation-discount-approval",
+      "webflowId": null,
+      "title": "What is workflow automation? Try a discount approval",
+      "description": "Test a discount approval workflow with an editable threshold. See what happens at the boundary, when a manager declines, and when nobody has answered.",
+      "date": "2026-11-26T00:00:00.000Z",
+      "updated": null,
+      "author": null,
+      "category": { "id": 1002, "documentId": "0uvykki1ymb0fq1kdwduy107", "slug": "architecture" },
+      "featured": false,
+      "thumbnail": {
+        "id": 1,
+        "file": {
+          "id": 141,
+          "documentId": "1g4k7uk0w5kgk417g3hqe14v",
+          "name": "6b08ba36f93ab75edc03a578-6b08b9a042a80257b3239d86-om-guide-workflow.jpeg",
+          "alternativeText": null,
+          "caption": null,
+          "width": null,
+          "height": null,
+          "formats": null,
+          "hash": "6b08ba36f93ab75edc03a578-6b08b9a042a80257b3239d86-om-guide-workflow_1g4k7uk0w5",
+          "ext": ".jpeg",
+          "mime": "image/jpeg",
+          "size": null,
+          "url": "/uploads/6b08ba36f93ab75edc03a578-6b08b9a042a80257b3239d86-om-guide-workflow_1g4k7uk0w5.jpeg",
+          "previewUrl": null,
+          "provider": "local",
+          "provider_metadata": null,
+          "createdAt": "2026-11-27T10:00:00.000Z",
+          "updatedAt": "2026-11-27T10:00:00.000Z",
+          "publishedAt": "2026-11-27T10:00:00.000Z"
+        },
+        "alt": "",
+        "decorative": true,
+        "width": null,
+        "height": null
+      },
+      "seo": null,
+      "body": "Workflow automation moves a request through a defined set of steps. A sales rep submits a discount. The system checks the percentage, approves a routine request, or sends an exception to a manager. At any point the rep should be able to tell who owes the next decision.\n\n<om-embed name=\"blog-workflow-automation-discount-approval-1\"></om-embed>\n\n## Turn a sentence in a sales policy into a rule\n\nUnder this sample policy, a rep may offer up to and including 10%. Anything higher needs a manager. Start with 8%, then enter exactly 10%, then 10.01%. The first two requests qualify automatically. The third waits. Testing the boundary catches a common disagreement between the person who wrote “up to 10%” and the person who implemented the comparison.\n\nTry declining the pending request. A decline is a finished decision the rep can act on. A request that nobody has answered is still pending. Treating those as the same state creates a hard-to-explain problem for the customer waiting on the price.\n\n## What to store when a discount is approved\n\nKeep the quote identifier, its revision, the discount requested, the policy limit used, the outcome, the decision time, and the person or rule responsible. Suppose a manager approved 12% and the rep later changes the quote to 18%. A fresh request should reference the revised quote. Otherwise a technically valid approval can silently authorize a different deal.\n\nDecide how your team handles silence. In this example, time passing leaves the request pending. A real team might remind the manager after one working day and escalate to a named backup after two. Make that a deliberate policy. A reminder and an approval have different consequences.\n\n## Build the same process in Open Mercato\n\n1. In **Workflows**, choose **Create Workflow**. Open a blank canvas or inspect the order-approval template to see an existing definition.\n2. Start with the request data. Add a condition for the percentage. Route values at or below the limit to an approved outcome.\n3. On the exception path, add a **User Task** assigned to the responsible role. Give approval and rejection their own transitions and end states.\n4. Run the three boundary cases above. Open a pending run and look for the active step. Complete the task and check that the recorded outcome agrees with the choice you made.\n\nThe small simulator above runs only on this page. In an application, the workflow also needs a connection to the quote and the people allowed to approve it. The Studio guide shows how to assign a user task and connect its transitions. [Build an approval workflow in Open Mercato Studio.](https://docs.openmercato.com/user-guide/workflows/creating-workflows)",
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+}

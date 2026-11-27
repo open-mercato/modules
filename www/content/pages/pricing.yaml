@@ -14,60 +14,60 @@ blocks:
   - type: features
     layout: pricing-plans
     items:
-      - title: Free
-        eyebrow: €0
+      - eyebrow: €0
+        title: Free
         body: |-
           MIT license · Self-hosted
 
           For teams building their own CRM, warehouse system or custom business app.
+        points:
+          - CRM, sales and product catalog modules
+          - Workflows and business rules
+          - Tenant isolation and role-based access
+          - REST APIs and permission-aware MCP tools
+        note: Included in the core
         cta:
           label: Get the free core
           href: https://github.com/open-mercato/open-mercato
           tracking:
             placement: pricing
             action: free
-        note: Included in the core
-        points:
-          - CRM, sales and product catalog modules
-          - Workflows and business rules
-          - Tenant isolation and role-based access
-          - REST APIs and permission-aware MCP tools
-      - title: Enterprise
-        eyebrow: From €3,000
+      - eyebrow: From €3,000
+        title: Enterprise
         body: |-
           EUR net / month · One licensed project
 
           Get the enterprise modules, priority technical support and security fixes for supported versions of Core and Enterprise.
+        points:
+          - Single sign-on, directory sync and enforced MFA
+          - Security fix emails and self-service upgrade packages
+          - Agent Orchestrator with human approvals
+          - Record locking to prevent conflicting edits
+        note: Included with the license
         cta:
           label: Talk to sales
           href: /contact
           tracking:
             placement: pricing
             action: enterprise
-        note: Included with the license
-        points:
-          - Single sign-on, directory sync and enforced MFA
-          - Security fix emails and self-service upgrade packages
-          - Agent Orchestrator with human approvals
-          - Record locking to prevent conflicting edits
-      - title: Custom
-        eyebrow: By quote
+      - eyebrow: By quote
+        title: Custom
         body: |-
           License and services quoted separately
 
           Agree on coverage for a larger deployment. Add hands-on engineering services to any Enterprise subscription, at purchase or later.
+        points:
+          - A pre-deployment architecture audit
+          - Security and performance reviews
+          - Managed upgrades and go-live reviews
+          - A dedicated contact through launch
+        note: Services you can commission
         cta:
           label: Let’s talk
           href: /contact
           tracking:
             placement: pricing
             action: custom
-        note: Services you can commission
-        points:
-          - A pre-deployment architecture audit
-          - Security and performance reviews
-          - Managed upgrades and go-live reviews
-          - A dedicated contact through launch
   - type: features
     layout: pricing-compare
     id: compare-plans

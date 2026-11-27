@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "0ecjr7a0h5r65s03skjs805g",
+      "slug": "english",
+      "webflowId": "6a2d48873f9feeabc2d903b3",
+      "name": "English",
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "0iuwon01do69at0z3iqt50yo",
+      "slug": "polish",
+      "webflowId": "6a2d4880e285fce50d33468c",
+      "name": "Polish",
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+}
