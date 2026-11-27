@@ -1,0 +1,22 @@
+en:
+  reviewedPrefix: Reviewed
+  sourcesLabel: "Sources:"
+  reviewedInline: reviewed
+  navLabel: On this page
+  detailsSummary: Explore implementation and commercial details
+  relatedTitle: Related pages
+  marks:
+    "yes": Available
+    "no": Not included
+    build: Requires implementation
+pl:
+  reviewedPrefix: Sprawdzono
+  sourcesLabel: "Źródła:"
+  reviewedInline: sprawdzono
+  navLabel: Na tej stronie
+  detailsSummary: Zobacz szczegóły wdrożenia i kosztów
+  relatedTitle: Powiązane strony
+  marks:
+    "yes": Available
+    "no": Not included
+    build: Wymaga wdrożenia

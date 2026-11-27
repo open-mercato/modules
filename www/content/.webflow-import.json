@@ -9,7 +9,7 @@
     {
       "path": "www/content/blog-categories.yaml",
       "webflowId": "69ced92817323234ffa7c627",
-      "sha256": "431babfd7605ad933c09104a51de9ad6db38c99bed7b343d8a9e2832405f6507"
+      "sha256": "50b8c9ab02f57be79029c6d2fa8f770f263cf1534f255fa4af460770e7b4ac06"
     },
     {
       "path": "www/content/blog/10-it-department-fears-about-open-mercato-answered-honestly.md",
@@ -2110,6 +2110,63 @@
       "path": "www/public/media/partners/6ac50d2fd773e63f86e1f397-6ac50d1898f5df55e0f07f12-full-stack-house-logo-2026-10.svg",
       "webflowId": "6ac50d2fd773e63f86e1f397",
       "sha256": "1589552ac3ef4b90edc9913cc25236262fe4703133df456b610ef4d0553357b8"
+    }
+  ],
+  "notes": [
+    {
+      "path": "www/content/pages/agencies.yaml",
+      "at": "blocks.1.items.0.note",
+      "note": "the live label reads \"devliery\"; mirrored as it is"
+    },
+    {
+      "path": "www/content/pages/blog.yaml",
+      "at": "seo.description",
+      "note": "Webflow has no description here; one of the four the spec asks for (SEO table)"
+    },
+    {
+      "path": "www/content/pages/case-studies.yaml",
+      "at": "blocks.0.lead",
+      "note": "the live lead's long dash written `-` (A5)"
+    },
+    {
+      "path": "www/content/pages/certified-partners.yaml",
+      "at": "seo.description",
+      "note": "Webflow has no description here; one of the four the spec asks for (SEO table)"
+    },
+    {
+      "path": "www/content/pages/certified-partners.yaml",
+      "at": "blocks.0.lead",
+      "note": "the live lead's long dash written `-` (A5)"
+    },
+    {
+      "path": "www/content/pages/crm.yaml",
+      "at": "blocks",
+      "note": "the live page is 12 embeds of compiled Astro output whose source is unknown (spec Q4): the four style embeds are www/src/styles/webflow/pages/crm.css, the other eight are these legacy components, in live order"
+    },
+    {
+      "path": "www/content/pages/how-to-contribute.yaml",
+      "at": "blocks.6",
+      "note": "live links Roadmap to `#` (nowhere); the roadmap of the docs stands for it (audit of 27 Nov 2026)"
+    },
+    {
+      "path": "www/content/pages/partners.yaml",
+      "at": "blocks.5.items.0.body",
+      "note": "the live text ends \"per yea\" (cut in Webflow); mirrored as it is"
+    },
+    {
+      "path": "www/content/pages/pricing.yaml",
+      "at": "seo",
+      "note": "/pricing, added on Webflow on 26 Nov 2026 by OM Core, migrated from the live page on 27 Nov 2026 (one embed there: its copy is here, its markup in www/src/components/blocks/pricing-*.astro, its code in www/src/styles/webflow/pages/pricing.css). Live has no OG image; the build draws the card, /og/pricing.png."
+    },
+    {
+      "path": "www/content/pages/team.yaml",
+      "at": "seo",
+      "note": "the live page has no title of its own (Webflow prints the site's name) and no description; the description is one of the four the spec asks for (SEO table)"
+    },
+    {
+      "path": "www/content/pages/terms-conditions.yaml",
+      "at": "seo.description",
+      "note": "Webflow has no description here; one of the four the spec asks for (SEO table)"
     }
   ]
 }

@@ -287,9 +287,23 @@ function orderDictionary(collection: WwwCollection, entries: Entry[]): Entry[] {
   if (collection === 'blogCategories' || collection === 'partnerTiers') {
     // the schema requires an order here; a category without one follows the numbered ones
     let next = Math.max(0, ...sorted.map((e) => num(e.data.order) ?? 0))
-    for (const e of sorted) if (num(e.data.order) === undefined) e.data.order = ++next
+    // the number goes in the schema's place, after the name: the keys of a file follow the Strapi mapping, which has
+    // one order of fields per type (Strapi CMS spec, Step 1.2)
+    for (const e of sorted) if (num(e.data.order) === undefined) e.data = withOrder(e.data, ++next)
   }
   return sorted
+}
+
+/** The data of a dictionary entry with `order` set right after `name`, every other key in its place. */
+function withOrder(data: Entry['data'], order: number): Entry['data'] {
+  const out: Entry['data'] = {}
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'order') continue
+    out[k] = v
+    if (k === 'name') out.order = order
+  }
+  if (!('order' in out)) out.order = order
+  return out
 }
 
 const DICTIONARIES = new Set<WwwCollection>([

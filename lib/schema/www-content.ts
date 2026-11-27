@@ -118,6 +118,7 @@ export const WWW_COLLECTIONS = [
   'partnerLocations',
   'jobs',
   'redirects',
+  'landingTemplate',
 ] as const
 export type WwwCollection = (typeof WWW_COLLECTIONS)[number]
 
@@ -180,43 +181,31 @@ export const LANDING_LOCALES = ['en', 'pl'] as const
 export type LandingLocale = (typeof LANDING_LOCALES)[number]
 
 /**
- * Words the landing template writes around data, per locale, as the live landings print them (25 Nov 2026): the review
- * lines of the capability matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and
- * `<title> · {reviewedInline} <date>`, the date in the locale's long form, "12 November 2026", "12 listopada 2026"),
- * the label of the section navigation, the summary of the comparison's details when the comparison has no title, the
- * heading of the related landings, and what each mark of the matrix reads as to a screen reader. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
+ * `landingTemplate`: content/landing-template.yaml, one entry per locale (its key: `en`, `pl`). The words the landing
+ * template writes around data, as the live landings print them (25 Nov 2026): the review lines of the capability
+ * matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and `<title> · {reviewedInline} <date>`, the
+ * date in the locale's long form, "12 November 2026", "12 listopada 2026"), the label of the section navigation, the
+ * summary of the comparison's details when the comparison has no title, the heading of the related landings, and what
+ * each mark of the matrix reads as to a screen reader. Content since the Strapi CMS spec (Step 1.1b): until then the
+ * constant LANDING_TEMPLATE_TEXT. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
  * comparison` on every live landing, the Polish one too.
  */
-export const LANDING_TEMPLATE_TEXT: Record<
-  LandingLocale,
-  {
-    reviewedPrefix: string
-    sourcesLabel: string
-    reviewedInline: string
-    navLabel: string
-    detailsSummary: string
-    relatedTitle: string
-    marks: Record<(typeof CAPABILITY_MARKS)[number], string>
-  }
-> = {
-  en: {
-    reviewedPrefix: 'Reviewed',
-    sourcesLabel: 'Sources:',
-    reviewedInline: 'reviewed',
-    navLabel: 'On this page',
-    detailsSummary: 'Explore implementation and commercial details',
-    relatedTitle: 'Related pages',
-    marks: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
-  },
-  pl: {
-    reviewedPrefix: 'Sprawdzono',
-    sourcesLabel: 'Źródła:',
-    reviewedInline: 'sprawdzono',
-    navLabel: 'Na tej stronie',
-    detailsSummary: 'Zobacz szczegóły wdrożenia i kosztów',
-    relatedTitle: 'Powiązane strony',
-    marks: { yes: 'Available', no: 'Not included', build: 'Wymaga wdrożenia' },
-  },
+export function landingTemplateSchema() {
+  return z.strictObject({
+    reviewedPrefix: Text,
+    sourcesLabel: Text,
+    reviewedInline: Text,
+    navLabel: Text,
+    detailsSummary: Text,
+    relatedTitle: Text,
+    marks: z.strictObject({ yes: Text, no: Text, build: Text }),
+  })
+}
+export type LandingTemplateText = z.output<ReturnType<typeof landingTemplateSchema>>
+
+/** The entries of landing-template.yaml, parsed: one per locale, each required. */
+export function landingTemplateEntries(data: unknown): Record<LandingLocale, LandingTemplateText> {
+  return z.strictObject({ en: landingTemplateSchema(), pl: landingTemplateSchema() }).parse(data)
 }
 
 /** The accessible name of a landing's capability matrix, as the live landings write it in every locale. */
@@ -392,6 +381,50 @@ export const PAGE_BLOCK_TYPES = [
   'list',
   'legacy',
 ] as const
+// How the layouts of www/src/components/blocks/ read the fields of their block where the type alone does not say it
+// (until the Strapi CMS spec, Step 1.1a, these notes were YAML comments in the page files; a Strapi document holds no
+// comments). By layout:
+// - `agencies-compare`: Each item is a column; ✓ and ✗ mark a cell's check or cross (agencies-compare.astro).
+// - `agencies-math`: Each item is a column of the table; a cell starting with ✓ shows the check (agencies-math.astro).
+// - `agent-orchestrator-compare`: The comparison table, one item per column as the live markup has it: the row labels,
+//   then n8n, then Open Mercato.
+// - `architecture-examples`: Each card: its icon, the scenario (`body`), its tags (`points`) and its blueprint, a list
+//   with one nested list (`note`).
+// - `architecture-fundamentals`: Each card: its text (`body`), its tags (`points`) and a quote with its source in
+//   *italics* (`note`).
+// - `architecture-hero`: The header: the breadcrumb's name, the heading, the tags, the lead and the two buttons.
+// - `architecture-watch`: The video beside its heading and three numbered points.
+// - `enterprise-level-support-backing`: A card's paragraphs are its body, then its note; a blank line inside one is the
+//   live double line break.
+// - `enterprise-level-support-tiers`: The table of the tiers, one item per column as the live markup has it: the row
+//   labels, then each tier.
+// - `home-academy`: The academy's videos: title, length (eyebrow), video and poster.
+// - `home-cases`: The case studies the live home page features, in its order.
+// - `home-compare`: The comparison table: the first item is the header row (its points the two columns), then one row
+//   per item (title the row, points the two cells); a cell `Desktop text | Phone text` reads differently on a phone.
+// - `home-flex`: The builder: the first item is the assistant's window (eyebrow and title its header, body its
+//   greeting, points the composer's placeholder and button, note what the phone shows once every request is in), then
+//   the seven requests (title) and the assistant's answers (body), in the order the tower grows; `note` is the scene for
+//   screen readers.
+// - `home-hero`: The hero: the release badge shows the core version of the catalog's data (the browser then shows the
+//   latest release of GitHub, as live), `label` is the line beside it, `primary` and `secondary` the first two buttons,
+//   `note` the third (one link); `items` the assistants it works with, by name (the component draws their marks).
+// - `home-sandbox`: The two ways in: the developer's command (body) and the sandbox (cta).
+// - `home-stories`: The customer videos, in the order live shows them (its script puts Implementation Partner first).
+// - `how-to-contribute-hero`: A third button, the arrow link, is the hero's one item.
+// - `how-to-contribute-steps`: The HowTo steps of the page's JSON-LD; each line of a body is a line of the card (the
+//   no-break space before `#` is live's).
+// - `learn-ai-engineering-roadmap`: The HowTo steps of the page's JSON-LD. A card's `note` is its quote, its last line
+//   the source under it; points written `1. ...` are a numbered list.
+// - `pricing-compare`: The table: the first item is the header row, each next item a row (its title the row heading,
+//   its points the cells in plan order).
+// - `pricing-plans`: One item per plan: eyebrow the price ("From" first when the price is a floor), body the basis line
+//   then the audience, note the heading of the list, points the list, cta the button (GA4 cta_pricing_<plan>, as live).
+// - `product-agents`: Cards beside the heading; a card's note is the source of its quote.
+// - `product-anatomy`: The cards of product-cards with a smaller heading; an item with a body only is the quote across
+//   both columns.
+// - `product-architecture`: Numbered cards: eyebrow the number.
+// - `product-modules`: A sticky heading beside numbered groups (eyebrow the number, body a lead and a list).
 export const PageBlock = z.discriminatedUnion('type', [
   CopyBlock,
   block('hero', { title: Text, image: Image.optional(), video: YouTubeId.optional(), items: items.optional() }),
@@ -476,7 +509,7 @@ export function pageSchema() {
             .optional(),
         })
         .optional(),
-      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm). */
+      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm, its crm-closing component). */
       siteCta: z.boolean().default(true),
       blocks: z.array(PageBlock),
       draft,
@@ -670,6 +703,7 @@ export function wwwSchemas(ref: WwwRef = slugRef): Record<WwwCollection, z.ZodTy
     partnerLocations: namedSchema(),
     jobs: jobSchema(),
     redirects: redirectSchema(),
+    landingTemplate: landingTemplateSchema(),
   }
 }
 
@@ -695,6 +729,85 @@ export const WWW_SOURCES: Record<WwwCollection, WwwSource> = {
   partnerLocations: { kind: 'file', file: 'partner-locations.yaml' },
   jobs: { kind: 'entries', dir: 'jobs', ext: 'md' },
   redirects: { kind: 'file', file: 'redirects.yaml' },
+  landingTemplate: { kind: 'file', file: 'landing-template.yaml' },
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// The navbar and the footer of the main site: www/content/navigation.json and footer.json, read by
+// lib/core/main-site.ts (Strapi CMS spec 2026-11-27-www-strapi-cms.md, Phase 1). JSON, not YAML, so lib/core keeps no
+// Node API: main-site.ts imports both with an import attribute. The texts are the main site's own words, copied as
+// they stand there, except its long dash (U+2014, in two descriptions), written " - " (AGENTS.md 7; `yarn om
+// check-text` reads www/). Main-site addresses are absolute, so they hold on every host that serves the build. The
+// Docs row links docs.openmercato.com, where the live row's /documentation answers a 301.
+
+/** Names of the 22 px stroke icons of the navbar panels (site/src/components/nav-icons.ts draws them). */
+export const NAV_ICONS = [
+  'crm',
+  'foundation-framework',
+  'agent-orchestrator',
+  'cloud-sandboxes',
+  'cezar',
+  'docs',
+  'architecture',
+  'modules',
+  'how-to-contribute',
+  'agencies',
+  'partners',
+  'certified-partners',
+  'enterprise-level-support',
+  'run-modules',
+  'run-templates',
+  'run-compat',
+  'run-radar',
+  'run-quality',
+  'run-agents',
+] as const
+export const NavIcon = z.enum(NAV_ICONS)
+
+/** A link of the navbar or the footer; `variant` is a class next to `navbar_link` (`is-github`, which styles hide). */
+export const SiteLink = z.strictObject({
+  label: Text,
+  url: HttpsUrl,
+  variant: z.literal('is-github').optional(),
+})
+
+/** `navigation.json`: the menus with a panel, in the navbar's order, its plain links and the sandbox button. */
+export function navigationSchema() {
+  return z.strictObject({
+    menus: z
+      .array(
+        z.strictObject({
+          label: Text,
+          items: z
+            .array(
+              z.strictObject({
+                label: Text,
+                url: HttpsUrl,
+                /** A site path of the catalog the header links instead of `url` (built with href()). */
+                run: z
+                  .string()
+                  .regex(/^\/[^\s]*$/)
+                  .optional(),
+                description: Text,
+                icon: NavIcon,
+              }),
+            )
+            .min(1),
+        }),
+      )
+      .min(1),
+    links: z.array(SiteLink).min(1),
+    sandbox: SiteLink,
+  })
+}
+
+/** `footer.json`: the footer's links in its order, the groups of its folded "Other" list and the licence line. */
+export function footerSchema() {
+  return z.strictObject({
+    links: z.array(SiteLink).min(1),
+    other: z.array(z.strictObject({ label: Text, links: z.array(SiteLink).min(1) })).min(1),
+    note: Text,
+  })
 }
 
 // ---------------------------------------------------------------------------------------------------------------

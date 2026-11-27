@@ -31,7 +31,6 @@ blocks:
       - body: Production Approval (Homologation)
       - body: Production Hosting Best Practices
       - body: "[Agent Orchestrator](/blog-posts/introducing-agent-orchestrator)"
-  # the table of the tiers, one item per column as the live markup has it: the row labels, then each tier
   - type: features
     layout: enterprise-level-support-tiers
     eyebrow: support tiers
@@ -81,7 +80,6 @@ blocks:
         body: Commercial support is provided by professional Software Houses.
       - title: SLA-Backed Performance
         body: Partners provide uptime guarantees, performance monitoring, and rapid incident response tailored to your specific deployment (Cloud/On-Premise).
-  # a card's paragraphs are its body, then its note; a blank line inside one is the live double line break
   - type: features
     layout: enterprise-level-support-backing
     eyebrow: strategic decision

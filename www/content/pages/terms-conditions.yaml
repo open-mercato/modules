@@ -1,7 +1,6 @@
 webflowId: 69c273e892caeeafc3381e55
 seo:
   title: Terms & Conditions | Open Mercato
-  # Webflow has no description here; one of the four the spec asks for (SEO table)
   description: The privacy policy of Open Mercato, what personal data we process and why, how long we keep it, cookies, and your rights.
 blocks:
   - type: hero

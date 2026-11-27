@@ -25,8 +25,6 @@ blocks:
     poster:
       src: /media/pages/gd2tod1jmle-poster.jpg
       alt: AI Assisted Engineering with Open Mercato
-  # the HowTo steps of the page's JSON-LD. A card's `note` is its quote, its last line the source under it; points
-  # written `1. ...` are a numbered list
   - type: steps
     layout: learn-ai-engineering-roadmap
     eyebrow: STEP BY STEP

@@ -26,9 +26,9 @@ import {
   landingOgImageSize,
   landingPath,
   publishedLandings,
-  templateText,
   type LandingEntry,
 } from '../../lib/landings.ts'
+import { templateText } from '../../lib/landing-template.ts'
 
 interface Props {
   landing: LandingEntry
@@ -38,7 +38,7 @@ const { landing, all } = Astro.props
 const d = landing.data
 const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
 const counts = countValues()
-const tpl = templateText(d.locale)
+const tpl = await templateText(d.locale)
 const byId = new Map(publishedLandings(all).map((l) => [l.id, l]))
 const related = d.related
   .map((r) => byId.get(refId(r) ?? ''))

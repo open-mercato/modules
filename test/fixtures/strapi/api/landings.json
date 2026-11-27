@@ -1,0 +1,622 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "1lbql640winczy00powho1x7",
+      "slug": "baselinker-alternatywa",
+      "webflowId": "6af5dc1131c663c24870d103",
+      "language": "pl",
+      "kind": "alternative",
+      "competitor": "Base / BaseLinker",
+      "alternateOf": { "id": 1001, "documentId": "1bzp1q0065uzrg033y8aq0sn", "slug": "baselinker-alternative" },
+      "seo": {
+        "id": 1,
+        "title": "Alternatywa dla BaseLinkera - własne procesy zamówień | Open Mercato",
+        "description": "Porównaj Base (BaseLinker) z Open Mercato. Własne procesy zamówień, kontrola kodu i plan migracji obejmujący integracje, dane oraz obsługę wysyłek.",
+        "ogImage": null,
+        "noindex": null
+      },
+      "hero": {
+        "id": 2,
+        "eyebrow": "Alternatywa dla Base / BaseLinker",
+        "title": "Zbuduj system zamówień dopasowany do reguł realizacji.",
+        "lead": "Gdy standardowy proces e-commerce przestaje pasować, zbuduj własne środowisko pracy na Open Mercato. Zacznij od klientów, katalogu, zamówień i wysyłek, a następnie dopasuj logikę do swojej firmy.",
+        "primary": {
+          "id": 3,
+          "label": "Porozmawiajmy o migracji z Base",
+          "href": "/contact?interest=baselinker-alternatywa",
+          "trackingPlacement": null,
+          "trackingAction": null
+        },
+        "secondary": {
+          "id": 4,
+          "label": "Porównaj możliwości",
+          "href": "#comparison",
+          "trackingPlacement": null,
+          "trackingAction": null
+        },
+        "proof": [
+          { "id": 5, "text": "MIT open source" },
+          { "id": 6, "text": "{githubStars} stars on GitHub" },
+          { "id": 7, "text": "{moduleCount} plugins" }
+        ]
+      },
+      "sectionNav": [
+        { "id": 8, "label": "Twój proces", "anchor": "needs" },
+        { "id": 9, "label": "Porównanie", "anchor": "comparison" },
+        { "id": 10, "label": "Zobacz w praktyce", "anchor": "proof" },
+        { "id": 11, "label": "Wdrożenie", "anchor": "migration" },
+        { "id": 12, "label": "Pytania", "anchor": "questions" }
+      ],
+      "pains": {
+        "id": 13,
+        "eyebrow": null,
+        "title": "Porównaj koszty zamówień, własne reguły i dostępne integracje.",
+        "items": [
+          {
+            "id": 14,
+            "title": "Wolumen rośnie razem z rachunkiem",
+            "body": "Base łączy abonament z opłatami zależnymi od zamówień i osobną ofertą Enterprise. Porównaj koszt swojego konta z pełnym budżetem wdrożenia, hostingu i utrzymania własnej aplikacji.",
+            "art": {
+              "id": 15,
+              "file": {
+                "id": 230,
+                "documentId": "0jy6ewc0ocnpte01tbs3s1yc",
+                "name": "6af5f54a987f197223f70d6d-om-lp-cost-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54a987f197223f70d6d-om-lp-cost-v3_0jy6ewc0oc",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54a987f197223f70d6d-om-lp-cost-v3_0jy6ewc0oc.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          },
+          {
+            "id": 16,
+            "title": "Wyjątki stały się codziennym procesem",
+            "body": "Akceptacje B2B, nietypowe reguły realizacji i wymiana danych z ERP nie powinny zależeć od kolejnego ręcznego obejścia. Zaimplementuj je wokół własnych danych klientów i zamówień.",
+            "art": {
+              "id": 17,
+              "file": {
+                "id": 239,
+                "documentId": "0ywrxbc0tmgfrg069fn3a077",
+                "name": "6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54ced23f8851fb179ef-om-lp-custom-v3_0ywrxbc0tm",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54ced23f8851fb179ef-om-lp-custom-v3_0ywrxbc0tm.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          },
+          {
+            "id": 18,
+            "title": "Działających integracji nie można zgubić po drodze",
+            "body": "Base ma rozbudowany katalog gotowych połączeń. Przed migracją spisz każdy marketplace, sklep, system ERP i przewoźnika. Integracje Open Mercato wymagają osobnej oceny i wdrożenia.",
+            "art": {
+              "id": 19,
+              "file": {
+                "id": 232,
+                "documentId": "0o6u70u1rzjgvx1rzkgp70qc",
+                "name": "6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54b1b98315466ed31c0-om-lp-migration-v3_0o6u70u1rz",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54b1b98315466ed31c0-om-lp-migration-v3_0o6u70u1rz.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          }
+        ]
+      },
+      "features": {
+        "id": 20,
+        "eyebrow": null,
+        "title": "Zacznij od danych i modułów potrzebnych do obsługi zamówienia.",
+        "lead": null,
+        "items": [
+          {
+            "id": 21,
+            "title": "Klient i zamówienie w jednym kontekście",
+            "body": "Połącz firmy i osoby z dokumentami sprzedaży, adresami oraz historią aktywności.",
+            "art": {
+              "id": 22,
+              "file": {
+                "id": 235,
+                "documentId": "1jiwun813ha9dx16xrpyt0e5",
+                "name": "6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54bc76a29afdf67a3ca-om-lp-customers-v3_1jiwun813h",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3_1jiwun813h.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          },
+          {
+            "id": 23,
+            "title": "Produkty, warianty i ceny",
+            "body": "Wykorzystaj moduły katalogu i kanałów sprzedaży jako podstawę własnego modelu produktów i cen.",
+            "art": {
+              "id": 24,
+              "file": {
+                "id": 238,
+                "documentId": "1uz13ba1kzp6f50s6he8r0y2",
+                "name": "6af5f54ca716baf24131cd6a-om-lp-catalog-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54ca716baf24131cd6a-om-lp-catalog-v3_1uz13ba1kz",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54ca716baf24131cd6a-om-lp-catalog-v3_1uz13ba1kz.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          },
+          {
+            "id": 25,
+            "title": "Zamówienia, płatności i wysyłki",
+            "body": "Pracuj na rekordach zamówień, korektach sprzedaży, płatnościach i informacjach o wysyłkach.",
+            "art": {
+              "id": 26,
+              "file": {
+                "id": 233,
+                "documentId": "13jodig1l6tfsg17n5uja03v",
+                "name": "6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54b80a055a87fa948c5-om-lp-orders-v3_13jodig1l6",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54b80a055a87fa948c5-om-lp-orders-v3_13jodig1l6.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          },
+          {
+            "id": 27,
+            "title": "Własna logika realizacji",
+            "body": "Wdróż akceptacje, routing i wymianę z ERP przy użyciu workflow oraz API. Synchronizacja kanałów, etykiety i połączenia z usługodawcami wymagają integracji.",
+            "art": {
+              "id": 28,
+              "file": {
+                "id": 239,
+                "documentId": "0ywrxbc0tmgfrg069fn3a077",
+                "name": "6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg",
+                "alternativeText": null,
+                "caption": null,
+                "width": null,
+                "height": null,
+                "formats": null,
+                "hash": "6af5f54ced23f8851fb179ef-om-lp-custom-v3_0ywrxbc0tm",
+                "ext": ".svg",
+                "mime": "image/svg+xml",
+                "size": null,
+                "url": "/uploads/6af5f54ced23f8851fb179ef-om-lp-custom-v3_0ywrxbc0tm.svg",
+                "previewUrl": null,
+                "provider": "local",
+                "provider_metadata": null,
+                "createdAt": "2026-11-27T10:00:00.000Z",
+                "updatedAt": "2026-11-27T10:00:00.000Z",
+                "publishedAt": "2026-11-27T10:00:00.000Z"
+              },
+              "alt": "",
+              "decorative": true,
+              "width": null,
+              "height": null
+            }
+          }
+        ]
+      },
+      "capabilities": {
+        "id": 29,
+        "eyebrow": "Funkcja po funkcji",
+        "title": "Podstawy obsługi zamówień i kontrola reguł procesu.",
+        "lead": "Porównaj dostępne moduły oraz potrzebne prace integracyjne. Base oferuje ekosystem gotowych połączeń, a Open Mercato fundament dedykowanego wdrożenia.",
+        "label": "Co otrzymuje Twój zespół",
+        "tagline": "WŁASNY PROCES ZAMÓWIEŃ",
+        "oursColumn": { "id": 30, "name": "Open Mercato", "note": "Sprzedaż, katalog i własne integracje" },
+        "theirsColumn": { "id": 31, "name": "Base / BaseLinker", "note": "Platforma operacji e-commerce" },
+        "groups": [
+          {
+            "id": 32,
+            "title": "Przewagi Open Mercato",
+            "rows": [
+              {
+                "id": 33,
+                "label": "Uruchomienie na własnej infrastrukturze",
+                "ours": "yes",
+                "oursNote": null,
+                "theirs": "no",
+                "theirsNote": "Usługa hostowana"
+              },
+              {
+                "id": 34,
+                "label": "Rdzeń aplikacji na licencji MIT",
+                "ours": "yes",
+                "oursNote": null,
+                "theirs": "no",
+                "theirsNote": "Platforma komercyjna"
+              },
+              {
+                "id": 35,
+                "label": "Bez opłaty licencyjnej rdzenia za zamówienie",
+                "ours": "yes",
+                "oursNote": "Hosting i usługi osobno",
+                "theirs": "no",
+                "theirsNote": "Model zależny od wolumenu"
+              }
+            ]
+          },
+          {
+            "id": 36,
+            "title": "Funkcje dostępne w obu narzędziach",
+            "rows": [
+              {
+                "id": 37,
+                "label": "Klienci i rekordy zamówień",
+                "ours": "yes",
+                "oursNote": null,
+                "theirs": "yes",
+                "theirsNote": null
+              },
+              {
+                "id": 38,
+                "label": "Produkty i warianty",
+                "ours": "yes",
+                "oursNote": null,
+                "theirs": "yes",
+                "theirsNote": null
+              },
+              {
+                "id": 39,
+                "label": "Rekordy płatności i wysyłek",
+                "ours": "yes",
+                "oursNote": null,
+                "theirs": "yes",
+                "theirsNote": null
+              },
+              {
+                "id": 40,
+                "label": "Automatyzacja procesu",
+                "ours": "yes",
+                "oursNote": "Konfiguracja workflow",
+                "theirs": "yes",
+                "theirsNote": "Akcje automatyczne"
+              }
+            ]
+          },
+          {
+            "id": 41,
+            "title": "Zakres wymagający wdrożenia",
+            "rows": [
+              {
+                "id": 42,
+                "label": "Katalog gotowych połączeń marketplace i kurierskich",
+                "ours": "no",
+                "oursNote": "Integracje do wdrożenia",
+                "theirs": "yes",
+                "theirsNote": "Rozbudowany ekosystem"
+              },
+              {
+                "id": 43,
+                "label": "Dedykowana integracja z ERP",
+                "ours": "build",
+                "oursNote": "Prace wdrożeniowe",
+                "theirs": "build",
+                "theirsNote": "Zakres integracji / partnera"
+              },
+              {
+                "id": 44,
+                "label": "Własne reguły zamówień w kodzie aplikacji",
+                "ours": "yes",
+                "oursNote": "Wymaga developmentu",
+                "theirs": "build",
+                "theirsNote": "Możliwości produktu / Enterprise"
+              }
+            ]
+          }
+        ],
+        "legend": {
+          "id": 45,
+          "yes": "Dostępne we wskazanym zakresie",
+          "no": "Niedostępne w tym modelu",
+          "build": "Wymaga wdrożenia"
+        },
+        "note": "Porównanie dotyczy obsługi zamówień, nie pełnej zgodności funkcji e-commerce. Synchronizacja stanów, oferty marketplace, etykiety, fakturowanie i wymogi lokalne wymagają osobnej weryfikacji. Wdrożenie, hosting, integracje i utrzymanie Open Mercato mają własny koszt.",
+        "reviewed": "2026-11-12",
+        "sources": [
+          { "id": 46, "label": "Cennik i możliwości Base", "url": "https://base.com/pl-PL/cennik/" },
+          {
+            "id": 47,
+            "label": "Integracje ERP w Base",
+            "url": "https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/"
+          },
+          { "id": 48, "label": "Open Mercato core", "url": "https://github.com/open-mercato/open-mercato" },
+          {
+            "id": 49,
+            "label": "Customer records",
+            "url": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx"
+          }
+        ]
+      },
+      "comparison": {
+        "id": 50,
+        "title": "Zobacz szczegóły wdrożenia i kosztów",
+        "label": "Obszar porównania",
+        "theirsColumn": "Base / BaseLinker",
+        "oursColumn": "Open Mercato",
+        "rows": [
+          {
+            "id": 51,
+            "topic": "Obsługa zamówień",
+            "theirs": "Gotowa platforma sprzedaży wielokanałowej.",
+            "ours": "Rekordy zamówień, klientów i wysyłek oraz własne procesy."
+          },
+          {
+            "id": 52,
+            "topic": "Marketplace i kurierzy",
+            "theirs": "Rozbudowany katalog gotowych połączeń.",
+            "ours": "Każde wymagane połączenie wymaga oceny i wdrożenia."
+          },
+          {
+            "id": 53,
+            "topic": "Model kosztów",
+            "theirs": "Abonament i rozliczenia zależne od wolumenu.",
+            "ours": "Rdzeń MIT bez opłaty licencyjnej za zamówienie; osobno infrastruktura i usługi."
+          },
+          {
+            "id": 54,
+            "topic": "Reguły biznesowe",
+            "theirs": "Akcje automatyczne i konfiguracja produktu.",
+            "ours": "Logika aplikacji, własne moduły i wdrażane workflow."
+          },
+          {
+            "id": 55,
+            "topic": "Migracja",
+            "theirs": "Zamówienia, produkty, oferty, identyfikatory i integracje.",
+            "ours": "Pilotaż jednego kanału i weryfikacja całej ścieżki realizacji."
+          }
+        ]
+      },
+      "demo": {
+        "id": 56,
+        "eyebrow": "MDM NT · wdrożenie w produkcji",
+        "title": "Zobacz przykład automatyzacji wysyłek.",
+        "body": "Case study MDM NT opisuje dedykowane wdrożenie procesów wysyłkowych połączonych z systemami firmy. Pokazuje sposób realizacji projektu; nie oznacza gotowości wszystkich integracji dostępnych w Base.",
+        "cta": {
+          "id": 57,
+          "label": "Zobacz wdrożenie MDM NT",
+          "href": "/case-studies/mdm-nt-shipping-automation",
+          "trackingPlacement": null,
+          "trackingAction": null
+        },
+        "image": {
+          "id": 58,
+          "file": {
+            "id": 229,
+            "documentId": "0gilzsy0abs6s40y25b0c0kn",
+            "name": "6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details.png",
+            "alternativeText": null,
+            "caption": null,
+            "width": null,
+            "height": null,
+            "formats": null,
+            "hash": "6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details_0gilzsy0ab",
+            "ext": ".png",
+            "mime": "image/png",
+            "size": null,
+            "url": "/uploads/6af5bb329b98d27ae6a88d6e-open-mercato-orders-order-details_0gilzsy0ab.png",
+            "previewUrl": null,
+            "provider": "local",
+            "provider_metadata": null,
+            "createdAt": "2026-11-27T10:00:00.000Z",
+            "updatedAt": "2026-11-27T10:00:00.000Z",
+            "publishedAt": "2026-11-27T10:00:00.000Z"
+          },
+          "alt": "Open Mercato order workspace. The case study describes MDM NT's separate custom shipping implementation.",
+          "decorative": null,
+          "width": null,
+          "height": null
+        },
+        "caption": "Widok zamówienia w Open Mercato. Dedykowany proces wysyłek MDM NT opisano w case study.",
+        "animation": null
+      },
+      "steps": {
+        "id": 59,
+        "eyebrow": null,
+        "title": "Przenieś proces zamówień, zachowując ciągłość realizacji.",
+        "items": [
+          {
+            "id": 60,
+            "title": "Spisz działające połączenia",
+            "body": "Uwzględnij marketplace, sklepy, przewoźników, ERP, magazyny, waluty i akcje automatyczne. Ustal, które połączenia mogą pozostać na czas pilotażu."
+          },
+          {
+            "id": 61,
+            "title": "Zmapuj dane operacyjne",
+            "body": "Zachowaj SKU, identyfikatory ofert, statusy zamówień, adresy, płatności i numery wysyłek. Wskaż system odpowiedzialny za stany oraz ceny."
+          },
+          {
+            "id": 62,
+            "title": "Przetestuj jeden kanał od początku do końca",
+            "body": "Sprawdź pobieranie zamówień, aktualizacje, anulacje, płatności, etykiety i tracking. Przetestuj ponowienia, ochronę przed duplikatami i alerty błędów."
+          },
+          {
+            "id": 63,
+            "title": "Uzgodnij dane i przełącz pracę",
+            "body": "Zaplanuj końcową synchronizację, sprawdź otwarte zamówienia, przeszkol operatorów i zachowaj przetestowaną ścieżkę powrotu."
+          }
+        ]
+      },
+      "faq": {
+        "id": 64,
+        "title": "Pytania przed kolejnym krokiem.",
+        "items": [
+          {
+            "id": 65,
+            "question": "Czy Open Mercato zastępuje BaseLinkera od razu po instalacji?",
+            "answer": "Nie. Base oferuje wiele gotowych integracji e-commerce. Open Mercato jest fundamentem dedykowanej aplikacji. Wymagane połączenia z marketplace, kurierami i ERP trzeba ocenić oraz wdrożyć przed przełączeniem."
+          },
+          {
+            "id": 66,
+            "question": "Czy płacimy licencję za każde zamówienie?",
+            "answer": "Rdzeń na licencji MIT nie ma opłaty licencyjnej za zamówienie. Całkowity koszt obejmuje jednak wdrożenie, hosting, utrzymanie, wsparcie i wykorzystanie zewnętrznych usług."
+          },
+          {
+            "id": 67,
+            "question": "Czy możemy zostawić Base do obsługi marketplace?",
+            "answer": "Można zaprojektować rozwiązanie, w którym Base obsługuje wybrane kanały, a Open Mercato procesy klientów i operacje. Trzeba określić właściciela danych, synchronizację i sposób obsługi błędów."
+          },
+          {
+            "id": 68,
+            "question": "Kiedy takie wdrożenie ma sens?",
+            "answer": "Gdy specyficzny proces, kontrola kodu lub rozwój własnej aplikacji uzasadniają projekt wdrożeniowy. Przy standardowej sprzedaży opartej głównie na gotowych integracjach platforma e-commerce może być lepszym wyborem."
+          }
+        ]
+      },
+      "cta": {
+        "id": 69,
+        "title": "Pokaż nam wyjątki, które utrudniają realizację zamówień.",
+        "body": "Zacznij od listy kanałów, wolumenu zamówień, ERP i reguł wysyłki. Ustalmy zakres pilotażu przed pełną migracją.",
+        "primary": {
+          "id": 70,
+          "label": "Porozmawiajmy o migracji z Base",
+          "href": "/contact?interest=baselinker-alternatywa",
+          "trackingPlacement": null,
+          "trackingAction": null
+        },
+        "note": "Omów proces, integracje i potrzeby wdrożeniowe z zespołem Open Mercato."
+      },
+      "sources": {
+        "id": 71,
+        "title": "Źródła i dokumentacja",
+        "reviewed": "2026-11-12",
+        "items": [
+          { "id": 72, "label": "Oficjalny cennik Base", "url": "https://base.com/pl-PL/cennik/" },
+          {
+            "id": 73,
+            "label": "Base integrations and ERP connections",
+            "url": "https://www.base.com/en-EN/help/knowledgebase/erp-systems-integrations/"
+          },
+          {
+            "id": 74,
+            "label": "Base / BaseLinker user reviews",
+            "url": "https://pl.trustpilot.com/review/baselinker.com"
+          },
+          {
+            "id": 75,
+            "label": "Open Mercato order and quote documentation",
+            "url": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx"
+          },
+          {
+            "id": 76,
+            "label": "Open Mercato catalog and pricing documentation",
+            "url": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/products-and-sales-channels.mdx"
+          },
+          {
+            "id": 77,
+            "label": "Open Mercato shipment documentation",
+            "url": "https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/shipments.mdx"
+          },
+          {
+            "id": 78,
+            "label": "MDM NT shipping automation case study",
+            "url": "https://www.openmercato.com/case-studies/mdm-nt-shipping-automation"
+          }
+        ]
+      },
+      "related": [],
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+}

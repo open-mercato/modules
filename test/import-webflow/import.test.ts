@@ -4,6 +4,8 @@ import { parse as parseYaml } from 'yaml'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { findBannedChars } from '../../lib/core/text.ts'
 import { REDIRECTS_HEADER } from '../../lib/import-webflow/docs-map.ts'
+import { parseArgs } from '../../lib/commands/import-webflow.ts'
+import { NOT_IMPORTED } from '../../lib/import-webflow/landing-template.ts'
 import { MANIFEST_PATH } from '../../lib/import-webflow/output.ts'
 import { renderReport } from '../../lib/import-webflow/report.ts'
 import type { ImportResult } from '../../lib/import-webflow/run.ts'
@@ -85,7 +87,7 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
           expect(r.success, `${path}: ${JSON.stringify(r.error?.issues)}`).toBe(true)
           ;(ids[collection] ??= []).push(path.slice(prefix.length, -source.ext.length - 1))
         }
-      } else {
+      } else if (!NOT_IMPORTED.has(collection)) {
         const bytes = files.get(`www/content/${source.file}`)
         expect(bytes, source.file).toBeDefined()
         for (const [id, entry] of Object.entries(fileEntries(collection, parseYaml(bytes!.toString('utf8'))))) {
@@ -165,6 +167,14 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
     // dictionaries by order, then name
     const tiers = Object.keys(parseYaml(files.get('www/content/partner-tiers.yaml')!.toString('utf8')))
     expect(tiers).toEqual(['ai-native-core-agency', 'ai-native-expert-agency', 'ai-native-agency', 'agency'])
+    // `order` right after `name`, also where the importer numbered a missing order (the mapping's key order, Step 1.2)
+    for (const file of ['blog-categories.yaml', 'partner-tiers.yaml']) {
+      const entries = parseYaml(files.get(`www/content/${file}`)!.toString('utf8')) as Record<string, object>
+      for (const [id, e] of Object.entries(entries)) {
+        const keys = Object.keys(e)
+        expect(keys.indexOf('order'), `${file} ${id}`).toBe(keys.indexOf('name') + 1)
+      }
+    }
   })
 
   it('parses the landings, tokens their counts (A6) and links the Polish one to the English one', () => {
@@ -354,6 +364,23 @@ describe('the ownership manifest', () => {
     }
   })
 
+  it('keeps the hand-written notes of the manifest on a re-run (Strapi CMS spec, Step 1.1a)', async () => {
+    const target = tempDir('notes')
+    const cache = tempDir('notes-cache')
+    try {
+      await importFixture({ target, mediaCache: cache })
+      const file = join(target, MANIFEST_PATH)
+      const notes = [{ path: 'www/content/pages/blog.yaml', at: 'seo.description', note: 'Webflow has none.' }]
+      writeFileSync(file, JSON.stringify({ ...JSON.parse(readFileSync(file, 'utf8')), notes }))
+      const r = await importFixture({ target, mediaCache: cache, offline: true })
+      expect(r.plan!.manifest.notes).toEqual(notes)
+      expect(JSON.parse(readFileSync(file, 'utf8')).notes).toEqual(notes)
+    } finally {
+      rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
   it('--only writes the named collections and carries the others in the manifest', async () => {
     const target = tempDir('only')
     const cache = tempDir('only-cache')
@@ -465,5 +492,13 @@ describe('the landing text cross-check', () => {
     } finally {
       rmSync(exp, { recursive: true, force: true })
     }
+  })
+})
+
+describe('yarn om import-webflow --only', () => {
+  it('takes collections of Webflow and refuses the template words, which Webflow does not hold', () => {
+    expect([...parseArgs(['--only', 'jobs,blog']).only!]).toEqual(['jobs', 'blog'])
+    expect(() => parseArgs(['--only', 'landingTemplate'])).toThrow(/not a collection of Webflow/)
+    expect(() => parseArgs(['--only', 'menus'])).toThrow(/not a collection/)
   })
 })

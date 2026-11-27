@@ -17,8 +17,6 @@ blocks:
     secondary:
       label: See Live Demo
       href: https://openmercatocloud.com/demo
-
-  # numbered cards: eyebrow the number
   - type: features
     layout: product-architecture
     eyebrow: The Architecture
@@ -37,8 +35,6 @@ blocks:
       - eyebrow: "03"
         title: Dependency Injection (Awilix)
         body: Every service, repository, and controller is managed via an IoC container, ensuring high testability and clean architectural boundaries.
-
-  # cards beside the heading; a card's note is the source of its quote
   - type: features
     layout: product-agents
     label: start with 80%
@@ -62,7 +58,6 @@ blocks:
           alt: ""
           decorative: true
         body: By maintaining a consistent structure between API and UI, we provide agents with the full context they need to generate production-grade code instead of hallucinations.
-
   - type: features
     layout: product-cards
     eyebrow: Enterprise Security
@@ -85,7 +80,6 @@ blocks:
           alt: ""
           decorative: true
         body: Every write operation is a "Command." This provides native Audit Logs (Who/What/When) and enables complex features like Undo/Redo at the framework level.
-
   - type: features
     layout: product-data
     eyebrow: DATA LAYER
@@ -109,7 +103,6 @@ blocks:
           alt: ""
           decorative: true
         body: We utilize the industry-standard stack for performance, reliability, and ACID compliance.
-
   - type: features
     layout: product-dx
     eyebrow: DX
@@ -133,8 +126,6 @@ blocks:
           alt: ""
           decorative: true
         body: Integrated Playwright testing suite designed to verify AI-generated features before they hit production.
-
-  # the cards of product-cards with a smaller heading; an item with a body only is the quote across both columns
   - type: features
     layout: product-anatomy
     label: start with 80%
@@ -155,8 +146,6 @@ blocks:
           decorative: true
         body: Modules communicate via an event-driven system. Want to trigger a Slack notification when a CRM Lead is created? Simply subscribe to the deal.created event in your custom module.
       - body: '"The core idea is to be open for extensions but closed for core modifications, achieved through build-time generators that scan enabled modules and allow overrides.”'
-
-  # a sticky heading beside numbered groups (eyebrow the number, body a lead and a list)
   - type: features
     layout: product-modules
     eyebrow: MODULE STRUCTURE
@@ -192,9 +181,7 @@ blocks:
           - **Workflows: **Manages custom data lifecycles and document-driven processes tailored per tenant.
       - eyebrow: "04"
         title: UX & Frontend
-        body: |-
-          - **Design System: **A dedicated UX module that keeps the design system separate, ensuring AI agents always generate UI that is consistent with the framework's look and feel.
-
+        body: "- **Design System: **A dedicated UX module that keeps the design system separate, ensuring AI agents always generate UI that is consistent with the framework's look and feel."
   - type: features
     layout: product-ai
     eyebrow: MODULE STRUCTURE

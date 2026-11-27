@@ -4,7 +4,7 @@
 import type { z } from 'zod'
 import { fillCounts, type CountValues } from '../../../lib/core/www-tokens.ts'
 import { formatProseDate } from '../../../lib/import-webflow/text.ts'
-import { LANDING_TEMPLATE_TEXT, type LandingLocale, type landingSchema } from '../../../lib/schema/www-content.ts'
+import type { LandingLocale, landingSchema } from '../../../lib/schema/www-content.ts'
 import { refId, type Ref } from './blog.ts'
 
 type Parsed = z.output<ReturnType<typeof landingSchema>>
@@ -23,9 +23,6 @@ export const landingPath = (slug: string): string => `/${slug}`
 export function publishedLandings<T extends LandingEntry>(entries: readonly T[]): T[] {
   return entries.filter((e) => !e.data.draft).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
 }
-
-/** The words of the template in the landing's language. */
-export const templateText = (locale: LandingLocale) => LANDING_TEMPLATE_TEXT[locale]
 
 /** A review date as the landings print it: "12 November 2026", "12 listopada 2026" (UTC). */
 export function reviewedDay(d: Date, locale: LandingLocale): string {

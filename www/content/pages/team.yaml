@@ -1,7 +1,5 @@
 webflowId: 6af227949211ec310e336ee3
 seo:
-  # the live page has no title of its own (Webflow prints the site's name) and no description; the description is one
-  # of the four the spec asks for (SEO table)
   title: Open Mercato
   description: Meet the people behind Open Mercato, the founders and core developers, and what each of them built before.
 blocks:

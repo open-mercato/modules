@@ -63,15 +63,15 @@ blocks:
       decorative: true
     items:
       - title: Confidence thresholds
-        points:
-          - ">80% → auto"
-          - "<80% → human"
         body: Set the bar. Above your threshold the agent decides and the workflow moves on. Below it, the decision escalates to a person. You decide how much autonomy you hand over.
-      - title: Human-in-the-loop
         points:
           - ">80% → auto"
-          - "<80% → human"
+          - <80% → human
+      - title: Human-in-the-loop
         body: When output needs sign-off, the workflow stops and routes it to the right person. The agent proposes, the human disposes.
+        points:
+          - ">80% → auto"
+          - <80% → human
       - body: Runs on top of the Open Mercato MCP Server - the tools you already expose are discoverable and callable by agents. No new tooling to wire up.
   - type: features
     layout: agent-orchestrator-audit
@@ -94,25 +94,24 @@ blocks:
     title: Stop guessing whether your agent is any good
     items:
       - title: Agent Evals
+        body: You don't ship code without tests. Define evaluation scenarios, benchmark your agents against them, and watch how they hold up on real cases - in the same place they run.
         points:
           - define
           - benchmark
-        body: You don't ship code without tests. Define evaluation scenarios, benchmark your agents against them, and watch how they hold up on real cases - in the same place they run.
         image:
           src: /media/pages/6a54d91c92e75db5dca91dfd-product-5.jpg
           alt: ""
           decorative: true
       - title: Observability
+        body: See which model an agent used, what it cost in tokens, and how it performs over time. Admins and AgentOps teams tune behavior with real numbers.
         points:
           - models
           - cost
           - performance
-        body: See which model an agent used, what it cost in tokens, and how it performs over time. Admins and AgentOps teams tune behavior with real numbers.
         image:
           src: /media/pages/6a54d91d44e8daf778cad67b-product-6.jpg
           alt: ""
           decorative: true
-  # the comparison table, one item per column as the live markup has it: the row labels, then n8n, then Open Mercato
   - type: features
     layout: agent-orchestrator-compare
     eyebrow: WHY IT'S DIFFERENT

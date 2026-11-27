@@ -5,7 +5,6 @@ seo:
   ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
 jsonLd:
   type: TechArticle
-  # the questions of the live page's head code, not shown on the page
   faq:
     - question: What technologies does Open Mercato use?
       answer: "Open Mercato is built on a modern TypeScript stack: Next.js for the full-stack application layer, Node.js as the runtime, Tailwind CSS for styling, PostgreSQL as the primary database, and Redis for caching. The API layer uses OpenAPI and Swagger for documentation. The architecture follows a Modular Monolith pattern with Awilix for dependency injection and MikroORM for database interactions. This stack provides deployment simplicity with strict module boundaries, making it production-ready for enterprise teams from day one."
@@ -16,18 +15,10 @@ jsonLd:
     - question: How does Open Mercato support AI-assisted development?
       answer: Open Mercato is designed to be read by LLMs and AI coding agents. The context-rich monorepo keeps UI, API, and schema together in a single well-structured codebase, giving agents the full relationship context they need. Each module contains an AGENTS.md file - a machine-readable specification that acts as a guardrail for AI generation. The framework provides the hard parts (auth, multi-tenancy, RBAC, encrypted data layers) so AI agents can focus on business logic instead of infrastructure plumbing that is notoriously difficult to prompt correctly and securely.
 blocks:
-  # the header: the breadcrumb's name, the heading, the tags, the lead and the two buttons
   - type: hero
     layout: architecture-hero
     eyebrow: Architecture
     title: Architecture built for safe extension
-    items:
-      - title: Modular Monolith
-      - title: OCP + Overlay
-      - title: Awilix DI
-      - title: Command Pattern
-      - title: Events
-      - title: Field‑level encryption
     lead: Open Mercato uses a Modular Monolith architecture. It provides the deployment simplicity of a single application with the strict boundary isolation typically found in microservices. This is the structural "North Star" that allows AI agents to write production-grade code without creating a maintenance nightmare.
     primary:
       label: Clone the Repo
@@ -35,7 +26,13 @@ blocks:
     secondary:
       label: See Live Demo
       href: https://openmercatocloud.com/demo
-  # the video beside its heading and three numbered points
+    items:
+      - title: Modular Monolith
+      - title: OCP + Overlay
+      - title: Awilix DI
+      - title: Command Pattern
+      - title: Events
+      - title: Field‑level encryption
   - type: hero
     layout: architecture-watch
     eyebrow: Modular Monolith
@@ -52,7 +49,6 @@ blocks:
     image:
       src: /media/pages/architecture-video-ezfhcr-9q0g.jpg
       alt: Open Mercato Architecture
-  # each card: its text (`body`), its tags (`points`) and a quote with its source in *italics* (`note`)
   - type: features
     layout: architecture-fundamentals
     label: start with 80%
@@ -114,21 +110,45 @@ blocks:
     title: The stack
     items:
       - name: Next.js
-        logo: { src: /media/pages/architecture-stack-nextjs.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-nextjs.svg
+          alt: ""
+          decorative: true
       - name: Tailwind CSS
-        logo: { src: /media/pages/architecture-stack-tailwind-css.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-tailwind-css.svg
+          alt: ""
+          decorative: true
       - name: Node.js
-        logo: { src: /media/pages/architecture-stack-nodejs.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-nodejs.svg
+          alt: ""
+          decorative: true
       - name: TypeScript
-        logo: { src: /media/pages/architecture-stack-typescript.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-typescript.svg
+          alt: ""
+          decorative: true
       - name: Open API
-        logo: { src: /media/pages/architecture-stack-open-api.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-open-api.svg
+          alt: ""
+          decorative: true
       - name: Swagger
-        logo: { src: /media/pages/architecture-stack-swagger.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-swagger.svg
+          alt: ""
+          decorative: true
       - name: PostgreSQL
-        logo: { src: /media/pages/architecture-stack-postgresql.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-postgresql.svg
+          alt: ""
+          decorative: true
       - name: Redis
-        logo: { src: /media/pages/architecture-stack-redis.svg, alt: "", decorative: true }
+        logo:
+          src: /media/pages/architecture-stack-redis.svg
+          alt: ""
+          decorative: true
   - type: video
     layout: architecture-install
     eyebrow: NEXT STEP
@@ -148,14 +168,16 @@ blocks:
     eyebrow: Intellectual Honesty
     title: The Trade-off
     markdown: Open Mercato requires a shift in mindset. It is not a "wild west" where you write code anywhere. You must adhere to the Overlay Pattern and Dependency Injection. While this has a slightly steeper learning curve for junior developers, it is the only way to ensure a system remains maintainable after 24 months of heavy AI-assisted feature growth.
-  # each card: its icon, the scenario (`body`), its tags (`points`) and its blueprint, a list with one nested list (`note`)
   - type: features
     layout: architecture-examples
     eyebrow: EXAMPLES
     title: Ready-made implementation scenarios
     items:
       - title: The "Zero-Knowledge" HIPAA/FinTech Portal
-        icon: { src: /media/pages/architecture-scenario-encrypted-vault.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/architecture-scenario-encrypted-vault.svg
+          alt: ""
+          decorative: true
         body: "Scenario: You need to build a patient management system or a financial portal where even database administrators cannot read sensitive PII (Personally Identifiable Information)."
         points:
           - Encrypted Vault
@@ -170,7 +192,10 @@ blocks:
           - Technical Edge: > "Your data is also safe at rest because the fields in the database they are encrypted with AES so it's a super strong encryption... it's fully configurable." (Source: OM - Architecture Webinar)
           - Business Outcome: Pass a Level 3 Security Audit in the first week of development.
       - title: The "Niche" Vertical CRM (e.g., Solar Installation)
-        icon: { src: /media/pages/architecture-scenario-vertical-crm.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/architecture-scenario-vertical-crm.svg
+          alt: ""
+          decorative: true
         body: 'Scenario: A client needs a CRM that doesn''t just manage "contacts" but tracks "Roof Pitch," "Sun Exposure," and "Grid Interconnect Status."'
         points:
           - Overlay Override
@@ -185,7 +210,10 @@ blocks:
           - Technical Edge: > "A custom fields layer allows runtime-defined models, enabling users to add custom fields to core entities with different field editors and types." (Source: OM - Architecture Webinar)
           - Business Outcome: Deliver a 100% bespoke industry solution with the stability of a battle-tested core.
       - title: The AI-Automated Logistics Dispatcher
-        icon: { src: /media/pages/architecture-scenario-logistics.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/architecture-scenario-logistics.svg
+          alt: ""
+          decorative: true
         body: "Scenario: A logistics company wants an AI to automatically assign drivers to loads based on complex vehicle tracking data and custom business rules."
         points:
           - AGENTS.MD
@@ -199,7 +227,10 @@ blocks:
           - Technical Edge: > "Open Mercato provides the 'plumbing' - auth, multi-tenancy, RBAC, and encrypted data layers - which are notoriously difficult to prompt correctly and securely." (Source: Open Mercato FAQ)
           - Business Outcome: Shift from "CRUD coding" to "AI Engineering," delivering complex automation in under 15 minutes of prompting.
       - title: The Multi-Tier Partner Portal (B2B2B)
-        icon: { src: /media/pages/architecture-scenario-partner-portal.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/architecture-scenario-partner-portal.svg
+          alt: ""
+          decorative: true
         body: "Scenario: A manufacturer needs a portal where Distributors can manage their own Dealers, but the Manufacturer retains global visibility."
         points:
           - Directory

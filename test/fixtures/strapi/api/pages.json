@@ -1,0 +1,515 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "1lbbj301y2084g0aj6oqy0ak",
+      "slug": "pricing",
+      "webflowId": null,
+      "seo": {
+        "id": 1,
+        "title": "Pricing | Open Mercato",
+        "description": "Compare Open Mercato Free, Enterprise and Custom. Build on the MIT core, add enterprise identity and agent approvals, or plan a managed rollout.",
+        "ogImage": null,
+        "noindex": null
+      },
+      "jsonLd": { "id": 2, "type": "WebPage", "faq": [] },
+      "siteCta": null,
+      "blocks": [
+        {
+          "__component": "block.hero",
+          "id": 3,
+          "anchor": null,
+          "layout": "pricing-hero",
+          "label": null,
+          "eyebrow": null,
+          "title": "Pricing",
+          "lead": "Build on the open-source core for free. Add Enterprise for identity controls, governed AI workflows and direct support when your team needs to patch or upgrade.",
+          "primary": {
+            "id": 4,
+            "label": "Compare plans ↓",
+            "href": "#compare-plans",
+            "trackingPlacement": null,
+            "trackingAction": null
+          },
+          "secondary": null,
+          "note": null,
+          "items": [],
+          "video": null,
+          "image": null
+        },
+        {
+          "__component": "block.features",
+          "id": 5,
+          "layout": "pricing-plans",
+          "anchor": null,
+          "label": null,
+          "eyebrow": null,
+          "title": null,
+          "lead": null,
+          "body": null,
+          "image": null,
+          "primary": null,
+          "secondary": null,
+          "items": [
+            {
+              "id": 6,
+              "eyebrow": "€0",
+              "title": "Free",
+              "icon": null,
+              "body": "MIT license · Self-hosted\n\nFor teams building their own CRM, warehouse system or custom business app.",
+              "points": [
+                { "id": 7, "text": "CRM, sales and product catalog modules" },
+                { "id": 8, "text": "Workflows and business rules" },
+                { "id": 9, "text": "Tenant isolation and role-based access" },
+                { "id": 10, "text": "REST APIs and permission-aware MCP tools" }
+              ],
+              "note": "Included in the core",
+              "video": null,
+              "image": null,
+              "cta": {
+                "id": 11,
+                "label": "Get the free core",
+                "href": "https://github.com/open-mercato/open-mercato",
+                "trackingPlacement": "pricing",
+                "trackingAction": "free"
+              }
+            },
+            {
+              "id": 12,
+              "eyebrow": "From €3,000",
+              "title": "Enterprise",
+              "icon": null,
+              "body": "EUR net / month · One licensed project\n\nGet the enterprise modules, priority technical support and security fixes for supported versions of Core and Enterprise.",
+              "points": [
+                { "id": 13, "text": "Single sign-on, directory sync and enforced MFA" },
+                { "id": 14, "text": "Security fix emails and self-service upgrade packages" },
+                { "id": 15, "text": "Agent Orchestrator with human approvals" },
+                { "id": 16, "text": "Record locking to prevent conflicting edits" }
+              ],
+              "note": "Included with the license",
+              "video": null,
+              "image": null,
+              "cta": {
+                "id": 17,
+                "label": "Talk to sales",
+                "href": "/contact",
+                "trackingPlacement": "pricing",
+                "trackingAction": "enterprise"
+              }
+            },
+            {
+              "id": 18,
+              "eyebrow": "By quote",
+              "title": "Custom",
+              "icon": null,
+              "body": "License and services quoted separately\n\nAgree on coverage for a larger deployment. Add hands-on engineering services to any Enterprise subscription, at purchase or later.",
+              "points": [
+                { "id": 19, "text": "A pre-deployment architecture audit" },
+                { "id": 20, "text": "Security and performance reviews" },
+                { "id": 21, "text": "Managed upgrades and go-live reviews" },
+                { "id": 22, "text": "A dedicated contact through launch" }
+              ],
+              "note": "Services you can commission",
+              "video": null,
+              "image": null,
+              "cta": {
+                "id": 23,
+                "label": "Let’s talk",
+                "href": "/contact",
+                "trackingPlacement": "pricing",
+                "trackingAction": "custom"
+              }
+            }
+          ],
+          "note": null
+        },
+        {
+          "__component": "block.features",
+          "id": 24,
+          "layout": "pricing-compare",
+          "anchor": "compare-plans",
+          "label": null,
+          "eyebrow": null,
+          "title": "Compare plans",
+          "lead": null,
+          "body": null,
+          "image": null,
+          "primary": null,
+          "secondary": null,
+          "items": [
+            {
+              "id": 25,
+              "eyebrow": null,
+              "title": "What you get",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 26, "text": "Free" },
+                { "id": 27, "text": "Enterprise" },
+                { "id": 28, "text": "Custom" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 29,
+              "eyebrow": null,
+              "title": "Production use",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 30, "text": "MIT core" },
+                { "id": 31, "text": "Core and commercial modules" },
+                { "id": 32, "text": "Core and commercial modules" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 33,
+              "eyebrow": null,
+              "title": "Users",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 34, "text": "Unlimited" },
+                { "id": 35, "text": "Unlimited per licensed project" },
+                { "id": 36, "text": "Unlimited per licensed project" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 37,
+              "eyebrow": null,
+              "title": "Software upgrades",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 38, "text": "Your team applies public core releases" },
+                { "id": 39, "text": "Your team or partner applies the supplied upgrade packages" },
+                { "id": 40, "text": "Assisted or managed upgrades by separate agreement" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 41,
+              "eyebrow": null,
+              "title": "Technical support",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 42, "text": "Community channels" },
+                {
+                  "id": 43,
+                  "text": "Priority support for Core and Enterprise. Basic covers 5 active issues at a time."
+                },
+                { "id": 44, "text": "Priority support with agreed capacity. Custom module coverage is optional." }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 45,
+              "eyebrow": null,
+              "title": "Security fixes",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 46, "text": "Follow public releases and apply the relevant fixes." },
+                {
+                  "id": 47,
+                  "text": "We email your team when a security fix is available for your supported release. You can apply it before the next public release."
+                },
+                {
+                  "id": 48,
+                  "text": "The same security notifications and fixes. Hands-on rollout can be scoped separately."
+                }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 49,
+              "eyebrow": null,
+              "title": "Identity and access",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 50, "text": "Role-based access and tenant isolation" },
+                { "id": 51, "text": "Adds single sign-on, directory provisioning and mandatory MFA" },
+                { "id": 52, "text": "Same enterprise identity controls" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 53,
+              "eyebrow": null,
+              "title": "AI workflows",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 54, "text": "Build workflows and connect agents through MCP" },
+                {
+                  "id": 55,
+                  "text": "Agent Orchestrator runs agents as workflow steps, routes uncertain results to a human and logs actions."
+                },
+                { "id": 56, "text": "Same Agent Orchestrator capabilities" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            },
+            {
+              "id": 57,
+              "eyebrow": null,
+              "title": "Concurrent edits",
+              "icon": null,
+              "body": null,
+              "points": [
+                { "id": 58, "text": "Standard record editing" },
+                { "id": 59, "text": "Record locking and presence indicators show who is editing a shared record." },
+                { "id": 60, "text": "Same collaboration controls" }
+              ],
+              "note": null,
+              "video": null,
+              "image": null,
+              "cta": null
+            }
+          ],
+          "note": null
+        },
+        {
+          "__component": "block.faq",
+          "id": 61,
+          "anchor": null,
+          "layout": "pricing-qa",
+          "label": null,
+          "eyebrow": null,
+          "title": "Licensing questions",
+          "lead": null,
+          "primary": null,
+          "secondary": null,
+          "note": null,
+          "items": [
+            {
+              "id": 62,
+              "question": "Can I use Free in production?",
+              "answer": "Yes. The MIT license lets you build, modify and run commercial applications on the open-source core. You choose the infrastructure and cover its running costs. [Read the MIT license.](https://github.com/open-mercato/open-mercato/blob/main/LICENSE)"
+            },
+            {
+              "id": 63,
+              "question": "How does Enterprise pricing work?",
+              "answer": "Basic starts at €3,000 net per month for companies below €25M in annual revenue. Medium is €10,000 net per month for companies from €25M to €250M. Above €250M, we quote the license individually. Basic and Medium each cover one project with unlimited users and servers. You can buy the license on its own."
+            },
+            {
+              "id": 64,
+              "question": "What happens if we don’t renew?",
+              "answer": "If you’ve paid in full and continue usage reporting, you can keep running the retained version in the same project. Your own application code stays in your repository. New enterprise releases, security patches and support end with the subscription. [Read the enterprise terms.](https://github.com/open-mercato/open-mercato/blob/main/packages/enterprise/TERMS.md)"
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "1lox4a21ausx3l0doq03b1mw",
+      "slug": "team",
+      "webflowId": "6af227949211ec310e336ee3",
+      "seo": {
+        "id": 1,
+        "title": "Open Mercato",
+        "description": "Meet the people behind Open Mercato, the founders and core developers, and what each of them built before.",
+        "ogImage": null,
+        "noindex": null
+      },
+      "jsonLd": null,
+      "siteCta": null,
+      "blocks": [
+        {
+          "__component": "block.team",
+          "id": 2,
+          "layout": "team-page",
+          "anchor": null,
+          "label": null,
+          "eyebrow": null,
+          "title": "Meet the people behind *Open Mercato*",
+          "lead": null,
+          "primary": null,
+          "secondary": null,
+          "note": null,
+          "members": [
+            {
+              "id": 3,
+              "name": "Tomasz Karwatka",
+              "role": "CEO & Co-Founder",
+              "url": "https://www.linkedin.com/in/tkarwatka/",
+              "photo": {
+                "id": 4,
+                "file": {
+                  "id": 255,
+                  "documentId": "1bhedf41vptkgc1atrqjy1xg",
+                  "name": "6aab8968d8d698564577b3f1-tomasz-karwatka-2026.png",
+                  "alternativeText": null,
+                  "caption": null,
+                  "width": null,
+                  "height": null,
+                  "formats": null,
+                  "hash": "6aab8968d8d698564577b3f1-tomasz-karwatka-2026_1bhedf41vp",
+                  "ext": ".png",
+                  "mime": "image/png",
+                  "size": null,
+                  "url": "/uploads/6aab8968d8d698564577b3f1-tomasz-karwatka-2026_1bhedf41vp.png",
+                  "previewUrl": null,
+                  "provider": "local",
+                  "provider_metadata": null,
+                  "createdAt": "2026-11-27T10:00:00.000Z",
+                  "updatedAt": "2026-11-27T10:00:00.000Z",
+                  "publishedAt": "2026-11-27T10:00:00.000Z"
+                },
+                "alt": "Tomasz Karwatka",
+                "decorative": null,
+                "width": null,
+                "height": null
+              },
+              "bio": "Co-founder of Divante and Callstack, both scaled to enterprise clients across Europe and the US and exited. Investor at Catch The Tornado, now all-in on Open Mercato.",
+              "links": []
+            },
+            {
+              "id": 5,
+              "name": "Piotr Karwatka",
+              "role": "CTO & Founder",
+              "url": "https://www.linkedin.com/in/piotrkarwatka/",
+              "photo": {
+                "id": 6,
+                "file": {
+                  "id": 254,
+                  "documentId": "14gn22s0i3h0ht1owc35p1f0",
+                  "name": "6aab84a929384ef36bc35d30-piotr-karwatka-2026.png",
+                  "alternativeText": null,
+                  "caption": null,
+                  "width": null,
+                  "height": null,
+                  "formats": null,
+                  "hash": "6aab84a929384ef36bc35d30-piotr-karwatka-2026_14gn22s0i3",
+                  "ext": ".png",
+                  "mime": "image/png",
+                  "size": null,
+                  "url": "/uploads/6aab84a929384ef36bc35d30-piotr-karwatka-2026_14gn22s0i3.png",
+                  "previewUrl": null,
+                  "provider": "local",
+                  "provider_metadata": null,
+                  "createdAt": "2026-11-27T10:00:00.000Z",
+                  "updatedAt": "2026-11-27T10:00:00.000Z",
+                  "publishedAt": "2026-11-27T10:00:00.000Z"
+                },
+                "alt": "Piotr Karwatka",
+                "decorative": null,
+                "width": 84,
+                "height": null
+              },
+              "bio": "Creator of Vue Storefront and co-founder of Alokai (Y Combinator, $40M Series A). Now focused on AI-native business software.",
+              "links": []
+            },
+            {
+              "id": 7,
+              "name": "Patryk Lewczuk",
+              "role": "Co-Founder & Core Developer",
+              "url": "https://www.linkedin.com/in/patryk-lewczuk-poland/",
+              "photo": {
+                "id": 8,
+                "file": {
+                  "id": 256,
+                  "documentId": "13edz2a0jvqi6d1ezwsn70m8",
+                  "name": "6aab8968fbccf4771786b62e-patryk-lewczuk-2026.png",
+                  "alternativeText": null,
+                  "caption": null,
+                  "width": null,
+                  "height": null,
+                  "formats": null,
+                  "hash": "6aab8968fbccf4771786b62e-patryk-lewczuk-2026_13edz2a0jv",
+                  "ext": ".png",
+                  "mime": "image/png",
+                  "size": null,
+                  "url": "/uploads/6aab8968fbccf4771786b62e-patryk-lewczuk-2026_13edz2a0jv.png",
+                  "previewUrl": null,
+                  "provider": "local",
+                  "provider_metadata": null,
+                  "createdAt": "2026-11-27T10:00:00.000Z",
+                  "updatedAt": "2026-11-27T10:00:00.000Z",
+                  "publishedAt": "2026-11-27T10:00:00.000Z"
+                },
+                "alt": "Patryk Lewczuk",
+                "decorative": null,
+                "width": 84,
+                "height": null
+              },
+              "bio": "Core Developer and Forward Deployed Engineer, earlier Development Lead and Solution Architect building B2B e-commerce systems. At Open Mercato responsible for Cezar, Agent Orchestrator and customer success.",
+              "links": []
+            },
+            {
+              "id": 9,
+              "name": "Maciej Gren",
+              "role": "Co-Founder & Partnership Manager",
+              "url": "https://www.linkedin.com/in/maciejgren/",
+              "photo": {
+                "id": 10,
+                "file": {
+                  "id": 257,
+                  "documentId": "1gkyp7213ofnwe1whieje1w5",
+                  "name": "6aab8969d97d6b56a612ce27-maciej-gren-2026.png",
+                  "alternativeText": null,
+                  "caption": null,
+                  "width": null,
+                  "height": null,
+                  "formats": null,
+                  "hash": "6aab8969d97d6b56a612ce27-maciej-gren-2026_1gkyp7213o",
+                  "ext": ".png",
+                  "mime": "image/png",
+                  "size": null,
+                  "url": "/uploads/6aab8969d97d6b56a612ce27-maciej-gren-2026_1gkyp7213o.png",
+                  "previewUrl": null,
+                  "provider": "local",
+                  "provider_metadata": null,
+                  "createdAt": "2026-11-27T10:00:00.000Z",
+                  "updatedAt": "2026-11-27T10:00:00.000Z",
+                  "publishedAt": "2026-11-27T10:00:00.000Z"
+                },
+                "alt": "Maciej Gren",
+                "decorative": null,
+                "width": 84,
+                "height": null
+              },
+              "bio": "Building and growing the Open Mercato Partner Network, connecting software agencies, freelancers, and strategic partners with the framework. Together with Patryk, responsible for customer success.",
+              "links": []
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+}

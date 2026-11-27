@@ -1,13 +1,11 @@
 webflowId: 6a2c45aa2e91174d4a975ded
 seo:
   title: Certified Partners | Open Mercato
-  # Webflow has no description here; one of the four the spec asks for (SEO table)
   description: Hire a certified Open Mercato partner, an agency that builds and supports projects on the framework, or browse every partner yourself.
 blocks:
   - type: hero
     eyebrow: Agencies
     title: Hire a Certified Open Mercato Partner
-    # the live lead's long dash written `-` (A5)
     lead: Find an agency to help with your next project. Tell us what you need and we'll match you with the best Certified Partner for the job - or browse the partner directory for yourself.
     primary:
       label: Explore partners

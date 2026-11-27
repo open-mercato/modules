@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentId": "0f4mch61dvkwq11u1g3tn1vf",
+      "slug": "erp",
+      "webflowId": "6a2b03dcdae0237648965a32",
+      "name": "ERP",
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "documentId": "04c8pme0m4vyn00ll3l0o1sp",
+      "slug": "software-house",
+      "webflowId": "6a2b03e46a4a51e59b4e8f5d",
+      "name": "Software House",
+      "createdAt": "2026-11-27T10:00:00.000Z",
+      "updatedAt": "2026-11-27T10:00:00.000Z",
+      "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+}

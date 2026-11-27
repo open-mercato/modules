@@ -584,10 +584,12 @@ footer in the same way. The data stamp and Submit a module sit in a line at the 
 (`PageContext.astro`), and the data provenance on `/about`.
 
 When the menu or the footer changes on Webflow (an item, a description, an address, an icon), change the catalog to
-match in the same week: the items, texts and addresses are in `lib/core/main-site.ts` (`MAIN_SITE_MENUS`,
-`MAIN_SITE_LINKS`, `RUN_MENU`, `MAIN_SITE_FOOTER`, `MAIN_SITE_FOOTER_OTHER`), the icons in
-`site/src/components/nav-icons.ts`. The layout check accepts exactly the main-site addresses listed there, so a link to
-a new page of the main site that is not in the file fails `yarn om pages-site --check`. The Run menu on Webflow itself
+match in the same week: the items, texts and addresses are in `www/content/navigation.json` (menus, plain links, the
+sandbox button) and `www/content/footer.json`, checked by the schemas of `lib/schema/www-content.ts`; `RUN_MENU` stays
+in `lib/core/main-site.ts`, which re-exports the files as `MAIN_SITE_MENUS`, `MAIN_SITE_LINKS`, `MAIN_SITE_FOOTER` and
+`MAIN_SITE_FOOTER_OTHER`; the icons are in `site/src/components/nav-icons.ts`. The layout check accepts exactly the
+main-site addresses listed there, so a link to a new page of the main site that is not in the files fails `yarn om
+pages-site --check`. The Run menu on Webflow itself
 is added by hand by whoever edits the main site, from a note with the labels, texts, addresses (the table above) and
 icons. Until it is there, the main site's own pages show no way into the Run section.
 
