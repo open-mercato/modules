@@ -3,7 +3,7 @@
 // test can restart Strapi or read a file of its volume. Both are set by cms.yml and by the local recipe of
 // cms/README.md; a test run without them fails, it never skips.
 import { execFileSync } from 'node:child_process'
-import { randomBytes } from 'node:crypto'
+import { createHash, randomBytes } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -70,28 +70,54 @@ const data = (a: Answer): Record<string, unknown> =>
 
 let session: Promise<string> | undefined
 
-/** Where the test run keeps the address and random password of its admin, for the next test file (one process each). */
-const STATE = (): string => process.env.CMS_TEST_STATE ?? join(tmpdir(), 'cms-instance-test.json')
+/**
+ * Where the test run keeps the address and random password of its admin, for the next test file (one process each):
+ * a file named after the invitation of this instance, so a fresh database never reads the file of an earlier one.
+ */
+function statePath(invitation: string | undefined): string {
+  const key = invitation ? createHash('sha256').update(invitation).digest('hex').slice(0, 16) : 'first-admin'
+  return join(tmpdir(), `cms-instance-test-${key}.json`)
+}
+
+/** The test accounts of cms/scripts/dev-env.sh: placeholders of example.com, never a person. */
+export const TEST_OWNER = 'test-owner@example.com'
+
+/** The invitation token the roles seed logged for an address (spec Step 2.3: no password in cms/.env). */
+export function invitationToken(email: string): string {
+  const log = compose('logs', '--no-color', 'strapi')
+  const m = new RegExp(`invited ${email.replace(/[.]/g, '\\.')}: \\S*registrationToken=([0-9a-f]+)`).exec(log)
+  if (!m) throw new Error(`no invitation of ${email} in the Strapi log`)
+  return m[1] as string
+}
 
 /**
- * The admin token of a Super Admin of this test run. On an empty database the first test file registers the first
- * admin with a random password, kept only in a temporary file of the run; the address is a placeholder of example.com.
+ * The admin token of a Super Admin of this test run. The first test file takes the invitation the roles seed logged
+ * for TEST_OWNER and sets a random password through it, kept only in a temporary file of the run; an instance
+ * without seeded accounts gets a first admin through register-admin instead.
  */
 export function adminToken(): Promise<string> {
   session ??= (async () => {
     const init = data(await call('/admin/init'))
+    const invitation = init.hasAdmin ? invitationToken(TEST_OWNER) : undefined
+    const state = statePath(invitation)
     let creds: { email: string; password: string }
-    if (init.hasAdmin) {
-      if (!existsSync(STATE())) throw new Error('the database is not empty: the tests need a fresh instance')
-      creds = JSON.parse(readFileSync(STATE(), 'utf8'))
-    } else {
-      creds = { email: 'test-owner@example.com', password: `T1-${randomBytes(18).toString('base64url')}` }
-      const reg = await call('/admin/register-admin', {
-        method: 'POST',
-        body: JSON.stringify({ ...creds, firstname: 'Test', lastname: 'Owner' }),
-      })
-      if (reg.status !== 200) throw new Error(`register-admin answered ${reg.status}: ${JSON.stringify(reg.body)}`)
-      writeFileSync(STATE(), JSON.stringify(creds), { mode: 0o600 })
+    if (existsSync(state)) creds = JSON.parse(readFileSync(state, 'utf8'))
+    else {
+      creds = { email: TEST_OWNER, password: `T1-${randomBytes(18).toString('base64url')}` }
+      const reg = init.hasAdmin
+        ? await call('/admin/register', {
+            method: 'POST',
+            body: JSON.stringify({
+              registrationToken: invitation,
+              userInfo: { firstname: 'Test', lastname: 'Owner', password: creds.password },
+            }),
+          })
+        : await call('/admin/register-admin', {
+            method: 'POST',
+            body: JSON.stringify({ ...creds, firstname: 'Test', lastname: 'Owner' }),
+          })
+      if (reg.status !== 200) throw new Error(`registration answered ${reg.status}: ${JSON.stringify(reg.body)}`)
+      writeFileSync(state, JSON.stringify(creds), { mode: 0o600 })
     }
     const login = await call('/admin/login', { method: 'POST', body: JSON.stringify(creds) })
     const token = data(login).token

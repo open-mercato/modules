@@ -12,7 +12,7 @@ Base: main (2d2fadb)
 | ----- | ---- | ------------------------------------------------------------ | ------ | ------ | ------ |
 | 2     | 2.1  | The cms folder, its boundary, cms.yml and the byte test      | inline | done   | 2.1    |
 | 2     | 2.2  | Content types and components as schema.json, drift test      | inline | done   | 2.2    |
-| 2     | 2.3  | Roles seed, help texts, edit views, no model change in prod  | inline | todo   | —      |
+| 2     | 2.3  | Roles seed, help texts, edit views, no model change in prod  | inline | done   | 2.3    |
 | 2     | 2.4  | Publish hook and preview handler (off)                       | inline | todo   | —      |
 | 2     | 2.5  | Backup and restore scripts, README                           | inline | todo   | —      |
 

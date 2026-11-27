@@ -19,5 +19,6 @@ JWT_SECRET=$(rand)
 DATABASE_NAME=strapi
 DATABASE_USERNAME=strapi
 DATABASE_PASSWORD=$(openssl rand -hex 16)
+CMS_ADMIN_ACCOUNTS=Test Owner <test-owner@example.com>, Test Infra <test-infra@example.com>, Test Editor <test-editor-one@example.com>, Test Editor <test-editor-two@example.com>
 ENV
 echo "wrote cms/.env"
