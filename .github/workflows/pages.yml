@@ -119,6 +119,11 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Check layout variables
+        # seconds, before the build: a set of SITE_URL, BASE_PATH, HOME_PATH, PAGES_MERGED and PAGES_SERVE_ORIGIN that
+        # makes no layout (a partial rollback) stops here with the reason and what goes together
+        run: yarn om pages-site --settings
+
       - name: Read data branch
         # Empty data only when the branch does not exist. A fetch that fails for any other reason (network,
         # credentials) stops the deploy instead of publishing an empty catalog over the live one.

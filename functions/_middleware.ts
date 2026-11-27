@@ -14,7 +14,8 @@
 // With PAGES_SERVE_ORIGIN (functions/site.ts `serve`, owner's decision of 26 Nov 2026) the hosts of the Pages project
 // serve the merged layout themselves (hostServe): the main site's pages answer first and an old catalog page address
 // it does not serve moves with a 301 under the base on the same origin, a machine-readable file answers with the
-// catalog's copy under the base first and the main site's own file next.
+// catalog's copy under the base first and the main site's own file next. Those redirects carry a one-hour Cache-Control,
+// X-Robots-Tag: noindex and the security headers of _headers (serveRedirectHeaders), which a Function's answer lacks.
 import {
   fileResponse,
   hostFile,
@@ -22,6 +23,7 @@ import {
   hostServe,
   redirectResponse,
   SERVE_MOVED_STATUS,
+  serveRedirectHeaders,
   type SiteConfig,
 } from '../lib/core/site-host.ts'
 import { SITE } from './site.ts'
@@ -64,7 +66,7 @@ function asset(
 async function serve(context: MiddlewareContext, site: SiteConfig): Promise<Response> {
   const step = hostServe(context.request.url, site)
   const assets = context.env?.ASSETS
-  if (step?.kind === 'redirect') return redirectResponse(step.redirect)
+  if (step?.kind === 'redirect') return redirectResponse(step.redirect, serveRedirectHeaders())
   if (!step || !assets) return context.next()
   if (step.kind === 'file') {
     const file = await asset(context, assets, step.file)
@@ -78,7 +80,7 @@ async function serve(context: MiddlewareContext, site: SiteConfig): Promise<Resp
   await old.body?.cancel()
   if (old.status >= 400) return page
   await page.body?.cancel()
-  return redirectResponse({ location: step.location, status: SERVE_MOVED_STATUS })
+  return redirectResponse({ location: step.location, status: SERVE_MOVED_STATUS }, serveRedirectHeaders())
 }
 
 export function onRequest(context: MiddlewareContext): Response | Promise<Response> {

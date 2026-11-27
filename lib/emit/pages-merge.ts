@@ -10,7 +10,9 @@ import { isMainSiteLink, MAIN_SITE_ORIGIN } from '../core/main-site.ts'
 import {
   FIXED_ROOT_FILES,
   isNested,
-  NOINDEX_HEADERS,
+  isSitemapPath,
+  mergedHeaders,
+  mergedPagesRoutes,
   NOINDEX_ROBOTS,
   pagesRedirects,
   SCHEMA_DIR,
@@ -68,9 +70,21 @@ export function mergedRedirects(c: Pick<SiteConfig, 'base' | 'home'>, www = ''):
     [
       '# Cloudflare Pages redirects of the merged layout (lib/emit/pages-merge.ts): the main site at the root.',
       '/sitemap.xml /sitemap-index.xml 301',
+      // audit of 27 Nov 2026: the base is static files, so these two answer there and not the Function
+      '# One address per page under the base: no run of slashes, and a package page without its trailing slash (@ kept).',
+      `${c.base}//* ${c.base}/:splat 301`,
+      `${c.base}/m/:scope/:name/ ${c.base}/m/:scope/:name 301`,
       pagesRedirects(c),
     ].join('\n') + www
   )
+}
+
+/** Sitemap files at the root of the upload `root` (`sitemap-0.xml`, `sitemap-index.xml`), for mergedPagesRoutes(). */
+export function rootSitemaps(root: string): string[] {
+  if (!existsSync(root)) return []
+  return readdirSync(root)
+    .filter((n) => isSitemapPath(`/${n}`) && n !== 'sitemap.xml')
+    .sort()
 }
 
 /** robots.txt at the root of the merged layout: all allowed and one sitemap, or nothing for a noindex preview. */
@@ -169,7 +183,7 @@ export interface MergeResult {
 /**
  * Composes `out` from the two builds: the catalog's nested build `run` as it is, then every file of `www` at the root
  * (its 404.html replaces the catalog's root copy, which keeps its own under the base), then the merged root files
- * (mergedRedirects, mergedRobots, the sitemap index, _headers for a noindex build), and last makes the links to the
+ * (mergedRedirects, mergedRobots, the sitemap index, mergedHeaders and mergedPagesRoutes), and last makes the links to the
  * main site's pages it serves root relative (localizeUpload). Throws, before touching `out`, on
  * a config mergeConfigProblem() refuses, a missing build, a catalog build that is not nested, or a name the main site
  * would take from the catalog or from the merge.
@@ -231,8 +245,8 @@ export function mergePagesSite(
   writeFileSync(join(out, 'sitemap-index.xml'), sitemapIndexXml(sitemaps))
   writeFileSync(join(out, '_redirects'), redirects)
   writeFileSync(join(out, 'robots.txt'), mergedRobots(c, noindex))
-  if (noindex) writeFileSync(join(out, NOINDEX_ROOT_FILE), NOINDEX_HEADERS)
-  else rmSync(join(out, NOINDEX_ROOT_FILE), { force: true })
+  writeFileSync(join(out, NOINDEX_ROOT_FILE), mergedHeaders(c, noindex))
+  writeFileSync(join(out, '_routes.json'), `${JSON.stringify(mergedPagesRoutes(c.base, rootSitemaps(out)), null, 2)}\n`)
   // last, so "served" is what the upload now holds, _redirects included
   const local = localizeUpload(out)
   return {
@@ -514,6 +528,8 @@ export function checkMergedLayout(
   const wwwPart = redirectsText !== null && redirectsText.startsWith(fixed) ? redirectsText.slice(fixed.length) : ''
   for (const p of checkPagesLayout(root, c, max, noindex, {
     redirects: fixed + wwwPart,
+    routes: mergedPagesRoutes(c.base, rootSitemaps(root)),
+    headers: mergedHeaders(c, noindex),
     mainSite: (ref, url) => onMainSite(ref, url),
   }))
     say(p)

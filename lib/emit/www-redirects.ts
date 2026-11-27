@@ -128,6 +128,9 @@ export function redirectChainProblems(text: string, origin: string): string[] {
   const matching = (path: string): number => patterns.findIndex((p) => p.test(path))
   const problems: string[] = []
   for (const [i, rule] of rules.entries()) {
+    // a rule that only collapses a run of slashes (`/run//* /run/:splat`, lib/emit/pages-merge.ts) answers addresses
+    // nothing links; the rest of the cleanup after it is one more hop by design
+    if (rule.from.includes('//')) continue
     const seen = [i]
     const hops = [rule.from]
     let loop = false

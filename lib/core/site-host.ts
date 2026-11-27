@@ -261,6 +261,98 @@ export function pagesRoutes(base: string): PagesRoutes {
   }
 }
 
+/** Pages limits of _routes.json: at most 100 include and exclude rules together, each at most 100 characters. */
+export const ROUTES_LIMITS = { rules: 100, length: 100 } as const
+
+/**
+ * Folders at the root of the merged layout that hold only static files of the main site, never a page and never an old
+ * catalog address: the hashed bundles of its build (`_astro`), the imported images and files (`media`, `files`, the
+ * fonts among them) and the generated social cards (`og`).
+ */
+export const MERGED_STATIC_DIRS = ['_astro', 'media', 'files', 'og'] as const
+
+/**
+ * dist/_routes.json of the merged layout (audit of 27 Nov 2026): pagesRoutes() of the catalog, and also the main site's
+ * static folders (MERGED_STATIC_DIRS), its robots.txt and its sitemap files (`sitemaps`, the names at the root of the
+ * upload), so those requests are plain static files and no Function invocation. The main site's robots.txt is the one
+ * at the root, on every host, with the same _headers as /run/robots.txt.
+ */
+export function mergedPagesRoutes(base: string, sitemaps: readonly string[] = []): PagesRoutes {
+  const r = pagesRoutes(base)
+  return {
+    ...r,
+    exclude: [
+      ...r.exclude,
+      ...MERGED_STATIC_DIRS.map((d) => `/${d}/*`),
+      '/robots.txt',
+      ...[...sitemaps].sort().map((f) => `/${f}`),
+    ],
+  }
+}
+
+/** Why `r` breaks the Pages limits of _routes.json (ROUTES_LIMITS), or null. */
+export function routesLimitProblem(r: PagesRoutes): string | null {
+  const rules = [...r.include, ...r.exclude]
+  if (rules.length > ROUTES_LIMITS.rules) return `${rules.length} rules; Pages allows ${ROUTES_LIMITS.rules}`
+  const long = rules.find((x) => x.length > ROUTES_LIMITS.length)
+  return long ? `the rule ${long} is longer than ${ROUTES_LIMITS.length} characters` : null
+}
+
+/**
+ * The security headers live Webflow sends on www.openmercato.com (curl -sI of 27 Nov 2026), so the switch loses none:
+ * HSTS for a year without includeSubDomains, framing by the same origin only, no MIME sniffing. Referrer-Policy is the
+ * value Pages already sends. Nothing stricter, and no Content-Security-Policy: X-Frame-Options SAMEORIGIN does what
+ * Webflow's `frame-ancestors 'self'` does.
+ */
+export const SECURITY_HEADERS: readonly (readonly [name: string, value: string])[] = [
+  ['Strict-Transport-Security', 'max-age=31536000'],
+  ['X-Frame-Options', 'SAMEORIGIN'],
+  ['X-Content-Type-Options', 'nosniff'],
+  ['Referrer-Policy', 'strict-origin-when-cross-origin'],
+]
+
+/** Cache-Control of the content-hashed bundles of both builds: a new build writes new names. */
+export const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable'
+
+/**
+ * dist/_headers of the merged layout: SECURITY_HEADERS on every static file (robots.txt at the root and under the base
+ * alike), `X-Robots-Tag: noindex` too in a noindex build, and IMMUTABLE_CACHE on the hashed bundles of the main site
+ * (`/_astro/*`) and of the catalog (`<base>/_astro/*`).
+ */
+export function mergedHeaders(c: Pick<SiteConfig, 'base'>, noindex: boolean): string {
+  const all = SECURITY_HEADERS.map(([k, v]) => `  ${k}: ${v}`)
+  if (noindex) all.push('  X-Robots-Tag: noindex')
+  return [
+    '# Cloudflare Pages headers of the merged layout (lib/core/site-host.ts, mergedHeaders).',
+    ...(noindex ? ['# A noindex build (PAGES_NOINDEX or PAGES_SERVE_ORIGIN): not for search engines.'] : []),
+    '/*',
+    ...all,
+    '/_astro/*',
+    `  Cache-Control: ${IMMUTABLE_CACHE}`,
+    `${c.base}/_astro/*`,
+    `  Cache-Control: ${IMMUTABLE_CACHE}`,
+    '',
+  ].join('\n')
+}
+
+/**
+ * Cache-Control of the redirects a serving host builds (old catalog addresses, the templates root): an hour, so a page
+ * the main site later adds at such a path is not hidden by a 301 that browsers would otherwise keep without limit.
+ */
+export const SERVE_REDIRECT_CACHE = 'public, max-age=3600'
+
+/**
+ * Headers of a redirect a serving host builds (PAGES_SERVE_ORIGIN): the bounded cache, noindex as every static file of
+ * the noindex build sends it, and the SECURITY_HEADERS (a Function's answer gets no _headers).
+ */
+export function serveRedirectHeaders(): Record<string, string> {
+  return {
+    'Cache-Control': SERVE_REDIRECT_CACHE,
+    'X-Robots-Tag': 'noindex',
+    ...Object.fromEntries(SECURITY_HEADERS),
+  }
+}
+
 /**
  * dist/_redirects. Crawlers ask for /sitemap.xml and @astrojs/sitemap writes sitemap-index.xml (live review of 30 Oct).
  * Nested, both sit under the base: the main site's own /sitemap.xml is not ours to answer.
@@ -433,10 +525,14 @@ export type ServeStep =
  *   move with a SERVE_MOVED_STATUS to `location`, the same path and query under the base on the serving origin
  *   (`/m/<package>` to `https://modules.openmercato.com/run/m/<package>`). So where an old catalog address and a page of
  *   the main site collide (`/`, the main site's home), the main site wins.
+ * - `redirect` too for a path with a run of slashes: a SERVE_MOVED_STATUS to the same path with single slashes on the
+ *   serving origin (`//run/modules` to `https://modules.openmercato.com/run/modules`).
+ * The old page address is normalized first (oldPagePath: no trailing slash, `.html` or `%40`), so it moves in one hop.
  * Null for a path under the base or a fixed address (static files at the root), a request that carries the site's own
- * host, a `*.pages.dev` address, any other host, and a path with `//` at the start, a backslash or a control character
- * (also percent-encoded): as hostRedirect() does, never a loop and never an open redirect. Null too unless the layout
- * is merged and nested and `serve` is set: the Functions then use hostRedirect() and hostFile() as before.
+ * host, a `*.pages.dev` address, any other host, and a path with a backslash or a control character (also
+ * percent-encoded): as hostRedirect() does, never a loop and never an open redirect, every Location is absolute on the
+ * serving origin. Null too unless the layout is merged and nested and `serve` is set: the Functions then use
+ * hostRedirect() and hostFile() as before.
  */
 export function hostServe(requestUrl: string | URL, c: SiteConfig): ServeStep | null {
   if (!c.serve || !c.merged || !isNested(c)) return null
@@ -450,25 +546,54 @@ export function hostServe(requestUrl: string | URL, c: SiteConfig): ServeStep | 
   if (path === c.base || path.startsWith(`${c.base}/`) || isFixedPath(path)) return null
   if (url.host === new URL(c.origin).host) return null
   if (isPreviewHost(url.hostname) || !PAGES_HOSTS.includes(url.hostname)) return null
-  if (path.startsWith('//') || UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
+  if (UNSAFE.test(path) || UNSAFE.test(String(requestUrl).split('?')[0] ?? '')) return null
+  // a run of slashes (`//run/modules`, `/m//x`): one 301 to the path with single slashes on the serving origin, an
+  // absolute address there, so `//evil.example` is never a Location a browser could read as another host
+  if (path.includes('//')) {
+    const location = `${c.serve}${path.replace(/\/{2,}/g, '/')}${url.search}`
+    return onOrigin(location, c.serve, '/')
+      ? { kind: 'redirect', redirect: { location, status: SERVE_MOVED_STATUS } }
+      : null
+  }
   const root = path === '/' || path === '/index.html'
   if (url.hostname === TEMPLATES_HOST && root)
     return {
       kind: 'redirect',
       redirect: { location: `${templatesTarget(`${c.serve}${c.base}`)}${url.search}`, status: 302 },
     }
-  // the root is the main site's home page on every serving host
-  if (root) return null
+  // the root is the main site's home page on every serving host, and its robots.txt the one of every host
+  if (root || path === '/robots.txt') return null
   if (isFilePath(path)) return { kind: 'file', file: `${c.base}${path}` }
-  const location = `${c.serve}${c.base}${path}${url.search}`
-  let target: URL
+  // the catalog's page address: one hop to it, never one to a form Pages would redirect again (`/modules/`)
+  const page = oldPagePath(path)
+  if (page === '/') return null
+  const location = `${c.serve}${c.base}${page}${url.search}`
+  if (!onOrigin(location, c.serve, `${c.base}/`)) return null
+  return { kind: 'page', probe: `${c.base}${page}`, location }
+}
+
+/** True when `location` parses to an address on `origin` whose path starts with `prefix`. */
+function onOrigin(location: string, origin: string, prefix: string): boolean {
   try {
-    target = new URL(location)
+    const target = new URL(location)
+    return target.origin === origin && target.pathname.startsWith(prefix)
   } catch {
-    return null
+    return false
   }
-  if (target.origin !== c.serve || !target.pathname.startsWith(`${c.base}/`)) return null
-  return { kind: 'page', probe: `${c.base}${path}`, location }
+}
+
+/**
+ * The path of the catalog's page for an old address (audit of 27 Nov 2026): without a trailing slash, `.html` or
+ * `/index.html`, the form Pages serves a page at, so an old address reaches it in one 301 and not a 301 and a 308.
+ * `%40` becomes `@`, as the catalog writes its package paths (`/m/@open-mercato/forms`).
+ */
+export function oldPagePath(path: string): string {
+  const p = path
+    .replace(/%40/gi, '@')
+    .replace(/\/index\.html$/, '/')
+    .replace(/\.html$/, '')
+    .replace(/\/+$/, '')
+  return p === '' ? '/' : p
 }
 
 /**
@@ -487,10 +612,10 @@ export function fileResponse(asset: Response): Response {
  * modules.json and llms.txt, 13 Nov), but not to a Function's answer, and a browser checks CORS on each redirect: a
  * cross-origin fetch of an old data address (modules.json, m/*.json) would fail at the 302 without the header.
  */
-export function redirectResponse(r: HostRedirect): Response {
+export function redirectResponse(r: HostRedirect, headers: Record<string, string> = {}): Response {
   return new Response(null, {
     status: r.status,
-    headers: { Location: r.location, 'Access-Control-Allow-Origin': '*' },
+    headers: { ...headers, Location: r.location, 'Access-Control-Allow-Origin': '*' },
   })
 }
 

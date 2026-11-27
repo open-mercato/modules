@@ -14,7 +14,8 @@ import {
   MAIN_SITE_RUN,
   mainSiteRun,
   mergedFromEnv,
-  NOINDEX_HEADERS,
+  mergedHeaders,
+  mergedPagesRoutes,
   NOINDEX_ROBOTS,
   pagesRedirects,
   siteModule,
@@ -113,7 +114,11 @@ describe('the merged layout (pages-site --merge)', () => {
     // the catalog's fixed root files and Functions route list stay until Phase 1c
     for (const f of ['_routes.json', 'modules.json', 'templates.json', 'picker.json', 'schema/modules-1.json'])
       expect(existsSync(join(dirs.out, f)), f).toBe(true)
-    expect(existsSync(join(dirs.out, '_headers'))).toBe(false)
+    // audit of 27 Nov 2026: the security headers and the cache of the bundles, no noindex; the main site's static
+    // folders, robots.txt and sitemaps stay away from Functions
+    expect(at('_headers')).toBe(mergedHeaders(WWW, false))
+    expect(at('_headers')).not.toContain('X-Robots-Tag')
+    expect(JSON.parse(at('_routes.json'))).toEqual(mergedPagesRoutes('/run', ['sitemap-0.xml', 'sitemap-index.xml']))
     // a production upload: every main site page the header links must be in the build (Pages answers it, not Webflow)
     const before = checkMergedLayout(dirs.out, WWW)
     expect(before.pending).toEqual([])
@@ -171,11 +176,13 @@ describe('the merged layout (pages-site --merge)', () => {
     runBuild(dirs.run, true)
     wwwBuild(dirs.www)
     mergePagesSite(dirs, WWW, true)
-    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toBe(NOINDEX_HEADERS)
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toBe(mergedHeaders(WWW, true))
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toContain('/*\n  Strict-Transport-Security')
+    expect(readFileSync(join(dirs.out, '_headers'), 'utf8')).toContain('  X-Robots-Tag: noindex\n')
     expect(readFileSync(join(dirs.out, 'robots.txt'), 'utf8')).toBe(NOINDEX_ROBOTS)
     expect(readFileSync(join(dirs.out, 'run', 'robots.txt'), 'utf8')).toBe(NOINDEX_ROBOTS)
     expect(checkMergedLayout(dirs.out, WWW, 50, true).problems).toEqual([])
-    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/_headers is for a noindex build/)
+    expect(checkMergedLayout(dirs.out, WWW).problems.join('\n')).toMatch(/_headers is not mergedHeaders\(\)$/m)
   })
 
   it('a new merge empties the upload folder first', () => {

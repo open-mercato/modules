@@ -333,6 +333,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Set up Node',
       'Enable Corepack',
       'Install',
+      'Check layout variables',
       'Read data branch',
       'Build',
       'Lay out the upload',
@@ -344,7 +345,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Not deployed',
     ])
     // the build and its checks run with or without the deploy settings
-    for (const x of b.slice(0, 12)) expect(x.if, x.name).toBeUndefined()
+    for (const x of b.slice(0, 13)) expect(x.if, x.name).toBeUndefined()
+    // a variable set that makes no layout stops before the build (audit of 27 Nov 2026)
+    expect(b.find((x) => x.name === 'Check layout variables')?.run).toBe('yarn om pages-site --settings')
     // the catalog alone unless PAGES_MERGED: dist-run/ becomes the upload as it is
     expect(b.find((x) => x.name === 'Build')?.run).toBe(
       'if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi\n',
