@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_landing_template_marks",
+  "info": {
+    "displayName": "Template marks"
+  },
+  "options": {},
+  "attributes": {
+    "yes": {
+      "type": "string",
+      "required": true
+    },
+    "no": {
+      "type": "string",
+      "required": true
+    },
+    "build": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

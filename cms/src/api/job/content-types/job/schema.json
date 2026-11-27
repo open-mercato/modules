@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "jobs",
+  "info": {
+    "singularName": "job",
+    "pluralName": "jobs",
+    "displayName": "Job",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "webflowId": {
+      "type": "string",
+      "regex": "^[0-9a-f]{24}$"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "employmentType": {
+      "type": "enumeration",
+      "enum": ["full-time", "part-time", "contract", "internship"],
+      "required": true
+    },
+    "department": {
+      "type": "string"
+    },
+    "salary": {
+      "type": "string"
+    },
+    "techStack": {
+      "type": "string"
+    },
+    "applyUrl": {
+      "type": "string",
+      "required": true
+    },
+    "open": {
+      "type": "boolean",
+      "required": true
+    },
+    "order": {
+      "type": "integer"
+    },
+    "datePosted": {
+      "type": "datetime",
+      "required": true
+    },
+    "validThrough": {
+      "type": "datetime"
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

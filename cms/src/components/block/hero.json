@@ -1,0 +1,58 @@
+{
+  "collectionName": "components_block_hero",
+  "info": {
+    "displayName": "Hero"
+  },
+  "options": {},
+  "attributes": {
+    "anchor": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "layout": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "lead": {
+      "type": "richtext"
+    },
+    "primary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "secondary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "note": {
+      "type": "richtext"
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.block-item",
+      "repeatable": true,
+      "min": 1
+    },
+    "video": {
+      "type": "string",
+      "regex": "^[A-Za-z0-9_-]{11}$"
+    },
+    "image": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    }
+  }
+}

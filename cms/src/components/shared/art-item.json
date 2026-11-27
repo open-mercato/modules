@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_art_item",
+  "info": {
+    "displayName": "Art item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "art": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    }
+  }
+}

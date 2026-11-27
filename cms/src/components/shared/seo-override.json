@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_seo_override",
+  "info": {
+    "displayName": "Seo override"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "noindex": {
+      "type": "boolean"
+    }
+  }
+}

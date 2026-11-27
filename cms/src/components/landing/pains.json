@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_landing_pains",
+  "info": {
+    "displayName": "Pains"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.art-item",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

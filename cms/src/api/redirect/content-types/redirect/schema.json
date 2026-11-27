@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "redirects",
+  "info": {
+    "singularName": "redirect",
+    "pluralName": "redirects",
+    "displayName": "Redirect",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^\\/[A-Za-z0-9._~%!$&'()+,;=:@*/-]*$"
+    },
+    "from": {
+      "type": "string",
+      "required": true,
+      "regex": "^\\/[A-Za-z0-9._~%!$&'()+,;=:@*/-]*$"
+    },
+    "to": {
+      "type": "string",
+      "required": true
+    },
+    "statusCode": {
+      "type": "integer",
+      "required": true,
+      "min": 301,
+      "max": 301,
+      "default": 301
+    }
+  }
+}

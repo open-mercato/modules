@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_landing_sources",
+  "info": {
+    "displayName": "Sources"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "reviewed": {
+      "type": "date",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.source-link",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_landing_template_words",
+  "info": {
+    "displayName": "Template words"
+  },
+  "options": {},
+  "attributes": {
+    "reviewedPrefix": {
+      "type": "string",
+      "required": true
+    },
+    "sourcesLabel": {
+      "type": "string",
+      "required": true
+    },
+    "reviewedInline": {
+      "type": "string",
+      "required": true
+    },
+    "navLabel": {
+      "type": "string",
+      "required": true
+    },
+    "detailsSummary": {
+      "type": "string",
+      "required": true
+    },
+    "relatedTitle": {
+      "type": "string",
+      "required": true
+    },
+    "marks": {
+      "type": "component",
+      "component": "landing.template-marks",
+      "repeatable": false,
+      "required": true
+    }
+  }
+}

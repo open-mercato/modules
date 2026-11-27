@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_landing_legend",
+  "info": {
+    "displayName": "Legend"
+  },
+  "options": {},
+  "attributes": {
+    "yes": {
+      "type": "string",
+      "required": true
+    },
+    "no": {
+      "type": "string",
+      "required": true
+    },
+    "build": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

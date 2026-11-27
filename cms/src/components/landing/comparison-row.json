@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_landing_comparison_row",
+  "info": {
+    "displayName": "Comparison row"
+  },
+  "options": {},
+  "attributes": {
+    "topic": {
+      "type": "string",
+      "required": true
+    },
+    "theirs": {
+      "type": "string",
+      "required": true
+    },
+    "ours": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "kind": "collectionType",
+  "collectionName": "partners",
+  "info": {
+    "singularName": "partner",
+    "pluralName": "partners",
+    "displayName": "Partner",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "webflowId": {
+      "type": "string",
+      "regex": "^[0-9a-f]{24}$"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "tier": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::partner-tier.partner-tier"
+    },
+    "industries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::partner-industry.partner-industry"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::partner-location.partner-location"
+    },
+    "languages": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::partner-language.partner-language"
+    },
+    "services": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::partner-service.partner-service"
+    },
+    "budget": {
+      "type": "enumeration",
+      "enum": ["under-10k", "from-10k-to-20k", "from-20k-to-50k", "from-50k-to-100k", "from-100k"]
+    },
+    "availability": {
+      "type": "enumeration",
+      "enum": ["accepting", "not-available"],
+      "required": true
+    },
+    "projectsInPortfolio": {
+      "type": "boolean",
+      "required": true
+    },
+    "website": {
+      "type": "string",
+      "required": true,
+      "regex": "^https:\\/\\/[^\\s]+$"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_nav_link",
+  "info": {
+    "displayName": "Link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true,
+      "regex": "^https:\\/\\/[^\\s]+$"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["is-github"]
+    }
+  }
+}

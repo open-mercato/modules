@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_line",
+  "info": {
+    "displayName": "Line"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

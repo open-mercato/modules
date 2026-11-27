@@ -24,7 +24,8 @@ export type StrapiScalar = 'string' | 'text' | 'richtext' | 'boolean' | 'integer
 
 /** A field of a type or a component: `key` in the file, `name` in Strapi when it differs. */
 export type Field =
-  | { kind: 'scalar'; key: string; type: StrapiScalar; name?: string }
+  /** `values`: an enumeration whose file keys Strapi cannot hold as they are, file key to Strapi value. */
+  | { kind: 'scalar'; key: string; type: StrapiScalar; name?: string; values?: Readonly<Record<string, string>> }
   | { kind: 'component'; key: string; component: string; repeatable?: boolean; keep?: boolean; name?: string }
   | { kind: 'media'; key: string; name?: string }
   | { kind: 'relation'; key: string; target: string; many?: boolean; keep?: boolean }
@@ -59,15 +60,30 @@ const str = (key: string, name?: string): Field => ({ kind: 'scalar', key, type:
 const text = (key: string): Field => ({ kind: 'scalar', key, type: 'text' })
 const md = (key: string): Field => ({ kind: 'scalar', key, type: 'richtext' })
 const bool = (key: string): Field => ({ kind: 'scalar', key, type: 'boolean' })
-const int = (key: string): Field => ({ kind: 'scalar', key, type: 'integer' })
+const int = (key: string, name?: string): Field => ({ kind: 'scalar', key, type: 'integer', ...(name ? { name } : {}) })
 const date = (key: string): Field => ({ kind: 'scalar', key, type: 'date' })
 const datetime = (key: string): Field => ({ kind: 'scalar', key, type: 'datetime' })
-const enumeration = (key: string, name?: string): Field => ({
+const enumeration = (key: string, name?: string, values?: Readonly<Record<string, string>>): Field => ({
   kind: 'scalar',
   key,
   type: 'enumeration',
   ...(name ? { name } : {}),
+  ...(values ? { values } : {}),
 })
+
+/**
+ * The budget of a partner in Strapi. Strapi 5.64.0 refuses an enumeration value without a letter before its first
+ * digit (@strapi/core domain/content-type validation, "Values should have at least one alphabetical character
+ * preceding the first occurence of a number"), and four keys of PARTNER_BUDGETS start with one, so Strapi holds
+ * these values and the files keep their keys.
+ */
+export const PARTNER_BUDGET_VALUES: Readonly<Record<string, string>> = {
+  'under-10k': 'under-10k',
+  '10k-20k': 'from-10k-to-20k',
+  '20k-50k': 'from-20k-to-50k',
+  '50k-100k': 'from-50k-to-100k',
+  '100k-plus': 'from-100k',
+}
 const one = (key: string, component: string): Field => ({ kind: 'component', key, component })
 const many = (key: string, component: string, keep = false): Field => ({
   kind: 'component',
@@ -511,7 +527,7 @@ export const TYPES: readonly StrapiType[] = [
       ref('location', 'partner-location'),
       refs('languages', 'partner-language', true),
       refs('services', 'partner-service', true),
-      enumeration('budget'),
+      enumeration('budget', undefined, PARTNER_BUDGET_VALUES),
       enumeration('availability'),
       bool('projectsInPortfolio'),
       str('website'),
@@ -552,8 +568,10 @@ export const TYPES: readonly StrapiType[] = [
     route: '/api/redirects',
     source: 'redirects',
     draft: 'none',
-    // the rules of source `manual` only; the pull keeps the other rules of redirects.yaml from the checkout
-    fields: [str('from'), str('to'), int('status')],
+    // the rules of source `manual` only; the pull keeps the other rules of redirects.yaml from the checkout. Strapi
+    // 5.64.0 reserves `status` on a type with Draft and Publish (the REST and Document Service status parameter,
+    // @strapi/utils content-types RESERVED_ATTRIBUTE_NAMES_DRAFT_PUBLISH), so the rule's status is `statusCode` there
+    fields: [str('from'), str('to'), int('status', 'statusCode')],
   },
   {
     apiId: 'navigation',
@@ -676,7 +694,7 @@ function toFields(fields: readonly Field[], value: Record<string, unknown>, ctx:
     const at = `${where}.${f.key}`
     switch (f.kind) {
       case 'scalar':
-        out[nameOf(f)] = v ?? null
+        out[nameOf(f)] = v === undefined ? null : f.values ? valueOf(f.values, v, at) : v
         break
       case 'media':
         out[nameOf(f)] = v === undefined ? null : ctx.media.toMedia(String(v))
@@ -789,7 +807,7 @@ function fromFields(fields: readonly Field[], doc: Record<string, unknown>, medi
     switch (f.kind) {
       case 'scalar': {
         const v = need(nameOf(f))
-        if (v !== null) out[f.key] = v
+        if (v !== null) out[f.key] = f.values ? keyOf(f.values, v, at) : v
         break
       }
       case 'media': {
@@ -857,6 +875,18 @@ function fromFields(fields: readonly Field[], doc: Record<string, unknown>, medi
     }
   }
   return out
+}
+
+/** The Strapi value of a file key of an enumeration with its own values. */
+function valueOf(values: Readonly<Record<string, string>>, key: unknown, where: string): string {
+  const v = typeof key === 'string' ? values[key] : undefined
+  return v ?? fail(where, `the value ${String(key)} is not in the mapping`)
+}
+
+/** The file key of a Strapi value of an enumeration with its own values. */
+function keyOf(values: Readonly<Record<string, string>>, value: unknown, where: string): string {
+  const k = Object.entries(values).find(([, v]) => v === value)?.[0]
+  return k ?? fail(where, `the value ${String(value)} is not in the mapping`)
 }
 
 function slugOf(r: unknown, where: string): string {

@@ -1,0 +1,32 @@
+{
+  "kind": "singleType",
+  "collectionName": "footer",
+  "info": {
+    "singularName": "footer",
+    "pluralName": "footers",
+    "displayName": "Footer",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "links": {
+      "type": "component",
+      "component": "nav.link",
+      "repeatable": true,
+      "min": 1
+    },
+    "other": {
+      "type": "component",
+      "component": "footer.group",
+      "repeatable": true,
+      "min": 1
+    },
+    "note": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_landing_column",
+  "info": {
+    "displayName": "Column"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

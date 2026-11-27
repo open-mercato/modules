@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_landing_faq",
+  "info": {
+    "displayName": "Faq"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.faq-item",
+      "repeatable": true,
+      "min": 3
+    }
+  }
+}
