@@ -416,7 +416,14 @@ describe('the HTML of a Markdown body', () => {
     plugin.raw(close, ctx)
     // the paragraph goes for the embed, its links under the body rules, and the closing tag goes with it
     expect(calls).toEqual([
-      ['replace', p, { type: 'raw', value: html.replace('href="/contact"', `href="${ORIGIN}/contact"`) }],
+      [
+        'replace',
+        p,
+        {
+          type: 'raw',
+          value: `<!-- om-embed blog-x-1 -->${html.replace('href="/contact"', `href="${ORIGIN}/contact"`)}<!-- /om-embed -->`,
+        },
+      ],
     ])
     expect(() => bodyHtmlPlugin(rules, () => {}).raw(open, ctx)).toThrow(
       'www/content/blog/x.md: no www/content/embeds/blog-x-1.html for <om-embed name="blog-x-1">',

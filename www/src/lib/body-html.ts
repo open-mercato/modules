@@ -11,7 +11,8 @@
 // - a table sits in a scrollable, focusable region, so a wide one never widens the page;
 // - raw HTML the importer kept (a figure with a caption) follows the same rules for its images and links (rawHtml);
 // - an `<om-embed name>` the importer wrote for a Webflow rich-text embed (an interactive tool of a post) becomes the
-//   embed's HTML, kept byte for byte in www/content/embeds/<name>.html; a name without its file stops the build.
+//   embed's HTML, kept byte for byte in www/content/embeds/<name>.html, between `<!-- om-embed <name> -->` and
+//   `<!-- /om-embed -->`; a name without its file stops the build.
 // Isomorphic: no Node APIs; the shapes below are the subset of hast the plugin reads.
 
 export const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/
@@ -238,7 +239,8 @@ export function bodyHtmlPlugin(
           throw new Error(`${file}: no www/content/embeds/${name}.html for <om-embed name="${name}">`)
         const r = rawHtml(html, rules)
         for (const why of r.unlinked) unlinked(ctx, why)
-        const embed = { type: 'raw', value: r.html }
+        // the markers let a check of the post (its table of contents, say) tell the embed's markup from the body's
+        const embed = { type: 'raw', value: `<!-- om-embed ${name} -->${r.html}<!-- /om-embed -->` }
         const parent = ctx.parent(node) as HNode | undefined
         if (parent?.type === 'element' && parent.tagName === 'p' && embedParagraph(parent as HElement))
           ctx.replaceNode(parent, embed)

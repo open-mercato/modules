@@ -130,9 +130,10 @@ describe('the build of the blog', () => {
           /<div class="blog-post_header"><span class="reader-avatar" aria-hidden="true">[A-Z]{1,2}<\/span>/,
         )
         expect(html, slug).toMatch(/<span class="text-size-small text-color-secondary">\d+ min read<\/span>/)
-        // every entry of the table of contents points at an h2 of the body
+        // every entry of the table of contents points at an h2 of the body (an embedded tool's own headings are not)
         const toc = [...html.matchAll(/<a href="#([^"]+)" class="blog-post_toc-link/g)].map((m) => m[1]!)
-        const h2 = [...html.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]!)
+        const body = html.replace(/<!-- om-embed [a-z0-9-]+ -->[\s\S]*?<!-- \/om-embed -->/g, '')
+        const h2 = [...body.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]!)
         expect(toc, slug).toEqual(h2)
       }
     })
