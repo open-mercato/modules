@@ -1,0 +1,44 @@
+---
+// NotFound: the 404 page of the main site as www.openmercato.com shows it (25 Nov 2026): Webflow's utility page, no
+// navbar and no footer, its icon, "Page Not Found", one sentence and Go Home (www/src/styles/webflow/not-found.css).
+// Pages serves it for any missing path outside the catalog, which keeps its own 404 under its base. Like every page of
+// the main site it gets Google Analytics and the cookie banner (www/site-behavior.ts). Unlike the live page it names no
+// canonical address (it stands in for a missing one, spec SEO) and stays noindex.
+import '../styles/webflow/not-found.css'
+import { fontFaceCss, FONT_FILES } from '../../../site/src/lib/fonts.ts'
+import { href } from '../../../site/src/lib/url.ts'
+import { jsonLdText } from '../../../site/src/lib/json-ld.ts'
+import { mainSiteJsonLd } from '../../../lib/core/main-site-json-ld.ts'
+
+const title = 'Not Found'
+const site = (Astro.site ?? new URL('https://www.openmercato.com')).origin
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="robots" content="noindex" />
+    <meta property="og:title" content={title} />
+    <meta name="twitter:title" content={title} />
+    <meta property="og:site_name" content="Open Mercato" />
+    <link rel="icon" href={href('/favicon.png')} type="image/png" />
+    <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={fontFaceCss()}></style>
+    <script type="application/ld+json" is:inline set:html={jsonLdText(mainSiteJsonLd(site))} />
+  </head>
+  <body>
+    <div class="utility_component">
+      <div class="utility_form-block w-form">
+        <img src="/files/page-not-found.svg" alt="" class="utility_image" width="47" height="59" />
+        <h3>Page Not Found</h3>
+        <div class="padding-xxsmall"></div>
+        <div>The page you are looking for doesn&#x27;t exist or has been moved</div>
+        <div class="padding-xxsmall"></div>
+        <a href="/" class="button w-button">Go Home</a>
+      </div>
+    </div>
+  </body>
+</html>

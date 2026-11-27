@@ -1,0 +1,54 @@
+---
+// A carousel of case study cards in the live Webflow markup (`case-slider_component`): "Discover more projects" on a
+// case study, "Projects we've shipped" on a partner page. Swiper is replaced by a row that scrolls (two cards at a
+// time, one on a phone) and two buttons that move it one card, back to the start after the last
+// (www/src/scripts/case-slider.ts). Without JavaScript the row scrolls by hand.
+import CaseStudyCard from './CaseStudyCard.tsx'
+import type { CaseStudyCardData } from '../../lib/case-studies.ts'
+import { NEXT_ICON, PREV_ICON } from '../../lib/webflow-icons.ts'
+
+interface Props {
+  tagline: string
+  heading: string
+  items: CaseStudyCardData[]
+}
+const { tagline, heading, items } = Astro.props
+---
+
+{
+  items.length > 0 && (
+    <div class="section overflow-hidden">
+      <div class="case-slider_component" data-case-slider>
+        <div class="case-slider_navigation">
+          <div class="case-slider_header">
+            <div class="text-style-tagline text-color-secondary">{tagline}</div>
+            <h2 class="heading-style-h4">{heading}</h2>
+          </div>
+          <div class="case-slider_buttons">
+            <button type="button" class="case-slider_button is-prev" aria-label="Previous case study" data-step="-1">
+              <span class="case-slider_button-icon" aria-hidden="true" set:html={PREV_ICON} />
+            </button>
+            <button type="button" class="case-slider_button is-next" aria-label="Next case study" data-step="1">
+              <span class="case-slider_button-icon" aria-hidden="true" set:html={NEXT_ICON} />
+            </button>
+          </div>
+        </div>
+        <div class="case_slider">
+          <div class="swiper is-case">
+            <div role="list" class="swiper-wrapper is-case">
+              {items.map((cs) => (
+                <div role="listitem" class="swiper-slide is-case">
+                  <CaseStudyCard cs={cs} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import '../../scripts/case-slider.ts'
+</script>

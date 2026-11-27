@@ -1,0 +1,27 @@
+---
+// The three results of a case study in the live Webflow markup (`case-post_numbers`): numbered 01 to 03 on violet,
+// yellow and green labels. Empty, as live, when the case study has none.
+interface Props {
+  stats: { title: string; description: string }[]
+}
+const { stats } = Astro.props
+const looks = [
+  { item: 'is-1st', label: 'is-violet' },
+  { item: 'is-2nd', label: 'is-yellow' },
+  { item: '', label: 'is-green' },
+]
+---
+
+<div class="case-post_numbers">
+  {
+    stats.map((s, i) => (
+      <div class:list={['case-post_number', looks[i % 3]!.item]}>
+        <div class:list={['label-list_item', looks[i % 3]!.label]}>{String(i + 1).padStart(2, '0')}</div>
+        <div class="case-post_number-content">
+          <div class="text-size-large">{s.title}</div>
+          <div class="text-color-secondary">{s.description}</div>
+        </div>
+      </div>
+    ))
+  }
+</div>

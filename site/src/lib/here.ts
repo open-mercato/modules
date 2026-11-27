@@ -5,6 +5,8 @@
 // It also shows the `[data-preview-note]` paragraphs (rendered `hidden`): a preview that a share link opens lets in only
 // the browser that holds its cookie, so a command run elsewhere answers 401 (finding of 25 Oct, OM Cloud sandbox).
 // Other production hosts of the same build (templates.openmercato.com, decision B of 29 Oct) are left alone too.
+// A host that serves the build as the site itself before SITE_URL does (PAGES_SERVE_ORIGIN, owner's decision of 26 Nov
+// 2026: modules.openmercato.com while www is on Webflow) gets its links pointed at it, without the preview note.
 
 /** `text` with every form of the site root `from` (as is, URL-encoded, without the scheme) replaced by `to`. */
 export function rewriteSite(text: string, from: string, to: string): string {
@@ -19,12 +21,20 @@ export function rewriteSite(text: string, from: string, to: string): string {
 
 /**
  * Inline script for the end of <body>: `site` is the configured site root with its base path, no trailing slash
- * (`https://open-mercato.github.io/modules`), `base` the base path (`/modules`). It rewrites `data-copy`, `href`,
+ * (`https://www.openmercato.com/run`), `base` the base path (`/run`). It rewrites `data-copy`, `href`,
  * `title` and `aria-label`, and the text of command chips and `[data-site-text]`, now and in islands that render
- * later. `production` lists other origins that serve this same build in production, where the script does nothing.
+ * later. `production` lists other origins that serve this same build in production, where the script does nothing;
+ * `serving` lists origins that serve it as the site itself, where it rewrites but shows no preview note.
  */
-export function hereScript(site: string, base: string, production: readonly string[] = []): string {
+export function hereScript(
+  site: string,
+  base: string,
+  production: readonly string[] = [],
+  serving: readonly string[] = [],
+): string {
   const fn = rewriteSite.toString()
+  // without serving origins the script is the one every build had before them
+  const notesIf = serving.length > 0 ? `if (${JSON.stringify([...serving])}.indexOf(location.origin) === -1) ` : ''
   return `(function () {
   var from = ${JSON.stringify(site.replace(/\/+$/, ''))}
   if (!/^https?:$/.test(location.protocol)) return
@@ -32,7 +42,7 @@ export function hereScript(site: string, base: string, production: readonly stri
   var to = location.origin + ${JSON.stringify(base.replace(/\/+$/, ''))}
   if (to === from) return
   var notes = document.querySelectorAll('[data-preview-note]')
-  for (var n = 0; n < notes.length; n++) notes[n].hidden = false
+  ${notesIf}for (var n = 0; n < notes.length; n++) notes[n].hidden = false
   var rewrite = ${fn}
   var SEL = '[data-copy],a[href],.cmd__text,[data-site-text]'
   var ATTRS = ['data-copy', 'href', 'title', 'aria-label']

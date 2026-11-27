@@ -1,0 +1,83 @@
+---
+// Where the data of the catalog comes from, for developers: the refresh time, the sources, the catalog commit this
+// build shows and the data files. It sat in the footer under "About this data" until the footer became the main site's
+// own (navbar of 14 Nov); it now opens the About page.
+import { day, dayTime } from '../lib/format.ts'
+import { dataHref, href } from '../lib/url.ts'
+import { isPreviewData, type DataAsOf } from '../lib/freshness.ts'
+import { PREVIEW_CHIP, PREVIEW_SENTENCE } from '../../../lib/core/source.ts'
+import { CATALOG_REPO_URL } from '../../../lib/core/home.ts'
+import { loadSiteData } from '../../../lib/emit/site-data.ts'
+
+interface Props {
+  dataAsOf: DataAsOf
+}
+const { dataAsOf } = Astro.props
+const dataLinks = [
+  { label: 'modules.json', url: href('/modules.json') },
+  { label: 'llms.txt', url: href('/llms.txt') },
+  { label: 'MCP', url: href('/for-agents#connect') },
+  { label: 'Schema', url: dataHref('/schema/modules-1.json') },
+  { label: 'GitHub', url: CATALOG_REPO_URL },
+]
+const refreshed = dataAsOf.nightly ?? dataAsOf.npm
+// the receipts name their runner here too (round 5): a preview run is not nightly CI. The chip carries the one
+// preview sentence as its title (review r6); the day without the hour, as in the stamp
+const preview = !!dataAsOf.nightly && isPreviewData(dataAsOf)
+// which catalog commit this build shows (finding of 25 Oct: a preview link served a build 40 commits behind main and
+// nothing said so); data emitted before the stamp existed has none, and the sentence is left out
+const { meta } = loadSiteData()
+const build = meta.build?.commit ? meta.build : null
+---
+
+<div class="prov">
+  <p>
+    {refreshed ? <>Data refreshed {preview ? day(refreshed) : dayTime(refreshed)}.</> : <>No data yet.</>} Descriptions
+    come from authors. Everything else is measured.{' '}
+    {
+      preview ? (
+        <>
+          Sources: npm, GitHub and a preview run.{' '}
+          <span class="chip chip--preview" title={PREVIEW_SENTENCE}>
+            {PREVIEW_CHIP}
+          </span>
+        </>
+      ) : (
+        'Sources: npm, GitHub, nightly CI.'
+      )
+    }
+    {
+      build && (
+        <span data-build={build.commit}>
+          {' '}Built from <code>{build.commit}</code>
+          {build.dirty ? ' with local changes' : ''} on {dayTime(meta.generatedAt)}.
+        </span>
+      )
+    }
+  </p>
+  <p class="prov__links">
+    {dataLinks.map((l, i) => (
+      <>
+        {i > 0 && ' · '}
+        <a href={l.url}>{l.label}</a>
+      </>
+    ))}
+  </p>
+</div>
+
+<style>
+  .prov {
+    display: grid;
+    gap: 6px;
+    max-width: 64ch;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .prov code {
+    font-size: 13px;
+  }
+  .prov__links a {
+    color: var(--ink);
+  }
+</style>

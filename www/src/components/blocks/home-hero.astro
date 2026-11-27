@@ -1,0 +1,349 @@
+---
+// The hero of the home page as live has it (`om-new-hero` in `om-home-refresh`, styled by
+// www/src/styles/webflow/pages/home.css): the release badge (the core version of this build's catalog data, replaced in the browser by the latest release
+// of the repository, as live) with its line (`label`), the heading (its *emphasis* the live highlight), the lead, three
+// buttons (`primary`, `secondary` and the one link of `note`), the marks of the assistants named by `items`, and the
+// growing mosaic of business modules beside them, animated by the live script (below, ported without jQuery).
+// CTA events as the live map names them: hero/release, hero/build_in_sandbox, hero/clone_repo, hero/<label>.
+import { ctaAttrs, ctaSlug } from '../../../../lib/core/cta.ts'
+import { MAIN_SITE_GITHUB } from '../../../../lib/core/main-site.ts'
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import arrow from './home-release-arrow.svg?raw'
+import { coreVersion } from '../../lib/counts.ts'
+import stack from './home-hero-stack.svg?raw'
+import claude from './home-tool-claude.svg?raw'
+import codex from './home-tool-codex.svg?raw'
+import cursor from './home-tool-cursor.svg?raw'
+import ssh from './home-tool-ssh.svg?raw'
+
+type Props = BlockProps<'hero'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+
+const TOOLS: Record<string, { svg: string; class?: string }> = {
+  codex: { svg: codex, class: 'om-tool-codex' },
+  claude: { svg: claude },
+  cursor: { svg: cursor },
+  ssh: { svg: ssh },
+}
+const tools = (block.items ?? []).map((item, i) => {
+  const name = item.title ?? ''
+  const tool = TOOLS[name.toLowerCase()]
+  if (!tool) throw new Error(`www/content/pages/${page}.yaml hero items.${i}: no mark for "${name}"`)
+  return { name, ...tool }
+})
+const toolList =
+  tools.length > 1
+    ? `${tools
+        .slice(0, -1)
+        .map((x) => x.name)
+        .join(', ')} or ${tools.at(-1)!.name}`
+    : (tools[0]?.name ?? '')
+
+/** The note's one link, the third button. */
+const noteLink = block.note ? /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(block.note.trim()) : null
+if (block.note && !noteLink) throw new Error(`www/content/pages/${page}.yaml hero note: one Markdown link, the third button`)
+const actions = [
+  block.primary && { ...block.primary, primary: true },
+  block.secondary && { ...block.secondary, primary: false },
+  noteLink && { label: noteLink[1]!, href: noteLink[2]!, primary: false },
+].filter((a) => !!a)
+
+/** The live map's action of a hero button. */
+const heroAction = (href: string, label: string): string =>
+  href.includes('app.openmercatocloud.com/signup')
+    ? 'build_in_sandbox'
+    : href.includes('github.com/open-mercato/open-mercato')
+      ? 'clone_repo'
+      : ctaSlug(label)
+
+const title = headingHtml(t(block.title)).replace(/<span>/g, '<span class="om-business-highlight">')
+// the release badge: the core version of the catalog's data of this build, never a typed number (AGENTS.md rule 8);
+// the script below shows the latest release of GitHub in the browser, as live
+const version = coreVersion()
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <div class="om-home-refresh om-hero-full">
+      <div class="om-hero-stage">
+        <section class="om-new-hero" aria-labelledby="om-new-title" id={block.id}>
+          <div class="om-hero-copy">
+            <div class="om-release-label">
+              <a href={MAIN_SITE_GITHUB} target="_blank" class="label_combo w-inline-block" {...ctaAttrs('release', 'hero')}>
+                <div class="label_combo-badge">
+                  <div id="om-version" class="text-style-tagline">
+                    {version ? `v${version}` : ''}
+                  </div>
+                </div>
+                {block.label && <div class="text-size-tiny text-weight-medium">{t(block.label)}</div>}
+                <div class="icon-embed-xxsmall w-embed" set:html={arrow} />
+              </a>
+            </div>
+            <h1 id="om-new-title" set:html={title} />
+            {block.lead && <p class="om-hero-subline">{t(block.lead)}</p>}
+            <div class="om-hero-actions" data-cta-placement="hero">
+              {
+                actions.map((a) => (
+                  <a class={a.primary ? 'om-primary' : undefined} href={a.href} {...ctaAttrs(heroAction(a.href, a.label))}>
+                    {t(a.label)} <span class="om-arrow" aria-hidden="true">↗</span>
+                  </a>
+                ))
+              }
+            </div>
+            {
+              tools.length > 0 && (
+                <div class="om-hero-tools" aria-label={`Build with ${toolList}`}>
+                  {tools.map((x) => (
+                    <span
+                      class:list={['om-tool-icon', x.class]}
+                      role="img"
+                      aria-label={x.name}
+                      title={x.name}
+                      set:html={x.svg}
+                    />
+                  ))}
+                </div>
+              )
+            }
+          </div>
+          <div class="om-hero-art om-line-hero" set:html={stack} />
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The mosaic of the hero, the live page's script: tiles of business modules land one by one on an isometric board
+  // that drifts left, each linking to an earlier neighbour; three rows on a phone, six on a wider screen. It runs only
+  // while the hero is in view and the tab is visible, and stands still under reduced motion. Then the latest release
+  // of the repository in the badge, cached for a day, as live.
+  const hero = document.querySelector<HTMLElement>('.om-line-hero')
+  if (hero && !hero.dataset.ready) {
+    hero.dataset.ready = 'true'
+    const mobile = matchMedia('(max-width:650px)')
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+    const layers = [...hero.querySelectorAll<SVGGElement>('[data-tile-slot]')]
+    const tileLinks = [...hero.querySelectorAll<SVGPathElement>('[data-tile-link]')]
+    const LABELS = [
+      'CRM',
+      'DOC AUTOMATION',
+      'WAREHOUSE',
+      'CPQ',
+      'ORDERS',
+      'SUPPORT',
+      'REPORTS',
+      'CRM',
+      'BILLING',
+      'DOC AUTOMATION',
+      'WAREHOUSE',
+      'CPQ',
+      'ORDERS',
+      'SUPPORT',
+      'REPORTS',
+      'PRODUCTION',
+      'PROCUREMENT',
+      'MARKETING',
+      'CUSTOMER PORTAL',
+      'B2B COMMERCE',
+      'SCHEDULING',
+      'CRM',
+      'PIPELINE',
+      'WORKFLOWS',
+    ]
+    const OFFSETS = [0, 350, 780, 1230, 1750, 2200]
+    const ORDER = [1, 5, 0, 3, 2, 4]
+    const SPAN = 2600
+    const PITCH = 82
+    const W = 78
+    const clock = { t: 0, visible: false }
+    let frame = 0
+    let last = 0
+
+    const paint = (t: number, still = false): void => {
+      const rows = mobile.matches ? 3 : 6
+      const time = still ? 6800 : t
+      const step = Math.floor(time / SPAN)
+      const cam = (time / SPAN) * PITCH
+      const labelAt = (c: number, r: number): string =>
+        LABELS[(((c * rows + r) % LABELS.length) + LABELS.length) % LABELS.length]!
+      const hash = (c: number, r: number): number => (((c * 7 + r * 11) % 19) + 19) % 19
+      const birth = (c: number, r: number): number => {
+        const h = hash(c, r)
+        return h < 7 ? Infinity : (c - 3) * SPAN + OFFSETS[ORDER.indexOf(r)]! + (h < 11 ? 3000 + (h - 7) * 230 : 0)
+      }
+      const point = (u: number, v: number): [number, number] =>
+        mobile.matches
+          ? [50 + u - cam + 0.32 * v, 95 - 0.18 * (u - cam) + 0.65 * v]
+          : [50 + 0.91 * (u - cam) + 0.43 * v, 190 - 0.35 * (u - cam) + 0.7 * v]
+      layers.forEach((g) => {
+        const i = Number(g.dataset.tileSlot)
+        const col = step - 2 + Math.floor(i / rows)
+        const row = i % rows
+        const born = birth(col, row)
+        const age = time - born
+        const ease = Math.max(0, Math.min(1, age / 230))
+        const fall = 12 * Math.pow(1 - ease, 3)
+        const pos = point(col * PITCH, row * PITCH)
+        g.setAttribute('transform', `translate(${pos[0]} ${pos[1] - fall})`)
+        g.style.opacity = age >= 0 ? '1' : '0'
+        const dot = g.querySelector('circle')!
+        const landAge = age - 230
+        const dotPulse =
+          still || landAge < 0 || landAge > 400 ? 0 : landAge < 30 ? landAge / 30 : Math.exp(-(landAge - 30) / 75)
+        dot.setAttribute(
+          'fill',
+          landAge < 0
+            ? '#a8ada5'
+            : dotPulse > 0.01
+              ? `rgb(${Math.round(41 + 68 * dotPulse)},${Math.round(173 + 62 * dotPulse)},${Math.round(70 + 60 * dotPulse)})`
+              : '#29ad46',
+        )
+        dot.setAttribute('r', String(2 + 0.6 * dotPulse))
+        dot.style.filter = dotPulse > 0.01 ? `drop-shadow(0 0 ${4 * dotPulse}px #59d779)` : 'none'
+        const label = g.querySelector<SVGTextElement>('.om-plate-title')!
+        const name = labelAt(col, row)
+        const key = `${name}-${mobile.matches}`
+        if (label.dataset.rendered !== key) {
+          label.dataset.rendered = key
+          label.replaceChildren()
+          const words = name.split(' ')
+          label.style.fontSize = words.length > 1 ? '8.5px' : name.length > 9 ? '8px' : ''
+          if (words.length > 1)
+            words.forEach((word, j) => {
+              const span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan')
+              span.setAttribute('x', mobile.matches ? '39' : '8')
+              span.setAttribute('y', j ? '48' : '35')
+              span.textContent = word
+              label.appendChild(span)
+            })
+          else label.textContent = name
+        }
+        const line = tileLinks[i]
+        if (!line) return
+        const linkAge = age - 230
+        line.style.display = 'none'
+        if (linkAge < 0) return
+        let target: { dx: number; dy: number; c: number; r: number } | undefined
+        for (const distance of [2, 3]) {
+          for (const [dx, dy] of [
+            [-1, 0],
+            [0, -1],
+            [0, 1],
+            [1, 0],
+          ] as const) {
+            const c = col + dx * distance
+            const r = row + dy * distance
+            if (r < 0 || r >= rows || birth(c, r) >= born - 500 || labelAt(c, r) === name) continue
+            const gaps = Array.from({ length: distance - 1 }, (_, j) => birth(col + dx * (j + 1), row + dy * (j + 1)))
+            if (gaps.some((b) => b !== Infinity)) continue
+            target = { dx, dy, c, r }
+            break
+          }
+          if (target) break
+        }
+        if (!target) return
+        const { dx, dy, c, r } = target
+        const a = point(col * PITCH + W / 2 + (dx * W) / 2, row * PITCH + W / 2 + (dy * W) / 2)
+        const b = point(c * PITCH + W / 2 - (dx * W) / 2, r * PITCH + W / 2 - (dy * W) / 2)
+        line.style.display = ''
+        line.setAttribute('d', `M${a.join(',')}L${b.join(',')}`)
+        const flashAge = linkAge - 220
+        const pulse = flashAge < 0 || flashAge > 400 ? 0 : flashAge < 35 ? flashAge / 35 : Math.exp(-(flashAge - 35) / 75)
+        line.setAttribute('stroke', linkAge < 220 ? '#a8b0a3' : '#39a958')
+        line.setAttribute('stroke-width', String(1 + 1.2 * pulse))
+        line.setAttribute('stroke-dasharray', '1')
+        line.setAttribute('stroke-dashoffset', String(1 - Math.min(1, linkAge / 220)))
+        line.style.opacity = String(linkAge < 220 ? 0.65 : 0.48 + 0.52 * pulse)
+        line.style.filter = pulse > 0.01 ? `drop-shadow(0 0 ${4 * pulse}px #59d779)` : 'none'
+      })
+    }
+
+    const tick = (now: number): void => {
+      frame = 0
+      const dt = last ? Math.min(now - last, 100) : 0
+      last = now
+      if (clock.visible && !document.hidden && !reduce.matches) {
+        clock.t += dt
+        paint(clock.t)
+        frame = requestAnimationFrame(tick)
+      } else last = 0
+    }
+    const start = (): void => {
+      if (!frame && !reduce.matches && !document.hidden) {
+        last = 0
+        frame = requestAnimationFrame(tick)
+      }
+    }
+    const fit = (): void => {
+      const m = mobile.matches
+      const win = hero.querySelector('#om-board-window rect')
+      win?.setAttribute('y', m ? '0' : '90')
+      win?.setAttribute('height', m ? '266' : '455')
+      hero.querySelector('svg')?.setAttribute('viewBox', m ? '40 5 420 266' : '0 0 600 630')
+      const matrix = m ? 'matrix(1 -.18 .32 .65 0 0)' : 'matrix(.91 -.35 .43 .70 0 0)'
+      hero.querySelector('#om-stack-grid')?.setAttribute('patternTransform', matrix)
+      layers.forEach((g) => {
+        g.querySelector('use')?.setAttribute('href', m ? '#om-tile-mobile' : '#om-tile-solid')
+        g.querySelector('g')?.setAttribute('transform', matrix)
+        const label = g.querySelector('text')
+        label?.setAttribute('clip-path', 'url(#om-label-clip)')
+        label?.setAttribute('x', m ? '39' : '8')
+        label?.setAttribute('text-anchor', m ? 'middle' : 'start')
+      })
+      paint(clock.t, reduce.matches)
+    }
+    new IntersectionObserver(
+      (es) => {
+        clock.visible = es[0]?.isIntersecting ?? false
+        start()
+      },
+      { threshold: 0.12 },
+    ).observe(hero)
+    document.addEventListener('visibilitychange', start)
+    reduce.addEventListener('change', () => {
+      paint(0, reduce.matches)
+      start()
+    })
+    mobile.addEventListener('change', fit)
+    fit()
+    start()
+  }
+
+  const version = document.getElementById('om-version')
+  if (version) {
+    const KEY = 'om_latest_release'
+    const DAY = 24 * 60 * 60 * 1000
+    const now = Date.now()
+    let fresh = false
+    try {
+      const cached = JSON.parse(localStorage.getItem(KEY) ?? 'null') as { tag?: string; ts?: number } | null
+      if (cached?.tag && cached.ts && now - cached.ts < DAY) {
+        version.textContent = cached.tag
+        fresh = true
+      }
+    } catch {
+      // no storage: ask GitHub
+    }
+    if (!fresh)
+      fetch('https://api.github.com/repos/open-mercato/open-mercato/releases/latest', {
+        headers: { Accept: 'application/vnd.github+json' },
+      })
+        .then((r) => (r.ok ? (r.json() as Promise<{ tag_name?: string }>) : Promise.reject(new Error(String(r.status)))))
+        .then((d) => {
+          if (!d.tag_name) return
+          version.textContent = d.tag_name
+          try {
+            localStorage.setItem(KEY, JSON.stringify({ tag: d.tag_name, ts: now }))
+          } catch {
+            // the badge keeps the release for this visit only
+          }
+        })
+        .catch(() => {
+          // the badge keeps the release of the build
+        })
+  }
+</script>

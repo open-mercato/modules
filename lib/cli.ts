@@ -57,8 +57,28 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     description: 'preview: run matrix cells in Docker (local or ssh host) for collect --local',
   },
   { name: 'emit', owner: 'WP09', description: 'published files and site data from .data' },
+  {
+    name: 'pages-site',
+    owner: 'WP09',
+    description: 'write functions/site.ts from SITE_URL, BASE_PATH and HOME_PATH; --check <dist> checks the layout',
+  },
   { name: 'plugin-sync', owner: 'WP14', description: 'copy the skill and .mcp.json into the Claude Code plugin' },
   { name: 'check-text', owner: 'WP01', description: 'ban long dashes and control characters in texts' },
+  {
+    name: 'import-webflow',
+    owner: 'www',
+    description: 'import a Webflow export into www/content and www/public/media; --check compares only',
+  },
+  {
+    name: 'webflow-export',
+    owner: 'www',
+    description: 'write a Webflow export directory from the API (WEBFLOW_TOKEN, read-only; owner only)',
+  },
+  {
+    name: 'compare-live',
+    owner: 'www',
+    description: 'compare every sitemap and redirect URL of the live main site with a candidate; read-only',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))

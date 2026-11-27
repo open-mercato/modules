@@ -1,0 +1,531 @@
+/*
+ * The page-specific styles of the blog, case study, partner and job pages, a mirror of the live openmercato.com (owner's
+ * decision of 25 Nov 2026, until the designer's visual pass, spec D7, replaces it).
+ *
+ * Origin: the custom code (embeds and page head code) of the Webflow pages /blog, /blog-posts/<slug>, /case-studies,
+ * /case-studies/<slug>, /certified-partners, /certified-partners/<slug> and /careers-jobs/<slug> of
+ * https://www.openmercato.com, fetched on 25 Nov 2026. A selector `html[data-wf-page="..."]` of the live page is
+ * written as the body class the page sets here (`wf-case-studies`, `wf-case-study`, ...); the code of the blog's two
+ * pages, unscoped on live where only those pages load it, is scoped to their body class (`wf-blog`, `wf-blog-post`)
+ * here, where one stylesheet serves all of these pages. Left out: the navbar and the
+ * footer code (the header and the footer are the catalog's), Finsweet's loading overlay and the lightbox.
+ * Then, marked as such, the rules of the live site stylesheet
+ * (https://cdn.prod.website-files.com/69a97e33d587824eef365d83/css/openmercato-dev.webflow.shared.aa54cdb44.min.css)
+ * whose classes site.css leaves out, and what the islands' buttons need to look like Webflow's form controls.
+ * Edit as a mirror: change a rule only to match the live site.
+ */
+
+/* /blog: the feed (its embed `om-blog-feed`) */
+body.wf-blog main:has(.blog-list_component) {
+  --feed: 850px;
+}
+body.wf-blog main:has(.blog-list_component) .header_component,
+.wf-blog .blog-list_component,
+.wf-blog .section:has(.blog-list_card.is-featured) .section-padding,
+.wf-blog .om-feed-nav {
+  width: min(100%, var(--feed));
+  margin-inline: auto;
+}
+body.wf-blog main:has(.blog-list_component) .header_component {
+  display: block;
+}
+body.wf-blog main:has(.blog-list_component) .header_content {
+  max-width: 680px;
+}
+body.wf-blog main:has(.blog-list_component) .section:has(h1) .section-padding {
+  padding-block: clamp(32px, 5vw, 68px) 32px;
+}
+body.wf-blog main:has(.blog-list_component) h1 {
+  font-size: clamp(38px, 5vw, 64px);
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+body.wf-blog main:has(.blog-list_component) .section:has(.blog-list_component),
+body.wf-blog main:has(.blog-list_component) .section:has(.blog-list_card.is-featured) {
+  padding-block: 0;
+  border: 0;
+}
+.wf-blog .section:has(.blog-list_card.is-featured) .section-padding {
+  padding: 0;
+}
+.wf-blog .om-feed-nav {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid #cccec5;
+}
+.wf-blog .om-feed-nav button {
+  background: transparent;
+  color: #60635a;
+  padding: 14px 0;
+  border-bottom: 2px solid transparent;
+  font: inherit;
+}
+.wf-blog .om-feed-nav button[aria-pressed='true'] {
+  color: #191b16;
+  border-color: #24271f;
+}
+.wf-blog .blog-list_component {
+  padding: 0 0 48px;
+}
+.wf-blog .blog-filters_component {
+  padding: 0;
+  margin: 12px 0 0;
+}
+.wf-blog .blog-filters_form {
+  gap: 4px;
+}
+.wf-blog .blog-filters_form :is(label, .cms-filters_filed) {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.wf-blog .blog-list_collection-list {
+  display: block;
+}
+.wf-blog .blog-list_card,
+.wf-blog .blog-list_card.is-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(105px, 17vw, 190px);
+  align-items: center;
+  gap: clamp(16px, 4vw, 48px);
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #d9dcd2;
+  padding: 30px 0;
+  color: inherit;
+  background: transparent;
+}
+.wf-blog .blog-list_card-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+.wf-blog .blog-list_card .blog-list_thumbnail-wrapper {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  max-width: none;
+  width: 100%;
+}
+.wf-blog .blog-list_thumbnail-wrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.5;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.wf-blog .blog-list_card .blog_label {
+  position: static;
+  margin: 0;
+}
+.wf-blog .blog-list_card .blog_label-text {
+  padding: 0;
+  color: #575d50 !important;
+  background: transparent !important;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.wf-blog .blog-list_card h2 {
+  font-size: clamp(21px, 2.2vw, 32px);
+  font-weight: 700;
+  line-height: 1.13;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+.wf-blog .blog-list_card:hover h2 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.wf-blog .blog-list_card .blog-list_card-content p {
+  margin: 9px 0 0;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.wf-blog .blog-list_card .spacer-1rem,
+.wf-blog .blog-list_card .spacer-medium,
+.wf-blog .blog-list_card .button-group {
+  display: none;
+}
+body.wf-blog main .om-feed-hidden {
+  display: none !important;
+}
+@media (max-width: 600px) {
+  .wf-blog .blog-list_card,
+  .wf-blog .blog-list_card.is-featured {
+    grid-template-columns: minmax(0, 1fr) 80px;
+    gap: 12px;
+    padding: 22px 0;
+  }
+  .wf-blog .blog-list_thumbnail-wrapper img {
+    aspect-ratio: 1;
+  }
+  .wf-blog .blog-filters_form :is(label, .cms-filters_filed) {
+    padding-inline: 9px;
+  }
+  .wf-blog .blog-list_card .blog_label-text {
+    font-size: 12px;
+  }
+}
+
+/* /blog-posts/<slug>: the reader (its head code `om-blog-reader`) */
+body.wf-blog-post main:has(.blog-post_component) {
+  --reader: 700px;
+  --figure: 960px;
+}
+body.wf-blog-post main:has(.blog-post_component) .section:has(.header_content) .section-padding {
+  padding-block: clamp(32px, 5vw, 76px) 0;
+}
+body.wf-blog-post main:has(.blog-post_component) .header_component,
+.wf-blog-post .blog-post_component {
+  display: block;
+  width: 100%;
+  max-width: none;
+}
+body.wf-blog-post main:has(.blog-post_component) .header_content {
+  display: block;
+  text-align: left;
+  width: min(100%, var(--reader));
+  max-width: none;
+  margin-inline: auto;
+}
+.wf-blog-post .header_content:has(.blog-post_header) .label_component {
+  margin-bottom: 20px;
+}
+.wf-blog-post .header_content:has(.blog-post_header) .blog_label {
+  position: static;
+  display: inline-flex;
+  margin: 0 0 16px;
+}
+.wf-blog-post .header_content:has(.blog-post_header) h1 {
+  font-size: clamp(35px, 4.2vw, 58px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.047em;
+  text-wrap: balance;
+  margin: 0;
+}
+.wf-blog-post .header_content:has(.blog-post_header) .spacer-small,
+.wf-blog-post .header_content:has(.blog-post_header) .spacer-large {
+  display: none;
+}
+.wf-blog-post .header_content:has(.blog-post_header) .max-width-47rem {
+  margin: 18px 0 24px;
+}
+.wf-blog-post .header_content:has(.blog-post_header) p {
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.45;
+  color: #555951;
+}
+.wf-blog-post .blog-post_header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #dcded6;
+}
+.wf-blog-post .blog-post_header .reader-avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7eecf;
+  color: #28331d;
+  font: 650 13px/1 system-ui;
+}
+.wf-blog-post .blog-post_header .reader-name {
+  font-weight: 600;
+  color: #262920;
+}
+.wf-blog-post .blog-post_component .blog-post_sticky-wrapper {
+  display: none;
+}
+.wf-blog-post .section:has(.blog-post_component) .section-padding {
+  padding-top: 32px;
+}
+.wf-blog-post .blog-post_component .blog-post_content {
+  width: min(100%, var(--figure));
+  max-width: none;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin-inline: auto;
+}
+.wf-blog-post .blog-post_content .text-blog-rich-text {
+  width: 100%;
+  max-width: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+}
+.wf-blog-post .text-blog-rich-text > * {
+  box-sizing: border-box;
+  width: min(100%, var(--reader));
+  max-width: 100%;
+  margin-inline: auto !important;
+}
+.wf-blog-post .text-blog-rich-text :is(p, ul, ol, blockquote) {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(19px, 1.55vw, 22px);
+  line-height: 1.62;
+  letter-spacing: -0.012em;
+}
+.wf-blog-post .text-blog-rich-text p {
+  margin-block: 0 1.1em;
+}
+.wf-blog-post .text-blog-rich-text :is(h2, h3) {
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  margin-block: 1.6em 0.65em;
+  text-wrap: pretty;
+}
+.wf-blog-post .text-blog-rich-text h2 {
+  font-size: clamp(26px, 2.5vw, 35px);
+}
+.wf-blog-post .text-blog-rich-text > figure {
+  float: none;
+  display: block;
+  clear: both;
+  width: 100%;
+  max-width: 100% !important;
+  margin-block: 32px;
+}
+.wf-blog-post .text-blog-rich-text figure img {
+  max-width: 100%;
+  height: auto;
+}
+.wf-blog-post .text-blog-rich-text figcaption {
+  font: 14px/1.45 system-ui;
+  color: #666b61;
+  text-align: center;
+}
+.wf-blog-post .text-blog-rich-text pre {
+  overflow: auto;
+}
+@media (max-width: 600px) {
+  .wf-blog-post .header_content:has(.blog-post_header) .label_component {
+    margin-bottom: 14px;
+  }
+  .wf-blog-post .blog-post_header {
+    gap: 8px;
+  }
+  .wf-blog-post .text-blog-rich-text > figure {
+    margin-block: 24px;
+  }
+}
+
+/* /blog-posts/<slug>: the table of contents (an embed of the template) */
+.blog-post_toc-dot {
+  opacity: 0;
+  pointer-events: none;
+}
+.blog-post_toc-link.w--current .blog-post_toc-dot {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The breadcrumb's current page on one line (an embed of the post template: 20ch; of the case study template: 30ch) */
+.breacrumb-link_with-limit {
+  width: 20ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wf-case-study .breacrumb-link_with-limit {
+  width: 30ch;
+}
+
+/* /case-studies (its footer code and `om-case-navbar-scroll`) */
+body.wf-case-studies,
+.wf-case-studies .main-wrapper {
+  background-color: #fafaf7;
+}
+.wf-case-studies .case_label-text,
+.wf-case-studies .cms-filters_filed {
+  background-color: #fff;
+}
+.wf-case-studies .navbar_component {
+  background-color: #fafaf7;
+  transition: background-color 0.2s ease;
+}
+body.wf-case-studies.om-case-nav-scrolled .navbar_component {
+  background-color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-case-studies .navbar_component {
+    transition: none;
+  }
+}
+
+/* /case-studies/<slug> (its footer code) */
+body.wf-case-study,
+.wf-case-study .main-wrapper {
+  background-color: #fafaf7;
+}
+.wf-case-study .case_label-text {
+  background-color: #fff;
+}
+.wf-case-study .navbar_component {
+  background-color: #fafaf7;
+  transition: background-color 0.2s ease;
+}
+body.wf-case-study.om-case-nav-scrolled .navbar_component {
+  background-color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-case-study .navbar_component {
+    transition: none;
+  }
+}
+
+/* From the live site stylesheet: classes site.css leaves out */
+.case-hero_asset {
+  aspect-ratio: 1.54;
+  border-radius: var(--_ui-styles---radius--large);
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.case-post_gallery-colection-list {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-flow: row;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  display: grid;
+}
+.case-post_gallery-lightbox {
+  width: 100%;
+  height: 100%;
+}
+.case-post_gallery-lightbox-image {
+  border-radius: var(--_ui-styles---radius--medium);
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.case-post_gallery-colection-item {
+  border: 1px solid var(--border-color--border-primary);
+  border-radius: var(--_ui-styles---radius--medium);
+  background-color: var(--base-color-neutral--neutral-lightest);
+  height: 20rem;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+@media screen and (max-width: 767px) {
+  .case-post_gallery-colection-list {
+    grid-template-columns: 1fr;
+  }
+  .case-post_gallery-colection-item {
+    aspect-ratio: 1;
+    height: auto;
+  }
+}
+
+/* An image figure of a body: every one of the live bodies is Webflow's full-width figure
+   (`w-richtext-figure-type-image w-richtext-align-fullwidth`, site.css); the Markdown bodies do not carry the classes */
+.w-richtext figure:not(.video-embed) {
+  text-align: center;
+  clear: both;
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+.w-richtext figure:not(.video-embed) > figcaption {
+  display: block;
+}
+
+/* Webflow's `.section` has no side padding; the catalog's `.section` (site/src/styles/base.css) has, and it would
+   apply here */
+.section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* What the islands and the carousel need: Webflow's controls are labels, divs and Swiper, here they are buttons and
+   a scrolling row; the look is Webflow's */
+.blog-filters_component[hidden],
+.agencies_filters-column[hidden] {
+  display: none !important;
+}
+button.cms-filters_filed,
+button.agencies_filter-clear,
+button.agencies_list-close,
+button.case-slider_button {
+  font: inherit;
+  background-color: transparent;
+  border: 0;
+}
+button:is(.cms-filters_filed, .agencies_list-close, .case-slider_button) {
+  color: inherit;
+}
+button.cms-filters_filed {
+  flex: none;
+  white-space: nowrap;
+}
+.cms-filters_radio-button {
+  display: block;
+}
+button.case-slider_button {
+  border: 1px solid var(--border-color--border-primary);
+}
+button.agencies_filter-clear:disabled {
+  cursor: default;
+}
+.agencies_filters-form label:has(input:focus-visible),
+button:is(.cms-filters_filed, .case-slider_button, .agencies_filter-clear, .agencies_list-close):focus-visible {
+  outline: 2px solid var(--focus, #0c0c0c);
+  outline-offset: 2px;
+}
+.case-slider_button-icon {
+  display: flex;
+}
+.swiper.is-case {
+  overflow: hidden;
+}
+.swiper-wrapper.is-case {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.swiper-wrapper.is-case::-webkit-scrollbar {
+  display: none;
+}
+.swiper-slide.is-case {
+  scroll-snap-align: start;
+}
+/* the click-to-load video fills the header's video box as Webflow's iframe does (`.w-video iframe`) */
+.case-hero_video .video-embed {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+/* A post's figures keep the reading width, as on the live posts (measured 25 Nov 2026: 700 px at 1440, the width of
+   the paragraphs): the live reader style sizes every child of the body to --reader after the figure rule above */
+.wf-blog-post .text-blog-rich-text > figure {
+  width: min(100%, var(--reader));
+}
+
+/* Not live code: the catalog's base.css keeps every svg from shrinking (flex-shrink: 0), while the arrows of the case
+   slider shrink to their 1rem box on a phone on live (home, case study and partner pages). */
+.case-slider_button-icon svg {
+  flex-shrink: 1;
+}

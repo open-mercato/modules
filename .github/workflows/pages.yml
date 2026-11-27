@@ -6,10 +6,32 @@
 # templates.openmercato.com (decision B of 29 Oct) is a second custom domain of the same project: functions/_middleware.ts
 # redirects its root to modules.openmercato.com/templates, and dist/_routes.json (from site/public) runs Functions on `/` only. The deploy step
 # runs from the repository root, where `wrangler pages deploy` finds and bundles functions/ by itself.
+# Move under www.openmercato.com/run, the Run section of the main site (decisions of 13 and 14 Nov): with the
+# repository variables SITE_URL, BASE_PATH and HOME_PATH set (https://www.openmercato.com, /run and /modules) the build
+# puts the site in dist/<base>/, the home page at <base><home> (/run/modules, with dist/_redirects sending /run and
+# /run/ there), and keeps 404.html, _routes.json, _redirects, schema/, templates.json, picker.json and modules.json at
+# the root of dist; `yarn om pages-site` writes functions/site.ts from the same variables in both jobs, so on the
+# production hosts the Functions redirect every other page to the site and serve every other machine-readable file
+# (llms.txt, m/<package>.md, badges, data files) from dist/<base>/ with a 200. A `*.pages.dev` deployment address serves
+# the site under <base>/ without redirects, and the summary and the environment link to its home page. Without the
+# variables nothing changes. See docs/RUNBOOK.md, Move under www.openmercato.com/run.
 # Two jobs (review of 28 Oct): `build` has no environment, so a run that does not deploy records no deployment.
 # `deploy` alone uses environment `cloudflare` and runs only when the repository variable CLOUDFLARE_ACCOUNT_ID is
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
 # still run, then the run ends green with a warning and a summary that say the site was not deployed.
+# Two more jobs, `preview-build` and `preview` (15 Nov), deploy the nested layout with fixed values to the branch
+# alias run-preview of the same project while production is still at the root; see the comment above them.
+# The main site (www site migration spec, Phase 1a, docs/specs/2026-11-24-www-site-migration.md): `yarn build` writes
+# the catalog to dist-run/ and the main site (www/) to dist-www/. Production uploads the catalog alone, dist-run/ moved
+# to dist/ as it is, until the repository variable PAGES_MERGED is set to 1 at the switch (step C8 of the spec); then
+# `yarn om pages-site --merge` composes dist/ from both (the main site at the root, the catalog under /run) and the
+# checks follow the merged layout. Two jobs, `www-preview-build` and `www-preview`, deploy the merged layout to the
+# branch alias www-preview with PAGES_NOINDEX=1 meanwhile.
+# Before the www switch (owner's decision of 26 Nov 2026, docs/RUNBOOK.md, Main site on modules.openmercato.com): with
+# PAGES_MERGED=1 and the repository variable PAGES_SERVE_ORIGIN (https://modules.openmercato.com) production deploys
+# the merged layout and the Pages hosts serve it themselves: not indexed (dist/_headers and a robots.txt that allows
+# nothing) and without Google Analytics, canonical addresses on SITE_URL, old catalog page addresses a 301 under /run on the
+# same host. The preview jobs never read it.
 name: pages
 
 on:
@@ -43,7 +65,13 @@ defaults:
 env:
   SITE_URL: ${{ vars.SITE_URL || 'https://modules.openmercato.com' }}
   BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+  # the home page under the base: / (the base itself), or /modules for https://www.openmercato.com/run/modules
+  HOME_PATH: ${{ vars.HOME_PATH || '/' }}
   CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'open-mercato-modules' }}
+  # 1: production deploys the merged layout (the main site at the root, the catalog under BASE_PATH); off by default
+  PAGES_MERGED: ${{ vars.PAGES_MERGED || '' }}
+  # the origin that serves the merged layout before the www switch (https://modules.openmercato.com); off by default
+  PAGES_SERVE_ORIGIN: ${{ vars.PAGES_SERVE_ORIGIN || '' }}
 
 jobs:
   build:
@@ -108,23 +136,44 @@ jobs:
           fi
 
       - name: Build
-        run: yarn build
+        # the catalog to dist-run/, and with PAGES_MERGED the main site to dist-www/ too
+        run: |
+          if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi
+
+      - name: Lay out the upload
+        # catalog only (the default): dist-run/ is the upload as it is. Merged: both builds composed into dist/.
+        run: |
+          rm -rf dist
+          if [ "$PAGES_MERGED" = "1" ]; then yarn om pages-site --merge; else mv dist-run dist; fi
+
+      - name: Write Functions config
+        # functions/site.ts tells the Functions where the site is (lib/core/site-host.ts), from SITE_URL, BASE_PATH,
+        # HOME_PATH and PAGES_MERGED.
+        run: yarn om pages-site
 
       - name: Check artifact contents
         run: |
+          # The site sits at the root of dist, or in dist/<base>/ when BASE_PATH is not / (lib/emit/pages-layout.ts).
+          # The home page is index.html there, or <home>.html when HOME_PATH is not / (/modules: modules.html); the
+          # layout check at the end of this step looks for it.
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          site="dist${base:+/$base}"
           # wrangler 4.149.0 pages deploy uploads dotfiles (its walk skips only .DS_Store, .git, .wrangler, node_modules and the
           # _headers/_redirects/_routes.json/_worker.js/functions config names), so .well-known/ goes up as built.
           # The MCP server card is there only with MCP_URL (no card for a Worker that is not deployed, finding of 25 Oct).
-          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f "$site/.well-known/agent-skills/index.json" || { echo "$site/.well-known/agent-skills/index.json is missing"; exit 1; }
           if [ -n "${MCP_URL:-}" ]; then
-            test -f dist/.well-known/mcp/server-card.json || { echo "dist/.well-known/mcp/server-card.json is missing"; exit 1; }
+            test -f "$site/.well-known/mcp/server-card.json" || { echo "$site/.well-known/mcp/server-card.json is missing"; exit 1; }
           fi
-          test -f dist/modules.json || { echo "dist/modules.json is missing"; exit 1; }
+          test -f "$site/modules.json" || { echo "$site/modules.json is missing"; exit 1; }
           # Cloudflare Pages serves 404.html for missing paths; without it every missing path answers 200 with index.html
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
           # the Functions route list: without it every request would run functions/_middleware.ts
           test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
-          test -f dist/templates.html || { echo "dist/templates.html is missing"; exit 1; }
+          test -f "$site/templates.html" || { echo "$site/templates.html is missing"; exit 1; }
+          # the layout as a whole for SITE_URL, BASE_PATH and HOME_PATH: root files, routes and redirects, the home
+          # page, the fixed schema $id, every link of every page under the base, and functions/site.ts
+          yarn om pages-site --check dist
 
       - name: Check Pages limits
         # The walk wrangler runs before an upload (20,000 files, 25 MiB per file), offline and without the token, so a
@@ -174,7 +223,8 @@ jobs:
     timeout-minutes: 15
     environment:
       name: cloudflare
-      url: ${{ steps.deploy.outputs.deployment-url }}
+      # the deployment address, under the base path when there is one (set by the Summary step)
+      url: ${{ steps.summary.outputs.url }}
     steps:
       - name: Check token
         # The token stays an environment secret, so the main-only rule of `cloudflare` guards it; only this job sees
@@ -212,12 +262,20 @@ jobs:
           name: site
           path: dist
 
+      - name: Write Functions config
+        # The same functions/site.ts the build job checked: this checkout has the committed default.
+        run: yarn om pages-site
+
       - name: Check downloaded site
-        # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip.
+        # The artifact keeps dotfiles only with include-hidden-files; this proves .well-known/ made the trip, and the
+        # layout check proves the site and functions/site.ts were made for the same SITE_URL, BASE_PATH and HOME_PATH.
         run: |
-          test -f dist/.well-known/agent-skills/index.json || { echo "dist/.well-known/agent-skills/index.json is missing"; exit 1; }
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          site="dist${base:+/$base}"
+          test -f "$site/.well-known/agent-skills/index.json" || { echo "$site/.well-known/agent-skills/index.json is missing"; exit 1; }
           test -f dist/404.html || { echo "dist/404.html is missing"; exit 1; }
           test -f dist/_routes.json || { echo "dist/_routes.json is missing"; exit 1; }
+          yarn om pages-site --check dist
 
       - name: Deploy
         id: deploy
@@ -233,11 +291,426 @@ jobs:
           command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true
 
       - name: Summary
+        id: summary
+        # Under a base path the deployment address (<hash>.<project>.pages.dev) serves the site at <base>/ and is not
+        # redirected to production (hostRedirect), so the link goes to its home page there (<base>/, or <base><home>
+        # with HOME_PATH): the new version can be looked at first.
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
+          base="$(printf '%s' "${BASE_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          home="$(printf '%s' "${HOME_PATH:-/}" | sed -E 's#^/+##; s#/+$##')"
+          # path of the home page on any host: /, /<base>/ or /<base>/<home>
+          path="/${base:+$base/}$home"
+          url="$DEPLOYMENT_URL"
+          if [ -n "$url" ] && [ -n "$base" ]; then url="${url%/}$path"; fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
           {
-            echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL}${BASE_PATH}"
+            if [ -n "$PAGES_SERVE_ORIGIN" ]; then
+              # the merged layout served on a Pages host: the main site at its root, canonical addresses on SITE_URL
+              echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${PAGES_SERVE_ORIGIN%/}/ (the catalog at ${PAGES_SERVE_ORIGIN%/}$path, canonical on ${SITE_URL%/}, noindex)"
+            else
+              echo "Site deployed to Cloudflare Pages project \`$CF_PAGES_PROJECT\`: ${SITE_URL%/}$path"
+            fi
+            echo ""
+            echo "This deployment: ${url:-see the wrangler output}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Preview of the /run layout (docs/RUNBOOK.md, Preview of the /run layout): the nested build with fixed values,
+  # deployed to the branch alias run-preview of the same project, https://run-preview.<project>.pages.dev, so the
+  # proxy of the main site (docs/proxy/) can be tested before the switch. Two jobs of their own, parallel to build and
+  # deploy, which need nothing from them: a failed preview never fails or skips the production deploy. The same guards
+  # as build and deploy (public repository, a successful workflow_run, CLOUDFLARE_ACCOUNT_ID, the token of environment
+  # cloudflare). Skipped once production itself is nested (the repository variable BASE_PATH is set to another
+  # value than /): production then serves the same layout. PAGES_NOINDEX=1 adds dist/_headers (X-Robots-Tag: noindex)
+  # and a robots.txt that allows nothing, for this build only.
+  preview-build:
+    name: preview build
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') && (vars.BASE_PATH == '' || vars.BASE_PATH == '/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      commit: ${{ steps.checkout.outputs.commit }}
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      MCP_URL: ${{ vars.MCP_URL }}
+      WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      # the catalog alone, whatever production deploys
+      PAGES_MERGED: ""
+      PAGES_SERVE_ORIGIN: ""
+    steps:
+      - name: Check deploy settings
+        id: settings
+        env:
+          HAS_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_ACCOUNT_ID" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        run: |
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data 2>"$err"; then
+            git worktree add --detach .data origin/data
+          elif grep -q "couldn't find remote ref" "$err"; then
+            mkdir -p .data
+            echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$err"
+            echo "::error::Cannot read the data branch; not deploying."
+            exit 1
+          fi
+
+      - name: Build
+        # the catalog to dist-run/, and with PAGES_MERGED the main site to dist-www/ too
+        run: |
+          if [ "$PAGES_MERGED" = "1" ]; then yarn build; else yarn build:run; fi
+
+      - name: Lay out the upload
+        # catalog only (the default): dist-run/ is the upload as it is. Merged: both builds composed into dist/.
+        run: |
+          rm -rf dist
+          if [ "$PAGES_MERGED" = "1" ]; then yarn om pages-site --merge; else mv dist-run dist; fi
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check preview contents
+        # the nested layout as a whole (the same check as the build job) and, with PAGES_NOINDEX, dist/_headers and
+        # the robots.txt of the preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Check Pages limits
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          yarn wrangler pages project validate dist
+          echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Check Pages Functions
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Upload preview
+        if: ${{ steps.settings.outputs.deploy == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  preview:
+    name: preview
+    needs: preview-build
+    if: ${{ needs.preview-build.outputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: cloudflare
+      url: ${{ steps.summary.outputs.url }}
+    env:
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      PAGES_MERGED: ""
+      PAGES_SERVE_ORIGIN: ""
+      # the branch of the preview deployment; Cloudflare serves its latest deployment at
+      # https://<branch>.<project>.pages.dev
+      PREVIEW_BRANCH: run-preview
+    steps:
+      - name: Check token
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set but environment cloudflare has no CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.preview-build.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Download preview
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: preview
+          path: dist
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check downloaded preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Deploy preview
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          # a branch other than main is a preview deployment of the project, never production
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true
+
+      - name: Preview summary
+        id: summary
+        # The branch alias keeps the latest preview: lowercase, every character but a-z, 0-9 and - becomes -.
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          alias="$(printf '%s' "$PREVIEW_BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/^-+//; s/-+$//')"
+          url="https://$alias.$CF_PAGES_PROJECT.pages.dev/run/modules"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          this="see the wrangler output"
+          if [ -n "$DEPLOYMENT_URL" ]; then this="${DEPLOYMENT_URL%/}/run/modules"; fi
+          {
+            echo "Preview of the /run layout deployed to branch \`$PREVIEW_BRANCH\` of Cloudflare Pages project \`$CF_PAGES_PROJECT\`: $url"
+            echo ""
+            echo "This deployment: $this"
+            echo ""
+            echo "Check it, or the proxy in front of it, with docs/proxy/check.sh <base URL>."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Preview of the merged layout (www site migration spec, Phase 1a): the main site (www/, a placeholder until its
+  # content arrives) at the root and the catalog under /run, built, merged and checked with fixed values and deployed
+  # to the branch alias www-preview of the same project, https://www-preview.<project>.pages.dev. Parallel to the
+  # other jobs and needing nothing from them, with the same guards; never production (step C8 of the spec switches
+  # production with the repository variable PAGES_MERGED). PAGES_NOINDEX=1: dist/_headers and a robots.txt that
+  # allows nothing, at the root and under /run. The Functions stay in the upload until Phase 1c; with PAGES_MERGED they
+  # leave every request to a *.pages.dev address alone (lib/core/site-host.ts).
+  www-preview-build:
+    name: www preview build
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      commit: ${{ steps.checkout.outputs.commit }}
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      MCP_URL: ${{ vars.MCP_URL }}
+      WEBMCP_OT_TOKENS: ${{ vars.WEBMCP_OT_TOKENS }}
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      PAGES_MERGED: "1"
+      PAGES_SERVE_ORIGIN: ""
+    steps:
+      - name: Check deploy settings
+        id: settings
+        env:
+          HAS_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_ACCOUNT_ID" = "true" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Read data branch
+        run: |
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/data:refs/remotes/origin/data 2>"$err"; then
+            git worktree add --detach .data origin/data
+          elif grep -q "couldn't find remote ref" "$err"; then
+            mkdir -p .data
+            echo "No data branch yet: building on empty data." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            cat "$err"
+            echo "::error::Cannot read the data branch; not deploying."
+            exit 1
+          fi
+
+      - name: Build
+        # the catalog to dist-run/, the main site to dist-www/
+        run: yarn build
+
+      - name: Merge
+        run: yarn om pages-site --merge
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check merged contents
+        # the merged layout as a whole: the catalog's nested checks, the root files, the sitemap index, the links of
+        # every page against the routes this build wrote, and the noindex files
+        run: |
+          test -f dist/index.html || { echo "dist/index.html is missing"; exit 1; }
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Check Pages limits
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          yarn wrangler pages project validate dist
+          echo "dist: $(find dist -type f | wc -l | tr -d ' ') files"
+
+      - name: Check Pages Functions
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Upload preview
+        if: ${{ steps.settings.outputs.deploy == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: www-preview
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  www-preview:
+    name: www preview
+    needs: www-preview-build
+    if: ${{ needs.www-preview-build.outputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: cloudflare
+      url: ${{ steps.summary.outputs.url }}
+    env:
+      SITE_URL: https://www.openmercato.com
+      BASE_PATH: /run
+      HOME_PATH: /modules
+      PAGES_NOINDEX: "1"
+      PAGES_MERGED: "1"
+      PAGES_SERVE_ORIGIN: ""
+      PREVIEW_BRANCH: www-preview
+    steps:
+      - name: Check token
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error title=pages not deployed::CLOUDFLARE_ACCOUNT_ID is set but environment cloudflare has no CLOUDFLARE_API_TOKEN."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.www-preview-build.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Download preview
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: www-preview
+          path: dist
+
+      - name: Write Functions config
+        run: yarn om pages-site
+
+      - name: Check downloaded preview
+        run: |
+          test -f dist/run/.well-known/agent-skills/index.json || { echo "dist/run/.well-known/agent-skills/index.json is missing"; exit 1; }
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          yarn om pages-site --check dist
+
+      - name: Deploy preview
+        id: deploy
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.149.0"
+          packageManager: yarn
+          # a branch other than main is a preview deployment of the project, never production
+          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ env.PREVIEW_BRANCH }} --commit-dirty=true
+
+      - name: Preview summary
+        id: summary
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          alias="$(printf '%s' "$PREVIEW_BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/^-+//; s/-+$//')"
+          url="https://$alias.$CF_PAGES_PROJECT.pages.dev/"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "Preview of the merged layout deployed to branch \`$PREVIEW_BRANCH\` of Cloudflare Pages project \`$CF_PAGES_PROJECT\`: $url (the catalog at ${url}run/modules)"
             echo ""
             echo "This deployment: ${DEPLOYMENT_URL:-see the wrangler output}"
           } >> "$GITHUB_STEP_SUMMARY"

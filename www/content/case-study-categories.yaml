@@ -1,0 +1,24 @@
+crm:
+  webflowId: 6a2b03e03b52c2ab59fdfe07
+  name: CRM
+erp:
+  webflowId: 6a2b03dcdae0237648965a32
+  name: ERP
+edtech:
+  webflowId: 6abb98868b85972807195ac5
+  name: EdTech
+enterprise:
+  webflowId: 6a2b03e82d2858542859a553
+  name: Enterprise
+fintech:
+  webflowId: 6aa17c0e7e24478aefaeb84e
+  name: Fintech
+multi-tenancy:
+  webflowId: 6a2b047e3b52c2ab59fe3938
+  name: Multi-tenancy
+software-house:
+  webflowId: 6a2b03e46a4a51e59b4e8f5d
+  name: Software House
+track-trace:
+  webflowId: 6a2b04876a4a51e59b4eb71b
+  name: Track & Trace

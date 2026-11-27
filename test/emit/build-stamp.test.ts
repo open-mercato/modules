@@ -2,7 +2,7 @@
 // on the page said which build it was. `emit` records the catalog commit in site.json; the footer prints it.
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { buildStamp } from '../../lib/commands/emit.ts'
 import { buildEmit } from '../../lib/emit/index.ts'
@@ -40,7 +40,16 @@ describe('buildStamp', () => {
   })
 
   it('has no commit outside git and ignores a GITHUB_SHA that is not one', () => {
-    expect(buildStamp(tmp(), { GITHUB_SHA: 'main; rm -rf /' })).toEqual({ commit: null, dirty: false })
+    // the temporary folder may itself sit inside a checkout (TMPDIR under a repository): git must not look above it
+    const dir = tmp()
+    const ceiling = process.env.GIT_CEILING_DIRECTORIES
+    process.env.GIT_CEILING_DIRECTORIES = dirname(dir)
+    try {
+      expect(buildStamp(dir, { GITHUB_SHA: 'main; rm -rf /' })).toEqual({ commit: null, dirty: false })
+    } finally {
+      if (ceiling === undefined) delete process.env.GIT_CEILING_DIRECTORIES
+      else process.env.GIT_CEILING_DIRECTORIES = ceiling
+    }
   })
 })
 

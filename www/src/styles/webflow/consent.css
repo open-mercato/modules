@@ -1,0 +1,102 @@
+/* The cookie banner of www.openmercato.com (www/src/lib/consent.ts).
+   Origin: the Webflow stylesheet of the live site, openmercato-dev.webflow.shared.aa54cdb44.min.css on
+   cdn.prod.website-files.com, read on 25 Nov 2026. Kept: the rules of cookie-banner_*, text-color-alternate, button,
+   is-secondary, is-small and w-inline-block the banner uses, in their order, with the Webflow variables they read
+   resolved to their values. Each rule is scoped to .cookie-banner_component so it leaves the shared navbar's own
+   .button rules alone; the first rule restates what the banner inherits from the Webflow body (Geist, 1.5). The
+   Privacy link is not underlined, as it shows on the live page.
+   The visual pass of the designer (D7) replaces this file. */
+
+.cookie-banner_component {
+  font-family: Geist, Arial, sans-serif;
+  line-height: 1.5;
+  color: #0c0c0c;
+}
+.cookie-banner_component .w-inline-block {
+  max-width: 100%;
+  display: inline-block;
+}
+.cookie-banner_component .button {
+  color: #0c0c0c;
+  text-align: center;
+  background-color: #0000;
+  background-image: linear-gradient(189deg, #b4f372 12%, #eefb63 58%, #bc9aff);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.cookie-banner_component .button.is-secondary {
+  border: 1px solid #ececec;
+  background-color: #fff;
+  color: #0c0c0c;
+  background-image: none;
+  padding-top: 0.4375rem;
+  padding-bottom: 0.4375rem;
+}
+.cookie-banner_component .button.is-secondary:hover {
+  background-color: #fafafa;
+}
+.cookie-banner_component .button.is-small {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+.cookie-banner_component .text-color-alternate {
+  color: #fff;
+  text-decoration: none;
+}
+.cookie-banner_content {
+  grid-column-gap: 2rem;
+  grid-row-gap: 2rem;
+  border: 1px solid #6d6d6d;
+  border-radius: 0.25rem;
+  background-color: #0c0c0c;
+  color: #6d6d6d;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  display: flex;
+}
+.cookie-banner_link-text {
+  color: #fff;
+  cursor: pointer;
+}
+.cookie-banner_buttons {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.cookie-banner_component {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: fixed;
+  inset: auto 0% 1rem;
+}
+@media screen and (max-width: 991px) {
+  .cookie-banner_buttons {
+    flex: none;
+  }
+  .cookie-banner_component {
+    left: 1rem;
+    right: 1rem;
+  }
+}
+@media screen and (max-width: 767px) {
+  .cookie-banner_content {
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    flex-flow: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .cookie-banner_link-text {
+    order: 9999;
+  }
+}

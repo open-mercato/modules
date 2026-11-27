@@ -1,0 +1,24 @@
+---
+// /<slug>: the root namespace of the main site (spec, Routing), shared by the SEO landings (Phase 5, 32 of
+// www/content/landings, rendered by components/landing/LandingView.astro) and the unique pages (Phase 6: every
+// published `pages` entry but the home page and the list pages' copy, www/src/lib/pages.ts routedPages, rendered by
+// PageView). The build fails on a slug in both (www/content.config.ts). A draft is never routed (D6).
+import { getCollection } from 'astro:content'
+import LandingView from '../components/landing/LandingView.astro'
+import PageView from '../components/PageView.astro'
+import { publishedLandings, type LandingEntry } from '../lib/landings.ts'
+import { routedPages, type PageEntry } from '../lib/pages.ts'
+
+export async function getStaticPaths() {
+  const all = (await getCollection('landings')) as unknown as LandingEntry[]
+  const pages = (await getCollection('pages')) as unknown as PageEntry[]
+  return [
+    ...publishedLandings(all).map((landing) => ({ params: { slug: landing.id }, props: { landing, all } })),
+    ...routedPages(pages).map((page) => ({ params: { slug: page.id }, props: { page } })),
+  ]
+}
+
+const props = Astro.props as { landing: LandingEntry; all: LandingEntry[] } | { page: PageEntry }
+---
+
+{'page' in props ? <PageView entry={props.page} /> : <LandingView landing={props.landing} all={props.all} />}

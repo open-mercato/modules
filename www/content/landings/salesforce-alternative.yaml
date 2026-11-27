@@ -1,0 +1,231 @@
+webflowId: 6af5bb0a85282a5c93e5e909
+locale: en
+kind: alternative
+competitor: Salesforce
+seo:
+  title: Salesforce Alternative for Custom CRM Workflows | Open Mercato
+  description: Compare Salesforce and Open Mercato for sales workflows, licensing, customization and hosting. Plan a phased CRM migration around your data and integrations.
+hero:
+  eyebrow: Salesforce alternative
+  title: Your sales CRM, with control of the code and hosting.
+  lead: Accounts, contacts, deals and sales activity are the starting point. Build your next CRM on Open Mercato when your business needs control over the code, hosting and workflows behind them.
+  primary:
+    label: Discuss your Salesforce migration
+    href: /contact?interest=salesforce-alternative
+  secondary:
+    label: Compare the capabilities
+    href: "#comparison"
+  proof:
+    - MIT open source
+    - "{githubStars} stars on GitHub"
+    - "{moduleCount} plugins"
+sectionNav:
+  - label: Your workflow
+    anchor: needs
+  - label: Comparison
+    anchor: comparison
+  - label: See it in practice
+    anchor: proof
+  - label: Implementation
+    anchor: migration
+  - label: Questions
+    anchor: questions
+pains:
+  title: The Salesforce budget includes seats, add-ons and specialist time.
+  items:
+    - title: More users, editions and add-ons
+      body: Salesforce's commercial model combines user subscriptions with edition-dependent capabilities and add-ons. Review your actual contract against an Open Mercato implementation budget covering hosting, delivery and support.
+      art:
+        src: /media/landings/6af5f54a987f197223f70d6d-om-lp-cost-v3.svg
+        alt: ""
+        decorative: true
+    - title: Simple changes need specialist time
+      body: Salesforce can be highly customized. Reviewers also describe a demanding setup and learning curve. Open Mercato gives your engineering team an extensible TypeScript foundation and control over the screens and rules they build.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+    - title: Migration includes relationships and business logic
+      body: Accounts are only part of the migration. Relationships, activity history and business logic matter too. Start with one team and a tested data map so the decision is grounded in a working pilot.
+      art:
+        src: /media/landings/6af5f54b1b98315466ed31c0-om-lp-migration-v3.svg
+        alt: ""
+        decorative: true
+features:
+  title: Start with accounts, deals, quotes and orders.
+  items:
+    - title: Accounts and contacts
+      body: Companies and people have linked deals, addresses, notes and activity history.
+      art:
+        src: /media/landings/6af5f54bc76a29afdf67a3ca-om-lp-customers-v3.svg
+        alt: ""
+        decorative: true
+    - title: Opportunities and pipeline
+      body: Configure stages and track deal value, probability, expected close and ownership in list or kanban views.
+      art:
+        src: /media/landings/6af5f54b8284a0c81e2b6c4d-om-lp-pipeline-v3.svg
+        alt: ""
+        decorative: true
+    - title: Quotes and orders
+      body: Connect the sales process to quotes, order records, payments and shipment information through the Sales module.
+      art:
+        src: /media/landings/6af5f54b80a055a87fa948c5-om-lp-orders-v3.svg
+        alt: ""
+        decorative: true
+    - title: Custom approvals and handoffs
+      body: Use custom fields, entities, modules, APIs and workflows to build the approval and handoff logic your team needs.
+      art:
+        src: /media/landings/6af5f54ced23f8851fb179ef-om-lp-custom-v3.svg
+        alt: ""
+        decorative: true
+capabilities:
+  eyebrow: Feature by feature
+  title: The CRM essentials. More control over what comes next.
+  lead: Keep the sales capabilities your team relies on, then gain control of the application, deployment and licence costs behind them.
+  label: What your team gets
+  tagline: BUILT FOR OWNERSHIP
+  columns:
+    - name: Open Mercato
+      note: Core CRM + configurable modules
+    - name: Salesforce
+      note: Sales CRM · edition dependent
+  groups:
+    - title: Where Open Mercato adds control
+      rows:
+        - label: Run the CRM on your own infrastructure
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Salesforce-hosted
+        - label: Full application core under an MIT licence
+          ours: "yes"
+          theirs: "no"
+          theirsNote: Proprietary platform
+        - label: $0 core licence fee, without a user cap
+          ours: "yes"
+          oursNote: Hosting and services extra
+          theirs: "no"
+          theirsNote: "Free Suite: 2 users"
+    - title: Capabilities available in both
+      rows:
+        - label: Company and contact records
+          ours: "yes"
+          theirs: "yes"
+        - label: Deals and sales pipelines
+          ours: "yes"
+          theirs: "yes"
+        - label: Notes and activity history
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom fields
+          ours: "yes"
+          theirs: "yes"
+          theirsNote: Plan limits apply
+        - label: Quotes and order records
+          ours: "yes"
+          oursNote: Sales module
+          theirs: "yes"
+          theirsNote: Edition dependent
+        - label: Roles and permissions
+          ours: "yes"
+          theirs: "yes"
+        - label: Custom business entities
+          ours: "yes"
+          oursNote: Extend the data model
+          theirs: "yes"
+          theirsNote: Paid editions
+        - label: Workflow automation
+          ours: "yes"
+          oursNote: Configure the workflow engine
+          theirs: "yes"
+          theirsNote: Edition limits apply
+  legend:
+    "yes": Available in the stated scope
+    "no": Not included in this model
+    build: Requires implementation
+  note: Selected core sales capabilities. Salesforce editions have different limits. Open Mercato implementation, hosting, maintenance and integrations are budgeted separately.
+  reviewed: "2026-11-12"
+  sources:
+    - label: Salesforce features
+      url: https://www.salesforce.com/sales/pricing/
+    - label: Free Suite limits
+      url: https://help.salesforce.com/s/articleView?id=xcloud.overview_limits_free_suite.htm&language=en_US&type=5
+    - label: Open Mercato core
+      url: https://github.com/open-mercato/open-mercato
+    - label: Customer records
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+comparison:
+  title: Explore implementation and commercial details
+  label: What matters
+  columns:
+    - Salesforce
+    - Open Mercato
+  rows:
+    - topic: Core sales records
+      theirs: Accounts, contacts, leads and opportunities in a managed product.
+      ours: Companies, people, deals, notes and activities in an extensible application.
+    - topic: Commercial model
+      theirs: Per-user plans with edition and add-on choices.
+      ours: MIT-licensed core. Implementation, hosting and support are scoped services.
+    - topic: Customization
+      theirs: Flow, platform configuration, Apex and ecosystem applications.
+      ours: TypeScript modules, custom fields, entities and application-level extensions.
+    - topic: Hosting
+      theirs: Salesforce-managed platform infrastructure.
+      ours: Choose and operate your deployment environment.
+    - topic: Integrations
+      theirs: A large application ecosystem and platform APIs.
+      ours: APIs and extension points for the integrations your project needs.
+    - topic: Migration scope
+      theirs: Inventory the clouds, automations and add-ons in use.
+      ours: Map each required capability to core, configuration, integration or custom development.
+demo:
+  eyebrow: Explore Open Mercato CRM
+  title: See the CRM you would start with.
+  body: The public product includes customer records, a sales pipeline and extensible data fields. Review the working interface with your team, then scope the Salesforce-specific capabilities your project needs.
+  cta:
+    label: Explore Open Mercato CRM
+    href: /crm
+  image:
+    src: /media/landings/6af5fc4085c3fe8aec1f28cf-om-crm-workflow-complete.svg
+    alt: A won deal starts a configured CRM automation workflow
+steps:
+  title: A Salesforce migration needs a record map and a workflow map.
+  items:
+    - title: Inventory the Salesforce setup
+      body: List Salesforce objects, fields, reports, Flows, Apex, add-ons and integrations your team depends on.
+    - title: Map and rehearse the data
+      body: Map Accounts, Contacts and Opportunities to companies, people and deals. Preserve source IDs and verify relationships, files and activity history.
+    - title: Rebuild the essential workflows
+      body: Implement required automations and integrations. Pilot one team with representative deals and agree acceptance criteria.
+    - title: Plan the cutover
+      body: Reconcile records, test permissions, agree a data freeze and recovery plan, then train users and assign support ownership.
+faq:
+  title: Questions before you take the next step.
+  items:
+    - question: Can Open Mercato replace our Salesforce setup?
+      answer: Fit depends on the Salesforce products and customizations you use. The core covers customer and deal management. Advanced forecasting, CPQ, Service Cloud and specialist apps need a capability-by-capability assessment and may require additional development.
+    - question: Will Salesforce Flows and Apex migrate automatically?
+      answer: Treat Flows, Apex and installed apps as business requirements to review and reimplement where needed. The migration plan should include behavior tests as well as data imports.
+    - question: Will it cost less?
+      answer: The core has a $0 licence fee. Compare your full Salesforce contract and administration costs with the proposed implementation, hosting, integrations and support over the same time period. The result depends on your scope.
+    - question: Can we move one team first?
+      answer: A phased pilot can be scoped around one team or workflow. Agree which system owns each record, how updates move between systems and the point at which the pilot is ready to expand.
+cta:
+  title: Start with the Salesforce work you want to improve.
+  body: Bring your object list, integrations and three workflows that create the most friction. Use them to scope a practical migration conversation.
+  primary:
+    label: Discuss your Salesforce migration
+    href: /contact?interest=salesforce-alternative
+  note: Talk through your process, integrations and implementation needs with the Open Mercato team.
+sources:
+  title: Sources and product documentation
+  reviewed: "2026-11-12"
+  items:
+    - label: Salesforce official sales pricing and feature comparison
+      url: https://www.salesforce.com/sales/pricing/
+    - label: Salesforce user reviews on Gartner Peer Insights
+      url: https://www.gartner.com/reviews/market/sales-force-automation-platforms/vendor/salesforce
+    - label: Open Mercato customer and deal documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/customers.mdx
+    - label: Open Mercato order and quote documentation
+      url: https://github.com/open-mercato/open-mercato/blob/main/apps/docs/docs/user-guide/sales/orders-and-quotes.mdx

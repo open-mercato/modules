@@ -1,0 +1,30 @@
+# The Worker for the old hosts (spec docs/specs/2026-11-24-www-site-migration.md, Phase 1b). Not deployed from this
+# repository: the owner deploys it from the repository root, on the Cloudflare account of the openmercato.com zone,
+# after the move to /run (docs/RUNBOOK.md, Old hosts on a Worker):
+#   yarn wrangler deploy --config workers/old-hosts/wrangler.toml
+# CI bundles it with `--dry-run` only (.github/workflows/validate.yml).
+name = "openmercato-old-hosts"
+main = "worker.ts"
+compatibility_date = "2026-10-01"
+# no *.workers.dev address: the Worker answers only the two hosts below
+workers_dev = false
+preview_urls = false
+
+[[routes]]
+pattern = "modules.openmercato.com/*"
+zone_name = "openmercato.com"
+
+[[routes]]
+pattern = "templates.openmercato.com/*"
+zone_name = "openmercato.com"
+
+[vars]
+# The Pages project's own address, where /run/<path> holds every file. Never www.openmercato.com (spec C10).
+UPSTREAM = "https://open-mercato-modules.pages.dev"
+# Where pages move: the values of the repository variables of the `pages` build after the move.
+SITE_URL = "https://www.openmercato.com"
+BASE_PATH = "/run"
+HOME_PATH = "/modules"
+
+[observability]
+enabled = false

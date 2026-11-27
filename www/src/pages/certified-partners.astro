@@ -1,0 +1,62 @@
+---
+// /certified-partners (spec, Routing and UI/UX), in the live Webflow markup: the header with its two buttons, then the
+// PartnerFilter island (`agencies_component`). Drafts are never listed (D6). Complete without JavaScript: the island's
+// server render lists every published partner; the list and the facet options reach the browser as the island's props,
+// JSON inlined into the page at build. Its title, description, breadcrumb, heading, lead and buttons are the `pages`
+// entry `certified-partners` (www/src/lib/pages.ts listPageCopy).
+import { getCollection } from 'astro:content'
+import Main from '../layouts/Main.astro'
+import Crumbs from '../components/Crumbs.astro'
+import PartnerFilter from '../islands/PartnerFilter.tsx'
+import { inline } from '../lib/inline-markdown.ts'
+import { listPageCopy, type PageEntry } from '../lib/pages.ts'
+import { partnerData } from '../lib/collections-data.ts'
+import { facetOptions, partnerCard, PARTNERS_PATH } from '../lib/partners.ts'
+import pagesCss from '../styles/webflow/pages.css?url'
+
+const data = await partnerData()
+const partners = data.published.map((p) => partnerCard(p, data.dict))
+const options = facetOptions(data.published, data.dict)
+const { seo, hero } = listPageCopy((await getCollection('pages')) as unknown as PageEntry[], 'certified-partners')
+---
+
+<Main
+  path={PARTNERS_PATH}
+  title={seo.title}
+  description={seo.description}
+  bodyClass="wf-partners"
+  styles={[pagesCss]}
+>
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <div class="section no-bottom-border no-bottom-padding">
+        <div class="section-padding">
+          <div class="header_component">
+            <div class="header_content max-width-39rem">
+              <Crumbs current={{ name: hero.eyebrow ?? hero.title, href: PARTNERS_PATH }} />
+              <h1 class="heading-style-h2">{hero.title}</h1>
+              <div class="spacer-small"></div>
+              {hero.lead && <p class="text-color-secondary" set:html={inline(hero.lead)} />}
+              <div class="spacer-medium"></div>
+              <div class="button-group">
+                {hero.primary && <a href={hero.primary.href} class="button is-tertiary w-button">{hero.primary.label}</a>}
+                {
+                  hero.secondary && (
+                    <a href={hero.secondary.href} class="button is-secondary w-inline-block">
+                      <div>{hero.secondary.label}</div>
+                    </a>
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="agencies-list_section-wrapper">
+        <section id="partners" class="section is-agencies-list" aria-label="Partners">
+          <PartnerFilter client:painted partners={partners} options={options} />
+        </section>
+      </div>
+    </div>
+  </div>
+</Main>

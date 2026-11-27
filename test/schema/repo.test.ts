@@ -39,6 +39,11 @@ const SPEC_3_3: Record<string, string> = {
   '@axe-core/playwright': '4.13.0',
   prettier: '3.9.9',
   '@types/node': '24.19.1',
+  // www site migration (docs/specs/2026-11-24-www-site-migration.md, Risks, Dependencies): the importer's HTML parser
+  // and Markdown writer, dev only
+  'hast-util-from-html': '2.1.0',
+  'mdast-util-to-markdown': '2.2.3',
+  'mdast-util-gfm-table': '2.0.1',
 }
 
 describe('repo configuration (spec 3.3, 3.4)', () => {
@@ -52,9 +57,14 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
 
   it('has the scripts of spec 3.4', () => {
     expect(pkg.scripts.om).toBe('node lib/cli.ts')
+    // the main site (www site migration, Phase 1a): its own astro check, and `build` writes both builds; the Worker for
+    // the old hosts (Phase 1b): its own tsc with the Workers types
     expect(pkg.scripts.check).toBe(
-      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && prettier --check . && node lib/cli.ts check-text',
+      'tsc --noEmit && tsc -p mcp/tsconfig.json --noEmit && tsc -p workers/old-hosts/tsconfig.json --noEmit && astro check --tsconfig tsconfig.site.json && astro check --root www --tsconfig tsconfig.json && prettier --check . && node lib/cli.ts check-text',
     )
+    expect(pkg.scripts.build).toBe('yarn build:run && yarn build:www')
+    expect(pkg.scripts['build:run']).toBe('node lib/cli.ts emit --data .data && astro build --outDir dist-run')
+    expect(pkg.scripts['build:www']).toBe('astro build --root www')
     expect(pkg.scripts.test).toBe('vitest run')
   })
 
@@ -74,8 +84,12 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
     // `.wp/` (review r3): the local notes and screenshots of the work packages, kept out of git by
     // .gitignore; a JSON file written there must not turn `yarn check` red
     // `.agents/`, `.claude/`, `.npm/`: untracked files the agent sandbox writes into the checkout
+    // `.ai/`: the local operator files of the agent pipeline and its task worktrees, never committed
+    // `dist-run/`, `dist-www/`: the two builds the merged layout composes dist/ from (lib/emit/pages-merge.ts)
     expect(lines).toEqual([
       'dist/',
+      'dist-run/',
+      'dist-www/',
       'out/',
       '.data/',
       'site/.generated/',
@@ -84,6 +98,7 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       '.wp/',
       '.agents/',
       '.claude/',
+      '.ai/',
       '.npm/',
       // byte copies of the create-mercato-app scaffold, the modulesFromModulesTs contract (templates spec, rev. 7)
       'test/fixtures/templates/modules-from-modules-ts/scaffold-*',

@@ -76,14 +76,10 @@ function description(): string {
   path={categoryPage(id)}
   dataAsOf={meta.dataAsOf}
   skip={{ href: '#registry', label: 'Skip to modules' }}
+  trail={[{ label: 'Modules', href: href('/') }, { label: cat.title }]}
 >
   <section class="band" aria-labelledby="hero-title">
     <div class="sheet section mhero mhero--cat">
-      <nav class="mhero__crumbs" aria-label="Breadcrumb">
-        <a href={href('/')}>Modules</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">{cat.title}</span>
-      </nav>
       <h1 class="mhero__h1" id="hero-title">{cat.title}</h1>
       <p class="mhero__lead">{lead}</p>
       {

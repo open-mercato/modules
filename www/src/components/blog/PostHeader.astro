@@ -1,0 +1,62 @@
+---
+// The head of a post in the live Webflow markup (`header_component`, `blog_label`, `blog-post_header`): breadcrumb,
+// category label in its colours, title, description and the byline. The byline is what the live template's reader
+// script makes of it in the browser (avatar initials, the author or Open Mercato, the date, the minutes to read), here
+// written at build.
+import Crumbs from '../Crumbs.astro'
+import { BLOG_PATH, bylineName, initials, longDate } from '../../lib/blog.ts'
+import type { BlogCategory } from '../../lib/blog-data.ts'
+
+interface Props {
+  title: string
+  description: string
+  href: string
+  category?: BlogCategory
+  author?: string
+  date: Date
+  minutes: number
+}
+const { title, description, href, category, author, date, minutes } = Astro.props
+const name = bylineName(author)
+const colors = [
+  category?.labelColor && `background-color:${category.labelColor}`,
+  category?.textColor && `color:${category.textColor}`,
+]
+  .filter(Boolean)
+  .join(';')
+---
+
+<section class="section">
+  <div class="section-padding">
+    <div class="header_component">
+      <div class="header_content">
+        <Crumbs trail={[{ name: 'Blog', href: BLOG_PATH }]} current={{ name: title, href }} limit />
+        {
+          category && (
+            <div class="blog_label is-blog-post">
+              <div class="blog_label-text" style={colors || undefined}>
+                {category.name}
+              </div>
+            </div>
+          )
+        }
+        <h1 class="heading-style-h3">{title}</h1>
+        <div class="spacer-small"></div>
+        <div class="max-width-47rem">
+          <p class="text-color-secondary">{description}</p>
+        </div>
+        <div class="spacer-large"></div>
+        <div class="blog-post_header">
+          <span class="reader-avatar" aria-hidden="true">{initials(name)}</span>
+          <div class="text-size-small text-color-secondary reader-name">{name}</div>
+          <div class="blog-post_header-dot"></div>
+          <div class="text-size-small text-color-secondary">
+            <time datetime={date.toISOString()}>{longDate(date)}</time>
+          </div>
+          <div class="blog-post_header-dot"></div>
+          <span class="text-size-small text-color-secondary">{minutes} min read</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

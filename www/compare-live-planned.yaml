@@ -1,0 +1,321 @@
+# Intended differences for `yarn om compare-live --planned` (www site migration spec, cutover step C6; RUNBOOK,
+# "Main site switch"): one entry per URL and field the main site differs from the live Webflow site on purpose, with
+# the reason. Owner's decision of 25 Nov 2026: until the designer's pass the main site mirrors the live templates
+# (markup, Webflow classes, breadcrumb, sidebar CTA, table of contents, carousels), so a template part differs only
+# where a note says why. Body text and content images were compared block by block (Webflow rich text against the
+# preview's): the same, apart from what a note names.
+# The landings (Phase 5) and the unique pages (Phase 6) mirror the live pages; where one differs, its note says why.
+# Owner's decision of 25 Nov 2026: a page shows the catalog's real module count ({moduleCount}, spec A6), not live's
+# hand-typed "50+"; every page that shows it has an entry for its text, though the change stays under the threshold.
+- url: /blog
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
+- url: /blog
+  field: text
+  note: "Live's category filter also offers Security, a category with no published post (here only categories with a post), lists the categories in another order, and has Webflow's form messages and the filter's empty-state text in its markup; live lists the post of 12 Apr 2026 (Open-source ERP in 2026) last, here it is in date order. Every published post is listed and linked, in the live markup."
+- url: /case-studies
+  field: text
+  note: "Live's page has no <main>, so its main text takes in the closing call to action that follows <main> here, and it has Webflow's form messages and the filter's empty-state text in its markup. The header, the filter and every card are the same."
+- url: /certified-partners
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
+- url: /certified-partners
+  field: text
+  note: "Live's filter lists every country and language of Webflow in hidden selects and every tier and budget, also those no published partner has (here the values published partners have); each live card carries Finsweet's hidden filter fields; live's page has no <main>, so its main text takes in the closing call to action. Every published partner is listed and linked, in the live markup."
+- url: /blog-posts/ai-engineering-at-enterprise-scale-8-lessons-fortune-500
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /blog-posts/open-mercato-sandboxes-ga
+  field: text
+  note: "A body video is a click-to-load link with its title here (nothing loads from YouTube before a click), an iframe on live; the byline's minutes to read are written at build here, by a script on live. The page is the same otherwise."
+- url: /blog-posts/open-mercato-typescript-erp-framework
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /blog-posts/open-mercato-vs-twenty
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /blog-posts/why-ai-rollouts-die-in-the-it-department
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /case-studies/flowbiz-sewing-workshop-quoting
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /case-studies/flowbiz-sewing-workshop-quoting
+  field: h1
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/10clouds
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/10clouds
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/300-codes
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/300-codes
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/amt-solution
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/amt-solution
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/cognize
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/cognize
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/commerce-weavers
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/dev4you
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/dev4you
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/easy-automate
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/easy-automate
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/enxoo
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/enxoo
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/evojam
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/evojam
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/fast-white-cat
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/fast-white-cat
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/filanovum
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/filanovum
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/freighttech
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/freighttech
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/full-stack-house
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/full-stack-house
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/gonextstage
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/lemonmind
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/lemonmind
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/macopedia
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/macopedia
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/nardeo
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/nardeo
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/omdyo
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/omdyo
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/scaleoma
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/scaleoma
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/softiq
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/softiq
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/tandemite
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/tandemite
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/they-dev
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/tracecore
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/tracecore
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/univio
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/univio
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /certified-partners/white-label-coders
+  field: description
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /certified-partners/white-label-coders
+  field: text
+  note: "Live's partner template has no <main>, so its main text takes in the closing call to action (18 words) that follows <main> here, as on every other page. The page is the same otherwise."
+- url: /careers-jobs/senior-ai-engineering
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /baselinker-alternatywa
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /
+  field: title
+  note: "Long dash written as a hyphen (spec A5, AGENTS.md rule 7)."
+- url: /
+  field: h1
+  note: 'Live''s HTML says "Build any Business App you need" and its script (om-hero-headline-copy) replaces it with "Start with 80% done" in the browser; the page renders the words visitors see.'
+- url: /
+  field: images
+  note: "Live's script (om-customer-implementation-partner) adds the implementation partner video to the stories in the browser; the page renders it, so one more image (its poster)."
+- url: /about
+  field: text
+  note: "Live closes <main> after the story section, so its main text leaves out the four sections after it; here they are inside <main>, with the same words."
+- url: /about
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /partners
+  field: text
+  note: "Live keeps a hidden section (The Commercial Support Model, class hide) in its markup; it is left out here because nobody sees it."
+- url: /partners
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /agencies
+  field: images
+  note: "The card icons are SVG files shown as images here; live inlines the same SVGs."
+- url: /team
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
+- url: /terms-conditions
+  field: description
+  note: "Webflow has no description here; one of the 4 new descriptions of the spec (SEO table), written in Phase 6."
+- url: /
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026); the release badge shows the core version of the catalog''s data where live''s HTML types v0.9.0 (AGENTS.md rule 8; the browser shows the latest release on both).'
+- url: /agile-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /attio-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /b2b-order-management
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /baselinker-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /baselinker-alternatywa
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /bitrix24-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /capsule-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /close-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /copper-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /crm-for-manufacturing
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /crm-for-wholesale-distributors
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /custom-crm-development
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /dynamics-365-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /freshsales-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /hubspot-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /insightly-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /keap-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /lot-traceability-software
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /monday-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /nutshell-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /odoo-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /pipedrive-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /salesforce-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /salesmate-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /self-hosted-crm
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /senior-care-operations
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /sugarcrm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /suitecrm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /twenty-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /vtiger-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /zendesk-sell-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'
+- url: /zoho-crm-alternative
+  field: text
+  note: 'The plugin count is the catalog''s real count from its data ({moduleCount}, spec A6), not live''s hand-typed "50+" (owner''s decision of 25 Nov 2026).'

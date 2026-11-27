@@ -1,0 +1,55 @@
+---
+// "Data Mastery & Multi-Tenancy" of /product as live has it: the heading, then three bordered columns, each with its
+// icon, title and body.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Icon from './product-icon.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-22rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-3-col">
+      {
+        block.items.map((item, i) => (
+          <div class="border-grid_card">
+            <div class="border-grid_card-content">
+              {item.icon && (
+                <div class="border-grid_icon-wrapepr">
+                  <div class="border-grid_icon w-embed">
+                    <Icon icon={item.icon} />
+                  </div>
+                </div>
+              )}
+              <div class="spacer-1rem" />
+              {item.title && <h3 class="text-size-large">{t(item.title)}</h3>}
+              <div class="spacer-large" />
+              {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+            </div>
+            {i < block.items.length - 1 && <div class="border-grid_line" />}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Wrap>

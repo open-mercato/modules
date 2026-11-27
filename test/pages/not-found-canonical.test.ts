@@ -14,7 +14,10 @@ describe('canonical address of the 404 page', () => {
   it('the layout writes canonical and og:url only when the page has an address', () => {
     expect(base).toContain('{canonical && <link rel="canonical" href={canonical} />}')
     expect(base).toContain('{canonical && <meta property="og:url" content={canonical} />}')
-    expect(base).toMatch(/const canonical = path === null \? null : absoluteUrl\(site, path\)/)
+    // a catalog page under its base, a main site page (section `main`, www/) on the main site's origin
+    expect(base).toMatch(
+      /const canonical = path === null \? null : run \? absoluteUrl\(site, path\) : new URL\(path, site\)\.toString\(\)/,
+    )
   })
 
   it('the 404 page passes no path and keeps noindex', () => {

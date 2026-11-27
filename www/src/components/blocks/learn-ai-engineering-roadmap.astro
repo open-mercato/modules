@@ -1,0 +1,117 @@
+---
+// "The roadmap to mastering AI-assisted coding" of /learn-ai-engineering, the page's HowTo steps: the heading, then a
+// two-column grid of bordered cards with the live dividing lines, each an icon, a title, its text, its points (a
+// numbered list when every point is written `1. ...`) and its quote, whose last line is the source under it.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import icon1 from './learn-ai-engineering-roadmap-1.svg?raw'
+import icon2 from './learn-ai-engineering-roadmap-2.svg?raw'
+import icon3 from './learn-ai-engineering-roadmap-3.svg?raw'
+import icon4 from './learn-ai-engineering-roadmap-4.svg?raw'
+import icon5 from './learn-ai-engineering-roadmap-5.svg?raw'
+import icon6 from './learn-ai-engineering-roadmap-6.svg?raw'
+
+type Props = BlockProps<'steps'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const icons = [icon1, icon2, icon3, icon4, icon5, icon6]
+const n = block.items.length
+const NUMBERED = /^(\d+)\.\s+/
+const list = (points: string[]): { ordered: boolean; start: number; items: string[] } => {
+  const ordered = points.every((p) => NUMBERED.test(p))
+  return {
+    ordered,
+    start: ordered ? Number(NUMBERED.exec(points[0]!)![1]) : 1,
+    items: points.map((p) => inline(t(ordered ? p.replace(NUMBERED, '') : p))),
+  }
+}
+const quote = (note: string): { text: string; source?: string } => {
+  const lines = t(note).split(/\r?\n/)
+  return lines.length > 1
+    ? { text: lines.slice(0, -1).map((l) => inline(l)).join('<br />'), source: inline(lines.at(-1)!) }
+    : { text: inline(lines[0]!) }
+}
+---
+
+<Wrap>
+  <section class="section no-bottom-border" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          <div class="max-width-33rem">
+            <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacer-large"></div>
+    <div class="border-grid_component is-2-col">
+      {
+        block.items.map((item, i) => {
+          const l = item.points && list(item.points)
+          const q = item.note && quote(item.note)
+          return (
+            <div class="border-grid_card">
+              <div class="border-grid_card-content">
+                {icons[i] && (
+                  <div class="border-grid_icon-wrapepr">
+                    <div class="border-grid_icon w-embed" set:html={icons[i]} />
+                  </div>
+                )}
+                <div class="spacer-1rem" />
+                {item.title && <h3 class="text-size-large">{t(item.title)}</h3>}
+                <div class="spacer-1rem" />
+                {item.body && <p class="text-color-secondary" set:html={inline(t(item.body))} />}
+                {l && (
+                  <>
+                    <div class="spacer-1rem" />
+                    <div class="text-rich-text text-color-secondary w-richtext">
+                      {l.ordered ? (
+                        <ol start={l.start}>
+                          {l.items.map((p) => (
+                            <li set:html={p} />
+                          ))}
+                        </ol>
+                      ) : (
+                        <ul>
+                          {l.items.map((p) => (
+                            <li set:html={p} />
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </>
+                )}
+                {q && (
+                  <>
+                    <div class="spacer-1rem" />
+                    <p class="text-color-secondary">
+                      <Fragment set:html={q.text} />
+                      {q.source && (
+                        <>
+                          <br />
+                          <span class="text-style-tagline" set:html={q.source} />
+                        </>
+                      )}
+                    </p>
+                  </>
+                )}
+              </div>
+              {i < n - 1 && <div class:list={['border-grid_line', { 'show-tablet': i % 2 === 1 }]} />}
+              {i < n - 2 && <div class="border-grid_line is-bottom hide-tablet" />}
+            </div>
+          )
+        })
+      }
+    </div>
+  </section>
+</Wrap>

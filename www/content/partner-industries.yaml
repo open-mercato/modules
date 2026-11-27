@@ -1,0 +1,39 @@
+manufacturing:
+  webflowId: 6a2d47a0a589b9cdd008e9da
+  name: Manufacturing
+  order: 1
+freight-logistics:
+  webflowId: 6a2d47a6172fd222e5fa2ef2
+  name: Freight & Logistics
+  order: 2
+retail:
+  webflowId: 6a2d47afb835d8b669528625
+  name: Retail
+  order: 3
+finance:
+  webflowId: 6a2d47c3de45e959f399d531
+  name: Finance
+  order: 4
+software-technology:
+  webflowId: 6a2d47d15377018dfd010617
+  name: Software & Technology
+  order: 5
+other:
+  webflowId: 6a2d47d7588a87e9b160b47e
+  name: Other
+  order: 6
+edtech:
+  webflowId: 6a4e7d47adae45fb23d3cb25
+  name: EdTech
+  order: 7
+healthcare:
+  webflowId: 6a4e83e65546d6cbbfa0a458
+  name: Healthcare
+  order: 8
+construction-real-estate:
+  webflowId: 6a9fce5ca6c38271a14107fe
+  name: Construction & Real Estate
+  order: 9
+energy-utilities:
+  webflowId: 6a50c400bb3c504ed7b43e0c
+  name: Energy & Utilities

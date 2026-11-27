@@ -1,0 +1,138 @@
+---
+// One quiet line at the top of every catalog page (navbar of 14 Nov): where you are in the Run menu on the left, in
+// the breadcrumbs of the main site's pages ("Home / Product", 12 px Medium, the trail grey, the page black); the data
+// stamp, About this data and Submit a module on the right. The data stamp and Submit a module had a header bar of
+// their own before (13 Nov); since the footer is the main site's (14 Nov), About this data is the way to the
+// provenance of the data. No links to pages of the menu and not sticky, so it never reads as a second navbar.
+import DataStamp from './DataStamp.astro'
+import { href } from '../lib/url.ts'
+import { sectionName } from '../lib/run-section.ts'
+import type { DataAsOf } from '../lib/freshness.ts'
+
+export interface TrailStep {
+  label: string
+  /** Where the step leads; absent for the page itself, the last step of a full trail (a category page). */
+  href?: string
+}
+interface Props {
+  /** Site path of the page, or null for the 404 page. */
+  path: string | null
+  dataAsOf: DataAsOf
+  /**
+   * The parents of a page deeper in a section (a module page: Modules, then its category), shown after "Run /" as
+   * links; a step without an address is the page itself (a category page: Modules, then the category); false leaves the left side empty for a page that draws its own breadcrumbs (receipts).
+   */
+  trail?: TrailStep[] | false
+}
+const { path, dataAsOf, trail } = Astro.props
+const name = sectionName(path)
+---
+
+<div class="sheet ctx">
+  {
+    trail === false ? (
+      <span />
+    ) : trail ? (
+      <nav class="ctx__where" aria-label="Breadcrumb">
+        Run
+        {trail.map((t) => (
+          <>
+            {' / '}
+            {t.href ? (
+              <a href={t.href}>{t.label}</a>
+            ) : (
+              <span class="ctx__here" aria-current="page">
+                {t.label}
+              </span>
+            )}
+          </>
+        ))}
+      </nav>
+    ) : (
+      <p class="ctx__where">
+        {name ? (
+          <>
+            Run / <span class="ctx__here">{name}</span>
+          </>
+        ) : (
+          <span class="ctx__here">Run</span>
+        )}
+      </p>
+    )
+  }
+  <div class="ctx__end">
+    <DataStamp dataAsOf={dataAsOf} />
+    {
+      path !== '/about' && (
+        <a class="ctx__link" href={href('/about')}>
+          About<span class="ctx__more">&nbsp;this data</span>
+        </a>
+      )
+    }
+    {path !== '/submit' && <a class="ctx__link" href={href('/submit')}>Submit a module</a>}
+  </div>
+</div>
+
+<style>
+  .ctx {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 3rem var(--pad) 0;
+  }
+  .ctx__where {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    /* the main site's trail is #9e9e9e (2.7:1); --ink-3 keeps its look at 4.6:1 */
+    color: var(--ink-3);
+  }
+  .ctx__here,
+  .ctx__where a:last-child {
+    color: var(--ink);
+  }
+  .ctx__where a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .ctx__where a:hover {
+    text-decoration: underline;
+  }
+  .ctx__end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+  }
+  /* touch targets of at least 44 px on phones (spec 7.10) */
+  @media (max-width: 767px) {
+    .ctx__where a,
+    .ctx__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  /* a small phone keeps the stamp and both links on one line: "About", its name still "About this data" (a no-break
+     space, as a flex item drops a plain one at its start) */
+  @media (max-width: 479px) {
+    .ctx__end {
+      column-gap: 16px;
+    }
+    .ctx__more {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+  .ctx__link {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+</style>

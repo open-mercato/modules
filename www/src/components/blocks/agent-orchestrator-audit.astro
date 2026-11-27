@@ -1,0 +1,72 @@
+---
+// "Trust, because you can see everything" of /agent-orchestrator: the heading and text over the numbered rows on the
+// left (the live label colours in order: violet, yellow), the screenshot and the card of the `note` on the right.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const tones = ['is-violet', 'is-yellow']
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-grid is-agent">
+        <div class="header_content-wrapper">
+          <div class="header_content">
+            {
+              block.eyebrow && (
+                <div class="label_component">
+                  <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+                </div>
+              )
+            }
+            {block.title && <h2 class="heading-style-h4" set:html={headingHtml(t(block.title))} />}
+            <div class="spacer-small"></div>
+            {block.body && <p class="text-color-secondary" set:html={inline(t(block.body))} />}
+          </div>
+          <div class="header_content">
+            {
+              block.items.map((item, i) => (
+                <>
+                  <div class="bg-grid_heading-wrapper">
+                    {item.eyebrow && (
+                      <div class:list={['label-list_item', tones[i % tones.length], 'is-auto-width']}>
+                        {t(item.eyebrow)}
+                      </div>
+                    )}
+                    {item.body && <div class="text-color-secondary" set:html={inline(t(item.body))} />}
+                  </div>
+                  <div class={i === block.items.length - 1 ? 'spacer-small' : 'spacer-1rem'} />
+                </>
+              ))
+            }
+          </div>
+        </div>
+        <div>
+          {
+            block.image && (
+              <div class="asset_component">
+                <img src={block.image.src} loading="lazy" alt={block.image.alt} class="asset_image" />
+              </div>
+            )
+          }
+          <div class="spacer-small"></div>
+          {
+            block.note && (
+              <div class="bg-grid_card is-auto-height">
+                <div class="bg-grid_card-content">
+                  <p class="text-color-secondary" set:html={inline(t(block.note))} />
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

@@ -1,0 +1,248 @@
+webflowId: 69a97e33d587824eef365d5f
+seo:
+  title: Open Mercato - AI CRM/ERP Framework | Start with 80% Done
+  description: AI-supportive CRM/ERP foundation framework. Modular, extensible, designed for teams that want strong defaults with room to customize everything.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: WebPage
+blocks:
+  # the hero: the release badge shows the core version of the catalog's data (the browser then shows the latest
+  # release of GitHub, as live), `label` is the line beside it, `primary` and `secondary` the first two buttons, `note`
+  # the third (one link); `items` the assistants it works with, by name (the component draws their marks)
+  - type: hero
+    layout: home-hero
+    label: Open source · MIT licensed
+    title: Start with *80% done*
+    lead: The open-source framework for building business apps. Create your CRM, warehouse system, or whole ERP with AI. Safer and faster than building from scratch.
+    primary:
+      label: Build in sandbox
+      href: https://app.openmercatocloud.com/signup?template=mercato
+    secondary:
+      label: Clone repo
+      href: https://github.com/open-mercato/open-mercato
+    note: "[Academy](/learn-ai-engineering)"
+    items:
+      - title: Codex
+      - title: Claude
+      - title: Cursor
+      - title: SSH
+
+  # the builder: the first item is the assistant's window (eyebrow and title its header, body its greeting, points the
+  # composer's placeholder and button, note what the phone shows once every request is in), then the seven requests
+  # (title) and the assistant's answers (body), in the order the tower grows; `note` is the scene for screen readers
+  - type: features
+    layout: home-flex
+    eyebrow: BUILD AROUND YOUR BUSINESS
+    title: |-
+      *The most flexible*
+      business apps framework.
+    lead: |-
+      CRM, warehouse operations, AI agents, and automations.
+      Connect the pieces. Make it yours.
+    note: "Seven requests build a tower: CRM and warehouse supports, an automation bridge, procurement and commerce, then an AI workflows manager and your fancy idea on top."
+    items:
+      - eyebrow: Build with your AI assistant
+        title: One request. One new capability.
+        body: What should your app do next?
+        points:
+          - Describe what you want to build…
+          - Plan your next module
+        note: Your business app, connected
+      - title: Add CRM
+        body: CRM added. Your first module is ready.
+      - title: Add a warehouse module
+        body: Warehouse added. Inventory is connected.
+      - title: Connect them with automations
+        body: Automations added across both modules.
+      - title: Add procurement
+        body: Procurement added to your business app.
+      - title: Add commerce
+        body: Commerce added. Your system keeps growing.
+      - title: Add an AI workflows manager
+        body: AI workflows manager added. Your modules work together.
+      - title: Add your fancy idea
+        body: Your fancy idea, built into your business app.
+
+  - type: features
+    layout: home-80
+    title: Start with *80% done*.
+    lead: Build on the business logic, architecture and AI tooling our team has already engineered and tested. Put your effort into what makes your business different.
+    items:
+      - title: Business Logic
+        body: Our team has already built and tested the rules behind customers, orders and pricing. You inherit that work, plus an evaluation harness that checks how AI agents extend the framework.
+        image:
+          src: /media/pages/home-80-business-logic.svg
+          alt: "One CRM module in cross-section: code, business logic, tests and evaluations."
+      - title: Security & Infrastructure
+        body: Tenant isolation, encryption and audit trails are built into the foundation. Spend your time building product features instead of assembling security infrastructure from scratch.
+        image:
+          src: /media/pages/home-80-security.svg
+          alt: A three-dimensional security shield with separate isolation, encryption and audit safeguards.
+      - title: AI Software Factory
+        body: Shared specs, architecture rules, agent skills and verification steps are the building blocks for your AI software factory. Give every developer and agent a repeatable path from brief to reviewed code.
+        image:
+          src: /media/pages/home-80-ai-software-factory.svg
+          alt: One connected workflow with BUILD and EVALS in focus, while SPEC and REVIEW recede into the background.
+      - title: Performance
+        body: Caching, indexed queries and background events are part of a deliberate architecture. Start with the foundations for responsive business apps instead of retrofitting them later.
+        image:
+          src: /media/pages/home-80-performance.svg
+          alt: Illustrative response-time chart with a cache-hit checkpoint, representing caching and query architecture without benchmark claims.
+      - title: Auth & Access
+        body: Roles and feature-level permissions decide who can see and change what, within the right tenant. Reuse one access model across your modules and AI tools.
+        image:
+          src: /media/pages/home-80-auth-access.svg
+          alt: A sales user can read and edit customers and read orders, while billing, settings and user administration are denied.
+      - title: Built-in MCP
+        body: Connect AI agents to your business with a built-in MCP server and permission-aware tools. Skip building the protocol, tool registry and access checks yourself.
+        image:
+          src: /media/pages/home-80-built-in-mcp.svg
+          alt: AI agent connects through the built-in MCP server to CRM in focus, with orders and catalog faded into the background.
+      - title: Build Your Own ERP
+        body: Compose customers, sales, catalog and warehouse modules into your own ERP. Adapt the data model and workflows to your operations, with full control of the code.
+        image:
+          src: /media/pages/home-80-build-your-own-erp.svg
+          alt: Customers, sales and warehouse modules fit on your ERP foundation, with a dedicated place for your own module.
+
+  # the customer videos, in the order live shows them (its script puts Implementation Partner first)
+  - type: carousel
+    layout: home-stories
+    title: |-
+      *Over 1000 devs* choose
+      Open Mercato.
+    items:
+      - title: Implementation Partner
+        video: vG7STlXFXG4
+        image:
+          src: /media/pages/home-video-vg7stlxfxg4.jpg
+          alt: Implementation Partner
+          width: 1280
+          height: 720
+      - title: Vistula Valley
+        video: xd9YxWFfAoE
+        image:
+          src: /media/pages/home-video-xd9yxwffaoe.jpg
+          alt: Vistula Valley
+          width: 1280
+          height: 720
+      - title: MDM NT
+        video: YBV5pNGCCpw
+        image:
+          src: /media/pages/home-video-ybv5pngccpw.jpg
+          alt: MDM NT
+          width: 1280
+          height: 720
+
+  # the comparison table: the first item is the header row (its points the two columns), then one row per item (title
+  # the row, points the two cells); a cell `Desktop text | Phone text` reads differently on a phone
+  - type: features
+    layout: home-compare
+    title: Skip the *commodity work*.
+    lead: What it takes to ship a production-ready CRM/ERP feature.
+    items:
+      - points:
+          - Build from scratch | From scratch
+          - With Open Mercato | Open Mercato
+      - title: Time to first feature | First feature
+        points:
+          - ~3-6 weeks
+          - ~2 days
+      - title: Security defaults | Security
+        points:
+          - Manual setup | Manual
+          - Yes (OWASP) | Yes
+      - title: AI agent compatibility | AI agents
+        points:
+          - Custom integration | Custom
+          - Native
+      - title: Modules pre-built | Modules
+        points:
+          - "0"
+          - "{moduleCount}"
+
+  # the two ways in: the developer's command (body) and the sandbox (cta)
+  - type: features
+    layout: home-sandbox
+    items:
+      - eyebrow: DEVELOPER?
+        title: Start with one command.
+        body: git clone https://github.com/open-mercato/open-mercato.git
+      - eyebrow: NOT A DEVELOPER?
+        title: Sandbox is like Lovable, but it makes apps you can really trust and scale
+        cta:
+          label: Build with sandbox
+          href: https://app.openmercatocloud.com/signup?template=mercato
+
+  # the case studies the live home page features, in its order
+  - type: carousel
+    layout: home-cases
+    title: Case Studies
+    primary:
+      label: View all case studies
+      href: /case-studies
+    items:
+      - title: "MDM NT: shipping automation alongside an existing ERP"
+        body: A 500-person manufacturer connected packing, batch label generation and carrier tracking with Open Mercato, while its existing ERP kept running the business.
+        image:
+          src: /media/case-studies/6af1d75b999082f56d4ca85f-img-4335-min-1200x800.jpeg
+          alt: "MDM NT: shipping automation alongside an existing ERP"
+        cta:
+          label: Read case study
+          href: /case-studies/mdm-nt-shipping-automation
+      - title: "Covo: one travel wallet, every balance accounted for"
+        body: One balance for mobile data in 190+ countries sounds simple. Covo’s team built the ledger, eSIM lifecycle and operator workspace needed to keep that promise, on an Open Mercato foundation.
+        image:
+          src: /media/case-studies/6aa17c420e840d0134af8cf4-6aa17b707e24478aefae5d70-covo-esim-wallet-card.png
+          alt: "Covo: one travel wallet, every balance accounted for"
+        cta:
+          label: Read case study
+          href: /case-studies/covo-travel-esim-wallet
+      - title: "TraceCore: from the production floor to connected MRP"
+        body: Built by BGW Pharma from its own manufacturing experience, TraceCore connects recipes, materials, production and customer orders through LOT traceability, on Open Mercato.
+        image:
+          src: /media/case-studies/6af1fadaee6670759c32ef42-6af1fabbc8429cd84dd8099e-mrp-pharma-cover.jpeg
+          alt: "TraceCore: from the production floor to connected MRP"
+        cta:
+          label: Read case study
+          href: /case-studies/tracecore
+      - title: "Senior Care Operations: from care plans to signed records"
+        body: A care order is only the beginning. This hackathon demo connects clients, branch schedules, caregiver visits and signed service confirmations on a reusable Open Mercato foundation.
+        image:
+          src: /media/case-studies/6af1fc43e7a6d7ea0dd1dbf3-6af1fc3cef231e388b0abaa0-senior-care-wall-cover.jpeg
+          alt: "Senior Care Operations: from care plans to signed records"
+        cta:
+          label: Read case study
+          href: /case-studies/senior-care-operations
+
+  # the academy's videos: title, length (eyebrow), video and poster
+  - type: features
+    layout: home-academy
+    title: Learn *AI Engineering* with us.
+    primary:
+      label: Explore Mercato Academy
+      href: /learn-ai-engineering
+    items:
+      - title: AI Assisted Engineering with Open Mercato
+        eyebrow: "40:15"
+        video: GD2ToD1jmLE
+        image:
+          src: /media/pages/home-video-gd2tod1jmle.jpg
+          alt: AI Assisted Engineering with Open Mercato
+          width: 1280
+          height: 720
+      - title: How to install Open Mercato
+        eyebrow: "13:03"
+        video: OsalmbiWQ-I
+        image:
+          src: /media/pages/home-video-osalmbiwq-i.jpg
+          alt: How to install Open Mercato
+          width: 1280
+          height: 720
+      - title: Open Mercato Architecture
+        eyebrow: "29:50"
+        video: ezfhcr_9Q0g
+        image:
+          src: /media/pages/home-video-ezfhcr-9q0g.jpg
+          alt: Open Mercato Architecture
+          width: 1280
+          height: 720

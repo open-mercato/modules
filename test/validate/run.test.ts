@@ -48,14 +48,16 @@ describe('validate --offline on the seed descriptors', () => {
     expect(code).toBe(0)
     const report = JSON.parse(readFileSync(join(out, 'validate.json'), 'utf8')) as {
       entries: { status: string; findings: { severity: string }[] }[]
-      global: { severity: string; code: string }[]
+      global: { severity: string; code: string; message: string }[]
     }
     expect(report.entries).toHaveLength(59)
     expect(report.entries.filter((e) => e.status !== 'pass')).toEqual([])
     expect(report.entries.flatMap((e) => e.findings.filter((f) => f.severity !== 'info'))).toEqual([])
-    // the 46 core modules of 0.9.0 are all mapped; ecommerce (0.10) is listed ahead of time in builtin-upcoming.yml,
-    // so it is no `builtin-extra` (finding of 25 Oct)
-    expect(report.global.map((g) => `${g.severity}:${g.code}`)).toEqual([])
+    // the 46 core modules of 0.9.0 are all mapped. The seed map also has ecommerce, which builtin-upcoming.yml no longer
+    // lists since core 0.10.0 ships it; without a data branch core is the pinned 0.9.0, so it is info, never an error
+    expect(report.global.map((g) => `${g.severity}:${g.code}: ${g.message}`)).toEqual([
+      'info:builtin-extra: policy/builtin-categories.yml lists ecommerce, not in core 0.9.0 (@open-mercato/cli@0.9.0 (pinned; no data/builtin))',
+    ])
     rmSync(seedRoot, { recursive: true, force: true })
   })
 
@@ -71,7 +73,10 @@ describe('validate --offline on the seed descriptors', () => {
 
   it('a category for a core module neither core nor builtin-upcoming.yml knows is info builtin-extra', async () => {
     const catalog = await loadCatalog(ROOT, null)
-    const map = { ...catalog.builtinCategories, teleport: 'operations' }
+    // the map cut to the 46 modules of the pinned core 0.9.0 plus ecommerce, so the core 0.10 IDs are not extra here
+    const core = new Set([...catalog.builtin!.modules.map((m) => m.id), 'ecommerce'])
+    const known = Object.entries(catalog.builtinCategories ?? {}).filter(([id]) => core.has(id))
+    const map = { ...Object.fromEntries(known), teleport: 'operations' }
     expect(checkBuiltinCoverage({ ...catalog, builtinCategories: map }, ['ecommerce']).map((x) => x.message)).toEqual([
       'policy/builtin-categories.yml lists teleport, not in core 0.9.0 (@open-mercato/cli@0.9.0 (pinned; no data/builtin))',
     ])

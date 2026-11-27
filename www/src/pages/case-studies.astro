@@ -1,0 +1,55 @@
+---
+// /case-studies (spec, Routing and UI/UX), in the live Webflow markup: the header, then every published case study in
+// the order of the live list with the category filter island. Drafts are never listed (D6). Complete without
+// JavaScript: the island's server render lists every case study. Its title, description, OG image, breadcrumb, heading
+// and lead are the `pages` entry `case-studies` (www/src/lib/pages.ts listPageCopy).
+import { getCollection } from 'astro:content'
+import Main from '../layouts/Main.astro'
+import Crumbs from '../components/Crumbs.astro'
+import CategoryFilter from '../islands/CategoryFilter.tsx'
+import { inline } from '../lib/inline-markdown.ts'
+import { listPageCopy, type PageEntry } from '../lib/pages.ts'
+import { CASE_STUDIES_PATH, caseStudyCard, filterCategories } from '../lib/case-studies.ts'
+import { caseStudyData } from '../lib/collections-data.ts'
+import pagesCss from '../styles/webflow/pages.css?url'
+
+const data = await caseStudyData()
+const cards = data.published.map((cs) => caseStudyCard(cs, data.categories))
+const categories = filterCategories(cards, data.categoryOrder)
+const { seo, hero } = listPageCopy((await getCollection('pages')) as unknown as PageEntry[], 'case-studies')
+---
+
+<Main
+  path={CASE_STUDIES_PATH}
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  bodyClass="wf-case-studies"
+  styles={[pagesCss]}
+>
+  <div class="main-wrapper padding-global">
+    <div class="container-main">
+      <section class="section">
+        <div class="section-padding">
+          <div class="header_component">
+            <div class="header_content max-width-42rem">
+              <Crumbs current={{ name: hero.eyebrow ?? hero.title, href: CASE_STUDIES_PATH }} />
+              <h1 class="heading-style-h2">{hero.title}</h1>
+              <div class="spacer-small"></div>
+              <div class="max-width-47rem">
+                {hero.lead && <p class="text-color-secondary" set:html={inline(hero.lead)} />}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <CategoryFilter client:painted caseStudies={cards} categories={categories} />
+      </section>
+    </div>
+  </div>
+</Main>
+
+<script>
+  import '../scripts/case-nav.ts'
+</script>

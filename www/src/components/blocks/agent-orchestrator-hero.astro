@@ -1,0 +1,71 @@
+---
+// The header of /agent-orchestrator as live has it: the breadcrumb, the heading (54rem), the lead (47rem), the GitHub
+// and demo buttons, then the product screenshot under them.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Crumbs from '../Crumbs.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import { pagePath, type BlockProps } from '../../lib/pages.ts'
+import github from '../site/github-mark.svg?raw'
+
+type Props = BlockProps<'hero'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component">
+        <div class="header_content">
+          {block.eyebrow && <Crumbs current={{ name: t(block.eyebrow), href: pagePath(page) }} />}
+          <div class="max-width-54rem">
+            <h1 set:html={headingHtml(t(block.title))} />
+          </div>
+          <div class="spacer-small"></div>
+          {
+            block.lead && (
+              <div class="max-width-47rem">
+                <p class="text-color-secondary" set:html={inline(t(block.lead))} />
+              </div>
+            )
+          }
+          <div class="spacer-medium"></div>
+          <div class="button-group">
+            {
+              block.primary && (
+                <a href={block.primary.href} target="_blank" class="button is-icon w-inline-block">
+                  <div class="button_icon w-embed" set:html={github} />
+                  <div>{t(block.primary.label)}</div>
+                </a>
+              )
+            }
+            {
+              block.secondary && (
+                <a href={block.secondary.href} target="_blank" class="button is-secondary w-inline-block">
+                  <div>{t(block.secondary.label)}</div>
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+      {
+        block.image && (
+          <>
+            <div class="spacer-large" />
+            <div class="asset_component">
+              <img
+                src={block.image.src}
+                loading="lazy"
+                width={block.image.width}
+                alt={block.image.alt}
+                class="asset_image"
+              />
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Wrap>

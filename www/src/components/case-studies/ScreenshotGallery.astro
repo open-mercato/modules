@@ -1,0 +1,43 @@
+---
+// The screenshots of a case study in the live Webflow markup (`case-post_gallery`). Each opens the full image: the live
+// page's lightbox needs Webflow's script; a link needs none and works without JavaScript. The alt text describes each
+// image (Webflow has no separate caption).
+import type { PostImage } from '../../lib/blog.ts'
+
+interface Props {
+  images: PostImage[]
+}
+const { images } = Astro.props
+---
+
+{
+  images.length > 0 && (
+    <div class="section">
+      <div class="section-padding">
+        <div class="text-style-tagline text-color-secondary">Screenshots</div>
+        <div class="spacer-small" />
+        <div class="case-post_gallery">
+          <div class="case-post_gallery-colection-list-wrapper">
+            <div role="list" class="case-post_gallery-colection-list">
+              {images.map((img) => (
+                <div role="listitem" class="case-post_gallery-colection-item">
+                  <a href={img.src} class="case-post_gallery-lightbox w-inline-block">
+                    <img
+                      class="case-post_gallery-lightbox-image"
+                      src={img.src}
+                      alt={img.decorative ? '' : img.alt}
+                      width={img.width}
+                      height={img.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

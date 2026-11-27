@@ -443,18 +443,19 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
     letter-spacing: -0.01em;
   }
   /* `How to read this`: one quiet line, closed by default; everything that explains the matrix lives inside */
+  /* the folded list of the main site (its footer's "Other +"): hairlines above and below, 16 px Medium, a plus that
+     turns 45 degrees when open */
   .cm__how {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-m);
-    background: var(--bg);
+    border-block: 1px solid var(--line);
   }
   .cm__how > summary {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 24px;
     min-height: 40px;
-    padding: 0 14px;
-    font-size: 14px;
+    padding: 12px 0;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     list-style: none;
@@ -462,21 +463,20 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
   .cm__how > summary::-webkit-details-marker {
     display: none;
   }
-  .cm__how > summary::before {
+  .cm__how > summary::after {
     content: '+';
-    display: inline-grid;
-    place-items: center;
-    width: 16px;
-    font-family: var(--font-mono);
-    color: var(--ink-2);
+    font-size: 23px;
+    line-height: 1;
+    font-weight: 400;
+    transition: transform 0.2s;
   }
-  .cm__how[open] > summary::before {
-    content: '\2212';
+  .cm__how[open] > summary::after {
+    transform: rotate(45deg);
   }
   .cm__howbody {
     display: grid;
     gap: 14px;
-    padding: 4px 14px 16px;
+    padding: 4px 0 16px;
   }
   .cm__hint {
     max-width: 72ch;
@@ -509,14 +509,6 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
     height: 14px;
     accent-color: #0c0c0c;
     margin: 0;
-  }
-  :global(:root[data-theme='dark']) .cm__sw input {
-    accent-color: #b4f372;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .cm__sw input {
-      accent-color: #b4f372;
-    }
   }
   .cm__legend {
     display: flex;
@@ -704,7 +696,7 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
     outline-offset: 2px;
   }
   .cm__cell:hover {
-    box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink-3);
+    outline: 1px solid var(--ink-3);
   }
   .cm__st {
     display: grid;
@@ -814,7 +806,6 @@ const cellOf = (row: CompatIndex['rows'][number], l: (typeof lines)[number]): Ce
     border-radius: var(--radius-m);
     background: var(--bg);
     color: var(--ink);
-    box-shadow: var(--shadow-float);
     font-size: 13px;
     line-height: 1.45;
     text-align: left;

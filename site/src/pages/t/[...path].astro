@@ -73,16 +73,13 @@ const supersededBy = e.supersededBy ? templateLink(e.supersededBy) : null
   dataAsOf={meta.dataAsOf}
   mdAlternate={`/t/${path}.md`}
   skip={{ href: '#template-body', label: 'Skip to template details' }}
+  trail={[
+    { label: 'Templates', href: href('/templates') },
+    { label: useCase, href: useCaseHref },
+  ]}
 >
   <div class="band">
     <div class="sheet mod">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <ol role="list">
-          <li><a href={href('/templates')}>Templates</a></li>
-          <li><a href={useCaseHref}>{useCase}</a></li>
-        </ol>
-      </nav>
-
       <div class="mod__banners">
         {
           e.status === 'unmaintained' && (

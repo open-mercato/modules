@@ -1,0 +1,101 @@
+webflowId: 69aef7f7cf02d54f2a66ed00
+seo:
+  title: Enterprise Level Support | Open Mercato
+  description: Community and commercial support tiers for mission-critical deployments. Get SLA-backed support from certified partners or leverage community resources.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: WebPage
+blocks:
+  - type: hero
+    layout: enterprise-level-support-hero
+    eyebrow: Enterprise Level Support
+    title: Enterprise Level Support
+    lead: The Open Mercato Enterprise License provides certification, review, and operational support to ensure that deployments built on the Open Mercato framework are secure, scalable, and production-ready.
+    primary:
+      label: Contact us
+      href: /contact
+  - type: features
+    layout: enterprise-level-support-scope
+    eyebrow: Subscription Scope
+    title: Open Mercato Enterprise Subscription Scope of Services
+    items:
+      - body: Architecture Audit (Pre-Deployment)
+      - body: Monthly Security Review
+      - body: Monthly Performance Review (Custom Code)
+      - body: Monthly Custom Module Code Review
+      - body: Customer Success Support (Pre-Go-Live)
+      - body: Priority Technical Support Channel
+      - body: GDPR Documentation Support
+      - body: Production Environment Configuration Support
+      - body: Software Updates
+      - body: Production Approval (Homologation)
+      - body: Production Hosting Best Practices
+      - body: "[Agent Orchestrator](/blog-posts/introducing-agent-orchestrator)"
+  # the table of the tiers, one item per column as the live markup has it: the row labels, then each tier
+  - type: features
+    layout: enterprise-level-support-tiers
+    eyebrow: support tiers
+    title: At a Glance
+    items:
+      - title: Feature
+        points:
+          - Primary Channel
+          - Response Time
+          - Bug Fixes
+          - Architecture
+          - Responsibility
+      - title: Community Support
+        points:
+          - GitHub Discussions & Discord
+          - Best Effort (Peer-to-Peer)
+          - Community Prioritization
+          - Public Documentation
+          - Self-Managed
+      - title: Commercial Support (SLA)
+        points:
+          - Dedicated Ticketing & Partner Access
+          - Guaranteed SLA
+          - Priority Hotfixes & Security Patches
+          - Custom Architectural Reviews
+          - Certification, review, and operational support
+  - type: features
+    layout: enterprise-level-support-community
+    label: start with 80%
+    eyebrow: Community Support
+    title: The Innovation Engine
+    lead: Our community is for developers building at the edge. It is the place for technical discovery, module sharing, and framework evolution.
+    items:
+      - title: GitHub Discussions
+        body: The hub for "How-to" questions and RFCs (Request for Comments) on new features.
+      - title: Public Issue Tracker
+        body: Where bugs are reported, triaged, and resolved by core maintainers and contributors.
+      - title: Discord
+        body: Real-time collaboration for the "AI-Assisted Engineering" workflow.
+  - type: features
+    layout: enterprise-level-support-partners
+    eyebrow: Commercial Support
+    title: Partner-Led Excellence
+    lead: For enterprises, Open Mercato operates on a "Partner-First" model. While the core framework is open, the implementation and its uptime are backed by certified experts.
+    items:
+      - title: Vetted Implementation Partners
+        body: Commercial support is provided by professional Software Houses.
+      - title: SLA-Backed Performance
+        body: Partners provide uptime guarantees, performance monitoring, and rapid incident response tailored to your specific deployment (Cloud/On-Premise).
+  # a card's paragraphs are its body, then its note; a blank line inside one is the live double line break
+  - type: features
+    layout: enterprise-level-support-backing
+    eyebrow: strategic decision
+    title: Framework backing & longevity
+    lead: Choosing Open Mercato is a long-term strategic decision. We ensure the framework itself never becomes "abandonware."
+    items:
+      - title: Rigorous Testing & Roadmap Transparency
+        body: We don't just "fix and forget."
+        note: |-
+          "We maintain growing unit and integration test coverage to ensure that the core remains stable even as you extend it."
+
+          Enterprise clients can see the public roadmap to align their internal product strategy with our core releases (e.g., Advanced Billing modules).
+      - title: Agent Orchestrator
+        body: |-
+          Everyone has an AI agent demo. Almost nobody has an agent you can safely let into a real business. [***Agent Orchestrator***](/blog-posts/introducing-agent-orchestrator) - a new Open Mercato Enterprise module - changes that: flexible runtimes, native workflow integration, two-layer audit and built-in evals.
+
+          In Open Mercato, an agent is a supervised participant in the process. It operates inside your data, inside your permission model, inside your audit trail. It is fully governed.

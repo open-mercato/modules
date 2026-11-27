@@ -282,8 +282,8 @@ export function renderSigil(input: SigilInput): string {
       continue
     }
     const [color, lvl] = key.split('|') as [string, string]
-    // built-in greys carry their level as a class: the dark theme turns the scale around (more anatomy, more ink:
-    // light greys on #0C0C0C), the attribute stays the light-theme value for badges and standalone files
+    // built-in greys carry their level as a class (sg-b1 to sg-b3, sg-bc), a hook for a stylesheet; the site has one
+    // light theme since 13 Nov and styles none of them, so the attribute is what every page and badge shows
     if (lvl.startsWith('b')) {
       out.push(`<path d="${d}" fill="${color}" class="sg-${lvl}"/>`)
       continue

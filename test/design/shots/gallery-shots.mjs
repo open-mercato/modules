@@ -1,10 +1,10 @@
-// Screenshots of the design gallery (WP11): light and dark, 1440 and 390 px, full page and one PNG per section.
+// Screenshots of the design gallery (WP11): 1440 and 390 px, full page and one PNG per section.
 // Not in CI. Build on real data first (the gallery renders site/.generated when it exists):
 //   yarn om emit --data .data && OM_DEV_GALLERY=1 yarn astro build
 //   lockf -k /tmp/om-shots.lock node test/design/shots/gallery-shots.mjs     # one browser at a time
 // Starts `astro preview` itself unless GALLERY_URL is set. Output: .wp/shots/ (git-ignored locally).
 // A build with BASE_PATH needs the same BASE_PATH here (default /, the domain root).
-// Env: SHOTS_DIR, ONLY (section ids, comma separated), THEMES (light,dark), WIDTHS (1440,390), FULL=0 (no full page).
+// Env: SHOTS_DIR, ONLY (section ids, comma separated), WIDTHS (1440,390), FULL=0 (no full page).
 import { spawn, spawnSync } from 'node:child_process'
 import { connect } from 'node:net'
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -17,7 +17,6 @@ const PORT = Number(process.env.PORT ?? 4329)
 const base = ('/' + (process.env.BASE_PATH ?? '/').replace(/^\/+|\/+$/g, '')).replace(/^\/$/, '')
 const url = process.env.GALLERY_URL ?? `http://127.0.0.1:${PORT}${base}/_dev/gallery`
 const only = process.env.ONLY ? process.env.ONLY.split(',') : null
-const themes = (process.env.THEMES ?? 'light,dark').split(',')
 const widths = (process.env.WIDTHS ?? '1440,390').split(',').map(Number)
 const full = process.env.FULL !== '0'
 mkdirSync(OUT, { recursive: true })
@@ -47,7 +46,9 @@ if (!process.env.GALLERY_URL) {
 const report = []
 const browser = await chromium.launch()
 try {
-  for (const theme of themes) {
+  // one theme since the move of 13 Nov (light only, like openmercato.com)
+  const theme = 'light'
+  {
     for (const width of widths) {
       const ctx = await browser.newContext({
         viewport: { width, height: width > 500 ? 900 : 844 },
@@ -56,11 +57,6 @@ try {
         reducedMotion: 'reduce',
       })
       const page = await ctx.newPage()
-      await page.addInitScript((t) => {
-        try {
-          localStorage.setItem('om-theme', t)
-        } catch {}
-      }, theme)
       await page.goto(url, { waitUntil: 'networkidle' })
       await page.evaluate(() => document.fonts.ready)
       const tag = `${theme}-${width}`

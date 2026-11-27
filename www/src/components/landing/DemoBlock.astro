@@ -1,0 +1,42 @@
+---
+// The demo of a landing (`#proof`): an eyebrow, a title, a body and the arrow link, beside an image; an illustration
+// (SVG) sits in its own frame (`omlp-proof-illustration`), a screenshot may carry a caption (`omlp-note`).
+import type { CountValues } from '../../../../lib/core/www-tokens.ts'
+import { LANDING_SECTION_IDS, type LandingData } from '../../lib/landings.ts'
+import Cta from './Cta.astro'
+import Rich from './Rich.astro'
+
+interface Props {
+  demo: NonNullable<LandingData['demo']>
+  counts: CountValues
+}
+const { demo, counts } = Astro.props
+const illustration = demo.image?.src.endsWith('.svg') ?? false
+---
+
+<section id={LANDING_SECTION_IDS.demo}>
+  <div class="omlp-wrap">
+    <div class="omlp-proof">
+      <div class="omlp-proof-copy">
+        {demo.eyebrow && <span class="omlp-proof-label">{demo.eyebrow}</span>}
+        <h2>{demo.title}</h2>
+        <p><Rich md={demo.body} counts={counts} /></p>
+        <Cta cta={demo.cta} variant="proof" />
+      </div>
+      {
+        demo.image && (
+          <figure class:list={['omlp-proof-image', { 'omlp-proof-illustration': illustration }]}>
+            <img
+              src={demo.image.src}
+              loading="lazy"
+              alt={demo.image.alt}
+              width={demo.image.width}
+              height={demo.image.height}
+            />
+            {demo.caption && <figcaption class="omlp-note">{demo.caption}</figcaption>}
+          </figure>
+        )
+      }
+    </div>
+  </div>
+</section>

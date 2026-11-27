@@ -23,7 +23,7 @@ import type { Others } from '../lib/status.ts'
 import { browseDefault, cannotInstall, registryDefault } from './c/_data.ts'
 import { Square } from '../lib/ui.tsx'
 import { shortVersion } from '../lib/format.ts'
-import { href } from '../lib/url.ts'
+import { dataHref, href } from '../lib/url.ts'
 
 const data = loadSiteData()
 const { modules, meta } = data
@@ -282,7 +282,6 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
 >
   <section class="band">
     <div class="sheet section cp-head">
-      <p class="t-tagline">// Compatibility</p>
       <h1 class="cp-title">Modules, tested on every Open Mercato version.</h1>
       <p class="cp-verdict">{verdict}</p>
       <p class="cp-intro">
@@ -521,7 +520,7 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
       }
       <p class="cp-links t-small">
         Data: <a href={href('/compat.json')}>compat.json</a> · schema{' '}
-        <a href={href('/schema/compat-1.json')}>compat-1.json</a> · API changes behind the fit on the{' '}
+        <a href={dataHref('/schema/compat-1.json')}>compat-1.json</a> · API changes behind the fit on the{' '}
         <a href={href('/radar')}>radar</a>.
       </p>
     </details>
@@ -529,10 +528,12 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
 </Base>
 
 <style>
+  /* the lead under the title, grey and 18 px like the leads of the other pages and the main site's subtitle */
   .cp-verdict {
     max-width: 60ch;
-    font-size: 20px;
-    line-height: 1.45;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-2);
     text-wrap: pretty;
   }
   .cp-plain {
@@ -562,7 +563,6 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
   }
   .cp-table tbody th a {
     color: var(--ink);
-    text-decoration-color: var(--line-strong);
   }
   .cp-table__group th {
     padding-top: 20px;
@@ -643,18 +643,20 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
     font-weight: 500;
     text-underline-offset: 3px;
   }
+  /* the folded list of the main site (its footer's "Other +"): hairlines above and below, 16 px Medium, a plus that
+     turns 45 degrees when open */
   .cp-how {
     max-width: 880px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-m);
+    border-block: 1px solid var(--line);
   }
   .cp-how > summary {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 24px;
     min-height: 40px;
-    padding: 0 14px;
-    font-size: 14px;
+    padding: 12px 0;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     list-style: none;
@@ -662,21 +664,20 @@ const description = `${compat.rows.length} Open Mercato modules on ${lines.lengt
   .cp-how > summary::-webkit-details-marker {
     display: none;
   }
-  .cp-how > summary::before {
+  .cp-how > summary::after {
     content: '+';
-    display: inline-grid;
-    place-items: center;
-    width: 16px;
-    font-family: var(--font-mono);
-    color: var(--ink-2);
+    font-size: 23px;
+    line-height: 1;
+    font-weight: 400;
+    transition: transform 0.2s;
   }
-  .cp-how[open] > summary::before {
-    content: '\2212';
+  .cp-how[open] > summary::after {
+    transform: rotate(45deg);
   }
   .cp-howbody {
     display: grid;
     gap: 16px;
-    padding: 4px 14px 16px;
+    padding: 4px 0 16px;
   }
   .cp-lede {
     max-width: 64ch;

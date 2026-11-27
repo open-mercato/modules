@@ -1,0 +1,50 @@
+---
+// "Start with 80% done" of the home page as live has it (`om80`, styled by www/src/styles/webflow/pages/home.css): the
+// heading (its *emphasis* the live <mark>) and lead, then one card per item: title, body and its illustration (the
+// item's image, an SVG of www/public/media/pages/ drawn inline as live has it, its alt text the drawing's label), three
+// across and four across below on a wide screen.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { headingHtml, inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts, page } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const drawings = import.meta.glob<string>('../../../public/media/pages/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+})
+/** The SVG of an item's image, labelled by its alt text; a build stops on an image that is not an SVG of the page media. */
+const drawing = (src: string, alt: string, i: number): string => {
+  const svg = drawings[`../../../public${src}`]
+  if (!svg) throw new Error(`www/content/pages/${page}.yaml ${block.layout} items.${i}: ${src} is not an SVG of /media/pages`)
+  const label = alt.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+  return svg.replace('<svg ', `<svg role="img" aria-label="${label}" `)
+}
+const title = block.title ? headingHtml(t(block.title)).replace(/span>/g, 'mark>') : ''
+---
+
+<div class="main-wrapper padding-global">
+  <div class="container-main">
+    <section class="om80" aria-labelledby="om80-title" id={block.id}>
+      <header class="om80-heading">
+        <h2 id="om80-title" set:html={title} />
+        {block.lead && <p set:html={inline(t(block.lead))} />}
+      </header>
+      <div class="om80-grid">
+        {
+          block.items.map((item, i) => (
+            <article class="om80-card">
+              {item.title && <h3>{t(item.title)}</h3>}
+              {item.body && <p set:html={inline(t(item.body))} />}
+              {item.image && (
+                <div class="om80-visual" set:html={drawing(item.image.src, item.image.alt, i)} />
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</div>

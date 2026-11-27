@@ -138,7 +138,7 @@ describe('renderSigil', () => {
     expect(new Set([one, two, three]).size).toBe(3)
     for (const svg of [one, two, three]) expect(svg).not.toContain('class=')
   })
-  it('built-in greys carry their level as a class, so the dark theme can turn the scale around (review r4)', () => {
+  it('built-in greys carry their level as a class next to the light fill (review r4)', () => {
     const svg = renderSigil({ glyph: '2130000', phase: 0, kind: 'built-in' })
     expect(svg).toContain('fill="#434343" class="sg-b3"')
     expect(svg).toContain('fill="#B6B6B6" class="sg-b1"')

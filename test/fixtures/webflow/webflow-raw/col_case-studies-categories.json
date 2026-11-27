@@ -1,0 +1,40 @@
+{
+  "id": "6a2ad7d71ab5ae226a820bfd",
+  "displayName": "Case Studies / Categories",
+  "singularName": "Case Studies / Category",
+  "slug": "case-studies-categories",
+  "createdOn": "2026-06-11T15:44:23.957Z",
+  "lastUpdated": "2026-06-12T11:37:14.578Z",
+  "fields": [
+    {
+      "id": "299759f05b21ee73eec605abb2feb796",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Category name e.g. ERP",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "9b4b357d4613a0812a291d7eb0509dbc",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

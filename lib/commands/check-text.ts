@@ -1,6 +1,6 @@
 // `yarn om check-text`: no U+2014, U+2013 or control characters in human texts (spec 0.7, 3.5).
-// Scope: site/src/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/** and
-// every *.md, except test/fixtures/** and generated or vendored directories. Optional args restrict the check to given
+// Scope: site/src/**, www/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/**,
+// lib/core/main-site.ts (the texts of the navbar and the footer) and every *.md, except test/fixtures/**, www/public/media/** and generated or vendored directories. Optional args restrict the check to given
 // files.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
@@ -12,6 +12,8 @@ const SKIP_DIRS = new Set([
   'node_modules',
   '.git',
   'dist',
+  'dist-run',
+  'dist-www',
   'out',
   '.data',
   '.astro',
@@ -19,10 +21,15 @@ const SKIP_DIRS = new Set([
   '.wrangler',
   'test-results',
   'playwright-report',
+  // local operator files of the agent pipeline and its task worktrees: never committed
+  '.ai',
 ])
-const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/']
+// www/public/media/: CMS media the Webflow importer copies byte for byte from the CDN (an SVG chart may carry a long
+// dash in its labels); the import manifest pins their hashes, so they are files of the authors, not texts we write
+const SKIP_PREFIXES = ['test/fixtures/', 'site/.generated/', 'www/public/media/']
 const TEXT_DIRS = [
   'site/src/',
+  'www/',
   'modules/',
   'templates/',
   'policy/',
@@ -33,13 +40,15 @@ const TEXT_DIRS = [
   'plugins/',
 ]
 const TEXT_EXT = /\.(md|mdx|ya?ml|astro|tsx?|jsx?|css|html|json|txt|svg)$/
+/** Code files outside TEXT_DIRS that hold texts for people: the menus and the footer copied from the main site. */
+const TEXT_FILES = ['lib/core/main-site.ts']
 
 export const description = 'ban long dashes and control characters in texts'
 
 /** Whether a repo-relative path is in scope of check-text. */
 export function inScope(rel: string): boolean {
   if (SKIP_PREFIXES.some((p) => rel.startsWith(p))) return false
-  if (rel.endsWith('.md')) return true
+  if (rel.endsWith('.md') || TEXT_FILES.includes(rel)) return true
   return TEXT_DIRS.some((d) => rel.startsWith(d)) && TEXT_EXT.test(rel)
 }
 

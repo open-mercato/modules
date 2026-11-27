@@ -1,0 +1,12 @@
+---
+// /careers (spec, Routing): the `pages` entry `careers`, rendered by PageView; its list of jobs is a `list` block of the
+// `jobs` collection.
+import { getCollection } from 'astro:content'
+import PageView from '../components/PageView.astro'
+import { pageEntry, type PageEntry } from '../lib/pages.ts'
+import { CAREERS_PATH } from '../lib/jobs.ts'
+
+const entry = pageEntry((await getCollection('pages')) as unknown as PageEntry[], CAREERS_PATH.slice(1))
+---
+
+<PageView entry={entry} />

@@ -1,0 +1,31 @@
+---
+// A call to action of a landing in the live markup: the green button (`omlp-primary`) with its arrow, the underlined
+// link (`omlp-secondary`) or the arrow link of the demo (`omlp-proof-link`). A contact link carries its `interest` as
+// `data-om-intent`, as on the live site.
+import { intentOf } from '../../lib/landings.ts'
+
+interface Props {
+  cta: { label: string; href: string }
+  variant: 'primary' | 'secondary' | 'proof'
+}
+const { cta, variant } = Astro.props
+const intent = intentOf(cta.href)
+const href = cta.href
+---
+
+{
+  variant === 'primary' ? (
+    <a href={href} data-om-intent={intent} class="omlp-primary">
+      {cta.label}
+      <span aria-hidden="true">↗</span>
+    </a>
+  ) : variant === 'secondary' ? (
+    <a href={href} class="omlp-secondary">
+      {cta.label}
+    </a>
+  ) : (
+    <a href={href} class="omlp-proof-link">
+      {cta.label} <span aria-hidden="true">↗</span>
+    </a>
+  )
+}

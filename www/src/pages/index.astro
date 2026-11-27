@@ -1,0 +1,11 @@
+---
+// The home page of the main site: the `pages` entry `home` (spec, Routing), rendered by PageView.
+import { getCollection } from 'astro:content'
+import PageView from '../components/PageView.astro'
+import { HOME_PAGE_SLUG } from '../../../lib/schema/www-content.ts'
+import { pageEntry, type PageEntry } from '../lib/pages.ts'
+
+const entry = pageEntry((await getCollection('pages')) as unknown as PageEntry[], HOME_PAGE_SLUG)
+---
+
+<PageView entry={entry} />

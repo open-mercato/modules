@@ -1,0 +1,221 @@
+webflowId: 69ab00d5953dbc6f7fd3562e
+seo:
+  title: Product | Open Mercato
+  description: AI-supportive CRM/ERP foundation framework. Modular monolith with overlay system eliminates 80% of commodity development. Start with enterprise-grade features.
+  ogImage: /media/pages/69b16891c7299bff733f1851-og-image.jpg
+jsonLd:
+  type: SoftwareApplication
+blocks:
+  - type: hero
+    layout: product-hero
+    eyebrow: Product
+    title: AI‑supportive CRM / ERP foundation framework
+    lead: Open Mercato is a foundation framework designed to eliminate the "commodity" 80% of enterprise development, allowing your team to focus on the 20% of unique business logic that actually drives value.
+    primary:
+      label: Clone the Repo
+      href: https://github.com/open-mercato/open-mercato
+    secondary:
+      label: See Live Demo
+      href: https://openmercatocloud.com/demo
+
+  # numbered cards: eyebrow the number
+  - type: features
+    layout: product-architecture
+    eyebrow: The Architecture
+    title: Modular Monolith with the Open Closed-Principle
+    lead: At the heart of Open Mercato is an architecture that solves the conflict between framework updates and custom development.
+    items:
+      - eyebrow: "01"
+        title: Modular at the Core
+        body: Open Mercato is modular and extensible, allowing teams to compose their own modules, entities, and workflows while keeping the guardrails of a production-ready stack.
+      - eyebrow: "02"
+        title: The Open-Closed Principle (OCP)
+        body: |-
+          Your custom business logic lives in the "Overlay" layer. When we release security patches or core features, you update the framework without breaking your custom "penthouses."
+
+          Zero technical debt on updates.
+      - eyebrow: "03"
+        title: Dependency Injection (Awilix)
+        body: Every service, repository, and controller is managed via an IoC container, ensuring high testability and clean architectural boundaries.
+
+  # cards beside the heading; a card's note is the source of its quote
+  - type: features
+    layout: product-agents
+    label: start with 80%
+    eyebrow: AI-Native
+    title: Context-Rich for LLM Agents
+    lead: Most systems are "black boxes" to AI. Open Mercato is built specifically to be understood and extended by AI agents (Claude, Cursor, GitHub Copilot).
+    items:
+      - title: AGENTS.MD as a North Star
+        icon:
+          src: /media/pages/product-icon-agents.md-as-a-north-star.svg
+          alt: ""
+          decorative: true
+        body: |-
+          Each module contains a machine-readable manual defining extensibility contracts and coding standards.
+
+          "Open Mercato isn’t just another boilerplate; it is a foundation designed to be 'read' and 'extended' by AI agents without creating technical debt."
+        note: "Source: How to Master AI-Assisted Coding with Open Mercato"
+      - title: Deterministic Mono-repo
+        icon:
+          src: /media/pages/product-icon-deterministic-mono-repo.svg
+          alt: ""
+          decorative: true
+        body: By maintaining a consistent structure between API and UI, we provide agents with the full context they need to generate production-grade code instead of hallucinations.
+
+  - type: features
+    layout: product-cards
+    eyebrow: Enterprise Security
+    title: Field-Level Protection
+    lead: Build for FinTech or HealthTech with confidence. Security is not an afterthought; it is baked into the schema.
+    items:
+      - title: Tenant-Scoped Field-Level Encryption
+        icon:
+          src: /media/pages/product-icon-tenant-scoped-field-level-encryption.svg
+          alt: ""
+          decorative: true
+        body: |-
+          Secure sensitive data at rest using AES-GCM encryption with unique keys per tenant.
+
+          "The core idea is to be open for extensions but closed for core modifications, achieved through build-time generators that scan enabled modules and allow overrides."
+        note: "Source: OM - Architecture Webinar"
+      - title: Audit-Ready Command Pattern
+        icon:
+          src: /media/pages/product-icon-audit-ready-command-pattern.svg
+          alt: ""
+          decorative: true
+        body: Every write operation is a "Command." This provides native Audit Logs (Who/What/When) and enables complex features like Undo/Redo at the framework level.
+
+  - type: features
+    layout: product-data
+    eyebrow: DATA LAYER
+    title: Data Mastery & Multi-Tenancy
+    items:
+      - title: Hierarchical Multi-tenancy
+        icon:
+          src: /media/pages/product-icon-hierarchical-multi-tenancy.svg
+          alt: ""
+          decorative: true
+        body: Native support for complex organization trees. Every query and API call is automatically scoped by tenantId and organizationId.
+      - title: The Custom Fields Layer
+        icon:
+          src: /media/pages/product-icon-the-custom-fields-layer.svg
+          alt: ""
+          decorative: true
+        body: Empower power users or analysts to extend data models in real-time. Add fields, validators, and UI widgets through the admin panel without a single line of code or a database migration.
+      - title: MikroORM & PostgreSQL
+        icon:
+          src: /media/pages/product-icon-mikroorm-and-postgresql.svg
+          alt: ""
+          decorative: true
+        body: We utilize the industry-standard stack for performance, reliability, and ACID compliance.
+
+  - type: features
+    layout: product-dx
+    eyebrow: DX
+    title: Developer Experience
+    items:
+      - title: Command Line Efficiency
+        icon:
+          src: /media/pages/product-icon-command-line-efficiency.svg
+          alt: ""
+          decorative: true
+        body: Open Mercato init bootstraps a full environment including RBAC, sample data, and local databases in minutes.
+      - title: Headless-First
+        icon:
+          src: /media/pages/product-icon-headless-first.svg
+          alt: ""
+          decorative: true
+        body: While we provide a powerful Next.js UI, the core is a headless API platform. Your data is accessible via well-typed APIs for mobile apps or external frontends.
+      - title: Built-in Reliability
+        icon:
+          src: /media/pages/product-icon-built-in-reliability.svg
+          alt: ""
+          decorative: true
+        body: Integrated Playwright testing suite designed to verify AI-generated features before they hit production.
+
+  # the cards of product-cards with a smaller heading; an item with a body only is the quote across both columns
+  - type: features
+    layout: product-anatomy
+    label: start with 80%
+    eyebrow: MODULE STRUCTURE
+    title: The Anatomy of an Open Mercato Module
+    lead: Unlike traditional ERPs where custom code is "hacked" into the core, an Open Mercato module is built for isolation and extensibility.
+    items:
+      - title: Full-Stack Scope
+        icon:
+          src: /media/pages/product-icon-full-stack-scope.svg
+          alt: ""
+          decorative: true
+        body: Each module delivers UI pages, validation logic, and database schemas (MikroORM) out of the box.
+      - title: The Event Backbone
+        icon:
+          src: /media/pages/product-icon-the-event-backbone.svg
+          alt: ""
+          decorative: true
+        body: Modules communicate via an event-driven system. Want to trigger a Slack notification when a CRM Lead is created? Simply subscribe to the deal.created event in your custom module.
+      - body: '"The core idea is to be open for extensions but closed for core modifications, achieved through build-time generators that scan enabled modules and allow overrides.”'
+
+  # a sticky heading beside numbered groups (eyebrow the number, body a lead and a list)
+  - type: features
+    layout: product-modules
+    eyebrow: MODULE STRUCTURE
+    title: Open Mercato modules are not static plugins.
+    lead: They are self-contained slices of the stack-including database entities, backend logic, API endpoints, and Next.js frontend components.
+    items:
+      - eyebrow: "01"
+        title: Infrastructure & Core Modules
+        body: |-
+          These provide the "plumbing" and foundational services that every enterprise application requires.
+
+          - **Directory: **Manages the multi-tenant core, including tenants, organization hierarchies (trees), and organization-level data filtering.
+          - **Auth:** Handles authorization, session management, roles, and a powerful Feature-based RBAC (Role-Based Access Control) system.
+          - **Entities:** The data management hub that provides the Custom Fields Layer, allowing runtime-defined fields and models without database migrations.
+          - **Encrypted Vault:** Manages Tenant-Scoped Field-Level Encryption (AES-GCM) with unique keys per tenant for high-stakes security compliance.
+          - **Configuration:** A centralized module for system-wide settings, overrides, and Feature Flags for managed feature rollouts.
+          - **Attachments:** Handles file uploads and storage, including automatic OCR (Optical Character Recognition) for making images and PDFs searchable.
+      - eyebrow: "02"
+        title: Performance & Data Processing
+        body: |-
+          - **Query Index:** A specialized engine that indexes both base and custom fields into flat tables to ensure high-performance reads even at enterprise scale.
+          - **Caching Mechanism:** A tagging-based cache layer (primarily using Redis) that ensures high speed while providing safe, tag-based cache invalidation when data changes.
+          - **Auto Deluxe: **Provides GDPR-compliant audit logging and the Undo/Redo functionality by tracking all operations through the Command Pattern.
+          - **Search Engine:** Supports multiple search strategies, including full-text search and Vector Search (PGVector/ChromaDB) for AI-powered semantic discovery.
+      - eyebrow: "03"
+        title: Business Domain Modules
+        body: |-
+          These are the vertical-specific modules that provide ready-to-use business functionality.
+
+          - **CRM Foundation: **Manages leads, customers (accounts), sales opportunities, and interaction timelines.
+          - **Catalog:** A robust module for managing product catalogs, categories, and sales channel offers.
+          - **Sales Operations:** Orchestrates orders, quotes, and negotiation flows, including shipping and payment provider integrations.
+          - **Workflows: **Manages custom data lifecycles and document-driven processes tailored per tenant.
+      - eyebrow: "04"
+        title: UX & Frontend
+        body: |-
+          - **Design System: **A dedicated UX module that keeps the design system separate, ensuring AI agents always generate UI that is consistent with the framework's look and feel.
+
+  - type: features
+    layout: product-ai
+    eyebrow: MODULE STRUCTURE
+    title: I-Assisted Module Development
+    lead: Open Mercato turns your AI (Claude, Cursor, Copilot) into a Senior Architect who knows the codebase perfectly.
+    items:
+      - title: AGENTS.MD integration
+        icon:
+          src: /media/pages/product-icon-agents.md-integration.svg
+          alt: ""
+          decorative: true
+        body: Every module contains its own documentation designed specifically for LLMs.
+      - title: Blueprint Generation
+        icon:
+          src: /media/pages/product-icon-blueprint-generation.svg
+          alt: ""
+          decorative: true
+        body: Use our CLI to generate a new module structure that is already compliant with our OCP (Open-Closed Principle) standards.
+      - title: Context-Aware Coding
+        icon:
+          src: /media/pages/product-icon-context-aware-coding.svg
+          alt: ""
+          decorative: true
+        body: Because modules follow a strict pattern, AI agents can reliably generate new entities or API endpoints without "hallucinating" the folder structure.

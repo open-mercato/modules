@@ -54,10 +54,10 @@ const m = meta[variant]
 </div>
 
 <style>
-  /* one plate in both themes (review WP11b): a neutral --bg-2 surface, a hairline and a 2 px signal edge on the left.
-     The tag and the icon carry the state in text; the edge only colours it. Enterprise stays dark (spec 7.7 B.7). */
+  /* one plate (review WP11b): a neutral --bg-2 surface and a hairline, as the .label_combo of the main site, without
+     a coloured edge (navbar of 14 Nov). The tag and the icon carry the state in text and colour. Enterprise stays
+     dark (spec 7.7 B.7). */
   .banner {
-    --b-accent: var(--ink-3);
     --b-tag: var(--ink-2);
     display: grid;
     grid-template-columns: auto auto minmax(0, 1fr) auto;
@@ -68,7 +68,6 @@ const m = meta[variant]
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-m);
     background: var(--bg-2);
-    box-shadow: inset 2px 0 0 var(--b-accent);
     color: var(--ink);
     font-size: 14px;
     line-height: 20px;
@@ -93,20 +92,15 @@ const m = meta[variant]
     color: var(--ink);
     text-underline-offset: 3px;
   }
-  /* light: the yellow and lime of the brand are too pale for a 2 px line on #FAFAFA, so the edge takes a deeper
-     shade of the same hue; dark uses the brand colours themselves */
   .banner--stale-data,
   .banner--quarantine,
   .banner--replaces {
-    --b-accent: #c4cf1d;
     --b-tag: var(--wait-ink);
   }
   .banner--advisory {
-    --b-accent: #f32828;
     --b-tag: var(--bad-ink);
   }
   .banner--preview {
-    --b-accent: #9a74f0;
     --b-tag: var(--id-ink);
   }
   .banner--harness-red {
@@ -115,38 +109,13 @@ const m = meta[variant]
       var(--bg-2);
   }
   .banner--enterprise {
-    --b-accent: #b4f372;
     --b-tag: #b4f372;
-    border-color: #2a2a2a;
+    border-color: #1f1f1f;
     background: #1b1b1b;
     color: #fafafa;
   }
   .banner--enterprise .banner__link {
     color: #fafafa;
-  }
-  :global(:root[data-theme='dark']) .banner--stale-data,
-  :global(:root[data-theme='dark']) .banner--quarantine,
-  :global(:root[data-theme='dark']) .banner--replaces {
-    --b-accent: #eefb63;
-  }
-  :global(:root[data-theme='dark']) .banner--preview {
-    --b-accent: #bc9aff;
-  }
-  :global(:root[data-theme='dark']) .banner--enterprise {
-    background: var(--bg-2);
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .banner--stale-data,
-    :global(:root:not([data-theme='light'])) .banner--quarantine,
-    :global(:root:not([data-theme='light'])) .banner--replaces {
-      --b-accent: #eefb63;
-    }
-    :global(:root:not([data-theme='light'])) .banner--preview {
-      --b-accent: #bc9aff;
-    }
-    :global(:root:not([data-theme='light'])) .banner--enterprise {
-      background: var(--bg-2);
-    }
   }
   @media (max-width: 767px) {
     .banner {

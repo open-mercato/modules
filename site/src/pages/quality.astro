@@ -121,7 +121,6 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
   <section class="band">
     <div class="sheet section q-head">
       <div class="q-copy">
-        <p class="t-tagline">// Quality</p>
         <h1 class="q-title">How the catalog checks a module.</h1>
         {/* three short paragraphs in the words of the cards and the module pages (review of 26 Oct: the page explained
             badges no page for people shows) */}
@@ -197,7 +196,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
 
   <section class="band" aria-labelledby="q-listed">
     <div class="sheet section q-sec">
-      <p class="t-tagline">// Listed · machine · all rules required</p>
+      <p class="t-tagline">Listed · machine · all rules required</p>
       <h2 id="q-listed">Listed</h2>
       <table class="q-table">
         <thead><tr><th scope="col">Rule</th><th scope="col">Check</th></tr></thead>
@@ -218,7 +217,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
 
   <section class="band" aria-labelledby="q-verified">
     <div class="sheet section q-sec">
-      <p class="t-tagline">// Verified · machine · per version · on the latest line</p>
+      <p class="t-tagline">Verified · machine · per version · on the latest line</p>
       <h2 id="q-verified">Verified</h2>
       <table class="q-table">
         <thead><tr><th scope="col">Rule</th><th scope="col">Check</th></tr></thead>
@@ -247,7 +246,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
 
   <section class="band" aria-labelledby="q-signals">
     <div class="sheet section q-sec">
-      <p class="t-tagline">// Signals · measured per version · each with a date and evidence</p>
+      <p class="t-tagline">Signals · measured per version · each with a date and evidence</p>
       <h2 id="q-signals">What is measured for each version</h2>
       <table class="q-table q-table--sig">
         <thead><tr><th scope="col">Signal</th><th scope="col">States</th><th scope="col">Rule</th></tr></thead>
@@ -299,7 +298,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
 
   <section class="band" aria-labelledby="q-omq">
     <div class="sheet section q-sec">
-      <p class="t-tagline">// OM Quality · people only · per published tarball</p>
+      <p class="t-tagline">OM Quality · people only · per published tarball</p>
       <h2 id="q-omq">OM Quality</h2>
       <p class="q-count">
         {holders === 0 ? 'No module holds OM Quality yet. Be the first: request a review.' : `${plural(holders, 'module')} ${holders === 1 ? 'holds' : 'hold'} OM Quality.`}
@@ -361,7 +360,7 @@ const codeHtml = (s: string): string => s.split('`').map((part, i) => (i % 2 ? `
 
   <section class="band" aria-labelledby="q-not">
     <div class="sheet section q-sec">
-      <p class="t-tagline">// Read this before you trust a badge</p>
+      <p class="t-tagline">Read this before you trust a badge</p>
       <h2 id="q-not">What the levels do not mean</h2>
       <ul class="q-not" role="list">
         <li><strong>Verified does not mean safe.</strong> A module's own code runs during the test. It is a compatibility signal, not a security review.</li>

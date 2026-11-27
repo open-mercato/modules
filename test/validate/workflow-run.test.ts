@@ -42,14 +42,16 @@ const stepRun = (file: string, name: string): string => {
 const FAKE_YARN = `#!/usr/bin/env bash
 set -euo pipefail
 echo "$*" >> "$CALLS"
-if [ "$1" = build ]; then
-  rm -rf dist; mkdir -p dist; ls -A .data > dist/data-files.txt; echo '{}' > dist/modules.json
-  mkdir -p dist/.well-known/agent-skills; echo '{}' > dist/.well-known/agent-skills/index.json
-  if [ "\${FAKE_404:-1}" = 1 ]; then echo '<h1>Not found</h1>' > dist/404.html; fi
-  echo '<h1>Templates</h1>' > dist/templates.html
-  if [ "\${FAKE_ROUTES:-1}" = 1 ]; then echo '{"version":1,"include":["/"],"exclude":[]}' > dist/_routes.json; fi
-  if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p dist/.well-known/mcp; echo '{}' > dist/.well-known/mcp/server-card.json; fi
-  if [ "\${FAKE_SKILLS:-1}" = 0 ]; then rm -rf dist/.well-known/agent-skills; fi
+# yarn build:run writes the catalog to dist-run/ (package.json), which pages.yml moves to dist/
+if [ "$1" = build:run ]; then
+  d=dist-run
+  rm -rf $d; mkdir -p $d; ls -A .data > $d/data-files.txt; echo '{}' > $d/modules.json
+  mkdir -p $d/.well-known/agent-skills; echo '{}' > $d/.well-known/agent-skills/index.json
+  if [ "\${FAKE_404:-1}" = 1 ]; then echo '<h1>Not found</h1>' > $d/404.html; fi
+  echo '<h1>Templates</h1>' > $d/templates.html
+  if [ "\${FAKE_ROUTES:-1}" = 1 ]; then echo '{"version":1,"include":["/"],"exclude":[]}' > $d/_routes.json; fi
+  if [ "\${FAKE_CARD:-1}" = 1 ]; then mkdir -p $d/.well-known/mcp; echo '{}' > $d/.well-known/mcp/server-card.json; fi
+  if [ "\${FAKE_SKILLS:-1}" = 0 ]; then rm -rf $d/.well-known/agent-skills; fi
   exit 0
 fi
 [ "$1" = om ] || exit 0
@@ -362,12 +364,17 @@ describe.skipIf(!hasJq)('sync.yml steps', () => {
 
 describe('pages.yml steps', () => {
   const env = () => ({ GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'), RUNNER_TEMP: join(tmp, 'runner') })
+  /** The Build step, then the upload laid out from it: the catalog alone while PAGES_MERGED is off. */
+  const build = (e: Record<string, string>): number => {
+    const r = runStep(stepRun('pages.yml', 'Build'), e)
+    return r.code === 0 ? runStep(stepRun('pages.yml', 'Lay out the upload'), e).code : r.code
+  }
 
   it('builds on empty data when the data branch does not exist yet', () => {
     const r = runStep(stepRun('pages.yml', 'Read data branch'), env())
     expect(r.code, r.out).toBe(0)
     expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe('No data branch yet: building on empty data.\n')
-    expect(runStep(stepRun('pages.yml', 'Build'), env()).code).toBe(0)
+    expect(build(env())).toBe(0)
     expect(readFileSync(join(work, 'dist', 'data-files.txt'), 'utf8')).toBe('')
     expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
   })
@@ -385,7 +392,7 @@ describe('pages.yml steps', () => {
 
     expect(runStep(stepRun('pages.yml', 'Read data branch'), env()).code).toBe(0)
     expect(readFileSync(join(work, '.data', 'lines.json'), 'utf8')).toBe('{}\n')
-    expect(runStep(stepRun('pages.yml', 'Build'), env()).code).toBe(0)
+    expect(build(env())).toBe(0)
     expect(readFileSync(join(work, 'dist', 'data-files.txt'), 'utf8')).toContain('lines.json')
     expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
 
@@ -403,17 +410,45 @@ describe('pages.yml steps', () => {
     )
   })
 
+  it('production uploads the catalog alone until PAGES_MERGED=1 builds both and merges them (www site migration)', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    writeFileSync(calls, '')
+    expect(build(env())).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe('build:run\n')
+    expect(readFileSync(join(work, 'dist', 'templates.html'), 'utf8')).toBe('<h1>Templates</h1>\n')
+    writeFileSync(calls, '')
+    expect(build({ ...env(), PAGES_MERGED: '1' })).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe('build\nom pages-site --merge\n')
+  })
+
   it('a build without _routes.json stops: every request would run the templates host Function', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
-    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_ROUTES: '0' })
+    build({ ...env(), FAKE_ROUTES: '0' })
     const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
     expect(r.code).not.toBe(0)
     expect(r.out).toContain('dist/_routes.json is missing')
   })
 
+  it('under a base path the site files are looked for in dist/<base>/ (move of 13 Nov)', () => {
+    runStep(stepRun('pages.yml', 'Read data branch'), env())
+    build(env())
+    // the flat fake build does not have the nested layout BASE_PATH asks for
+    const flat = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/run/' })
+    expect(flat.code).not.toBe(0)
+    expect(flat.out).toContain('dist/run/.well-known/agent-skills/index.json is missing')
+    // nested: the site under dist/run, the Pages files at the root
+    mkdirSync(join(work, 'dist', 'run'))
+    for (const f of ['.well-known', 'modules.json', 'templates.html'])
+      execFileSync('mv', [join(work, 'dist', f), join(work, 'dist', 'run', f)])
+    writeFileSync(calls, '')
+    const nested = runStep(stepRun('pages.yml', 'Check artifact contents'), { ...env(), BASE_PATH: '/run' })
+    expect(nested.code, nested.out).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toBe('om pages-site --check dist\n')
+  })
+
   it('a build without 404.html stops: Cloudflare Pages would answer every missing path with the home page', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
-    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_404: '0' })
+    build({ ...env(), FAKE_404: '0' })
     const r = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
     expect(r.code).not.toBe(0)
     expect(r.out).toContain('dist/404.html is missing')
@@ -463,9 +498,12 @@ describe('pages.yml steps', () => {
     expect(runStep(stepRun('pages.yml', 'Check token'), { ...vars, HAS_TOKEN: 'true' }).code).toBe(0)
 
     rmSync(join(tmp, 'summary.md'), { force: true })
+    const out = join(tmp, 'output.txt')
+    writeFileSync(out, '')
     const ok = runStep(stepRun('pages.yml', 'Summary'), {
       ...vars,
       DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
+      GITHUB_OUTPUT: out,
     })
     expect(ok.code, ok.out).toBe(0)
     expect(ok.out).not.toContain('::warning')
@@ -473,11 +511,77 @@ describe('pages.yml steps', () => {
       'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://modules.openmercato.com/\n\n' +
         'This deployment: https://abc123.open-mercato-modules.pages.dev\n',
     )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev\n')
+
+    // under a base path the deployment address serves the site at <base>/ (move of 13 Nov)
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    const nested = runStep(stepRun('pages.yml', 'Summary'), {
+      ...vars,
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/run',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev',
+      GITHUB_OUTPUT: out,
+    })
+    expect(nested.code, nested.out).toBe(0)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/run/\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/\n',
+    )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/run/\n')
+
+    // with a home path both links name the home page, /run/modules (14 Nov)
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    const home = runStep(stepRun('pages.yml', 'Summary'), {
+      ...vars,
+      SITE_URL: 'https://www.openmercato.com',
+      BASE_PATH: '/run',
+      HOME_PATH: '/modules',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev/',
+      GITHUB_OUTPUT: out,
+    })
+    expect(home.code, home.out).toBe(0)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Site deployed to Cloudflare Pages project `open-mercato-modules`: https://www.openmercato.com/run/modules\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/modules\n',
+    )
+    expect(readFileSync(out, 'utf8')).toBe('url=https://abc123.open-mercato-modules.pages.dev/run/modules\n')
+
+    // no address from wrangler: the summary says so and the environment gets no link
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Summary'), { ...vars, BASE_PATH: '/run', DEPLOYMENT_URL: '', GITHUB_OUTPUT: out })
+    expect(readFileSync(out, 'utf8')).toBe('url=\n')
+  })
+
+  it('the preview job names the branch alias address of the preview and its own deployment (15 Nov)', () => {
+    const out = join(tmp, 'output.txt')
+    const vars = { ...env(), CF_PAGES_PROJECT: 'open-mercato-modules', GITHUB_OUTPUT: out }
+    writeFileSync(out, '')
+    const r = runStep(stepRun('pages.yml', 'Preview summary'), {
+      ...vars,
+      PREVIEW_BRANCH: 'run-preview',
+      DEPLOYMENT_URL: 'https://abc123.open-mercato-modules.pages.dev/',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(readFileSync(out, 'utf8')).toBe('url=https://run-preview.open-mercato-modules.pages.dev/run/modules\n')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toBe(
+      'Preview of the /run layout deployed to branch `run-preview` of Cloudflare Pages project `open-mercato-modules`: ' +
+        'https://run-preview.open-mercato-modules.pages.dev/run/modules\n\n' +
+        'This deployment: https://abc123.open-mercato-modules.pages.dev/run/modules\n\n' +
+        'Check it, or the proxy in front of it, with docs/proxy/check.sh <base URL>.\n',
+    )
+    // the alias rule of Cloudflare Pages: lowercase, anything but a-z, 0-9 and - becomes -
+    rmSync(join(tmp, 'summary.md'), { force: true })
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Preview summary'), { ...vars, PREVIEW_BRANCH: 'Run_Preview/2', DEPLOYMENT_URL: '' })
+    expect(readFileSync(out, 'utf8')).toBe('url=https://run-preview-2.open-mercato-modules.pages.dev/run/modules\n')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toContain('This deployment: see the wrangler output\n')
   })
 
   it('the deploy job finds .well-known in the downloaded site and stops without it', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
-    runStep(stepRun('pages.yml', 'Build'), env())
+    build(env())
     expect(runStep(stepRun('pages.yml', 'Check downloaded site'), env()).code).toBe(0)
     rmSync(join(work, 'dist', '.well-known'), { recursive: true, force: true })
     const r = runStep(stepRun('pages.yml', 'Check downloaded site'), env())
@@ -495,12 +599,12 @@ describe('pages.yml steps', () => {
 
   it('a build without .well-known stops before upload; the server card is required only with MCP_URL', () => {
     runStep(stepRun('pages.yml', 'Read data branch'), env())
-    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_SKILLS: '0' })
+    build({ ...env(), FAKE_SKILLS: '0' })
     const bare = runStep(stepRun('pages.yml', 'Check artifact contents'), env())
     expect(bare.code).not.toBe(0)
     expect(bare.out).toContain('dist/.well-known/agent-skills/index.json is missing')
 
-    runStep(stepRun('pages.yml', 'Build'), { ...env(), FAKE_CARD: '0' })
+    build({ ...env(), FAKE_CARD: '0' })
     expect(runStep(stepRun('pages.yml', 'Check artifact contents'), env()).code).toBe(0)
     const r = runStep(stepRun('pages.yml', 'Check artifact contents'), {
       ...env(),

@@ -1,0 +1,108 @@
+{
+  "collections": [
+    {
+      "id": "69ced91e5dfd5dde1d978b0a",
+      "displayName": "Blog / Posts",
+      "singularName": "Blog / Post",
+      "slug": "blog-posts",
+      "createdOn": "2026-04-02T21:01:18.705Z",
+      "lastUpdated": "2026-06-12T11:36:20.414Z"
+    },
+    {
+      "id": "69ced92817323234ffa7c627",
+      "displayName": "Blog / Categories",
+      "singularName": "Blog / Category",
+      "slug": "blog-categories",
+      "createdOn": "2026-04-02T21:01:28.321Z",
+      "lastUpdated": "2026-04-02T21:33:21.920Z"
+    },
+    {
+      "id": "69ced930474469d745265300",
+      "displayName": "Blog / Authors",
+      "singularName": "Blog / Author",
+      "slug": "blog-authors",
+      "createdOn": "2026-04-02T21:01:36.200Z",
+      "lastUpdated": "2026-04-02T21:34:04.595Z"
+    },
+    {
+      "id": "6a2ad78f29be48c42ccda7a0",
+      "displayName": "Case Studies / Posts",
+      "singularName": "Case Studies / Post",
+      "slug": "case-studies",
+      "createdOn": "2026-06-11T15:43:11.852Z",
+      "lastUpdated": "2026-07-08T17:48:33.099Z"
+    },
+    {
+      "id": "6a2ad7d71ab5ae226a820bfd",
+      "displayName": "Case Studies / Categories",
+      "singularName": "Case Studies / Category",
+      "slug": "case-studies-categories",
+      "createdOn": "2026-06-11T15:44:23.957Z",
+      "lastUpdated": "2026-06-12T11:37:14.578Z"
+    },
+    {
+      "id": "6a2ad8fe4ffe0487fdfd5328",
+      "displayName": "Partners / Industries",
+      "singularName": "Partners / Industry",
+      "slug": "partners-industries",
+      "createdOn": "2026-06-11T15:49:18.281Z",
+      "lastUpdated": "2026-06-18T06:25:36.047Z"
+    },
+    {
+      "id": "6a2ad90b213ca1dc397962c1",
+      "displayName": "Partners / Languages",
+      "singularName": "Partners / Language",
+      "slug": "partners-language",
+      "createdOn": "2026-06-11T15:49:31.765Z",
+      "lastUpdated": "2026-06-18T06:25:04.911Z"
+    },
+    {
+      "id": "6a2ad91fb7947837b996aac0",
+      "displayName": "Partners / Services",
+      "singularName": "Partners / Service",
+      "slug": "partners-services",
+      "createdOn": "2026-06-11T15:49:51.414Z",
+      "lastUpdated": "2026-06-18T06:25:28.745Z"
+    },
+    {
+      "id": "6a2b03cd5e12536d31880f20",
+      "displayName": "Partners",
+      "singularName": "Partner",
+      "slug": "certified-partners",
+      "createdOn": "2026-06-11T18:51:57.884Z",
+      "lastUpdated": "2026-06-18T08:37:51.268Z"
+    },
+    {
+      "id": "6a2d49e5278a501ddae4abec",
+      "displayName": "Partners / Locations",
+      "singularName": "Partners / Location",
+      "slug": "partners-location",
+      "createdOn": "2026-06-13T12:15:33.215Z",
+      "lastUpdated": "2026-06-18T06:25:13.663Z"
+    },
+    {
+      "id": "6a3143f69aa7ba6170e3e963",
+      "displayName": "Careers / Jobs",
+      "singularName": "Careers / Job",
+      "slug": "careers-jobs",
+      "createdOn": "2026-06-16T12:39:18.476Z",
+      "lastUpdated": "2026-06-17T15:30:14.676Z"
+    },
+    {
+      "id": "6a3393f46f251da6f05ac59a",
+      "displayName": "Partners / Tiers",
+      "singularName": "Partners / Tier",
+      "slug": "partners-tiers",
+      "createdOn": "2026-06-18T06:45:08.170Z",
+      "lastUpdated": "2026-06-18T08:35:26.121Z"
+    },
+    {
+      "id": "6b04d5d918d7d77f974d156a",
+      "displayName": "Documentation",
+      "singularName": "Documentation page",
+      "slug": "docs",
+      "createdOn": "2026-11-24T00:10:01.315Z",
+      "lastUpdated": "2026-11-24T00:16:12.990Z"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ export interface PublishedScreenshots {
   files: [string, Uint8Array][]
 }
 
-/** `/modules` for a base of `/modules/` or `modules`, `` for `/`. */
+/** `/run` for a base of `/run/` or `run`, `` for `/`. */
 export const basePrefix = (base: string): string => {
   const b = base.replace(/^\/+|\/+$/g, '')
   return b === '' ? '' : `/${b}`

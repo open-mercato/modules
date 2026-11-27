@@ -1,0 +1,27 @@
+---
+// The technology stack of a case study under its body, in the live Webflow markup (`case-post_stack-panel`). A link in
+// the stack follows the rules of a body: a draft is never linked, a page still on Webflow points there.
+import { linkAction } from '../../lib/body-html.ts'
+import { linkRules } from '../../lib/collections-data.ts'
+import { markdownHtml, type LinkFn } from '../../lib/inline-markdown.ts'
+
+interface Props {
+  stack?: string
+}
+const { stack } = Astro.props
+const rules = await linkRules()
+const link: LinkFn = (href) => {
+  const a = linkAction(href, rules)
+  if (a.kind === 'text') console.warn(`[om-www] technology stack: ${a.why}; the link renders as text`)
+  return a.kind === 'keep' ? href : a.kind === 'live' ? a.href : undefined
+}
+---
+
+{
+  stack && (
+    <div class="case-post_stack-panel">
+      <div class="text-style-tagline text-color-secondary">Technology stack</div>
+      <div class="text-rich-text w-richtext" set:html={markdownHtml(stack, link)} />
+    </div>
+  )
+}

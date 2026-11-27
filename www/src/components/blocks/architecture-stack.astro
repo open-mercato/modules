@@ -1,0 +1,41 @@
+---
+// The /architecture stack strip as the live one is: the title and one logo with its name per item.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import Wrap from './Wrap.astro'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'logos'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+// the live page draws its icons inline: an icon of the site's media is inlined the same way, its file read at build time
+const svgs = import.meta.glob<string>('../../../public/media/pages/*.svg', { query: '?raw', import: 'default', eager: true })
+const svg = (src: string): string | undefined => svgs[`../../../public${src}`]
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="logos_component">
+        <div class="logos_content">
+          {block.title && <div class="heading-style-h6">{t(block.title)}</div>}
+          <div class="logos_list">
+            {
+              block.items.map((i) => (
+                <div class="logos_list-item">
+                  {svg(i.logo.src) ? (
+                    <div class="icon-embed-small w-embed" set:html={svg(i.logo.src)} />
+                  ) : (
+                    <div class="icon-embed-small w-embed">
+                      <img src={i.logo.src} alt={i.logo.alt} width="32" height="32" loading="lazy" />
+                    </div>
+                  )}
+                  <div class="text-weight-medium">{t(i.name)}</div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

@@ -1,0 +1,74 @@
+---
+// A job page in the live Webflow markup: the head (`header_component max-width-50rem`: the link to all open roles, the
+// title, location, employment type and salary, the technology, "Apply now"), then the body and the same two links
+// again. A closed job says so and offers no application.
+import { EMPLOYMENT_TYPE_LABELS } from '../../../../lib/schema/www-content.ts'
+import { applyHref, type JobEntry } from '../../lib/jobs.ts'
+
+interface Props {
+  job: JobEntry
+  /** Where "All open roles" points: /careers. */
+  careersHref: string
+}
+const { job, careersHref } = Astro.props
+const d = job.data
+const facts = [d.location, EMPLOYMENT_TYPE_LABELS[d.employmentType], d.salary].filter(
+  (f): f is string => typeof f === 'string' && f !== '',
+)
+const apply = applyHref(d.applyUrl, d.title)
+---
+
+<section class="section no-bottom-border">
+  <div class="section-padding">
+    <div class="header_component max-width-50rem">
+      <div class="header_content">
+        <a href={careersHref} class="text-size-tiny text-weight-medium text-style-tagline text-color-additional"
+          >← All open roles</a
+        >
+        <div class="spacer-small"></div>
+        <div class="max-width-33rem"><h1>{d.title}</h1></div>
+        <div class="spacer-small"></div>
+        <div class="button-group">
+          {facts.map((f) => <p class="text-style-tagline text-color-secondary">{f}</p>)}
+        </div>
+        {
+          d.techStack && (
+            <>
+              <div class="spacer-small" />
+              <p class="text-style-tagline text-color-secondary">{d.techStack}</p>
+            </>
+          )
+        }
+        <div class="spacer-medium"></div>
+        <div class="button-group">
+          {
+            d.open ? (
+              <a href={apply} class="button w-inline-block">
+                Apply now
+              </a>
+            ) : (
+              <p class="text-color-secondary">This position is closed.</p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section no-bottom-border">
+  <div class="section-padding">
+    <div class="max-width-50rem"><slot /></div>
+    <div class="spacer-large"></div>
+    {
+      d.open && (
+        <div class="button-group">
+          <a href={apply} class="button w-inline-block">
+            Apply now
+          </a>
+        </div>
+      )
+    }
+    <div class="spacer-large"></div>
+    <a href={careersHref} class="button is-icon is-secondary w-inline-block">← All open roles</a>
+  </div>
+</section>

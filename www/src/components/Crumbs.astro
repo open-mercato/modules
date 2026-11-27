@@ -1,0 +1,41 @@
+---
+// The breadcrumb of the main site's pages in the live Webflow markup (`label_component`, `label_breadcrumbs`): Home, the
+// section, the page, separated by `/`. The JSON-LD BreadcrumbList of the page names the same trail. `limit` cuts a
+// long current name to one line, as the live templates of posts (20ch) and case studies (30ch) do
+// (www/src/styles/webflow/pages.css). A `div`, as on the live site, not a `nav` landmark: compare-live leaves a `nav`
+// out of the main text, and the trail is part of the live page's text. The designer's pass (D7) can restore the
+// landmark.
+interface Props {
+  /** The steps between Home and the current page. */
+  trail?: { name: string; href: string }[]
+  current: { name: string; href: string }
+  limit?: boolean
+}
+const { trail = [], current, limit = false } = Astro.props
+const step = 'text-size-tiny text-weight-medium text-color-additional'
+---
+
+<div class="label_component">
+  <div class="label_breadcrumbs">
+    <a href="/" class={step}>Home</a>
+    {
+      trail.map((t) => (
+        <>
+          <div class={step} aria-hidden="true">
+            /
+          </div>
+          <a href={t.href} class={step}>
+            {t.name}
+          </a>
+        </>
+      ))
+    }
+    <div class={step} aria-hidden="true">/</div>
+    <a
+      href={current.href}
+      aria-current="page"
+      class:list={['text-size-tiny text-weight-medium', { 'breacrumb-link_with-limit': limit }, 'w--current']}
+      title={limit ? current.name : undefined}>{current.name}</a
+    >
+  </div>
+</div>

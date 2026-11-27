@@ -1,21 +1,27 @@
 ---
-// Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, theme before first paint, self-hosted fonts, header,
+// Page shell (spec 7.2-7.3, 7.9, 7.12): head metadata, self-hosted fonts, header,
 // stale-data banner, footer, copy handler with a polite live region, Speculation Rules, and WebMCP on pages that
 // ask for it (site/src/scripts/webmcp.ts, WP14, loaded through import.meta.glob so a missing file is fine).
+// The main site (www/, section `main`) uses the same shell with the same header, footer, fonts and styles, without
+// what belongs to the catalog: its data stamp and context line, the stale banner, llms.txt, the module prefetch and
+// the page script for its other hosts; the canonical address is the page's path on the main site's origin.
 import '../styles/tokens.css'
 import '../styles/base.css'
 import '../styles/ui.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import PageContext, { type TrailStep } from '../components/PageContext.astro'
 import Banner from '../components/Banner.astro'
 import { fontFaceCss, FONT_FILES } from '../lib/fonts.ts'
-import { absoluteUrl, BASE, href } from '../lib/url.ts'
+import { absoluteUrl, BASE, HOME, href, siteRootUrl } from '../lib/url.ts'
 import { hereScript } from '../lib/here.ts'
 import { jsonLdText } from '../lib/json-ld.ts'
+import { metaDescription } from '../lib/meta-description.ts'
 import { day, hoursBetween } from '../lib/format.ts'
 import { STALE_CHECK_JS, STALE_HOURS, isPreviewData, type DataAsOf } from '../lib/freshness.ts'
 import { DEFAULT_SITE_ORIGIN } from '../../../lib/core/home.ts'
-import { TEMPLATES_HOST } from '../../../lib/core/templates-host.ts'
+import { mainSiteJsonLd } from '../../../lib/core/main-site-json-ld.ts'
+import { otherProductionOrigins, serveOriginFromEnv, servingOrigins, siteConfig } from '../../../lib/core/site-host.ts'
 import { EMAIL_OFF, EMAIL_ON } from '../lib/email-off.ts'
 
 interface Props {
@@ -26,18 +32,31 @@ interface Props {
    * 404 page, live review of 30 Oct): no canonical and no og:url, since it has no address of its own.
    */
   path: string | null
-  dataAsOf: DataAsOf
+  /** As of when the data of the page is (catalog pages only). */
+  dataAsOf?: DataAsOf
+  /** Which site the page belongs to: the catalog under its base (`run`, the default) or the main site (`main`). */
+  section?: 'run' | 'main'
   /** Markdown twin of the page (module pages). */
   mdAlternate?: string
   /** Register the WebMCP tools (/, /m/*, /for-agents). */
   webmcp?: boolean
   /** Extra JSON-LD object. */
   jsonLd?: Record<string, unknown>
+  /** og:type: `article` for a post of the main site; `website` otherwise. */
+  ogType?: 'website' | 'article'
+  /** The page's own og:image, a site path or an absolute URL; else the default 1200 x 630 card. */
+  ogImage?: string
+  /** The size of the page's own og:image, when the page knows it (the landings' cards drawn at build). */
+  ogImageSize?: { width: number; height: number }
   /** Skip link target and text (spec 7.9). */
   skip?: { href: string; label: string }
   /** Force noindex (otherwise noindex on *.github.io, D36). */
   noindex?: boolean
   bodyClass?: string
+  /** Breadcrumbs of a page deeper in a section, for the context line (PageContext.astro). */
+  trail?: TrailStep[] | false
+  /** The language of the page (`<html lang>`): `en` but on a main-site page in another language (a landing in Polish). */
+  lang?: string
 }
 const {
   title,
@@ -50,64 +69,88 @@ const {
   skip = { href: '#main', label: 'Skip to content' },
   noindex,
   bodyClass,
+  trail,
+  section = 'run',
+  ogType = 'website',
+  ogImage: pageOgImage,
+  ogImageSize,
+  lang = 'en',
 } = Astro.props
+const run = section === 'run'
 const site = (Astro.site ?? new URL(DEFAULT_SITE_ORIGIN)).toString()
-const canonical = path === null ? null : absoluteUrl(site, path)
+const canonical = path === null ? null : run ? absoluteUrl(site, path) : new URL(path, site).toString()
 const robotsNoindex = noindex ?? new URL(site).hostname.endsWith('github.io')
-const ogImage = absoluteUrl(site, '/og-default.png')
+// a page's own image is a file of its own site (www/public/media), not under the catalog's base
+const ogImage = pageOgImage ? new URL(pageOgImage, site).toString() : absoluteUrl(site, '/og-default.png')
+// the other hosts of the Pages project serve this build too: the page script leaves their links alone (move of 13 Nov),
+// unless they serve it before SITE_URL does (PAGES_SERVE_ORIGIN): then it points the links at them (servingOrigins)
+const serve = serveOriginFromEnv(process.env)
+const hostConfig = { ...siteConfig(site, BASE || '/', HOME), ...(serve ? { serve } : {}) }
+const production = otherProductionOrigins(hostConfig)
+const serving = servingOrigins(hostConfig)
 // a preview run is never a late nightly run (review r6): no STALE DATA banner on preview data, whatever the clock
 const stale =
-  dataAsOf.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
+  dataAsOf?.nightly && !isPreviewData(dataAsOf) ? hoursBetween(dataAsOf.nightly, new Date()) > STALE_HOURS : false
+// cut at 155 characters on the catalog, whole on the main site (lib/meta-description.ts)
+const shownDescription = metaDescription(description, section)
 const speculation = JSON.stringify({
   prefetch: [{ where: { href_matches: `${BASE}/m/*` }, eagerness: 'moderate' }],
 })
-const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()`
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     {/* package@version reads as an e-mail address to Cloudflare (live review of 30 Oct): head and body are kept apart */}
     <Fragment set:html={EMAIL_OFF} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="description" content={shownDescription} />
     {robotsNoindex && <meta name="robots" content="noindex" />}
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    {/* the favicon of openmercato.com (32 x 32 PNG): the catalog is a part of it (navbar of 14 Nov) */}
+    <link rel="icon" href={href('/favicon.png')} type="image/png" />
     <link rel="preload" href={href(FONT_FILES.regular)} as="font" type="font/woff2" crossorigin />
-    <link rel="llms-txt" href={href('/llms.txt')} />
+    {run && <link rel="llms-txt" href={href('/llms.txt')} />}
     {mdAlternate && <link rel="alternate" type="text/markdown" href={href(mdAlternate)} />}
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0C0C0C" media="(prefers-color-scheme: dark)" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Open Mercato Modules" />
+    {/* light only, like openmercato.com (move of 13 Nov): no dark theme, whatever the system asks for */}
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Open Mercato" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description.slice(0, 155)} />
+    <meta property="og:description" content={shownDescription} />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    {/* the size is known for the default card, and for a page's own image when the page gives it */}
+    {!pageOgImage && <meta property="og:image:width" content="1200" />}
+    {!pageOgImage && <meta property="og:image:height" content="630" />}
+    {pageOgImage && ogImageSize && <meta property="og:image:width" content={String(ogImageSize.width)} />}
+    {pageOgImage && ogImageSize && <meta property="og:image:height" content={String(ogImageSize.height)} />}
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline set:html={themeInit} />
     {/* the view-transition opt-in is inline in the head (review r4: the flight from a query to a module page was
         dropped as `opt-in disabled` in about a third of the tries; with the rule only in the external stylesheet the
         new page's first style pass could run without it; inline: 96 of 96 flights land in headless Chromium) */}
     <style is:inline set:html={`${fontFaceCss()}@view-transition{navigation:auto}`}></style>
-    <script type="speculationrules" is:inline set:html={speculation} />
+    {run && <script type="speculationrules" is:inline set:html={speculation} />}
     {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLdText(jsonLd)} />}
+    {/* the main site's Organization and WebSite, on each of its pages (www site migration, Phase 7) */}
+    {!run && <script type="application/ld+json" is:inline set:html={jsonLdText(mainSiteJsonLd(site))} />}
     <slot name="head" />
     <Fragment set:html={EMAIL_ON} />
   </head>
   <body class={bodyClass}>
     <Fragment set:html={EMAIL_OFF} />
+    {/* the main site's own stylesheets (www/src/layouts/Main.astro): after every stylesheet of the head, so its rules
+        win where they and the catalog's style the same element, as on openmercato.com */}
+    <slot name="body-start" />
     <a class="skip-link" href={skip.href}>{skip.label}</a>
-    <Header dataAsOf={dataAsOf} current={path ?? ''} />
+    {/* the Run menu marks a catalog page only: on the main site no row of it is the current page */}
+    <Header current={run ? (path ?? '') : ''} />
     {
       /* a preview build has no nightly run to be late (review r6): no stale banner in its pages at all */
-      !isPreviewData(dataAsOf) && (
+      dataAsOf && !isPreviewData(dataAsOf) && (
         <div class="sheet stale-wrap" id="stale-banner" hidden={!stale}>
           <Banner variant="stale-data">
             Data from <span data-stale-day>{dataAsOf.nightly ? day(dataAsOf.nightly) : ''}</span>. The nightly run did
@@ -116,12 +159,16 @@ const themeInit = `(function(){try{var t=localStorage.getItem('om-theme');if(t==
         </div>
       )
     }
-    <script is:inline set:html={STALE_CHECK_JS} />
+    {dataAsOf && <script is:inline set:html={STALE_CHECK_JS} />}
     <main id="main" tabindex="-1">
+      {dataAsOf && <PageContext path={path} dataAsOf={dataAsOf} trail={trail} />}
       <slot />
     </main>
-    <Footer dataAsOf={dataAsOf} />
-    <script is:inline set:html={hereScript(absoluteUrl(site, '/'), BASE, [`https://${TEMPLATES_HOST}`])} />
+    {/* what the main site shows between the page and the footer, outside <main> as on openmercato.com (its closing call
+        to action) */}
+    <slot name="after-main" />
+    <Footer />
+    {run && <script is:inline set:html={hereScript(siteRootUrl(site), BASE, production, serving)} />}
     <div class="toast" id="om-toast" role="status" aria-live="polite"></div>
     <script>
       const toast = document.getElementById('om-toast')

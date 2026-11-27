@@ -1,5 +1,5 @@
 ---
-// The X-ray film (spec 7.6): dark in both themes. Sigil 96 with the organ legend, then nine sections in a 3x3 grid;
+// The X-ray film (spec 7.6): always dark. Sigil 96 with the organ legend, then nine sections in a 3x3 grid;
 // every fact is a mono row with its `file:line` source link into the published tarball.
 import type { Facts, IndexEntry, ModuleFacts } from '../../../lib/schema/index.ts'
 import { ORGANS, PETAL_ANGLES, brandStop } from '../../../lib/sigil/sigil.ts'
@@ -296,7 +296,7 @@ const calloutItems = (entry.anatomy?.callout ?? '').split(' · ').filter(Boolean
 
 <section class="film band--film" aria-labelledby={`film-${entry.path}`}>
   <header class="film__head">
-    <p class="t-tagline" id={`film-${entry.path}`}>// Anatomy</p>
+    <p class="t-tagline" id={`film-${entry.path}`}>Anatomy</p>
     <p class="film__src">
       {hidden ? 'Not published' : <><span class="nw">Read from <code>src/</code> ·</span> <code translate="no" set:html={wbrHtml(`${entry.npm ?? entry.github}@${version}`)} /></>}
     </p>

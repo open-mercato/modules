@@ -1,0 +1,9 @@
+---
+// legacy (spec Q4): /crm, the script embed (the last of the page's 12) that animates the hero's AI agent cursor, the
+// pipeline demo and the AI workflows. Compiled output whose source is unknown, ported as it is from
+// https://www.openmercato.com/crm on 25 Nov 2026 (./crm-script.txt, kept as text so no formatter touches it); it needs
+// no jQuery and no Webflow runtime. Replace it when its source is found.
+import js from './crm-script.txt?raw'
+---
+
+<div class="w-embed w-script"><script is:inline set:html={js} /></div>

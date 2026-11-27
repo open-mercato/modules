@@ -1,0 +1,74 @@
+{
+  "id": "69ced92817323234ffa7c627",
+  "displayName": "Blog / Categories",
+  "singularName": "Blog / Category",
+  "slug": "blog-categories",
+  "createdOn": "2026-04-02T21:01:28.321Z",
+  "lastUpdated": "2026-04-02T21:33:21.920Z",
+  "fields": [
+    {
+      "id": "5e1b0444f726629bca885323deafadc2",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "display-order",
+      "displayName": "Display Order",
+      "helpText": "Sort order for displayed categories",
+      "validations": {
+        "format": "integer",
+        "precision": 1,
+        "allowNegative": false
+      }
+    },
+    {
+      "id": "a75a8f5733e48a067a61f779993e9396",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Color",
+      "slug": "label-color",
+      "displayName": "Label Color",
+      "helpText": "Pick label color. e.g brand purple",
+      "validations": null
+    },
+    {
+      "id": "b4a313e3b8595cae474e02d44a44ce5f",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Color",
+      "slug": "text-color",
+      "displayName": "Text Color",
+      "helpText": "Pick contrasting color to label e.g. black",
+      "validations": null
+    },
+    {
+      "id": "9a4af27c85c0612997c6d174a594ce32",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Category name e.g. Expert tips",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "c4658c7cb2934c33413d1acd2670e7ea",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

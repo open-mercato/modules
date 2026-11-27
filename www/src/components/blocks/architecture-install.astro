@@ -1,0 +1,56 @@
+---
+// The /architecture install section as the live one is: the tagline (`eyebrow`) and heading beside the two buttons
+// (the first with the GitHub mark), then the full-width video, loaded on a click (blog/VideoEmbed.astro).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import VideoEmbed from '../blog/VideoEmbed.astro'
+import Wrap from './Wrap.astro'
+import { headingHtml } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+import github from './architecture-github.svg?raw'
+
+type Props = BlockProps<'video'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+---
+
+<Wrap>
+  <section class="section" id={block.id}>
+    <div class="section-padding">
+      <div class="header_component is-flex">
+        <div class="header_content max-width-36rem">
+          {
+            block.eyebrow && (
+              <div class="label_component">
+                <div class="text-style-tagline text-color-secondary">{t(block.eyebrow)}</div>
+              </div>
+            )
+          }
+          {block.title && <h2 class="heading-style-h3" set:html={headingHtml(t(block.title))} />}
+        </div>
+        <div class="button-group">
+          {
+            block.primary && (
+              <a href={block.primary.href} target="_blank" class="button is-icon w-inline-block">
+                <div class="button_icon w-embed" set:html={github} />
+                <div>{t(block.primary.label)}</div>
+              </a>
+            )
+          }
+          {
+            block.secondary && (
+              <a href={block.secondary.href} target="_blank" class="button is-tertiary w-inline-block">
+                <div>{t(block.secondary.label)}</div>
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <div class="spacer-large"></div>
+      <div class="video_component-embed w-embed">
+        <div class="video_component is-full">
+          <VideoEmbed id={block.youtube} title={block.title && t(block.title)} poster={block.poster?.src} />
+        </div>
+      </div>
+    </div>
+  </section>
+</Wrap>

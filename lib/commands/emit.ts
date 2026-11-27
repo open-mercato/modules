@@ -1,9 +1,9 @@
-// `yarn om emit [--site <url>] [--base <path>]` (spec 5.4): every published file of spec 4.6 into
+// `yarn om emit [--site <url>] [--base <path>] [--home <path>]` (spec 5.4): every published file of spec 4.6 into
 // site/.generated/public and the page data into site/.generated/data, from `.data` (the `data` branch), the
 // descriptors and policy. The only source of those files; the Astro integration (lib/emit/astro-integration.ts)
 // copies public/ into dist/. Works on an empty or missing `.data` (first day: empty states).
 // Extra flags: --to <dir> (default site/.generated), --modules <dir>, --templates <dir>, --policy <dir>,
-// --skills <dir>, --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, MCP_URL, WEBMCP_OT_TOKENS,
+// --skills <dir>, --now <iso> (clock), --mcp-url <url>. Environment: SITE_URL, BASE_PATH, HOME_PATH, MCP_URL, WEBMCP_OT_TOKENS,
 // GITHUB_SHA (the build stamp in the footer; otherwise `git rev-parse` of the repo).
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
@@ -15,7 +15,8 @@ import { buildEmit } from '../emit/index.ts'
 import { loadEmitData } from '../emit/load.ts'
 import { writeEmit } from '../emit/write.ts'
 import { byteLength } from '../emit/util.ts'
-import { DEFAULT_BASE_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
+import { DEFAULT_BASE_PATH, DEFAULT_HOME_PATH, DEFAULT_SITE_ORIGIN } from '../core/home.ts'
+import { homeConfig } from '../core/site-host.ts'
 import type { BuildStamp } from '../emit/types.ts'
 
 export const description = 'published files and site data from .data'
@@ -23,6 +24,7 @@ export const description = 'published files and site data from .data'
 const VALUE_FLAGS = [
   '--site',
   '--base',
+  '--home',
   '--to',
   '--modules',
   '--templates',
@@ -89,6 +91,13 @@ export default function emit(ctx: CommandContext): number {
     console.error('om emit: --site / SITE_URL must be an absolute URL')
     return EXIT_ENV
   }
+  let home: string
+  try {
+    home = homeConfig(args['--home'] ?? process.env.HOME_PATH ?? DEFAULT_HOME_PATH, site.base)
+  } catch (err) {
+    console.error(`om emit: ${(err as Error).message}`)
+    return EXIT_ENV
+  }
   // a build served anywhere else (a preview, a sandbox) keeps absolute links to the default address in llms.txt,
   // modules.json and the cards (finding of 25 Oct): say so, the pages fix their copy commands at run time only
   if (!args['--site'] && !process.env.SITE_URL)
@@ -129,6 +138,7 @@ export default function emit(ctx: CommandContext): number {
     result = buildEmit(data, {
       site: site.site,
       base: site.base,
+      home,
       now: now.toISOString().replace(/\.\d{3}Z$/, 'Z'),
       mcpUrl,
       originTrialTokens: process.env.WEBMCP_OT_TOKENS ?? null,

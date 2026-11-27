@@ -1,0 +1,10 @@
+webflowId: 69d002138cfdc5a79b1ffe97
+seo:
+  title: Blog | Open Mercato
+  # Webflow has no description here; one of the four the spec asks for (SEO table)
+  description: Practical guides, deep dives and lessons learned from the Open Mercato team on building production-ready AI and business software.
+blocks:
+  - type: hero
+    eyebrow: Blog
+    title: Open Mercato Blog
+    lead: Practical guides, deep dives, and lessons learned from building production-ready AI systems.

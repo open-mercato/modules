@@ -1,0 +1,116 @@
+{
+  "id": "69ced91e5dfd5dde1d978b0a",
+  "displayName": "Blog / Posts",
+  "singularName": "Blog / Post",
+  "slug": "blog-posts",
+  "createdOn": "2026-04-02T21:01:18.705Z",
+  "lastUpdated": "2026-06-12T11:36:20.414Z",
+  "fields": [
+    {
+      "id": "0651f7c5b09d826f7ead26f2b2bd6384",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Image",
+      "slug": "thumbnail",
+      "displayName": "Thumbnail",
+      "helpText": "Blog post image (compressed, horizontal ratio)",
+      "validations": null
+    },
+    {
+      "id": "fe02abd101c937d8827ec5fbd6c37465",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "PlainText",
+      "slug": "short-description",
+      "displayName": "Short Description",
+      "helpText": "Displayed on the blog post card and in post hero",
+      "validations": {
+        "singleLine": false
+      }
+    },
+    {
+      "id": "d3f704ac0cb665149fe2207dcdee495b",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Reference",
+      "slug": "author",
+      "displayName": "Author",
+      "helpText": "Pick author from the list",
+      "validations": {
+        "collectionId": "69ced930474469d745265300"
+      }
+    },
+    {
+      "id": "43070f70b0c08d1b51bc0374848f0f43",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Reference",
+      "slug": "category",
+      "displayName": "Category",
+      "helpText": "Pick one the best matching category",
+      "validations": {
+        "collectionId": "69ced92817323234ffa7c627"
+      }
+    },
+    {
+      "id": "f837812c5f7bf643d0dffd2219f509ea",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "DateTime",
+      "slug": "publication-date",
+      "displayName": "Publication Date",
+      "helpText": "Post publish date (used for sorting)",
+      "validations": null
+    },
+    {
+      "id": "e55571c0caba1d99c5af74169889908c",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Switch",
+      "slug": "featured",
+      "displayName": "Featured",
+      "helpText": "Turn on if this post should be displayed as featured",
+      "validations": null
+    },
+    {
+      "id": "5a190b697483b4c740285d02bca6d805",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "RichText",
+      "slug": "content",
+      "displayName": "Content",
+      "helpText": "Main blog post content",
+      "validations": null
+    },
+    {
+      "id": "15c2a01707a03233011ac61eff2b9b1c",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Blog post title displayed as the main headline",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "5bc3255c2fb5d6cc6c9110e32c31493f",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "URL-friendly title (e.g. \"understanding-openmercato-architecture)",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

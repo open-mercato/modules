@@ -1,0 +1,54 @@
+{
+  "id": "6a2ad91fb7947837b996aac0",
+  "displayName": "Partners / Services",
+  "singularName": "Partners / Service",
+  "slug": "partners-services",
+  "createdOn": "2026-06-11T15:49:51.414Z",
+  "lastUpdated": "2026-06-18T06:25:28.745Z",
+  "fields": [
+    {
+      "id": "a54cb8f4c4a1c89b5e58a133fe663348",
+      "isEditable": true,
+      "isRequired": false,
+      "type": "Number",
+      "slug": "display-order",
+      "displayName": "Display order",
+      "helpText": "Number used for display order",
+      "validations": {
+        "format": "integer",
+        "precision": 1,
+        "allowNegative": false
+      }
+    },
+    {
+      "id": "347cd2fc660d6ae3fd6d0c59b3edc3e0",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "name",
+      "displayName": "Name",
+      "helpText": "Service name",
+      "validations": {
+        "maxLength": 256
+      }
+    },
+    {
+      "id": "d5a5a52aa763be55b5467239b46181a4",
+      "isEditable": true,
+      "isRequired": true,
+      "type": "PlainText",
+      "slug": "slug",
+      "displayName": "Slug",
+      "helpText": "Internal use only, no individual pages created",
+      "validations": {
+        "maxLength": 256,
+        "pattern": {},
+        "messages": {
+          "pattern": "Must be alphanumerical and not contain any spaces or special characters",
+          "maxLength": "Must be less than 256 characters"
+        }
+      }
+    }
+  ],
+  "fieldGroups": []
+}

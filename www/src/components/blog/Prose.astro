@@ -1,0 +1,11 @@
+---
+// A Markdown body (spec, UI/UX) in the rich text block of the live Webflow templates: `text-blog-rich-text` for posts,
+// case studies and partners, `text-rich-text` for a job. Webflow's rich text styles apply (www/src/styles/webflow/);
+// www/src/styles/blog.css adds what Webflow has no style for (wide tables in their own scroll region, videos).
+interface Props {
+  variant?: 'blog' | 'plain'
+}
+const { variant = 'blog' } = Astro.props
+---
+
+<div class={variant === 'blog' ? 'text-blog-rich-text w-richtext' : 'text-rich-text w-richtext'}><slot /></div>

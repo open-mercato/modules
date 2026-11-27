@@ -12,12 +12,14 @@
 //   E2E_SHOTS      where the 16 screenshots go (default out/e2e/shots; also attached to the report)
 //   BASE_PATH      base path the sites were built with (default /, as for emit and astro since 28 Oct); set it
 //                  for build.ts and here alike
+//   HOME_PATH      path of the home page under the base (default /); set it for build.ts and here alike. The Run
+//                  section of the main site is SITE_URL=https://www.openmercato.com BASE_PATH=/run HOME_PATH=/modules
 import { defineConfig } from '@playwright/test'
-import { E2E } from './test/e2e/env.ts'
+import { E2E, url } from './test/e2e/env.ts'
 
 const serve = (dist: string, port: number) => ({
   command: `node test/e2e/serve.ts ${dist} ${port} ${E2E.basePath}`,
-  url: `http://127.0.0.1:${port}${E2E.basePath}/`,
+  url: url('/', `http://127.0.0.1:${port}${E2E.basePath}`),
   reuseExistingServer: !process.env.CI,
   timeout: 30_000,
   stdout: 'ignore' as const,
