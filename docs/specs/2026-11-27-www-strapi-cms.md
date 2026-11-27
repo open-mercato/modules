@@ -51,6 +51,12 @@ Made by the repository owner. This spec designs within them and does not reopen 
 | Q9  | 27 Nov 2026 | Option b. The marketing editors are Super Admins too, each with a personal account. There is no Editor-role account.                                                                                                                                                                                                                                                                                                                                                 |
 | Q10 | 27 Nov 2026 | Option b. Strapi becomes the source of the live site before the www switch, on the merged site of `modules.openmercato.com` (D11 of the migration spec). Shadow mode comes first; the www switch then serves the Strapi content.                                                                                                                                                                                                                                     |
 
+What Community holds (Q3, checked 27 Nov 2026 in Step 0.1 against the Preview docs and the self-hosted pricing page):
+Preview with a preview handler is in the free plan (the docs call it Free, the pricing page Community), and so is
+RBAC with unlimited roles. The side-by-side live preview is paid; Content History and Releases need Growth or higher;
+Review Workflows and Audit Logs are Enterprise; SSO is not in Community (an add-on). So the Preview button of Phase 5
+works on Community, and the `www-content` history stands in for Content History and Audit Logs.
+
 Effect on the migration spec (PR #23): D2 is superseded by S1. D10 (content pull requests reviewed by the site owner)
 ends for content that lives in Strapi: editors publish there, and the repository keeps code review for code. D5
 (images in the repository) holds until the source switch (Phase 6); after it the media of record are in Strapi and a
@@ -78,8 +84,8 @@ of the owner's answers of 27 Nov 2026 (Q1 to Q10) changes one of them.
 | A3  | What happens when Strapi is down or its content is invalid.           | A build started by a publish fails loudly. Every other build (push, catalog data, schedule) falls back to the last good snapshot, says so in its summary and updates the issue of A9.                                                                                                                                            | An editor must learn that a publish did not go live; the catalog's several builds a day must not stop because of a second server or an editor's mistake.                                                                             | reversible |
 | A4  | Rich text format in Strapi.                                           | The Markdown rich text field, not Blocks.                                                                                                                                                                                                                                                                                        | Bodies are Markdown today with GFM tables, `<lite-video>` and `<om-embed>`; Blocks JSON cannot hold them and would break the byte round trip.                                                                                        | reversible |
 | A5  | Localization.                                                         | No i18n plugin. `locale` stays a field and `alternateOf` a relation, as in the files.                                                                                                                                                                                                                                            | One Polish landing out of 32; i18n would change how documents and slugs relate for one pair.                                                                                                                                         | reversible |
-| A6  | Database.                                                             | PostgreSQL in the same Compose file.                                                                                                                                                                                                                                                                                             | The common Strapi production database, `pg_dump` is a standard backup, and a managed Postgres is a likely target of the move.                                                                                                        | reversible |
-| A7  | Strapi image formats.                                                 | Off: no breakpoints, no size optimization, no auto orientation. Strapi keeps originals byte for byte.                                                                                                                                                                                                                            | The build already makes webp variants and srcset from originals (`www/image-variants.ts`, PR #39); Strapi variants would be unused and would break byte parity.                                                                      | reversible |
+| A6  | Database.                                                             | PostgreSQL 17 in the same Compose file.                                                                                                                                                                                                                                                                                          | The common Strapi production database, `pg_dump` is a standard backup, and a managed Postgres is a likely target of the move.                                                                                                        | reversible |
+| A7  | Strapi image formats.                                                 | The Media Library settings "Responsive friendly upload", "Size optimization" and "Auto orientation" are all off, written by the bootstrap of `cms/` into the upload plugin's stored settings at every start. Byte identity of the stored original is a test (Step 2.1, Step 3.3), not an assumption.                             | The build already makes webp variants and srcset from originals (`www/image-variants.ts`, PR #39); Strapi variants would be unused and would break byte parity.                                                                      | reversible |
 | A8  | Drafts in the public snapshot.                                        | Production builds and the snapshot exclude documents that were never published. The one-off parity run includes them and runs on Cezar only; the drafts build (Phase 5) prints counts only to the public run.                                                                                                                    | The repository and its Actions logs are public, and an unpublished post in Strapi is unannounced (unlike the 13 Webflow drafts already in `main`). Drafts are never built for production, so the built site is identical either way. | reversible |
 | A9  | How editors learn that a publish did not go live.                     | Field rules in Strapi catch the simple cases at save; the full Zod check runs in the build. A failed publish build, and any build that fell back to the snapshot, opens or updates one issue in this repository listing the cause (no draft content in it), without assignees or mentions; the next good Strapi build closes it. | No new service; the issue is a visible, linkable list, and it still appears when GitHub replaced a pending publish run with another trigger. The last good snapshot stays live meanwhile.                                            | reversible |
 
@@ -100,8 +106,8 @@ of the owner's answers of 27 Nov 2026 (Q1 to Q10) changes one of them.
 ## 📝 Proposed Solution
 
 1. **Strapi 5 Community in Docker Compose** (Strapi, PostgreSQL, a backup job, a tunnel), defined in the `cms/` folder
-   of this repository (Q6) with content types and components as code. In production the Content-Type Builder is
-   read-only, so the model changes only through a reviewed commit.
+   of this repository (Q6) with content types and components as code. The Content-Type Builder is available only in
+   development, so in production the model changes only through code, in a reviewed commit.
 2. **`yarn om www-push`**, the one-off and repeatable import: files of `www/content/` and media of `www/public/media/`
    and `www/public/files/` into Strapi, upserted by slug, idempotent.
 3. **`yarn om www-pull`**, the reverse: Strapi documents and media into the same files, same bytes. It is the only
@@ -114,63 +120,108 @@ of the owner's answers of 27 Nov 2026 (Q1 to Q10) changes one of them.
 
 ### Alternatives considered
 
-- **Astro pages call Strapi directly (the pattern of the Astro guide) or a content loader for Strapi.** Rejected as the
+- **Astro pages call Strapi directly (the pattern of the Astro guide, a hand-written `fetch` at build) or a content
+  loader for Strapi (the guide recommends none).** Rejected as the
   main path: the schemas, the namespace check of `www/content.config.ts`, the media paths the srcset step reads and the
   byte parity would all have to be rebuilt around API objects, and rollback to files would need a converter anyway.
   The pull is that converter, written once.
 - **GraphQL.** Rejected (A2): a plugin, a second schema to keep in step, no gain for a full read at build.
 - **Strapi's built-in Webhooks to GitHub.** Not usable as is: the payload shape is fixed by Strapi (event, model,
-  entry), while `workflow_dispatch` needs `{"ref": ..., "inputs": ...}`, and its headers are stored in the database where
-  every Super Admin can read them. A few lines in the Strapi project send the right body and read the token from the
-  environment.
-- **Cloudflare Pages deploy hooks.** Not available: the Pages project is a direct-upload project built by GitHub
-  Actions, and deploy hooks belong to Git-connected projects.
+  entry), while `workflow_dispatch` needs `{"ref": ..., "inputs": ...}`, and its headers (where the token would go) are set per
+  webhook in the admin panel, so any Super Admin can view and edit them there (Q9). A few lines in the Strapi project
+  send the right body and read the token from the environment; Step 2.4 confirms the mechanism, and its fallback keeps
+  the built-in sender but points it at a relay container that holds the token.
+- **Cloudflare Pages deploy hooks.** Not used: deploy hooks are tied to a branch of a connected Git repository, and
+  the Pages project is a direct-upload project built by GitHub Actions.
 - **A git-based editor (Decap, Keystatic, TinaCMS) on the files.** Superseded by S1.
 - **Static build only from the snapshot branch, Strapi never read by `pages`.** Rejected: S3a asks the build to fetch at
   build time, and a separate sync workflow would add a second moving part with no gain.
 
 ### What comparable Astro and Strapi setups do, and what this spec takes
 
-Sources were not fetched in this run (web access was refused by the session's permissions); each claim below is
-re-checked against its page in Step 0.1 before any implementation PR, and the spec is corrected where a page says
-otherwise.
+Step 0.1, done 27 Nov 2026: every page below was read live that day by independent checkers, two per disputed claim.
+Each bullet gives what the page says, what this spec takes, and where the page is silent. A silent point is not
+answered here; it is a test on a running instance in the step that first needs it, with a stated fallback.
 
-- The Astro guide for Strapi fetches the REST API at build time with a token and rebuilds the static site on a Strapi
-  webhook ([docs.astro.build/en/guides/cms/strapi](https://docs.astro.build/en/guides/cms/strapi/)). Taken: build-time
-  fetch and a rebuild on publish. Not taken: fetching inside pages (see Alternatives).
-- Strapi 5 REST returns flattened documents with a `documentId`, reads drafts with `status=draft`, needs explicit
-  `populate` for relations, components, dynamic zones and media, and caps page size by `maxLimit`
-  ([REST API](https://docs.strapi.io/cms/api/rest), [status](https://docs.strapi.io/cms/api/rest/status),
-  [populate](https://docs.strapi.io/cms/api/rest/populate-select)). Taken: one paged, fully populated read per type.
-- Strapi API tokens come as read-only, full access or custom, and can expire
-  ([API tokens](https://docs.strapi.io/cms/features/api-tokens)). Taken: a read-only token for builds, a full-access
-  token only on Cezar for the import.
-- Strapi webhooks fire on entry create, update, delete, publish and unpublish and on media events, with custom headers
-  and no signature ([Webhooks](https://docs.strapi.io/cms/backend-customization/webhooks)). Taken: the event list;
-  not taken: the built-in sender (see Alternatives).
-- Strapi 5 Preview opens a front-end URL that the project builds from the document in a `preview.handler`; a side by
-  side live preview is a paid feature ([Preview](https://docs.strapi.io/cms/features/preview),
-  [pricing](https://strapi.io/pricing-self-hosted)). Taken: the Preview button pointing at the draft build.
-- The upload plugin generates responsive formats unless `breakpoints` and `sizeOptimization` are turned off, and
-  switches to S3-compatible storage such as R2 through `@strapi/provider-upload-aws-s3`
-  ([Media Library](https://docs.strapi.io/cms/features/media-library),
-  [R2 S3 API](https://developers.cloudflare.com/r2/api/s3/)). Taken: formats off (A7), the local provider (Q5).
-- Strapi's data management CLI (`strapi export`, `import`, `transfer`) moves content, media and configuration between
-  instances, with optional encryption; admin users and API tokens are not part of it
-  ([Data management](https://docs.strapi.io/cms/features/data-management)). Taken: as the portable archive of the move,
-  next to `pg_dump`.
-- Strapi documents Docker deployments with PostgreSQL ([Docker](https://docs.strapi.io/cms/installation/docker)).
-  Taken: Compose with Postgres (A6).
-- GitHub: `workflow_dispatch` needs Actions write, `repository_dispatch` needs Contents write for a fine-grained token
-  ([permissions of fine-grained tokens](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens),
-  [workflow dispatch](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event)); a
-  concurrency group keeps one run and one pending run
-  ([concurrency](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs)).
-  Taken: `workflow_dispatch` (Q4) and the existing `pages` group as the second half of the debounce.
-- Cloudflare: Access can protect Pages preview deployments, and Tunnel exposes a host without an open port
-  ([preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/),
-  [Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)); deploy hooks need a
-  Git-connected project ([deploy hooks](https://developers.cloudflare.com/pages/configuration/deploy-hooks/)).
+- **Astro guide for Strapi** ([docs.astro.build/en/guides/cms/strapi](https://docs.astro.build/en/guides/cms/strapi/)).
+  Says: fetch the Strapi REST API at build time with a hand-written `fetch` helper, configured by `STRAPI_URL` only (no
+  token is sent), and rebuild the static site on a Strapi webhook (it shows Netlify and Vercel build hooks). Taken:
+  build-time fetch and a rebuild on publish. Not taken: fetching from the pages (Alternatives). Silent: it names no
+  Strapi version and recommends no content loader, so neither choice here leans on it. The token of the pull is this
+  spec's own choice, because the content API here is not public (Webhook path and its security).
+- **Strapi 5 REST** ([REST API](https://docs.strapi.io/cms/api/rest),
+  [status](https://docs.strapi.io/cms/api/rest/status),
+  [populate and select](https://docs.strapi.io/cms/api/rest/populate-select),
+  [API configuration](https://docs.strapi.io/cms/configurations/api)). Says: responses are flattened documents with a
+  `documentId`; `status=draft` reads drafts and published is the default; relations, media, components and dynamic
+  zones come back only with an explicit `populate`; the default page size is 25; `api.rest.maxLimit` has no built-in
+  default (no cap when unset), and generated projects set it to 100. Taken: one paged, fully populated read per type,
+  with `maxLimit` set to 100 in `cms/config/api.ts` and the pull paging at exactly that value, never at a default
+  (API Contracts, `www-pull`).
+- **API tokens** ([API tokens](https://docs.strapi.io/cms/features/api-tokens)). Says: types read-only, full access
+  and custom; an optional expiry; a read-only token reaches only `find` and `findOne`; a token is shown once after
+  creation, unless an encryption key is configured, in which case it can be viewed again later. Taken: a read-only
+  token for production builds, a separate drafts token for the drafts build only (`STRAPI_DRAFTS_TOKEN`), a full-access
+  token only on Cezar for the import, and no encryption key in `cms/`, so no Super Admin can display an existing token
+  (Q9). Silent: whether a read-only token can read drafts with `status=draft`. Step 3.3 tests it on the Cezar
+  instance; fallback: the drafts token is a custom token with `find` and `findOne` on the content types.
+- **Webhooks** ([Webhooks](https://docs.strapi.io/cms/backend-customization/webhooks)). Says: events for entry
+  create, update, delete, publish and unpublish and for media; custom headers per webhook; a fixed payload (event,
+  model, entry); no signature. Taken: the event list. Not taken: the built-in sender (Alternatives). Silent: where the
+  headers are stored or shown beyond the admin panel, and how a project listens to publish events in code (lifecycle
+  hooks, document service middlewares, `strapi.eventHub`). Step 2.4 starts by confirming the mechanism in the source
+  of the pinned Strapi release; fallback: a built-in webhook to a small relay container on the Compose network that
+  holds the GitHub token.
+- **Preview and plans** ([Preview](https://docs.strapi.io/cms/features/preview),
+  [self-hosted pricing](https://strapi.io/pricing-self-hosted)). Says: Preview with a `preview.handler` is in the free
+  plan (the docs call it Free, the pricing page Community); the side-by-side live preview is paid; Content History and
+  Releases need Growth or higher; Review Workflows and Audit Logs are Enterprise; SSO is not in Community (an add-on);
+  Community includes RBAC with unlimited roles. Taken: the Preview button pointing at the draft build (Q7), recorded
+  under Q3 in Decisions.
+- **Media Library** ([Media Library](https://docs.strapi.io/cms/features/media-library)). Says: format generation is
+  the admin setting "Responsive friendly upload" (Settings, Global Settings, Media Library); breakpoints only set the
+  sizes; "Size optimization" (on by default, reduces size and quality) and "Auto orientation" (off by default) are
+  separate toggles. These are admin settings, not documented config keys. Taken: all three off, written by the
+  bootstrap of `cms/` at every start (A7). Silent: whether the original is kept byte for byte (tested in Step 2.1 and
+  over every file in Step 3.3), whether the local provider serves `/uploads` without authentication (checked in Step
+  2.1; Risks), and S3 or R2 storage: the page names neither `@strapi/provider-upload-aws-s3` nor R2. Cloudflare's
+  [R2 S3 API](https://developers.cloudflare.com/r2/api/s3/api/) page holds the R2 side; Strapi's upload providers page
+  is read when option b of Q5 is ever chosen, not before.
+- **Data management** ([Data management](https://docs.strapi.io/cms/features/data-management), with its transfer
+  page). Says: `strapi export`, `import` and `transfer` exist; admin users and API tokens are not included; `export`
+  encrypts archives by default (`--no-encrypt` turns it off, `--key` sets the key) and `import` reads encrypted
+  archives; `transfer` has no encryption, only checksums. Taken: an encrypted weekly `export` as the portable archive
+  of the move, next to `pg_dump`. Not taken: `transfer`.
+- **Docker and versions** ([Docker](https://docs.strapi.io/cms/installation/docker),
+  [CLI installation](https://docs.strapi.io/cms/installation/cli), the docs release notes,
+  [npm](https://www.npmjs.com/package/@strapi/strapi)). Says: Docker with PostgreSQL is documented (the examples use
+  `node:22-alpine`); the latest Strapi on npm on 27 Nov 2026 is 5.64.0 (the docs release notes still list 5.62.0);
+  supported Node is the active and maintenance LTS lines, today 22, 24 and 26 (engines `>=22.0.0 <=26.x.x`);
+  PostgreSQL 14 at least, 17 recommended. Taken: Compose with Postgres (A6), Strapi pinned at exactly 5.64.0 and
+  re-checked at Step 2.1, PostgreSQL 17, and Node 24 for the image, the same Node as the rest of this repository.
+- **Content-Type Builder**
+  ([Content-Type Builder](https://docs.strapi.io/cms/features/content-type-builder)). Says: available in the
+  development environment only; the Markdown rich text field still exists next to Blocks. Taken: the model changes
+  only through code in production, and the Markdown field (A4). Silent: `NODE_ENV` and `schema.json`; Step 2.3 proves
+  on a running production-mode instance that a model change is refused.
+- **GitHub** ([permissions of fine-grained tokens](https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens),
+  [workflow dispatch](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event),
+  [concurrency](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs),
+  [GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token)). Says: `workflow_dispatch` needs
+  Actions write and `repository_dispatch` Contents write for a fine-grained token; a concurrency group keeps one
+  running and one pending run; a push made with `GITHUB_TOKEN` starts no new workflow run (`workflow_dispatch` and
+  `repository_dispatch` excepted). Taken: `workflow_dispatch` (Q4), the existing `pages` group as the second half of
+  the debounce, and the snapshot push to `www-content` with `GITHUB_TOKEN`, which therefore triggers nothing.
+- **Cloudflare** ([preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/),
+  [known issues](https://developers.cloudflare.com/pages/platform/known-issues/),
+  [Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/),
+  [deploy hooks](https://developers.cloudflare.com/pages/configuration/deploy-hooks/), the Zero Trust plans page).
+  Says: Access can protect preview deployments and, by the known-issues steps plus a self-hosted Access application, a
+  project's production `*.pages.dev` address and custom domain; Tunnel needs no open inbound port; deploy hooks are tied
+  to a branch of a connected Git repository; Access is free up to 50 users on the Zero Trust free plan, so the four
+  accounts of Q9 fit. Taken: Tunnel and Access on `/admin` (Q2), the known-issues procedure for the drafts project
+  (Step 5.0). Silent: the deploy hooks page does not say that direct-upload projects lack them; this project is direct
+  upload, so hooks are not used either way.
 
 What the common setups skip and this spec keeps: a schema check stricter than the CMS (the Zod schemas), a parity
 proof at migration, and a rollback that does not need the CMS.
@@ -204,7 +255,7 @@ snapshot branch.
 
 | Component               | Where                                                                                                                                                                | What it does                                                                                                                                                                                                                                                                                                                                                                      |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Strapi project          | `cms/` of this repository (Q6): `compose.yaml`, `Dockerfile`, `src/api/**`, `src/components/**`, `config/**`, `scripts/backup.sh`, `scripts/restore.sh`, `README.md` | Content types and components as `schema.json` files, upload config (A7), roles seed, the publish hook (`src/index.ts` bootstrap), the preview handler, backup and restore. Strapi version pinned exactly; Node of its image as Strapi supports it (re-checked in Step 0.1), not this repository's Node 24.                                                                        |
+| Strapi project          | `cms/` of this repository (Q6): `compose.yaml`, `Dockerfile`, `src/api/**`, `src/components/**`, `config/**`, `scripts/backup.sh`, `scripts/restore.sh`, `README.md` | Content types and components as `schema.json` files, upload config (A7), roles seed, the publish hook (its mechanism confirmed in Step 2.4), the preview handler, backup and restore. Strapi pinned at exactly 5.64.0 (re-checked at Step 2.1), PostgreSQL 17, and an image on Node 24, the Node of this repository, which Strapi supports (22 to 26).                            |
 | `lib/www-cms/model.ts`  | this repository                                                                                                                                                      | The mapping table between each file collection and its Strapi type: field names, components, relations, media fields. Pure functions `toDocument(entry)` and `fromDocument(doc)`; erasable TypeScript, no Node APIs.                                                                                                                                                              |
 | `yarn om www-push`      | `lib/commands/www-push.ts`                                                                                                                                           | Files into Strapi (API Contracts).                                                                                                                                                                                                                                                                                                                                                |
 | `yarn om www-pull`      | `lib/commands/www-pull.ts`                                                                                                                                           | Strapi into files (API Contracts).                                                                                                                                                                                                                                                                                                                                                |
@@ -214,11 +265,13 @@ snapshot branch.
 
 ### No Cezar path in the site build
 
-The site repository knows Strapi only by the variable `STRAPI_URL` (an https address, Q1) and the secret
-`STRAPI_READ_TOKEN`. Nothing in `pages.yml`, `www/` or `lib/` names Cezar, a Docker volume or a host path. The Strapi
+The site repository knows Strapi only by the variable `STRAPI_URL` (an https address, Q1), the repository secret
+`STRAPI_READ_TOKEN` (production builds) and, from Phase 5, the secret `STRAPI_DRAFTS_TOKEN` of the environment
+`www-drafts`, which only `pages-drafts.yml` uses. Nothing in `pages.yml`, `www/` or `lib/` names Cezar, a Docker volume or a host path. The Strapi
 project reads every host-specific value from `cms/.env` on the host, which is never committed (`.gitignore` lists it,
 `cms/.env.example` lists the keys): database password, app keys, JWT secrets, the GitHub token, the tunnel token, the
-backup target and key.
+backup target and key. It sets no encryption key for API tokens, so a token is shown once at creation and no Super
+Admin can display it later (API tokens docs; Q9); a lost token is replaced, as at rotation.
 
 ### The `cms/` folder (Q6)
 
@@ -231,11 +284,11 @@ exceptions, each with a comment. Nothing of its tree enters the root `package.js
 | Tool                                  | How `cms/` is kept out of the catalog, and the catalog out of `cms/`                                                                                                                                                                                                                                                                                                                                                                                     |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Root workspace and install            | The root `package.json` has no `workspaces` field, so `yarn install` at the root never reads `cms/`. `cms/` installs with `yarn install --immutable` inside the folder.                                                                                                                                                                                                                                                                                  |
-| `yarn check`: `tsc`, `astro check`    | The root `tsconfig.json` includes `lib`, `site/src`, `scripts` and `test` only; `astro check` reads `site/` and `www/`. `cms/` has Strapi's own `tsconfig.json`, compiled by `strapi build` on the Node of the Strapi image. Its TypeScript is still erasable (rule 6), so the same reviewers read it the same way.                                                                                                                                      |
+| `yarn check`: `tsc`, `astro check`    | The root `tsconfig.json` includes `lib`, `site/src`, `scripts` and `test` only; `astro check` reads `site/` and `www/`. `cms/` has Strapi's own `tsconfig.json`, compiled by `strapi build` on Node 24 in the Strapi image. Its TypeScript is still erasable (rule 6), so the same reviewers read it the same way.                                                                                                                                       |
 | `yarn check`: Prettier and check-text | Root Prettier checks the sources of `cms/` with the root config (no new dependency); `.prettierignore` gains the folder's outputs (`cms/node_modules/`, `cms/dist/`, `cms/build/`, `cms/.strapi/`, `cms/types/generated/`, `cms/public/uploads/`). check-text already covers every `*.md`; `cms/src/` and `cms/config/` join its text directories, so help texts are checked for the banned dashes and control characters; the rest of rule 7 is review. |
 | `yarn test`                           | Vitest includes `test/**` only, so no test of `cms/` runs there. One root test reads `cms/src/**/schema.json` as plain JSON, without importing Strapi, and compares it with `lib/www-cms/model.ts` (Step 2.2). `cms/` tests itself with `node --test`, so it adds no test runner.                                                                                                                                                                        |
 | `validate.yml`                        | No trigger change. A PR that changes `cms/` is outside `modules/`, so `yarn check` and `yarn test` run (the drift test with them) without installing `cms/`; its site builds are skipped because `cms/` is not among the paths of Detect site changes.                                                                                                                                                                                                   |
-| `cms.yml` (new)                       | On pull requests and pushes with `paths: ['cms/**']` only: `yarn install --immutable` in `cms/`, `strapi build`, `node --test`, `docker compose config`. `ubuntu-latest`, `contents: read`, no secrets. A change outside `cms/` never starts it.                                                                                                                                                                                                         |
+| `cms.yml` (new)                       | On pull requests and pushes with `paths: ['cms/**']` only: `yarn install --immutable` in `cms/`, `strapi build`, `node --test`, `docker compose config`. `ubuntu-latest`, Node 24, `contents: read`, no secrets. A change outside `cms/` never starts it.                                                                                                                                                                                                |
 | `pages.yml`                           | Its `push` trigger gains `paths-ignore: ['cms/**']`, so a merge that changes only `cms/` neither builds nor deploys the site. The `workflow_run`, schedule and `workflow_dispatch` triggers do not change. The reverse holds by construction: no change of this repository redeploys Strapi, because the host runs a tag (below).                                                                                                                        |
 | Dependency updates                    | No Dependabot or Renovate config exists today (no `.github/dependabot.yml`, no `renovate.json`, checked 27 Nov 2026). If one is added, `cms/` gets an entry of its own (`directory: /cms`), so a Strapi update never lands in a root PR. GitHub's dependency graph reads every lockfile, so security alerts for the Strapi tree appear on this repository's Security tab; the owners of `cms/` triage them.                                              |
 | CODEOWNERS                            | A `/cms/` line names the owner and the infrastructure owner; every other path keeps its owner.                                                                                                                                                                                                                                                                                                                                                           |
@@ -270,8 +323,8 @@ docker compose -f cms/compose.yaml up -d --build
   the owner's review required for every other path; the access itself is repository-wide (branches, workflow runs),
   which the owner accepts by granting it.
 - **What they own.** The host, its `cms/.env`, the tunnel, the backup target, the `cms-v*` tags (when the ruleset
-  allows them) and the review of `cms/`. The repository holds no Strapi secret except `STRAPI_READ_TOKEN`, which the
-  owner sets.
+  allows them) and the review of `cms/`. The repository holds no Strapi secret except `STRAPI_READ_TOKEN` and, from
+  Phase 5, `STRAPI_DRAFTS_TOKEN`, which the owner sets.
 - **The exit.** If they later want a repository of their own, `git subtree split --prefix=cms` gives one with the
   folder's history. The site side does not change (it knows only `STRAPI_URL`); only the drift test of Step 2.2 goes
   back to reading a pinned commit of another repository.
@@ -376,7 +429,11 @@ flowchart LR
 - **New uploads.** A file an editor uploads outside those folders is written to `/media/uploads/<name>`, the name
   lowercased with every character outside `[a-z0-9.-]` turned into `-` (the importer's rule). Two different files that
   reach the same path stop the pull with both names, so nothing is overwritten silently.
-- **Bytes.** Formats and optimization are off (A7), so Strapi stores the original. The pull checks the SHA-256 against
+- **Bytes.** With the three Media Library settings off (A7), Strapi is expected to store the original unchanged. The
+  Media Library docs do not say so, so Step 2.1 tests it on a running instance (a JPEG, a PNG, a WebP and an SVG, each
+  with EXIF or metadata, uploaded and compared by SHA-256 with the stored file) and Step 3.3 checks it over every file
+  of the import. If a type is not kept byte for byte, the plan stops at Step 2.1 and this section is revised before
+  Phase 3, because byte parity cannot hold. The pull checks the SHA-256 against
   the `manifest.json` of the snapshot and downloads only new or changed files; the media cache of the build is the
   Actions cache keyed by that manifest.
 - **Limits.** The Strapi upload limit is set to 25 MiB, the Pages file limit; the pull fails above it too, and
@@ -422,9 +479,15 @@ yarn om www-push --strapi <https url> [--content www/content] [--public www/publ
 yarn om www-pull --strapi <https url> [--out <dir>] [--drafts] [--status published|draft] [--check] [--snapshot <dir>]
 ```
 
-- **Token.** `STRAPI_READ_TOKEN`, a read-only API token.
-- **Read.** For each type, paged REST reads (`pagination[pageSize]` at the type's `maxLimit`) with an explicit
-  `populate` from `lib/www-cms/model.ts`; `status=published` by default, `status=draft` for the drafts build. Requests
+- **Token.** `STRAPI_READ_TOKEN`, a read-only API token, for `status=published`. With `--status draft` or `--drafts`
+  the pull reads `STRAPI_DRAFTS_TOKEN` instead and never the other one, so the production build holds no token made for
+  drafts. Whether a read-only token can read drafts at all is not documented; Step 3.3 tests it, and if it cannot, the
+  drafts token is a custom token with `find` and `findOne` on the content types.
+- **Read.** For each type, paged REST reads with an explicit `populate` from `lib/www-cms/model.ts`. `cms/config/api.ts`
+  sets `rest.maxLimit` to 100 (Strapi has no cap when it is unset, and the default page size is 25); the pull asks for
+  `pagination[pageSize]=100` and fails with exit 2 when an answer's `meta.pagination.pageSize` is not 100 or its page
+  count does not add up, so a changed limit can never drop documents silently. `status=published` is sent explicitly
+  (it is also Strapi's default), `status=draft` for the drafts build. Requests
   at most 4 at a time, 30 seconds each, 3 tries with backoff; any failure ends the run with exit 2 (environment), never
   with partial files.
 - **Write.** Into a fresh directory, then validated with the Zod schemas of `lib/schema/www-content.ts`, the slug and
@@ -461,7 +524,13 @@ contents: write` on this job only.
 
 ### Publish hook (Strapi project)
 
-- Listens to publish, unpublish and delete of every type above, and to media update and delete.
+- Listens to publish, unpublish and delete of every type above, and to media update and delete. The Webhooks docs
+  name these events but not how a project listens to them in code; Step 2.4 confirms the mechanism in the source of
+  Strapi 5.64.0 (document service middlewares, lifecycle hooks or the event hub) before writing the hook, and tests
+  that one publish on a running instance gives exactly one hook call. Fallback: a built-in Strapi webhook on those
+  events to a small relay container on the Compose network (no published port), which debounces and sends the
+  dispatch; the GitHub token lives only in the relay's environment, and the webhook in the admin carries no header and
+  no token.
 - Waits for 60 seconds without a new event (at most 5 minutes from the first), then calls
   `POST /repos/open-mercato/modules/actions/workflows/pages.yml/dispatches` with
   `{"ref": "main", "inputs": {"www_content": "publish"}}` and the token of Q4 from the environment.
@@ -483,23 +552,28 @@ contents: write` on this job only.
   precondition of the token. `pages` checks its own input against the enum and ends on any other value. A relay (a
   Worker that holds the token, option c of Q4) would narrow this to `pages.yml` and `pages-drafts.yml` on `ref: main`
   with their fixed inputs, at the cost of a service to run; it is the natural upgrade at the move.
-- **What a stolen read token can do.** Read published and draft content of Strapi. It is a repository secret, not
-  available to pull requests from forks, and is rotated with the dispatch token.
+- **What a stolen read token can do.** `STRAPI_READ_TOKEN` reads published content (and drafts too if the test of Step
+  3.3 shows that read-only tokens can; then no token type separates the two, and Risks records it). It is a
+  repository secret, not available to pull requests from forks. `STRAPI_DRAFTS_TOKEN` reads drafts; it is a secret of
+  the environment `www-drafts`, which accepts only `main` and is named only by `pages-drafts.yml`, so neither the
+  production build nor any other workflow holds it. Both are rotated with the dispatch token.
 - **Where secrets live.** The GitHub token and the Strapi secrets are in `cms/.env` on the Strapi host (file mode 600,
   not in the image, not in the database, not in the admin UI). That stays true with every editor a Super Admin (Q9):
-  built-in Strapi webhooks stay unused, so no account can read the GitHub token in the UI.
-- **What every Super Admin can do (Q9).** Each of the four accounts can read and create API tokens (a full-access token
+  no built-in Strapi webhook carries the GitHub token (with the relay fallback of the publish hook it carries none
+  either), so no account can read it in the UI, and with no token encryption key set no account can display an
+  existing API token.
+- **What every Super Admin can do (Q9).** Each of the four accounts can list and create API tokens (a full-access token
   reads drafts and writes every type), change settings (upload settings, built-in webhooks, which could send entry
   events to any address), and create, change and delete admin users. What none of them can do in production is change
-  the model: the Content-Type Builder is read-only there, so a type or field changes only through a reviewed commit to
+  the model: the Content-Type Builder is available only in development, so a type or field changes only through a reviewed commit to
   `cms/`, and the drift test of Step 2.2 keeps it equal to the mapping. Two more doors stay open to every account: the
   Public role (any Super Admin can grant it `find`, which opens the content API without a token, since Access covers
   only `/admin`) and the upload settings. The bootstrap of `cms/` resets the Public role to no permission and re-applies
   the upload settings of A7 at every start; `www-pull` fails when an anonymous `GET /api/<type>` answers 200; and the
   pull's SHA-256 check against the snapshot manifest names every existing media file whose bytes changed. What remains
   is in Risks.
-- **Rotation.** Both tokens expire within a year; rotation is a RUNBOOK section (new token, update `cms/.env` or the
-  repository secret, restart, one dispatch by hand). API tokens made in the admin UI are listed and reviewed at the
+- **Rotation.** The dispatch, read and drafts tokens expire within a year; rotation is a RUNBOOK section (new token, update `cms/.env`, the
+  repository secret or the environment secret, restart, one dispatch by hand). API tokens made in the admin UI are listed and reviewed at the
   same time; any not named in the RUNBOOK is deleted.
 
 ## 📝 UI/UX
@@ -601,8 +675,9 @@ merged site on modules.openmercato.com (D11 of the migration spec: not indexed, 
 - **Nightly** on the Strapi host, by `scripts/backup.sh` in a container of the Compose file: `pg_dump --format=custom`
   of the database and a tar of the uploads volume, encrypted with `age` to a public key whose private key the owner
   holds, sent to the target of Q8. Kept 14 daily and 8 weekly.
-- **Weekly** a `strapi export` archive (content, media, config; encrypted with its own key option) as the portable copy
-  for the move. Admin users and API tokens are not in it; they are recreated (four personal Super Admin accounts, Q9).
+- **Weekly** a `strapi export` archive (content, media, config) as the portable copy for the move. `export` encrypts
+  by default; the backup passes `--key` from `cms/.env` and never `--no-encrypt`, and `import` reads the encrypted
+  archive. `strapi transfer` is not used: it has no encryption, only checksums. Admin users and API tokens are not in it; they are recreated (four personal Super Admin accounts, Q9).
 - **Last resort.** The `www-content` branch holds every published state since the source switch. `www-push` from it into
   an empty Strapi restores the published content and media without any backup (drafts and users excluded).
 - **Restore drill.** `scripts/restore.sh` into a fresh Compose project, then `www-pull --check` against the snapshot:
@@ -620,8 +695,9 @@ Because the site knows only `STRAPI_URL` and two secrets, the move is:
 5. One `pages` dispatch by hand; `www-pull --check` passes; Cezar's Strapi is stopped and its volumes kept for 30 days.
 
 Nothing in this repository changes for the move (CODEOWNERS of `/cms/` already names the infrastructure owner). If the
-infrastructure owner later prefers R2 for media (option b of Q5), it is a
-change of the upload provider plus a one-time copy, done before or after the move, not during it.
+infrastructure owner later prefers R2 for media (option b of Q5), it is a change of the upload provider plus a
+one-time copy, done before or after the move, not during it. Its facts are not in this spec: Strapi's upload providers
+page and Cloudflare's R2 S3 API page are read at that time, and the byte test of Step 2.1 is run again on R2.
 
 ## 📝 Rollback to files
 
@@ -650,14 +726,21 @@ change of the upload provider plus a one-time copy, done before or after the mov
   add a built-in webhook or manage users, so one taken-over account can read every draft or change every document.
   What remains as mitigation: Access with an email one-time code in front of `/admin` (a password alone is not
   enough), personal accounts only and no shared login, the `www-content` history as the audit trail of every published
-  change, the model read-only in production, and the token review at every rotation (Webhook path and its security).
+  change, the model changeable only through code in production, and the token review at every rotation (Webhook path and its security).
 - **The freeze is longer (Q10).** From the source switch to C8 the indexed site does not change unless a page is
   copied into Webflow by hand, and a rollback at C10 must copy back everything published since the freeze. The 7-day
   spacing is a minimum; the freeze day records a target date for C8 in the RUNBOOK, and when C8 slips past it the
   owner decides again whether to wait or to copy the divergence into Webflow.
-- **Draft media are public by URL.** Strapi's local provider serves `/uploads/*` without a token. File names carry a
-  hash, but a draft's image can be fetched by anyone who has its address. Acceptable for marketing images; Access on the
-  whole host or a private R2 bucket closes it if needed.
+- **Draft media may be public by URL.** The Media Library docs do not say whether the local provider serves
+  `/uploads/*` without a token; Step 2.1 checks it on a running instance and records the answer here. If it does, a
+  draft's image can be fetched by anyone who has its address (file names carry a hash): acceptable for marketing
+  images, and Access on the whole host or a private R2 bucket closes it if needed. If it does not, this risk is
+  removed. The pull sends its token on media downloads either way.
+- **A read token may read drafts.** If the test of Step 3.3 shows that a read-only token reads `status=draft`, the
+  production `STRAPI_READ_TOKEN` can read every draft, and a leak of it exposes unannounced content. The separate
+  `STRAPI_DRAFTS_TOKEN` then still keeps the drafts workflow's secret out of production and lets each be rotated
+  alone, but it no longer limits what a stolen production token reads; the owner decides at Step 3.3 whether that is
+  acceptable or whether the spec is revised.
 - **Build time and size.** The pull adds one paged read per type and, after the first run, only new media. The 71 MB
   of media move from `main` to Strapi and the snapshot branch at the switch; `main` keeps today's copy until the
   rollback window ends, then a PR removes it.
@@ -674,16 +757,18 @@ change of the upload provider plus a one-time copy, done before or after the mov
 
 ## 📋 Phasing
 
-- **Phase 0: checks and answers.** Re-check the cited pages (Step 0.1, open). The owner's answers to Q1 to Q10 are
-  recorded (Step 0.2, done in this PR). No code.
+- **Phase 0: checks and answers.** Done. Every cited page was re-checked live (Step 0.1, done 27 Nov 2026) and the
+  owner's answers to Q1 to Q10 are recorded (Step 0.2, done 27 Nov 2026), both in this PR. No code.
 - **Phase 1: the mapping, offline.** Navigation, footer and landing template become content files; the mapping table
   and its byte round trip over today's files. Ships alone; the site does not change.
 - **Phase 2: the Strapi project.** PRs in this repository that add `cms/` (Q6) with Compose, types, roles, hook,
   backup, and keep it out of the root toolchain. Nothing runs on Cezar yet, and no change of `cms/` builds the site.
-- **Phase 3: push, pull and parity on Cezar.** Import, byte parity, built-site parity, restore drill.
+- **Phase 3: push, pull and parity on Cezar.** Which token type reads drafts, import, byte parity, built-site
+  parity, restore drill.
 - **Phase 4: `pages` reads Strapi.** The variable, the snapshot branch, the fallback, the dispatch input. Default
   `files`, so it ships without changing the site; it ends with `shadow` on.
-- **Phase 5: draft preview.** The drafts build on its own Pages project behind Access (Q7).
+- **Phase 5: draft preview.** The drafts build on its own Pages project behind Access (Q7), with its own token
+  (`STRAPI_DRAFTS_TOKEN`) in an environment only that workflow names.
 - **Phase 6: the source switch, then the www switch.** Shadow until `0 files differ`, the freeze and the final
   `www-push`, then `strapi` on the merged site of modules.openmercato.com (Q10). The www switch (C8) follows later and
   serves the same Strapi content.
@@ -695,9 +780,11 @@ changes `cms/`), and names its test. Steps marked Owner are the owner's actions,
 
 ### Phase 0: checks and answers
 
-0.1. Re-check every source of "What comparable Astro and Strapi setups do" and the plan matrix of Strapi; correct this
-spec where a page differs (exact Strapi 5 minor, Node versions of its image, Preview and roles in Community, the data
-management contents, the token permissions). Test: the PR lists each URL with what it says.
+0.1. Done 27 Nov 2026: every source of "What comparable Astro and Strapi setups do" and the plan matrix of Strapi were
+read live by independent checkers, two per disputed claim. The research section lists each URL with what it says,
+what this spec takes and where it is silent; the spec is corrected where a page differed (Strapi 5.64.0 on Node 24,
+PostgreSQL 17, `maxLimit`, the drafts token, the Media Library settings, export encryption, the Content-Type
+Builder, deploy hooks, Community plan contents under Q3). Every silent point is a test in Steps 2.1, 2.3, 2.4 and 3.3.
 
 0.2. Done 27 Nov 2026: the owner's answers to Q1 to Q10 are in Decisions, and the spec reads under them.
 
@@ -729,13 +816,21 @@ invalid or good, to `pull`, `snapshot` or `fail`, plus `www_content: snapshot` w
 
 ### Phase 2: the Strapi project in `cms/` (Q6)
 
-2.1. The folder and its boundary: `cms/package.json`, `cms/yarn.lock`, `cms/.yarnrc.yml`, Compose (Strapi pinned,
-PostgreSQL pinned, backup job, tunnel), `Dockerfile`, `.env.example`, a non-root user, upload config (A7, 25 MiB, the
-local provider of Q5); `.gitignore` gains `cms/.env`; `.prettierignore`, the check-text directories, the `paths-ignore`
+2.1. The folder and its boundary: `cms/package.json`, `cms/yarn.lock`, `cms/.yarnrc.yml`, Compose (Strapi 5.64.0
+exactly, re-checked against npm at this step, PostgreSQL 17, backup job, tunnel), `Dockerfile` on Node 24,
+`.env.example` (no API token encryption key), a non-root user, `cms/config/api.ts` with `rest.maxLimit` 100, upload
+config (25 MiB, the local provider of Q5) and the bootstrap that writes the three Media Library settings of A7 at
+every start; `.gitignore` gains `cms/.env`; `.prettierignore`, the check-text directories, the `paths-ignore`
 of the `pages` push trigger, the new `cms.yml` and the `/cms/` line of CODEOWNERS as in The `cms/` folder; a note for
 the owner of AGENTS.md (the Map line). Test: the root `yarn install --immutable` leaves the root `yarn.lock`
 unchanged; `cms.yml` passes `docker compose config` and a start with an empty database; a test of the workflow files
-asserts the `paths-ignore` of `pages.yml` and the `paths` of `cms.yml`.
+asserts the `paths-ignore` of `pages.yml` and the `paths` of `cms.yml`. On the started instance: after a setting of A7
+is changed in the admin and Strapi restarts, all three are off again (the settings are admin settings, not documented
+config keys, so the step first finds where 5.64.0 stores them; fallback: the bootstrap reads them and refuses to start
+while any is on, naming it); a JPEG, a PNG, a WebP and an SVG, each with EXIF
+or metadata, uploaded through the admin API are stored with the same SHA-256 (if not, the plan stops here, Media);
+an anonymous `GET` of an uploaded file under `/uploads/` is recorded as answered or refused, and Risks is updated
+with the answer.
 
 2.2. Content types and components of the Data Model as `schema.json` in `cms/src/`, with the field rules Strapi can
 hold (required, regex, enums, max). Test: a root test (`test/www-cms/model-drift.test.ts`) reads those JSON files and
@@ -745,13 +840,18 @@ pinned commit to fetch and no second CI to keep in step: a PR that changes one s
 
 2.3. Roles seed (Q9): four personal Super Admin accounts (the owner, the infrastructure owner, the two editors), their
 addresses listed in `cms/.env` and each first password set through Strapi's invitation link (no password in
-`.env`), no shared login and no Editor-role account; help texts, edit view layout, Content-Type Builder read-only
-in production, the A7 upload settings re-applied at start. Test: in production mode a Super Admin can publish a
-post and a request to change a content type is refused; after a start the Public role has no permission; the seed
+`.env`), no shared login and no Editor-role account; help texts, edit view layout; the Content-Type Builder available only
+in development. Test: in production mode on a running instance a Super Admin can publish a post, the Content-Type
+Builder is not offered and a request to change a content type is refused; after a start the Public role has no permission; the seed
 refuses an account list with a repeated or role address (`admin@`, `marketing@`).
 
-2.4. The publish hook and the preview handler (the handler stays off until Phase 5). Test: `node --test` with a fake
-GitHub endpoint: a burst of events gives one dispatch with the fixed body; a 403 is not retried.
+2.4. The publish hook and the preview handler (the handler stays off until Phase 5). First, confirm in the source or
+docs of Strapi 5.64.0 which mechanism reports publish, unpublish and delete (document service middlewares, lifecycle
+hooks or the event hub) and record the answer, with its source, in `cms/README.md`. Test: `node --test` with a fake
+GitHub endpoint: a burst of events gives one dispatch with the fixed body; a 403 is not retried; and on a running
+instance with the fake endpoint, one publish, one unpublish and one delete each give exactly one hook call. Fallback,
+when no mechanism passes that test: a built-in webhook to a relay container on the Compose network that holds the
+token (Publish hook); the same `node --test` cases then run against the relay.
 
 2.5. `cms/scripts/backup.sh` (to the Hetzner Storage Box of Q8), `cms/scripts/restore.sh`, `cms/README.md` (operate,
 rotate tokens, deploy a tag, move). Test: in `cms.yml`, backup to a local target and restore into a second
@@ -772,8 +872,12 @@ idempotent (second run `0 changed`), creates relations in the right order and up
 recorded fixture it writes valid files; a removed slug without a redirect fails; a corrupt answer leaves `www/content`
 untouched.
 
-3.3. Owner or a maintainer on Cezar: steps 2 to 4 of Migration (import, byte parity, built-site parity with
-`compare-live`) and the restore drill. Evidence goes into the PR of 4.1.
+3.3. Owner or a maintainer on Cezar: first the draft-token test: `www-pull --status draft --check` with a read-only
+token, then with a custom token (`find` and `findOne` on the content types); the result names which one returns
+drafts, and that type becomes `STRAPI_DRAFTS_TOKEN` (fallback: the custom token; if neither returns drafts, Phase 5 is
+revised before it starts, and a full-access token in CI is not an option). Then steps 2 to 4 of Migration (import,
+byte parity, with the media SHA-256 compared for every file of `www/public/media` and `www/public/files`, built-site
+parity with `compare-live`) and the restore drill. Evidence goes into the PR of 4.1.
 
 ### Phase 4: `pages` reads Strapi (default unchanged)
 
@@ -791,10 +895,15 @@ problem list (title fixed, no assignee, no mention). Test: unit test of the issu
 
 ### Phase 5: draft preview (Q7)
 
-5.0. Owner: create the Pages project for drafts (for example `open-mercato-www-drafts`), put Cloudflare Access on all
-its hostnames, and give the deploy token of environment `cloudflare` access to it.
+5.0. Owner: create the Pages project for drafts (for example `open-mercato-www-drafts`); put Cloudflare Access on its
+preview deployments and, by the steps of the Pages known issues page, a self-hosted Access application on its
+production `*.pages.dev` address and any custom domain (the Zero Trust free plan covers up to 50 users); give the
+deploy token of environment `cloudflare` access to it; create the environment `www-drafts` (deployment branch `main`)
+with the secret `STRAPI_DRAFTS_TOKEN` of the type Step 3.3 chose. Check: an anonymous request to each hostname gets
+the Access login, not the site.
 
-5.1. The drafts build, `pages-drafts.yml`: `www-pull --status draft --drafts`, `PAGES_NOINDEX=1`, deploy to the
+5.1. The drafts build, `pages-drafts.yml` (environment `www-drafts`, the only workflow that names it): `www-pull
+--status draft --drafts` with `STRAPI_DRAFTS_TOKEN`, `PAGES_NOINDEX=1`, deploy to the
 drafts project; on invalid content a problem page per path on that protected project. The public run prints counts
 only, uploads no artifact and never echoes draft text (A8). Test: the build of the fixture in drafts mode routes the
 draft documents and writes noindex headers; a test greps the job log of a fixture run for a draft title and fails on
@@ -830,5 +939,6 @@ of the publish help text; C4 to C10 of the amended Cutover.
 - Scope: one capability (editing the main site in a CMS); the Strapi server and the pull are its two halves (A1).
 - Merge order with the migration spec: PR #23 is still a draft on its own branch. Step 6.1 amends its Cutover, so
   that step lands after #23 merges or as a change in #23 itself, whichever comes first.
-- Not checked in this run: any web page (see the research section), any Strapi behavior on a running instance, the
-  build time of a pull.
+- Web sources: read live on 27 Nov 2026 by independent checkers (Step 0.1); what they leave open is a test in Steps
+  2.1, 2.3, 2.4 and 3.3.
+- Not checked yet: any Strapi behavior on a running instance, the build time of a pull.
