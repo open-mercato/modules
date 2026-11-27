@@ -1,9 +1,20 @@
 {
-  "at": "2026-11-27T08:42:49Z",
+  "at": "2026-11-27T21:23:30Z",
   "listed": 39,
-  "missing": [],
+  "missing": [
+    "@open-mercato/cache-provider-jsonfile",
+    "@open-mercato/cache-provider-kit",
+    "@open-mercato/cache-provider-memory",
+    "@open-mercato/cache-provider-redis-legacy",
+    "@open-mercato/cache-provider-sqlite"
+  ],
   "packages": [
     "@open-mercato/ai-assistant",
+    "@open-mercato/cache-provider-jsonfile",
+    "@open-mercato/cache-provider-kit",
+    "@open-mercato/cache-provider-memory",
+    "@open-mercato/cache-provider-redis-legacy",
+    "@open-mercato/cache-provider-sqlite",
     "@open-mercato/carrier-inpost",
     "@open-mercato/channel-apns",
     "@open-mercato/channel-discord",

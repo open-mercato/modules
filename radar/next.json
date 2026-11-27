@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T11:35:38.417Z",
-  "next": "0.11.1-develop.8587.1.5952ba9ee6",
+  "generatedAt": "2026-11-27T21:25:21.347Z",
+  "next": "0.11.1-develop.8687.1.adb16f62b3",
   "base": "0.10.1",
   "summary": "15 of 16 modules outside the @open-mercato scope use APIs that changed since 0.10.1. 0 break statically. Receipts on next: 0 verified, 0 broken.",
   "changedApis": [
@@ -44,6 +44,38 @@
       ]
     },
     {
+      "symbol": "@open-mercato/shared/lib/commands#CommandRuntimeContext",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/billing",
+        "npm:@dainamite/cpq",
+        "npm:@dainamite/cpq-billing-connector",
+        "npm:@freighttech/shipment-tracking",
+        "npm:@freighttech/terminal-tracking",
+        "npm:@northbound-run/sync-google-sheets",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/injection/useGuardedMutation#useGuardedMutation",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq-billing-connector",
+        "npm:@fastwhitecat/integration-ksef-direct",
+        "npm:@northbound-run/channel-cloudflare-email",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/encryption/tenantDataEncryptionService#TenantDataEncryptionService",
+      "change": "signature",
+      "modules": [
+        "github:fullstackhouse/open-mercato-client-auth",
+        "npm:@dainamite/cpq",
+        "npm:@piotrkarwatka/marketing-consents"
+      ]
+    },
+    {
       "symbol": "@open-mercato/shared/lib/logger#createLogger",
       "change": "signature",
       "modules": [
@@ -61,10 +93,38 @@
       ]
     },
     {
+      "symbol": "@open-mercato/core/modules/attachments/data/entities#AttachmentPartition",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
+      ]
+    },
+    {
       "symbol": "@open-mercato/core/modules/auth/services/authService#AuthService",
       "change": "signature",
       "modules": [
         "github:fullstackhouse/open-mercato-client-auth"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/auth/services/rbacService#RbacService",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/communication_channels/data/entities#CommunicationChannel",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/core/modules/communication_channels/lib/adapter#ChannelCapabilities",
+      "change": "signature",
+      "modules": [
+        "npm:@northbound-run/channel-cloudflare-email"
       ]
     },
     {
@@ -75,6 +135,13 @@
       ]
     },
     {
+      "symbol": "@open-mercato/shared/lib/commands/command-interceptor#CommandInterceptor",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq"
+      ]
+    },
+    {
       "symbol": "@open-mercato/shared/lib/commands/helpers#setCustomFieldsIfAny",
       "change": "signature",
       "modules": [
@@ -82,10 +149,31 @@
       ]
     },
     {
+      "symbol": "@open-mercato/shared/lib/commands/types#CommandRuntimeContext",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/billing"
+      ]
+    },
+    {
       "symbol": "@open-mercato/shared/lib/crud/mutation-guard-registry#bridgeLegacyGuard",
       "change": "signature",
       "modules": [
         "npm:@dainamite/billing"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/shared/lib/crud/mutation-guard-registry#MutationGuard",
+      "change": "signature",
+      "modules": [
+        "npm:@dainamite/cpq-billing-connector"
+      ]
+    },
+    {
+      "symbol": "@open-mercato/ui/backend/CrudForm#CrudForm",
+      "change": "signature",
+      "modules": [
+        "npm:@piotrkarwatka/marketing-consents"
       ]
     },
     {
