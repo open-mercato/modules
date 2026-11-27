@@ -577,6 +577,10 @@ const menuCta = (label: string) => cta(navCtaAction({ kind: 'menu', label }))
     .navbar_menu-links {
       flex: 1;
     }
+    /* as the live code does (27 Nov 2026): Contact, and the hidden GitHub link after it, pushed to the right */
+    .navbar_menu-links > .navbar_link[href$='/contact'] {
+      margin-left: auto;
+    }
     .navbar_content-right {
       flex: none;
     }
