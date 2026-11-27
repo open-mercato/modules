@@ -4,8 +4,9 @@ title: How OPAK KREFT keeps the exact packaging document its customer received
 heading: The box changed. The customer’s datasheet stayed on record.
 description: OPAK KREFT used to assemble packaging documents from spreadsheets, supplier files and a separate design program. Flowbiz built a document generator on Open Mercato alongside the manufacturer’s existing ERP.
 thumbnail:
-  src: /media/case-studies/6b04bd0f27b47149dc5d05ba-6b04bceb31735d86a26543fd-ppwr-cover.jpeg
-  alt: Illustrative corrugated packaging workbench with a carton and a caliper
+  src: /media/case-studies/6b08b5fb99e371aa3ba83f1c-6b08b5deb95baf1d55a39bfc-opak-kreft-carton-dieline.webp
+  alt: ''
+  decorative: true
 deliveredByUrl: https://flowbiz.pl/en
 overview:
   client: OPAK KREFT

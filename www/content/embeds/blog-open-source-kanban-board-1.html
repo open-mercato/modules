@@ -1,0 +1,1412 @@
+<section class="om-workbench" data-om-guide="kanban" aria-label="Open source Kanban board">
+  <style>
+    .om-workbench {
+      --ink: #18212b;
+      --muted: #495762;
+      --rule: #c8ced0;
+      --paper: #f8f8f4;
+      --blue: #2446ab;
+      box-sizing: border-box;
+      max-width: 100%;
+      margin: 1.5rem 0 2.25rem;
+      padding: clamp(16px, 3vw, 30px);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--blue);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      font:
+        400 16px/1.45 system-ui,
+        sans-serif;
+      text-align: left;
+    }
+    .om-workbench *,
+    .om-workbench *:before,
+    .om-workbench *:after {
+      box-sizing: border-box;
+    }
+    .om-workbench .wb-title {
+      font:
+        650 clamp(21px, 3vw, 28px)/1.2 system-ui,
+        sans-serif;
+      color: var(--ink);
+      margin: 0 0 18px;
+      letter-spacing: -0.035em;
+    }
+    .om-workbench .wb-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 20px;
+      margin: 12px 0;
+    }
+    .om-workbench label,
+    .om-workbench legend {
+      display: block;
+      color: var(--ink);
+      font:
+        600 14px/1.35 system-ui,
+        sans-serif;
+    }
+    .om-workbench input:not([type='checkbox']),
+    .om-workbench select,
+    .om-workbench textarea {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      margin: 6px 0 0;
+      padding: 9px 10px;
+      border: 1px solid #869295;
+      border-radius: 4px;
+      background: #fff;
+      color: var(--ink);
+      font:
+        400 16px/1.35 system-ui,
+        sans-serif;
+    }
+    .om-workbench input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+      accent-color: var(--blue);
+    }
+    .om-workbench textarea {
+      min-height: 100px;
+      font-family: ui-monospace, monospace;
+    }
+    .om-workbench input:focus-visible,
+    .om-workbench select:focus-visible,
+    .om-workbench textarea:focus-visible,
+    .om-workbench button:focus-visible,
+    .om-workbench a:focus-visible {
+      outline: 3px solid #4262b8;
+      outline-offset: 2px;
+    }
+    .om-workbench button,
+    .om-workbench a.wb-button {
+      font:
+        600 14px/1.3 system-ui,
+        sans-serif;
+      color: #fff;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: 4px;
+      padding: 10px 15px;
+      cursor: pointer;
+      text-decoration: none;
+      margin: 0;
+    }
+    .om-workbench button.secondary {
+      background: white;
+      color: var(--ink);
+      border-color: #879394;
+    }
+    .om-workbench button:disabled {
+      opacity: 0.48;
+      cursor: default;
+    }
+    .om-workbench .wb-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+    .om-workbench .wb-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(125px, 100%), 1fr));
+      gap: 14px;
+      border-block-start: 1px solid var(--rule);
+      margin-top: 20px;
+      padding-top: 16px;
+    }
+    .om-workbench .wb-results small {
+      display: block;
+      color: var(--muted);
+      font:
+        500 13px/1.3 system-ui,
+        sans-serif;
+    }
+    .om-workbench .wb-results strong {
+      display: block;
+      font:
+        650 clamp(19px, 3vw, 27px)/1.3 ui-monospace,
+        monospace;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .om-workbench .wb-hint,
+    .om-workbench .wb-status,
+    .om-workbench .wb-error {
+      margin: 10px 0 0;
+      font:
+        400 14px/1.5 system-ui,
+        sans-serif;
+      text-align: left;
+      color: var(--muted);
+    }
+    .om-workbench .wb-error:not(:empty) {
+      color: #992d18;
+      font-weight: 600;
+    }
+    .om-workbench .wb-error:empty,
+    .om-workbench [hidden] {
+      display: none !important;
+    }
+    .om-workbench .wb-sheet,
+    .om-workbench .wb-snapshot {
+      margin-top: 14px;
+      padding: 16px;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    .om-workbench .wb-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(95px, 100%), 1fr));
+      gap: 8px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      align-items: end;
+    }
+    .om-workbench .wb-row label:first-child {
+      grid-column: span 2;
+    }
+    .om-workbench .wb-row label {
+      font-size: 12px;
+    }
+    .om-workbench .wb-row input {
+      padding: 7px;
+    }
+    .om-workbench .wb-row button {
+      justify-self: start;
+      padding: 8px 10px;
+    }
+    .om-workbench .wb-codes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(235px, 100%), 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .om-workbench .wb-code {
+      min-width: 0;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .om-workbench .wb-code svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto 8px;
+    }
+    .om-workbench .wb-code button {
+      padding: 6px 10px;
+    }
+    .om-workbench .wb-choice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    #om-sheet-print {
+      display: none;
+    }
+    @media (max-width: 560px) {
+      .om-workbench .wb-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .om-workbench .wb-grid {
+        gap: 12px;
+      }
+      .om-workbench .wb-title {
+        margin-bottom: 14px;
+      }
+    }
+    @media (max-width: 400px) {
+      .om-workbench .wb-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media print {
+      body.om-printing {
+        overflow: visible !important;
+        height: auto !important;
+        background: white !important;
+      }
+      body.om-printing > :not(#om-sheet-print) {
+        display: none !important;
+      }
+      body.om-printing > #om-sheet-print {
+        display: block !important;
+        position: static !important;
+        color: #111;
+        font:
+          12pt/1.4 Arial,
+          sans-serif;
+        background: white;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+      #om-sheet-print * {
+        box-sizing: border-box;
+      }
+      #om-sheet-print h1 {
+        font:
+          600 22pt/1.2 Arial,
+          sans-serif;
+        color: #111;
+        margin: 0 0 6mm;
+      }
+      #om-sheet-print table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 5mm;
+      }
+      #om-sheet-print th,
+      #om-sheet-print td {
+        border-bottom: 1px solid #777;
+        text-align: left;
+        padding: 2mm;
+        overflow-wrap: anywhere;
+      }
+      #om-sheet-print .wb-labels {
+        display: flex;
+        gap: 1.5mm;
+        flex-wrap: wrap;
+      }
+      #om-sheet-print .wb-print-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        break-inside: avoid;
+        border: 0.2mm dotted #aaa;
+        page-break-inside: avoid;
+      }
+      #om-sheet-print svg {
+        display: block;
+        max-width: none !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+
+    /* The working board leads this article. Keep the reading width for the guide below it. */
+    main:has(.kb-frame) .section:has(.header_content) {
+      padding-block: 10px 16px;
+    }
+    main:has(.kb-frame) .section:has(.header_content) .section-padding {
+      padding-block: 20px 0;
+    }
+    main:has(.kb-frame) .header_content,
+    main:has(.kb-frame) .blog-post_component .blog-post_content {
+      width: min(100%, 1100px);
+      margin-inline: auto;
+    }
+    main:has(.kb-frame) .header_content .label_component {
+      margin: 0 0 14px;
+    }
+    main:has(.kb-frame) .header_content .blog_label,
+    main:has(.kb-frame) .header_content .blog-post_header {
+      display: none;
+    }
+    main:has(.kb-frame) .header_content h1 {
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: 1.06;
+    }
+    main:has(.kb-frame) .header_content .max-width-47rem {
+      margin: 10px 0 0;
+      max-width: 780px;
+    }
+    main:has(.kb-frame) .header_content .max-width-47rem p {
+      font-size: clamp(16px, 1.3vw, 19px);
+      line-height: 1.45;
+      margin: 0;
+    }
+    main:has(.kb-frame) .section:has(.blog-post_component) .section-padding {
+      padding-top: 22px;
+    }
+    .text-blog-rich-text > :has(> [data-om-guide='kanban']) {
+      width: 100%;
+      max-width: none;
+    }
+
+    [data-om-guide='kanban'].om-workbench {
+      --kb-ink: #23271f;
+      --kb-muted: #586053;
+      --kb-line: #d8ddd2;
+      --kb-accent: #d9ed87;
+      --kb-sans: Inter, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0 0 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--kb-ink);
+      font: 400 15px/1.45 var(--kb-sans);
+      letter-spacing: 0;
+      min-width: 0;
+    }
+    .kb-frame {
+      border: 1px solid #cbd1c4;
+      border-radius: 14px;
+      background: #f6f7f2;
+    }
+    .om-workbench .kb-toolbar,
+    .om-workbench .kb-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .kb-toolbar {
+      padding: 15px 19px;
+      background: #fff;
+      border-radius: 14px 14px 0 0;
+      border-bottom: 1px solid var(--kb-line);
+    }
+    .kb-identity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .kb-mark {
+      width: 35px;
+      height: 35px;
+      display: inline-flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2px;
+      padding-top: 10px;
+      background: #e3eca7;
+      border-radius: 8px;
+      flex: none;
+    }
+    .kb-mark i {
+      display: block;
+      width: 4px;
+      border-radius: 1px;
+      background: #34452a;
+      height: 16px;
+    }
+    .kb-mark i:nth-child(2) {
+      height: 11px;
+    }
+    .kb-mark i:nth-child(3) {
+      height: 7px;
+    }
+    [data-om-guide='kanban'] button,
+    [data-om-guide='kanban'] a.kb-launch {
+      color: var(--kb-ink);
+      background: #fff;
+      border: 1px solid var(--kb-line);
+      border-radius: 7px;
+      font: 600 14px/1.3 var(--kb-sans);
+      padding: 7px 11px;
+      min-height: 36px;
+    }
+    [data-om-guide='kanban'] :is(button, a, input, select, textarea, [tabindex]):focus-visible {
+      outline: 3px solid #617832;
+      outline-offset: 2px;
+    }
+    [data-om-guide='kanban'] .kb-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      max-width: 100%;
+      border: 0;
+      padding: 2px 0;
+      background: transparent;
+      font-size: 18px;
+      text-align: left;
+    }
+    .kb-name span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .kb-name svg {
+      width: 15px;
+      height: 15px;
+      flex: none;
+      color: var(--kb-muted);
+    }
+    [data-om-guide='kanban'] .kb-add-column {
+      white-space: nowrap;
+      flex: none;
+    }
+    .kb-add-column span {
+      font-size: 17px;
+      vertical-align: -1px;
+    }
+    .kb-lanes {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #b3b9aa transparent;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: 16px;
+    }
+    .kb-lane {
+      --stage: #727b9a;
+      flex: 0 0 calc((100% - 24px) / 3);
+      min-width: 195px;
+      min-height: 198px;
+      padding: 8px;
+      background: #ebeee6;
+      border-radius: 9px;
+      scroll-snap-align: start;
+    }
+    .kb-lane:nth-child(3n + 2) {
+      --stage: #aa722d;
+    }
+    .kb-lane:nth-child(3n) {
+      --stage: #4f7c4d;
+    }
+    .kb-lane.kb-over {
+      outline: 2px solid #72863b;
+      outline-offset: -2px;
+      background: #e4ebd6;
+    }
+    .kb-lane-head {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 1px 5px 3px;
+    }
+    .kb-lane-head::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--stage);
+      flex: none;
+    }
+    [data-om-guide='kanban'] .kb-lane h3 {
+      font: 650 14px/1.35 var(--kb-sans);
+      margin: 0;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+    .kb-count {
+      color: var(--kb-muted);
+      font: 500 12px/1 var(--kb-sans);
+    }
+    [data-om-guide='kanban'] .kb-icon {
+      display: grid;
+      place-items: center;
+      padding: 2px;
+      min-width: 34px;
+      min-height: 34px;
+      line-height: 1;
+      color: var(--kb-muted);
+    }
+    [data-om-guide='kanban'] .kb-options {
+      margin-left: auto;
+      flex: none;
+      background: transparent;
+      border: 0;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    [data-om-guide='kanban'] .kb-lane ul {
+      list-style: none;
+      display: grid;
+      margin: 0;
+      padding: 0;
+      gap: 7px;
+    }
+    [data-om-guide='kanban'] .kb-lane li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    [data-om-guide='kanban'] .kb-card {
+      display: block;
+      width: 100%;
+      min-height: 44px;
+      text-align: left;
+      padding: 11px;
+      background: white;
+      box-shadow: 0 1px 2px #26301c0c;
+      cursor: grab;
+      font: 550 14px/1.4 var(--kb-sans);
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+    [data-om-guide='kanban'] .kb-card:hover {
+      border-color: #99a38b;
+    }
+    .kb-card:active {
+      cursor: grabbing;
+    }
+    .kb-card span,
+    .kb-card small {
+      display: block;
+    }
+    .kb-card small {
+      font: 400 12px/1.4 var(--kb-sans);
+      color: var(--kb-muted);
+      margin-top: 4px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .kb-lane li.kb-insert-before {
+      box-shadow: 0 -3px 0 #778b45;
+      border-radius: 7px;
+    }
+    .kb-lane li.kb-insert-after {
+      box-shadow: 0 3px 0 #778b45;
+      border-radius: 7px;
+    }
+    [data-om-guide='kanban'] .kb-add-card {
+      border: 0;
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-top: 4px;
+      background: transparent;
+      color: #49523e;
+      min-height: 37px;
+    }
+    [data-om-guide='kanban'] .kb-add-card:hover,
+    [data-om-guide='kanban'] .kb-options:hover {
+      background: #dfe5d8;
+    }
+    .kb-empty {
+      margin: auto;
+      padding: 22px;
+      color: var(--kb-muted);
+    }
+    .kb-footer {
+      border-top: 1px solid var(--kb-line);
+      padding: 9px 17px;
+      min-height: 41px;
+    }
+    .kb-feedback,
+    .kb-transfer {
+      font: 400 13px/1.45 var(--kb-sans);
+      color: var(--kb-muted);
+      overflow-wrap: anywhere;
+    }
+    .kb-scroll,
+    .kb-transfer-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    [data-om-guide='kanban'] .kb-text-button,
+    [data-om-guide='kanban'] .kb-transfer a {
+      color: #3d572a;
+      border: 0;
+      background: transparent;
+      min-height: 30px;
+      padding: 3px 0;
+      font: 600 13px/1.3 var(--kb-sans);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .kb-save {
+      margin-top: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      border-radius: 11px;
+      padding: 20px;
+      background: #202a20;
+      color: #f5f7ef;
+    }
+    [data-om-guide='kanban'] .kb-save h2 {
+      color: #fff;
+      font: 640 clamp(18px, 2vw, 23px)/1.15 var(--kb-sans);
+      margin: 0;
+      letter-spacing: -0.025em;
+    }
+    [data-om-guide='kanban'] .kb-save p {
+      font: 400 14px/1.45 var(--kb-sans);
+      color: #dde4d7;
+      margin: 5px 0 0;
+      letter-spacing: 0;
+      max-width: 570px;
+    }
+    [data-om-guide='kanban'] a.kb-launch {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 43px;
+      padding-inline: 15px;
+      color: #233019;
+      border-color: var(--kb-accent);
+      background: var(--kb-accent);
+      text-decoration: none;
+    }
+    [data-om-guide='kanban'] a.kb-launch:hover {
+      background: #edf6c2;
+    }
+    .kb-transfer {
+      margin: 10px 2px 0;
+    }
+    .kb-transfer-actions {
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .kb-setup {
+      margin-top: 8px;
+    }
+    [data-om-guide='kanban'] .kb-setup textarea {
+      font:
+        13px/1.4 ui-monospace,
+        monospace;
+      width: 100%;
+    }
+    .kb-dialog {
+      color: var(--kb-ink);
+      background: #fff;
+      width: min(440px, calc(100% - 24px));
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      padding: 21px;
+      border: 1px solid #bdc7b6;
+      border-radius: 12px;
+      box-shadow: 0 20px 70px #14221033;
+      margin: auto;
+    }
+    .kb-dialog::backdrop {
+      background: #17201666;
+    }
+    .kb-dialog-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 18px;
+      gap: 10px;
+    }
+    [data-om-guide='kanban'] .kb-dialog h2 {
+      font: 650 22px/1.2 var(--kb-sans);
+      color: var(--kb-ink);
+      margin: 0;
+    }
+    .kb-fields {
+      display: grid;
+      gap: 14px;
+    }
+    .kb-optional {
+      color: var(--kb-muted);
+      font-weight: 400;
+    }
+    [data-om-guide='kanban'] .kb-dialog :is(input, select, textarea) {
+      width: 100%;
+      background: #fff;
+      font: 400 16px/1.4 var(--kb-sans);
+      margin-top: 5px;
+    }
+    [data-om-guide='kanban'] .kb-dialog textarea {
+      min-height: 65px;
+      resize: vertical;
+    }
+    [data-om-guide='kanban'] .kb-confirm {
+      margin: 0;
+      color: var(--kb-ink);
+      font: 400 15px/1.5 var(--kb-sans);
+    }
+    .kb-dialog-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    [data-om-guide='kanban'] .kb-dialog [type='submit'] {
+      color: #fff;
+      background: #35472c;
+      border-color: #35472c;
+    }
+    [data-om-guide='kanban'] .kb-dialog .kb-delete {
+      margin-right: auto;
+      color: #913c28;
+      background: transparent;
+      border-color: transparent;
+      padding-left: 0;
+    }
+    [data-om-guide='kanban'] .kb-dialog [data-danger='true'] {
+      background: #8a3e2b;
+      border-color: #8a3e2b;
+    }
+    @media (max-width: 700px) {
+      main:has(.kb-frame) .section:has(.header_content) {
+        padding-block: 4px 6px;
+      }
+      main:has(.kb-frame) .section:has(.header_content) .section-padding {
+        padding-top: 14px;
+      }
+      main:has(.kb-frame) .section:has(.blog-post_component) .section-padding {
+        padding-top: 13px;
+      }
+      main:has(.kb-frame) .header_content .label_component {
+        margin-bottom: 8px;
+      }
+      .kb-lane {
+        flex-basis: 73%;
+        min-width: min(210px, 84%);
+      }
+      .kb-toolbar {
+        padding: 10px 12px;
+      }
+      .kb-lanes {
+        padding: 10px;
+        gap: 8px;
+        scroll-padding-inline: 10px;
+      }
+      .kb-footer {
+        padding: 6px 10px;
+      }
+      .kb-save {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 15px;
+      }
+    }
+    @media (max-width: 480px) {
+      main.padding-global:has(.kb-frame) {
+        padding-inline: 16px;
+      }
+      .kb-mark {
+        width: 29px;
+        height: 29px;
+        padding-top: 7px;
+      }
+      [data-om-guide='kanban'] .kb-name {
+        font-size: 16px;
+      }
+      .kb-feedback {
+        font-size: 12px;
+      }
+    }
+  </style>
+  <div class="kb-frame">
+    <div class="kb-toolbar">
+      <div class="kb-identity">
+        <span class="kb-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <button type="button" class="kb-name" data-ui="rename-board" aria-label="Rename board">
+          <span data-ui="board-name">My board</span>
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="m12.5 4 3.5 3.5M3 17l3.8-.8 9.9-9.9a1.9 1.9 0 0 0-2.7-2.7L4 13.4 3 17Z" />
+          </svg>
+        </button>
+      </div>
+      <button type="button" class="kb-add-column" data-ui="add-column">
+        <span aria-hidden="true">+</span> Add column
+      </button>
+    </div>
+    <div class="kb-lanes" data-ui="lanes" role="region" aria-label="Kanban columns" tabindex="0">
+      <section class="kb-lane">
+        <h3>To do</h3>
+        <ul>
+          <li data-note="Include the onboarding timeline.">Draft the proposal</li>
+          <li>Book a discovery call</li>
+        </ul>
+      </section>
+      <section class="kb-lane">
+        <h3>In progress</h3>
+        <ul>
+          <li data-note="Walk through the customer’s first order.">Prepare the demo</li>
+        </ul>
+      </section>
+      <section class="kb-lane">
+        <h3>Done</h3>
+        <ul>
+          <li>Confirm the project brief</li>
+        </ul>
+      </section>
+    </div>
+    <div class="kb-footer">
+      <div class="kb-feedback">
+        <span data-ui="feedback" role="status" aria-live="polite">Drag a card or open it to edit and move it.</span>
+        <button type="button" class="kb-text-button" data-ui="undo" hidden>Undo</button>
+      </div>
+      <div class="kb-scroll" data-ui="scroll-controls" hidden>
+        <button type="button" class="kb-icon" data-ui="scroll-prev" aria-label="Scroll to previous column">←</button>
+        <button type="button" class="kb-icon" data-ui="scroll-next" aria-label="Scroll to next column">→</button>
+      </div>
+    </div>
+  </div>
+  <div class="kb-save">
+    <div class="kb-save-copy">
+      <h2>Get your own board in Open Mercato</h2>
+      <p data-ui="handoff-description">Start a free 7-day sandbox to work with Open Mercato’s sales pipeline.</p>
+    </div>
+    <a
+      class="kb-launch"
+      data-ui="launch"
+      href="https://app.openmercatocloud.com/signup?template=mercato"
+      target="_blank"
+      rel="noopener"
+      ><span data-ui="launch-label">Launch free sandbox</span> <span aria-hidden="true">↗</span></a
+    >
+  </div>
+  <div class="kb-transfer" data-ui="transfer" hidden>
+    <span role="status" aria-live="polite" data-ui="transfer-status"></span>
+    <div class="kb-transfer-actions">
+      <button type="button" class="kb-text-button" data-ui="copy-again">Copy board setup</button>
+      <button
+        type="button"
+        class="kb-text-button"
+        data-ui="show-setup"
+        aria-controls="om-kb-setup"
+        aria-expanded="false"
+      >
+        Show board setup
+      </button>
+      <a
+        href="https://app.openmercatocloud.com/signup?template=mercato"
+        target="_blank"
+        rel="noopener"
+        data-ui="continue"
+        hidden
+        >Open sandbox ↗</a
+      >
+    </div>
+    <div class="kb-setup" id="om-kb-setup" data-ui="setup-panel" hidden>
+      <label
+        >Board setup for the sandbox agent<textarea data-ui="setup" rows="6" readonly spellcheck="false"></textarea>
+      </label>
+    </div>
+  </div>
+  <dialog class="kb-dialog" data-ui="editor" aria-labelledby="om-kb-dialog-title">
+    <form data-ui="editor-form">
+      <div class="kb-dialog-head">
+        <h2 id="om-kb-dialog-title" data-ui="editor-title">Edit card</h2>
+        <button type="button" class="kb-icon" data-ui="close" aria-label="Close editor">×</button>
+      </div>
+      <div class="kb-fields">
+        <label data-ui="name-field"
+          ><span data-ui="name-label">Card title</span
+          ><input data-ui="name" required maxlength="200" autocomplete="off"
+        /></label>
+        <label data-ui="notes-field" hidden
+          >Notes <span class="kb-optional">(optional)</span
+          ><textarea data-ui="notes" rows="3" maxlength="4000"></textarea>
+        </label>
+        <label data-ui="choice-field" hidden
+          ><span data-ui="choice-label">Column</span
+          ><select data-ui="choice"></select
+        ></label>
+        <p class="kb-confirm" data-ui="confirm-text" hidden></p>
+      </div>
+      <div class="kb-dialog-actions">
+        <button type="button" class="kb-delete" data-ui="remove" hidden>Delete card</button>
+        <button type="button" class="kb-secondary" data-ui="cancel">Cancel</button>
+        <button type="submit" data-ui="submit">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+  <noscript><p>Enable JavaScript to edit the example in your browser.</p></noscript>
+  <script>
+    ;(() => {
+      const root = document.currentScript.closest('[data-om-guide]')
+      const get = (role) => root.querySelector('[data-ui="' + role + '"]')
+      const all = (role) => Array.from(root.querySelectorAll('[data-ui="' + role + '"]'))
+      const amount = (role) => {
+        const input = get(role)
+        return input.value.trim() && input.validity.valid ? input.valueAsNumber : NaN
+      }
+      const usd = (value) =>
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(value)
+      const fmt = (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(value)
+      const make = (tag, value) => {
+        const element = document.createElement(tag)
+        if (value !== undefined) element.textContent = value
+        return element
+      }
+      function download(name, type, data) {
+        const link = document.createElement('a')
+        const url = URL.createObjectURL(new Blob([data], { type }))
+        link.href = url
+        link.download = name
+        document.body.append(link)
+        link.click()
+        link.remove()
+        setTimeout(() => URL.revokeObjectURL(url), 30000)
+      }
+      function printSheet(content) {
+        document.getElementById('om-sheet-print')?.remove()
+        const sheet = make('section')
+        sheet.id = 'om-sheet-print'
+        sheet.append(content)
+        document.body.append(sheet)
+        document.body.classList.add('om-printing')
+        const finish = () => {
+          document.body.classList.remove('om-printing')
+          sheet.remove()
+        }
+        window.addEventListener('afterprint', finish, { once: true })
+        window.print()
+      }
+
+      const lanes = get('lanes')
+      const editor = get('editor')
+      const sessionKey = 'om.kanban-board.tab.v1'
+      const newId = () => crypto.randomUUID()
+      const sampleBoard = {
+        id: newId(),
+        title: get('board-name').textContent,
+        columns: Array.from(lanes.children, (section) => ({
+          id: newId(),
+          title: section.querySelector('h3').textContent,
+          cards: Array.from(section.querySelectorAll('li'), (item) => ({
+            id: newId(),
+            title: item.textContent,
+            notes: item.dataset.note || '',
+          })),
+        })),
+      }
+
+      function readDraft() {
+        try {
+          const draft = JSON.parse(sessionStorage.getItem(sessionKey))
+          const hasName = (item) => typeof item?.id === 'string' && typeof item.title === 'string'
+          if (
+            hasName(draft) &&
+            Array.isArray(draft.columns) &&
+            draft.columns.every(
+              (column) =>
+                hasName(column) &&
+                Array.isArray(column.cards) &&
+                column.cards.every((card) => hasName(card) && typeof card.notes === 'string'),
+            )
+          )
+            return draft
+        } catch {
+          /* A private or full browser session can still use the board in memory. */
+        }
+        return sampleBoard
+      }
+
+      let board = readDraft()
+      let editing
+      let removedState
+      let dragging
+      const columnById = (id) => board.columns.find((column) => column.id === id)
+      const cardCount = (column) => column.cards.length + (column.cards.length === 1 ? ' card' : ' cards')
+
+      function button(action, id, label, className, visibleText) {
+        const control = make('button', visibleText)
+        control.type = 'button'
+        control.className = className
+        control.dataset.action = action
+        control.dataset.id = id
+        control.setAttribute('aria-label', label)
+        return control
+      }
+
+      function renderColumn(column) {
+        const section = make('section')
+        section.className = 'kb-lane'
+        section.dataset.column = column.id
+        const head = make('div')
+        head.className = 'kb-lane-head'
+        const heading = make('h3', column.title)
+        heading.id = 'om-kb-lane-' + column.id
+        section.setAttribute('aria-labelledby', heading.id)
+        const count = make('span', String(column.cards.length))
+        count.className = 'kb-count'
+        count.setAttribute('aria-label', cardCount(column))
+        const options = button('column', column.id, 'Edit column: ' + column.title, 'kb-icon kb-options', '⋯')
+        options.title = 'Edit column'
+        head.append(heading, count, options)
+
+        const list = make('ul')
+        for (const card of column.cards) {
+          const item = make('li')
+          item.dataset.card = card.id
+          const open = button('card', card.id, 'Edit card: ' + card.title, 'kb-card')
+          open.draggable = true
+          open.append(make('span', card.title))
+          if (card.notes) open.append(make('small', card.notes))
+          item.append(open)
+          list.append(item)
+        }
+        const add = button('add-card', column.id, 'Add card to ' + column.title, 'kb-add-card', '+ Add card')
+        section.append(head, list, add)
+        return section
+      }
+
+      function updateScrollButtons() {
+        const available = lanes.scrollWidth - lanes.clientWidth
+        get('scroll-controls').hidden = available < 3
+        get('scroll-prev').disabled = lanes.scrollLeft < 2
+        get('scroll-next').disabled = lanes.scrollLeft >= available - 2
+      }
+
+      function render() {
+        get('board-name').textContent = board.title
+        get('rename-board').setAttribute('aria-label', 'Rename board: ' + board.title)
+        const left = lanes.scrollLeft
+        lanes.replaceChildren(...board.columns.map(renderColumn))
+        if (!board.columns.length) {
+          const empty = make('div', 'Add a column to start your board.')
+          empty.className = 'kb-empty'
+          lanes.append(empty)
+        }
+        lanes.scrollLeft = left
+        get('undo').hidden = !removedState
+        updateScrollButtons()
+      }
+
+      function saveChange(message, undoSnapshot = null) {
+        removedState = undoSnapshot
+        try {
+          sessionStorage.setItem(sessionKey, JSON.stringify(board))
+        } catch {
+          /* Keep the in-memory draft. */
+        }
+        get('transfer').hidden = true
+        get('feedback').textContent = message
+        render()
+      }
+
+      function focusControl(action, id, reveal = false) {
+        const control = Array.from(lanes.querySelectorAll('[data-action]')).find(
+          (node) => node.dataset.action === action && node.dataset.id === id,
+        )
+        const target = control || get('add-column')
+        if (reveal && control) {
+          const lane = control.closest('.kb-lane')
+          const rect = lane.getBoundingClientRect()
+          const viewport = lanes.getBoundingClientRect()
+          if (rect.left < viewport.left || rect.right > viewport.right)
+            lanes.scrollLeft += rect.left - viewport.left - parseFloat(getComputedStyle(lanes).paddingLeft)
+        }
+        target.focus({ preventScroll: true })
+      }
+
+      function resetEditor(title) {
+        get('editor-title').textContent = title
+        get('editor-form').reset()
+        get('name').disabled = false
+        get('name').setCustomValidity('')
+        get('name-field').hidden = false
+        get('notes-field').hidden = true
+        get('choice-field').hidden = true
+        get('confirm-text').hidden = true
+        get('remove').hidden = true
+        get('submit').dataset.danger = 'false'
+        get('submit').textContent = 'Save changes'
+      }
+
+      function setChoices(label, options, selected) {
+        get('choice-label').textContent = label
+        get('choice').replaceChildren(...options.map(([title, value]) => new Option(title, value)))
+        get('choice').value = selected
+        get('choice-field').hidden = false
+      }
+
+      function openEditor(mode, column, card) {
+        editing = { mode, column, card }
+        const titles = {
+          board: 'Rename board',
+          column: column ? 'Edit column' : 'Add column',
+          card: card ? 'Edit card' : 'Add card',
+        }
+        resetEditor(titles[mode])
+        const field = get('name')
+        const original = mode === 'board' ? board : mode === 'card' ? card : column
+        field.value = original?.title || ''
+        field.maxLength = mode === 'card' ? 200 : 100
+        get('name-label').textContent = { board: 'Board name', column: 'Column name', card: 'Card title' }[mode]
+        if (!original) get('submit').textContent = titles[mode]
+        if (mode === 'card') {
+          get('notes-field').hidden = false
+          get('notes').value = card?.notes || ''
+          setChoices(
+            'Column',
+            board.columns.map((item) => [item.title, item.id]),
+            column.id,
+          )
+        }
+        if (mode === 'column' && column && board.columns.length > 1) {
+          const choices = board.columns.map((item, index) => [String(index + 1), String(index)])
+          setChoices('Column position', choices, String(board.columns.indexOf(column)))
+        }
+        if ((mode === 'column' && column) || (mode === 'card' && card)) {
+          get('remove').hidden = false
+          get('remove').textContent = 'Delete ' + mode
+        }
+        editor.showModal()
+        field.focus()
+        field.select()
+      }
+
+      function finish(message, action, id, snapshot) {
+        editor.close()
+        saveChange(message, snapshot)
+        if (action === 'board') get('rename-board').focus({ preventScroll: true })
+        else focusControl(action, id, true)
+      }
+
+      function removeColumn(column) {
+        const snapshot = JSON.stringify(board)
+        const index = board.columns.indexOf(column)
+        board.columns.splice(index, 1)
+        const next = board.columns[index] || board.columns[index - 1]
+        finish('Deleted column “' + column.title + '”.', 'column', next?.id, snapshot)
+      }
+
+      get('remove').addEventListener('click', () => {
+        const { mode, column, card } = editing
+        if (mode === 'card') {
+          const snapshot = JSON.stringify(board)
+          column.cards.splice(column.cards.indexOf(card), 1)
+          finish('Deleted card “' + card.title + '”.', 'add-card', column.id, snapshot)
+          return
+        }
+        if (!column.cards.length) {
+          removeColumn(column)
+          return
+        }
+        editing.mode = 'confirm-delete'
+        resetEditor('Delete this column?')
+        get('name-field').hidden = true
+        get('name').disabled = true
+        get('confirm-text').textContent =
+          '“' + column.title + '” contains ' + cardCount(column) + '. Deleting the column also removes those cards.'
+        get('confirm-text').hidden = false
+        get('submit').textContent = 'Delete column and cards'
+        get('submit').dataset.danger = 'true'
+        get('cancel').focus()
+      })
+
+      get('editor-form').addEventListener('submit', (event) => {
+        event.preventDefault()
+        const { mode, column, card } = editing
+        if (mode === 'confirm-delete') {
+          removeColumn(column)
+          return
+        }
+        const title = get('name').value.trim()
+        if (!title) {
+          get('name').setCustomValidity('Enter a name.')
+          get('name').reportValidity()
+          return
+        }
+        if (mode === 'board') {
+          board.title = title
+          finish('Board renamed.', 'board')
+        } else if (mode === 'column') {
+          const edited = column || { id: newId(), cards: [] }
+          edited.title = title
+          if (!column) board.columns.push(edited)
+          else if (board.columns.length > 1) {
+            board.columns.splice(board.columns.indexOf(column), 1)
+            board.columns.splice(Number(get('choice').value), 0, column)
+          }
+          finish(column ? 'Column updated.' : 'Column added.', 'column', edited.id)
+        } else {
+          const destination = columnById(get('choice').value)
+          const edited = card || { id: newId() }
+          edited.title = title
+          edited.notes = get('notes').value
+          if (!card || column !== destination) {
+            if (card) column.cards.splice(column.cards.indexOf(card), 1)
+            destination.cards.push(edited)
+          }
+          finish(card ? 'Card updated.' : 'Card added.', 'card', edited.id)
+        }
+      })
+
+      get('name').addEventListener('input', () => get('name').setCustomValidity(''))
+      get('close').addEventListener('click', () => editor.close())
+      get('cancel').addEventListener('click', () => editor.close())
+      get('rename-board').addEventListener('click', () => openEditor('board'))
+      get('add-column').addEventListener('click', () => openEditor('column'))
+      lanes.addEventListener('click', (event) => {
+        const control = event.target.closest('[data-action]')
+        if (!control) return
+        const column = columnById(control.closest('.kb-lane').dataset.column)
+        const action = control.dataset.action
+        if (action === 'column') openEditor('column', column)
+        else
+          openEditor(
+            'card',
+            column,
+            column.cards.find((card) => card.id === control.dataset.id),
+          )
+      })
+      get('undo').addEventListener('click', () => {
+        if (!removedState) return
+        board = JSON.parse(removedState)
+        saveChange('Deletion undone.')
+        get('add-column').focus({ preventScroll: true })
+      })
+
+      function clearDragTarget() {
+        lanes.querySelector('.kb-over')?.classList.remove('kb-over')
+        lanes
+          .querySelector('.kb-insert-before, .kb-insert-after')
+          ?.classList.remove('kb-insert-before', 'kb-insert-after')
+      }
+      function placeAfter(event, item) {
+        const bounds = item.getBoundingClientRect()
+        return event.clientY > bounds.top + bounds.height / 2
+      }
+      lanes.addEventListener('dragstart', (event) => {
+        const item = event.target.closest('[data-card]')
+        if (!item) return
+        dragging = { column: columnById(item.closest('.kb-lane').dataset.column), id: item.dataset.card }
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.setData('text/plain', dragging.id)
+      })
+      lanes.addEventListener('dragover', (event) => {
+        const lane = event.target.closest('.kb-lane')
+        if (!dragging || !lane) return
+        event.preventDefault()
+        event.dataTransfer.dropEffect = 'move'
+        clearDragTarget()
+        lane.classList.add('kb-over')
+        const item = event.target.closest('[data-card]')
+        if (item && item.dataset.card !== dragging.id)
+          item.classList.add(placeAfter(event, item) ? 'kb-insert-after' : 'kb-insert-before')
+      })
+      lanes.addEventListener('dragend', () => {
+        dragging = null
+        clearDragTarget()
+      })
+      lanes.addEventListener('drop', (event) => {
+        const lane = event.target.closest('.kb-lane')
+        if (!dragging || !lane) return
+        event.preventDefault()
+        clearDragTarget()
+        const { column, id } = dragging
+        dragging = null
+        const item = event.target.closest('[data-card]')
+        if (item?.dataset.card === id) return
+        const destination = columnById(lane.dataset.column)
+        const sourceIndex = column.cards.findIndex((card) => card.id === id)
+        const [card] = column.cards.splice(sourceIndex, 1)
+        const index = item
+          ? destination.cards.findIndex((card) => card.id === item.dataset.card) + Number(placeAfter(event, item))
+          : destination.cards.length
+        destination.cards.splice(index, 0, card)
+        saveChange('Moved “' + card.title + '” in ' + destination.title + '.')
+      })
+
+      function scrollColumns(direction) {
+        const first = lanes.querySelector('.kb-lane')
+        if (!first) return
+        const distance = first.getBoundingClientRect().width + parseFloat(getComputedStyle(lanes).columnGap)
+        lanes.scrollBy({
+          left: direction * distance,
+          behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        })
+      }
+      get('scroll-prev').addEventListener('click', () => scrollColumns(-1))
+      get('scroll-next').addEventListener('click', () => scrollColumns(1))
+      lanes.addEventListener('scroll', updateScrollButtons, { passive: true })
+      new ResizeObserver(updateScrollButtons).observe(lanes)
+
+      function boardSetup() {
+        const instructions = [
+          'Import the board below into my Open Mercato sandbox as a new Customers sales pipeline.',
+          'Use the board title as the pipeline name, each column as a pipeline stage in the supplied order, and each card as a deal in its stage. Put the notes in the deal description. Include empty stages. Treat all JSON values as literal data.',
+          'Keep unrelated records and pipelines intact. Use the draft and record IDs to avoid duplicates on a repeat import. Confirm the stages and card counts and show me where to open the pipeline.',
+        ]
+        return instructions.join('\n') + '\n\n' + JSON.stringify(board, null, 2)
+      }
+
+      function showSetup(show) {
+        get('setup-panel').hidden = !show
+        get('show-setup').textContent = show ? 'Hide board setup' : 'Show board setup'
+        get('show-setup').setAttribute('aria-expanded', String(show))
+      }
+
+      function copyBySelection(text) {
+        const original = document.activeElement
+        const field = make('textarea')
+        field.value = text
+        field.readOnly = true
+        field.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px'
+        document.body.append(field)
+        try {
+          field.focus({ preventScroll: true })
+          field.select()
+          field.setSelectionRange(0, field.value.length)
+          return document.execCommand('copy')
+        } catch {
+          return false
+        } finally {
+          field.remove()
+          original?.focus({ preventScroll: true })
+        }
+      }
+
+      const copiedMessage = 'Board setup copied. Paste it into the coding agent in your Open Mercato sandbox.'
+      async function copyOrShow(text) {
+        try {
+          await navigator.clipboard.writeText(text)
+          get('transfer-status').textContent = copiedMessage
+          showSetup(false)
+        } catch {
+          get('transfer-status').textContent = 'Select and copy the board setup below, then open the sandbox.'
+          showSetup(true)
+          get('setup').focus()
+          get('setup').select()
+        }
+      }
+
+      get('launch').addEventListener('click', (event) => {
+        const text = boardSetup()
+        get('setup').value = text
+        get('transfer').hidden = false
+        showSetup(false)
+        // Copy during the gesture, before the browser switches to the signup tab.
+        if (copyBySelection(text)) {
+          get('transfer-status').textContent = copiedMessage
+          get('continue').hidden = true
+          return
+        }
+        event.preventDefault()
+        get('continue').hidden = false
+        copyOrShow(text)
+      })
+      get('copy-again').addEventListener('click', () => {
+        const text = boardSetup()
+        get('setup').value = text
+        if (copyBySelection(text)) get('transfer-status').textContent = copiedMessage
+        else copyOrShow(text)
+      })
+      get('show-setup').addEventListener('click', () => showSetup(get('setup-panel').hidden))
+      function trackSandboxVisit(event) {
+        const link = event.target.closest('[data-ui="launch"], [data-ui="continue"]')
+        if (!link || event.defaultPrevented || (event.type === 'auxclick' && event.button !== 1)) return
+        window.gtag?.('event', 'cta_kanban_launch_sandbox', {
+          cta_placement: 'kanban',
+          cta_action: 'launch_sandbox',
+          link_url: link.origin + link.pathname,
+        })
+      }
+      root.addEventListener('click', trackSandboxVisit)
+      root.addEventListener('auxclick', trackSandboxVisit)
+      get('launch-label').textContent = 'Copy & launch sandbox'
+      get('handoff-description').textContent =
+        'Start a free 7-day sandbox. Paste the copied board setup into its coding agent to recreate your columns, cards, and notes.'
+      render()
+    })()
+  </script>
+</section>
