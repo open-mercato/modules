@@ -74,7 +74,11 @@ check() {
 header() {
   local name="$1" pattern="$2" path="$3"
   shift 3
-  if curl -s -o /dev/null -D - --path-as-is "$@" "$base$path" | tr -d '\r' | grep -qiE "$pattern"; then
+  # captured first: `grep -q` at the end of a pipe exits on the first match, and under pipefail the SIGPIPE of the
+  # writer before it turned a match into a failure
+  local headers
+  headers="$(curl -s -o /dev/null -D - --path-as-is "$@" "$base$path" | tr -d '\r')"
+  if grep -qiE "$pattern" <<<"$headers"; then
     echo "pass  $name"
   else
     echo "fail  $name"
