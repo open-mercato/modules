@@ -6,9 +6,6 @@ seo:
 jsonLd:
   type: WebPage
 blocks:
-  # the hero: the release badge shows the core version of the catalog's data (the browser then shows the latest
-  # release of GitHub, as live), `label` is the line beside it, `primary` and `secondary` the first two buttons, `note`
-  # the third (one link); `items` the assistants it works with, by name (the component draws their marks)
   - type: hero
     layout: home-hero
     label: Open source · MIT licensed
@@ -26,10 +23,6 @@ blocks:
       - title: Claude
       - title: Cursor
       - title: SSH
-
-  # the builder: the first item is the assistant's window (eyebrow and title its header, body its greeting, points the
-  # composer's placeholder and button, note what the phone shows once every request is in), then the seven requests
-  # (title) and the assistant's answers (body), in the order the tower grows; `note` is the scene for screen readers
   - type: features
     layout: home-flex
     eyebrow: BUILD AROUND YOUR BUSINESS
@@ -62,7 +55,6 @@ blocks:
         body: AI workflows manager added. Your modules work together.
       - title: Add your fancy idea
         body: Your fancy idea, built into your business app.
-
   - type: features
     layout: home-80
     title: Start with *80% done*.
@@ -103,8 +95,6 @@ blocks:
         image:
           src: /media/pages/home-80-build-your-own-erp.svg
           alt: Customers, sales and warehouse modules fit on your ERP foundation, with a dedicated place for your own module.
-
-  # the customer videos, in the order live shows them (its script puts Implementation Partner first)
   - type: carousel
     layout: home-stories
     title: |-
@@ -132,9 +122,6 @@ blocks:
           alt: MDM NT
           width: 1280
           height: 720
-
-  # the comparison table: the first item is the header row (its points the two columns), then one row per item (title
-  # the row, points the two cells); a cell `Desktop text | Phone text` reads differently on a phone
   - type: features
     layout: home-compare
     title: Skip the *commodity work*.
@@ -159,8 +146,6 @@ blocks:
         points:
           - "0"
           - "{moduleCount}"
-
-  # the two ways in: the developer's command (body) and the sandbox (cta)
   - type: features
     layout: home-sandbox
     items:
@@ -172,8 +157,6 @@ blocks:
         cta:
           label: Build with sandbox
           href: https://app.openmercatocloud.com/signup?template=mercato
-
-  # the case studies the live home page features, in its order
   - type: carousel
     layout: home-cases
     title: Case Studies
@@ -213,8 +196,6 @@ blocks:
         cta:
           label: Read case study
           href: /case-studies/senior-care-operations
-
-  # the academy's videos: title, length (eyebrow), video and poster
   - type: features
     layout: home-academy
     title: Learn *AI Engineering* with us.
@@ -223,7 +204,7 @@ blocks:
       href: /learn-ai-engineering
     items:
       - title: AI Assisted Engineering with Open Mercato
-        eyebrow: "40:15"
+        eyebrow: 40:15
         video: GD2ToD1jmLE
         image:
           src: /media/pages/home-video-gd2tod1jmle.jpg
@@ -231,7 +212,7 @@ blocks:
           width: 1280
           height: 720
       - title: How to install Open Mercato
-        eyebrow: "13:03"
+        eyebrow: 13:03
         video: OsalmbiWQ-I
         image:
           src: /media/pages/home-video-osalmbiwq-i.jpg
@@ -239,7 +220,7 @@ blocks:
           width: 1280
           height: 720
       - title: Open Mercato Architecture
-        eyebrow: "29:50"
+        eyebrow: 29:50
         video: ezfhcr_9Q0g
         image:
           src: /media/pages/home-video-ezfhcr-9q0g.jpg

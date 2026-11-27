@@ -354,6 +354,23 @@ describe('the ownership manifest', () => {
     }
   })
 
+  it('keeps the hand-written notes of the manifest on a re-run (Strapi CMS spec, Step 1.1a)', async () => {
+    const target = tempDir('notes')
+    const cache = tempDir('notes-cache')
+    try {
+      await importFixture({ target, mediaCache: cache })
+      const file = join(target, MANIFEST_PATH)
+      const notes = [{ path: 'www/content/pages/blog.yaml', at: 'seo.description', note: 'Webflow has none.' }]
+      writeFileSync(file, JSON.stringify({ ...JSON.parse(readFileSync(file, 'utf8')), notes }))
+      const r = await importFixture({ target, mediaCache: cache, offline: true })
+      expect(r.plan!.manifest.notes).toEqual(notes)
+      expect(JSON.parse(readFileSync(file, 'utf8')).notes).toEqual(notes)
+    } finally {
+      rmSync(target, { recursive: true, force: true })
+      rmSync(cache, { recursive: true, force: true })
+    }
+  })
+
   it('--only writes the named collections and carries the others in the manifest', async () => {
     const target = tempDir('only')
     const cache = tempDir('only-cache')

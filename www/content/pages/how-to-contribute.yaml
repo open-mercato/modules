@@ -6,7 +6,6 @@ seo:
 jsonLd:
   type: HowTo
 blocks:
-  # a third button, the arrow link, is the hero's one item
   - type: hero
     layout: how-to-contribute-hero
     eyebrow: How to contribute
@@ -35,8 +34,6 @@ blocks:
         body: High-quality modules contribute to your professional standing and can lead to becoming a certified Implementation Partner.
       - title: Built to Last
         body: Backed by Catch The Tornado, we are committed to a long-term, stable roadmap.
-  # the HowTo steps of the page's JSON-LD; each line of a body is a line of the card (the no-break space before `#` is
-  # live's)
   - type: steps
     layout: how-to-contribute-steps
     eyebrow: Fast Track
@@ -101,7 +98,6 @@ blocks:
       - eyebrow: "03"
         title: Documentation
         body: Every new module or core change must include an update to its respective AGENTS.MD file so the AI community can use it immediately.
-  # live links Roadmap to `#` (nowhere); the roadmap of the docs stands for it (audit of 27 Nov 2026)
   - type: features
     layout: how-to-contribute-connect
     eyebrow: contribute

@@ -9,7 +9,9 @@ blocks:
   - type: hero
     layout: about-header
     eyebrow: Careers
-    title: "Join\nOpen Mercato"
+    title: |-
+      Join
+      Open Mercato
     lead: Open Mercato is an open-source, AI-native foundation for modern business software, built by a small and senior team. We hire builders who care about getting the architecture right and shipping real product. See our open roles below.
   - type: list
     layout: careers-jobs

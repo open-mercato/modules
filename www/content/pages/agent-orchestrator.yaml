@@ -65,12 +65,12 @@ blocks:
       - title: Confidence thresholds
         points:
           - ">80% → auto"
-          - "<80% → human"
+          - <80% → human
         body: Set the bar. Above your threshold the agent decides and the workflow moves on. Below it, the decision escalates to a person. You decide how much autonomy you hand over.
       - title: Human-in-the-loop
         points:
           - ">80% → auto"
-          - "<80% → human"
+          - <80% → human
         body: When output needs sign-off, the workflow stops and routes it to the right person. The agent proposes, the human disposes.
       - body: Runs on top of the Open Mercato MCP Server - the tools you already expose are discoverable and callable by agents. No new tooling to wire up.
   - type: features
@@ -112,7 +112,6 @@ blocks:
           src: /media/pages/6a54d91d44e8daf778cad67b-product-6.jpg
           alt: ""
           decorative: true
-  # the comparison table, one item per column as the live markup has it: the row labels, then n8n, then Open Mercato
   - type: features
     layout: agent-orchestrator-compare
     eyebrow: WHY IT'S DIFFERENT

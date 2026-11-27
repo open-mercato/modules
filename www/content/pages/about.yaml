@@ -9,7 +9,9 @@ blocks:
   - type: hero
     layout: about-header
     eyebrow: About
-    title: "About\nOpen Mercato"
+    title: |-
+      About
+      Open Mercato
     lead: Open Mercato is an open-source foundation for building modern business software - CRM/ERP-style systems that power commerce, operations, finance, and growth. We’re building it for teams who need speed without chaos, customization without forking, and enterprise-grade foundations from day one.
     primary:
       label: Clone the Repo
@@ -89,25 +91,46 @@ blocks:
     title: Why do we win?
     items:
       - title: Flexibility
-        icon: { src: /media/pages/about-flexibility.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-flexibility.svg
+          alt: ""
+          decorative: true
         body: Open Mercato can address processes unique to every company - that is our focus. We provide flexibility without the need to rewrite "commodity" features. We take responsibility for their maintenance and security, freeing the client's developers from creating and maintaining them.
       - title: Speed
-        icon: { src: /media/pages/about-speed.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-speed.svg
+          alt: ""
+          decorative: true
         body: We deliver unique business functions faster than anyone on the market by utilizing ready-made, maintained core components.
       - title: Open-Closed (OCP)
-        icon: { src: /media/pages/about-open-closed-ocp.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-open-closed-ocp.svg
+          alt: ""
+          decorative: true
         body: The system is delivered as npm packages, and a dedicated implementation is created as an app that can overwrite and change all components, pages, and modules.
       - title: Extensibility
-        icon: { src: /media/pages/about-extensibility.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-extensibility.svg
+          alt: ""
+          decorative: true
         body: A very extensive event system is available, and most elements, such as the queue system, cache, and others, are replaceable based on Strategy and Dependency Injection (DI) patterns. This allows you to build a 100% dedicated application using, for example, 80% of Open Mercato's functionality without modifying the core system, maintaining the ability for very fast updates.
       - title: Modern Tech Stack
-        icon: { src: /media/pages/about-modern-tech-stack.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-modern-tech-stack.svg
+          alt: ""
+          decorative: true
         body: Few systems of this class are built on Next/React and TypeScript, which is currently the most popular tech stack for applications. Consequently, AI coding agents perform best on it (as React/shadcn and next.js apps form the largest codebase for their training). We also utilize functional programming and modern React design patterns.
       - title: Enterprise-Grade Security
-        icon: { src: /media/pages/about-enterprise-grade-security.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-enterprise-grade-security.svg
+          alt: ""
+          decorative: true
         body: Unlike many systems on the market, we offer SOTA (state-of-the-art) data encryption, where you can configure which database fields are encrypted with an individual key. Every data access is monitored (logs), and operations can be reversed from within the application (undo/redo). This opens doors to demanding sectors like HealthTech or Finance. Our standard security gives developers and agents freedom to create and administrators peace of mind.
       - title: Enterprise Design Patterns
-        icon: { src: /media/pages/about-enterprise-design-patterns.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-enterprise-design-patterns.svg
+          alt: ""
+          decorative: true
         body: AI is good at fast coding but often takes shortcuts. Not in Open Mercato - we ensured the use of enterprise-class design patterns, including replaceable strategies, SAGA, SOLID principles, and sensitive data storage rules. This provides a solid framework for AI agents to create dedicated functions while maintaining the quality expected by business and security departments.
   - type: features
     layout: about-scale
@@ -116,10 +139,16 @@ blocks:
     body: We are moving away from selling people's time and toward selling ready-made business solutions based on our proprietary framework. This allows us to drastically increase margins and business scalability. We deliver immense value to clients, priced - where it makes sense - in a fixed price model.
     items:
       - title: AI-Native from the Foundations
-        icon: { src: /media/pages/about-ai-native-from-the-foundations.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-ai-native-from-the-foundations.svg
+          alt: ""
+          decorative: true
         body: Open Mercato doesn't just "bolt on" AI. Data, workflows, and the permission system are designed from the start for AI agents. When adding new functionalities with AI agents, you use the exact same context and tools we used to create Open Mercato.
       - title: Spec-Driven Development
-        icon: { src: /media/pages/about-spec-driven-development.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/about-spec-driven-development.svg
+          alt: ""
+          decorative: true
         body: We encourage this approach to improve team communication and ensure the logging of design decisions (ADR - Architecture Decision Records).
   - type: features
     layout: about-audience

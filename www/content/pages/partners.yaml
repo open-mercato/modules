@@ -21,15 +21,24 @@ blocks:
     items:
       - eyebrow: "01"
         title: Predictable Timelines
-        icon: { src: /media/pages/partners-predictable-timelines.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-predictable-timelines.svg
+          alt: ""
+          decorative: true
         body: Partners leverage the "80% commodity code" already present in the framework (Auth, RBAC, Encryption), focusing 100% of your budget on your unique business logic.
       - eyebrow: "02"
         title: Architectural Integrity
-        icon: { src: /media/pages/partners-architectural-integrity.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-architectural-integrity.svg
+          alt: ""
+          decorative: true
         body: Every partner is trained to use the Open-Close Approach, ensuring your custom features never block framework updates.
       - eyebrow: "03"
         title: AI-Native Delivery
-        icon: { src: /media/pages/partners-ai-native-delivery.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-ai-native-delivery.svg
+          alt: ""
+          decorative: true
         body: Our partners use our Prompt Libraries and AGENTS.MD guardrails to deliver features 10x faster than traditional development teams.
   - type: cta
     layout: partners-support
@@ -45,13 +54,22 @@ blocks:
     title: Partners matched to your industry by domain expertise
     items:
       - title: Compliance & Security (FinTech/HealthTech)
-        icon: { src: /media/pages/partners-compliance-security-fintech-healthtech.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-compliance-security-fintech-healthtech.svg
+          alt: ""
+          decorative: true
         body: Experts in implementing Tenant-Scoped Field-Level Encryption and HIPAA/GDPR-compliant audit logs.
       - title: Supply Chain & Logistics
-        icon: { src: /media/pages/partners-supply-chain-logistics.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-supply-chain-logistics.svg
+          alt: ""
+          decorative: true
         body: Partners specialized in complex hierarchical data and real-time vehicle/inventory tracking modules.
       - title: High-Scale CRM
-        icon: { src: /media/pages/partners-high-scale-crm.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-high-scale-crm.svg
+          alt: ""
+          decorative: true
         body: Focused on organizations with 10k+ users and complex multi-layered sales hierarchies.
   - type: features
     layout: partners-assurance
@@ -61,10 +79,16 @@ blocks:
     lead: We understand the "SaaS Trap." Even when working with a partner, you maintain total control.
     items:
       - title: Ownership
-        icon: { src: /media/pages/partners-ownership.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-ownership.svg
+          alt: ""
+          decorative: true
         body: You own the intellectual property (IP) of the custom Overlay modules built for you.
       - title: Standard Tech
-        icon: { src: /media/pages/partners-standard-tech.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/partners-standard-tech.svg
+          alt: ""
+          decorative: true
         body: Because we use PostgreSQL, Next.js, and TypeScript, your internal team can take over the project at any time.
         note: '"Your data and your custom logic are yours to move if you ever decide to deviate from the framework."'
   - type: features
@@ -78,20 +102,31 @@ blocks:
     items:
       - eyebrow: TIER 1
         title: Agency
-        # the live text ends "per yea" (cut in Webflow); mirrored as it is
         body: Foundational certified partner. Delivers production-ready Open Mercato projects with at least one licensed implementation per yea
-        image: { src: /media/pages/6a5537d27bb7265b2391a3e0-badge-ai-certified.svg, alt: "", decorative: true }
+        image:
+          src: /media/pages/6a5537d27bb7265b2391a3e0-badge-ai-certified.svg
+          alt: ""
+          decorative: true
       - eyebrow: TIER 2
         title: AI-native Agency
         body: Proven, stable team and scaled operations - higher lead-match scores for general, non-niche clients.
-        image: { src: /media/pages/6a5537d2d19033781a9db53f-badge-ai-native.svg, alt: "", decorative: true }
+        image:
+          src: /media/pages/6a5537d2d19033781a9db53f-badge-ai-native.svg
+          alt: ""
+          decorative: true
       - eyebrow: TIER 3
         title: AI-native Expert Agency
         body: "Dominates a specific micro-vertical. The default #1 choice for clients in that industry niche."
-        image: { src: /media/pages/6a5537d22634a1597a93497e-badge-ai-native-expert.svg, alt: "", decorative: true }
+        image:
+          src: /media/pages/6a5537d22634a1597a93497e-badge-ai-native-expert.svg
+          alt: ""
+          decorative: true
       - eyebrow: TIER 4
         title: AI-native Core Agency
         body: Horizontal mastery of Agentic Engineering and OM core modules - top experts for the most technical, demanding clients.
-        image: { src: /media/pages/6a5537d26086ab815dabd495-badge-ai-native-core.svg, alt: "", decorative: true }
+        image:
+          src: /media/pages/6a5537d26086ab815dabd495-badge-ai-native-core.svg
+          alt: ""
+          decorative: true
       - title: Start with a 3‑week PoC
         body: Validate the architecture and delivery model on your scope - then scale with an Implementation Partner.

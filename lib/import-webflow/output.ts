@@ -31,9 +31,22 @@ export interface ManifestEntry {
   sha256: string
 }
 
+/**
+ * A note on how a file departs from its Webflow page or item (a typo kept as live has it, a text Webflow lacks),
+ * written by hand: the content files hold no comments, so a Strapi document can hold each of them (Strapi CMS spec,
+ * Step 1.1a). `at` is the place in the file, a dotted path of keys with list indexes. The importer never writes notes;
+ * it keeps them on every run.
+ */
+export interface ManifestNote {
+  path: string
+  at: string
+  note: string
+}
+
 export interface Manifest {
   version: 1
   files: ManifestEntry[]
+  notes?: ManifestNote[]
 }
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(?:T[\d:.]+Z)?$/
@@ -88,7 +101,8 @@ export function readManifest(root: string): Manifest {
   const file = join(root, MANIFEST_PATH)
   if (!existsSync(file)) return { version: 1, files: [] }
   const m = JSON.parse(readFileSync(file, 'utf8')) as Manifest
-  if (m.version !== 1 || !Array.isArray(m.files)) throw new Error(`${MANIFEST_PATH}: not a manifest of version 1`)
+  if (m.version !== 1 || !Array.isArray(m.files) || (m.notes !== undefined && !Array.isArray(m.notes)))
+    throw new Error(`${MANIFEST_PATH}: not a manifest of version 1`)
   return m
 }
 
@@ -171,7 +185,11 @@ export async function planOutput(
     }
   }
 
-  const manifest: Manifest = { version: 1, files: [...entries.values()].sort((a, b) => cmp(a.path, b.path)) }
+  const manifest: Manifest = {
+    version: 1,
+    files: [...entries.values()].sort((a, b) => cmp(a.path, b.path)),
+    ...(previous.notes === undefined ? {} : { notes: previous.notes }),
+  }
   const manifestBytes = utf8(await format(JSON.stringify(manifest), MANIFEST_PATH, repoRoot))
   const onDisk = join(root, MANIFEST_PATH)
   const manifestChanged = !existsSync(onDisk) || sha256(new Uint8Array(readFileSync(onDisk))) !== sha256(manifestBytes)

@@ -392,6 +392,50 @@ export const PAGE_BLOCK_TYPES = [
   'list',
   'legacy',
 ] as const
+// How the layouts of www/src/components/blocks/ read the fields of their block where the type alone does not say it
+// (until the Strapi CMS spec, Step 1.1a, these notes were YAML comments in the page files; a Strapi document holds no
+// comments). By layout:
+// - `agencies-compare`: Each item is a column; ✓ and ✗ mark a cell's check or cross (agencies-compare.astro).
+// - `agencies-math`: Each item is a column of the table; a cell starting with ✓ shows the check (agencies-math.astro).
+// - `agent-orchestrator-compare`: The comparison table, one item per column as the live markup has it: the row labels,
+//   then n8n, then Open Mercato.
+// - `architecture-examples`: Each card: its icon, the scenario (`body`), its tags (`points`) and its blueprint, a list
+//   with one nested list (`note`).
+// - `architecture-fundamentals`: Each card: its text (`body`), its tags (`points`) and a quote with its source in
+//   *italics* (`note`).
+// - `architecture-hero`: The header: the breadcrumb's name, the heading, the tags, the lead and the two buttons.
+// - `architecture-watch`: The video beside its heading and three numbered points.
+// - `enterprise-level-support-backing`: A card's paragraphs are its body, then its note; a blank line inside one is the
+//   live double line break.
+// - `enterprise-level-support-tiers`: The table of the tiers, one item per column as the live markup has it: the row
+//   labels, then each tier.
+// - `home-academy`: The academy's videos: title, length (eyebrow), video and poster.
+// - `home-cases`: The case studies the live home page features, in its order.
+// - `home-compare`: The comparison table: the first item is the header row (its points the two columns), then one row
+//   per item (title the row, points the two cells); a cell `Desktop text | Phone text` reads differently on a phone.
+// - `home-flex`: The builder: the first item is the assistant's window (eyebrow and title its header, body its
+//   greeting, points the composer's placeholder and button, note what the phone shows once every request is in), then
+//   the seven requests (title) and the assistant's answers (body), in the order the tower grows; `note` is the scene for
+//   screen readers.
+// - `home-hero`: The hero: the release badge shows the core version of the catalog's data (the browser then shows the
+//   latest release of GitHub, as live), `label` is the line beside it, `primary` and `secondary` the first two buttons,
+//   `note` the third (one link); `items` the assistants it works with, by name (the component draws their marks).
+// - `home-sandbox`: The two ways in: the developer's command (body) and the sandbox (cta).
+// - `home-stories`: The customer videos, in the order live shows them (its script puts Implementation Partner first).
+// - `how-to-contribute-hero`: A third button, the arrow link, is the hero's one item.
+// - `how-to-contribute-steps`: The HowTo steps of the page's JSON-LD; each line of a body is a line of the card (the
+//   no-break space before `#` is live's).
+// - `learn-ai-engineering-roadmap`: The HowTo steps of the page's JSON-LD. A card's `note` is its quote, its last line
+//   the source under it; points written `1. ...` are a numbered list.
+// - `pricing-compare`: The table: the first item is the header row, each next item a row (its title the row heading,
+//   its points the cells in plan order).
+// - `pricing-plans`: One item per plan: eyebrow the price ("From" first when the price is a floor), body the basis line
+//   then the audience, note the heading of the list, points the list, cta the button (GA4 cta_pricing_<plan>, as live).
+// - `product-agents`: Cards beside the heading; a card's note is the source of its quote.
+// - `product-anatomy`: The cards of product-cards with a smaller heading; an item with a body only is the quote across
+//   both columns.
+// - `product-architecture`: Numbered cards: eyebrow the number.
+// - `product-modules`: A sticky heading beside numbered groups (eyebrow the number, body a lead and a list).
 export const PageBlock = z.discriminatedUnion('type', [
   CopyBlock,
   block('hero', { title: Text, image: Image.optional(), video: YouTubeId.optional(), items: items.optional() }),
@@ -476,7 +520,7 @@ export function pageSchema() {
             .optional(),
         })
         .optional(),
-      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm). */
+      /** The shared closing call to action between the page and the footer; false where the page has its own (/crm, its crm-closing component). */
       siteCta: z.boolean().default(true),
       blocks: z.array(PageBlock),
       draft,
@@ -729,7 +773,7 @@ export const NAV_ICONS = [
 ] as const
 export const NavIcon = z.enum(NAV_ICONS)
 
-/** A link of the navbar or the footer; `variant` is a class next to `navbar_link` (`is-github`, hidden by the styles). */
+/** A link of the navbar or the footer; `variant` is a class next to `navbar_link` (`is-github`, which styles hide). */
 export const SiteLink = z.strictObject({
   label: Text,
   url: HttpsUrl,
@@ -748,7 +792,7 @@ export function navigationSchema() {
               z.strictObject({
                 label: Text,
                 url: HttpsUrl,
-                /** A site path of the catalog the header links instead of `url` (built with href(), like the Run rows). */
+                /** A site path of the catalog the header links instead of `url` (built with href()). */
                 run: z
                   .string()
                   .regex(/^\/[^\s]*$/)

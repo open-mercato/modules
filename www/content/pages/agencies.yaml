@@ -17,7 +17,6 @@ blocks:
     secondary:
       label: See Live Demo
       href: https://openmercatocloud.com/demo
-  # each item is a column of the table; a cell starting with ✓ shows the check (agencies-math.astro)
   - type: features
     layout: agencies-math
     eyebrow: the math
@@ -31,13 +30,24 @@ blocks:
           - Search, events, caching
           - Client-specific features
           - Testing & security audit
-        # the live label reads "devliery"; mirrored as it is
         note: Total devliery
       - title: Without Mercato
-        points: [3 weeks, 4 weeks, 2 weeks, 2 weeks, 4 weeks, 2 weeks]
+        points:
+          - 3 weeks
+          - 4 weeks
+          - 2 weeks
+          - 2 weeks
+          - 4 weeks
+          - 2 weeks
         note: 17 weeks
       - title: With Mercato
-        points: [✓ Included, ✓ Included, ✓ Included, ✓ Included, 3 weeks, 1 week]
+        points:
+          - ✓ Included
+          - ✓ Included
+          - ✓ Included
+          - ✓ Included
+          - 3 weeks
+          - 1 week
         note: 4 weeks
   - type: cta
     layout: agencies-margin
@@ -49,26 +59,40 @@ blocks:
   - type: features
     layout: partners-why
     eyebrow: Your workflow
-    title: "Clone → Overlay →\n→ Ship → Repeat."
+    title: |-
+      Clone → Overlay →
+      → Ship → Repeat.
     items:
       - eyebrow: "01"
         title: Clone the base
-        icon: { src: /media/pages/agencies-clone-the-base.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-clone-the-base.svg
+          alt: ""
+          decorative: true
         body: Fork Open Mercato for the new client. Auth, CRM, design system - running in 5 minutes.
         note: Day 1
       - eyebrow: "02"
         title: Overlay their workflow
-        icon: { src: /media/pages/agencies-overlay-their-workflow.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-overlay-their-workflow.svg
+          alt: ""
+          decorative: true
         body: Your team (or AI agents) drops files in src/apps/. Core never modified. Clean separation.
         note: Week 1-3
       - eyebrow: "03"
         title: Ship & handoff
-        icon: { src: /media/pages/agencies-ship-handoff.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-ship-handoff.svg
+          alt: ""
+          decorative: true
         body: Client gets a fully-owned codebase on their infra. No vendor lock-in. No recurring platform fees.
         note: Week 4
       - eyebrow: "04"
         title: Maintain & upsell
-        icon: { src: /media/pages/agencies-maintain-upsell.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-maintain-upsell.svg
+          alt: ""
+          decorative: true
         body: Sell ongoing feature development. Each overlay is scoped - easy to estimate, profitable to deliver.
         note: Ongoing
   - type: features
@@ -78,24 +102,41 @@ blocks:
     body: The architecture and AI guardrails do the heavy lifting. Your team learns real skills - not workarounds.
     items:
       - title: Architecture that enforces quality
-        icon: { src: /media/pages/agencies-architecture-that-enforces-quality.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-architecture-that-enforces-quality.svg
+          alt: ""
+          decorative: true
         body: OCP overlays mean your devs can't accidentally break core modules. The structure prevents the mistakes before code review catches them.
       - title: AI agents that follow the rules
-        icon: { src: /media/pages/agencies-ai-agents-that-follow-the-rules.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-ai-agents-that-follow-the-rules.svg
+          alt: ""
+          decorative: true
         body: AGENTS.md and .ai/specs/ ship with the repo. Claude, Cursor, Copilot - they all generate code that fits the architecture, not fights it.
       - title: Real AI engineering skills
-        icon: { src: /media/pages/agencies-real-ai-engineering-skills.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-real-ai-engineering-skills.svg
+          alt: ""
+          decorative: true
         body: Your team learns spec-driven development and context-first workflows. Skills compound across projects.
       - title: Enterprise security out of the box
-        icon: { src: /media/pages/agencies-enterprise-security-out-of-the-box.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-enterprise-security-out-of-the-box.svg
+          alt: ""
+          decorative: true
         body: Field-level encryption, RBAC, audit trails, GDPR. Stop spending 3 weeks on auth for every client. Pass security reviews on day one.
       - title: Reusable across clients
-        icon: { src: /media/pages/agencies-reusable-across-clients.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-reusable-across-clients.svg
+          alt: ""
+          decorative: true
         body: Build a logistics overlay once. Use it for 5 clients with minor customization. Your IP compounds. Your margins grow.
       - title: No vendor lock-in (for you or them)
-        icon: { src: /media/pages/agencies-no-vendor-lock-in-for-you-or-them.svg, alt: "", decorative: true }
+        icon:
+          src: /media/pages/agencies-no-vendor-lock-in-for-you-or-them.svg
+          alt: ""
+          decorative: true
         body: MIT licensed. Client gets full source. You're not reselling someone else's SaaS - you're delivering owned software on open infrastructure.
-  # each item is a column; ✓ and ✗ mark a cell's check or cross (agencies-compare.astro)
   - type: features
     layout: agencies-compare
     eyebrow: Before vs. After

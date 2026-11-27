@@ -1,6 +1,3 @@
-# /pricing, added on Webflow on 26 Nov 2026 by OM Core, migrated from the live page on 27 Nov 2026 (one embed there:
-# its copy is here, its markup in www/src/components/blocks/pricing-*.astro, its code in
-# www/src/styles/webflow/pages/pricing.css). Live has no OG image; the build draws the card, /og/pricing.png.
 seo:
   title: Pricing | Open Mercato
   description: Compare Open Mercato Free, Enterprise and Custom. Build on the MIT core, add enterprise identity and agent approvals, or plan a managed rollout.
@@ -14,8 +11,6 @@ blocks:
     primary:
       label: Compare plans ↓
       href: "#compare-plans"
-  # one item per plan: eyebrow the price ("From" first when the price is a floor), body the basis line then the
-  # audience, note the heading of the list, points the list, cta the button (GA4 cta_pricing_<plan>, as live)
   - type: features
     layout: pricing-plans
     items:
@@ -28,7 +23,9 @@ blocks:
         cta:
           label: Get the free core
           href: https://github.com/open-mercato/open-mercato
-          tracking: { placement: pricing, action: free }
+          tracking:
+            placement: pricing
+            action: free
         note: Included in the core
         points:
           - CRM, sales and product catalog modules
@@ -44,7 +41,9 @@ blocks:
         cta:
           label: Talk to sales
           href: /contact
-          tracking: { placement: pricing, action: enterprise }
+          tracking:
+            placement: pricing
+            action: enterprise
         note: Included with the license
         points:
           - Single sign-on, directory sync and enforced MFA
@@ -60,26 +59,35 @@ blocks:
         cta:
           label: Let’s talk
           href: /contact
-          tracking: { placement: pricing, action: custom }
+          tracking:
+            placement: pricing
+            action: custom
         note: Services you can commission
         points:
           - A pre-deployment architecture audit
           - Security and performance reviews
           - Managed upgrades and go-live reviews
           - A dedicated contact through launch
-  # the table: the first item is the header row, each next item a row (its title the row heading, its points the
-  # cells in plan order)
   - type: features
     layout: pricing-compare
     id: compare-plans
     title: Compare plans
     items:
       - title: What you get
-        points: [Free, Enterprise, Custom]
+        points:
+          - Free
+          - Enterprise
+          - Custom
       - title: Production use
-        points: [MIT core, Core and commercial modules, Core and commercial modules]
+        points:
+          - MIT core
+          - Core and commercial modules
+          - Core and commercial modules
       - title: Users
-        points: [Unlimited, Unlimited per licensed project, Unlimited per licensed project]
+        points:
+          - Unlimited
+          - Unlimited per licensed project
+          - Unlimited per licensed project
       - title: Software upgrades
         points:
           - Your team applies public core releases
