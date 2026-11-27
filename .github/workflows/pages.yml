@@ -20,18 +20,22 @@
 # set (the account ID is not a secret; mcp-deploy.yml reads the same variable). Without it the build and its checks
 # still run, then the run ends green with a warning and a summary that say the site was not deployed.
 # Two more jobs, `preview-build` and `preview` (15 Nov), deploy the nested layout with fixed values to the branch
-# alias run-preview of the same project while production is still at the root; see the comment above them.
-# The main site (www site migration spec, Phase 1a, docs/specs/2026-11-24-www-site-migration.md): `yarn build` writes
-# the catalog to dist-run/ and the main site (www/) to dist-www/. Production uploads the catalog alone, dist-run/ moved
-# to dist/ as it is, until the repository variable PAGES_MERGED is set to 1 at the switch (step C8 of the spec); then
-# `yarn om pages-site --merge` composes dist/ from both (the main site at the root, the catalog under /run) and the
-# checks follow the merged layout. Two jobs, `www-preview-build` and `www-preview`, deploy the merged layout to the
-# branch alias www-preview with PAGES_NOINDEX=1 meanwhile.
-# Before the www switch (owner's decision of 26 Nov 2026, docs/RUNBOOK.md, Main site on modules.openmercato.com): with
-# PAGES_MERGED=1 and the repository variable PAGES_SERVE_ORIGIN (https://modules.openmercato.com) production deploys
-# the merged layout and the Pages hosts serve it themselves: not indexed (dist/_headers and a robots.txt that allows
-# nothing) and without Google Analytics, canonical addresses on SITE_URL, old catalog page addresses a 301 under /run on the
-# same host. The preview jobs never read it.
+# alias run-preview of the same project while BASE_PATH is `/` (production at the root, as until 26 Nov 2026); since
+# BASE_PATH is /run they are skipped. See the comment above them.
+# The main site (www site migration spec 2026-11-24-www-site-migration.md of PR #23, Phase 1a): `yarn build` writes
+# the catalog to dist-run/ and the main site (www/) to dist-www/. Without PAGES_MERGED the upload is the catalog alone,
+# dist-run/ moved to dist/ as it is; with the repository variable PAGES_MERGED=1 `yarn om pages-site --merge` composes
+# dist/ from both (the main site at the root, the catalog under /run) and the checks follow the merged layout. Two
+# jobs, `www-preview-build` and `www-preview`, deploy the merged layout to the branch alias www-preview with
+# PAGES_NOINDEX=1.
+# Production since 26 Nov 2026 (owner's decision, docs/RUNBOOK.md, Main site on modules.openmercato.com): PAGES_MERGED=1,
+# SITE_URL, BASE_PATH and HOME_PATH for www and /run, and the repository variable PAGES_SERVE_ORIGIN
+# (https://modules.openmercato.com), so production deploys the merged layout and the Pages hosts serve it themselves: not
+# indexed (dist/_headers and a robots.txt that allows nothing) and without Google Analytics, canonical addresses on
+# SITE_URL, old catalog page addresses a 301 under /run on the same host. The preview jobs never read it. At the www
+# switch (RUNBOOK, Main site switch, C8) only PAGES_SERVE_ORIGIN is deleted. `Check layout variables` stops a run whose
+# variables make no layout before the build, and `Smoke test the merged upload` runs a merged upload in the Pages
+# emulator (scripts/pages-smoke.sh).
 name: pages
 
 on:
@@ -194,6 +198,14 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: "false"
         run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Smoke test the merged upload
+        # The upload in the Pages emulator of the locked wrangler, with its Functions, _redirects, _headers and
+        # _routes.json (scripts/pages-smoke.sh, about 30 s): every redirect rule read, the security and cache headers,
+        # and with PAGES_SERVE_ORIGIN the old catalog addresses in one hop. Merged layout only.
+        if: ${{ env.PAGES_MERGED == '1' }}
+        timeout-minutes: 4
+        run: scripts/pages-smoke.sh dist
 
       - name: Upload site
         # Only for a deploy (artifact storage counts against the account quota), kept one day. upload-artifact skips
@@ -625,6 +637,11 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: "false"
         run: yarn wrangler pages functions build functions --outdir "$RUNNER_TEMP/functions"
+
+      - name: Smoke test the merged upload
+        # as in the build job (scripts/pages-smoke.sh)
+        timeout-minutes: 4
+        run: scripts/pages-smoke.sh dist
 
       - name: Upload preview
         if: ${{ steps.settings.outputs.deploy == 'true' }}

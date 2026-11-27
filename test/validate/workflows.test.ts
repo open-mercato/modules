@@ -341,9 +341,15 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Check artifact contents',
       'Check Pages limits',
       'Check Pages Functions',
+      'Smoke test the merged upload',
       'Upload site',
       'Not deployed',
     ])
+    // the emulator run of a merged upload (audit of 27 Nov 2026), skipped for the catalog alone
+    expect(b.find((x) => x.name === 'Smoke test the merged upload')).toMatchObject({
+      if: "${{ env.PAGES_MERGED == '1' }}",
+      run: 'scripts/pages-smoke.sh dist',
+    })
     // the build and its checks run with or without the deploy settings
     for (const x of b.slice(0, 13)) expect(x.if, x.name).toBeUndefined()
     // a variable set that makes no layout stops before the build (audit of 27 Nov 2026)
@@ -545,8 +551,10 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Check merged contents',
       'Check Pages limits',
       'Check Pages Functions',
+      'Smoke test the merged upload',
       'Upload preview',
     ])
+    expect(byName(pb, 'Smoke test the merged upload')?.run).toBe('scripts/pages-smoke.sh dist')
     for (const n of ['Check deploy settings', 'Read data branch', 'Check Pages limits', 'Check Pages Functions'])
       expect(byName(pb, n), n).toEqual(byName(build, n))
     expect(byName(pb, 'Build')?.run).toBe('yarn build')
