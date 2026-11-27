@@ -203,7 +203,8 @@ export function caseStudyCard(cs: CaseStudyEntry, categoryNames: ReadonlyMap<str
     categories: known.map((c) => c.name),
     categoryIds: known.map((c) => c.id),
   }
+  // the live cards bind the image's alt text to the case study's name (27 Nov 2026), whatever the thumbnail's own
   const t = cs.data.thumbnail
-  if (t) card.thumbnail = { src: t.src, alt: t.decorative ? '' : t.alt }
+  if (t) card.thumbnail = { src: t.src, alt: cs.data.title }
   return card
 }
