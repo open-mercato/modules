@@ -4,6 +4,8 @@ import { parse as parseYaml } from 'yaml'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { findBannedChars } from '../../lib/core/text.ts'
 import { REDIRECTS_HEADER } from '../../lib/import-webflow/docs-map.ts'
+import { parseArgs } from '../../lib/commands/import-webflow.ts'
+import { NOT_IMPORTED } from '../../lib/import-webflow/landing-template.ts'
 import { MANIFEST_PATH } from '../../lib/import-webflow/output.ts'
 import { renderReport } from '../../lib/import-webflow/report.ts'
 import type { ImportResult } from '../../lib/import-webflow/run.ts'
@@ -85,7 +87,7 @@ describe('yarn om import-webflow on the fixture (spec API Contracts)', () => {
           expect(r.success, `${path}: ${JSON.stringify(r.error?.issues)}`).toBe(true)
           ;(ids[collection] ??= []).push(path.slice(prefix.length, -source.ext.length - 1))
         }
-      } else {
+      } else if (!NOT_IMPORTED.has(collection)) {
         const bytes = files.get(`www/content/${source.file}`)
         expect(bytes, source.file).toBeDefined()
         for (const [id, entry] of Object.entries(fileEntries(collection, parseYaml(bytes!.toString('utf8'))))) {
@@ -482,5 +484,13 @@ describe('the landing text cross-check', () => {
     } finally {
       rmSync(exp, { recursive: true, force: true })
     }
+  })
+})
+
+describe('yarn om import-webflow --only', () => {
+  it('takes collections of Webflow and refuses the template words, which Webflow does not hold', () => {
+    expect([...parseArgs(['--only', 'jobs,blog']).only!]).toEqual(['jobs', 'blog'])
+    expect(() => parseArgs(['--only', 'landingTemplate'])).toThrow(/not a collection of Webflow/)
+    expect(() => parseArgs(['--only', 'menus'])).toThrow(/not a collection/)
   })
 })

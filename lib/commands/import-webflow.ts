@@ -10,6 +10,7 @@ import { EXIT_ENV } from '../cli.ts'
 import { ExportError } from '../import-webflow/export.ts'
 import { renderReport } from '../import-webflow/report.ts'
 import { ImportEnvError, runImport } from '../import-webflow/run.ts'
+import { NOT_IMPORTED } from '../import-webflow/landing-template.ts'
 import { WWW_COLLECTIONS, type WwwCollection } from '../schema/www-content.ts'
 
 export const description = 'import a Webflow export into www/content and www/public/media; --check compares only'
@@ -50,6 +51,7 @@ export function parseArgs(argv: readonly string[]): Args {
         for (const n of names)
           if (!(WWW_COLLECTIONS as readonly string[]).includes(n))
             throw new Error(`--only: ${n} is not a collection (${WWW_COLLECTIONS.join(', ')})`)
+          else if (NOT_IMPORTED.has(n as WwwCollection)) throw new Error(`--only: ${n} is not a collection of Webflow`)
         a.only = new Set([...(a.only ?? []), ...(names as WwwCollection[])])
         break
       }

@@ -118,6 +118,7 @@ export const WWW_COLLECTIONS = [
   'partnerLocations',
   'jobs',
   'redirects',
+  'landingTemplate',
 ] as const
 export type WwwCollection = (typeof WWW_COLLECTIONS)[number]
 
@@ -180,43 +181,31 @@ export const LANDING_LOCALES = ['en', 'pl'] as const
 export type LandingLocale = (typeof LANDING_LOCALES)[number]
 
 /**
- * Words the landing template writes around data, per locale, as the live landings print them (25 Nov 2026): the review
- * lines of the capability matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and
- * `<title> · {reviewedInline} <date>`, the date in the locale's long form, "12 November 2026", "12 listopada 2026"),
- * the label of the section navigation, the summary of the comparison's details when the comparison has no title, the
- * heading of the related landings, and what each mark of the matrix reads as to a screen reader. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
+ * `landingTemplate`: content/landing-template.yaml, one entry per locale (its key: `en`, `pl`). The words the landing
+ * template writes around data, as the live landings print them (25 Nov 2026): the review lines of the capability
+ * matrix and of the source list (`{reviewedPrefix} <date>. {sourcesLabel}` and `<title> · {reviewedInline} <date>`, the
+ * date in the locale's long form, "12 November 2026", "12 listopada 2026"), the label of the section navigation, the
+ * summary of the comparison's details when the comparison has no title, the heading of the related landings, and what
+ * each mark of the matrix reads as to a screen reader. Content since the Strapi CMS spec (Step 1.1b): until then the
+ * constant LANDING_TEMPLATE_TEXT. `matrixLabel` names the matrix table: `Open Mercato and <their column> feature
  * comparison` on every live landing, the Polish one too.
  */
-export const LANDING_TEMPLATE_TEXT: Record<
-  LandingLocale,
-  {
-    reviewedPrefix: string
-    sourcesLabel: string
-    reviewedInline: string
-    navLabel: string
-    detailsSummary: string
-    relatedTitle: string
-    marks: Record<(typeof CAPABILITY_MARKS)[number], string>
-  }
-> = {
-  en: {
-    reviewedPrefix: 'Reviewed',
-    sourcesLabel: 'Sources:',
-    reviewedInline: 'reviewed',
-    navLabel: 'On this page',
-    detailsSummary: 'Explore implementation and commercial details',
-    relatedTitle: 'Related pages',
-    marks: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
-  },
-  pl: {
-    reviewedPrefix: 'Sprawdzono',
-    sourcesLabel: 'Źródła:',
-    reviewedInline: 'sprawdzono',
-    navLabel: 'Na tej stronie',
-    detailsSummary: 'Zobacz szczegóły wdrożenia i kosztów',
-    relatedTitle: 'Powiązane strony',
-    marks: { yes: 'Available', no: 'Not included', build: 'Wymaga wdrożenia' },
-  },
+export function landingTemplateSchema() {
+  return z.strictObject({
+    reviewedPrefix: Text,
+    sourcesLabel: Text,
+    reviewedInline: Text,
+    navLabel: Text,
+    detailsSummary: Text,
+    relatedTitle: Text,
+    marks: z.strictObject({ yes: Text, no: Text, build: Text }),
+  })
+}
+export type LandingTemplateText = z.output<ReturnType<typeof landingTemplateSchema>>
+
+/** The entries of landing-template.yaml, parsed: one per locale, each required. */
+export function landingTemplateEntries(data: unknown): Record<LandingLocale, LandingTemplateText> {
+  return z.strictObject({ en: landingTemplateSchema(), pl: landingTemplateSchema() }).parse(data)
 }
 
 /** The accessible name of a landing's capability matrix, as the live landings write it in every locale. */
@@ -714,6 +703,7 @@ export function wwwSchemas(ref: WwwRef = slugRef): Record<WwwCollection, z.ZodTy
     partnerLocations: namedSchema(),
     jobs: jobSchema(),
     redirects: redirectSchema(),
+    landingTemplate: landingTemplateSchema(),
   }
 }
 
@@ -739,6 +729,7 @@ export const WWW_SOURCES: Record<WwwCollection, WwwSource> = {
   partnerLocations: { kind: 'file', file: 'partner-locations.yaml' },
   jobs: { kind: 'entries', dir: 'jobs', ext: 'md' },
   redirects: { kind: 'file', file: 'redirects.yaml' },
+  landingTemplate: { kind: 'file', file: 'landing-template.yaml' },
 }
 
 // ---------------------------------------------------------------------------------------------------------------

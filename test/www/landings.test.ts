@@ -2,7 +2,7 @@
 // routes, hreflang, the FAQPage JSON-LD and the template's helpers, without a build.
 import { describe, expect, it } from 'vitest'
 import { fillCounts } from '../../lib/core/www-tokens.ts'
-import { LANDING_TEMPLATE_TEXT } from '../../lib/schema/www-content.ts'
+import { landingTemplateText } from '../../lib/import-webflow/landing-template.ts'
 import {
   alternatesOf,
   faqJsonLd,
@@ -72,7 +72,7 @@ describe('www/src/lib/landings.ts (Phase 5)', () => {
     const d = new Date('2026-11-12T00:00:00Z')
     expect(reviewedDay(d, 'en')).toBe('12 November 2026')
     expect(reviewedDay(d, 'pl')).toBe('12 listopada 2026')
-    expect(LANDING_TEMPLATE_TEXT.pl.navLabel).toBe('Na tej stronie')
+    expect(landingTemplateText('pl').navLabel).toBe('Na tej stronie')
   })
 
   it('gives each landing an OG image: its own, else the card the build draws', () => {

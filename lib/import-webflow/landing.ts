@@ -5,7 +5,8 @@
 // those parts from the lines between nodes. Then the landing's text, rendered from the parsed fields, must equal the
 // visible text as a normalized word sequence; a mismatch stops that landing.
 import type { Element } from 'hast'
-import { CAPABILITY_MARKS, LANDING_TEMPLATE_TEXT, type LandingLocale } from '../schema/www-content.ts'
+import { CAPABILITY_MARKS, type LandingLocale } from '../schema/www-content.ts'
+import { landingTemplateText } from './landing-template.ts'
 import { compact, ItemStop, ItemText, validate, type Entry, type RunCtx } from './context.ts'
 import type { WfNode, WfPage } from './export.ts'
 import { elementClasses, htmlTextNodes, htmlToText, parseFragment } from './richtext.ts'
@@ -461,7 +462,7 @@ interface RawLanding {
 function detectLocale(line: string): { locale: LandingLocale; day: string } | undefined {
   for (const locale of ['en', 'pl'] as const) {
     const day = parseProseDate(line, locale)
-    const tpl = LANDING_TEMPLATE_TEXT[locale]
+    const tpl = landingTemplateText(locale)
     if (day && (line.startsWith(tpl.reviewedPrefix) || line.includes(` · ${tpl.reviewedInline} `)))
       return { locale, day }
   }
@@ -526,7 +527,7 @@ export function parseLanding(parts: Part[], t: ItemText, slug: string): RawLandi
       const found = detectLocale(head)
       if (!found) throw new ItemStop(`capabilities: the review line "${head}" has no date in a known locale`)
       locale = found.locale
-      const tpl = LANDING_TEMPLATE_TEXT[locale]
+      const tpl = landingTemplateText(locale)
       const expected = `${tpl.reviewedPrefix} ${formatProseDate(found.day, locale)}. ${tpl.sourcesLabel}`
       if (head !== expected) throw new ItemStop(`capabilities: the review line "${head}" is not "${expected}"`)
       capabilities = {
@@ -604,7 +605,7 @@ export function parseLanding(parts: Part[], t: ItemText, slug: string): RawLandi
     if (!found) throw new ItemStop(`sources: the line "${line}" has no review date in a known locale`)
     locale ??= found.locale
     if (found.locale !== locale) throw new ItemStop(`sources: the line "${line}" is in another locale than the matrix`)
-    const tpl = LANDING_TEMPLATE_TEXT[locale]
+    const tpl = landingTemplateText(locale)
     const suffix = ` · ${tpl.reviewedInline} ${formatProseDate(found.day, locale)}`
     if (!line.endsWith(suffix)) throw new ItemStop(`sources: the line "${line}" does not end with "${suffix}"`)
     const items: { label: string; url: string }[] = []
@@ -648,7 +649,7 @@ export function landingText(l: RawLanding): string[] {
   const add = (...v: (string | Rich | undefined)[]) => {
     for (const x of v) if (x !== undefined) out.push(typeof x === 'string' ? x : x.plain)
   }
-  const tpl = LANDING_TEMPLATE_TEXT[l.locale]
+  const tpl = landingTemplateText(l.locale)
   add(l.hero.eyebrow, l.hero.title, l.hero.lead, l.hero.primary.label, l.hero.secondary?.label, ...l.hero.proof)
   for (const n of l.sectionNav) add(n.label)
   for (const s of [l.pains, l.features]) {

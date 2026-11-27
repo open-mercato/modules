@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { parse as parseYaml } from 'yaml'
 import { describe, expect, it } from 'vitest'
 import {
   CTA_EVENT_MAX,
@@ -7,6 +10,8 @@ import {
   EMPLOYMENT_TYPE_LABELS,
   EMPLOYMENT_TYPES,
   Image,
+  LANDING_LOCALES,
+  landingTemplateEntries,
   MediaPath,
   PAGE_BLOCK_TYPES,
   PageBlock,
@@ -120,6 +125,15 @@ const VALID: Record<WwwCollection, unknown> = {
     validThrough: '2026-12-31',
   },
   redirects: { from: '/docs/*', to: 'https://docs.openmercato.com/', status: 301, source: 'docs-map' },
+  landingTemplate: {
+    reviewedPrefix: 'Reviewed',
+    sourcesLabel: 'Sources:',
+    reviewedInline: 'reviewed',
+    navLabel: 'On this page',
+    detailsSummary: 'Explore implementation and commercial details',
+    relatedTitle: 'Related pages',
+    marks: { yes: 'Available', no: 'Not included', build: 'Requires implementation' },
+  },
 }
 
 /** One invalid sample per collection, each breaking one rule of the Data Model. */
@@ -190,6 +204,10 @@ const INVALID: Record<WwwCollection, [string, (v: Record<string, unknown>) => un
     ['a status other than 301', (v) => ({ ...v, status: 302 })],
     ['a source that is not a path', (v) => ({ ...v, from: 'docs/x' })],
     ['a target over http', (v) => ({ ...v, to: 'http://docs.openmercato.com/' })],
+  ],
+  landingTemplate: [
+    ['a mark without its words', (v) => ({ ...v, marks: { yes: 'Available', no: 'Not included' } })],
+    ['an empty label', (v) => ({ ...v, navLabel: ' ' })],
   ],
 }
 
@@ -402,5 +420,23 @@ describe('lib/schema/www-content.ts (www site migration, Data Model)', () => {
       expect(() => fileEntries('redirects', [rule, rule])).toThrow(/\/docs is given twice/)
       expect(() => fileEntries('redirects', { '/docs': rule })).toThrow(/a list of rules is expected/)
     })
+  })
+})
+
+describe('www/content/landing-template.yaml (Strapi CMS spec, Step 1.1b)', () => {
+  const file = join(import.meta.dirname, '..', '..', 'www', 'content', 'landing-template.yaml')
+  const data = parseYaml(readFileSync(file, 'utf8')) as Record<string, Record<string, unknown>>
+
+  it('holds the words of the template for every locale of the landings, as the live landings print them', () => {
+    const entries = landingTemplateEntries(data)
+    expect(Object.keys(fileEntries('landingTemplate', data))).toEqual([...LANDING_LOCALES])
+    expect(entries.en.reviewedPrefix).toBe('Reviewed')
+    expect(entries.pl.sourcesLabel).toBe('Źródła:')
+    expect(entries.pl.marks.build).toBe('Wymaga wdrożenia')
+  })
+
+  it('refuses a file without a locale or with one the landings do not have', () => {
+    expect(() => landingTemplateEntries({ en: data.en })).toThrow()
+    expect(() => landingTemplateEntries({ ...data, de: data.en })).toThrow()
   })
 })
