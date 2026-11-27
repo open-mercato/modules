@@ -1,0 +1,122 @@
+# /pricing, added on Webflow on 26 Nov 2026 by OM Core, migrated from the live page on 27 Nov 2026 (one embed there:
+# its copy is here, its markup in www/src/components/blocks/pricing-*.astro, its code in
+# www/src/styles/webflow/pages/pricing.css). Live has no OG image; the build draws the card, /og/pricing.png.
+seo:
+  title: Pricing | Open Mercato
+  description: Compare Open Mercato Free, Enterprise and Custom. Build on the MIT core, add enterprise identity and agent approvals, or plan a managed rollout.
+jsonLd:
+  type: WebPage
+blocks:
+  - type: hero
+    layout: pricing-hero
+    title: Pricing
+    lead: Build on the open-source core for free. Add Enterprise for identity controls, governed AI workflows and direct support when your team needs to patch or upgrade.
+    primary:
+      label: Compare plans ↓
+      href: "#compare-plans"
+  # one item per plan: eyebrow the price ("From" first when the price is a floor), body the basis line then the
+  # audience, note the heading of the list, points the list, cta the button (GA4 cta_pricing_<plan>, as live)
+  - type: features
+    layout: pricing-plans
+    items:
+      - title: Free
+        eyebrow: €0
+        body: |-
+          MIT license · Self-hosted
+
+          For teams building their own CRM, warehouse system or custom business app.
+        cta:
+          label: Get the free core
+          href: https://github.com/open-mercato/open-mercato
+          tracking: { placement: pricing, action: free }
+        note: Included in the core
+        points:
+          - CRM, sales and product catalog modules
+          - Workflows and business rules
+          - Tenant isolation and role-based access
+          - REST APIs and permission-aware MCP tools
+      - title: Enterprise
+        eyebrow: From €3,000
+        body: |-
+          EUR net / month · One licensed project
+
+          Get the enterprise modules, priority technical support and security fixes for supported versions of Core and Enterprise.
+        cta:
+          label: Talk to sales
+          href: /contact
+          tracking: { placement: pricing, action: enterprise }
+        note: Included with the license
+        points:
+          - Single sign-on, directory sync and enforced MFA
+          - Security fix emails and self-service upgrade packages
+          - Agent Orchestrator with human approvals
+          - Record locking to prevent conflicting edits
+      - title: Custom
+        eyebrow: By quote
+        body: |-
+          License and services quoted separately
+
+          Agree on coverage for a larger deployment. Add hands-on engineering services to any Enterprise subscription, at purchase or later.
+        cta:
+          label: Let’s talk
+          href: /contact
+          tracking: { placement: pricing, action: custom }
+        note: Services you can commission
+        points:
+          - A pre-deployment architecture audit
+          - Security and performance reviews
+          - Managed upgrades and go-live reviews
+          - A dedicated contact through launch
+  # the table: the first item is the header row, each next item a row (its title the row heading, its points the
+  # cells in plan order)
+  - type: features
+    layout: pricing-compare
+    id: compare-plans
+    title: Compare plans
+    items:
+      - title: What you get
+        points: [Free, Enterprise, Custom]
+      - title: Production use
+        points: [MIT core, Core and commercial modules, Core and commercial modules]
+      - title: Users
+        points: [Unlimited, Unlimited per licensed project, Unlimited per licensed project]
+      - title: Software upgrades
+        points:
+          - Your team applies public core releases
+          - Your team or partner applies the supplied upgrade packages
+          - Assisted or managed upgrades by separate agreement
+      - title: Technical support
+        points:
+          - Community channels
+          - Priority support for Core and Enterprise. Basic covers 5 active issues at a time.
+          - Priority support with agreed capacity. Custom module coverage is optional.
+      - title: Security fixes
+        points:
+          - Follow public releases and apply the relevant fixes.
+          - We email your team when a security fix is available for your supported release. You can apply it before the next public release.
+          - The same security notifications and fixes. Hands-on rollout can be scoped separately.
+      - title: Identity and access
+        points:
+          - Role-based access and tenant isolation
+          - Adds single sign-on, directory provisioning and mandatory MFA
+          - Same enterprise identity controls
+      - title: AI workflows
+        points:
+          - Build workflows and connect agents through MCP
+          - Agent Orchestrator runs agents as workflow steps, routes uncertain results to a human and logs actions.
+          - Same Agent Orchestrator capabilities
+      - title: Concurrent edits
+        points:
+          - Standard record editing
+          - Record locking and presence indicators show who is editing a shared record.
+          - Same collaboration controls
+  - type: faq
+    layout: pricing-qa
+    title: Licensing questions
+    items:
+      - question: Can I use Free in production?
+        answer: Yes. The MIT license lets you build, modify and run commercial applications on the open-source core. You choose the infrastructure and cover its running costs. [Read the MIT license.](https://github.com/open-mercato/open-mercato/blob/main/LICENSE)
+      - question: How does Enterprise pricing work?
+        answer: Basic starts at €3,000 net per month for companies below €25M in annual revenue. Medium is €10,000 net per month for companies from €25M to €250M. Above €250M, we quote the license individually. Basic and Medium each cover one project with unlimited users and servers. You can buy the license on its own.
+      - question: What happens if we don’t renew?
+        answer: If you’ve paid in full and continue usage reporting, you can keep running the retained version in the same project. Your own application code stays in your repository. New enterprise releases, security patches and support end with the subscription. [Read the enterprise terms.](https://github.com/open-mercato/open-mercato/blob/main/packages/enterprise/TERMS.md)

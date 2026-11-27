@@ -1,0 +1,60 @@
+---
+// The plan cards of /pricing as live (`op-plans`), one item per plan: `title` the plan's name, `eyebrow` its price (a
+// leading "From" is the live `op-from`), the first paragraph of `body` the basis line and the rest the audience, `cta`
+// the button with its GA4 event (cta_pricing_<plan>, the live embed's own tracker), `note` the heading of the list and
+// `points` the list. The figure of stacked blocks grows by one per card, as live.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { ctaAttrs } from '../../../../lib/core/cta.ts'
+import { inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const plans = block.items.map((item, i) => {
+  const key = (item.title ?? `plan-${i + 1}`).toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  const price = /^From\s+(.+)$/.exec(item.eyebrow ?? '')
+  const [basis = '', ...audience] = (item.body ?? '').split(/\n\s*\n/)
+  return { item, key, figures: i + 1, from: price !== null, price: price ? price[1]! : (item.eyebrow ?? ''), basis, audience: audience.join(' ') }
+})
+---
+
+<div class="op-shell">
+  <div class="op-plans" id={block.id}>
+    {
+      plans.map((p) => (
+        <article aria-labelledby={`op-${p.key}-title`} class={`op-card op-${p.key}`}>
+          <div class="op-summary">
+            <div class="op-plan-head">
+              <h2 id={`op-${p.key}-title`}>{p.item.title && t(p.item.title)}</h2>
+              <span aria-hidden="true" class="op-figure">
+                {Array.from({ length: p.figures }, () => <i />)}
+              </span>
+            </div>
+            <div class="op-priceline">
+              {p.from && <span class="op-from">From</span>}
+              <span class="op-price">{t(p.price)}</span>
+            </div>
+            {p.basis && <p class="op-basis" set:html={inline(t(p.basis))} />}
+            {p.audience && <p class="op-audience" set:html={inline(t(p.audience))} />}
+          </div>
+          {
+            p.item.cta && (
+              <a
+                href={p.item.cta.href}
+                class="op-button"
+                {...(p.item.cta.tracking ? ctaAttrs(p.item.cta.tracking.action, p.item.cta.tracking.placement) : {})}
+              >
+                {t(p.item.cta.label)}
+              </a>
+            )
+          }
+          <div class="op-features">
+            {p.item.note && <p set:html={inline(t(p.item.note))} />}
+            <ul role="list">{(p.item.points ?? []).map((pt) => <li set:html={inline(t(pt))} />)}</ul>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</div>
