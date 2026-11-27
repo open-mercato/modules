@@ -37,8 +37,9 @@ Verified is a compatibility signal, not a security review. A module's own code r
 
 The site has a Templates section for whole app templates: complete Open Mercato apps in GitHub repositories to start a
 new app from. One file in `templates/` is one entry; [CONTRIBUTING.md](CONTRIBUTING.md#templates) says how to add one.
-The save tool, [`create-mercato-template`](https://github.com/open-mercato/create-mercato-template), is on GitHub and
-not on npm yet. The section stays in a coming soon state until the first template is active. Plan and tracking:
+The save tool is [`create-mercato-template`](https://github.com/open-mercato/create-mercato-template), and
+[Publish your app as a template](docs/publish-a-template.md) is the guide for partners. The section opens with the
+first active template. Plan and tracking:
 [specification](https://github.com/open-mercato/modules/pull/5), [save tool](https://github.com/open-mercato/modules/issues/6),
 [section](https://github.com/open-mercato/modules/issues/7).
 
