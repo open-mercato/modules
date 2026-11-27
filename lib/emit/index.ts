@@ -295,7 +295,7 @@ export function buildEmit(input: EmitData, opts: EmitOptions): EmitResult {
   // GitHub Pages cannot serve); llms.txt says it is not deployed yet
   if (opts.mcpUrl) put(SERVER_CARD_PATH, McpServerCard, serverCard(opts.mcpUrl))
   else warn('MCP_URL is not set; no MCP server card is published and llms.txt says the MCP server is not deployed yet')
-  const skills = agentSkills(data.skills, opts.site, warn)
+  const skills = agentSkills(data.skills, opts.servingSite ?? opts.site, warn)
   put('.well-known/agent-skills/index.json', AgentSkillsIndex, skills.index)
   for (const [path, bytes] of skills.files) pub.set(path, bytes)
   pub.set('robots.txt', robotsTxt(opts.site))
