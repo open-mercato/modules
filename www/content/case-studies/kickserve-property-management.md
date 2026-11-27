@@ -4,8 +4,9 @@ title: 'Kickserve: from a WhatsApp message to assigned maintenance'
 heading: 'Kickserve: from a WhatsApp message to assigned maintenance'
 description: A tenant reports a problem. The right technician gets the task. Kickserve built a property-management product on Open Mercato, connecting WhatsApp requests, a maintenance board and automatic assignment for a Dubai use case.
 thumbnail:
-  src: /media/case-studies/6af2d0b24c918da2c831c2d9-6af2ce23caea92099154a80d-kickserve-cover.jpeg
-  alt: AI-generated illustration of a WhatsApp maintenance conversation and a request board in a Dubai apartment
+  src: /media/case-studies/6b08b5fb99e371aa3ba83f1f-6b08b5df11568b3b27273db1-kickserve-maintenance-hero.webp
+  alt: ''
+  decorative: true
 overview:
   client: Property-management use case, Dubai
   industry: Real estate / property management

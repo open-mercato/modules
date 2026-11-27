@@ -1,8 +1,9 @@
 // The navbar and the footer of the main site, https://www.openmercato.com (Webflow), copied into the catalog. The
 // catalog is the Run section of that site, www.openmercato.com/run, so a visitor must not feel they left the main site: one navbar,
-// the same as there (Product, Developers and Enterprise open panels of icon, name and description; Contact; Case
-// Studies; Blog; the GitHub button with the star count; Launch sandbox), plus one menu the main site gets too: Run, after
-// Enterprise, with the pages of the catalog (RUN_MENU). Keep this file in step with the Webflow navbar: when the menu
+// the same as there (Product, Developers and Enterprise open panels of icon, name and description; Pricing; Clients;
+// Blog; Contact; a GitHub text link its styles hide; the GitHub button with the star count; Launch sandbox), plus one
+// menu the main site gets too: Run, after Enterprise, with the pages of the catalog (RUN_MENU). The live Developers
+// panel links Modules to modules.openmercato.com, the catalog's old host; here that row is the catalog's home page. Keep this file in step with the Webflow navbar: when the menu
 // changes there, change it here (docs/RUNBOOK.md).
 // Main-site addresses are absolute, so they hold on every host that serves the build. The layout check
 // (lib/emit/pages-layout.ts) accepts exactly these addresses on the origin of the main site and still flags any other
@@ -18,6 +19,8 @@ export const MAIN_SITE_ORIGIN = 'https://www.openmercato.com'
 export interface MainSiteLink {
   label: string
   url: string
+  /** A class next to `navbar_link`: `is-github`, which the main site's styles hide, as they do there. */
+  variant?: 'is-github'
 }
 
 /** Names of the 22 px stroke icons of the navbar panels (site/src/components/nav-icons.ts draws them). */
@@ -27,7 +30,9 @@ export type NavIcon =
   | 'agent-orchestrator'
   | 'cloud-sandboxes'
   | 'cezar'
+  | 'docs'
   | 'architecture'
+  | 'modules'
   | 'how-to-contribute'
   | 'agencies'
   | 'partners'
@@ -44,6 +49,8 @@ export type NavIcon =
 export interface MainSiteMenuItem extends MainSiteLink {
   description: string
   icon: NavIcon
+  /** A site path of the catalog the header links instead of `url` (built with href(), like the Run rows). */
+  run?: string
 }
 
 /** A menu of the navbar that opens a panel; the label also heads the panel. */
@@ -120,10 +127,24 @@ export const MAIN_SITE_MENUS: readonly MainSiteMenu[] = [
     label: 'Developers',
     items: [
       {
+        // the live row links /documentation, which answers a 301 to the docs
+        label: 'Docs',
+        url: 'https://docs.openmercato.com/',
+        description: 'Get started, build a module, or look up an API.',
+        icon: 'docs',
+      },
+      {
         label: 'Architecture',
         url: at('/architecture'),
         description: 'Learn the Modular Monolith, Overlay system (OCP), DI, and request flow.',
         icon: 'architecture',
+      },
+      {
+        label: 'Modules',
+        url: 'https://modules.openmercato.com/',
+        run: '/',
+        description: 'Browse the Open Mercato module catalog.',
+        icon: 'modules',
       },
       {
         label: 'How to contribute',
@@ -208,15 +229,17 @@ export const RUN_MENU: { label: string; items: readonly RunMenuItem[] } = {
 }
 
 /**
- * The plain links of the main navbar, after the menus: Contact, then Case Studies and Blog pushed to the right.
- * Blog is the live navbar's link (owner's decision of 25 Nov 2026, www migration Phase 6): the one header shows it on
- * the main site and on the /run pages alike, and keeps the Run menu on both, because after the switch /run is part of
- * the site.
+ * The plain links of the main navbar, after the menus, as the live navbar of 27 Nov 2026 has them: Pricing, Clients
+ * (the case studies), Blog, Contact and a GitHub text link its styles hide. The one header shows them on the main
+ * site and on the /run pages alike, and keeps the Run menu on both, because after the switch /run is part of the site
+ * (owner's decision of 25 Nov 2026, www migration Phase 6).
  */
 export const MAIN_SITE_LINKS: readonly MainSiteLink[] = [
-  { label: 'Contact', url: at('/contact') },
-  { label: 'Case Studies', url: at('/case-studies') },
+  { label: 'Pricing', url: at('/pricing') },
+  { label: 'Clients', url: at('/case-studies') },
   { label: 'Blog', url: at('/blog') },
+  { label: 'Contact', url: at('/contact') },
+  { label: 'GitHub', url: MAIN_SITE_GITHUB, variant: 'is-github' },
 ]
 
 /** Footer links of the main site, in its order. */

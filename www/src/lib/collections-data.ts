@@ -49,6 +49,7 @@ export async function caseStudyData(): Promise<CaseStudyData> {
     partners: {
       names: new Map(partners.map((p) => [p.id, p.data.name])),
       published: new Set(publishedPartners(partners).map((p) => p.id)),
+      websites: new Map(partners.flatMap((p) => (p.data.website ? [[p.id, p.data.website] as const] : []))),
     },
   }
 }

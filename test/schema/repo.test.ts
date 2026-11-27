@@ -102,6 +102,8 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       '.npm/',
       // byte copies of the create-mercato-app scaffold, the modulesFromModulesTs contract (templates spec, rev. 7)
       'test/fixtures/templates/modules-from-modules-ts/scaffold-*',
+      // the rich-text embeds of posts, kept byte for byte as Webflow serves them (lib/import-webflow/run.ts)
+      'www/content/embeds/',
     ])
   })
 

@@ -1,0 +1,28 @@
+---
+// "Licensing questions" of /pricing as live (`op-qa`): the title beside the questions, each a details element whose
+// answer is one paragraph (Markdown inline, its links kept). The page's JSON-LD takes them as FAQPage (pageJsonLd).
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'faq'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const titleId = `op-${block.id ?? 'faq'}-title`
+---
+
+<div class="op-shell">
+  <section aria-labelledby={titleId} class="op-qa" id={block.id}>
+    <h2 id={titleId} class="op-section-title">{t(block.title)}</h2>
+    <div class="op-questions">
+      {
+        block.items.map((q) => (
+          <details>
+            <summary>{t(q.question)}</summary>
+            <p class="op-answer" set:html={inline(t(q.answer))} />
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</div>

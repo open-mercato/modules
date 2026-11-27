@@ -1,4 +1,4 @@
-// The 22 px icons of the navbar panels. The first eleven are the main site's own (decoded from its navbar styles of
+// The 22 px icons of the navbar panels. The first eleven, without Docs and Modules, are the main site's own (decoded from its navbar styles of
 // 13 Nov); the six of the Run menu are drawn in the same way: a 24 grid, no fill, a 1.65 round stroke (Lucide shapes,
 // ISC). The main site paints them through a CSS mask in the text colour; here they are inline with currentColor,
 // which looks the same.
@@ -11,6 +11,10 @@ const BODY: Record<NavIcon, string> = {
     '<rect x="4" y="7" width="16" height="14" rx="3"/><path d="M12 3v4M2 12v5m20-5v5M8 16h8"/><circle cx="8" cy="11" r="1"/><circle cx="16" cy="11" r="1"/>',
   'cloud-sandboxes': '<path d="M7 19a5 5 0 1 1-1-9.9A7 7 0 0 1 19.7 10 4.5 4.5 0 0 1 19 19z"/>',
   cezar: '<rect x="3" y="3" width="18" height="18" rx="4"/><path d="m7 8 4 4-4 4m6 0h4"/>',
+  // Docs and Modules (added on the live navbar after 13 Nov): an open book and a package, drawn like the Run icons
+  docs: '<path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  modules:
+    '<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73zM12 22V12M3.3 7 12 12l8.7-5M7.5 4.27l9 5.15"/>',
   architecture:
     '<rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4H5v4m7-4h7v4"/>',
   'how-to-contribute': '<path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0c-1 .8-1 1.5-1 4H9c0-2.5 0-3.2-1-4Z"/>',

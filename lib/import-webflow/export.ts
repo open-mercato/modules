@@ -134,6 +134,14 @@ export function readExport(dir: string): WebflowExport {
   return { dir, collections, pages, dom, assets, text }
 }
 
+/**
+ * The key of an item in references and in the ownership manifest: its Webflow id, or `new:<slug>` for an item read
+ * from the published site that the base export does not hold (`webflow-export --from-site`; no id is shown there).
+ */
+export function itemKey(item: WfItem): string {
+  return item.id || `new:${String(item.fieldData.slug ?? '')}`
+}
+
 /** The id a Webflow option field stores for each option name. */
 export function optionNames(schema: WfCollection, field: string): Map<string, string> {
   const f = schema.fields.find((x) => x.slug === field)

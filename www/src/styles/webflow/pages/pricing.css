@@ -1,0 +1,432 @@
+/*
+ * /pricing, a mirror of the live page (owner's decision of 25 Nov 2026, until the designer's pass, D7, replaces it).
+ * Origin: the embedded code of https://www.openmercato.com/pricing, fetched on 27 Nov 2026; its `#om-pricing` (a
+ * `main` there) is this site's `main` of the page, `.wf-pricing #main`.
+ * Edit as a mirror: change a rule only to match the live site.
+ */
+
+.wf-pricing #main {
+  --ink: #1c211b;
+  --muted: #525d50;
+  --rule: #cbd1c6;
+  --paper: #fafaf7;
+  --mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Geist, 'Helvetica Neue', Arial, sans-serif;
+  text-align: left;
+  padding: clamp(52px, 6vw, 94px) clamp(20px, 5vw, 88px) clamp(66px, 8vw, 118px);
+}
+.wf-pricing #main *,
+.wf-pricing #main *::before,
+.wf-pricing #main *::after {
+  box-sizing: border-box;
+}
+.wf-pricing #main .op-shell {
+  width: 100%;
+  max-width: 1216px;
+  margin-inline: auto;
+}
+.wf-pricing #main :is(h1, h2, h3, p, ul, dl, dt, dd) {
+  margin: 0;
+}
+.wf-pricing #main h1,
+.wf-pricing #main h2,
+.wf-pricing #main h3 {
+  font-family: inherit;
+  color: inherit;
+}
+.wf-pricing #main h1 {
+  font-size: clamp(54px, 6.5vw, 88px);
+  font-weight: 550;
+  letter-spacing: -0.068em;
+  line-height: 0.99;
+}
+.wf-pricing #main .op-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 26px;
+  margin-bottom: clamp(30px, 3.6vw, 52px);
+}
+.wf-pricing #main .op-intro p {
+  max-width: 660px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: clamp(17px, 1.45vw, 21px);
+  line-height: 1.43;
+  letter-spacing: -0.018em;
+}
+.wf-pricing #main .op-jump,
+.wf-pricing #main .op-answer a {
+  color: #354c27;
+  font-weight: 550;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+.wf-pricing #main .op-jump {
+  flex: none;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+.wf-pricing #main :is(a, summary):focus-visible {
+  outline: 3px solid #588333;
+  outline-offset: 4px;
+}
+.wf-pricing #main .op-plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 22px);
+}
+.wf-pricing #main .op-card {
+  --card-ink: var(--ink);
+  --card-muted: var(--muted);
+  --card-line: #cbd1c6;
+  --art-outline: #3b4933;
+  --art-top: #f4f6ed;
+  --art-left: #d6deca;
+  --art-right: #a9b797;
+  color: var(--card-ink);
+  background: #fff;
+  border: 1px solid var(--card-line);
+  border-radius: 10px;
+  padding: clamp(21px, 2.2vw, 34px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.wf-pricing #main .op-plan-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 53px;
+}
+.wf-pricing #main .op-plan-head h2 {
+  font-size: clamp(23px, 2.1vw, 31px);
+  line-height: 1.12;
+  font-weight: 560;
+  letter-spacing: -0.045em;
+}
+.wf-pricing #main .op-figure {
+  position: relative;
+  display: block;
+  flex: 0 0 65px;
+  height: 53px;
+}
+.wf-pricing #main .op-figure i {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 52px;
+  height: 34px;
+  display: block;
+  background: var(--art-outline);
+  clip-path: polygon(50% 0, 100% 33%, 100% 66%, 50% 100%, 0 66%, 0 33%);
+}
+.wf-pricing #main .op-figure i::before,
+.wf-pricing #main .op-figure i::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+}
+.wf-pricing #main .op-figure i::before {
+  background: linear-gradient(90deg, var(--art-left) 0 48.5%, var(--art-outline) 49% 51%, var(--art-right) 51.5% 100%);
+  clip-path: polygon(0 36%, 50% 70%, 100% 36%, 100% 64%, 50% 99%, 0 64%);
+}
+.wf-pricing #main .op-figure i::after {
+  background: var(--art-top);
+  clip-path: polygon(50% 0, 99% 33%, 50% 65%, 1% 33%);
+}
+.wf-pricing #main .op-free .op-figure i {
+  bottom: 9px;
+}
+.wf-pricing #main .op-figure i:nth-child(2) {
+  transform: translateY(-9px);
+}
+.wf-pricing #main .op-figure i:nth-child(3) {
+  transform: translateY(-18px);
+}
+.wf-pricing #main .op-priceline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 23px;
+  min-height: 52px;
+}
+.wf-pricing #main .op-price {
+  font-size: clamp(39px, 3.85vw, 59px);
+  line-height: 1.05;
+  letter-spacing: -0.063em;
+  font-weight: 530;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.wf-pricing #main .op-from {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--card-muted);
+}
+.wf-pricing #main .op-basis {
+  color: var(--card-muted);
+  font: 12px/1.55 var(--mono);
+  letter-spacing: -0.02em;
+  margin-top: 5px;
+}
+.wf-pricing #main .op-audience {
+  color: var(--card-muted);
+  font-size: 16px;
+  line-height: 1.47;
+  margin-top: 20px;
+}
+.wf-pricing #main .op-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+  padding: 11px 16px;
+  border-radius: 5px;
+  border: 1px solid #263022;
+  color: var(--ink);
+  background: transparent;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 560;
+  line-height: 1.35;
+}
+.wf-pricing #main .op-button::after {
+  content: '→';
+  font-size: 18px;
+  font-weight: 450;
+  line-height: 1;
+}
+.wf-pricing #main .op-button:hover {
+  color: #fff;
+  background: #273026;
+  border-color: #273026;
+}
+.wf-pricing #main .op-features {
+  padding-top: 20px;
+  border-top: 1px solid var(--card-line);
+}
+.wf-pricing #main .op-features p {
+  font-size: 14px;
+  font-weight: 610;
+  line-height: 1.4;
+  color: var(--card-ink);
+}
+.wf-pricing #main .op-features ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.wf-pricing #main .op-features li {
+  position: relative;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--card-muted);
+  font-size: 15px;
+  line-height: 1.42;
+}
+.wf-pricing #main .op-features li::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0.39em;
+  width: 10px;
+  height: 6px;
+  border-left: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+  transform: rotate(-45deg);
+}
+.wf-pricing #main .op-summary {
+  flex: 1 0 auto;
+  padding-bottom: 22px;
+}
+.wf-pricing #main .op-button {
+  margin-bottom: 22px;
+}
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 801px) {
+    .wf-pricing #main .op-card {
+      display: grid;
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      row-gap: 21px;
+    }
+    .wf-pricing #main .op-summary {
+      padding-bottom: 0;
+    }
+    .wf-pricing #main .op-button {
+      margin-bottom: 0;
+    }
+  }
+}
+.wf-pricing #main .op-compare {
+  margin-top: clamp(56px, 6vw, 90px);
+  scroll-margin-top: 90px;
+}
+.wf-pricing #main .op-section-title {
+  font-size: clamp(31px, 3.2vw, 46px);
+  font-weight: 550;
+  letter-spacing: -0.053em;
+  line-height: 1.05;
+}
+.wf-pricing #main table {
+  background: #fff;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  margin: 25px 0 0;
+  color: var(--ink);
+}
+.wf-pricing #main th,
+.wf-pricing #main td {
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 17px clamp(9px, 1.4vw, 20px);
+  vertical-align: top;
+  text-align: left;
+}
+.wf-pricing #main th:first-child {
+  padding-left: 0;
+  width: 26%;
+}
+.wf-pricing #main thead th {
+  border-top: 1px solid var(--rule);
+  font-size: 17px;
+  font-weight: 600;
+}
+.wf-pricing #main tbody th {
+  font-size: 15px;
+  font-weight: 580;
+}
+.wf-pricing #main td {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.wf-pricing #main .op-qa {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: clamp(32px, 6vw, 90px);
+  margin-top: clamp(58px, 7vw, 100px);
+}
+.wf-pricing #main .op-questions {
+  border-top: 1px solid var(--rule);
+}
+.wf-pricing #main details {
+  border-bottom: 1px solid var(--rule);
+}
+.wf-pricing #main summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 2px 20px 0;
+  font-size: 17px;
+  font-weight: 540;
+  list-style: none;
+}
+.wf-pricing #main summary::-webkit-details-marker {
+  display: none;
+}
+.wf-pricing #main summary::after {
+  content: '+';
+  font: 24px/1 var(--mono);
+  font-weight: 400;
+  color: #45543d;
+}
+.wf-pricing #main details[open] summary::after {
+  content: '−';
+}
+.wf-pricing #main .op-answer {
+  padding: 0 28px 20px 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+@media (max-width: 900px) and (min-width: 801px) {
+  .wf-pricing #main {
+    padding-inline: 20px;
+  }
+  .wf-pricing #main .op-card {
+    padding: 19px;
+  }
+  .wf-pricing #main .op-from {
+    font-size: 14px;
+  }
+}
+@media (max-width: 800px) {
+  .wf-pricing #main .op-intro {
+    display: block;
+  }
+  .wf-pricing #main .op-jump {
+    display: inline-block;
+    margin-top: 18px;
+  }
+  .wf-pricing #main .op-plans {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .wf-pricing #main .op-plan-head {
+    min-height: 44px;
+  }
+  .wf-pricing #main .op-priceline {
+    margin-top: 12px;
+  }
+  .wf-pricing #main .op-audience {
+    margin-top: 14px;
+  }
+  .wf-pricing #main .op-qa {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+@media (max-width: 600px) {
+  .wf-pricing #main table,
+  .wf-pricing #main tbody {
+    display: block;
+  }
+  .wf-pricing #main thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+  .wf-pricing #main tbody tr {
+    display: block;
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .wf-pricing #main tbody tr:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .wf-pricing #main tbody tr > th {
+    display: block;
+    border: 0;
+    width: auto;
+    padding: 0 0 8px;
+  }
+  .wf-pricing #main tbody tr > td {
+    display: grid;
+    grid-template-columns: 87px minmax(0, 1fr);
+    gap: 10px;
+    padding: 4px 0;
+    border: 0;
+  }
+  .wf-pricing #main tbody tr > td::before {
+    content: attr(data-plan);
+    color: #43503b;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+}

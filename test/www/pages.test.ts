@@ -9,6 +9,8 @@ import {
   listPageCopy,
   pageEntry,
   pageJsonLd,
+  pageOgCard,
+  pageOgImage,
   pagePath,
   routedPages,
   type PageEntry,
@@ -33,6 +35,18 @@ describe('the pages entries', () => {
     expect(pagePath('home')).toBe('/')
     expect(pagePath('product')).toBe('/product')
     expect(routedPages(pages).map((p) => p.id)).toEqual(['product'])
+  })
+
+  it('draws an OG card only for a routed page with a hero and no image of its own', () => {
+    expect(pageOgCard(pages[1]!)).toEqual({ eyebrow: 'Open Mercato', title: 'Product' })
+    expect(pageOgImage(pages[1]!)).toBe('/og/product.png')
+    // the home page and a list page are not routed here; a page without a hero keeps the default image
+    expect(pageOgCard(pages[0]!)).toBeUndefined()
+    expect(pageOgCard(pages[3]!)).toBeUndefined()
+    const team = entry('team', { blocks: [{ type: 'prose', markdown: 'x' }] })
+    expect(pageOgImage(team)).toBeUndefined()
+    const own = entry('own', { seo: { ...seo, ogImage: '/media/pages/x.png' }, blocks: [{ type: 'hero', title: 'X' }] })
+    expect(pageOgImage(own)).toBe('/media/pages/x.png')
   })
 
   it('reads a page the build needs, and refuses a missing or draft one', () => {

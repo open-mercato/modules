@@ -1,0 +1,39 @@
+---
+// "Compare plans" of /pricing as live (`op-compare`): the first item is the header row (its title the corner cell, its
+// points the plans), each next item a row (its title the row heading, its points the cells in plan order). A cell
+// carries its plan's name, which the narrow layout of the page's code shows before it.
+import { fillCounts } from '../../../../lib/core/www-tokens.ts'
+import { inline } from '../../lib/inline-markdown.ts'
+import type { BlockProps } from '../../lib/pages.ts'
+
+type Props = BlockProps<'features'>
+const { block, counts } = Astro.props
+const t = (s: string): string => fillCounts(s, counts)
+const [head, ...rows] = block.items
+const plans = (head?.points ?? []).map(t)
+const titleId = `op-${block.id ?? 'compare'}-title`
+---
+
+<div class="op-shell">
+  <section id={block.id} aria-labelledby={titleId} class="op-compare">
+    {block.title && <h2 id={titleId} class="op-section-title">{t(block.title)}</h2>}
+    <table aria-labelledby={titleId}>
+      <thead>
+        <tr>
+          <th scope="col">{head?.title && t(head.title)}</th>
+          {plans.map((p) => <th scope="col">{p}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr>
+              <th scope="row">{r.title && t(r.title)}</th>
+              {(r.points ?? []).map((c, i) => <td data-plan={plans[i]} set:html={inline(t(c))} />)}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
