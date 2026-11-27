@@ -18,9 +18,11 @@ Non-goals: no other cleanup; the `/run/m/:scope/:name/` rule stays (Pages matche
 
 ## Progress
 
+PR: #40
+
 > Convention: `- [ ]` pending, `- [x]` done. Append ` - <commit sha>` when a step lands. Do not rename step titles.
 
 ### Phase 1: Fix and prove
 
-- [ ] 1.1 Drop the self-covering rule and check for it
-- [ ] 1.2 Smoke assertions in the emulator
+- [x] 1.1 Drop the self-covering rule and check for it - 9b337ee
+- [x] 1.2 Smoke assertions in the emulator - 9a47d87
