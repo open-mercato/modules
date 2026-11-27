@@ -733,11 +733,20 @@ page and Cloudflare's R2 S3 API page are read at that time, and the byte test of
   copied into Webflow by hand, and a rollback at C10 must copy back everything published since the freeze. The 7-day
   spacing is a minimum; the freeze day records a target date for C8 in the RUNBOOK, and when C8 slips past it the
   owner decides again whether to wait or to copy the divergence into Webflow.
-- **Draft media may be public by URL.** The Media Library docs do not say whether the local provider serves
-  `/uploads/*` without a token; Step 2.1 checks it on a running instance and records the answer here. If it does, a
+- **Draft media are public by URL (checked in Step 2.1).** On 5.64.0 with the local provider an anonymous `GET` of an
+  uploaded file under `/uploads/` answers 200 with the file (`cms/test/instance/media.test.ts`, run in `cms.yml`). So a
   draft's image can be fetched by anyone who has its address (file names carry a hash): acceptable for marketing
-  images, and Access on the whole host or a private R2 bucket closes it if needed. If it does not, this risk is
-  removed. The pull sends its token on media downloads either way.
+  images, and Access on the whole host or a private R2 bucket closes it if needed. The pull sends its token on media
+  downloads either way.
+- **Media Library settings (checked in Step 2.1).** 5.64.0 stores the three settings of A7 in its core store, the row
+  `plugin_upload_settings` of the table `strapi_core_store_settings` (JSON `sizeOptimization`, `responsiveDimensions`,
+  `autoOrientation`, plus `aiMetadata` of the AI captions); the upload plugin's own bootstrap writes its defaults there
+  only for a missing key and runs before the bootstrap of `cms/`, which forces all four off at every start
+  (`cms/src/bootstrap/media-settings.ts`). A Super Admin can still turn them on until the next restart; the bytes of a
+  file uploaded meanwhile may change, and the pull's SHA-256 check against the snapshot manifest names it. With them off
+  a JPEG, a PNG and a WebP with EXIF (orientation 6) or a text chunk and an SVG with metadata keep their SHA-256 as
+  stored and as served. Strapi still writes a `thumbnail` format next to a raster original larger than 245 by 156
+  pixels; the pull ignores formats.
 - **A read token may read drafts.** If the test of Step 3.3 shows that a read-only token reads `status=draft`, the
   production `STRAPI_READ_TOKEN` can read every draft, and a leak of it exposes unannounced content. The separate
   `STRAPI_DRAFTS_TOKEN` then still keeps the drafts workflow's secret out of production and lets each be rotated

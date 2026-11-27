@@ -15,3 +15,15 @@ playwright-report/
 .DS_Store
 *.log
 .wp/
+# the Strapi project (spec 2026-11-27-www-strapi-cms.md): host secrets and the folder's outputs
+cms/.env
+cms/.yarn/*
+!cms/.yarn/patches
+cms/build/
+cms/.strapi/
+cms/.strapi-updater.json
+cms/.tmp/
+cms/.tsbuildinfo
+cms/types/generated/
+cms/public/uploads/*
+!cms/public/uploads/.gitkeep

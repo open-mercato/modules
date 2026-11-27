@@ -1,5 +1,6 @@
 // `yarn om check-text`: no U+2014, U+2013 or control characters in human texts (spec 0.7, 3.5).
 // Scope: site/src/**, www/**, modules/**, templates/**, policy/**, quality/**, docs/**, .github/**, skills/**, plugins/**,
+// cms/src/**, cms/config/**,
 // lib/core/main-site.ts (the texts of the Run menu; the navbar and the footer are www/content/*.json) and every *.md, except test/fixtures/**, www/public/media/**, www/content/embeds/** and generated or vendored directories. Optional args restrict the check to given
 // files.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
@@ -41,6 +42,9 @@ const TEXT_DIRS = [
   '.github/',
   'skills/',
   'plugins/',
+  // the Strapi project: help texts of the content types and the bootstrap (spec 2026-11-27-www-strapi-cms.md)
+  'cms/src/',
+  'cms/config/',
 ]
 const TEXT_EXT = /\.(md|mdx|ya?ml|astro|tsx?|jsx?|css|html|json|txt|svg)$/
 /** Code files outside TEXT_DIRS that hold texts for people: the Run menu of the navbar. */

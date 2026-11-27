@@ -1,0 +1,6 @@
+# For tests and a local instance only (cms.yml, cms/README.md): Strapi on 127.0.0.1:1337 of the machine, never on
+# another address. Not used on the Strapi host.
+services:
+  strapi:
+    ports:
+      - "127.0.0.1:${CMS_PORT:-1337}:1337"

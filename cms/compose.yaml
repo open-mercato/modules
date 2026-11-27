@@ -1,0 +1,64 @@
+# The Strapi host (spec, The cms/ folder): Strapi, PostgreSQL 17, the tunnel and (Step 2.5) the backup job, on a
+# network of their own. Every host value comes from cms/.env. No port is published: the tunnel is the only way in
+# (Q2). Start: `docker compose -f cms/compose.yaml --profile tunnel up -d --build`.
+name: www-cms
+
+services:
+  postgres:
+    image: postgres:17.12-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-strapi}
+      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?set DATABASE_PASSWORD in cms/.env}
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - cms
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  strapi:
+    build: .
+    image: www-cms-strapi:local
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+    volumes:
+      - uploads:/opt/cms/public/uploads
+    networks:
+      - cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  tunnel:
+    image: cloudflare/cloudflared:2026.11.2
+    profiles:
+      - tunnel
+    restart: unless-stopped
+    command: ["tunnel", "--no-autoupdate", "run"]
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    networks:
+      - cms
+    depends_on:
+      - strapi
+
+networks:
+  cms: {}
+
+volumes:
+  db: {}
+  uploads: {}
