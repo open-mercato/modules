@@ -16,3 +16,12 @@
 - Five files of www/content held the same keys in two orders within one kind of object (blog-categories.yaml: a numbered `order` after the colours; pages agent-orchestrator, architecture, home, pricing: block and item fields). A Strapi component has one attribute order, so they could not come back byte for byte.
 - Done: those files are written in the mapping's order (data deep-equal before and after); the importer places a numbered `order` after `name`; the manifest hash of blog-categories.yaml is what the fixed importer writes. The test is not changed. Flagged in the PR body as a decision for the owner; the built site must stay byte-identical (checked by the layout diff).
 - Builds: the diff of two builds of the same commit is empty only with OM_NOW, GITHUB_SHA and one build path pinned (the emit clock, the About stamp, and Astro's scoped CSS ids hash the absolute path). Every layout build of this run uses all three.
+
+## 2026-11-27T23:03:52Z: review and final gate
+
+- Delegated `om-auto-review-pr 43 --autofix` to one subagent: verdict approve, fixes 2039d9f and afa234f, open points listed in the PR body.
+- Final gate green on afa234f; diff -r of both layouts against main empty; smoke test 35 pass.
+
+## 2026-11-27T23:03:52Z: run finished
+
+- PR: https://github.com/open-mercato/modules/pull/43, Status complete, marked ready.

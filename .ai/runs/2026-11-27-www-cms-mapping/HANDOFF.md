@@ -1,27 +1,27 @@
 # Handoff: 2026-11-27-www-cms-mapping
 
-**Last updated:** 2026-11-27T22:13:46Z
+**Last updated:** 2026-11-27T23:03:52Z
 **Branch:** feat/www-cms-mapping
-**PR:** not yet opened
-**Current phase/step:** Phase 1 Step 1.1
-**Last commit:** 71c9fc1 docs(specs): Strapi CMS for www.openmercato.com (#42)
+**PR:** https://github.com/open-mercato/modules/pull/43
+**Current phase/step:** Phase 1 complete
+**Last commit:** afa234f fix(www-cms): name the field when a Strapi document holds no list where one belongs
 
 ## What just happened
 
-- Run folder written; baseline builds of both layouts on main (71c9fc1, data a34fa69) taken outside the repository.
+- All Steps of Phase 1 and two review fixes landed; final gate green; both layouts byte-identical to main.
 
 ## Next concrete action
 
-- Step 1.1: navbar and footer to www/content/navigation.json and footer.json.
+- Owner review of PR 43, including the decisions in its body (five files reordered by key, manual redirects after the docs map, spec wording of navigation fields and dictionary order).
 
 ## Blockers / open questions
 
-- none
+- none for this phase
 
 ## Environment caveats
 
-- Dev runtime runnable: yes (Cezar, Node 24)
-- Browser / UI checks: skipped, the built site must not change; byte diff of both layouts stands for them
+- Dev runtime runnable: yes
+- Browser / UI checks: skipped, the site does not change (byte diff and smoke test instead)
 - Database/migration state: clean (no database)
 
 ## Worktree
