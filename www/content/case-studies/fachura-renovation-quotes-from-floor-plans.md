@@ -6,7 +6,7 @@ thumbnail:
   src: /media/case-studies/6b08b3b3874e9246335aba46-6b08b36b089886669400ae26-fachura-workbench-quote-phone.webp
   alt: ''
   decorative: true
-deliveredBy: evojam
+deliveredByUrl: https://evojam.com/
 overview:
   client: Residential renovation contractor
   industry: Construction and renovation
@@ -27,6 +27,7 @@ categories:
   - crm
   - erp
 featuredOnAgencies: false
+order: 3
 draft: false
 ---
 

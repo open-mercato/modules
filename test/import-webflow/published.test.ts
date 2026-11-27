@@ -14,6 +14,7 @@ import {
   Dictionary,
   exportFromSite,
   fileIdOf,
+  listCards,
   listThumbnails,
   PublishedPageError,
   readBlogPostPage,
@@ -60,7 +61,7 @@ function dicts(): Dictionaries {
     caseCategories: new Dictionary(items('case-studies-categories'), 'name'),
     partners: new Dictionary(
       [...items('certified-partners'), partner('6a4e8ff3523627dd6c83b1da', 'Commerce Weavers', 'commerce-weavers')],
-      'name',
+      'slug',
       false,
     ),
     authors: new Dictionary(items('blog-authors'), 'name'),
@@ -102,18 +103,19 @@ describe('a page Webflow added after the export', () => {
     const p = readCaseStudyPage(page(path), `${ORIGIN}${path}`)
     const d = dicts()
     const thumb = listThumbnails(page('/case-studies')).get(path)
-    const item = caseStudyItem(p, undefined, d, thumb, `${ORIGIN}${path}`)
+    const item = caseStudyItem(p, undefined, d, thumb, `${ORIGIN}${path}`, 2)
     expect(item.id).toBe('')
     expect(item.fieldData).toMatchObject({
       slug: 'fondaco-warehouse-receiving-pallet-counts',
       name: 'How Fondaco catches a short delivery before it reaches inventory',
       'main-heading': 'Fondaco catches short deliveries at the pallet',
-      'delivered-by': '6a4e8ff3523627dd6c83b1da',
+      // an outside link: no partner, as the live partner page (it lists no case study) shows
+      'delivered-by': null,
       'delivered-by-url': 'https://commerceweavers.com/',
       'overview-client': 'Fondaco warehouse receiving project',
       'stat-1-title': '2 rolls short',
       'featured-on-agencies-page': false,
-      'display-order': null,
+      'display-order': 2,
       thumbnail: {
         fileId: '6b08ba954c4662bd5519d7cb',
         url: expect.stringContaining('fondaco-warehouse-label-printing.webp'),
@@ -152,12 +154,21 @@ describe('a page Webflow added after the export', () => {
     expect(kept[0]).toMatch(/^<section\s+class="om-workbench"[\s\S]*<script>[\s\S]*<\/section>$/)
   })
 
-  it('refuses a partner the export does not hold, and a page that is not a case study', () => {
-    const path = '/case-studies/fondaco-warehouse-receiving-pallet-counts'
+  it('refuses a partner page the export does not hold, and a page that is not a case study', () => {
+    const path = '/case-studies/arvo-configurator'
     const p = readCaseStudyPage(page(path), `${ORIGIN}${path}`)
-    const d = { ...dicts(), partners: new Dictionary(items('certified-partners'), 'name', false) }
-    expect(() => caseStudyItem(p, undefined, d, undefined, path)).toThrow(/Commerce Weavers/)
+    const d = { ...dicts(), partners: new Dictionary([], 'slug', false) }
+    expect(() => caseStudyItem(p, undefined, d, undefined, path)).toThrow(/the-good-code/)
     expect(() => readCaseStudyPage(page('/blog-posts/wms-module-open-source'), 'x')).toThrow(PublishedPageError)
+  })
+
+  it('reads the list in its order', () => {
+    const cards = listCards(page('/case-studies'))
+    expect(cards.slice(0, 2).map((c) => c.href)).toEqual([
+      '/case-studies/anter-system-warehouse-barrier-plan-to-quote',
+      '/case-studies/fondaco-warehouse-receiving-pallet-counts',
+    ])
+    expect(cards.every((c) => c.image?.startsWith('https://cdn.prod.website-files.com/'))).toBe(true)
   })
 })
 

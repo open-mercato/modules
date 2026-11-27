@@ -399,13 +399,19 @@ export function caseStudyItem(
   dicts: Dictionaries,
   thumbnail: string | undefined,
   url: string,
+  listPosition?: number,
 ): WfItem {
   const f = base?.fieldData ?? {}
   const video = f['hero-video'] as { url?: string } | null | undefined
   const videoId = (u: string | undefined) => (u ? /[?&]v=([\w-]{11})/.exec(u)?.[1] : undefined)
   const sameVideo = videoId(video?.url) !== undefined && videoId(video?.url) === videoId(page.heroVideo)
-  // the template shows the item only with a partner: its name, linked to delivered-by-url
-  const deliveredBy = page.deliveredBy?.name ? dicts.partners.id(page.deliveredBy.name) : null
+  // the page shows a name linked to delivered-by-url. A link to a partner page of this site names that partner (the
+  // partner's page lists the case study, as live); an outside link keeps the base's partner, and a new item gets none,
+  // as the live partner pages show (they list no case study whose link goes elsewhere)
+  const own = page.deliveredBy
+    ? /^(?:https:\/\/(?:www\.)?openmercato\.com)?\/certified-partners\/([a-z0-9-]+)\/?$/.exec(page.deliveredBy.href)
+    : null
+  const deliveredBy = own ? dicts.partners.id(own[1]!) : ((f['delivered-by'] as string | null | undefined) ?? null)
   const deliveredByUrl = page.deliveredBy ? page.deliveredBy.href : (f['delivered-by-url'] ?? null)
   const stat = (n: number, k: 'title' | 'description') => page.stats[n]?.[k] ?? null
   const screenshots = page.screenshots.map((s) => {
@@ -439,7 +445,9 @@ export function caseStudyItem(
     'case-content': sameRichText(f['case-content'], page.content) ? f['case-content'] : page.content,
     screenshots: screenshots.length === 0 && !Array.isArray(f.screenshots) ? (f.screenshots ?? null) : screenshots,
     'featured-on-agencies-page': f['featured-on-agencies-page'] ?? false,
-    'display-order': f['display-order'] ?? null,
+    // not shown: kept from the base; a new item has no Webflow id to order it by, so it takes its place in the live
+    // list (listPosition), which the site's list order puts first, in that order, as live
+    'display-order': base ? (f['display-order'] ?? null) : (listPosition ?? null),
   })
 }
 
@@ -466,16 +474,22 @@ export function blogPostItem(page: BlogPostPage, base: WfItem | undefined, dicts
   })
 }
 
-/** Card links of a list page to the card image's address (`/case-studies` shows each case study's thumbnail). */
-export function listThumbnails(html: string): Map<string, string> {
+/** The cards of a list page in its order: each card's link and its image's address (`/case-studies`, the thumbnails). */
+export function listCards(html: string): { href: string; image?: string }[] {
   const tree = fromHtml(html)
-  const out = new Map<string, string>()
+  const out: { href: string; image?: string }[] = []
   for (const card of findAll(tree, (e) => hasClass(e, 'case-list_card'))) {
     const link = find(card, (e) => e.tagName === 'a' && typeof e.properties?.href === 'string')
+    if (!link) continue
     const img = imageOf(find(card, (e) => e.tagName === 'img'))
-    if (link && img) out.set(String(link.properties.href), img.url)
+    out.push(img ? { href: String(link.properties.href), image: img.url } : { href: String(link.properties.href) })
   }
   return out
+}
+
+/** Card links of a list page to the card image's address. */
+export function listThumbnails(html: string): Map<string, string> {
+  return new Map(listCards(html).flatMap((c) => (c.image ? [[c.href, c.image] as const] : [])))
 }
 
 /** The `<loc>` paths of a sitemap under a prefix. */
@@ -520,12 +534,14 @@ export async function exportFromSite(opts: FromSiteOptions): Promise<FromSiteRes
   }
   const dicts: Dictionaries = {
     caseCategories: new Dictionary(items('case-studies-categories'), 'name'),
-    partners: new Dictionary(items('certified-partners'), 'name', false),
+    partners: new Dictionary(items('certified-partners'), 'slug', false),
     authors: new Dictionary(items('blog-authors'), 'name'),
     blogCategories: new Dictionary(items('blog-categories'), 'name'),
   }
   const sitemap = await get('/sitemap.xml')
-  const thumbnails = listThumbnails(await get('/case-studies'))
+  const cards = listCards(await get('/case-studies'))
+  const thumbnails = new Map(cards.flatMap((c) => (c.image ? [[c.href, c.image] as const] : [])))
+  const position = new Map(cards.map((c, i) => [c.href, i + 1]))
   const limit = pLimit(4)
   const result: FromSiteResult = {
     counts: {
@@ -546,7 +562,7 @@ export async function exportFromSite(opts: FromSiteOptions): Promise<FromSiteRes
           const url = `${opts.origin}${path}`
           if (slug === 'case-studies') {
             const page = readCaseStudyPage(html, url)
-            return caseStudyItem(page, bySlug.get(page.slug), dicts, thumbnails.get(path), url)
+            return caseStudyItem(page, bySlug.get(page.slug), dicts, thumbnails.get(path), url, position.get(path))
           }
           const page = readBlogPostPage(html, url)
           return blogPostItem(page, bySlug.get(page.slug), dicts)

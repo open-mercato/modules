@@ -6,7 +6,7 @@ thumbnail:
   src: /media/case-studies/6b08bd18664a553b2c3b7020-6b08bcf4b342a76c8892b6e6-anter-system-barrier-plan-quote-usd.webp
   alt: ''
   decorative: true
-deliveredBy: they-dev
+deliveredByUrl: https://www.they.dev/
 overview:
   client: Anter System
   industry: Industrial safety and manufacturing
@@ -27,6 +27,7 @@ categories:
   - erp
   - crm
 featuredOnAgencies: false
+order: 1
 draft: false
 ---
 

@@ -6,7 +6,7 @@ thumbnail:
   src: /media/case-studies/6b08ba954c4662bd5519d7cb-6b08b9fb62955729fd013496-fondaco-warehouse-label-printing.webp
   alt: ''
   decorative: true
-deliveredBy: commerce-weavers
+deliveredByUrl: https://commerceweavers.com/
 overview:
   client: Fondaco warehouse receiving project
   industry: Warehousing and logistics
@@ -27,6 +27,7 @@ categories:
   - erp
   - track-trace
 featuredOnAgencies: false
+order: 2
 draft: false
 ---
 
