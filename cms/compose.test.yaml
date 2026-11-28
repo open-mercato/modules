@@ -1,6 +1,27 @@
 # For tests and a local instance only (cms.yml, cms/README.md): Strapi on 127.0.0.1:1337 of the machine, never on
-# another address. Not used on the Strapi host.
+# another address, and a fake GitHub endpoint that the publish hook calls instead of api.github.com (its recorded
+# calls on 127.0.0.1:8099). Not used on the Strapi host.
 services:
   strapi:
     ports:
       - "127.0.0.1:${CMS_PORT:-1337}:1337"
+    environment:
+      GITHUB_API_URL: http://fake-github:8080
+      GITHUB_DISPATCH_TOKEN: fake-token-of-the-tests
+      CMS_DISPATCH_QUIET_MS: "2000"
+      CMS_DISPATCH_MAX_WAIT_MS: "20000"
+    depends_on:
+      fake-github:
+        condition: service_started
+
+  fake-github:
+    image: node:24.22.3-bookworm-slim
+    user: node
+    working_dir: /fake
+    command: ["node", "--disable-warning=MODULE_TYPELESS_PACKAGE_JSON", "main.mts"]
+    volumes:
+      - ./test/fake-github:/fake:ro
+    networks:
+      - cms
+    ports:
+      - "127.0.0.1:${CMS_FAKE_GITHUB_PORT:-8099}:8080"

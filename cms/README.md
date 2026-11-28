@@ -10,11 +10,12 @@ never installs or reads this folder; it reads Strapi only through its REST API.
 | Path                          | What it holds                                                                                                            |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `compose.yaml`                | Strapi, PostgreSQL 17 and the tunnel, on a network of their own, no port                                                 |
-| `compose.test.yaml`           | Strapi on 127.0.0.1 of the machine, for tests and a local instance only                                                  |
+| `compose.test.yaml`           | Strapi on 127.0.0.1 of the machine and a fake GitHub endpoint, for tests and a local instance only                       |
 | `Dockerfile`                  | The Strapi image on Node 24, run as the non-root user `node`                                                             |
 | `.env.example`                | The keys of `cms/.env` on the host; there is no API token encryption key                                                 |
 | `config/`                     | Server, database, admin, `api.ts` (`maxLimit` 100), upload (25 MiB, local)                                               |
 | `src/api/`, `src/components/` | The content model of the spec's Data Model; `test/www-cms/model-drift.test.ts` keeps it equal to `lib/www-cms/model.ts`  |
+| `src/hook/`, `src/preview.ts` | The publish hook (a dispatch of `pages`) and the preview handler, off until Phase 5                                      |
 | `src/index.ts`                | The bootstrap, at every start: the Media Library settings of A7, the Public role emptied, the roles seed, the edit views |
 | `scripts/dev-env.sh`          | Writes `cms/.env` with random values for a throwaway instance                                                            |
 | `test/unit/`                  | `node --test` without a server                                                                                           |
@@ -35,6 +36,33 @@ not listed, and stops the start on a list with a repeated address or a role addr
 In production (`strapi start`) the Content-Type Builder refuses every change of the model, so a type or field changes
 only through a reviewed commit to `cms/src`. The Public role loses every permission at each start, and end-user
 registration is off: the content API answers only to an API token.
+
+## Publish hook
+
+**Mechanism, confirmed in the source of 5.64.0 (spec Step 2.4).** Strapi reports a publish, an unpublish and a delete
+of a document on its event hub: `publish`, `unpublish` and `delete` of the document service repository
+(`node_modules/@strapi/core/dist/services/document-service/repository.js`) emit `entry.publish`, `entry.unpublish` and
+`entry.delete` through `strapi.eventHub.emit`, one event per database row of the document; the upload service
+(`node_modules/@strapi/upload/dist/server/services/upload.js`) emits `media.update` and `media.delete` the same way. The
+built-in webhooks listen to the same hub (`node_modules/@strapi/core/dist/services/webhook-runner.js`,
+`eventHub.on(event, ...)`), so the hook sees exactly the events a webhook would, without a webhook: no Super Admin can
+read its token in the admin. Document service middlewares and lifecycle hooks were not needed. The relay fallback of
+the spec is not used.
+
+**What it does** (`src/hook/`). On those five events of the site's types and the media library it waits for
+`CMS_DISPATCH_QUIET_MS` (60 000) without a new event, at most `CMS_DISPATCH_MAX_WAIT_MS` (300 000) from the first, then
+sends `POST /repos/open-mercato/modules/actions/workflows/pages.yml/dispatches` with
+`{"ref":"main","inputs":{"www_content":"publish"}}` and the token `GITHUB_DISPATCH_TOKEN` of `cms/.env` (Q4). Three
+tries with backoff on a 5xx or a network error; a 401 or 403 is logged as `dispatch refused: token` and not retried.
+A draft save sends nothing (Phase 5 adds the drafts build). Without a token the hook logs that it is off.
+
+**Tests.** `test/unit/dispatch.test.ts` against a fake GitHub endpoint (`test/fake-github/`): a burst gives one
+dispatch with the fixed body, the longest wait holds, a 401 or 403 is not retried, a 5xx is tried three times.
+`test/instance/hook.test.ts` on the started instance, whose hook `compose.test.yaml` points at the same fake as a
+Compose service: a draft save gives none, one publish, one unpublish and one delete each exactly one.
+
+**Preview.** `src/preview.ts` maps a document to its path on the draft build; `config/admin.ts` keeps the Preview
+button off (`CMS_PREVIEW`) until Phase 5.
 
 ## Tests
 
