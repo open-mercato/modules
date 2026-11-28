@@ -453,7 +453,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
 }
 
 /** The files of the pulled tree that differ from the tree at `out`: content a Strapi type holds, and the media. */
-function differences(stage: string, out: string): string[] {
+export function differences(stage: string, out: string): string[] {
   const list = (root: string) => {
     const content = walk(join(root, 'content'))
       .map((a) =>

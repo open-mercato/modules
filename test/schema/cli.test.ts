@@ -29,6 +29,7 @@ describe('lib/cli.ts (spec 5.4)', () => {
       'compare-live',
       'www-push',
       'www-pull',
+      'www-content',
     ])
     const text = usage()
     for (const c of COMMANDS) expect(text).toContain(c.name)

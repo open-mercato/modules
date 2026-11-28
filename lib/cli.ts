@@ -89,6 +89,11 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     owner: 'www',
     description: 'pull Strapi into www/content and the media, validated first; --check compares only',
   },
+  {
+    name: 'www-content',
+    owner: 'www',
+    description: 'plan, read or apply the content of the main site build by WWW_CONTENT_SOURCE (pages.yml steps)',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))

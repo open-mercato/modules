@@ -466,11 +466,12 @@ describe('pages.yml steps', () => {
     const settings = runStep(stepRun('pages.yml', 'Check deploy settings'), {
       ...vars,
       HAS_ACCOUNT_ID: 'false',
+      ON_MAIN: 'true',
       GITHUB_OUTPUT: out,
     })
     expect(settings.code, settings.out).toBe(0)
     expect(readFileSync(out, 'utf8')).toBe('deploy=false\n')
-    const r = runStep(stepRun('pages.yml', 'Not deployed'), vars)
+    const r = runStep(stepRun('pages.yml', 'Not deployed'), { ...vars, ON_MAIN: 'true' })
     expect(r.code, r.out).toBe(0)
     expect(r.out).toContain('::warning title=pages not deployed::No repository variable CLOUDFLARE_ACCOUNT_ID')
     const summary = readFileSync(join(tmp, 'summary.md'), 'utf8')
@@ -481,8 +482,35 @@ describe('pages.yml steps', () => {
     expect(summary).toContain('modules.openmercato.com')
 
     writeFileSync(out, '')
-    runStep(stepRun('pages.yml', 'Check deploy settings'), { ...vars, HAS_ACCOUNT_ID: 'true', GITHUB_OUTPUT: out })
+    runStep(stepRun('pages.yml', 'Check deploy settings'), {
+      ...vars,
+      HAS_ACCOUNT_ID: 'true',
+      ON_MAIN: 'true',
+      GITHUB_OUTPUT: out,
+    })
     expect(readFileSync(out, 'utf8')).toBe('deploy=true\n')
+  })
+
+  it('a run on another ref than main builds and checks, deploys nothing and says so (Strapi CMS spec, Step 4.1)', () => {
+    const out = join(tmp, 'output.txt')
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Check deploy settings'), {
+      ...env(),
+      HAS_ACCOUNT_ID: 'true',
+      ON_MAIN: 'false',
+      GITHUB_OUTPUT: out,
+    })
+    expect(readFileSync(out, 'utf8')).toBe('deploy=false\n')
+    const r = runStep(stepRun('pages.yml', 'Not deployed'), {
+      ...env(),
+      ON_MAIN: 'false',
+      GITHUB_REF: 'refs/heads/test/www-content-snapshot',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('::notice title=pages not deployed::A run on refs/heads/test/www-content-snapshot')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toContain(
+      '**Not deployed.** A run on `refs/heads/test/www-content-snapshot` builds and checks the site',
+    )
   })
 
   it('the deploy job fails red when the variable is set but the token is missing, and sums up a deploy', () => {

@@ -290,7 +290,8 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       push: { branches: ['main'], 'paths-ignore': ['cms/**'] },
       workflow_run: { workflows: ['watch', 'sync', 'collect'], types: ['completed'], branches: ['main'] },
       schedule: [{ cron: '47 5 * * *' }],
-      workflow_dispatch: null,
+      // the inputs www_content and snapshot of the Strapi CMS spec, Step 4.1 (test/www-cms/workflows.test.ts)
+      workflow_dispatch: { inputs: { www_content: expect.any(Object), snapshot: expect.any(Object) } },
     })
     // Cloudflare Pages instead of GitHub Pages (Piotr and owner decision A(a), 28 Oct): no pages or id-token scope
     expect(w.permissions).toEqual({ contents: 'read' })
@@ -309,6 +310,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(Object.keys(w.jobs)).toEqual([
       'build',
       'deploy',
+      'www-snapshot',
       'preview-build',
       'preview',
       'www-preview-build',
@@ -326,6 +328,8 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(build.outputs).toEqual({
       deploy: '${{ steps.settings.outputs.deploy }}',
       commit: '${{ steps.checkout.outputs.commit }}',
+      'www-snapshot': '${{ steps.read.outputs.snapshot }}',
+      'www-newest': '${{ steps.read.outputs.newest }}',
     })
     const b = build.steps
     expect(b.map((x) => x.name)).toEqual([
@@ -336,6 +340,10 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Install',
       'Check layout variables',
       'Read data branch',
+      // the main site's content (Strapi CMS spec, Step 4.1; test/www-cms/workflows.test.ts)
+      'Choose www content',
+      'Read www content',
+      'Use www snapshot',
       'Build',
       'Lay out the upload',
       'Write Functions config',
@@ -344,6 +352,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'Check Pages Functions',
       'Smoke test the merged upload',
       'Upload site',
+      'Upload www snapshot',
       'Not deployed',
     ])
     // the emulator run of a merged upload (audit of 27 Nov 2026), skipped for the catalog alone
@@ -352,7 +361,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       run: 'scripts/pages-smoke.sh dist',
     })
     // the build and its checks run with or without the deploy settings
-    for (const x of b.slice(0, 13)) expect(x.if, x.name).toBeUndefined()
+    // (Read www content and Use www snapshot run by WWW_CONTENT_SOURCE and the inputs, Step 4.1 of the Strapi CMS spec)
+    for (const x of b.slice(0, 16).filter((x) => !['Read www content', 'Use www snapshot'].includes(x.name ?? '')))
+      expect(x.if, x.name).toBeUndefined()
     // a variable set that makes no layout stops before the build (audit of 27 Nov 2026)
     expect(b.find((x) => x.name === 'Check layout variables')?.run).toBe('yarn om pages-site --settings')
     // the catalog alone unless PAGES_MERGED: dist-run/ becomes the upload as it is
@@ -364,7 +375,11 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     )
     // the switch is the repository variable: a job without environment sees no environment secret, and a
     // job-level if cannot read secrets (review of 28 Oct)
-    expect(b[0]?.env).toEqual({ HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}" })
+    expect(b[0]?.env).toEqual({
+      HAS_ACCOUNT_ID: "${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}",
+      // only a run on main deploys (Strapi CMS spec, Step 4.1)
+      ON_MAIN: "${{ github.ref == 'refs/heads/main' }}",
+    })
     expect(text('pages.yml')).not.toMatch(/secrets\.CLOUDFLARE_ACCOUNT_ID/)
     const upload = b.find((x) => x.name === 'Upload site')
     expect(upload?.if).toBe("${{ steps.settings.outputs.deploy == 'true' }}")
@@ -475,7 +490,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(pv.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
     expect(pb['timeout-minutes']).toBe(15)
     expect(pv['timeout-minutes']).toBe(15)
-    expect(pb.outputs).toEqual(build.outputs)
+    // the outputs of the build job but those of the main site's content (Strapi CMS spec, Step 4.1)
+    const { 'www-snapshot': _snapshot, 'www-newest': _newest, ...shared } = build.outputs ?? {}
+    expect(pb.outputs).toEqual(shared)
     const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
     for (const n of [
       'Check deploy settings',
@@ -537,7 +554,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(pb.env).toMatchObject(fixed)
     expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'www-preview' })
     expect(pv.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
-    expect(pb.outputs).toEqual(build.outputs)
+    // the outputs of the build job but those of the main site's content (Strapi CMS spec, Step 4.1)
+    const { 'www-snapshot': _snapshot, 'www-newest': _newest, ...shared } = build.outputs ?? {}
+    expect(pb.outputs).toEqual(shared)
     const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
     expect(pb.steps.map((x) => x.name)).toEqual([
       'Check deploy settings',
