@@ -76,7 +76,7 @@ describe('lib/www-cms/issue.ts: the issue of A9 (Step 4.2)', () => {
     const body = issueBody({ decision, pull, input: '', runUrl: RUN })
     expect(body).toContain('started by a push, the catalog data or the schedule.')
     expect(body).toContain(
-      'The build used the snapshot 1a2b3c4d5e6f of the branch www-content instead, and deployed it: the site shows that content, not the latest in Strapi.',
+      'The build fell back to the snapshot 1a2b3c4d5e6f of the branch www-content: once it is deployed, the site shows that content, not the latest in Strapi.',
     )
     expect(body).toContain('**Strapi content invalid:** 4 problems')
   })

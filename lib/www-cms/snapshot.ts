@@ -75,7 +75,7 @@ export function applyTree(from: string, www: string): { content: number; media: 
     if (heldByStrapi(path)) rmSync(abs)
   }
   for (const p of content) if (p !== REDIRECTS) copy(join(from, 'content', p), join(www, 'content', p))
-  writeFileSync(checkout, `${kept}${manual}`)
+  if (existsSync(checkout) || existsSync(own)) writeFileSync(checkout, `${kept}${manual}`)
   for (const root of MEDIA_ROOTS) {
     rmSync(join(www, 'public', root), { recursive: true, force: true })
     mkdirSync(join(www, 'public', root), { recursive: true })

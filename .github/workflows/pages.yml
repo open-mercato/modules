@@ -206,9 +206,9 @@ jobs:
             git worktree add --detach "$RUNNER_TEMP/www-snapshot" origin/www-content
             snap=(--snapshot-dir "$RUNNER_TEMP/www-snapshot" --snapshot-sha "$(git rev-parse --short=12 origin/www-content)" --snapshot-date "$(git log -1 --format=%cs origin/www-content)")
           elif ! grep -q "couldn't find remote ref" "$err"; then
+            # without its baseline the pull still decides: shadow only compares, and strapi fails rather than fall back
             cat "$err"
-            echo "::error::Cannot read the www-content branch."
-            exit 1
+            echo "::warning title=www content::Cannot read the www-content branch; going on without a snapshot."
           fi
           yarn om www-content read --work "$RUNNER_TEMP/www" "${snap[@]}"
 
@@ -239,12 +239,17 @@ jobs:
             exit 0
           fi
           full=""
-          if git fetch --no-tags origin +refs/heads/www-content:refs/remotes/origin/www-content 2>/dev/null; then
+          err="$(mktemp)"
+          if git fetch --no-tags origin +refs/heads/www-content:refs/remotes/origin/www-content 2>"$err"; then
             c="$(git rev-parse --verify --quiet "$COMMIT^{commit}" || true)"
             if [ -n "$c" ] && git merge-base --is-ancestor "$c" origin/www-content; then full="$c"; fi
+          elif ! grep -q "couldn't find remote ref" "$err"; then
+            cat "$err"
+            echo "::error title=www content::Cannot read the www-content branch."
+            exit 1
           fi
           if [ -z "$full" ] && [ "$ON_MAIN" != "true" ]; then
-            full="$(git ls-remote --heads origin | awk -v c="$COMMIT" 'index($1, c) == 1 { print $1; exit }')"
+            full="$(git ls-remote --heads origin | awk -v c="$COMMIT" 'index($1, c) == 1 && !found { print $1; found = 1 }')"
             if [ -n "$full" ]; then git fetch --no-tags --depth=1 origin "$full"; fi
           fi
           if [ -z "$full" ]; then
@@ -495,10 +500,15 @@ jobs:
           git config "http.https://github.com/.extraheader" "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git fetch --no-tags --depth=1 origin +refs/heads/www-content:refs/remotes/origin/www-content 2>/dev/null; then
+          err="$(mktemp)"
+          if git fetch --no-tags --depth=1 origin +refs/heads/www-content:refs/remotes/origin/www-content 2>"$err"; then
             git checkout -q -b www-content origin/www-content
-          else
+          elif grep -q "couldn't find remote ref" "$err"; then
             git checkout -q --orphan www-content
+          else
+            cat "$err"
+            echo "::error::Cannot read the www-content branch; the snapshot is not written."
+            exit 1
           fi
           git rm -rq --ignore-unmatch .
           cp -R ../snapshot/. .
@@ -547,7 +557,8 @@ jobs:
           INPUT: ${{ inputs.www_content }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          number="$(gh issue list --state open --limit 200 --json number,title --jq 'map(select(.title == env.TITLE)) | .[0].number // empty')"
+          # the issue this workflow opened: the fixed title and the Actions bot as its author, never one a person opened
+          number="$(gh issue list --state open --limit 200 --json number,title,author --jq 'map(select(.title == env.TITLE and .author.is_bot and (.author.login | test("github-actions")))) | .[0].number // empty')"
           body=""
           if [ "$ACTION" = "update" ]; then
             body=issue/issue.md

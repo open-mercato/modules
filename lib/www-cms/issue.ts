@@ -57,7 +57,7 @@ export function issueBody(x: IssueFacts): string {
     d.use === 'fail'
       ? `The build stopped before the build of the site: nothing was deployed, and the site keeps its last good version.`
       : d.use === 'snapshot'
-        ? `The build used the snapshot ${d.commit} of the branch www-content instead, and deployed it: the site shows that content, not the latest in Strapi.`
+        ? `The build fell back to the snapshot ${d.commit} of the branch www-content: once it is deployed, the site shows that content, not the latest in Strapi.`
         : `The build read Strapi.`
   const started =
     x.input === 'publish' ? 'a publish in Strapi' : x.input === '' ? 'a push, the catalog data or the schedule' : 'hand'

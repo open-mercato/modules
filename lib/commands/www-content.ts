@@ -163,7 +163,8 @@ async function readStrapi(
       return { result: { kind: 'unreachable', status: err.message } }
     if (err instanceof Error && err.message.startsWith('Invalid URL'))
       return { result: { kind: 'unreachable', status: 'STRAPI_URL is not an address' } }
-    throw err
+    // anything else still decides by source.ts (a fallback, or a failure with the issue text), never a crash
+    return { result: { kind: 'unreachable', status: `the pull failed: ${(err as Error).message ?? String(err)}` } }
   }
   return { result: pullResultOf(report), report }
 }
@@ -229,7 +230,8 @@ async function read(args: Args, env: Env, root: string, at: (p: string) => strin
     out.log(`www content: from Strapi, ${n.content} content files and ${n.media} media files`)
   }
   if (d.use !== 'snapshot' && d.writeSnapshot) snapshotTree(pulled, join(work, 'snapshot'))
-  if (d.use === 'snapshot') out.log(`www content: snapshot ${d.commit}`)
+  // the fallback of Edge Cases: a warning on the run, beside the summary line
+  if (d.use === 'snapshot') out.log(`::warning title=www content::${d.summary[0]}`)
   else if (d.use === 'files') out.log('www content: the files of the commit')
   return EXIT_OK
 }

@@ -277,6 +277,7 @@ describe('www-content read against a fake Strapi', () => {
       expect(r.code, r.out).toBe(0)
       expect(r.output).toMatchObject({ use: 'snapshot', commit: '1a2b3c4d5e6f', snapshot: 'false', issue: 'update' })
       expect(r.summary).toMatch(/^Main site content from snapshot 1a2b3c4d5e6f of 2026-11-28: Strapi unreachable: /)
+      expect(r.out).toContain('::warning title=www content::Main site content from snapshot 1a2b3c4d5e6f of 2026-11-28')
       expect(bytesOf(s.www)).toEqual(before)
     } finally {
       s.done()
