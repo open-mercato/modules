@@ -1,7 +1,7 @@
 {
   "locator": "npm:@open-mercato/channel-apns",
   "version": "0.10.1",
-  "computedAt": "2026-11-28T07:58:18Z",
+  "computedAt": "2026-11-28T11:13:28Z",
   "identity": {
     "type": "official",
     "typeReason": "Scope @open-mercato.",
@@ -93,7 +93,7 @@
     {
       "id": "VER-1",
       "pass": false,
-      "detail": "Not yet tested in a new app on 0.10."
+      "detail": "Not yet tested in a new app on 0.10. In isolation (empty preset): verified on 28 Nov."
     },
     {
       "id": "VER-2",
@@ -124,7 +124,7 @@
       "reasons": [
         {
           "code": "NOT_VERIFIED",
-          "text": "Not yet tested in a new app on 0.10."
+          "text": "Not yet tested in a new app on 0.10. In isolation (empty preset): verified on 28 Nov."
         },
         {
           "code": "IN_PRESET",
