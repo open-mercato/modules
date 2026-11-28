@@ -1,31 +1,38 @@
 {
   "data": [
     {
-      "id": 1,
-      "documentId": "1g8furq1cxwend1l96nan091",
+      "id": 8,
+      "documentId": "lbwou8zj24ja559izhrajedv",
       "slug": "piotr-karwatka",
       "webflowId": "69ced951d78e56b184a3d8a2",
       "name": "Piotr Karwatka",
       "role": null,
-      "avatar": null,
       "url": null,
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:33:59.416Z",
+      "updatedAt": "2026-11-28T01:33:59.416Z",
+      "publishedAt": "2026-11-28T01:33:59.424Z",
+      "avatar": null
     },
     {
-      "id": 2,
-      "documentId": "15i3a081xmbmvy02lc1gg0sn",
+      "id": 10,
+      "documentId": "dgdj6ifkbtav6h5z6gcqxcfl",
       "slug": "tomasz-karwatka",
       "webflowId": "69ced9470148d89bf9734ece",
       "name": "Tomasz Karwatka",
       "role": null,
-      "avatar": null,
       "url": null,
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:33:59.444Z",
+      "updatedAt": "2026-11-28T01:33:59.444Z",
+      "publishedAt": "2026-11-28T01:33:59.457Z",
+      "avatar": null
     }
   ],
-  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 2
+    }
+  }
 }

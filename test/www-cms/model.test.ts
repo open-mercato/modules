@@ -37,6 +37,7 @@ import {
   wwwSchemas,
   type WwwCollection,
 } from '../../lib/schema/www-content.ts'
+import { strapiMediaIndex, type Upload } from '../../lib/www-cms/strapi.ts'
 
 const ROOT = join(import.meta.dirname, '..', '..')
 const CONTENT = join(ROOT, 'www', 'content')
@@ -237,7 +238,10 @@ function answer(type: StrapiType): { data: unknown; meta: Record<string, unknown
 }
 
 describe('test/fixtures/strapi: one trimmed REST answer per type (Strapi 5, published content only)', () => {
-  const fixtureMedia = mediaIndex(JSON.parse(readFileSync(join(FIXTURE, 'media.json'), 'utf8')) as string[])
+  // the recorded upload list: each file at the site folder of its caption (lib/www-cms/strapi.ts)
+  const fixtureMedia = strapiMediaIndex(
+    JSON.parse(readFileSync(join(FIXTURE, 'api', 'upload', 'files.json'), 'utf8')) as Upload[],
+  )
 
   it('has the shape of Strapi 5: flattened documents with a documentId, pagination at the pull page size', () => {
     for (const type of TYPES) {

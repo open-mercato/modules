@@ -1,18 +1,25 @@
 {
   "data": [
     {
-      "id": 1,
-      "documentId": "1sbslta05xxty90ls538j0rh",
+      "id": 2,
+      "documentId": "dtq2ax520f0s33qrv28v2cks",
       "slug": "agency",
       "webflowId": "6a3395528bca900549dfa54d",
       "name": "Agency",
       "order": 4,
       "backgroundColor": "#bc9aff",
       "textColor": "#000000",
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:33:59.893Z",
+      "updatedAt": "2026-11-28T01:33:59.893Z",
+      "publishedAt": "2026-11-28T01:33:59.901Z"
     }
   ],
-  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 1
+    }
+  }
 }

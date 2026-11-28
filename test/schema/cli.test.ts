@@ -27,6 +27,8 @@ describe('lib/cli.ts (spec 5.4)', () => {
       'import-webflow',
       'webflow-export',
       'compare-live',
+      'www-push',
+      'www-pull',
     ])
     const text = usage()
     for (const c of COMMANDS) expect(text).toContain(c.name)

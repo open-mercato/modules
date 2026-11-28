@@ -1,16 +1,23 @@
 {
   "data": [
     {
-      "id": 1,
-      "documentId": "0ngzldq01eq3k91u19hh31ln",
+      "id": 2,
+      "documentId": "kyuzwry3edc3e44ggfoe5cu3",
       "slug": "/old-pricing",
       "from": "/old-pricing",
       "to": "/pricing",
       "statusCode": 301,
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:41:21.743Z",
+      "updatedAt": "2026-11-28T01:41:21.743Z",
+      "publishedAt": "2026-11-28T01:41:21.755Z"
     }
   ],
-  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 1
+    }
+  }
 }

@@ -1,90 +1,134 @@
 {
   "data": {
-    "id": 1,
-    "documentId": "00711o214q1ik20mobpmu10e",
+    "id": 2,
+    "documentId": "j99mwofmnleg0nf9z60r34hc",
+    "note": "MIT License · Supported by Catch The Tornado",
+    "createdAt": "2026-11-28T01:34:38.506Z",
+    "updatedAt": "2026-11-28T01:34:38.506Z",
+    "publishedAt": "2026-11-28T01:34:38.519Z",
     "links": [
-      { "id": 1, "label": "GitHub", "url": "https://github.com/open-mercato/open-mercato", "variant": null },
-      { "id": 2, "label": "Discord", "url": "https://discord.gg/f4qwPtJ3qA", "variant": null },
-      { "id": 3, "label": "Docs", "url": "https://docs.openmercato.com/", "variant": null },
-      { "id": 4, "label": "Demo", "url": "https://openmercatocloud.com/demo", "variant": null },
-      { "id": 5, "label": "Blog", "url": "https://www.openmercato.com/blog", "variant": null },
-      { "id": 6, "label": "Team", "url": "https://www.openmercato.com/team", "variant": null },
-      { "id": 7, "label": "Contact", "url": "https://www.openmercato.com/contact", "variant": null },
-      { "id": 8, "label": "Terms", "url": "https://www.openmercato.com/terms-conditions", "variant": null }
+      {
+        "id": 53,
+        "label": "GitHub",
+        "url": "https://github.com/open-mercato/open-mercato",
+        "variant": null
+      },
+      {
+        "id": 54,
+        "label": "Discord",
+        "url": "https://discord.gg/f4qwPtJ3qA",
+        "variant": null
+      },
+      {
+        "id": 55,
+        "label": "Docs",
+        "url": "https://docs.openmercato.com/",
+        "variant": null
+      },
+      {
+        "id": 56,
+        "label": "Demo",
+        "url": "https://openmercatocloud.com/demo",
+        "variant": null
+      },
+      {
+        "id": 57,
+        "label": "Blog",
+        "url": "https://www.openmercato.com/blog",
+        "variant": null
+      },
+      {
+        "id": 58,
+        "label": "Team",
+        "url": "https://www.openmercato.com/team",
+        "variant": null
+      },
+      {
+        "id": 59,
+        "label": "Contact",
+        "url": "https://www.openmercato.com/contact",
+        "variant": null
+      },
+      {
+        "id": 60,
+        "label": "Terms",
+        "url": "https://www.openmercato.com/terms-conditions",
+        "variant": null
+      }
     ],
     "other": [
       {
-        "id": 9,
+        "id": 5,
         "label": "Compare",
         "links": [
           {
-            "id": 10,
+            "id": 61,
             "label": "Salesforce Alternative",
             "url": "https://www.openmercato.com/salesforce-alternative",
             "variant": null
           },
           {
-            "id": 11,
+            "id": 62,
             "label": "HubSpot Alternative",
             "url": "https://www.openmercato.com/hubspot-alternative",
             "variant": null
           },
           {
-            "id": 12,
+            "id": 63,
             "label": "Odoo Alternative",
             "url": "https://www.openmercato.com/odoo-alternative",
             "variant": null
           },
           {
-            "id": 13,
+            "id": 64,
             "label": "Pipedrive Alternative",
             "url": "https://www.openmercato.com/pipedrive-alternative",
             "variant": null
           },
           {
-            "id": 14,
+            "id": 65,
             "label": "Zoho CRM Alternative",
             "url": "https://www.openmercato.com/zoho-crm-alternative",
             "variant": null
           },
           {
-            "id": 15,
+            "id": 66,
             "label": "Attio Alternative",
             "url": "https://www.openmercato.com/attio-alternative",
             "variant": null
           },
           {
-            "id": 16,
+            "id": 67,
             "label": "Insightly Alternative",
             "url": "https://www.openmercato.com/insightly-alternative",
             "variant": null
           },
           {
-            "id": 17,
+            "id": 68,
             "label": "Dynamics 365 Sales Alternative",
             "url": "https://www.openmercato.com/dynamics-365-alternative",
             "variant": null
           },
           {
-            "id": 18,
+            "id": 69,
             "label": "monday CRM Alternative",
             "url": "https://www.openmercato.com/monday-crm-alternative",
             "variant": null
           },
           {
-            "id": 19,
+            "id": 70,
             "label": "Freshsales Alternative",
             "url": "https://www.openmercato.com/freshsales-alternative",
             "variant": null
           },
           {
-            "id": 20,
+            "id": 71,
             "label": "Copper Alternative",
             "url": "https://www.openmercato.com/copper-crm-alternative",
             "variant": null
           },
           {
-            "id": 21,
+            "id": 72,
             "label": "Close Alternative",
             "url": "https://www.openmercato.com/close-crm-alternative",
             "variant": null
@@ -92,71 +136,71 @@
         ]
       },
       {
-        "id": 22,
+        "id": 6,
         "label": "More comparisons",
         "links": [
           {
-            "id": 23,
+            "id": 73,
             "label": "Nutshell Alternative",
             "url": "https://www.openmercato.com/nutshell-crm-alternative",
             "variant": null
           },
           {
-            "id": 24,
+            "id": 74,
             "label": "Capsule CRM Alternative",
             "url": "https://www.openmercato.com/capsule-crm-alternative",
             "variant": null
           },
           {
-            "id": 25,
+            "id": 75,
             "label": "Bitrix24 Alternative",
             "url": "https://www.openmercato.com/bitrix24-alternative",
             "variant": null
           },
           {
-            "id": 26,
+            "id": 76,
             "label": "Keap Alternative",
             "url": "https://www.openmercato.com/keap-alternative",
             "variant": null
           },
           {
-            "id": 27,
+            "id": 77,
             "label": "Agile CRM Alternative",
             "url": "https://www.openmercato.com/agile-crm-alternative",
             "variant": null
           },
           {
-            "id": 28,
+            "id": 78,
             "label": "Salesmate Alternative",
             "url": "https://www.openmercato.com/salesmate-alternative",
             "variant": null
           },
           {
-            "id": 29,
+            "id": 79,
             "label": "SugarCRM Alternative",
             "url": "https://www.openmercato.com/sugarcrm-alternative",
             "variant": null
           },
           {
-            "id": 30,
+            "id": 80,
             "label": "Zendesk Sell Alternative",
             "url": "https://www.openmercato.com/zendesk-sell-alternative",
             "variant": null
           },
           {
-            "id": 31,
+            "id": 81,
             "label": "Twenty CRM Alternative",
             "url": "https://www.openmercato.com/twenty-crm-alternative",
             "variant": null
           },
           {
-            "id": 32,
+            "id": 82,
             "label": "Vtiger Alternative",
             "url": "https://www.openmercato.com/vtiger-alternative",
             "variant": null
           },
           {
-            "id": 33,
+            "id": 83,
             "label": "SuiteCRM Alternative",
             "url": "https://www.openmercato.com/suitecrm-alternative",
             "variant": null
@@ -164,29 +208,29 @@
         ]
       },
       {
-        "id": 34,
+        "id": 7,
         "label": "CRM solutions",
         "links": [
           {
-            "id": 35,
+            "id": 84,
             "label": "Self-Hosted CRM",
             "url": "https://www.openmercato.com/self-hosted-crm",
             "variant": null
           },
           {
-            "id": 36,
+            "id": 85,
             "label": "Custom CRM Development",
             "url": "https://www.openmercato.com/custom-crm-development",
             "variant": null
           },
           {
-            "id": 37,
+            "id": 86,
             "label": "CRM for Manufacturing",
             "url": "https://www.openmercato.com/crm-for-manufacturing",
             "variant": null
           },
           {
-            "id": 38,
+            "id": 87,
             "label": "CRM for Wholesale Distributors",
             "url": "https://www.openmercato.com/crm-for-wholesale-distributors",
             "variant": null
@@ -194,46 +238,42 @@
         ]
       },
       {
-        "id": 39,
+        "id": 8,
         "label": "Operations",
         "links": [
           {
-            "id": 40,
+            "id": 88,
             "label": "B2B Order Management",
             "url": "https://www.openmercato.com/b2b-order-management",
             "variant": null
           },
           {
-            "id": 41,
+            "id": 89,
             "label": "LOT Traceability Software",
             "url": "https://www.openmercato.com/lot-traceability-software",
             "variant": null
           },
           {
-            "id": 42,
+            "id": 90,
             "label": "Senior Care Operations",
             "url": "https://www.openmercato.com/senior-care-operations",
             "variant": null
           },
           {
-            "id": 43,
+            "id": 91,
             "label": "Base / BaseLinker Alternative",
             "url": "https://www.openmercato.com/baselinker-alternative",
             "variant": null
           },
           {
-            "id": 44,
+            "id": 92,
             "label": "Alternatywa dla BaseLinkera",
             "url": "https://www.openmercato.com/baselinker-alternatywa",
             "variant": null
           }
         ]
       }
-    ],
-    "note": "MIT License · Supported by Catch The Tornado",
-    "createdAt": "2026-11-27T10:00:00.000Z",
-    "updatedAt": "2026-11-27T10:00:00.000Z",
-    "publishedAt": "2026-11-27T10:00:00.000Z"
+    ]
   },
   "meta": {}
 }

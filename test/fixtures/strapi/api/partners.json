@@ -1,68 +1,141 @@
 {
   "data": [
     {
-      "id": 1,
-      "documentId": "01r2s7g1vdtb8l0ma6cax05b",
+      "id": 45,
+      "documentId": "mvc036i36d7r9e9w16gih2y3",
       "slug": "the-good-code",
       "webflowId": "6a4e83f5ae6cec34d193364b",
       "name": "thegoodcode",
-      "logo": {
-        "id": 1,
-        "file": {
-          "id": 341,
-          "documentId": "1gqu1u01ddlo4x0oi1jq51ca",
-          "name": "6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo.webp",
-          "alternativeText": null,
-          "caption": null,
-          "width": null,
-          "height": null,
-          "formats": null,
-          "hash": "6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo_1gqu1u01dd",
-          "ext": ".webp",
-          "mime": "image/webp",
-          "size": null,
-          "url": "/uploads/6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo_1gqu1u01dd.webp",
-          "previewUrl": null,
-          "provider": "local",
-          "provider_metadata": null,
-          "createdAt": "2026-11-27T10:00:00.000Z",
-          "updatedAt": "2026-11-27T10:00:00.000Z",
-          "publishedAt": "2026-11-27T10:00:00.000Z"
-        },
-        "alt": "The Good Code logo",
-        "decorative": null,
-        "width": null,
-        "height": null
-      },
-      "tier": { "id": 1006, "documentId": "1sbslta05xxty90ls538j0rh", "slug": "agency" },
-      "industries": [
-        { "id": 1007, "documentId": "1rulh9u1kq7kog0t6jud41rz", "slug": "manufacturing" },
-        { "id": 1008, "documentId": "162odt00236oiy01sumqc0hf", "slug": "freight-logistics" },
-        { "id": 1009, "documentId": "0g1u9me0b3cldc0j4cruc1a8", "slug": "software-technology" },
-        { "id": 1010, "documentId": "0yisvem0bn3j2x0utor8n0on", "slug": "healthcare" },
-        { "id": 1011, "documentId": "1aiclou1nlgivw0vjaaug1b5", "slug": "other" }
-      ],
-      "location": { "id": 1012, "documentId": "10ye93406z319l11tpszp0l6", "slug": "poland" },
-      "languages": [
-        { "id": 1013, "documentId": "0ecjr7a0h5r65s03skjs805g", "slug": "english" },
-        { "id": 1014, "documentId": "0iuwon01do69at0z3iqt50yo", "slug": "polish" }
-      ],
-      "services": [
-        { "id": 1015, "documentId": "0nkgvcs1yupcaq10sw9l80fx", "slug": "implementation" },
-        { "id": 1016, "documentId": "0lnsngk015xvfy0v985181xy", "slug": "consulting" },
-        { "id": 1017, "documentId": "1mkakaa1a654040twn2p418f", "slug": "custom-development" },
-        { "id": 1018, "documentId": "1t5bx7e18hu40s1niyyl80zp", "slug": "ai-integration" }
-      ],
       "budget": "under-10k",
       "availability": "accepting",
       "projectsInPortfolio": true,
       "website": "https://thegoodcode.io",
       "description": "Open Mercato implementation partner for AI-native CRM, ERP, CPQ, and custom operations systems. We help manufacturers, regulated operators, and scale-ups turn complex workflows into production software, with senior delivery, business advisory, integrations, and no vendor lock-in.",
       "body": "## About\n\nthe.good.code; is an Open Mercato implementation partner for companies with real operational complexity: manufacturers, regulated operators, healthcare and senior care operations, logistics teams, and enterprise software companies. Founded in 2021, we are a senior team of 25+ across Poland and Portugal. We work as advisors and builders: we understand the business process first, then decide what should be built, configured, integrated, or left alone.\n\n## What we do\n\nWe advise on, build, and implement AI-native CRM and ERP systems on Open Mercato, CPQ and product configuration workflows, custom modules, and LLM-based workflows. Most of our work sits in the hard, specific part: business logic, approvals, permissions, integrations, edge cases, and process-specific interfaces. As an open-source contributor to Open Mercato, we help shape the platform itself and know its internals deep enough to extend the core when a client's process demands it.\n\n## Our specializations\n\n- Open Mercato CRM and ERP implementation: vertical operations systems, custom modules, workflows, approvals, permissions, and integrations built around how the business actually runs\n- CPQ and product configuration for manufacturers: quoting workflows, configurators, BOM logic, product rules, and ERP/PLM integrations\n- Legacy ERP and CRM modernization: flexible operational layers next to rigid systems such as SAP, Salesforce, Odoo, or internal tools\n- AI-native workflows and technical strategy advisory: LLM integrations, internal automation, and operational systems that reach production\n\n## Who we work with\n\nWe work best with companies that have outgrown off-the-shelf CRM or ERP, or run critical operations across spreadsheets, email, legacy software, and disconnected tools. Typical clients come to us when they need clearer ownership, faster delivery, and a partner who can make a technical call before they commit to a build.\n\n## Industries we serve\n\nManufacturing, including agricultural machinery, industrial equipment, and robotics; freight and logistics; healthcare and senior care operations; telecom and enterprise software; and regulated sectors such as identity verification, gaming, and finance-related operations.\n\n## How we work\n\nWe start from the business problem. The founders stay close to important decisions, and the senior engineers who scope the problem are the ones who build it. We move from discovery to working software on real processes and real data. The custom code we write for you is yours, along with the architecture, documentation, and a clear handover path. Where the system includes open-source or licensed components, the terms are transparent from day one. No vendor lock-in. After go-live, we stay on through monthly development capacity so the system keeps improving instead of being handed off and left.",
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:34:04.175Z",
+      "updatedAt": "2026-11-28T01:34:04.175Z",
+      "publishedAt": "2026-11-28T01:34:04.197Z",
+      "logo": {
+        "id": 43,
+        "alt": "The Good Code logo",
+        "decorative": null,
+        "width": null,
+        "height": null,
+        "file": {
+          "id": 326,
+          "documentId": "t3zui2q41n08ltpc6nbaqmx2",
+          "name": "6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo.webp",
+          "alternativeText": null,
+          "caption": "/media/partners",
+          "focalPoint": null,
+          "width": 1920,
+          "height": 254,
+          "formats": {
+            "thumbnail": {
+              "ext": ".webp",
+              "url": "/uploads/thumbnail_6a4e83f5ae6cec34d1933641_6a4e83d38d032bfeb19ca39c_the_good_code_logo_6bc3010f2c.webp",
+              "hash": "thumbnail_6a4e83f5ae6cec34d1933641_6a4e83d38d032bfeb19ca39c_the_good_code_logo_6bc3010f2c",
+              "mime": "image/webp",
+              "name": "thumbnail_6a4e83f5ae6cec34d1933641-6a4e83d38d032bfeb19ca39c-the-good-code-logo.webp",
+              "path": null,
+              "size": 2.68,
+              "width": 245,
+              "height": 32,
+              "sizeInBytes": 2676
+            }
+          },
+          "hash": "6a4e83f5ae6cec34d1933641_6a4e83d38d032bfeb19ca39c_the_good_code_logo_6bc3010f2c",
+          "ext": ".webp",
+          "mime": "image/webp",
+          "size": 33.71,
+          "url": "/uploads/6a4e83f5ae6cec34d1933641_6a4e83d38d032bfeb19ca39c_the_good_code_logo_6bc3010f2c.webp",
+          "previewUrl": null,
+          "provider": "local",
+          "provider_metadata": null,
+          "createdAt": "2026-11-28T01:33:52.477Z",
+          "updatedAt": "2026-11-28T01:33:52.477Z",
+          "publishedAt": "2026-11-28T01:33:52.477Z"
+        }
+      },
+      "tier": {
+        "id": 2,
+        "documentId": "dtq2ax520f0s33qrv28v2cks",
+        "slug": "agency"
+      },
+      "industries": [
+        {
+          "id": 14,
+          "documentId": "htd9p0gfyuvprfl6ft6o7fg2",
+          "slug": "manufacturing"
+        },
+        {
+          "id": 10,
+          "documentId": "weu9zstwakb6cndo9mkra19p",
+          "slug": "freight-logistics"
+        },
+        {
+          "id": 20,
+          "documentId": "fu22s38mhrwpjewcxmzpi1hu",
+          "slug": "software-technology"
+        },
+        {
+          "id": 12,
+          "documentId": "xspayymtku6j3pcab7e4ihh7",
+          "slug": "healthcare"
+        },
+        {
+          "id": 16,
+          "documentId": "yky3typ597pi09kna6a3b8t1",
+          "slug": "other"
+        }
+      ],
+      "location": {
+        "id": 52,
+        "documentId": "dzywvsdlu17kx7chkr0mcilm",
+        "slug": "poland"
+      },
+      "languages": [
+        {
+          "id": 14,
+          "documentId": "krzqrs1sjcyrgtfs2li423nj",
+          "slug": "english"
+        },
+        {
+          "id": 40,
+          "documentId": "itmb4drsfy9oz6qgj1g16qys",
+          "slug": "polish"
+        }
+      ],
+      "services": [
+        {
+          "id": 8,
+          "documentId": "wnldyx3frwisfn5cjrhdxmpg",
+          "slug": "implementation"
+        },
+        {
+          "id": 4,
+          "documentId": "wdzciwp4x6phnc67aygwkwgs",
+          "slug": "consulting"
+        },
+        {
+          "id": 6,
+          "documentId": "plervagj5oxetgvap59xqmgh",
+          "slug": "custom-development"
+        },
+        {
+          "id": 2,
+          "documentId": "a0djnez82h5zendtx9gcrj0w",
+          "slug": "ai-integration"
+        }
+      ]
     }
   ],
-  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 1 } }
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 1
+    }
+  }
 }
