@@ -10,16 +10,16 @@ Base: main (2d2fadb)
 
 | Phase | Step | Title                                                        | Exec   | Status | Commit |
 | ----- | ---- | ------------------------------------------------------------ | ------ | ------ | ------ |
-| 2     | 2.1  | The cms folder, its boundary, cms.yml and the byte test      | inline | done   | 2.1    |
-| 2     | 2.2  | Content types and components as schema.json, drift test      | inline | done   | 2.2    |
-| 2     | 2.3  | Roles seed, help texts, edit views, no model change in prod  | inline | done   | 2.3    |
-| 2     | 2.4  | Publish hook and preview handler (off)                       | inline | done   | 2.4    |
-| 2     | 2.5  | Backup and restore scripts, README                           | inline | done   | 2.5    |
+| 2     | 2.1  | The cms folder, its boundary, cms.yml and the byte test      | inline | done   | 2c8372f    |
+| 2     | 2.2  | Content types and components as schema.json, drift test      | inline | done   | ef8a846    |
+| 2     | 2.3  | Roles seed, help texts, edit views, no model change in prod  | inline | done   | d5de9d3    |
+| 2     | 2.4  | Publish hook and preview handler (off)                       | inline | done   | 6c226c8    |
+| 2     | 2.5  | Backup and restore scripts, README                           | inline | done   | 5a1542f    |
 | 2     | 2.2-review-fix | Every enumeration compared with its source in the drift test | inline | done | 0238fef |
 | 2     | 2.1-review-fix | The anonymous upload GET asserted as recorded (200) | inline | done | 544963b |
 | 2     | 2.2-review-fix-b | Data Model rows: redirect statusCode, Strapi budget values | inline | done | 0eae850 |
 | 2     | 2.5-review-fix | Only the newest weekly export kept in the exports volume | inline | done | 5879b02 |
-| 2     | 2.3-review-fix | End of the age-gate exception; no production start without accounts | inline | done | this commit |
+| 2     | 2.3-review-fix | End of the age-gate exception; no production start without accounts | inline | done | 0b8d620 |
 
 ## Goal
 

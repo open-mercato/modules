@@ -1,27 +1,27 @@
 # Handoff: 2026-11-27-www-cms-strapi-project
 
-**Last updated:** 2026-11-27T23:16:00Z
+**Last updated:** 2026-11-28
 **Branch:** feat/www-cms-strapi-project
-**PR:** not yet opened
-**Current phase/step:** Phase 2 Step 2.1
-**Last commit:** 2d2fadb (main)
+**PR:** https://github.com/open-mercato/modules/pull/44
+**Current phase/step:** complete (Steps 2.1 to 2.5 and review fixes)
+**Last commit:** see the branch
 
 ## What just happened
 
-- Run started; plan committed.
+- Steps 2.1 to 2.5 landed with their tests; review approve after five fix commits; final gate green.
 
 ## Next concrete action
 
-- Step 2.1: the `cms/` folder and `cms.yml`.
+- Owner: review and merge PR 44; then Step 2.6 (tag, ruleset, DNS, tunnel, Access, tokens, Storage Box, checkout on Cezar).
 
 ## Blockers / open questions
 
-- none
+- none for the run; open points for the owner are in the PR body.
 
 ## Environment caveats
 
-- Dev runtime runnable: Docker on Cezar, one throwaway Compose project at a time, ports on 127.0.0.1 only.
-- Browser / UI checks: skipped, the site does not change and the Strapi admin is Strapi's own.
+- Dev runtime runnable: yes (throwaway Compose project cms-dev, torn down).
+- Browser / UI checks: skipped, the site does not change.
 - Database/migration state: clean.
 
 ## Worktree
