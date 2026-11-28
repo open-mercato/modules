@@ -466,11 +466,12 @@ describe('pages.yml steps', () => {
     const settings = runStep(stepRun('pages.yml', 'Check deploy settings'), {
       ...vars,
       HAS_ACCOUNT_ID: 'false',
+      ON_MAIN: 'true',
       GITHUB_OUTPUT: out,
     })
     expect(settings.code, settings.out).toBe(0)
     expect(readFileSync(out, 'utf8')).toBe('deploy=false\n')
-    const r = runStep(stepRun('pages.yml', 'Not deployed'), vars)
+    const r = runStep(stepRun('pages.yml', 'Not deployed'), { ...vars, ON_MAIN: 'true' })
     expect(r.code, r.out).toBe(0)
     expect(r.out).toContain('::warning title=pages not deployed::No repository variable CLOUDFLARE_ACCOUNT_ID')
     const summary = readFileSync(join(tmp, 'summary.md'), 'utf8')
@@ -481,8 +482,35 @@ describe('pages.yml steps', () => {
     expect(summary).toContain('modules.openmercato.com')
 
     writeFileSync(out, '')
-    runStep(stepRun('pages.yml', 'Check deploy settings'), { ...vars, HAS_ACCOUNT_ID: 'true', GITHUB_OUTPUT: out })
+    runStep(stepRun('pages.yml', 'Check deploy settings'), {
+      ...vars,
+      HAS_ACCOUNT_ID: 'true',
+      ON_MAIN: 'true',
+      GITHUB_OUTPUT: out,
+    })
     expect(readFileSync(out, 'utf8')).toBe('deploy=true\n')
+  })
+
+  it('a run on another ref than main builds and checks, deploys nothing and says so (Strapi CMS spec, Step 4.1)', () => {
+    const out = join(tmp, 'output.txt')
+    writeFileSync(out, '')
+    runStep(stepRun('pages.yml', 'Check deploy settings'), {
+      ...env(),
+      HAS_ACCOUNT_ID: 'true',
+      ON_MAIN: 'false',
+      GITHUB_OUTPUT: out,
+    })
+    expect(readFileSync(out, 'utf8')).toBe('deploy=false\n')
+    const r = runStep(stepRun('pages.yml', 'Not deployed'), {
+      ...env(),
+      ON_MAIN: 'false',
+      GITHUB_REF: 'refs/heads/test/www-content-snapshot',
+    })
+    expect(r.code, r.out).toBe(0)
+    expect(r.out).toContain('::notice title=pages not deployed::A run on refs/heads/test/www-content-snapshot')
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toContain(
+      '**Not deployed.** A run on `refs/heads/test/www-content-snapshot` builds and checks the site',
+    )
   })
 
   it('the deploy job fails red when the variable is set but the token is missing, and sums up a deploy', () => {
@@ -715,5 +743,129 @@ describe('collect.yml steps', () => {
     expect(r.code).not.toBe(0)
     expect(r.out).toContain('No data branch in the checkout (refs/remotes/origin/data)')
     expect(existsSync(join(work, '.data'))).toBe(false)
+  })
+})
+
+// The steps of the main site's content in pages.yml (Strapi CMS spec 2026-11-27-www-strapi-cms.md, Steps 4.1 and
+// 4.2), against the local bare origin: a snapshot commit by hand is accepted on main only from www-content and off
+// main also as the tip of a branch, never as a commit only a pull request (a fork) holds; the snapshot job writes one
+// commit and none when only the pull time changed; the issue job creates, edits or closes the one issue.
+describe('pages.yml steps of the main site content', () => {
+  const runner = () => {
+    const d = join(tmp, 'runner')
+    mkdirSync(d, { recursive: true })
+    return d
+  }
+  /** A commit of a tree with one file, on a ref of origin; returns its SHA. */
+  function commitOn(ref: string, file: string, text: string): string {
+    const d = join(tmp, `c-${Math.random().toString(36).slice(2)}`)
+    execFileSync('git', ['init', '--quiet', d])
+    writeFileSync(join(d, file), text)
+    git(d, 'add', '-A')
+    git(d, '-c', 'user.name=t', '-c', 'user.email=t@e', 'commit', '--quiet', '-m', file)
+    git(d, 'push', '--quiet', origin, `HEAD:${ref}`)
+    return git(d, 'rev-parse', 'HEAD')
+  }
+  const use = (commit: string, onMain: boolean) =>
+    runStep(stepRun('pages.yml', 'Use www snapshot'), {
+      BY_HAND: 'true',
+      COMMIT: commit,
+      ON_MAIN: String(onMain),
+      RUNNER_TEMP: runner(),
+      GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'),
+    })
+
+  it('Use www snapshot: on main a commit of www-content, a short SHA too; never a commit of a pull request', () => {
+    // GitHub serves an unadvertised commit (of a fork, by its pull request) by its SHA too
+    git(origin, 'config', 'uploadpack.allowAnySHA1InWant', 'true')
+    mkdirSync(join(work, '.data'))
+    const good = commitOn('refs/heads/www-content', 'manifest.json', '{}\n')
+    const fork = commitOn('refs/pull/1/head', 'manifest.json', '{"fork":true}\n')
+    const r = use(good.slice(0, 12), true)
+    expect(r.code, r.out).toBe(0)
+    expect(callLog()).toEqual([`om www-content apply --from ${join(tmp, 'runner', 'www-snapshot-by-hand')}`])
+    const f = use(fork, true)
+    expect(f.code).not.toBe(0)
+    expect(f.out).toContain(`::error title=www content::${fork} is not a commit of the www-content branch.`)
+  })
+
+  it('Use www snapshot: off main the tip of a branch is accepted too, a pull request commit still not', () => {
+    git(origin, 'config', 'uploadpack.allowAnySHA1InWant', 'true')
+    mkdirSync(join(work, '.data'))
+    const tip = commitOn('refs/heads/test/www-content-snapshot', 'manifest.json', '{}\n')
+    const fork = commitOn('refs/pull/2/head', 'manifest.json', '{"fork":true}\n')
+    expect(use(tip, false).code).toBe(0)
+    expect(use(tip, true).code, 'on main the tip of another branch is not enough').not.toBe(0)
+    expect(use(fork, false).code).not.toBe(0)
+  })
+
+  it.skipIf(!hasJq)('Write www snapshot: one commit, none when only the pull time changed, then one more', () => {
+    const repo = 'open-mercato/modules'
+    const env = {
+      GH_TOKEN: 'test-token',
+      NEWEST: '2026-11-28T10:00:00.000Z',
+      GITHUB_REPOSITORY: repo,
+      GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'),
+      // github.com of the step is the local origin here
+      GIT_CONFIG_COUNT: '1',
+      GIT_CONFIG_KEY_0: `url.${origin}.insteadOf`,
+      GIT_CONFIG_VALUE_0: `https://github.com/${repo}.git`,
+    }
+    const tree = (pulledAt: string, page: string) => {
+      rmSync(join(work, 'snapshot'), { recursive: true, force: true })
+      rmSync(join(work, 'branch'), { recursive: true, force: true })
+      mkdirSync(join(work, 'snapshot', 'content', 'pages'), { recursive: true })
+      writeFileSync(join(work, 'snapshot', 'content', 'pages', 'home.yaml'), page)
+      writeFileSync(join(work, 'snapshot', 'manifest.json'), JSON.stringify({ version: 1, pulledAt, media: [] }))
+    }
+    const log = () => git(origin, 'log', 'www-content', '--format=%s').split('\n')
+    tree('2026-11-28T10:00:00Z', 'title: Home\n')
+    const first = runStep(stepRun('pages.yml', 'Write www snapshot'), env)
+    expect(first.code, first.out).toBe(0)
+    expect(log()).toEqual(['www-content: 2026-11-28T10:00:00.000Z'])
+    expect(git(origin, 'show', 'www-content:content/pages/home.yaml')).toBe('title: Home')
+    tree('2026-11-28T11:00:00Z', 'title: Home\n')
+    const same = runStep(stepRun('pages.yml', 'Write www snapshot'), env)
+    expect(same.code, same.out).toBe(0)
+    expect(log()).toHaveLength(1)
+    expect(readFileSync(join(tmp, 'summary.md'), 'utf8')).toContain('www-content unchanged: nothing written.')
+    tree('2026-11-28T12:00:00Z', 'title: Home, edited\n')
+    const changed = runStep(stepRun('pages.yml', 'Write www snapshot'), { ...env, NEWEST: '2026-11-28T12:00:00.000Z' })
+    expect(changed.code, changed.out).toBe(0)
+    expect(log()).toEqual(['www-content: 2026-11-28T12:00:00.000Z', 'www-content: 2026-11-28T10:00:00.000Z'])
+  })
+
+  it('Write the issue: creates it, edits the open one, closes it after a good build, and a later publish failure', () => {
+    mkdirSync(join(work, 'issue'))
+    writeFileSync(join(work, 'issue', 'issue.md'), 'problems\n')
+    writeFileSync(join(work, 'issue', 'issue-failed.md'), 'failed later\n')
+    const env = {
+      TITLE: 'Main site content from Strapi is not live',
+      RUN_URL: 'https://github.com/o/r/actions/runs/1',
+      GITHUB_STEP_SUMMARY: join(tmp, 'summary.md'),
+      INPUT: 'publish',
+    }
+    const step = (vars: Record<string, string>) => {
+      writeFileSync(calls, '')
+      const r = runStep(stepRun('pages.yml', 'Write the issue'), { ...env, ...vars })
+      expect(r.code, r.out).toBe(0)
+      return callLog().filter((l) => !l.startsWith('gh issue list'))
+    }
+    expect(step({ ACTION: 'update', BUILD: 'failure', DEPLOY: 'skipped' })).toEqual([
+      'gh issue create --title Main site content from Strapi is not live --body-file issue/issue.md',
+    ])
+    expect(step({ ACTION: 'update', BUILD: 'success', DEPLOY: 'success', FAKE_ISSUE: '7' })).toEqual([
+      'gh issue edit 7 --body-file issue/issue.md',
+    ])
+    expect(step({ ACTION: 'close', BUILD: 'success', DEPLOY: 'skipped', FAKE_ISSUE: '7' })).toEqual([
+      'gh issue close 7 --comment Closed by https://github.com/o/r/actions/runs/1: it read Strapi without a problem and the build went through.',
+    ])
+    expect(step({ ACTION: 'close', BUILD: 'success', DEPLOY: 'success' })).toEqual([])
+    expect(step({ ACTION: 'close', BUILD: 'failure', DEPLOY: 'skipped', FAKE_ISSUE: '7' })).toEqual([
+      'gh issue edit 7 --body-file issue/issue-failed.md',
+    ])
+    // a build not started by a publish that fails after a good pull is not the issue's business
+    expect(step({ ACTION: 'close', BUILD: 'failure', DEPLOY: 'skipped', INPUT: '' })).toEqual([])
+    expect(step({ ACTION: 'close', BUILD: 'cancelled', DEPLOY: 'skipped', FAKE_ISSUE: '7' })).toEqual([])
   })
 })

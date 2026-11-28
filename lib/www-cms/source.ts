@@ -169,3 +169,19 @@ export function decideContent(x: SourceInput): Decision {
     summary: [`Main site content from snapshot ${x.snapshot.sha} of ${x.snapshot.date}: ${reason}.`, ...problems],
   }
 }
+
+/** What the first step of the build does, before any secret: read Strapi, or use a content it can decide alone. */
+export type Plan = { pull: 'compare' | 'replace' } | { pull: 'none'; decision: Decision }
+
+/**
+ * The plan of a build from the variable and the inputs alone (step Choose www content of `pages`): when the build
+ * pulls Strapi, the step that holds the token decides after the pull; otherwise the decision is made here, without
+ * the token: the files, a snapshot commit by hand, or a failure on a value outside its enum.
+ */
+export function planContent(x: Pick<SourceInput, 'variable' | 'input' | 'snapshotCommit'>): Plan {
+  const mode = pullMode(x.variable, x.input)
+  const decision = decideContent({ ...x, pull: { kind: 'not-run' } })
+  // a value outside its enum, or a snapshot commit without www_content: snapshot, fails before any read
+  if (mode === 'none' || (decision.use === 'fail' && decision.issue === 'none')) return { pull: 'none', decision }
+  return { pull: mode }
+}
