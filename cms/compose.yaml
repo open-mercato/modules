@@ -1,4 +1,4 @@
-# The Strapi host (spec, The cms/ folder): Strapi, PostgreSQL 17, the tunnel and (Step 2.5) the backup job, on a
+# The Strapi host (spec, The cms/ folder): Strapi, PostgreSQL 17, the tunnel and the backup and restore jobs, on a
 # network of their own. Every host value comes from cms/.env. No port is published: the tunnel is the only way in
 # (Q2). Start: `docker compose -f cms/compose.yaml --profile tunnel up -d --build`.
 name: www-cms
@@ -24,6 +24,7 @@ services:
   strapi:
     build: .
     image: www-cms-strapi:local
+    pull_policy: build
     restart: unless-stopped
     env_file:
       - .env
@@ -33,6 +34,7 @@ services:
       DATABASE_PORT: "5432"
     volumes:
       - uploads:/opt/cms/public/uploads
+      - exports:/opt/cms/exports
     networks:
       - cms
     depends_on:
@@ -56,9 +58,66 @@ services:
     depends_on:
       - strapi
 
+  # nightly from the host's cron (cms/README.md, Backup): `docker compose -f cms/compose.yaml --profile backup run --rm
+  # backup`; reads the database, the uploads and the exports, sends one encrypted archive to BACKUP_TARGET
+  backup:
+    build: ./backup
+    image: www-cms-backup:local
+    pull_policy: build
+    profiles:
+      - backup
+    entrypoint: ["/scripts/backup.sh"]
+    environment: &pg
+      PGHOST: postgres
+      PGDATABASE: ${DATABASE_NAME:-strapi}
+      PGUSER: ${DATABASE_USERNAME:-strapi}
+      PGPASSWORD: ${DATABASE_PASSWORD:-}
+      BACKUP_TARGET: ${BACKUP_TARGET:-}
+      BACKUP_SSH_PORT: ${BACKUP_SSH_PORT:-23}
+      BACKUP_AGE_RECIPIENT: ${BACKUP_AGE_RECIPIENT:-}
+    volumes:
+      - uploads:/uploads:ro
+      - exports:/exports:ro
+      - ./scripts:/scripts:ro
+      - ${BACKUP_SSH_KEY_FILE:-/dev/null}:/run/backup/ssh_key:ro
+      - ${BACKUP_KNOWN_HOSTS_FILE:-/dev/null}:/run/backup/known_hosts:ro
+    networks:
+      - cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  # the restore into a project whose Strapi is stopped (cms/scripts/restore.sh); the archive and the owner's private
+  # age key are mounted only for the run
+  restore:
+    image: www-cms-backup:local
+    build: ./backup
+    pull_policy: build
+    profiles:
+      - restore
+    entrypoint: ["/scripts/restore.sh"]
+    environment: *pg
+    volumes:
+      - uploads:/uploads
+      - ./scripts:/scripts:ro
+    networks:
+      - cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
 networks:
   cms: {}
 
 volumes:
   db: {}
   uploads: {}
+  exports: {}

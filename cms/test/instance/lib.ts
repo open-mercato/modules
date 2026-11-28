@@ -18,8 +18,12 @@ export const CMS_URL = (): string => need('CMS_URL').replace(/\/$/, '')
 
 /** Runs the Compose command of the instance with more arguments and returns its output. */
 export function compose(...args: string[]): string {
-  const [cmd, ...base] = need('CMS_COMPOSE').split(' ').filter(Boolean)
-  return execFileSync(cmd as string, [...base, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+  const [cmd, sub, ...base] = need('CMS_COMPOSE').split(' ').filter(Boolean)
+  // no build or pull progress in the output a test reads
+  return execFileSync(cmd as string, [sub as string, '--progress', 'quiet', ...base, ...args], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
 }
 
 /** Waits until Strapi answers its health route. */

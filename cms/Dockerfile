@@ -17,8 +17,9 @@ FROM node:24.22.3-bookworm-slim
 ENV NODE_ENV=production STRAPI_TELEMETRY_DISABLED=true STRAPI_DISABLE_UPDATE_NOTIFICATION=true
 WORKDIR /opt/cms
 COPY --from=build --chown=root:root /opt/cms ./
-# the only directories Strapi writes: the uploads (a volume, Q5) and its temporary files
-RUN mkdir -p public/uploads .tmp && chown node:node public/uploads .tmp
+# the only directories Strapi writes: the uploads (a volume, Q5), the weekly export archives (a volume) and its
+# temporary files
+RUN mkdir -p public/uploads exports .tmp && chown node:node public/uploads exports .tmp
 USER node
 EXPOSE 1337
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=12 \
