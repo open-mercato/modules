@@ -16,3 +16,9 @@
 - Claim comments name no person (the operator asked for no mentions).
 - Media folders: only the admin API of Strapi 5.64.0 creates Media Library folders; the push needs them to exist and
   names the missing ones (PLAN.md, Design decisions).
+
+## 2026-11-28T01:10:53Z: Step 3.1 left one test red
+
+- c7b14ba added `www-push` to the command list of `lib/cli.ts` without the list pinned in `test/schema/cli.test.ts`
+  (only `test/www-cms` ran before that commit). The Step 3.2 commit adds both commands to the test; history is not
+  rewritten.

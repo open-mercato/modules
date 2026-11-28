@@ -64,7 +64,7 @@ export interface FakeOptions {
   /** Media Library folders that exist, by name path (`/media/blog`); parents are made too. */
   folders?: readonly string[]
   /** Answers a request before the fake does (a recorded fixture, a corrupt answer). */
-  override?: (method: string, url: URL) => Override
+  override?: (method: string, url: URL, token: string | undefined) => Override
 }
 
 export interface FakeStrapi {
@@ -256,7 +256,7 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
       line.status = status
       send(res, status, body)
     }
-    const o = opts.override?.(method, url)
+    const o = opts.override?.(method, url, token)
     if (o) {
       line.status = o.status
       res.writeHead(o.status, { 'content-type': 'application/json' })

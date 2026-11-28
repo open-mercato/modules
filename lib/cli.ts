@@ -84,6 +84,11 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     owner: 'www',
     description: 'push www/content and the media into Strapi, upserted by slug (STRAPI_ADMIN_TOKEN; never in CI)',
   },
+  {
+    name: 'www-pull',
+    owner: 'www',
+    description: 'pull Strapi into www/content and the media, validated first; --check compares only',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))
