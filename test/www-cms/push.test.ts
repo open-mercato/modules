@@ -263,6 +263,19 @@ describe('www-push refuses before it writes', () => {
     }
   })
 
+  it('refuses a token a header cannot carry before any request, without printing it', async () => {
+    const fake = await startFakeStrapi({ folders: folderPaths(tree.media) })
+    try {
+      const r = await pushOnce(fake.url, tree.dir, { STRAPI_ADMIN_TOKEN: 'abc\nsecret-part-xyz' })
+      expect(r.code).toBe(2)
+      expect(r.out).toMatch(/STRAPI_ADMIN_TOKEN holds characters an HTTP header cannot carry/)
+      expect(r.out).not.toContain('secret-part-xyz')
+      expect(fake.log).toEqual([])
+    } finally {
+      await fake.close()
+    }
+  })
+
   it('lists a value the mapping or Strapi refuses with its file and field, and exits 1', async () => {
     const fake = await startFakeStrapi({
       folders: folderPaths(tree.media),

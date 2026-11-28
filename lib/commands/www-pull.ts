@@ -10,7 +10,7 @@ import { isAbsolute, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import { pull, PullEnvError, type PullReport } from '../www-cms/pull.ts'
-import { createClient, StrapiError } from '../www-cms/rest.ts'
+import { createClient, StrapiError, tokenProblem } from '../www-cms/rest.ts'
 import { TYPES } from '../www-cms/model.ts'
 import type { Status } from '../www-cms/strapi.ts'
 
@@ -59,6 +59,7 @@ export function reportLines(r: PullReport): string[] {
   lines.push(`  media: ${r.media.downloaded} downloaded, ${r.media.reused} reused`)
   lines.push(`  newest change in Strapi: ${r.newest ?? 'none'}`)
   for (const c of r.changedMedia) lines.push(`  media changed since the snapshot: ${c}`)
+  for (const n of r.notes) lines.push(`  note: ${n}`)
   for (const p of r.problems) lines.push(`  invalid: ${p}`)
   if (r.problems.length > 0) lines.push(`${r.problems.length} problems, nothing replaced`)
   else if (r.differs) {
@@ -87,6 +88,11 @@ export async function runPull(
     out.error(
       `www-pull: set ${name} to a ${name === 'STRAPI_READ_TOKEN' ? 'read-only' : 'drafts'} API token of the instance`,
     )
+    return EXIT_ENV
+  }
+  const bad = tokenProblem(name, token)
+  if (bad) {
+    out.error(`www-pull: ${bad}`)
     return EXIT_ENV
   }
   const at = (p: string) => (isAbsolute(p) ? p : resolve(ctx.root, p))

@@ -110,6 +110,16 @@ export function strapiOrigin(url: string): string {
   return u.origin
 }
 
+/**
+ * Why a token cannot go into a header, or undefined: the check runs before any request, so a header error (whose
+ * message carries the value) never reaches a log.
+ */
+export function tokenProblem(name: string, token: string): string | undefined {
+  return /^[\x21-\x7e]+$/.test(token)
+    ? undefined
+    : `${name} holds characters an HTTP header cannot carry (a space or a line break?)`
+}
+
 /** Strapi's error message of an answer, when it has one. */
 function strapiMessage(body: unknown): { message?: string; details?: unknown } {
   const e = (body as { error?: { message?: unknown; details?: unknown } } | null)?.error
@@ -126,9 +136,17 @@ export function createClient(opts: ClientOptions): Client {
   async function send(method: string, path: string, req: JsonRequest, accept: (status: number) => boolean) {
     const at = `${method} ${path}`
     const qs = req.query ? encodeQuery(req.query) : ''
-    const target = /^https?:\/\//.test(path) ? path : `${origin}${path}${qs ? `?${qs}` : ''}`
-    if (/^https?:\/\//.test(path) && new URL(path).origin !== origin)
-      throw new StrapiError('answer', `${method} of a file on another origin (${new URL(path).origin}) is not read`)
+    // every target is resolved against the origin and must stay on it: the token never goes to another host, whatever
+    // path (a file's url from Strapi included) it is given
+    let target: URL
+    try {
+      target = new URL(path.startsWith('/') && !path.startsWith('//') ? `${origin}${path}` : path)
+    } catch {
+      throw new StrapiError('answer', `${method}: ${JSON.stringify(path.slice(0, 80))} is not a path of the instance`)
+    }
+    if (target.origin !== origin)
+      throw new StrapiError('answer', `${method} of ${target.origin} refused: only ${origin} is read with the token`)
+    if (qs) target.search = qs
     let last = ''
     for (let i = 1; i <= tries; i++) {
       const headers = new Headers()
@@ -141,7 +159,13 @@ export function createClient(opts: ClientOptions): Client {
       }
       try {
         const answer = await run(async () => {
-          const r = await fetch(target, { method, headers, body, signal: AbortSignal.timeout(timeoutMs) })
+          const r = await fetch(target, {
+            method,
+            headers,
+            body,
+            redirect: 'error',
+            signal: AbortSignal.timeout(timeoutMs),
+          })
           return { status: r.status, bytes: new Uint8Array(await r.arrayBuffer()) }
         })
         if (answer.status >= 500 || answer.status === 429) last = `answered ${answer.status}`

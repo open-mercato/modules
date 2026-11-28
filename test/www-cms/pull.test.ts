@@ -5,7 +5,7 @@
 // 200, fails on a removed slug without a redirect, leaves the tree untouched on a corrupt or invalid answer, names a
 // media file whose bytes differ from the snapshot manifest, reuses the others, and reads only STRAPI_DRAFTS_TOKEN for
 // drafts (and only STRAPI_READ_TOKEN otherwise).
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, cpSync, existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -14,9 +14,10 @@ import { runPush } from '../../lib/commands/www-push.ts'
 import { TYPES, typeOf } from '../../lib/www-cms/model.ts'
 import { createClient } from '../../lib/www-cms/rest.ts'
 import { readType, readUploads, type Upload } from '../../lib/www-cms/strapi.ts'
-import { walk } from '../../lib/www-cms/tree.ts'
+import { readMedia, walk } from '../../lib/www-cms/tree.ts'
+import { mediaReferenceProblems } from '../../lib/www-cms/pull.ts'
 import { startFakeStrapi, type FakeOptions, type FakeStrapi } from './fake-strapi.ts'
-import { miniTree, ROOT } from './mini-tree.ts'
+import { miniTree, RAW_MEDIA, ROOT } from './mini-tree.ts'
 
 const FIXTURE = join(ROOT, 'test', 'fixtures', 'strapi')
 const ENV = { STRAPI_READ_TOKEN: 'test-read', STRAPI_DRAFTS_TOKEN: 'test-drafts' }
@@ -77,6 +78,17 @@ describe('www-pull from the REST fixture of test/fixtures/strapi', () => {
         return t ? { status: 200, body: JSON.parse(readFileSync(join(FIXTURE, `${t.route}.json`), 'utf8')) } : undefined
       },
     })
+    // the files the fixture's bodies link to by raw path, beside the recorded ones the fields use
+    const linked = new Set<string>()
+    for (const t of TYPES)
+      for (const m of readFileSync(join(FIXTURE, `${t.route}.json`), 'utf8').matchAll(RAW_MEDIA))
+        linked.add(m[0].replace(/[.,]+$/, ''))
+    for (const u of recorded) linked.delete(`${u.caption}/${u.name}`)
+    for (const p of linked) {
+      if (!existsSync(join(ROOT, 'www', 'public', p)) || !statSync(join(ROOT, 'www', 'public', p)).isFile()) continue
+      const dir = p.slice(0, p.lastIndexOf('/'))
+      fake.addUpload(dir, p.slice(dir.length + 1), readFileSync(join(ROOT, 'www', 'public', p)))
+    }
     for (const u of recorded) {
       const { id: _id, ...fields } = u
       fake.addUpload(u.caption!, u.name, readFileSync(join(ROOT, 'www', 'public', u.caption!, u.name)), fields)
@@ -362,6 +374,8 @@ describe('www-pull reads every page and trusts no other paging', () => {
         ['0', '100'],
         ['100', '100'],
         ['200', '100'],
+        // the short page is the last only when nothing follows it
+        ['205', '1'],
       ])
     } finally {
       await fake.close()
@@ -381,19 +395,26 @@ describe('www-pull reads every page and trusts no other paging', () => {
     }
   })
 
-  it('ends with exit 2 when an answer pages at a size other than 100', async () => {
-    const fake = await heldFake(tree)
+  it('ends with exit 2 when an answer pages at a size other than 100, and leaves the tree untouched', async () => {
+    let size25 = false
+    const fake = await heldFake(tree, {
+      override: (method, url, token) =>
+        size25 && token && url.pathname === '/api/landings'
+          ? {
+              status: 200,
+              body: { data: [], meta: { pagination: { page: 1, pageSize: 25, pageCount: 2, total: 32 } } },
+            }
+          : undefined,
+    })
     const out = tmp('size')
     try {
-      const paged = await startFakeStrapi({ pageSize: 25, override: undefined })
-      try {
-        const r = await pullOnce(paged.url, out, ENV)
-        expect(r.code, r.out).toBe(2)
-        expect(r.out).toMatch(/page size 25, not 100/)
-        expect(walk(out)).toEqual([])
-      } finally {
-        await paged.close()
-      }
+      cpSync(tree.dir, out, { recursive: true })
+      const before = snapshotOf(out)
+      size25 = true
+      const r = await pullOnce(fake.url, out, ENV)
+      expect(r.code, r.out).toBe(2)
+      expect(r.out).toMatch(/GET \/api\/landings page 1: page size 25, not 100/)
+      expect(snapshotOf(out)).toEqual(before)
     } finally {
       await fake.close()
       rmSync(out, { recursive: true, force: true })
@@ -430,5 +451,118 @@ describe('www-pull reads every page and trusts no other paging', () => {
     expect(r.code).toBe(2)
     expect(r.out).toMatch(/set STRAPI_DRAFTS_TOKEN/)
     expect(read).toEqual(['STRAPI_DRAFTS_TOKEN'])
+  })
+})
+
+describe('www-pull after the review: the token stays on the instance, media paths hold, a failed replace undoes itself', () => {
+  let tree: { dir: string; media: string[] }
+  let fake: FakeStrapi
+  beforeAll(async () => {
+    tree = miniTree()
+    fake = await heldFake(tree)
+  }, 60_000)
+  afterAll(async () => {
+    await fake.close()
+    rmSync(tree.dir, { recursive: true, force: true })
+  })
+
+  it('never sends the token to another origin, whatever url Strapi gives a file', async () => {
+    const client = createClient({ url: fake.url, token: 'test-read' })
+    for (const url of ['//evil.example/x', 'https://evil.example/x', `@evil.example/x`, 'uploads/x'])
+      await expect(client.bytes(url), url).rejects.toThrow(
+        /refused: only http:\/\/127\.0\.0\.1:\d+ is read|not a path of the instance/,
+      )
+    const ok = fake.uploads[0]!
+    expect((await client.bytes(ok.url)).length).toBe(ok.bytes.length)
+  })
+
+  it('refuses a token a header cannot carry without printing it', async () => {
+    const secret = 'abc\ndef-not-printed'
+    const r = await pullOnce(fake.url, tmp('header'), { STRAPI_READ_TOKEN: secret })
+    expect(r.code).toBe(2)
+    expect(r.out).toMatch(/STRAPI_READ_TOKEN holds characters an HTTP header cannot carry/)
+    expect(r.out).not.toContain('def-not-printed')
+  })
+
+  it('fails when an upload moved (its caption changed) and when a raw link has no file', async () => {
+    const out = tmp('moved')
+    try {
+      expect((await pullOnce(fake.url, out, ENV, '--drafts')).code).toBe(0)
+      const before = snapshotOf(out)
+      // a file only the body links to by raw path (a field's file follows a move through the media index)
+      const text = readFileSync(join(out, 'content', 'case-studies', 'arvo-configurator.md'), 'utf8')
+      const raw = [...text.slice(text.indexOf('\n---\n', 4)).matchAll(RAW_MEDIA)][0]![0]
+      const u = fake.uploads.find((x) => `${x.caption}/${x.name}` === raw)!
+      const caption = u.caption
+      u.caption = 'Team photo'
+      try {
+        const r = await pullOnce(fake.url, out, ENV, '--drafts')
+        expect(r.code, r.out).toBe(1)
+        expect(r.out).toContain(`invalid: ${raw}: the upload moved to /media/uploads/`)
+        expect(r.out).toContain(`invalid: case-studies/arvo-configurator.md: ${raw} has no file in Strapi`)
+        expect(snapshotOf(out)).toEqual(before)
+      } finally {
+        u.caption = caption
+      }
+    } finally {
+      rmSync(out, { recursive: true, force: true })
+    }
+  }, 60_000)
+
+  it('refuses an upload name that is not one plain path segment', async () => {
+    const odd = fake.addUpload('/media/blog', 'x.png', new Uint8Array([1]), { name: '..', caption: null })
+    const out = tmp('name')
+    try {
+      const r = await pullOnce(fake.url, out, ENV, '--drafts')
+      expect(r.code, r.out).toBe(1)
+      expect(r.out).toContain('invalid: /media/uploads/..: not a media path the pull writes')
+      expect(walk(out)).toEqual([])
+    } finally {
+      fake.uploads.splice(fake.uploads.indexOf(odd), 1)
+      rmSync(out, { recursive: true, force: true })
+    }
+  }, 60_000)
+
+  it('puts the previous tree back when the replace fails half way, and exits 2', async () => {
+    const out = tmp('undo')
+    try {
+      cpSync(tree.dir, out, { recursive: true })
+      writeFileSync(join(out, 'content', 'pages', 'pricing.yaml'), 'an older pricing page\n')
+      const before = snapshotOf(out)
+      // public/ read-only: the content moves, the media cannot, and everything goes back
+      chmodSync(join(out, 'public'), 0o555)
+      let r: Awaited<ReturnType<typeof pullOnce>>
+      try {
+        r = await pullOnce(fake.url, out, ENV, '--drafts')
+      } finally {
+        chmodSync(join(out, 'public'), 0o755)
+      }
+      expect(r.code, r.out).toBe(2)
+      expect(r.out).toMatch(/the tree could not be replaced, the previous one is back in place/)
+      expect(snapshotOf(out)).toEqual(before)
+    } finally {
+      rmSync(out, { recursive: true, force: true })
+    }
+  }, 60_000)
+
+  it('says so when the snapshot holds nothing to compare', async () => {
+    const out = tmp('empty')
+    try {
+      const r = await pullOnce(fake.url, out, ENV, '--drafts')
+      expect(r.code, r.out).toBe(0)
+      expect(r.out).toMatch(/note: the snapshot .* holds no routed entry: the removed-URL rule had nothing to compare/)
+    } finally {
+      rmSync(out, { recursive: true, force: true })
+    }
+  }, 60_000)
+})
+
+describe("the raw media links of today's content", () => {
+  it('each have their file in www/public, so the reference check passes on the site as it is', () => {
+    const content = join(ROOT, 'www', 'content')
+    const files = walk(content).map((a) => ({ path: relative(content, a), text: readFileSync(a, 'utf8') }))
+    const media = new Set(readMedia(join(ROOT, 'www', 'public')).map((m) => m.path))
+    expect(mediaReferenceProblems(files, media)).toEqual([])
+    expect(files.some((f) => /\/media\/blog\//.test(f.text))).toBe(true)
   })
 })

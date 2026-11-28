@@ -9,7 +9,7 @@ import { isAbsolute, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import { push, type PushReport } from '../www-cms/push.ts'
-import { createClient, StrapiError } from '../www-cms/rest.ts'
+import { createClient, StrapiError, tokenProblem } from '../www-cms/rest.ts'
 
 export const description =
   'push www/content and the media into Strapi, upserted by slug (STRAPI_ADMIN_TOKEN; never in CI)'
@@ -88,6 +88,11 @@ export async function runPush(
   const token = env.STRAPI_ADMIN_TOKEN
   if (!token) {
     out.error('www-push: set STRAPI_ADMIN_TOKEN to a full-access API token of the instance')
+    return EXIT_ENV
+  }
+  const bad = tokenProblem('STRAPI_ADMIN_TOKEN', token)
+  if (bad) {
+    out.error(`www-push: ${bad}`)
     return EXIT_ENV
   }
   const at = (p: string) => (isAbsolute(p) ? p : resolve(ctx.root, p))

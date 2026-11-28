@@ -22,3 +22,10 @@
 - c7b14ba added `www-push` to the command list of `lib/cli.ts` without the list pinned in `test/schema/cli.test.ts`
   (only `test/www-cms` ran before that commit). The Step 3.2 commit adds both commands to the test; history is not
   rewritten.
+
+## 2026-11-28T02:06:03Z: rehearsal and review
+
+- Rehearsal on a throwaway local instance (rehearsal.md): three behaviours of 5.64.0 fixed in 3.2-recording (folder
+  invisible to API tokens, so the site folder rides in the caption; read-only tokens reach /api/upload/files only;
+  that list pages by start and limit). Read-only token reads drafts: recorded in the spec's Risks.
+- Review subagent (om-code-review checklist): request changes, 3 major and 5 minor; fixed in 3.2-review-fix.

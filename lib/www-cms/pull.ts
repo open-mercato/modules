@@ -71,6 +71,8 @@ export interface PullReport {
   differs?: string[]
   /** True when the tree was replaced. */
   written: boolean
+  /** What the run could not check, for the summary (an empty snapshot). */
+  notes: string[]
 }
 
 /** Strapi answered, but not as the pull can trust: an environment failure (exit 2), like no answer at all. */
@@ -252,6 +254,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
     newest: null,
     problems: [],
     written: false,
+    notes: [],
   }
 
   // the content API must not answer without a token (spec, Webhook path and its security)
@@ -344,8 +347,29 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
       `${p}: the URL was in the snapshot and is gone (renamed, deleted or unpublished); add a redirect from ${p} in Strapi`,
     )
 
+  if (routedPaths(before).size === 0)
+    report.notes.push(`the snapshot ${snapshot} holds no routed entry: the removed-URL rule had nothing to compare`)
+
+  // every content file at a path its type owns, inside the tree; every media path a plain path under public/
+  for (const f of files)
+    if (sourceOf(f.path) === undefined || !inside(join('/c', f.path), '/c'))
+      report.problems.push(`${f.path}: not a path of a content file (a slug Strapi should not hold)`)
+  for (const { path } of media.files)
+    if (!/^\/(?:media|files)(?:\/[^/\\\0]+)+$/.test(path) || path.split('/').some((s) => s === '.' || s === '..'))
+      report.problems.push(`${path}: not a media path the pull writes (a file name Strapi should not hold)`)
+  const pulledMedia = new Set(media.files.map((m) => m.path))
+  report.problems.push(...mediaReferenceProblems(files, pulledMedia))
+
   // media, through the cache of the snapshot manifest
   const cache = readManifest(snapshot)
+  // a file of the snapshot at another path now: its caption changed, and every raw link to the old path would break
+  for (const c of cache?.media ?? []) {
+    const now = media.files.find((m) => m.file.documentId === c.documentId)
+    if (now && now.path !== c.path)
+      report.problems.push(
+        `${c.path}: the upload moved to ${now.path}; set its caption back to ${c.path.slice(0, c.path.lastIndexOf('/'))} in Strapi`,
+      )
+  }
   const cached = new Map((cache?.media ?? []).map((m) => [m.path, m]))
   const bytes = new Map<string, Uint8Array>()
   await Promise.all(
@@ -406,7 +430,13 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
       report.differs = differences(stage, out)
       return report
     }
-    replace(stage, out)
+    try {
+      replace(stage, out)
+    } catch (err) {
+      throw new PullEnvError(
+        `the tree could not be replaced, the previous one is back in place: ${(err as Error).message}`,
+      )
+    }
     writeFileSync(join(out, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
     report.written = true
     return report
@@ -440,27 +470,75 @@ function differences(stage: string, out: string): string[] {
   return differ
 }
 
-/** Moves the pulled tree into `out`: its Strapi files of content/ (the others stay) and public/media and public/files. */
+/** Whether a path lies inside a directory. */
+function inside(path: string, dir: string): boolean {
+  const r = resolve(path)
+  const d = resolve(dir)
+  return r === d || r.startsWith(`${d}/`)
+}
+
+/** Every `/media/...` or `/files/...` path a content file names (outside an address of another site) with no pulled file. */
+export function mediaReferenceProblems(files: readonly ContentFile[], media: ReadonlySet<string>): string[] {
+  const problems: string[] = []
+  const REF = /(?<![A-Za-z0-9._~:/%-])\/(?:media|files)\/[A-Za-z0-9._/%-]+/g
+  for (const f of files)
+    for (const m of f.text.matchAll(REF)) {
+      const p = m[0].replace(/[.,]+$/, '')
+      let decoded = p
+      try {
+        decoded = decodeURIComponent(p)
+      } catch {
+        // not an encoded path
+      }
+      if (!media.has(p) && !media.has(decoded))
+        problems.push(`${f.path}: ${p} has no file in Strapi (moved, renamed or deleted in the media library)`)
+    }
+  return [...new Set(problems)]
+}
+
+/**
+ * Moves the pulled tree into `out`: its Strapi files of content/ (the others stay) and public/media and public/files.
+ * The previous files are moved aside first and put back when any step fails, so a failed replace leaves the tree as it
+ * was.
+ */
 function replace(stage: string, out: string): void {
   const content = join(out, 'content')
-  for (const a of walk(content)) {
-    const p = a
-      .slice(content.length + 1)
-      .split('\\')
-      .join('/')
-    if (heldByStrapi(p)) rmSync(a)
+  const aside = join(stage, 'previous')
+  const done: [from: string, to: string][] = []
+  const move = (from: string, to: string) => {
+    mkdirSync(dirname(to), { recursive: true })
+    renameSync(from, to)
+    done.push([from, to])
   }
-  for (const a of walk(join(stage, 'content'))) {
-    const p = join(content, a.slice(join(stage, 'content').length + 1))
-    mkdirSync(dirname(p), { recursive: true })
-    renameSync(a, p)
-  }
-  for (const root of ['media', 'files']) {
-    const target = join(out, 'public', root)
-    rmSync(target, { recursive: true, force: true })
-    const from = join(stage, 'public', root)
-    mkdirSync(dirname(target), { recursive: true })
-    if (existsSync(from)) renameSync(from, target)
-    else mkdirSync(target, { recursive: true })
+  try {
+    for (const a of walk(content)) {
+      const p = a
+        .slice(content.length + 1)
+        .split('\\')
+        .join('/')
+      if (heldByStrapi(p)) move(a, join(aside, 'content', p))
+    }
+    for (const root of ['media', 'files']) {
+      const target = join(out, 'public', root)
+      if (existsSync(target)) move(target, join(aside, 'public', root))
+    }
+    for (const a of walk(join(stage, 'content'))) move(a, join(content, a.slice(join(stage, 'content').length + 1)))
+    for (const root of ['media', 'files']) {
+      const from = join(stage, 'public', root)
+      const target = join(out, 'public', root)
+      if (existsSync(from)) move(from, target)
+      else mkdirSync(target, { recursive: true })
+    }
+  } catch (err) {
+    // undo in reverse order: the new files go back to the stage, the previous ones to their places
+    for (const [from, to] of done.reverse()) {
+      try {
+        mkdirSync(dirname(from), { recursive: true })
+        renameSync(to, from)
+      } catch {
+        // keep undoing the rest
+      }
+    }
+    throw err
   }
 }

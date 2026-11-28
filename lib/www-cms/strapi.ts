@@ -91,7 +91,8 @@ export async function readFolders(client: Client): Promise<StrapiFolder[]> {
 
 /**
  * Every upload, from GET /api/upload/files: the list route a read-only token reaches (5.64.0 keeps /files/page from it).
- * It answers a plain list without `meta` and pages by `start` and `limit`, so the read pages at PAGE_SIZE until a shorter page and fails on a page
+ * It answers a plain list without `meta` and pages by `start` and `limit`, so the read pages at PAGE_SIZE until a shorter page,
+ * checks that nothing follows that page, and fails on a page
  * longer than PAGE_SIZE: a changed limit can stop the read, never shorten it.
  */
 export async function readUploads(client: Client): Promise<Upload[]> {
@@ -108,7 +109,18 @@ export async function readUploads(client: Client): Promise<Upload[]> {
         `GET /api/upload/files page ${page}: ${a.length} files, more than the page size ${PAGE_SIZE}`,
       )
     out.push(...(a as Upload[]))
-    if (a.length < PAGE_SIZE) return out
+    if (a.length < PAGE_SIZE) {
+      // a short page ends the list only if nothing follows it: a limit below PAGE_SIZE would look the same
+      const more = await client.json('GET', '/api/upload/files', {
+        query: { start: out.length, limit: 1, sort: ['id:asc'] },
+      })
+      if (Array.isArray(more) && more.length > 0)
+        throw new StrapiError(
+          'answer',
+          `GET /api/upload/files: a page of ${a.length} files was not the last; check the limit of the upload route`,
+        )
+      return out
+    }
   }
 }
 

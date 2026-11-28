@@ -9,6 +9,9 @@ import { entriesOf, sourceOf } from '../../lib/www-cms/files.ts'
 import { toDocument, typeOf, type MediaIndex } from '../../lib/www-cms/model.ts'
 import { walk } from '../../lib/www-cms/tree.ts'
 
+/** A raw link to a media file in content, as the pull's reference check reads it. */
+export const RAW_MEDIA = /(?<![A-Za-z0-9._~:/%-])\/(?:media|files)\/[A-Za-z0-9._/%-]+/g
+
 export const ROOT = join(import.meta.dirname, '..', '..')
 const WWW = join(ROOT, 'www')
 
@@ -65,6 +68,9 @@ export function miniTree(): { dir: string; media: string[] } {
     for (const e of entriesOf(source, { path, text: readFileSync(abs, 'utf8') }))
       toDocument(type, e, { media: recorder })
   }
+  // and every file a body or field links to by its raw path (the pull refuses a link without its file)
+  for (const abs of walk(join(dir, 'content')))
+    for (const m of readFileSync(abs, 'utf8').matchAll(RAW_MEDIA)) used.add(m[0].replace(/[.,]+$/, ''))
   for (const p of used) {
     mkdirSync(dirname(join(dir, 'public', p)), { recursive: true })
     cpSync(join(WWW, 'public', p), join(dir, 'public', p))
