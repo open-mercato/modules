@@ -163,11 +163,17 @@ export function createClient(opts: ClientOptions): Client {
             method,
             headers,
             body,
-            redirect: 'error',
+            redirect: 'manual',
             signal: AbortSignal.timeout(timeoutMs),
           })
           return { status: r.status, bytes: new Uint8Array(await r.arrayBuffer()) }
         })
+        if (answer.status >= 300 && answer.status < 400)
+          throw new StrapiError(
+            'answer',
+            `${at} answered ${answer.status}, a redirect: give --strapi the address it answers at`,
+            answer.status,
+          )
         if (answer.status >= 500 || answer.status === 429) last = `answered ${answer.status}`
         else if (accept(answer.status)) return answer
         else {

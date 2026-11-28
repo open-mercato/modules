@@ -367,7 +367,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
     const now = media.files.find((m) => m.file.documentId === c.documentId)
     if (now && now.path !== c.path)
       report.problems.push(
-        `${c.path}: the upload moved to ${now.path}; set its caption back to ${c.path.slice(0, c.path.lastIndexOf('/'))} in Strapi`,
+        `${c.path}: the upload is at ${now.path} now (its caption or its name changed in the media library); give it back its path ${c.path}, or link the new one`,
       )
   }
   const cached = new Map((cache?.media ?? []).map((m) => [m.path, m]))
@@ -415,6 +415,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
   // a fresh directory beside the tree, so the replace is a rename on the same disk
   mkdirSync(dirname(out), { recursive: true })
   const stage = mkdtempSync(join(dirname(out), '.www-pull-'))
+  let keep = false
   try {
     for (const f of files) {
       const p = join(stage, 'content', f.path)
@@ -433,6 +434,12 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
     try {
       replace(stage, out)
     } catch (err) {
+      if (err instanceof ReplaceUndoError) {
+        keep = true
+        throw new PullEnvError(
+          `the tree could not be replaced (${err.message}) and ${err.failed} moves could not be undone; the previous files are in ${join(stage, 'previous')}`,
+        )
+      }
       throw new PullEnvError(
         `the tree could not be replaced, the previous one is back in place: ${(err as Error).message}`,
       )
@@ -441,7 +448,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
     report.written = true
     return report
   } finally {
-    rmSync(stage, { recursive: true, force: true })
+    if (!keep) rmSync(stage, { recursive: true, force: true })
   }
 }
 
@@ -481,7 +488,8 @@ function inside(path: string, dir: string): boolean {
 export function mediaReferenceProblems(files: readonly ContentFile[], media: ReadonlySet<string>): string[] {
   const problems: string[] = []
   const REF = /(?<![A-Za-z0-9._~:/%-])\/(?:media|files)\/[A-Za-z0-9._/%-]+/g
-  for (const f of files)
+  // redirects.yaml names old paths on purpose (a `from` of a file gone, a /files/* splat)
+  for (const f of files.filter((x) => x.path !== 'redirects.yaml'))
     for (const m of f.text.matchAll(REF)) {
       const p = m[0].replace(/[.,]+$/, '')
       let decoded = p
@@ -505,6 +513,7 @@ function replace(stage: string, out: string): void {
   const content = join(out, 'content')
   const aside = join(stage, 'previous')
   const done: [from: string, to: string][] = []
+  let undoFailed = 0
   const move = (from: string, to: string) => {
     mkdirSync(dirname(to), { recursive: true })
     renameSync(from, to)
@@ -536,9 +545,20 @@ function replace(stage: string, out: string): void {
         mkdirSync(dirname(from), { recursive: true })
         renameSync(to, from)
       } catch {
-        // keep undoing the rest
+        // keep undoing the rest, and keep the stage: it holds what could not go back
+        undoFailed++
       }
     }
+    if (undoFailed > 0) throw new ReplaceUndoError(undoFailed, (err as Error).message)
     throw err
+  }
+}
+
+/** A replace whose undo failed too: the stage, kept, holds the previous files that did not go back. */
+class ReplaceUndoError extends Error {
+  readonly failed: number
+  constructor(failed: number, cause: string) {
+    super(cause)
+    this.failed = failed
   }
 }

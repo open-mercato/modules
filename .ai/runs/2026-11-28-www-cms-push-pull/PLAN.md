@@ -14,6 +14,7 @@ Base: main (a16f320)
 | 3     | 3.2           | yarn om www-pull with --check, --drafts, --status, removed URLs, media cache | inline | done   | ec43ccb |
 | 3     | 3.2-recording | REST fixture recorded from a throwaway local instance, rehearsal fixes | inline | done   | ebf69ff |
 | 3     | 3.2-review-fix | Review findings: token origin and header, moved media, replace undo | inline | done   | ce907b1 |
+| 3     | 3.2-review-fix-b | Re-review minors: redirects named, undo keeps its stage, redirects.yaml links | inline | done   | 635be9a |
 
 ## Goal
 

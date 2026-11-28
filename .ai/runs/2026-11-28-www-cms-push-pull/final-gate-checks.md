@@ -9,9 +9,9 @@ The repository's gate (AGENTS.md, Checks), in place of the `npm` commands of the
 | Command      | Result                                                                 |
 | ------------ | ---------------------------------------------------------------------- |
 | `yarn check` | exit 0: tsc (root, mcp, workers), astro check x2 0 errors, Prettier clean, check-text 800 files clean |
-| `yarn test`  | 219 files passed, 2549 tests passed, 176 skipped (after the review fixes) |
+| `yarn test`  | 219 files passed, 2551 tests passed, 176 skipped (after the review fixes) |
 
-`test/www-cms`: 174 tests (38 of them in push.test.ts and pull.test.ts; the rest model, drift, source, workflows). Root `package.json` and `yarn.lock`
+`test/www-cms`: 176 tests (40 of them in push.test.ts and pull.test.ts; the rest model, drift, source, workflows). Root `package.json` and `yarn.lock`
 unchanged (`git diff origin/main --stat -- package.json yarn.lock` is empty).
 
 ## Integration suite
@@ -36,3 +36,8 @@ A fresh reviewer applied the `om-code-review` checklist: request changes, 3 majo
 carry refused before any request; a moved upload and a raw link without its file fail the pull; a short upload page
 probed; every written path checked; a failed replace undone; an empty snapshot noted; the page-size test seeds the
 tree). Nits taken: `redirect: 'error'`. Not taken: parallel `sameBytes` in the push (a one-off import, 71 MB).
+
+Re-review of e8d05ac: approve; its three minors fixed in 3.2-review-fix-b (a 3xx named as a redirect, not retried as
+unreachable; a replace whose undo fails keeps its stage and names it; redirects.yaml may name a file that is gone).
+Nits left: an upload deleted between two pages of the list can be skipped once; the manifest write is outside the undo
+(the next run downloads again).

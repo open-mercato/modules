@@ -476,6 +476,29 @@ describe('www-pull after the review: the token stays on the instance, media path
     expect((await client.bytes(ok.url)).length).toBe(ok.bytes.length)
   })
 
+  it('names a redirect of the instance instead of following it, without a retry', async () => {
+    const moved = await startFakeStrapi({ override: () => ({ status: 301, body: {} }) })
+    try {
+      const client = createClient({ url: moved.url, token: 'test-read' })
+      await expect(client.json('GET', '/api/landings')).rejects.toThrow(
+        /answered 301, a redirect: give --strapi the address/,
+      )
+      expect(moved.log.length).toBe(1)
+    } finally {
+      await moved.close()
+    }
+  })
+
+  it('lets redirects.yaml name a file that is gone, and nothing else', () => {
+    const files = [
+      { path: 'redirects.yaml', text: '- from: /files/old.pdf\n  to: /\n  status: 301\n  source: manual\n' },
+      { path: 'pages/x.yaml', text: 'body: see /files/old.pdf and https://example.com/media/x.png\n' },
+    ]
+    expect(mediaReferenceProblems(files, new Set())).toEqual([
+      'pages/x.yaml: /files/old.pdf has no file in Strapi (moved, renamed or deleted in the media library)',
+    ])
+  })
+
   it('refuses a token a header cannot carry without printing it', async () => {
     const secret = 'abc\ndef-not-printed'
     const r = await pullOnce(fake.url, tmp('header'), { STRAPI_READ_TOKEN: secret })
@@ -498,7 +521,7 @@ describe('www-pull after the review: the token stays on the instance, media path
       try {
         const r = await pullOnce(fake.url, out, ENV, '--drafts')
         expect(r.code, r.out).toBe(1)
-        expect(r.out).toContain(`invalid: ${raw}: the upload moved to /media/uploads/`)
+        expect(r.out).toContain(`invalid: ${raw}: the upload is at /media/uploads/`)
         expect(r.out).toContain(`invalid: case-studies/arvo-configurator.md: ${raw} has no file in Strapi`)
         expect(snapshotOf(out)).toEqual(before)
       } finally {
