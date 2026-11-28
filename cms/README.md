@@ -108,8 +108,12 @@ Strapi with `BACKUP_EXPORT_KEY` (never `--no-encrypt`); the Sunday backup carrie
 
 ```sh
 docker compose -f cms/compose.yaml exec strapi sh -c \
-  'node node_modules/@strapi/strapi/bin/strapi.js export --key "$BACKUP_EXPORT_KEY" --file "exports/strapi-export-$(date -u +%Y%m%d)"'
+  'node node_modules/@strapi/strapi/bin/strapi.js export --key "$BACKUP_EXPORT_KEY" --file "exports/strapi-export-$(date -u +%Y%m%d)" &&
+   find exports -maxdepth 1 -type f -name "strapi-export-*" ! -name "strapi-export-$(date -u +%Y%m%d)*" -delete'
 ```
+
+Each archive carries every media file, so the command keeps only the newest one in the `exports` volume; the older
+ones live on in the weekly backups.
 
 Admin users and API tokens are not in an export: after an import they are recreated (the roles seed invites the four
 accounts again). `strapi transfer` is not used: it has no encryption.
