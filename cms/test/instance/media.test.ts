@@ -1,7 +1,7 @@
 // Step 2.1 of the spec on a started instance with an empty database: the Media Library settings of A7 are off again
 // after a Super Admin turns them on and Strapi restarts; a JPEG, a PNG, a WebP and an SVG with metadata keep their
-// SHA-256 through an upload (the stored file on the volume and the file Strapi serves); and the answer to an anonymous
-// GET of an uploaded file under /uploads/ is printed for the Risks of the spec.
+// SHA-256 through an upload (the stored file on the volume and the file Strapi serves); and an anonymous GET of an
+// uploaded file under /uploads/ answers 200, as the Risks of the spec record.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
@@ -87,14 +87,15 @@ test('a JPEG, a PNG, a WebP and an SVG with metadata keep their SHA-256', async 
   }
 })
 
-test('an anonymous GET of an uploaded file under /uploads/ is recorded', async () => {
+test('an anonymous GET of an uploaded file under /uploads/ answers 200', async () => {
   const token = await freshToken()
   const list = await call('/upload/files?pageSize=1', { token })
   const [file] = (list.body as { results: Upload[] }).results
   assert.ok(file, 'an uploaded file')
   const r = await fetch(`${CMS_URL()}${file.url}`)
   console.log(`anonymous GET ${file.url}: ${r.status} ${r.headers.get('content-type')}`)
-  assert.ok([200, 401, 403, 404].includes(r.status), `answer ${r.status}`)
+  // the answer the spec's Risks records (Draft media are public by URL); another answer reopens that Risk
+  assert.equal(r.status, 200, `answer ${r.status}: update the Risks of the spec`)
 })
 
 const pick = (s: Record<string, unknown>) => ({
