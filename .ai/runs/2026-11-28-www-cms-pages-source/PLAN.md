@@ -11,7 +11,7 @@ Base: main (1b8b688)
 | Phase | Step | Title                                                                        | Exec   | Status | Commit |
 | ----- | ---- | ---------------------------------------------------------------------------- | ------ | ------ | ------ |
 | 4     | 4.1  | pages.yml reads www content by WWW_CONTENT_SOURCE, with the snapshot job      | inline | done   | ae9a529 |
-| 4     | 4.2  | A9: one issue for a failed publish build or a snapshot fallback               | inline | todo   | —      |
+| 4     | 4.2  | A9: one issue for a failed publish build or a snapshot fallback               | inline | done   | fb900f9 |
 
 ## Goal
 

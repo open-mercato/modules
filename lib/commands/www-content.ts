@@ -11,16 +11,19 @@
 //   `compare` (shadow) counts the files that differ from www/ and changes nothing; `replace` (strapi) lays the pull
 //   over www/. A failed or invalid pull gives the snapshot or a failure as source.ts says. It writes `use`, `commit`,
 //   `snapshot` (true when the snapshot job is to write <dir>/snapshot), `newest` and `issue`; a failure ends with exit 1.
+//   For the issue of A9 (lib/www-cms/issue.ts, Step 4.2) it writes <dir>/issue/issue.md when the decision updates the
+//   issue, and <dir>/issue/issue-failed.md when it would close it (the text for a publish build that fails later).
 // - `apply --from <dir>` (step Use www snapshot, no secret): lays a snapshot tree over www/.
 //
 // `--www <dir>` (default `www`) is the site tree, for tests. Summary lines go to GITHUB_STEP_SUMMARY when it is set.
 // Exit 0 done, 1 the build must stop (a failure of source.ts, a tree that is not one), 2 environment.
-import { appendFileSync, mkdirSync, rmSync } from 'node:fs'
+import { appendFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
 import type { CommandContext } from '../cli.ts'
 import { EXIT_ENV, EXIT_OK, EXIT_VALIDATION } from '../cli.ts'
 import { differences, pull, PullEnvError, type PullReport } from '../www-cms/pull.ts'
 import { createClient, StrapiError, tokenProblem } from '../www-cms/rest.ts'
+import { buildFailedBody, issueBody, pullResultOf } from '../www-cms/issue.ts'
 import { applyTree, snapshotTree } from '../www-cms/snapshot.ts'
 import { decideContent, planContent, pullMode, type Decision, type PullResult } from '../www-cms/source.ts'
 import { reportLines } from './www-pull.ts'
@@ -162,8 +165,7 @@ async function readStrapi(
       return { result: { kind: 'unreachable', status: 'STRAPI_URL is not an address' } }
     throw err
   }
-  if (report.problems.length > 0) return { result: { kind: 'invalid', problems: report.problems }, report }
-  return { result: { kind: 'good', newest: report.newest ?? 'none' }, report }
+  return { result: pullResultOf(report), report }
 }
 
 async function read(args: Args, env: Env, root: string, at: (p: string) => string, out: Out): Promise<number> {
@@ -208,6 +210,19 @@ async function read(args: Args, env: Env, root: string, at: (p: string) => strin
   summary(env, [...lines, ...problems, ...list])
 
   outputs(env, out, decisionOutputs(d, report?.newest ?? null))
+  const runUrl =
+    env.GITHUB_SERVER_URL && env.GITHUB_REPOSITORY && env.GITHUB_RUN_ID
+      ? `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}`
+      : 'the run'
+  const issueDir = join(work, 'issue')
+  rmSync(issueDir, { recursive: true, force: true })
+  if (d.issue !== 'none') mkdirSync(issueDir, { recursive: true })
+  if (d.issue === 'update')
+    writeFileSync(
+      join(issueDir, 'issue.md'),
+      issueBody({ decision: d, pull: result, input: env.WWW_CONTENT_INPUT ?? '', runUrl }),
+    )
+  if (d.issue === 'close') writeFileSync(join(issueDir, 'issue-failed.md'), buildFailedBody(runUrl))
   if (d.use === 'fail') return fail(out, d.reason)
   if (d.use === 'pull') {
     const n = applyTree(pulled, www)

@@ -177,3 +177,38 @@ describe('pages.yml: the main site content (Step 4.1)', () => {
     expect(step('Checkout').with?.ref).toBe("${{ github.ref == 'refs/heads/main' && 'main' || github.sha }}")
   })
 })
+
+// Step 4.2: the issue of A9 is written by its own job, with issues: write on that job only and the fixed title of
+// lib/www-cms/issue.ts; no assignee, label or mention.
+describe('pages.yml: the issue of A9 (Step 4.2)', () => {
+  interface Job {
+    needs?: string[]
+    if?: string
+    permissions?: Record<string, string>
+    steps: (Step & { env?: Record<string, string> })[]
+  }
+  const pages = parse(text('.github/workflows/pages.yml')) as { jobs: Record<string, Job> }
+  const job = pages.jobs['www-issue']!
+
+  it('runs after build and deploy, from main, only when Read www content asked to update or close', () => {
+    expect(job.needs).toEqual(['build', 'deploy'])
+    expect(job.if).toBe(
+      "${{ always() && github.ref == 'refs/heads/main' && (needs.build.outputs.www-issue == 'update' || needs.build.outputs.www-issue == 'close') }}",
+    )
+    expect(job.permissions).toEqual({ issues: 'write' })
+    for (const [name, j] of Object.entries(pages.jobs))
+      if (name !== 'www-issue') expect(j.permissions?.issues, name).toBeUndefined()
+  })
+
+  it('finds the open issue by the fixed title, and creates, edits or closes it without assignee, label or mention', async () => {
+    const { ISSUE_TITLE } = await import('../../lib/www-cms/issue.ts')
+    const write = job.steps.find((s) => s.name === 'Write the issue')!
+    expect(write.env?.TITLE).toBe(ISSUE_TITLE)
+    expect(write.env?.GH_TOKEN).toBe('${{ github.token }}')
+    const run = write.run ?? ''
+    expect(run).toContain('gh issue create --title "$TITLE" --body-file "$body"')
+    expect(run).toContain('gh issue edit "$number" --body-file "$body"')
+    expect(run).toContain('gh issue close "$number"')
+    expect(run).not.toMatch(/--assignee|--label|@/)
+  })
+})

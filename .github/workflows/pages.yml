@@ -44,7 +44,9 @@
 # publish falls back to the branch www-content (a publish build fails). STRAPI_URL and STRAPI_READ_TOKEN are read in
 # `Read www content` only. After a good deploy of pulled content, the job `www-snapshot` writes it to www-content
 # (`contents: write` on that job only). `www_content: snapshot` with a `snapshot` commit builds that commit of
-# www-content and never reads Strapi (rollback). A run on another ref than main builds that ref and deploys nothing.
+# www-content and never reads Strapi (rollback). A failed publish build or a snapshot fallback creates or updates one
+# issue (job `www-issue`, `issues: write` on that job only), and the next good Strapi build closes it. A run on another
+# ref than main builds that ref and deploys nothing.
 name: pages
 
 on:
@@ -113,6 +115,7 @@ jobs:
       commit: ${{ steps.checkout.outputs.commit }}
       www-snapshot: ${{ steps.read.outputs.snapshot }}
       www-newest: ${{ steps.read.outputs.newest }}
+      www-issue: ${{ steps.read.outputs.issue }}
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
       MCP_URL: ${{ vars.MCP_URL }}
@@ -208,6 +211,17 @@ jobs:
             exit 1
           fi
           yarn om www-content read --work "$RUNNER_TEMP/www" "${snap[@]}"
+
+      - name: Upload www issue text
+        # the text of the issue of A9 for the job www-issue (lib/www-cms/issue.ts), also when Read www content stopped
+        # the build; from main only, as the issue
+        if: ${{ always() && github.ref == 'refs/heads/main' && (steps.read.outputs.issue == 'update' || steps.read.outputs.issue == 'close') }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: www-issue
+          path: ${{ runner.temp }}/www/issue
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Use www snapshot
         # a commit of www-content laid over www/ (lib/www-cms/snapshot.ts): the fallback of Read www content (the tip it
@@ -498,6 +512,63 @@ jobs:
           git commit -qm "www-content: ${NEWEST:-none}"
           git push -q origin HEAD:refs/heads/www-content
           echo "Snapshot written: www-content $(git rev-parse --short=12 HEAD), newest change ${NEWEST:-none}." >> "$GITHUB_STEP_SUMMARY"
+
+  # The issue of A9 (Strapi CMS spec, Step 4.2): one issue of this repository under a fixed title. A build that read
+  # Strapi and stopped (a publish) or fell back to the snapshot creates it, or updates its text when it is open, with the
+  # problems by file and field (lib/www-cms/issue.ts); a publish build that read Strapi without a problem and then
+  # failed later does the same with that cause. The next build that read Strapi without a problem and deployed closes
+  # it. No assignee, no label, no mention; `issues: write` on this job only. Never runs while WWW_CONTENT_SOURCE is
+  # unset, files or shadow (Read www content then sets no update or close), and only on main.
+  www-issue:
+    name: www issue
+    needs:
+      - build
+      - deploy
+    if: ${{ always() && github.ref == 'refs/heads/main' && (needs.build.outputs.www-issue == 'update' || needs.build.outputs.www-issue == 'close') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Download issue text
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: www-issue
+          path: issue
+
+      - name: Write the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Main site content from Strapi is not live
+          ACTION: ${{ needs.build.outputs.www-issue }}
+          BUILD: ${{ needs.build.result }}
+          DEPLOY: ${{ needs.deploy.result }}
+          INPUT: ${{ inputs.www_content }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          number="$(gh issue list --state open --limit 200 --json number,title --jq 'map(select(.title == env.TITLE)) | .[0].number // empty')"
+          body=""
+          if [ "$ACTION" = "update" ]; then
+            body=issue/issue.md
+          elif [ "$BUILD" = "success" ] && { [ "$DEPLOY" = "success" ] || [ "$DEPLOY" = "skipped" ]; }; then
+            if [ -n "$number" ]; then
+              gh issue close "$number" --comment "Closed by $RUN_URL: it read Strapi without a problem and the build went through."
+              echo "Issue $number closed." >> "$GITHUB_STEP_SUMMARY"
+            fi
+            exit 0
+          elif [ "$INPUT" = "publish" ] && { [ "$BUILD" = "failure" ] || [ "$DEPLOY" = "failure" ]; }; then
+            body=issue/issue-failed.md
+          else
+            exit 0
+          fi
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$body" >/dev/null
+            echo "Issue $number updated." >> "$GITHUB_STEP_SUMMARY"
+          else
+            url="$(gh issue create --title "$TITLE" --body-file "$body")"
+            echo "Issue opened: $url" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
   # Preview of the /run layout (docs/RUNBOOK.md, Preview of the /run layout): the nested build with fixed values,
   # deployed to the branch alias run-preview of the same project, https://run-preview.<project>.pages.dev, so the

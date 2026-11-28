@@ -192,6 +192,7 @@ describe('www-content read against a fake Strapi', () => {
       expect(r.output).toMatchObject({ use: 'files', snapshot: 'true', issue: 'none', commit: '' })
       expect(r.output.newest).toMatch(/^\d{4}-\d\d-\d\dT/)
       expect(r.summary).toContain('Strapi shadow: 0 files differ.')
+      expect(existsSync(join(s.work, 'issue'))).toBe(false)
       expect(bytesOf(s.www)).toEqual(before)
       // the snapshot: the pulled tree, redirects.yaml with its manual rules only
       const snap = join(s.work, 'snapshot')
@@ -252,6 +253,11 @@ describe('www-content read against a fake Strapi', () => {
       })
       expect(r.code, r.out).toBe(0)
       expect(r.output).toMatchObject({ use: 'pull', snapshot: 'true', issue: 'close' })
+      // the text for a publish build that fails after this step (Step 4.2), and no update text
+      expect(readFileSync(join(s.work, 'issue', 'issue-failed.md'), 'utf8')).toContain(
+        'Strapi was read without a problem',
+      )
+      expect(existsSync(join(s.work, 'issue', 'issue.md'))).toBe(false)
       expect(r.summary).toContain('Main site content from Strapi, newest change ')
       expect(bytesOf(s.www)).toEqual(want)
     } finally {
@@ -289,6 +295,10 @@ describe('www-content read against a fake Strapi', () => {
       expect(r.code, r.out).toBe(1)
       expect(r.output).toMatchObject({ use: 'fail', issue: 'update' })
       expect(r.out).toContain('::error title=www content::Strapi unreachable: the variable STRAPI_URL is not set.')
+      // the issue text of A9 (Step 4.2)
+      expect(readFileSync(join(s.work, 'issue', 'issue.md'), 'utf8')).toContain(
+        '**Strapi unreachable.** The answer of the pull:\n\n```text\nthe variable STRAPI_URL is not set\n```',
+      )
       expect(bytesOf(s.www)).toEqual(before)
     } finally {
       s.done()
@@ -335,7 +345,9 @@ describe('www-content read against a fake Strapi', () => {
   }, 60_000)
 
   it('refuses to read when the plan pulls nothing', async () => {
-    const r = await run(['read', '--work', tmp('none')], { STRAPI_READ_TOKEN: 'x' })
+    const work = tmp('none')
+    const r = await run(['read', '--work', work], { STRAPI_READ_TOKEN: 'x' })
+    rmSync(work, { recursive: true, force: true })
     expect(r.code).toBe(2)
   })
 

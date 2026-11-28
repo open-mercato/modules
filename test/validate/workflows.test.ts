@@ -311,6 +311,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       'build',
       'deploy',
       'www-snapshot',
+      'www-issue',
       'preview-build',
       'preview',
       'www-preview-build',
@@ -330,6 +331,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       commit: '${{ steps.checkout.outputs.commit }}',
       'www-snapshot': '${{ steps.read.outputs.snapshot }}',
       'www-newest': '${{ steps.read.outputs.newest }}',
+      'www-issue': '${{ steps.read.outputs.issue }}',
     })
     const b = build.steps
     expect(b.map((x) => x.name)).toEqual([
@@ -343,6 +345,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
       // the main site's content (Strapi CMS spec, Step 4.1; test/www-cms/workflows.test.ts)
       'Choose www content',
       'Read www content',
+      'Upload www issue text',
       'Use www snapshot',
       'Build',
       'Lay out the upload',
@@ -362,7 +365,9 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     })
     // the build and its checks run with or without the deploy settings
     // (Read www content and Use www snapshot run by WWW_CONTENT_SOURCE and the inputs, Step 4.1 of the Strapi CMS spec)
-    for (const x of b.slice(0, 16).filter((x) => !['Read www content', 'Use www snapshot'].includes(x.name ?? '')))
+    for (const x of b
+      .slice(0, 17)
+      .filter((x) => !['Read www content', 'Upload www issue text', 'Use www snapshot'].includes(x.name ?? '')))
       expect(x.if, x.name).toBeUndefined()
     // a variable set that makes no layout stops before the build (audit of 27 Nov 2026)
     expect(b.find((x) => x.name === 'Check layout variables')?.run).toBe('yarn om pages-site --settings')
@@ -491,7 +496,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(pb['timeout-minutes']).toBe(15)
     expect(pv['timeout-minutes']).toBe(15)
     // the outputs of the build job but those of the main site's content (Strapi CMS spec, Step 4.1)
-    const { 'www-snapshot': _snapshot, 'www-newest': _newest, ...shared } = build.outputs ?? {}
+    const { 'www-snapshot': _snapshot, 'www-newest': _newest, 'www-issue': _issue, ...shared } = build.outputs ?? {}
     expect(pb.outputs).toEqual(shared)
     const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
     for (const n of [
@@ -555,7 +560,7 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
     expect(pv.env).toEqual({ ...fixed, PREVIEW_BRANCH: 'www-preview' })
     expect(pv.environment).toEqual({ name: 'cloudflare', url: '${{ steps.summary.outputs.url }}' })
     // the outputs of the build job but those of the main site's content (Strapi CMS spec, Step 4.1)
-    const { 'www-snapshot': _snapshot, 'www-newest': _newest, ...shared } = build.outputs ?? {}
+    const { 'www-snapshot': _snapshot, 'www-newest': _newest, 'www-issue': _issue, ...shared } = build.outputs ?? {}
     expect(pb.outputs).toEqual(shared)
     const byName = (j: Job, n: string) => j.steps.find((x) => x.name === n)
     expect(pb.steps.map((x) => x.name)).toEqual([
