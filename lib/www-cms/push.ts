@@ -3,7 +3,8 @@
 //
 // - Media first, matched by folder, name and SHA-256: a file of the same path and bytes is the same upload, so a
 //   second run uploads nothing; other bytes replace the upload in place (same id, so documents keep it). Each file goes
-//   into the Media Library folder of its directory (`/media/blog`). Strapi 5.64.0 creates folders only through its
+//   into the Media Library folder of its directory (`/media/blog`), and that folder's path into its caption, from which
+//   the pull reads it (the content API does not tell an API token which folder a file is in). Strapi 5.64.0 creates folders only through its
 //   admin API, which an API token does not reach, so the folders must exist: the push names the missing ones and
 //   writes nothing.
 // - Documents in the spec's order: dictionaries, authors and categories, then partners, case studies, posts, landings
@@ -262,7 +263,7 @@ export async function push(opts: PushOptions): Promise<PushReport> {
     log(`missing Media Library folders: ${report.missingFolders.join(', ')}`)
     if (!dryRun) return report
   }
-  const index = strapiMediaIndex(await readUploads(client), folders)
+  const index = strapiMediaIndex(await readUploads(client))
   const uploads = new Map<string, Upload>(index.byPath)
   for (const m of local) {
     const size = statSync(m.abs).size
@@ -281,7 +282,8 @@ export async function push(opts: PushOptions): Promise<PushReport> {
     log(`${held ? 'replace' : 'upload'} ${m.path}`)
     if (dryRun) continue
     const form = new FormData()
-    form.append('fileInfo', JSON.stringify({ name: nameOf(m.path) }))
+    // the site folder in the caption too: the content API does not tell which folder a file is in (lib/www-cms/strapi.ts)
+    form.append('fileInfo', JSON.stringify({ name: nameOf(m.path), caption: dirOf(m.path) }))
     if (!held) form.append('folder', String(folderId.get(dirOf(m.path))))
     form.append('files', new Blob([bytes], { type: mimeOf(m.path) }), nameOf(m.path))
     const answer = await client.json('POST', '/api/upload', {

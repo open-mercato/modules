@@ -3,7 +3,7 @@
 // replaced. The only reader of Strapi.
 //
 // - Read: first an anonymous GET of every type, which must not answer 200 (the Public role is closed); then the media
-//   library (folders and uploads) and every type, paged at exactly 100 with the populate of the mapping, published
+//   library (its uploads, each at the site folder of its caption) and every type, paged at exactly 100 with the populate of the mapping, published
 //   versions unless `--status draft` (the draft version of every published document). `--drafts` adds the documents
 //   never published, written with `draft: true`, for the types whose files hold a draft.
 // - Write: the files through lib/www-cms/files.ts (Prettier, keys in the mapping's order, no run time in them), the
@@ -40,7 +40,7 @@ import { entriesOf, filesOf, sourceOf, type ContentFile } from './files.ts'
 import { fromDocument, TYPES, type FileEntry, type StrapiDocument } from './model.ts'
 import { MAX_FILE_BYTES } from './push.ts'
 import { StrapiError, type Client } from './rest.ts'
-import { readFolders, readType, readUploads, strapiMediaIndex, type Status, type StrapiMediaIndex } from './strapi.ts'
+import { readType, readUploads, strapiMediaIndex, type Status, type StrapiMediaIndex } from './strapi.ts'
 import { heldByStrapi, readContent, readMedia, walk } from './tree.ts'
 
 export interface PullOptions {
@@ -273,7 +273,7 @@ export async function pull(opts: PullOptions): Promise<PullReport> {
 
   let media: StrapiMediaIndex
   try {
-    media = strapiMediaIndex(await readUploads(client), await readFolders(client))
+    media = strapiMediaIndex(await readUploads(client))
   } catch (err) {
     if (err instanceof StrapiError) throw err
     report.problems.push((err as Error).message)

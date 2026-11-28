@@ -7,13 +7,13 @@
 // drafts (and only STRAPI_READ_TOKEN otherwise).
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, relative } from 'node:path'
+import { join, relative } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { runPull } from '../../lib/commands/www-pull.ts'
 import { runPush } from '../../lib/commands/www-push.ts'
-import { mediaIndex, TYPES, typeOf } from '../../lib/www-cms/model.ts'
+import { TYPES, typeOf } from '../../lib/www-cms/model.ts'
 import { createClient } from '../../lib/www-cms/rest.ts'
-import { readType } from '../../lib/www-cms/strapi.ts'
+import { readType, readUploads, type Upload } from '../../lib/www-cms/strapi.ts'
 import { walk } from '../../lib/www-cms/tree.ts'
 import { startFakeStrapi, type FakeOptions, type FakeStrapi } from './fake-strapi.ts'
 import { miniTree, ROOT } from './mini-tree.ts'
@@ -69,8 +69,7 @@ describe('www-pull from the REST fixture of test/fixtures/strapi', () => {
   let fake: FakeStrapi
   let out: string
   beforeAll(async () => {
-    const paths = JSON.parse(readFileSync(join(FIXTURE, 'media.json'), 'utf8')) as string[]
-    const index = mediaIndex(paths)
+    const recorded = JSON.parse(readFileSync(join(FIXTURE, 'api', 'upload', 'files.json'), 'utf8')) as Upload[]
     fake = await startFakeStrapi({
       override: (method, url, token) => {
         if (method !== 'GET' || token === undefined) return undefined
@@ -78,15 +77,9 @@ describe('www-pull from the REST fixture of test/fixtures/strapi', () => {
         return t ? { status: 200, body: JSON.parse(readFileSync(join(FIXTURE, `${t.route}.json`), 'utf8')) } : undefined
       },
     })
-    for (const p of paths) {
-      const m = index.toMedia(p)
-      fake.addUpload(dirname(p), m.name, readFileSync(join(ROOT, 'www', 'public', p)), {
-        documentId: m.documentId,
-        url: m.url,
-        hash: m.hash,
-        ext: m.ext,
-        mime: m.mime,
-      })
+    for (const u of recorded) {
+      const { id: _id, ...fields } = u
+      fake.addUpload(u.caption!, u.name, readFileSync(join(ROOT, 'www', 'public', u.caption!, u.name)), fields)
     }
     out = tmp('fixture')
   })
@@ -106,7 +99,9 @@ describe('www-pull from the REST fixture of test/fixtures/strapi', () => {
       if (/^(landings|pages|blog|case-studies|partners|jobs)\//.test(path) || path === 'navigation.json')
         expect(readFileSync(p, 'utf8') === readFileSync(join(ROOT, 'www', 'content', path), 'utf8'), path).toBe(true)
     }
-    for (const p of JSON.parse(readFileSync(join(FIXTURE, 'media.json'), 'utf8')) as string[])
+    for (const p of (JSON.parse(readFileSync(join(FIXTURE, 'api', 'upload', 'files.json'), 'utf8')) as Upload[]).map(
+      (u) => `${u.caption}/${u.name}`,
+    ))
       expect(readFileSync(join(out, 'public', p)).equals(readFileSync(join(ROOT, 'www', 'public', p))), p).toBe(true)
     const manifest = JSON.parse(readFileSync(join(out, 'manifest.json'), 'utf8'))
     expect(manifest.version).toBe(1)
@@ -354,6 +349,38 @@ describe('www-pull reads every page and trusts no other paging', () => {
     }
   }, 60_000)
 
+  it('reads more than 100 uploads over several pages of start and limit, and fails on a page longer than 100', async () => {
+    const fake = await startFakeStrapi()
+    try {
+      for (let i = 0; i < 205; i++) fake.addUpload('/media/blog', `f-${i}.png`, new Uint8Array([i % 256]))
+      const client = createClient({ url: fake.url, token: 'test-read' })
+      expect((await readUploads(client)).length).toBe(205)
+      const starts = fake.log
+        .filter((l) => l.path === '/api/upload/files')
+        .map((l) => [l.query.get('start'), l.query.get('limit')])
+      expect(starts).toEqual([
+        ['0', '100'],
+        ['100', '100'],
+        ['200', '100'],
+      ])
+    } finally {
+      await fake.close()
+    }
+    const long = await startFakeStrapi({
+      override: (method, url) =>
+        url.pathname === '/api/upload/files'
+          ? { status: 200, body: Array.from({ length: 101 }, (_, i) => ({ id: i })) }
+          : undefined,
+    })
+    try {
+      await expect(readUploads(createClient({ url: long.url, token: 'test-read' }))).rejects.toThrow(
+        /101 files, more than the page size 100/,
+      )
+    } finally {
+      await long.close()
+    }
+  })
+
   it('ends with exit 2 when an answer pages at a size other than 100', async () => {
     const fake = await heldFake(tree)
     const out = tmp('size')
@@ -397,7 +424,9 @@ describe('www-pull reads every page and trusts no other paging', () => {
         return t[k as string]
       },
     })
-    const r = await pullOnce('http://127.0.0.1:9', tmp('token'), env, '--drafts')
+    const out = tmp('token')
+    const r = await pullOnce('http://127.0.0.1:9', out, env, '--drafts')
+    rmSync(out, { recursive: true, force: true })
     expect(r.code).toBe(2)
     expect(r.out).toMatch(/set STRAPI_DRAFTS_TOKEN/)
     expect(read).toEqual(['STRAPI_DRAFTS_TOKEN'])

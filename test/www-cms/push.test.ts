@@ -2,7 +2,7 @@
 // on 127.0.0.1, a random port; test/www-cms/fake-strapi.ts) with a small copy of the content tree. The push is
 // idempotent (a second run prints `0 changed` and writes nothing), creates relations in the spec's order (a related
 // document always exists before the document that points at it, landings in two passes) and uploads each media file
-// once, into the Media Library folder of its directory. A dry run writes nothing; the push refuses to run in CI, needs
+// once, into the Media Library folder of its directory and with that folder in its caption. A dry run writes nothing; the push refuses to run in CI, needs
 // the folders and its token, and never prints the token.
 import { rmSync, writeFileSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -11,7 +11,7 @@ import { runPush } from '../../lib/commands/www-push.ts'
 import { PUSH_ORDER } from '../../lib/www-cms/push.ts'
 import { fromDocument, TYPES, typeOf } from '../../lib/www-cms/model.ts'
 import { createClient } from '../../lib/www-cms/rest.ts'
-import { readFolders, readType, readUploads, strapiMediaIndex } from '../../lib/www-cms/strapi.ts'
+import { readType, readUploads, strapiMediaIndex } from '../../lib/www-cms/strapi.ts'
 import { entriesOfSource, readContent } from '../../lib/www-cms/tree.ts'
 import { startFakeStrapi, type FakeStrapi, type LogLine } from './fake-strapi.ts'
 import { miniTree, ROOT } from './mini-tree.ts'
@@ -83,6 +83,8 @@ describe('www-push against a fake Strapi', () => {
       const u = fake.uploads.find((x) => `${fake.folders.find((f) => f.id === x.folder)!.namePath}/${x.name}` === p)
       expect(u, p).toBeDefined()
       expect(Buffer.from(u!.bytes).equals(bytes), p).toBe(true)
+      // the content API does not show a file's folder to a token: the site folder rides in the caption as well
+      expect(u!.caption, p).toBe(p.slice(0, p.lastIndexOf('/')))
     }
   })
 
@@ -115,7 +117,7 @@ describe('www-push against a fake Strapi', () => {
 
   it('sets every relation to the documentId Strapi gave the related document', async () => {
     const client = createClient({ url: fake.url, token: FULL })
-    const media = strapiMediaIndex(await readUploads(client), await readFolders(client))
+    const media = strapiMediaIndex(await readUploads(client))
     const { bySource } = readContent(join(tree.dir, 'content'))
     for (const t of TYPES) {
       const want = entriesOfSource(t.source, bySource.get(t.source) ?? [])
@@ -305,5 +307,31 @@ describe('the push order', () => {
             PUSH_ORDER.indexOf(t.apiId as never),
           )
     expect(typeOf('redirects').apiId).toBe(PUSH_ORDER.at(-1))
+  })
+})
+
+describe('the site path of an upload', () => {
+  const file = (name: string, caption: string | null) =>
+    ({ id: 1, documentId: name, name, url: `/uploads/${name}`, ext: '', mime: '', hash: name, caption }) as const
+
+  it('is the site folder of its caption and its name, and /media/uploads for any other upload', () => {
+    const index = strapiMediaIndex([
+      file('a.png', '/media/blog'),
+      file('Team Photo.PNG', null),
+      file('b.png', 'a caption an editor wrote'),
+      file('c.png', '/media/../secrets'),
+    ])
+    expect(index.files.map((f) => f.path)).toEqual([
+      '/media/blog/a.png',
+      '/media/uploads/b.png',
+      '/media/uploads/c.png',
+      '/media/uploads/team-photo.png',
+    ])
+  })
+
+  it('refuses two uploads that reach the same path, naming both', () => {
+    expect(() =>
+      strapiMediaIndex([file('a.png', '/media/blog'), { ...file('a.png', '/media/blog'), documentId: 'other' }]),
+    ).toThrow(/\/media\/blog\/a\.png: the uploads a\.png \(a\.png\) and a\.png \(other\)/)
   })
 })

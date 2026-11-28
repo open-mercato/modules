@@ -1,30 +1,40 @@
 {
   "data": {
-    "id": 1,
-    "documentId": "0c1p2t208bmehs1rskf701jg",
+    "id": 2,
+    "documentId": "xtvjiyffje7xs9b3m6js9xi5",
+    "createdAt": "2026-11-28T01:34:38.610Z",
+    "updatedAt": "2026-11-28T01:34:38.610Z",
+    "publishedAt": "2026-11-28T01:34:38.622Z",
     "en": {
-      "id": 1,
+      "id": 3,
       "reviewedPrefix": "Reviewed",
       "sourcesLabel": "Sources:",
       "reviewedInline": "reviewed",
       "navLabel": "On this page",
       "detailsSummary": "Explore implementation and commercial details",
       "relatedTitle": "Related pages",
-      "marks": { "id": 2, "yes": "Available", "no": "Not included", "build": "Requires implementation" }
+      "marks": {
+        "id": 3,
+        "yes": "Available",
+        "no": "Not included",
+        "build": "Requires implementation"
+      }
     },
     "pl": {
-      "id": 3,
+      "id": 4,
       "reviewedPrefix": "Sprawdzono",
       "sourcesLabel": "Źródła:",
       "reviewedInline": "sprawdzono",
       "navLabel": "Na tej stronie",
       "detailsSummary": "Zobacz szczegóły wdrożenia i kosztów",
       "relatedTitle": "Powiązane strony",
-      "marks": { "id": 4, "yes": "Available", "no": "Not included", "build": "Wymaga wdrożenia" }
-    },
-    "createdAt": "2026-11-27T10:00:00.000Z",
-    "updatedAt": "2026-11-27T10:00:00.000Z",
-    "publishedAt": "2026-11-27T10:00:00.000Z"
+      "marks": {
+        "id": 4,
+        "yes": "Available",
+        "no": "Not included",
+        "build": "Wymaga wdrożenia"
+      }
+    }
   },
   "meta": {}
 }

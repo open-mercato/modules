@@ -1,31 +1,38 @@
 {
   "data": [
     {
-      "id": 1,
-      "documentId": "1x3wgck0ie77pw151k3jy1y0",
+      "id": 2,
+      "documentId": "hb768kzdkaztaow0o5or8b9a",
       "slug": "ai-engineering",
       "webflowId": "69ced9a1ebdf8d9bf68d5720",
       "name": "AI Engineering",
       "order": 1,
       "labelColor": "#b4f372",
       "textColor": "#0c0c0c",
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:33:59.484Z",
+      "updatedAt": "2026-11-28T01:33:59.484Z",
+      "publishedAt": "2026-11-28T01:33:59.494Z"
     },
     {
-      "id": 2,
-      "documentId": "0uvykki1ymb0fq1kdwduy107",
+      "id": 6,
+      "documentId": "tcj3wl9pj7s49978kfw6qpr2",
       "slug": "architecture",
       "webflowId": "69ced9a6276f2db33ef97fc0",
       "name": "Architecture",
       "order": 2,
       "labelColor": "#846cb3",
       "textColor": "#efe7ff",
-      "createdAt": "2026-11-27T10:00:00.000Z",
-      "updatedAt": "2026-11-27T10:00:00.000Z",
-      "publishedAt": "2026-11-27T10:00:00.000Z"
+      "createdAt": "2026-11-28T01:33:59.549Z",
+      "updatedAt": "2026-11-28T01:33:59.549Z",
+      "publishedAt": "2026-11-28T01:33:59.556Z"
     }
   ],
-  "meta": { "pagination": { "page": 1, "pageSize": 100, "pageCount": 1, "total": 2 } }
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 2
+    }
+  }
 }

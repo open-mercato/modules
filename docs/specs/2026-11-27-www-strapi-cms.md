@@ -425,7 +425,12 @@ flowchart LR
   (`/media/blog`, `/media/partners`, `/files`) with its original file name. The pull writes
   `www/public<folder>/<name>`, so every `src` of today keeps its path, and the srcset step of PR #39
   (`www/image-variants.ts`, which reads raster images under `/media/` and `/files/` from the built pages) works
-  unchanged.
+  unchanged. Checked on 5.64.0 in Step 3.2: the content API does not tell an API token which folder a file is in
+  (`folder` and `folderPath` are refused in `populate`, `filters` and `fields` of `/api/upload/files`, and
+  `/api/upload/folders` lists no files), and only the admin API creates folders. So the folders are made once in the
+  admin before the import (the push names any that is missing and writes nothing), the push also writes each file's
+  folder path into its `caption`, and the pull reads the path from the caption. A read-only token reaches
+  `GET /api/upload/files` (paged by `start` and `limit` only), not `/api/upload/files/page`.
 - **New uploads.** A file an editor uploads outside those folders is written to `/media/uploads/<name>`, the name
   lowercased with every character outside `[a-z0-9.-]` turned into `-` (the importer's rule). Two different files that
   reach the same path stop the pull with both names, so nothing is overwritten silently.
@@ -751,7 +756,9 @@ page and Cloudflare's R2 S3 API page are read at that time, and the byte test of
   production `STRAPI_READ_TOKEN` can read every draft, and a leak of it exposes unannounced content. The separate
   `STRAPI_DRAFTS_TOKEN` then still keeps the drafts workflow's secret out of production and lets each be rotated
   alone, but it no longer limits what a stolen production token reads; the owner decides at Step 3.3 whether that is
-  acceptable or whether the spec is revised.
+  acceptable or whether the spec is revised. Local data point of 28 Nov 2026 (a throwaway 5.64.0 instance, Step 3.2
+  rehearsal): a read-only token read a never-published sentinel post with `status=draft`, so the case above holds unless
+  Step 3.3 on the real instance shows otherwise.
 - **Build time and size.** The pull adds one paged read per type and, after the first run, only new media. The 71 MB
   of media move from `main` to Strapi and the snapshot branch at the switch; `main` keeps today's copy until the
   rollback window ends, then a PR removes it.

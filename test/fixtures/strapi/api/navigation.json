@@ -1,14 +1,17 @@
 {
   "data": {
-    "id": 1,
-    "documentId": "0u8h0w40yuxepi0fyjvys1ll",
+    "id": 2,
+    "documentId": "e7sas4vaewmmtndd4jl3vkjq",
+    "createdAt": "2026-11-28T01:34:38.375Z",
+    "updatedAt": "2026-11-28T01:34:38.375Z",
+    "publishedAt": "2026-11-28T01:34:38.386Z",
     "menus": [
       {
-        "id": 1,
+        "id": 4,
         "label": "Product",
         "items": [
           {
-            "id": 2,
+            "id": 14,
             "label": "CRM",
             "url": "https://www.openmercato.com/crm",
             "run": null,
@@ -16,7 +19,7 @@
             "icon": "crm"
           },
           {
-            "id": 3,
+            "id": 15,
             "label": "Foundation Framework",
             "url": "https://www.openmercato.com/product",
             "run": null,
@@ -24,7 +27,7 @@
             "icon": "foundation-framework"
           },
           {
-            "id": 4,
+            "id": 16,
             "label": "Agent Orchestrator",
             "url": "https://www.openmercato.com/agent-orchestrator",
             "run": null,
@@ -32,7 +35,7 @@
             "icon": "agent-orchestrator"
           },
           {
-            "id": 5,
+            "id": 17,
             "label": "Cloud Sandboxes",
             "url": "https://openmercatocloud.com/demo",
             "run": null,
@@ -40,7 +43,7 @@
             "icon": "cloud-sandboxes"
           },
           {
-            "id": 6,
+            "id": 18,
             "label": "Cezar",
             "url": "https://cezar.run/",
             "run": null,
@@ -50,11 +53,11 @@
         ]
       },
       {
-        "id": 7,
+        "id": 5,
         "label": "Developers",
         "items": [
           {
-            "id": 8,
+            "id": 19,
             "label": "Docs",
             "url": "https://docs.openmercato.com/",
             "run": null,
@@ -62,7 +65,7 @@
             "icon": "docs"
           },
           {
-            "id": 9,
+            "id": 20,
             "label": "Architecture",
             "url": "https://www.openmercato.com/architecture",
             "run": null,
@@ -70,7 +73,7 @@
             "icon": "architecture"
           },
           {
-            "id": 10,
+            "id": 21,
             "label": "Modules",
             "url": "https://modules.openmercato.com/",
             "run": "/",
@@ -78,7 +81,7 @@
             "icon": "modules"
           },
           {
-            "id": 11,
+            "id": 22,
             "label": "How to contribute",
             "url": "https://www.openmercato.com/how-to-contribute",
             "run": null,
@@ -86,7 +89,7 @@
             "icon": "how-to-contribute"
           },
           {
-            "id": 12,
+            "id": 23,
             "label": "For Agencies & Software Houses",
             "url": "https://www.openmercato.com/agencies",
             "run": null,
@@ -96,11 +99,11 @@
         ]
       },
       {
-        "id": 13,
+        "id": 6,
         "label": "Enterprise",
         "items": [
           {
-            "id": 14,
+            "id": 24,
             "label": "Implementation Partners",
             "url": "https://www.openmercato.com/partners",
             "run": null,
@@ -108,7 +111,7 @@
             "icon": "partners"
           },
           {
-            "id": 15,
+            "id": 25,
             "label": "Certified Partners",
             "url": "https://www.openmercato.com/certified-partners",
             "run": null,
@@ -116,7 +119,7 @@
             "icon": "certified-partners"
           },
           {
-            "id": 16,
+            "id": 26,
             "label": "Enterprise Level Support",
             "url": "https://www.openmercato.com/enterprise-level-support",
             "run": null,
@@ -127,21 +130,43 @@
       }
     ],
     "links": [
-      { "id": 17, "label": "Pricing", "url": "https://www.openmercato.com/pricing", "variant": null },
-      { "id": 18, "label": "Clients", "url": "https://www.openmercato.com/case-studies", "variant": null },
-      { "id": 19, "label": "Blog", "url": "https://www.openmercato.com/blog", "variant": null },
-      { "id": 20, "label": "Contact", "url": "https://www.openmercato.com/contact", "variant": null },
-      { "id": 21, "label": "GitHub", "url": "https://github.com/open-mercato/open-mercato", "variant": "is-github" }
+      {
+        "id": 7,
+        "label": "Pricing",
+        "url": "https://www.openmercato.com/pricing",
+        "variant": null
+      },
+      {
+        "id": 8,
+        "label": "Clients",
+        "url": "https://www.openmercato.com/case-studies",
+        "variant": null
+      },
+      {
+        "id": 9,
+        "label": "Blog",
+        "url": "https://www.openmercato.com/blog",
+        "variant": null
+      },
+      {
+        "id": 10,
+        "label": "Contact",
+        "url": "https://www.openmercato.com/contact",
+        "variant": null
+      },
+      {
+        "id": 11,
+        "label": "GitHub",
+        "url": "https://github.com/open-mercato/open-mercato",
+        "variant": "is-github"
+      }
     ],
     "sandbox": {
-      "id": 22,
+      "id": 12,
       "label": "Launch sandbox",
       "url": "https://app.openmercatocloud.com/signup?template=mercato",
       "variant": null
-    },
-    "createdAt": "2026-11-27T10:00:00.000Z",
-    "updatedAt": "2026-11-27T10:00:00.000Z",
-    "publishedAt": "2026-11-27T10:00:00.000Z"
+    }
   },
   "meta": {}
 }

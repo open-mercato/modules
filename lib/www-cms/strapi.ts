@@ -1,7 +1,10 @@
 // What www-push and www-pull read from Strapi 5 (Strapi CMS spec, API Contracts and Data Model, Media): the documents
 // of a type with the explicit `populate` of lib/www-cms/model.ts, the media files of the upload plugin with their
-// Media Library folders, and the media index that turns an upload into its site path and back. A file in a folder
-// whose path starts at `/media` or `/files` is `<folder path>/<name>`, as the push lays them out; any other upload is
+// Media Library folders, and the media index that turns an upload into its site path and back. The content API of
+// Strapi 5.64.0 does not tell an API token which folder a file is in (`folder` and `folderPath` are refused in
+// `populate`, `filters` and `fields` of /api/upload/files, and /api/upload/folders lists no files), so the push writes
+// the site folder of each file into its `caption` as well as putting it in that Media Library folder: an upload whose
+// caption is a site folder (`/media/blog`) is `<caption>/<name>`; any other upload, an editor's, is
 // `/media/uploads/<name>` (the importer's rule). Two uploads that reach the same path are refused with both names.
 // Isomorphic: fetch only, no Node APIs.
 import {
@@ -13,7 +16,7 @@ import {
   type StrapiMedia,
   type StrapiType,
 } from './model.ts'
-import { readPages, StrapiError, type Client } from './rest.ts'
+import { PAGE_SIZE, readPages, StrapiError, type Client } from './rest.ts'
 
 export type Status = 'published' | 'draft'
 
@@ -75,8 +78,8 @@ export interface StrapiFolder {
   namePath: string
 }
 
-/** An upload with the folder it is in. */
-export type Upload = StrapiMedia & { size?: number; updatedAt?: string; folder?: { id: number } | null }
+/** An upload as the content API lists it; `caption` holds the site folder the push put it in. */
+export type Upload = StrapiMedia & { size?: number; updatedAt?: string; caption?: string | null }
 
 export async function readFolders(client: Client): Promise<StrapiFolder[]> {
   const folders = (await readPages(client, '/api/upload/folders')) as StrapiFolder[]
@@ -86,17 +89,36 @@ export async function readFolders(client: Client): Promise<StrapiFolder[]> {
   return folders
 }
 
+/**
+ * Every upload, from GET /api/upload/files: the list route a read-only token reaches (5.64.0 keeps /files/page from it).
+ * It answers a plain list without `meta` and pages by `start` and `limit`, so the read pages at PAGE_SIZE until a shorter page and fails on a page
+ * longer than PAGE_SIZE: a changed limit can stop the read, never shorten it.
+ */
 export async function readUploads(client: Client): Promise<Upload[]> {
-  return (await readPages(client, '/api/upload/files/page', { populate: { folder: true } })) as Upload[]
+  const out: Upload[] = []
+  for (let page = 1; ; page++) {
+    const a = await client.json('GET', '/api/upload/files', {
+      // this route pages by start and limit only; it ignores pagination[page] and pagination[pageSize]
+      query: { start: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE, sort: ['id:asc'] },
+    })
+    if (!Array.isArray(a)) throw new StrapiError('answer', `GET /api/upload/files page ${page}: no list`)
+    if (a.length > PAGE_SIZE)
+      throw new StrapiError(
+        'answer',
+        `GET /api/upload/files page ${page}: ${a.length} files, more than the page size ${PAGE_SIZE}`,
+      )
+    out.push(...(a as Upload[]))
+    if (a.length < PAGE_SIZE) return out
+  }
 }
 
-/** The site folders the push lays files out in: a path under `/media` or `/files`. */
-export const siteFolder = (namePath: string): boolean => /^\/(?:media|files)(?:\/|$)/.test(namePath)
+/** A site folder the push lays files out in: a path of slug-like names under `/media` or `/files`. */
+export const siteFolder = (path: string): boolean => /^\/(?:media|files)(?:\/[a-z0-9][a-z0-9._-]*)*$/.test(path)
 
-/** The site path of an upload, from its folder. */
-export function pathOf(file: Upload, folders: ReadonlyMap<number, string>): string {
-  const namePath = file.folder ? folders.get(file.folder.id) : undefined
-  if (namePath !== undefined && siteFolder(namePath)) return `${namePath}/${file.name}`
+/** The site path of an upload, from the site folder in its caption. */
+export function pathOf(file: Upload): string {
+  const folder = typeof file.caption === 'string' ? file.caption : undefined
+  if (folder !== undefined && siteFolder(folder) && !file.name.includes('/')) return `${folder}/${file.name}`
   return `/media/uploads/${uploadName(file.name)}`
 }
 
@@ -107,13 +129,12 @@ export interface StrapiMediaIndex extends MediaIndex {
   byPath: ReadonlyMap<string, Upload>
 }
 
-export function strapiMediaIndex(uploads: readonly Upload[], folders: readonly StrapiFolder[]): StrapiMediaIndex {
-  const names = new Map(folders.map((f) => [f.id, f.namePath]))
+export function strapiMediaIndex(uploads: readonly Upload[]): StrapiMediaIndex {
   const byPath = new Map<string, Upload>()
   const byId = new Map<string, string>()
   const clashes: string[] = []
   for (const file of uploads) {
-    const path = pathOf(file, names)
+    const path = pathOf(file)
     const other = byPath.get(path)
     if (other)
       clashes.push(`${path}: the uploads ${other.name} (${other.documentId}) and ${file.name} (${file.documentId})`)

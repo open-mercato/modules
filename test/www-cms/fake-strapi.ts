@@ -136,9 +136,10 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
   for (const f of opts.folders ?? []) folderOf(f)
 
   const pathOfUpload = (u: FakeUpload) => `${folders.find((f) => f.id === u.folder)?.namePath ?? ''}/${u.name}`
+  // as the content API of 5.64.0 answers a file: without its folder, which an API token cannot read
   const uploadJson = (u: FakeUpload) => {
-    const { bytes: _b, folder, ...rest } = u
-    return { ...rest, folder: folder === null ? null : { id: folder, ...folders.find((f) => f.id === folder) } }
+    const { bytes: _b, folder: _f, ...rest } = u
+    return { caption: null, ...rest }
   }
 
   /** A stored value (write shape) in the read shape of a populated GET. */
@@ -284,7 +285,20 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
 
     if (method === 'GET') line.status = 200
     if (url.pathname === '/api/upload/folders' && method === 'GET') return paged(res, q, folders, (f) => f)
-    if (url.pathname === '/api/upload/files/page' && method === 'GET') return paged(res, q, uploads, uploadJson)
+    // the list a read-only token reaches: a plain list without meta, paged by start and limit only
+    if (url.pathname === '/api/upload/files' && method === 'GET') {
+      const start = Number(q.get('start') ?? 0)
+      const limit = Number(q.get('limit') ?? uploads.length)
+      return reply(200, uploads.slice(start, start + limit).map(uploadJson))
+    }
+    // 5.64.0 keeps /files/page from read-only tokens
+    if (url.pathname === '/api/upload/files/page' && method === 'GET' && kind !== 'full')
+      return reply(403, error(403, 'ForbiddenError', 'Forbidden'))
+    if (url.pathname === '/api/upload/files/page' && method === 'GET') {
+      const refused = [...q.keys()].find((k) => /^(populate|filters|fields)\b.*\b(folder|folderPath)\b/.test(k))
+      if (refused) return reply(400, error(400, 'ValidationError', 'Invalid key folder'))
+      return paged(res, q, uploads, uploadJson)
+    }
     if (url.pathname === '/api/upload' && method === 'POST') {
       const body = await readBody(req)
       const form = await new Request('http://127.0.0.1/', {
@@ -293,13 +307,17 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
         body: new Uint8Array(body),
       }).formData()
       const file = form.get('files') as File
-      const info = JSON.parse(String(form.get('fileInfo') ?? '{}')) as { name?: string }
+      const info = JSON.parse(String(form.get('fileInfo') ?? '{}')) as { name?: string; caption?: string }
       const bytes = new Uint8Array(await file.arrayBuffer())
       const replace = q.get('id')
       if (replace) {
         const u = uploads.find((x) => String(x.id) === replace)
         if (!u) return reply(404, error(404, 'NotFoundError', 'file.notFound'))
-        Object.assign(u, fileFields(info.name ?? file.name, bytes, file.type), { id: u.id, documentId: u.documentId })
+        Object.assign(u, fileFields(info.name ?? file.name, bytes, file.type), {
+          id: u.id,
+          documentId: u.documentId,
+          caption: info.caption ?? null,
+        })
         uploadCount.set(pathOfUpload(u), (uploadCount.get(pathOfUpload(u)) ?? 0) + 1)
         return reply(201, uploadJson(u))
       }
@@ -311,6 +329,7 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
         documentId: docIdOf(),
         ...fileFields(info.name ?? file.name, bytes, file.type),
         folder: folder === null ? null : Number(folder),
+        caption: info.caption ?? null,
       }
       uploads.push(u)
       uploadCount.set(pathOfUpload(u), (uploadCount.get(pathOfUpload(u)) ?? 0) + 1)
@@ -424,6 +443,7 @@ export async function startFakeStrapi(opts: FakeOptions = {}): Promise<FakeStrap
         documentId: docIdOf(),
         ...fileFields(name, bytes),
         folder: folderOf(folderPath).id,
+        caption: folderPath,
         ...fields,
         bytes,
       }
