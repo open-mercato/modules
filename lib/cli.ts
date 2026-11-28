@@ -79,6 +79,11 @@ export const COMMANDS: readonly { name: string; owner: string; description: stri
     owner: 'www',
     description: 'compare every sitemap and redirect URL of the live main site with a candidate; read-only',
   },
+  {
+    name: 'www-push',
+    owner: 'www',
+    description: 'push www/content and the media into Strapi, upserted by slug (STRAPI_ADMIN_TOKEN; never in CI)',
+  },
 ]
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))

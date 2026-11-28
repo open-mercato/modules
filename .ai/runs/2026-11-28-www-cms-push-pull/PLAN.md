@@ -10,7 +10,7 @@ Base: main (a16f320)
 
 | Phase | Step          | Title                                                              | Exec   | Status | Commit |
 | ----- | ------------- | ------------------------------------------------------------------ | ------ | ------ | ------ |
-| 3     | 3.1           | yarn om www-push with its fake Strapi tests                        | inline | todo   | —      |
+| 3     | 3.1           | yarn om www-push with its fake Strapi tests                        | inline | done   | 0558e6e |
 | 3     | 3.2           | yarn om www-pull with --check, --drafts, --status, removed URLs, media cache | inline | todo   | —      |
 | 3     | 3.2-recording | REST fixture recorded from a throwaway local instance, rehearsal fixes | inline | todo   | —      |
 
