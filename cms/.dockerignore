@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.strapi/
+.tmp/
+.cache/
+.env
+public/uploads/*
+!public/uploads/.gitkeep
+test/
+types/generated/
+.strapi-updater.json
+.tsbuildinfo

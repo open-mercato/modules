@@ -1,0 +1,48 @@
+{
+  "collectionName": "components_block_carousel",
+  "info": {
+    "displayName": "Carousel"
+  },
+  "options": {},
+  "attributes": {
+    "anchor": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "layout": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "lead": {
+      "type": "richtext"
+    },
+    "primary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "secondary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.block-item",
+      "repeatable": true,
+      "min": 1
+    },
+    "note": {
+      "type": "richtext"
+    }
+  }
+}

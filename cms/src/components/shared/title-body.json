@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_title_body",
+  "info": {
+    "displayName": "Title body"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

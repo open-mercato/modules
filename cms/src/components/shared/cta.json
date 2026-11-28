@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_shared_cta",
+  "info": {
+    "displayName": "Cta"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "required": true,
+      "regex": "^(?:\\/[^\\s]*|#[A-Za-z0-9_-]+|https:\\/\\/[^\\s]+|mailto:[^\\s@]+@[^\\s@]+)$"
+    },
+    "trackingPlacement": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+    },
+    "trackingAction": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+    }
+  }
+}

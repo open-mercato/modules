@@ -104,6 +104,15 @@ describe('repo configuration (spec 3.3, 3.4)', () => {
       'test/fixtures/templates/modules-from-modules-ts/scaffold-*',
       // the rich-text embeds of posts, kept byte for byte as Webflow serves them (lib/import-webflow/run.ts)
       'www/content/embeds/',
+      // the outputs of the Strapi project in cms/, whose sources the root Prettier checks (spec 2026-11-27-www-strapi-cms.md)
+      '# the outputs of the Strapi project in cms/ (its sources are checked with the root config)',
+      'cms/node_modules/',
+      'cms/dist/',
+      'cms/build/',
+      'cms/.strapi/',
+      'cms/types/generated/',
+      'cms/public/uploads/',
+      'cms/.yarn/',
     ])
   })
 

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_landing_features",
+  "info": {
+    "displayName": "Features"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "lead": {
+      "type": "richtext"
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.art-item",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

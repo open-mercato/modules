@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_nav_menu",
+  "info": {
+    "displayName": "Menu"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "nav.item",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

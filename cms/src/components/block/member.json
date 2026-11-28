@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_block_member",
+  "info": {
+    "displayName": "Member"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "regex": "^https:\\/\\/[^\\s]+$"
+    },
+    "photo": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "bio": {
+      "type": "richtext"
+    },
+    "links": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

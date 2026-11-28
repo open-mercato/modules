@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blog_categories",
+  "info": {
+    "singularName": "blog-category",
+    "pluralName": "blog-categories",
+    "displayName": "Blog category",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "webflowId": {
+      "type": "string",
+      "regex": "^[0-9a-f]{24}$"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "required": true
+    },
+    "labelColor": {
+      "type": "string",
+      "regex": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    },
+    "textColor": {
+      "type": "string",
+      "regex": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    }
+  }
+}

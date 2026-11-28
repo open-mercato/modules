@@ -20,6 +20,7 @@ import {
   documentIdOf,
   fromDocument,
   mediaIndex,
+  PARTNER_BUDGET_VALUES,
   toDocument,
   typeOf,
   TYPES,
@@ -31,6 +32,7 @@ import {
   footerSchema,
   landingTemplateEntries,
   navigationSchema,
+  PARTNER_BUDGETS,
   WWW_SOURCES,
   wwwSchemas,
   type WwwCollection,
@@ -212,6 +214,10 @@ describe('redirects.yaml: manual rules are documents, the rest is kept from the 
     expect(kept).toBe(redirects)
     expect(rules).toEqual([{ from: '/old-pricing', to: '/pricing', status: 301, source: 'manual' }])
     const entries = entriesOf('redirects', { path: 'redirects.yaml', text })
+    // Strapi reserves `status` on a Draft and Publish type: the document holds it as statusCode
+    const doc = toDocument(type, entries[0]!, { media })
+    expect(doc.statusCode).toBe(301)
+    expect(doc).not.toHaveProperty('status')
     const back = entries.map((e) => roundTrip(type, e))
     const [out] = await filesOf(type, back, ROOT, { redirects: text })
     expect(out!.text === text).toBe(true)
@@ -290,5 +296,29 @@ describe('test/fixtures/strapi: one trimmed REST answer per type (Strapi 5, publ
         } else expect(f.text === readFileSync(join(CONTENT, f.path), 'utf8'), f.path).toBe(true)
       }
     }
+  })
+})
+
+describe('values and names Strapi 5.64.0 refuses (Step 2.2)', () => {
+  const partner = typeOf('partners')
+  const base = { name: 'P', tier: 't', location: 'l', availability: 'accepting', projectsInPortfolio: false }
+
+  it('maps every partner budget to a Strapi value with a letter before its first digit, and back', () => {
+    expect(Object.keys(PARTNER_BUDGET_VALUES)).toEqual([...PARTNER_BUDGETS])
+    for (const [key, value] of Object.entries(PARTNER_BUDGET_VALUES)) {
+      expect(/^[^a-z]*[0-9]/i.test(value), value).toBe(false)
+      const entry = { id: 'p', data: { ...base, budget: key, website: 'https://x.test', description: 'd' }, body: 'b' }
+      const doc = toDocument(partner, entry, { media })
+      expect(doc.budget).toBe(value)
+      expect(roundTrip(partner, entry).data.budget).toBe(key)
+    }
+  })
+
+  it('refuses a budget the mapping does not know, in either direction', () => {
+    const entry = { id: 'p', data: { ...base, budget: 'any', website: 'https://x.test', description: 'd' }, body: 'b' }
+    expect(() => toDocument(partner, entry, { media })).toThrow(/the value any is not in the mapping/)
+    const ok = { ...entry, data: { ...entry.data, budget: 'under-10k' } }
+    const doc = { ...toDocument(partner, ok, { media }), budget: '10k-20k' }
+    expect(() => fromDocument(partner, doc, media)).toThrow(/the value 10k-20k is not in the mapping/)
   })
 })

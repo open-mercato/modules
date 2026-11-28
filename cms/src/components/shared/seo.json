@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_shared_seo",
+  "info": {
+    "displayName": "Seo"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "noindex": {
+      "type": "boolean"
+    }
+  }
+}

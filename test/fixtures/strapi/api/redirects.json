@@ -6,7 +6,7 @@
       "slug": "/old-pricing",
       "from": "/old-pricing",
       "to": "/pricing",
-      "status": 301,
+      "statusCode": 301,
       "createdAt": "2026-11-27T10:00:00.000Z",
       "updatedAt": "2026-11-27T10:00:00.000Z",
       "publishedAt": "2026-11-27T10:00:00.000Z"

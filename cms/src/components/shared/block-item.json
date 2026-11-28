@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_shared_block_item",
+  "info": {
+    "displayName": "Block item"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "points": {
+      "type": "component",
+      "component": "shared.line",
+      "repeatable": true,
+      "min": 1
+    },
+    "note": {
+      "type": "richtext"
+    },
+    "video": {
+      "type": "string",
+      "regex": "^[A-Za-z0-9_-]{11}$"
+    },
+    "image": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "cta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    }
+  }
+}

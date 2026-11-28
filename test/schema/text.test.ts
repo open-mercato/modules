@@ -84,6 +84,10 @@ describe('check-text', () => {
     expect(inScope('www/content/blog/x.md')).toBe(true)
     // the menus and the footer copied from the main site are texts for people, though the file is code
     expect(inScope('lib/core/main-site.ts')).toBe(true)
+    // the help texts and the bootstrap of the Strapi project, not its tests or outputs
+    expect(inScope('cms/src/api/blog-post/content-types/blog-post/schema.json')).toBe(true)
+    expect(inScope('cms/config/plugins.ts')).toBe(true)
+    expect(inScope('cms/test/unit/hook.test.ts')).toBe(false)
   })
 
   it('returns 1 on a banned character and 0 on a clean tree', () => {

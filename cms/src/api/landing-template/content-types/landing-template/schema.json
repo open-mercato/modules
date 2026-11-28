@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "landing_template",
+  "info": {
+    "singularName": "landing-template",
+    "pluralName": "landing-templates",
+    "displayName": "Landing template",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "en": {
+      "type": "component",
+      "component": "landing.template-words",
+      "repeatable": false,
+      "required": true
+    },
+    "pl": {
+      "type": "component",
+      "component": "landing.template-words",
+      "repeatable": false,
+      "required": true
+    }
+  }
+}

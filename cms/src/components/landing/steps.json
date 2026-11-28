@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_landing_steps",
+  "info": {
+    "displayName": "Steps"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.title-body",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

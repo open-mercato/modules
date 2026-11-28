@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Byte test of cms/ (spec Step 2.1): an SVG with metadata, a comment and attributes in a fixed order. -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="600" height="400" viewBox="0 0 600 400">
+  <metadata>
+    <rdf:RDF>
+      <rdf:Description dc:title="cms byte test" dc:rights="Open Mercato test image"/>
+    </rdf:RDF>
+  </metadata>
+  <title>cms byte test</title>
+  <rect x="0" y="0" width="600" height="400" fill="#2f6feb"/>
+  <circle cx="300" cy="200" r="120" fill="#e5e7eb"/>
+</svg>

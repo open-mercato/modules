@@ -286,7 +286,8 @@ describe('the WP10 workflows (spec 5.1 table, 5.2 steps)', () => {
   it('pages: triggers, read only, a build job without environment and a deploy job in cloudflare', () => {
     const w = wf('pages.yml')
     expect(w.on).toEqual({
-      push: { branches: ['main'] },
+      // a merge that changes only cms/ (the Strapi project, spec 2026-11-27-www-strapi-cms.md) does not build the site
+      push: { branches: ['main'], 'paths-ignore': ['cms/**'] },
       workflow_run: { workflows: ['watch', 'sync', 'collect'], types: ['completed'], branches: ['main'] },
       schedule: [{ cron: '47 5 * * *' }],
       workflow_dispatch: null,

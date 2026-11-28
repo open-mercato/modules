@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_landing_hero",
+  "info": {
+    "displayName": "Hero"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "lead": {
+      "type": "richtext",
+      "required": true
+    },
+    "primary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false,
+      "required": true
+    },
+    "secondary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "proof": {
+      "type": "component",
+      "component": "shared.line",
+      "repeatable": true
+    }
+  }
+}

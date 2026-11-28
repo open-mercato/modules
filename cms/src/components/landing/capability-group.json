@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_landing_capability_group",
+  "info": {
+    "displayName": "Capability group"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "rows": {
+      "type": "component",
+      "component": "landing.capability-row",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

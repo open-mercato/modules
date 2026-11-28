@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_block_copy",
+  "info": {
+    "displayName": "Copy"
+  },
+  "options": {},
+  "attributes": {
+    "markdown": {
+      "type": "richtext",
+      "required": true
+    },
+    "webflowNode": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_source_link",
+  "info": {
+    "displayName": "Source link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true,
+      "regex": "^https:\\/\\/[^\\s]+$"
+    }
+  }
+}

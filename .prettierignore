@@ -13,3 +13,11 @@ quality/reviews/
 .npm/
 test/fixtures/templates/modules-from-modules-ts/scaffold-*
 www/content/embeds/
+# the outputs of the Strapi project in cms/ (its sources are checked with the root config)
+cms/node_modules/
+cms/dist/
+cms/build/
+cms/.strapi/
+cms/types/generated/
+cms/public/uploads/
+cms/.yarn/

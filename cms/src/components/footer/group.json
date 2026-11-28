@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_footer_group",
+  "info": {
+    "displayName": "Group"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "links": {
+      "type": "component",
+      "component": "nav.link",
+      "repeatable": true,
+      "min": 1
+    }
+  }
+}

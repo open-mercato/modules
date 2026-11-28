@@ -1,0 +1,51 @@
+{
+  "collectionName": "components_nav_item",
+  "info": {
+    "displayName": "Item"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true,
+      "regex": "^https:\\/\\/[^\\s]+$"
+    },
+    "run": {
+      "type": "string",
+      "regex": "^\\/[^\\s]*$"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "icon": {
+      "type": "enumeration",
+      "enum": [
+        "crm",
+        "foundation-framework",
+        "agent-orchestrator",
+        "cloud-sandboxes",
+        "cezar",
+        "docs",
+        "architecture",
+        "modules",
+        "how-to-contribute",
+        "agencies",
+        "partners",
+        "certified-partners",
+        "enterprise-level-support",
+        "run-modules",
+        "run-templates",
+        "run-compat",
+        "run-radar",
+        "run-quality",
+        "run-agents"
+      ],
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,80 @@
+# The Strapi project in cms/ (spec 2026-11-27-www-strapi-cms.md, The cms/ folder): its own install from cms/yarn.lock,
+# `strapi build`, the unit tests and the Compose file, then a start from compose.yaml with an empty database and the
+# tests that need a running instance (Phase 2). Only a change under cms/ starts it; the root toolchain never installs
+# cms/, and `pages` ignores pushes that change only cms/. No secrets: the instance gets random throwaway values from
+# cms/scripts/dev-env.sh and listens on 127.0.0.1 of the runner only.
+name: cms
+
+on:
+  pull_request:
+    paths:
+      - "cms/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "cms/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cms-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: cms
+
+jobs:
+  cms:
+    name: cms
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      STRAPI_TELEMETRY_DISABLED: "true"
+      CMS_URL: http://127.0.0.1:1337
+      CMS_COMPOSE: docker compose -p cms-ci -f compose.yaml -f compose.test.yaml
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Unit tests
+        run: yarn test
+
+      - name: Compose config
+        run: |
+          ./scripts/dev-env.sh
+          docker compose -f compose.yaml config --quiet
+          $CMS_COMPOSE config --quiet
+
+      - name: Start with an empty database
+        run: $CMS_COMPOSE up --detach --build --wait
+
+      - name: Instance tests
+        run: yarn test:instance
+
+      - name: Strapi log
+        if: ${{ failure() }}
+        run: $CMS_COMPOSE logs --no-color strapi
+
+      - name: Stop
+        if: ${{ always() }}
+        run: $CMS_COMPOSE down --volumes

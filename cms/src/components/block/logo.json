@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_block_logo",
+  "info": {
+    "displayName": "Logo"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false,
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "regex": "^(?:\\/[^\\s]*|#[A-Za-z0-9_-]+|https:\\/\\/[^\\s]+|mailto:[^\\s@]+@[^\\s@]+)$"
+    }
+  }
+}

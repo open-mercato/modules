@@ -6,3 +6,7 @@
 /templates/ @wojciechszyjka
 /policy/ @wojciechszyjka
 /quality/ @wojciechszyjka
+
+# The Strapi project of the main site (spec 2026-11-27-www-strapi-cms.md, The cms/ folder): the owner and the
+# infrastructure owner, whose handle the owner adds here.
+/cms/ @wojciechszyjka

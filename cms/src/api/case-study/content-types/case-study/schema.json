@@ -1,0 +1,88 @@
+{
+  "kind": "collectionType",
+  "collectionName": "case_studies",
+  "info": {
+    "singularName": "case-study",
+    "pluralName": "case-studies",
+    "displayName": "Case study",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "webflowId": {
+      "type": "string",
+      "regex": "^[0-9a-f]{24}$"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "thumbnail": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "heroVideo": {
+      "type": "string",
+      "regex": "^[A-Za-z0-9_-]{11}$"
+    },
+    "deliveredBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::partner.partner"
+    },
+    "deliveredByUrl": {
+      "type": "string",
+      "regex": "^https:\\/\\/[^\\s]+$"
+    },
+    "overview": {
+      "type": "component",
+      "component": "case-study.overview",
+      "repeatable": false,
+      "required": true
+    },
+    "stats": {
+      "type": "component",
+      "component": "case-study.stat",
+      "repeatable": true,
+      "max": 3
+    },
+    "screenshots": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": true
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::case-study-category.case-study-category"
+    },
+    "featuredOnAgencies": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer"
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

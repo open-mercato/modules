@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_landing_cta",
+  "info": {
+    "displayName": "Cta"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "primary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false,
+      "required": true
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

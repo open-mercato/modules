@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_landing_capability_row",
+  "info": {
+    "displayName": "Capability row"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "ours": {
+      "type": "enumeration",
+      "enum": ["yes", "no", "build"],
+      "required": true
+    },
+    "oursNote": {
+      "type": "string"
+    },
+    "theirs": {
+      "type": "enumeration",
+      "enum": ["yes", "no", "build"],
+      "required": true
+    },
+    "theirsNote": {
+      "type": "string"
+    }
+  }
+}

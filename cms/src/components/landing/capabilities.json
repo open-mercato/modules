@@ -1,0 +1,63 @@
+{
+  "collectionName": "components_landing_capabilities",
+  "info": {
+    "displayName": "Capabilities"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "lead": {
+      "type": "richtext"
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "oursColumn": {
+      "type": "component",
+      "component": "landing.column",
+      "repeatable": false,
+      "required": true
+    },
+    "theirsColumn": {
+      "type": "component",
+      "component": "landing.column",
+      "repeatable": false,
+      "required": true
+    },
+    "groups": {
+      "type": "component",
+      "component": "landing.capability-group",
+      "repeatable": true,
+      "min": 1
+    },
+    "legend": {
+      "type": "component",
+      "component": "landing.legend",
+      "repeatable": false,
+      "required": true
+    },
+    "note": {
+      "type": "richtext",
+      "required": true
+    },
+    "reviewed": {
+      "type": "date",
+      "required": true
+    },
+    "sources": {
+      "type": "component",
+      "component": "shared.source-link",
+      "repeatable": true
+    }
+  }
+}

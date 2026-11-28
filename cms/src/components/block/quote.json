@@ -1,0 +1,55 @@
+{
+  "collectionName": "components_block_quote",
+  "info": {
+    "displayName": "Quote"
+  },
+  "options": {},
+  "attributes": {
+    "anchor": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "layout": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "lead": {
+      "type": "string"
+    },
+    "primary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "secondary": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "note": {
+      "type": "richtext"
+    },
+    "quote": {
+      "type": "richtext",
+      "required": true
+    },
+    "author": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string"
+    },
+    "image": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    }
+  }
+}

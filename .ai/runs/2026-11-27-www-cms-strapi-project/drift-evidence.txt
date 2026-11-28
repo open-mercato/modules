@@ -1,0 +1,5 @@
+drift test, each side changed alone (23:43Z):
+1 blog-post schema.json gains subtitle -> FAIL type blog-post, 1 failed | 74 passed (75)
+2 model.ts case-study heading renamed headline -> FAIL type case-study, 1 failed | 74 passed (75)
+3 shared.faq-item answer richtext->text in JSON -> FAIL component shared.faq-item, 1 failed | 74 passed (75)
+restored -> 75 passed (75)

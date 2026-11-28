@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_block_legacy",
+  "info": {
+    "displayName": "Legacy"
+  },
+  "options": {},
+  "attributes": {
+    "anchor": {
+      "type": "string",
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "component": {
+      "type": "enumeration",
+      "enum": [
+        "crm-ai",
+        "crm-closing",
+        "crm-demo",
+        "crm-features",
+        "crm-hero",
+        "crm-logos",
+        "crm-modules",
+        "crm-script"
+      ],
+      "required": true
+    },
+    "note": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

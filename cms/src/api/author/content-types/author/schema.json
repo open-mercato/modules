@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "authors",
+  "info": {
+    "singularName": "author",
+    "pluralName": "authors",
+    "displayName": "Author",
+    "description": "Published changes are on the site when the next site build ends, a minute after the last publish at the earliest. Until the www switch the site is modules.openmercato.com; www.openmercato.com still shows the frozen Webflow pages."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "webflowId": {
+      "type": "string",
+      "regex": "^[0-9a-f]{24}$"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": "component",
+      "component": "shared.image",
+      "repeatable": false
+    },
+    "url": {
+      "type": "string",
+      "regex": "^https:\\/\\/[^\\s]+$"
+    }
+  }
+}
