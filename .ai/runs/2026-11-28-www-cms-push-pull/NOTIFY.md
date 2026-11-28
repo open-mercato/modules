@@ -29,3 +29,7 @@
   invisible to API tokens, so the site folder rides in the caption; read-only tokens reach /api/upload/files only;
   that list pages by start and limit). Read-only token reads drafts: recorded in the spec's Risks.
 - Review subagent (om-code-review checklist): request changes, 3 major and 5 minor; fixed in 3.2-review-fix.
+
+## 2026-11-28T02:13:24Z: run ended
+
+- PR https://github.com/open-mercato/modules/pull/45 ready; Status complete; review approved.
