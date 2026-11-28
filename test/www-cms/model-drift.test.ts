@@ -3,12 +3,23 @@
 // cms/src/components/*/*.json as plain JSON (no Strapi import) and compares every type and component with the mapping
 // of the same commit: the set of types and components, each attribute's name, order, Strapi type, component,
 // repetition, relation and media kind, and the values of an enumeration the mapping holds. A pull request that changes
-// one side without the other is red here. The field rules (required, regex, enums from the Zod schemas, max) live in
-// the JSON only.
+// one side without the other is red here. The values of every enumeration are compared with their source (the Zod
+// constants, the legacy component files); the other field rules (required, regex, max) live in the JSON only.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { COMPONENTS, TYPES, type Field, type StrapiType } from '../../lib/www-cms/model.ts'
+import {
+  CAPABILITY_MARKS,
+  EMPLOYMENT_TYPES,
+  LANDING_LOCALES,
+  landingSchema,
+  LIST_COLLECTIONS,
+  NAV_ICONS,
+  PAGE_JSON_LD_TYPES,
+  PARTNER_AVAILABILITY,
+  SiteLink,
+} from '../../lib/schema/www-content.ts'
+import { COMPONENTS, PARTNER_BUDGET_VALUES, TYPES, type Field, type StrapiType } from '../../lib/www-cms/model.ts'
 
 const CMS = join(import.meta.dirname, '..', '..', 'cms', 'src')
 
@@ -105,6 +116,29 @@ function jsonShapes(s: Schema, expected: [string, Shape][]): [string, Shape][] {
 const RESERVED = ['id', 'document_id', 'created_at', 'updated_at', 'published_at', 'created_by_id', 'updated_by_id']
   .concat(['created_by', 'updated_by', 'entry_id', 'localizations', 'meta', 'locale', '__component', '__content_type'])
   .concat(['status'])
+/**
+ * The source of every enumeration of cms/src, by `<type or component>.<attribute>`: the Zod constants of
+ * lib/schema/www-content.ts, the Strapi values of the mapping, and the files of www/src/components/legacy/.
+ */
+const LEGACY = join(import.meta.dirname, '..', '..', 'www', 'src', 'components', 'legacy')
+const ENUM_SOURCES: Record<string, readonly string[]> = {
+  'job.employmentType': EMPLOYMENT_TYPES,
+  'partner.budget': Object.values(PARTNER_BUDGET_VALUES),
+  'partner.availability': PARTNER_AVAILABILITY,
+  'landing.language': LANDING_LOCALES,
+  'landing.kind': landingSchema().shape.kind.options,
+  'nav.item.icon': NAV_ICONS,
+  'nav.link.variant': [SiteLink.shape.variant.unwrap().value],
+  'block.legacy.component': readdirSync(LEGACY)
+    .filter((f) => f.endsWith('.astro'))
+    .map((f) => f.slice(0, -'.astro'.length))
+    .sort(),
+  'block.list.collection': LIST_COLLECTIONS,
+  'landing.capability-row.ours': CAPABILITY_MARKS,
+  'landing.capability-row.theirs': CAPABILITY_MARKS,
+  'page.json-ld.type': PAGE_JSON_LD_TYPES,
+}
+
 const RESERVED_PREFIXES = ['strapi', '_strapi', '__strapi']
 const snake = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase()
 
@@ -148,6 +182,16 @@ describe('cms/src and lib/www-cms/model.ts are the same model (Step 2.2)', () =>
         const n = snake(name)
         expect(RESERVED.includes(n) || RESERVED_PREFIXES.some((p) => n.startsWith(p)), `${owner}.${name}`).toBe(false)
       }
+  })
+
+  it('holds in every enumeration the values of its source, so a value added on one side only is red', () => {
+    const found = [...strapiTypes, ...strapiComponents].flatMap(([owner, s]) =>
+      Object.entries(s.attributes)
+        .filter(([, a]) => a.type === 'enumeration')
+        .map(([name, a]) => [`${owner}.${name}`, a.enum] as const),
+    )
+    expect(found.map(([at]) => at).sort()).toEqual(Object.keys(ENUM_SOURCES).sort())
+    for (const [at, values] of found) expect(values, at).toEqual([...(ENUM_SOURCES[at] ?? [])])
   })
 
   it('gives every enumeration values Strapi accepts: a letter before the first digit', () => {
