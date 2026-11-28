@@ -1,6 +1,6 @@
 {
   "om": "0.9.0",
-  "computedAt": "2026-11-28T07:58:16.790Z",
+  "computedAt": "2026-11-28T20:13:37.476Z",
   "driftAgainst": "0.10.1",
   "cells": {
     "github:fullstackhouse/open-mercato-client-auth@0.4.0": {
@@ -4479,7 +4479,7 @@
         {
           "name": "@tanstack/react-query",
           "moduleRange": "5.104.1",
-          "appVersion": "5.108.3"
+          "appVersion": "5.108.4"
         },
         {
           "name": "@tanstack/react-table",
@@ -4504,7 +4504,7 @@
         {
           "name": "@tanstack/react-query",
           "moduleRange": "5.104.1",
-          "appVersion": "5.108.3"
+          "appVersion": "5.108.4"
         },
         {
           "name": "@tanstack/react-table",

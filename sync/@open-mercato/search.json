@@ -1,13 +1,13 @@
 {
   "locator": "npm:@open-mercato/search",
-  "checkedAt": "2026-11-28T07:56:52Z",
+  "checkedAt": "2026-11-28T20:12:03Z",
   "firstSeenAt": "2026-10-23T02:34:30Z",
   "npm": {
     "name": "@open-mercato/search",
     "distTags": {
       "canary": "0.6.8-canary.322.1.0b9d350501",
       "latest": "0.10.1",
-      "develop": "0.11.1-develop.8725.1.d642a49e90"
+      "develop": "0.11.1-develop.8740.1.b3685cb4b7"
     },
     "latestStable": "0.10.1",
     "previousStable": "0.10.0",
@@ -51,9 +51,9 @@
     "repo": "open-mercato/open-mercato",
     "redirectedFrom": null,
     "archived": false,
-    "pushedAt": "2026-11-28T07:56:22Z",
+    "pushedAt": "2026-11-28T20:11:15Z",
     "defaultBranch": "main",
-    "stars": 1972,
+    "stars": 1973,
     "license": "MIT",
     "topics": [
       "crm",
@@ -249,6 +249,6 @@
   "advisories": [],
   "type": "official",
   "typeReason": "Scope @open-mercato.",
-  "downloads30d": 93927,
+  "downloads30d": 94999,
   "errors": []
 }
