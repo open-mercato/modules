@@ -15,6 +15,11 @@ Base: main (2d2fadb)
 | 2     | 2.3  | Roles seed, help texts, edit views, no model change in prod  | inline | done   | 2.3    |
 | 2     | 2.4  | Publish hook and preview handler (off)                       | inline | done   | 2.4    |
 | 2     | 2.5  | Backup and restore scripts, README                           | inline | done   | 2.5    |
+| 2     | 2.2-review-fix | Every enumeration compared with its source in the drift test | inline | done | 0238fef |
+| 2     | 2.1-review-fix | The anonymous upload GET asserted as recorded (200) | inline | done | 544963b |
+| 2     | 2.2-review-fix-b | Data Model rows: redirect statusCode, Strapi budget values | inline | done | 0eae850 |
+| 2     | 2.5-review-fix | Only the newest weekly export kept in the exports volume | inline | done | 5879b02 |
+| 2     | 2.3-review-fix | End of the age-gate exception; no production start without accounts | inline | done | this commit |
 
 ## Goal
 

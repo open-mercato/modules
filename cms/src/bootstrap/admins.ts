@@ -64,9 +64,21 @@ interface AdminUser {
   roles?: { code: string }[]
 }
 
+/**
+ * Why a start with an empty account list must stop: in production with no admin yet, anyone who reaches /admin first
+ * would register the first Super Admin. Elsewhere (strapi develop) an empty list is only a warning.
+ */
+export function emptyListProblem(nodeEnv: string | undefined, admins: number): string | undefined {
+  if (nodeEnv === 'production' && admins === 0)
+    return 'admin accounts: CMS_ADMIN_ACCOUNTS is empty and no admin exists; set it in cms/.env before the first start'
+  return undefined
+}
+
 export async function seedAdmins(strapi: Core.Strapi): Promise<void> {
   const accounts = parseAccounts(process.env.CMS_ADMIN_ACCOUNTS)
   if (accounts.length === 0) {
+    const problem = emptyListProblem(process.env.NODE_ENV, await strapi.db.query('admin::user').count())
+    if (problem) throw new Error(problem)
     strapi.log.warn('admin accounts: CMS_ADMIN_ACCOUNTS is empty, no account is seeded')
     return
   }

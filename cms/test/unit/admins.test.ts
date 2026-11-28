@@ -1,7 +1,7 @@
 // The roles seed of Q9 (spec Step 2.3) without a server: the account list of cms/.env.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { parseAccounts } from '../../src/bootstrap/admins.ts'
+import { emptyListProblem, parseAccounts } from '../../src/bootstrap/admins.ts'
 
 const FOUR =
   'Ada Owner <ada@example.com>, Ben Infra <ben@example.com>, Cleo Editor <cleo@example.com>, Dan Editor <dan@example.com>'
@@ -29,4 +29,10 @@ test('refuses an entry without a name and an address', () => {
 test('an empty list seeds nothing', () => {
   assert.deepEqual(parseAccounts(undefined), [])
   assert.deepEqual(parseAccounts('  '), [])
+})
+
+test('an empty list stops a production start while no admin exists, so nobody can register the first one', () => {
+  assert.match(String(emptyListProblem('production', 0)), /CMS_ADMIN_ACCOUNTS is empty and no admin exists/)
+  assert.equal(emptyListProblem('production', 4), undefined)
+  assert.equal(emptyListProblem('development', 0), undefined)
 })
